@@ -1,0 +1,87 @@
+{
+  "status": "passed",
+  "version": "3.2.0",
+  "date": "2026-10-18T11:42:14.394875+00:00",
+  "scope": "真实浏览器操作与有限画面检查；61项内部数值/几何检查另记。不是AAA等效、实车标定或全设备性能认证。",
+  "browser": "Codex in-app browser / WebGL 2 / 1375x960",
+  "checks": [
+    {
+      "name": "Local release",
+      "result": "实际加载03.2菜单；health返回3.2.0/PID51444；4个入口文件/清单的服务字节与磁盘一致。默认有限储气、正常白天、镜头适应开启。"
+    },
+    {
+      "name": "Independent diffuse and specular lighting",
+      "result": "11221个有效探针、768方向/探针的三事件SH照明实际载入。固定曝光0.90/白漆/同一城市初态下车尾涂装区域由约48变为95的显示亮度；为主GI与AO修正阶段的PNG局部比较，并非物理辐射标定。最终收紧AO范围另以街巷实驾验收。",
+      "screenshot": "qa/lighting-3.2-after-city-fixed.png",
+      "comparison": "qa/lighting-comparison.json"
+    },
+    {
+      "name": "G on the ground",
+      "result": "实际按G后armed=true、active=false，4轮承载，10喷口指令仍为零；车辆不因开启稳姿而自动起飞。"
+    },
+    {
+      "name": "G recovery and direct pair priority",
+      "result": "明确选择恒压试验台做长时间UI验收。空中按1约0.2s造成+30.598度俯仰，松开后自动用后轮对回正；之后pitch/roll/angularSpeed均归零，高度约4.127m、0轮接触。",
+      "disturbed": {
+        "time": 6.9,
+        "pitch": 30.598,
+        "height": 4.267,
+        "rearPairCommandEachN": 18004
+      },
+      "settled": {
+        "time": 29.708,
+        "pitch": 0,
+        "roll": 0,
+        "angularSpeed": 0,
+        "height": 4.127
+      },
+      "screenshot": "qa/stabilization-3.2.png"
+    },
+    {
+      "name": "G independent of H mode",
+      "result": "空中H切回drive，再按G关/开，DOM分别armed=false/active=false与true/true。重新接管后pitch/roll/角速度均为零、约3.945m定高。有限储气的5秒大角度恢复与实际气耗另由数值测试验证；UI恢复有限供气后返回城市。"
+    },
+    {
+      "name": "Menus and exposure",
+      "result": "G开关位于场景与实验菜单，HUD只显示状态。车辆画质菜单实际开关镜头明暗适应、切换高/极高画质、选择白漆。最终高预设街巷曝光约2.353，固定对照为0.90。"
+    },
+    {
+      "name": "Final driving and shaded body",
+      "result": "最终版本在街市实驾、Space停稳，四轮接触、零角速度/俯仰/滚转。阴影中白漆层次、局部高光与细化后的布篷/器皿/居民可见。",
+      "position": [
+        -200,
+        0.597,
+        -308.32
+      ],
+      "screenshot": "qa/city-3.2-shade.png"
+    },
+    {
+      "name": "Runtime logs",
+      "result": "11:37 UTC后的最终渲染修正/重载检查无新增warning/error。标签历史日志仍包含11:22时的旧版着色器警告；未将历史日志描述为空。",
+      "recentCount": 0
+    }
+  ],
+  "numericalAcceptanceChecks": 61,
+  "assetAudit": "qa/street-detail-validation.json",
+  "transportAudit": "qa/indirect-light-validation.json",
+  "finalRuntime": "qa/final-runtime-3.2.json",
+  "limits": [
+    "三事件静态实体包络间接光，未包含动态可见性矩、细部叶片/活动人物光传输、无限反弹或硬件光追。",
+    "阴影、薄墙漏光、反射捕获跳变与程序化资产仍可能可见；人物/建筑细节仍明显低于2077。",
+    "未作完整GPU性能基准、全路线持续驾驶或跨设备验证；瞬时FPS不作为性能承诺。",
+    "未复测音频主观听感、实物手柄/触控或Tesla实车。"
+  ],
+  "sourceSHA256": {
+    "dist/main.js": "81732ae9a58cc1b33d4d23ea0ddf7627f982273766d862ed38aebfc22da9203e",
+    "dist/physics.js": "e648353af2b0ddfee92d93af14ec57496fced7b169ff6413c3444e32abef2bd3",
+    "dist/city-environment.js": "b4081ce88633e9a0809793fd8f1e86de218db67ba1b3f9cf4c1ed5bbf2bc9b6e",
+    "dist/indirect-lighting.js": "03ed348dc85919cae4ebd05cea7f8625f9a40ee884e90343e29ea71b8a9ba9b4",
+    "dist/irradiance-math.js": "7b4719a94f07a5dc3141525add4db89750a3edb8b91c8b66a7b7812c97f8da4b",
+    "dist/vehicle.js": "659d25674f64fb6ca61c239f8413597c6ef2b5a7dccdda39c8c6f968c71ca70f",
+    "dist/street-life.js": "39ec75e4e7aadde06b51f9e214086aa52eda872ca6810e5dac91c880db159a7c",
+    "dist/index.html": "9dd00d1ad5c95ca7e64fb1277b39eecbd0c12f33c5fba51da141a0d8da8d9e2d",
+    "dist/telemetry.js": "7a5e63d86d5b02be9c1efa1cbdc293a489a6ac2a40024c6567d8c58b44baed33",
+    "dist/assets/irradiance/city.bin": "66cba9aa7f0b342689c75074c2207cb6c12d8842c5b02635ad0c04d5fd7fd63b",
+    "dist/assets/irradiance/lower-market.bin": "b76942823a8b2546948637b206c8a3372fa9086e8fc74249fc2ea9af8dbfe314"
+  }
+}

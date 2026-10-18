@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "date": "2026-10-18",
+  "scope": "人工浏览器功能与画面冒烟检查；不代表性能基准、全机型兼容或实车验证。",
+  "browser": "Codex in-app browser, WebGL 2, 1375 × 960 capture",
+  "checks": [
+    {"name":"Local launch and offline assets","result":"新版应用加载完成，HDR、车辆与场景正常显示；本机 health 返回 2.0.0。"},
+    {"name":"World-space cold gas","result":"恒压工况稳定悬停在 4.00 m，0 接触轮；观察到连续白色喷流及地面铺展，暂停后保存截图。方向、惯性继承、暂停和帧率约束另有数值检查。","screenshot":"qa/after-exhaust-clean.png"},
+    {"name":"Finite automatic roll sequence","result":"从 4 m、满气源初态启动滚转并持续记录；最终自动退出飞行动作、进入 drive、四轮承载，重心 0.605 m，剩余气体 31.752 kg。","observedAtSimSeconds":64.142,"sampleCount":1282,"screenshot":"qa/after-flight-telemetry.png"},
+    {"name":"Telemetry CSV","result":"停止记录并导出，界面确认 1282 行；下载触发成功。CSV 列与格式另经 Node 检查，未在外部表格软件打开此次下载文件。"},
+    {"name":"GLB export","result":"界面确认模型导出成功；修正旋转体法线和线段材质后复核，没有新增导出警告。未对下载的 GLB 运行独立 glTF validator。"},
+    {"name":"Ultra quality, night and cutaway","result":"极高画质、暮色照明与半透明结构视图正常显示。","screenshot":"qa/after-night-cutaway.png"},
+    {"name":"Ceiling attachment and release","result":"21.4 s 时倒置保持在 7.39 m，吸附约 39.4 kN、四轮承载；关闭吸附后降至 7.31 m，垂速 -0.82 m/s、0 轮承载。实际支撑箭头向下。持续顶面行驶另由物理验收覆盖。","screenshot":"qa/after-ceiling.png"},
+    {"name":"Parameter defaults","result":"点击恢复默认，DOM 滑块实际值为 8200 Pa / step 50 和 5800 N·s/m / step 100，与标签和默认参数一致。"},
+    {"name":"Source archive","result":"本地源码 ZIP 返回 HTTP 200、application/zip；打包脚本校验全部压缩条目 CRC。"},
+    {"name":"Clean view and final handoff","result":"M 隐藏/恢复仪表可用；最终恢复有限气源、地面试验就绪状态并保留浏览器标签。","screenshot":"qa/after-ground.png"}
+  ],
+  "console": "最终修复后检查日志，无 2026-10-18T08:39:00Z 之后的 warn/error；旧日志中的导出警告属于修复前运行。",
+  "notCovered": ["独显/集显和多浏览器帧率基准；后台标签会被节流，FPS 不能视作性能承诺。", "移动设备、实体手柄、声音设备的实机验收。", "全部参数包线、低气量任意特技和控制故障。", "实车标定、CFD、FEA、结构安全与认证。", "独立外部应用对下载 CSV/GLB 的格式验收。"]
+}

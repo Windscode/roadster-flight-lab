@@ -1,0 +1,264 @@
+{
+  "generatedAt": "2026-10-18T10:30:29.775Z",
+  "files": [
+    "qa/handling-before.json",
+    "qa/handling-load-ebd.json",
+    "qa/handling-front-bias.json",
+    "qa/handling-lateral-load-independent.json",
+    "qa/handling-dt-half.json",
+    "qa/handling-dt-double.json"
+  ],
+  "scope": "Controlled experiments on private source snapshots only; running physics.js/main.js are unchanged by this audit.",
+  "rootCause": "Equal per-wheel brake force combined with Fz-proportional lateral law and radial friction saturation creates severe brake-induced oversteer. Load transfer reduces rear normal loads. Under saturation small-slip effective cornering stiffness is approximately 4.8*(mu*Fz)^2/(brakeForce/4), so the lightly loaded rear axle loses lateral authority disproportionately. Tiny yaw/velocity/steer perturbations grow.",
+  "signs": "A vehicle facing +Z with +Y up has driver-right along -X. Current positive D/right mapping generates +X trajectory; tire/contact force signs internally oppose slip.",
+  "exclusions": [
+    "200 km/h yaw test remains four-wheel contact with zero hull or wheel-stop collisions.",
+    "Mirrored disturbances and 180 degree world rotations agree.",
+    "Halving timestep preserves severe oversteer, excluding a solely explicit-step stability defect.",
+    "Zero-perturbation tests remain straight, which explains why symmetric brake-only unit tests missed this failure."
+  ],
+  "recommendation": "Distribute total deliberate brake demand proportional to positive per-wheel normal loads, retaining low-speed velocity regularization and the combined-force friction bound. This is an EBD/traction-capacity approximation, not a resolved wheel-slip ABS implementation; do not claim actual Tesla calibration.",
+  "limitations": [
+    "No rotating tire inertia or pressure-modulated ABS dynamics.",
+    "Tire load sensitivity and temperature are not calibrated.",
+    "No active ESP differential braking is needed to eliminate the reproduced fault, nor has an ESP implementation been validated here."
+  ],
+  "comparisons": [
+    {
+      "label": "brake 100 full yaw",
+      "variants": {
+        "before": {
+          "yawDeg": 0.04739086983264122,
+          "yawRateDegS": 0.04342467897543936,
+          "pathM": 31.706225945234987,
+          "lateralM": 0.0018793276869554024,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "load-ebd": {
+          "yawDeg": 0.0006035059932990713,
+          "yawRateDegS": 0.0006255759734148824,
+          "pathM": 30.98269238192775,
+          "lateralM": 0.00015841619004084738,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "front-bias": {
+          "yawDeg": 0.0005727031428064762,
+          "yawRateDegS": 0.0009427450577895354,
+          "pathM": 31.1094289866688,
+          "lateralM": 0.00013144790017311663,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "lateral-load-independent": {
+          "yawDeg": 0.0032373421001925993,
+          "yawRateDegS": 0.002520747121968417,
+          "pathM": 31.706225617623822,
+          "lateralM": 0.00030176975597014425,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "dt-half": {
+          "yawDeg": 0.04344642934392021,
+          "yawRateDegS": 0.03892785015211397,
+          "pathM": 31.695029180084163,
+          "lateralM": 0.0018017116665369473,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "dt-double": {
+          "yawDeg": 0.06953451110814218,
+          "yawRateDegS": 0.07588245590703603,
+          "pathM": 31.792841901141433,
+          "lateralM": 0.0022151196218480893,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        }
+      }
+    },
+    {
+      "label": "brake 200 full yaw",
+      "variants": {
+        "before": {
+          "yawDeg": 45.2068194260177,
+          "yawRateDegS": 43.203136022637494,
+          "pathM": 124.0183474484453,
+          "lateralM": 1.427327781447308,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "load-ebd": {
+          "yawDeg": 0.0006654894355009618,
+          "yawRateDegS": 0.0006610016521384948,
+          "pathM": 121.43185976461223,
+          "lateralM": 0.0006569419029865708,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "front-bias": {
+          "yawDeg": 0.0005727004219466628,
+          "yawRateDegS": 0.0010239914351033222,
+          "pathM": 121.6774364253153,
+          "lateralM": 0.00037237713878844863,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "lateral-load-independent": {
+          "yawDeg": 0.011169548031996665,
+          "yawRateDegS": 0.006561217538648915,
+          "pathM": 122.98983057823729,
+          "lateralM": 0.004231753134807307,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "dt-half": {
+          "yawDeg": 36.97280448258524,
+          "yawRateDegS": 35.312736920148296,
+          "pathM": 123.8602907148601,
+          "lateralM": 1.2215751312917247,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "dt-double": {
+          "yawDeg": 64.74359074805596,
+          "yawRateDegS": 60.87496507248061,
+          "pathM": 124.46290416581887,
+          "lateralM": 1.8595114190297097,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        }
+      }
+    },
+    {
+      "label": "brake 300 full yaw",
+      "variants": {
+        "before": {
+          "yawDeg": 162.51651557145698,
+          "yawRateDegS": 111.71093787318095,
+          "pathM": 275.39269698020786,
+          "lateralM": 4.799117346823774,
+          "minimumContacts": 3,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 4
+        },
+        "load-ebd": {
+          "yawDeg": 0.0007253970397497856,
+          "yawRateDegS": 0.0007073390353483356,
+          "pathM": 264.8285865221801,
+          "lateralM": 0.0015254974082040814,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "front-bias": {
+          "yawDeg": 0.0005726995020266253,
+          "yawRateDegS": 0.0010499869598884933,
+          "pathM": 265.17725695606384,
+          "lateralM": 0.0005455257213191977,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "lateral-load-independent": {
+          "yawDeg": 0.021383175399173747,
+          "yawRateDegS": 0.00971847378455894,
+          "pathM": 267.22933220400324,
+          "lateralM": 0.018978342444764075,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "dt-half": {
+          "yawDeg": 162.3308955997286,
+          "yawRateDegS": 111.4149445991817,
+          "pathM": 275.2486282586462,
+          "lateralM": 4.764606881773008,
+          "minimumContacts": 3,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 6
+        },
+        "dt-double": {
+          "yawDeg": 163.56413615932863,
+          "yawRateDegS": 114.5954338879607,
+          "pathM": 276.26058985974834,
+          "lateralM": 4.813405357482287,
+          "minimumContacts": 3,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 17
+        }
+      }
+    },
+    {
+      "label": "brake 200 held steer 0.002",
+      "variants": {
+        "before": {
+          "yawDeg": 159.46335617772024,
+          "yawRateDegS": 107.03827147553083,
+          "pathM": 127.0787483121525,
+          "lateralM": 3.90304801949557,
+          "minimumContacts": 3,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 8
+        },
+        "load-ebd": {
+          "yawDeg": 0.5921274393437732,
+          "yawRateDegS": 0.1973036599659991,
+          "pathM": 121.43272821522338,
+          "lateralM": 0.19717921395372986,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "front-bias": {
+          "yawDeg": 0.4862069855418773,
+          "yawRateDegS": 0.15387868649731795,
+          "pathM": 121.67810344090262,
+          "lateralM": 0.1767184274310711,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "lateral-load-independent": {
+          "yawDeg": 2.9740505783694067,
+          "yawRateDegS": 1.5284798487804099,
+          "pathM": 123.22919660970746,
+          "lateralM": 0.38982962291113216,
+          "minimumContacts": 4,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 0
+        },
+        "dt-half": {
+          "yawDeg": 158.6935809031082,
+          "yawRateDegS": 106.27961151649195,
+          "pathM": 127.00256192501479,
+          "lateralM": 3.9110695105481246,
+          "minimumContacts": 3,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 9
+        },
+        "dt-double": {
+          "yawDeg": 159.66520479587538,
+          "yawRateDegS": 106.98476317026089,
+          "pathM": 127.23807729081192,
+          "lateralM": 3.840279637360924,
+          "minimumContacts": 3,
+          "hullContactSteps": 0,
+          "wheelStopContactSteps": 6
+        }
+      }
+    }
+  ]
+}

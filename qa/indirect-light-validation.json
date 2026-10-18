@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "checks": [
+    "Isotropic radiance integrates to pi times radiance on six normals without double cosine convolution",
+    "Directional SH evaluation agrees with the independent Three.js irradiance implementation across 64 normals",
+    "Every stored probe has finite coefficients, consistent validity, exact dimensions and a verified content hash",
+    "Four city locations retain nonnegative bounce energy and agree with a 1536-ray transport reference within the documented spot-check tolerance",
+    "Contact AO affects only indirect diffuse; spatial probe samples use explicit LOD in divergent geometry branches",
+    "Camera adaptation responds to spatial shade and sun visibility, stays bounded and has an unloaded fixed-exposure fallback"
+  ],
+  "validProbes": 11913,
+  "totalProbes": 14202,
+  "bounces": 3,
+  "samplesPerProbe": 768,
+  "limits": [
+    "Static shared solid envelopes and average diffuse reflectances; fine facade, foliage and animated people are not path-traced.",
+    "Three surface events; not an unlimited-bounce solution, hardware ray tracing or DDGI.",
+    "Invalid solid probes are rejected; finite probe spacing may leak or blur lighting near thin geometry.",
+    "Specular reflections remain rasterized local probes; transparent transport and participating media are excluded."
+  ]
+}

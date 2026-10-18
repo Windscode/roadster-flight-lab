@@ -1,0 +1,159 @@
+{
+  "status": "passed",
+  "asOf": "2026-10-18T13:08:28.226Z",
+  "model": "Roadster photograph reconstruction v4",
+  "geometry": {
+    "meshes": 157,
+    "vertices": 145976
+  },
+  "sweep": {
+    "samples": 1774080,
+    "lengthRangeM": [
+      0.24,
+      0.41
+    ],
+    "frontSteerRangeRad": [
+      -0.49,
+      0.49
+    ],
+    "tyreRadiusM": 0.372,
+    "minimumArchLinerMarginM": 0.017689963530136996,
+    "minimumRoofMarginM": 0.017206905838350772,
+    "minimumInnerWallMarginM": 0.07619499326628021,
+    "minimumLiftDuctMarginM": 0.0709447795558538
+  },
+  "pressureChamber": {
+    "concept": "independent pressure chamber reconstruction, not a published Tesla underbody drawing",
+    "projectedAreaM2": 5.0812,
+    "effectiveSimulationAreaM2": 4.8,
+    "roofY": -0.299,
+    "sealNominalExtendedY": -0.581,
+    "sealExtendedY": -0.766,
+    "wheelAndJetDuctsIsolated": true,
+    "perimeterXZ": [
+      [
+        0.67,
+        -2.04
+      ],
+      [
+        0.7,
+        -1.94
+      ],
+      [
+        0.5,
+        -1.83
+      ],
+      [
+        0.5,
+        -1.03
+      ],
+      [
+        0.73,
+        -0.89
+      ],
+      [
+        0.73,
+        0.89
+      ],
+      [
+        0.5,
+        1.03
+      ],
+      [
+        0.5,
+        1.83
+      ],
+      [
+        0.7,
+        1.94
+      ],
+      [
+        0.67,
+        2.04
+      ],
+      [
+        -0.67,
+        2.04
+      ],
+      [
+        -0.7,
+        1.94
+      ],
+      [
+        -0.5,
+        1.83
+      ],
+      [
+        -0.5,
+        1.03
+      ],
+      [
+        -0.73,
+        0.89
+      ],
+      [
+        -0.73,
+        -0.89
+      ],
+      [
+        -0.5,
+        -1.03
+      ],
+      [
+        -0.5,
+        -1.83
+      ],
+      [
+        -0.7,
+        -1.94
+      ],
+      [
+        -0.67,
+        -2.04
+      ]
+    ],
+    "sealMaximumExtension": 0.44
+  },
+  "tests": [
+    {
+      "test": "Every authored position and normal is finite; nonzero normals are unit length",
+      "status": "PASS",
+      "ms": 11
+    },
+    {
+      "test": "Full suspension travel is represented directly, without shrinking or visually clamping tyres",
+      "status": "PASS",
+      "ms": 13
+    },
+    {
+      "test": "Whole tyre sweep clears arch, roof, inner wheelhouse and isolated thrust duct",
+      "status": "PASS",
+      "ms": 610
+    },
+    {
+      "test": "Continuous pressure chamber has an airtight roof, isolated wheel/jet cutouts and surface-following seal",
+      "status": "PASS",
+      "ms": 11
+    },
+    {
+      "test": "Cabin glazing, body aperture, individual LED lenses and suspension articulation exist",
+      "status": "PASS",
+      "ms": 0
+    },
+    {
+      "test": "Pressed door has interior surface samples and each lamp is an actual opening in paint",
+      "status": "PASS",
+      "ms": 23
+    },
+    {
+      "test": "All 20 physical seal segments and interpolation correction survive exterior rebuilding",
+      "status": "PASS",
+      "ms": 1
+    }
+  ],
+  "limitations": [
+    "A sampled geometric clearance test, not a tolerance stack-up or deformable tyre contact analysis.",
+    "Suspension links and pressure chamber are independently authored layouts, not OEM CAD or measured suspension kinematics.",
+    "Full tyre travel envelope is guaranteed only for the stated suspension and steering range."
+  ]
+}

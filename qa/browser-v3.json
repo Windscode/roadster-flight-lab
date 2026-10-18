@@ -1,0 +1,22 @@
+{
+  "status":"passed",
+  "version":"3.0.0",
+  "date":"2026-10-18",
+  "scope":"人工浏览器功能与画面检查；数值一致性另见43项验收，不等于实车标定、设备性能基准或AAA质量认证。v2历史记录另存browser-v2.json。",
+  "browser":"Codex in-app browser / WebGL 2; city capture 1375x960; workshop capture 1280x720",
+  "checks":[
+    {"name":"Local launch","result":"本地health实际返回3.0.0，运行依赖和HDR/贴图本地加载完成。"},
+    {"name":"Game menus","result":"默认暂停菜单；自由探索/实验/参数/画质分组可用，关闭设置返回菜单，再继续驾驶。驾驶仅保留必要仪表。"},
+    {"name":"Drive and brake","result":"从下城初态沿街行驶、穿过人行桥下并制动停稳；最终x=-200、z=-305.74、重心0.597m、4轮接触、0km/h，切换四种视角可用。"},
+    {"name":"Authored districts and elevated streets","result":"实际进入下城、8m上城和14m高架，观察到实体店面/桥梁/道路护栏和坡道。95段路面高度另有数值验收。","screenshot":"qa/city-final-highway-day.png"},
+    {"name":"Night materials and reflections","result":"观察到路灯对墙面/路面的局部照明、车漆连续高光、窗面环境反射和局部湿斑内的街景倒影。修正CSM注入后的材质缓存键，复核长路面不再整片无响应发黑。","screenshot":"qa/city-final-night.png"},
+    {"name":"Quality and daylight","result":"实际切换高/极高/流畅与昼夜。最终保留极高、夜间、有限气源，当前道路场景已停稳，可继续驾驶。SSAO深度阈值改为实际米制区间的归一化值，投影矩阵逐帧同步。"},
+    {"name":"Vehicle front and side","result":"实际复核前侧/正侧，窗尾斜向收口、完整门缝、凹入灯组、五组银色轮辐可读。","screenshots":["qa/vehicle-final-front.png","qa/vehicle-final-side.png"]},
+    {"name":"Full compression and steering","result":"工坊悬架Home到0.240m、转向End到28.1度，观察轮胎在轮拱内无可见穿透；1774080个表面采样另有几何验收。","screenshot":"qa/vehicle-final-compressed.png"},
+    {"name":"Underbody and seal","result":"实际查看底盘、展开连续密封裙；可见封闭腔顶/加强筋、隔离轮舱及喷口。该结构明确为工程重建。","screenshot":"qa/vehicle-final-underbody.png"},
+    {"name":"Cold-gas hover","result":"显式恒压试验台悬停，5.883s时重心4.009m、0轮承载、894个雾片；看见4路向下窄喷流和近地铺展。雾流由实际推力驱动，灯光散射为视觉近似。随后恢复有限储气。","screenshot":"qa/exhaust-final-day.png"},
+    {"name":"GLB export","result":"新车辆模型导出触发，界面确认成功；最终浏览器无warn/error。未对下载文件运行独立glTF validator。"}
+  ],
+  "console":"最终材质缓存/阴影修复后读取warn/error列表为空。此前画质切换时工具一度等待超时，重新读取UI确认实际切换成功；未忽略图形错误。",
+  "notCovered":["硬件光追、完整GI或AAA成品质量。","多显卡/多浏览器/移动端/实体手柄的性能和兼容性基准。","新菜单下的CSV外部软件打开；CSV格式和20Hz采样已数值验证，旧版端到端检查另存历史记录。","全部城市道路和任意参数组合的连续驾驶/特技包线。","实车数据标定、OEM悬架运动学、轮胎热/ABS、水膜、CFD、FEA和结构安全。"]
+}

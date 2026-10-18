@@ -1,0 +1,97 @@
+{
+  "status": "passed",
+  "date": "2026-10-18",
+  "checks": [
+    {
+      "name": "finite geometry, instancing and bounded draw/triangle budgets",
+      "count": 217474,
+      "status": "passed"
+    },
+    {
+      "name": "all storey-aligned solid tiers remain in original parcels and join vertically",
+      "count": 660,
+      "status": "passed"
+    },
+    {
+      "name": "independent rays contact exposed terrace tops at their visible height",
+      "count": 303,
+      "status": "passed"
+    },
+    {
+      "name": "horizontal street rays reach actual recessed facades without old full-box collisions",
+      "count": 24,
+      "status": "passed"
+    },
+    {
+      "name": "generic parcel pavements do not overlap authored lower-city strips",
+      "count": 16,
+      "status": "passed"
+    },
+    {
+      "name": "street props preserve a 10 m lower-city vehicle corridor",
+      "count": 26,
+      "status": "passed"
+    }
+  ],
+  "geometry": {
+    "buildings": 132,
+    "physicalBuildingTiers": 660,
+    "cityColliders": 1555,
+    "streetColliders": 114
+  },
+  "architecture": {
+    "buildings": 132,
+    "heroBuildings": 39,
+    "shopfronts": 3280,
+    "recessedWindows": 17684,
+    "balconies": 901,
+    "mechanicalUnits": 1009,
+    "instances": 196131,
+    "drawBatches": 188,
+    "triangles": 2308216,
+    "textureCount": 0,
+    "sectorSizeM": 300,
+    "sectorCount": 16,
+    "lightAnchors": 171,
+    "massingTiers": 660,
+    "setbackTerraces": 396,
+    "structuralBraces": 264,
+    "rotatedTowers": 27,
+    "geometryMiB": 17.21
+  },
+  "streetLife": {
+    "marketSections": 10,
+    "stalls": 20,
+    "cafes": 6,
+    "repairShops": 3,
+    "flowerStalls": 4,
+    "produceStalls": 2,
+    "bookStalls": 3,
+    "foodStalls": 2,
+    "pedestrians": 14,
+    "bicycles": 4,
+    "benches": 8,
+    "goods": 473,
+    "trees": 8,
+    "instances": 21343,
+    "drawBatches": 160,
+    "triangles": 297180,
+    "collisionProxies": 114,
+    "originalAtlases": 0,
+    "sectorSizeM": 300,
+    "animals": 0,
+    "animalTriangles": 0,
+    "animatedAnimals": 0,
+    "animalAssetErrors": []
+  },
+  "characters": {
+    "planned": 2,
+    "browserEvidence": "qa/city-3.3-browser-assets.json",
+    "source": "dist/assets/characters/manifest.json"
+  },
+  "limits": [
+    "Facade microdetails and thin railings use conservative solid building envelopes, not room-scale interiors.",
+    "Static rays validate authored contact geometry, not unrestricted pedestrian pathfinding.",
+    "Full scene GI must be rebaked after the changed massing."
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "status": "passed",
+  "version": "3.1.0",
+  "date": "2026-10-18T11:02:37.357730+00:00",
+  "scope": "实际浏览器功能/画面检查；49项数值与几何验收另记。非Tesla标定、听感标定或AAA质量认证。",
+  "browser": "Codex in-app browser / WebGL 2 / 1375x960",
+  "checks": [
+    {
+      "name": "Local release and menu",
+      "result": "health实际返回3.1.0/PID39180。默认正常日间、暂停菜单；六个城市目的地均在菜单中。实际开关画质/参数/实验面板并返回驾驶。"
+    },
+    {
+      "name": "Driver-right steering and braking",
+      "result": "W后W+D，车向局部-X真实右转；城市实测x=-201.21,z=-331.80,heading337.821°，随后Space停稳，4轮接触。小地图按同一方位修正。最新SMAA版本另实驾直行制动，x=-200,z=-338.17，4轮停稳。",
+      "screenshot": "qa/city-3.1-day.png"
+    },
+    {
+      "name": "Direct front jets",
+      "result": "实际按1，在0.10x慢动作下前轮喷气，0.217s时pitch+7.177°、2轮接触、gas240.640kg、225雾片，松开后指令归零。选口/真实力矩/气耗/限压另有数值验收。",
+      "screenshot": "qa/jets-3.1-front.png"
+    },
+    {
+      "name": "Direct rear jets",
+      "result": "实际按2，同类工况0.217s时pitch-7.962°、2轮接触、gas240.134kg、235雾片；观察到相反俯仰与后方近地雾流。",
+      "screenshot": "qa/jets-3.1-rear.png"
+    },
+    {
+      "name": "Audio controls",
+      "result": "菜单启用声音后AudioContext为running，默认25%；Home调至0%时DOM状态volume=0，PageUp调至20%，关闭有效。暂停持续静音。负载/速度/回收/路噪分离有纯模型验收。未作实车录音或主观听感对照。"
+    },
+    {
+      "name": "Daylight and AA",
+      "result": "实拍正午天空、默认日间。扫描沥青/法线/粗糙度、CSM、接触AO、局部车反射可见；最终使用线性域SMAA，复核成功启动与实际驾驶。干路无全地面镜面反射。"
+    },
+    {
+      "name": "Botanical destination",
+      "result": "正常速率驶入并制动。x=-403.85,z=181.05,height.597m,4轮接触，曲面温室/树冠桥/扫描植被可见；园区增加草地基底、环路与城市共用扫描沥青。",
+      "screenshot": "qa/city-3.1-garden.png"
+    },
+    {
+      "name": "Waterfront destination",
+      "result": "安全平地出生，经真实坡道驶至x=-430,z=-465.31,height2.081m,4轮接触，无复位；观察坡道护栏、码头、水域、吊机与遮阳帆。完整上坡至码头并制动另有数值回归。",
+      "screenshot": "qa/city-3.1-waterfront.png"
+    },
+    {
+      "name": "Public art destination",
+      "result": "驶入广场、制动并自由观察，x=-52,z=174.14,height.597m,4轮接触；双螺旋雕塑、水池、咖啡伞座、树阵和凉棚可见。",
+      "screenshot": "qa/city-3.1-sculpture.png"
+    },
+    {
+      "name": "Quality settings",
+      "result": "实际选择高、极高与流畅，控件状态正确；最终恢复高、声音关闭/25%、有限气源、正常1x速率。"
+    }
+  ],
+  "console": {
+    "runtimeErrors": 0,
+    "historicalWarning": {
+      "timestamp": "2026-10-18T10:48:49.301Z",
+      "source": "previous FXAA shader / ANGLE compiler",
+      "message": "Derivative-in-loop and f_ApplyFXAA initialization warnings. Final pipeline has been changed to SMAA; logs persist across reloads, no new warning/error observed after that change."
+    }
+  },
+  "finalState": {
+    "scenario": "city",
+    "paused": true,
+    "menu": true,
+    "quality": "high",
+    "timeScale": 1,
+    "day": "normal midday",
+    "soundEnabled": false,
+    "soundVolume": 0.25
+  },
+  "notCovered": [
+    "真实车辆轮胎/制动/电机声压/喷管/控制器标定。",
+    "原生AAA画质、硬件光追/完整GI、跨显卡性能基准。",
+    "实体手柄、移动端触控的端到端实机验收（统一轴映射有数值测试）。",
+    "完整行人导航、交通AI、可进入建筑、车辆浮力与涉水。",
+    "所有道路/任意参数/任意特技包线；全轮ABS和轮胎热/磨损。"
+  ],
+  "sourceSHA256": {
+    "dist\\main.js": "0cb9f7e94e6ae08a9f5fcadca12b193ccb41a189545183678d1f2dd45d81797a",
+    "dist\\physics.js": "92d12c71c5fc3c67b298c37bf62801ca678583c54150822a41db92b84bd04389",
+    "dist\\controls.js": "2707db9b0317018588634580a351a51e4c427780075f7739fd181858f919201f",
+    "dist\\audio.js": "80b39ba94e8b7ff56dc526229188b7927e8b53b68894e52ad32818257d689141",
+    "dist\\telemetry.js": "e0f68d1c7abd5cf9fa2e258204833b063e735e54a4cf1e9b7f0b906bb4b19dbb",
+    "dist\\static-city-broadphase.js": "070f04470708b76a11d84cb5c353e86e229326ed9568f3b8a348115d8cacaa47",
+    "dist\\city-data.js": "397cb929dfe97e9b8056cfa0b6de29a452ae44ed20234d5d306133d59cf9e4fb",
+    "dist\\city-environment.js": "3c4f2c8654cf055e328ac4f6e49a20c652d6a47c09375be464fd691968e57ae4",
+    "dist\\city-landmarks.js": "e58dced2693f2895296c851cf21f283af1827d22ccc113765fbd13312bbc1bcb",
+    "dist\\street-life.js": "d07fd57792f93c041ee330ccb67f07c0b434e06639dcadc7811a5d489d51e119"
+  }
+}

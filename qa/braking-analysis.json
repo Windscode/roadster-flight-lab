@@ -1,0 +1,6037 @@
+{
+  "generatedAt": "2026-10-18T08:51:28.378Z",
+  "physicsSha256": "91c05e2b6fee7af9b7d10320d10bf48b099669eff8b90024f735491157934335",
+  "scope": "Internal reduced-order model only. These are engineering assumptions and numerical experiments, not measured Tesla Roadster specifications.",
+  "protocol": "120 Hz; level floor; x=0,z=-80; settle 3 s; set initial forward speed; no steering, suction, jets, collisions, or reset. Stop threshold <=0.1 m/s, followed by >=1 s of four-wheel hold <=0.15 m/s. Body collision invalidates a brake stop. The averageDecelerationUntilStop field excludes the 1 s hold; observation averages include it.",
+  "model": {
+    "tireMu": 1.25,
+    "brakeForceN": 42000,
+    "motorForceN": 24000,
+    "regenForceN": 2600,
+    "regenPowerW": 60000,
+    "springRatePerWheelNpm": 65000,
+    "damperPerWheelNspm": 5800,
+    "restLengthM": 0.37,
+    "legacyVisualOnlyCompressionClamp08": true,
+    "droopLengthM": 0.41,
+    "wheelRadiusM": 0.37
+  },
+  "findings": {
+    "friction": "Each ray wheel load is max(0,k*(rest-length)-c*v_normal)/alignment; each contact has capacity mu*normalLoad. Combined longitudinal and lateral force is radially saturated to that friction circle. Tire force is applied at the ray hit point, so actual pitch and load transfer arise in the rigid body.",
+    "braking": "Explicit brake requests +/- brakeForce/contactCount per wheel, regularized as -v_long*(mass/contactCount)*28 near zero. It is not brake disc torque, wheel inertia, a slip-ratio tire curve, or a physical ABS implementation.",
+    "acceleratorRelease": "With no brake and no accelerator, regeneration is bounded by min(2600 N,60000 W/speed); aerodynamic drag and body damping add a small deceleration. At 100 km/h this means approximately 2160 N of regenerative force, not 42000 N of brake demand.",
+    "brakeThrottleConflict": "In the measured legacy model, throttle adds motor force during explicit braking. At high speed braking authority is reduced; near zero motor force and the velocity regularization reach a nonzero creep equilibrium. Brake priority should suppress drive torque and booster demand when braking deliberately.",
+    "suspension": "The legacy displayed wheel length is clamped at 0.08 m but the force law uses the unbounded geometric length. This can hide an already overcompressed physical state. A compressed-wheel collision envelope and progressive bump stop should enforce the same geometry used by the visible wheel and wheel arch.",
+    "assumptions": "mu=1.25 is an assumed high-grip dry tire/road value, not Tesla calibration. Treat 0.85 and wet-road values as sensitivity cases. Raising mu to hide input conflicts would be physically misleading.",
+    "limitations": [
+      "Single-ray wheels do not model tire width, finite contact patches or sidewall/curb impacts.",
+      "Wheel angular speed is visual kinematics; rotational wheel inertia, ABS pressure cycling, tire relaxation and load sensitivity are absent.",
+      "No official Roadster braking/adhesion calibration is inferred from these tests.",
+      "No driver reaction time is included; these are pure brake-application distances."
+    ]
+  },
+  "experiments": [
+    {
+      "label": "100 km/h, full gas, explicit brake",
+      "input": {
+        "speedKmh": 100,
+        "gas": "full",
+        "throttle": 0,
+        "brake": 1,
+        "tireMu": 1.25
+      },
+      "valid": true,
+      "massKg": 2199.5582002848946,
+      "initialPressureBar": 350,
+      "initialHeightM": 0.5970089755245234,
+      "initialSuspensionM": [
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731
+      ],
+      "idealFrictionLimitMps2": 12.262500000000001,
+      "idealFrictionStoppingDistanceM": 31.461975056946173,
+      "stop": {
+        "seconds": 2.27500000000006,
+        "distanceM": 31.188854013243784,
+        "speedKmh": 0.25387042693947526
+      },
+      "stopStable": true,
+      "observedDurationS": 3.2750000000001096,
+      "finalSpeedKmh": -0.0010100465716818084,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.5970103468017554,
+        "z": -48.82679052847518
+      },
+      "averageDecelerationUntilStopMps2": 12.179014599884969,
+      "speedReductionMps": 27.778058346269912,
+      "averageDecelerationMps2": 8.481849876723354,
+      "maximumDecelerationMps2": 12.539038239660982,
+      "bodyContactSteps": 0,
+      "wheelBumpStopContactSteps": 0,
+      "minimumWheelContacts": 4,
+      "notFourWheelSteps": 0,
+      "minimumSuspensionM": 0.2383402979657826,
+      "maximumSuspensionM": 0.3355147371044481,
+      "maximumPitchDeg": 1.959688013679944,
+      "averageNormalLoadN": 21583.39472615841,
+      "averageLongitudinalTireBrakingN": 18508.3558426832,
+      "records": [
+        {
+          "seconds": 0.008,
+          "speedKmh": 99.625,
+          "distanceM": 0.231,
+          "heightM": 0.597,
+          "pitchDeg": -0.009,
+          "normalLoadsN": [
+            5394.4,
+            5394.4,
+            5394.4,
+            5394.4
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": -26972.1
+        },
+        {
+          "seconds": 0.108,
+          "speedKmh": 95.119,
+          "distanceM": 2.93,
+          "heightM": 0.597,
+          "pitchDeg": -0.924,
+          "normalLoadsN": [
+            8405.1,
+            8405.1,
+            2367.2,
+            2367.2
+          ],
+          "suspensionM": [
+            0.2666,
+            0.2666,
+            0.3075,
+            0.3075
+          ],
+          "longitudinalTireForceN": -26918
+        },
+        {
+          "seconds": 0.208,
+          "speedKmh": 90.797,
+          "distanceM": 5.508,
+          "heightM": 0.5968,
+          "pitchDeg": -1.78,
+          "normalLoadsN": [
+            8972.8,
+            8972.8,
+            1821.9,
+            1821.9
+          ],
+          "suspensionM": [
+            0.244,
+            0.244,
+            0.3302,
+            0.3302
+          ],
+          "longitudinalTireForceN": -25554.8
+        },
+        {
+          "seconds": 0.308,
+          "speedKmh": 86.443,
+          "distanceM": 7.966,
+          "heightM": 0.5966,
+          "pitchDeg": -1.958,
+          "normalLoadsN": [
+            8563.5,
+            8563.5,
+            2260.7,
+            2260.7
+          ],
+          "suspensionM": [
+            0.2383,
+            0.2383,
+            0.3355,
+            0.3355
+          ],
+          "longitudinalTireForceN": -26651.8
+        },
+        {
+          "seconds": 0.408,
+          "speedKmh": 81.968,
+          "distanceM": 10.302,
+          "heightM": 0.5965,
+          "pitchDeg": -1.873,
+          "normalLoadsN": [
+            8295.1,
+            8295.1,
+            2518.6,
+            2518.6
+          ],
+          "suspensionM": [
+            0.2402,
+            0.2402,
+            0.3335,
+            0.3335
+          ],
+          "longitudinalTireForceN": -27034.4
+        },
+        {
+          "seconds": 0.508,
+          "speedKmh": 77.493,
+          "distanceM": 12.512,
+          "heightM": 0.5966,
+          "pitchDeg": -1.799,
+          "normalLoadsN": [
+            8235.4,
+            8235.4,
+            2560.6,
+            2560.6
+          ],
+          "suspensionM": [
+            0.2422,
+            0.2422,
+            0.3316,
+            0.3316
+          ],
+          "longitudinalTireForceN": -26990.1
+        },
+        {
+          "seconds": 0.608,
+          "speedKmh": 73.024,
+          "distanceM": 14.599,
+          "heightM": 0.5967,
+          "pitchDeg": -1.782,
+          "normalLoadsN": [
+            8267.8,
+            8267.8,
+            2521.7,
+            2521.7
+          ],
+          "suspensionM": [
+            0.2428,
+            0.2428,
+            0.3312,
+            0.3312
+          ],
+          "longitudinalTireForceN": -26973.7
+        },
+        {
+          "seconds": 0.708,
+          "speedKmh": 68.56,
+          "distanceM": 16.561,
+          "heightM": 0.5967,
+          "pitchDeg": -1.792,
+          "normalLoadsN": [
+            8301,
+            8301,
+            2490.7,
+            2490.7
+          ],
+          "suspensionM": [
+            0.2426,
+            0.2426,
+            0.3314,
+            0.3314
+          ],
+          "longitudinalTireForceN": -26979.1
+        },
+        {
+          "seconds": 0.808,
+          "speedKmh": 64.098,
+          "distanceM": 18.399,
+          "heightM": 0.5967,
+          "pitchDeg": -1.802,
+          "normalLoadsN": [
+            8310.8,
+            8310.8,
+            2484,
+            2484
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26987
+        },
+        {
+          "seconds": 0.908,
+          "speedKmh": 59.641,
+          "distanceM": 20.113,
+          "heightM": 0.5967,
+          "pitchDeg": -1.804,
+          "normalLoadsN": [
+            8307.2,
+            8307.2,
+            2488.2,
+            2488.2
+          ],
+          "suspensionM": [
+            0.2423,
+            0.2423,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26988.6
+        },
+        {
+          "seconds": 1.008,
+          "speedKmh": 55.188,
+          "distanceM": 21.704,
+          "heightM": 0.5967,
+          "pitchDeg": -1.803,
+          "normalLoadsN": [
+            8302.2,
+            8302.2,
+            2491.9,
+            2491.9
+          ],
+          "suspensionM": [
+            0.2423,
+            0.2423,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26985.4
+        },
+        {
+          "seconds": 1.108,
+          "speedKmh": 50.74,
+          "distanceM": 23.171,
+          "heightM": 0.5967,
+          "pitchDeg": -1.802,
+          "normalLoadsN": [
+            8299.8,
+            8299.8,
+            2492.8,
+            2492.8
+          ],
+          "suspensionM": [
+            0.2423,
+            0.2423,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26981.5
+        },
+        {
+          "seconds": 1.208,
+          "speedKmh": 46.296,
+          "distanceM": 24.514,
+          "heightM": 0.5967,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8299.4,
+            8299.4,
+            2492.2,
+            2492.2
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26979
+        },
+        {
+          "seconds": 1.308,
+          "speedKmh": 41.857,
+          "distanceM": 25.734,
+          "heightM": 0.5967,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8299.5,
+            8299.5,
+            2491.6,
+            2491.6
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26977.8
+        },
+        {
+          "seconds": 1.408,
+          "speedKmh": 37.42,
+          "distanceM": 26.83,
+          "heightM": 0.5967,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8299.5,
+            8299.5,
+            2491.3,
+            2491.3
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26977
+        },
+        {
+          "seconds": 1.508,
+          "speedKmh": 32.987,
+          "distanceM": 27.803,
+          "heightM": 0.5967,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8299.3,
+            8299.3,
+            2491.2,
+            2491.2
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26976
+        },
+        {
+          "seconds": 1.608,
+          "speedKmh": 28.558,
+          "distanceM": 28.653,
+          "heightM": 0.5967,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8298.9,
+            8298.9,
+            2491.1,
+            2491.1
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26975.1
+        },
+        {
+          "seconds": 1.708,
+          "speedKmh": 24.131,
+          "distanceM": 29.38,
+          "heightM": 0.5967,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8298.6,
+            8298.6,
+            2491.1,
+            2491.1
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26974.1
+        },
+        {
+          "seconds": 1.808,
+          "speedKmh": 19.708,
+          "distanceM": 29.984,
+          "heightM": 0.5967,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8298.4,
+            8298.4,
+            2491,
+            2491
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26973.4
+        },
+        {
+          "seconds": 1.908,
+          "speedKmh": 15.287,
+          "distanceM": 30.466,
+          "heightM": 0.5968,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8298.2,
+            8298.2,
+            2490.9,
+            2490.9
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26972.8
+        },
+        {
+          "seconds": 2.008,
+          "speedKmh": 10.868,
+          "distanceM": 30.824,
+          "heightM": 0.5968,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8298.1,
+            8298.1,
+            2490.9,
+            2490.9
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26972.4
+        },
+        {
+          "seconds": 2.108,
+          "speedKmh": 6.452,
+          "distanceM": 31.059,
+          "heightM": 0.5968,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8298,
+            8298,
+            2490.8,
+            2490.8
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26972.1
+        },
+        {
+          "seconds": 2.208,
+          "speedKmh": 2.04,
+          "distanceM": 31.172,
+          "heightM": 0.5968,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8298,
+            8298,
+            2490.8,
+            2490.8
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26813.3
+        },
+        {
+          "seconds": 2.308,
+          "speedKmh": -0.071,
+          "distanceM": 31.189,
+          "heightM": 0.5968,
+          "pitchDeg": -1.442,
+          "normalLoadsN": [
+            6771.5,
+            6771.5,
+            4037.9,
+            4037.9
+          ],
+          "suspensionM": [
+            0.2497,
+            0.2497,
+            0.3243,
+            0.3243
+          ],
+          "longitudinalTireForceN": -4581.2
+        },
+        {
+          "seconds": 2.408,
+          "speedKmh": -0.342,
+          "distanceM": 31.182,
+          "heightM": 0.597,
+          "pitchDeg": -0.509,
+          "normalLoadsN": [
+            5023.6,
+            5023.6,
+            5760.1,
+            5760.1
+          ],
+          "suspensionM": [
+            0.2725,
+            0.2725,
+            0.3014,
+            0.3014
+          ],
+          "longitudinalTireForceN": 6.2
+        },
+        {
+          "seconds": 2.508,
+          "speedKmh": -0.203,
+          "distanceM": 31.174,
+          "heightM": 0.5971,
+          "pitchDeg": 0.116,
+          "normalLoadsN": [
+            4679.6,
+            4679.6,
+            6093,
+            6093
+          ],
+          "suspensionM": [
+            0.2892,
+            0.2892,
+            0.285,
+            0.285
+          ],
+          "longitudinalTireForceN": 1204.6
+        },
+        {
+          "seconds": 2.608,
+          "speedKmh": -0.028,
+          "distanceM": 31.171,
+          "heightM": 0.5971,
+          "pitchDeg": 0.245,
+          "normalLoadsN": [
+            5026.3,
+            5026.3,
+            5758.2,
+            5758.2
+          ],
+          "suspensionM": [
+            0.2932,
+            0.2932,
+            0.2809,
+            0.2809
+          ],
+          "longitudinalTireForceN": 821.5
+        },
+        {
+          "seconds": 2.708,
+          "speedKmh": 0.046,
+          "distanceM": 31.171,
+          "heightM": 0.597,
+          "pitchDeg": 0.13,
+          "normalLoadsN": [
+            5373.7,
+            5373.7,
+            5417.6,
+            5417.6
+          ],
+          "suspensionM": [
+            0.2906,
+            0.2906,
+            0.2835,
+            0.2835
+          ],
+          "longitudinalTireForceN": 173.2
+        },
+        {
+          "seconds": 2.808,
+          "speedKmh": 0.041,
+          "distanceM": 31.173,
+          "heightM": 0.597,
+          "pitchDeg": 0.01,
+          "normalLoadsN": [
+            5499.4,
+            5499.4,
+            5292.1,
+            5292.1
+          ],
+          "suspensionM": [
+            0.2874,
+            0.2874,
+            0.2866,
+            0.2866
+          ],
+          "longitudinalTireForceN": -147.5
+        },
+        {
+          "seconds": 2.908,
+          "speedKmh": 0.013,
+          "distanceM": 31.174,
+          "heightM": 0.597,
+          "pitchDeg": -0.035,
+          "normalLoadsN": [
+            5473.1,
+            5473.1,
+            5316.7,
+            5316.7
+          ],
+          "suspensionM": [
+            0.2861,
+            0.2861,
+            0.2878,
+            0.2878
+          ],
+          "longitudinalTireForceN": -157.4
+        },
+        {
+          "seconds": 3.008,
+          "speedKmh": -0.004,
+          "distanceM": 31.174,
+          "heightM": 0.597,
+          "pitchDeg": -0.028,
+          "normalLoadsN": [
+            5414.4,
+            5414.4,
+            5374.2,
+            5374.2
+          ],
+          "suspensionM": [
+            0.2863,
+            0.2863,
+            0.2877,
+            0.2877
+          ],
+          "longitudinalTireForceN": -60.2
+        },
+        {
+          "seconds": 3.108,
+          "speedKmh": -0.007,
+          "distanceM": 31.173,
+          "heightM": 0.597,
+          "pitchDeg": -0.007,
+          "normalLoadsN": [
+            5382.6,
+            5382.6,
+            5405.8,
+            5405.8
+          ],
+          "suspensionM": [
+            0.2868,
+            0.2868,
+            0.2872,
+            0.2872
+          ],
+          "longitudinalTireForceN": 9.7
+        },
+        {
+          "seconds": 3.208,
+          "speedKmh": -0.004,
+          "distanceM": 31.173,
+          "heightM": 0.597,
+          "pitchDeg": 0.004,
+          "normalLoadsN": [
+            5379.8,
+            5379.8,
+            5408.8,
+            5408.8
+          ],
+          "suspensionM": [
+            0.2871,
+            0.2871,
+            0.2869,
+            0.2869
+          ],
+          "longitudinalTireForceN": 26.2
+        }
+      ]
+    },
+    {
+      "label": "50 km/h, full gas, explicit brake",
+      "input": {
+        "speedKmh": 50,
+        "gas": "full",
+        "throttle": 0,
+        "brake": 1,
+        "tireMu": 1.25
+      },
+      "valid": true,
+      "massKg": 2199.5582002848946,
+      "initialPressureBar": 350,
+      "initialHeightM": 0.5970089755245234,
+      "initialSuspensionM": [
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731
+      ],
+      "idealFrictionLimitMps2": 12.262500000000001,
+      "idealFrictionStoppingDistanceM": 7.865493764236543,
+      "stop": {
+        "seconds": 1.1583333333333377,
+        "distanceM": 7.869568233997597,
+        "speedKmh": 0.24195828882109194
+      },
+      "stopStable": true,
+      "observedDurationS": 2.1583333333333874,
+      "finalSpeedKmh": -0.000980825557543683,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.5970103379138394,
+        "z": -72.14611897564086
+      },
+      "averageDecelerationUntilStopMps2": 11.932384103400173,
+      "speedReductionMps": 13.88916134043265,
+      "averageDecelerationMps2": 6.435132667381762,
+      "maximumDecelerationMps2": 12.354996793254642,
+      "bodyContactSteps": 0,
+      "wheelBumpStopContactSteps": 0,
+      "minimumWheelContacts": 4,
+      "notFourWheelSteps": 0,
+      "minimumSuspensionM": 0.23841522028034767,
+      "maximumSuspensionM": 0.33556752087551334,
+      "maximumPitchDeg": 1.9592419002510584,
+      "averageNormalLoadN": 21578.616101479143,
+      "averageLongitudinalTireBrakingN": 14109.63728572562,
+      "records": [
+        {
+          "seconds": 0.008,
+          "speedKmh": 49.63,
+          "distanceM": 0.115,
+          "heightM": 0.597,
+          "pitchDeg": -0.009,
+          "normalLoadsN": [
+            5394.4,
+            5394.4,
+            5394.4,
+            5394.4
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": -26972.1
+        },
+        {
+          "seconds": 0.108,
+          "speedKmh": 45.183,
+          "distanceM": 1.427,
+          "heightM": 0.597,
+          "pitchDeg": -0.924,
+          "normalLoadsN": [
+            8404.1,
+            8404.1,
+            2366.5,
+            2366.5
+          ],
+          "suspensionM": [
+            0.2666,
+            0.2666,
+            0.3075,
+            0.3075
+          ],
+          "longitudinalTireForceN": -26916.2
+        },
+        {
+          "seconds": 0.208,
+          "speedKmh": 40.93,
+          "distanceM": 2.618,
+          "heightM": 0.5968,
+          "pitchDeg": -1.779,
+          "normalLoadsN": [
+            8968.4,
+            8968.4,
+            1818.6,
+            1818.6
+          ],
+          "suspensionM": [
+            0.244,
+            0.244,
+            0.3302,
+            0.3302
+          ],
+          "longitudinalTireForceN": -25546.5
+        },
+        {
+          "seconds": 0.308,
+          "speedKmh": 36.631,
+          "distanceM": 3.691,
+          "heightM": 0.5966,
+          "pitchDeg": -1.958,
+          "normalLoadsN": [
+            8556.4,
+            8556.4,
+            2256,
+            2256
+          ],
+          "suspensionM": [
+            0.2384,
+            0.2384,
+            0.3356,
+            0.3356
+          ],
+          "longitudinalTireForceN": -26639.9
+        },
+        {
+          "seconds": 0.408,
+          "speedKmh": 32.204,
+          "distanceM": 4.643,
+          "heightM": 0.5966,
+          "pitchDeg": -1.873,
+          "normalLoadsN": [
+            8287.2,
+            8287.2,
+            2515.4,
+            2515.4
+          ],
+          "suspensionM": [
+            0.2403,
+            0.2403,
+            0.3336,
+            0.3336
+          ],
+          "longitudinalTireForceN": -27006.4
+        },
+        {
+          "seconds": 0.508,
+          "speedKmh": 27.775,
+          "distanceM": 5.471,
+          "heightM": 0.5967,
+          "pitchDeg": -1.798,
+          "normalLoadsN": [
+            8228.4,
+            8228.4,
+            2559.2,
+            2559.2
+          ],
+          "suspensionM": [
+            0.2423,
+            0.2423,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26968.9
+        },
+        {
+          "seconds": 0.608,
+          "speedKmh": 23.352,
+          "distanceM": 6.176,
+          "heightM": 0.5968,
+          "pitchDeg": -1.781,
+          "normalLoadsN": [
+            8262.8,
+            8262.8,
+            2520.3,
+            2520.3
+          ],
+          "suspensionM": [
+            0.2429,
+            0.2429,
+            0.3312,
+            0.3312
+          ],
+          "longitudinalTireForceN": -26957.7
+        },
+        {
+          "seconds": 0.708,
+          "speedKmh": 18.931,
+          "distanceM": 6.759,
+          "heightM": 0.5968,
+          "pitchDeg": -1.791,
+          "normalLoadsN": [
+            8297.1,
+            8297.1,
+            2489,
+            2489
+          ],
+          "suspensionM": [
+            0.2427,
+            0.2427,
+            0.3314,
+            0.3314
+          ],
+          "longitudinalTireForceN": -26965.1
+        },
+        {
+          "seconds": 0.808,
+          "speedKmh": 14.51,
+          "distanceM": 7.218,
+          "heightM": 0.5968,
+          "pitchDeg": -1.801,
+          "normalLoadsN": [
+            8307.1,
+            8307.1,
+            2482.4,
+            2482.4
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26973.7
+        },
+        {
+          "seconds": 0.908,
+          "speedKmh": 10.092,
+          "distanceM": 7.555,
+          "heightM": 0.5967,
+          "pitchDeg": -1.804,
+          "normalLoadsN": [
+            8303.6,
+            8303.6,
+            2486.8,
+            2486.8
+          ],
+          "suspensionM": [
+            0.2423,
+            0.2423,
+            0.3318,
+            0.3318
+          ],
+          "longitudinalTireForceN": -26976
+        },
+        {
+          "seconds": 1.008,
+          "speedKmh": 5.675,
+          "distanceM": 7.769,
+          "heightM": 0.5967,
+          "pitchDeg": -1.802,
+          "normalLoadsN": [
+            8298.8,
+            8298.8,
+            2490.8,
+            2490.8
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -26974.1
+        },
+        {
+          "seconds": 1.108,
+          "speedKmh": 1.4,
+          "distanceM": 7.861,
+          "heightM": 0.5968,
+          "pitchDeg": -1.795,
+          "normalLoadsN": [
+            8247.9,
+            8247.9,
+            2542.2,
+            2542.2
+          ],
+          "suspensionM": [
+            0.2424,
+            0.2424,
+            0.3317,
+            0.3317
+          ],
+          "longitudinalTireForceN": -20879.8
+        },
+        {
+          "seconds": 1.208,
+          "speedKmh": -0.175,
+          "distanceM": 7.869,
+          "heightM": 0.5968,
+          "pitchDeg": -1.291,
+          "normalLoadsN": [
+            6366.4,
+            6366.4,
+            4441.9,
+            4441.9
+          ],
+          "suspensionM": [
+            0.2531,
+            0.2531,
+            0.3208,
+            0.3208
+          ],
+          "longitudinalTireForceN": -3295.2
+        },
+        {
+          "seconds": 1.308,
+          "speedKmh": -0.333,
+          "distanceM": 7.861,
+          "heightM": 0.597,
+          "pitchDeg": -0.361,
+          "normalLoadsN": [
+            4873.4,
+            4873.4,
+            5905.3,
+            5905.3
+          ],
+          "suspensionM": [
+            0.2764,
+            0.2764,
+            0.2976,
+            0.2976
+          ],
+          "longitudinalTireForceN": 396.9
+        },
+        {
+          "seconds": 1.408,
+          "speedKmh": -0.168,
+          "distanceM": 7.854,
+          "heightM": 0.5971,
+          "pitchDeg": 0.17,
+          "normalLoadsN": [
+            4715.8,
+            4715.8,
+            6058.3,
+            6058.3
+          ],
+          "suspensionM": [
+            0.2907,
+            0.2907,
+            0.2834,
+            0.2834
+          ],
+          "longitudinalTireForceN": 1207.9
+        },
+        {
+          "seconds": 1.508,
+          "speedKmh": -0.007,
+          "distanceM": 7.852,
+          "heightM": 0.5971,
+          "pitchDeg": 0.234,
+          "normalLoadsN": [
+            5099.7,
+            5099.7,
+            5686.8,
+            5686.8
+          ],
+          "suspensionM": [
+            0.293,
+            0.293,
+            0.2811,
+            0.2811
+          ],
+          "longitudinalTireForceN": 699
+        },
+        {
+          "seconds": 1.608,
+          "speedKmh": 0.049,
+          "distanceM": 7.852,
+          "heightM": 0.597,
+          "pitchDeg": 0.105,
+          "normalLoadsN": [
+            5412.1,
+            5412.1,
+            5379.7,
+            5379.7
+          ],
+          "suspensionM": [
+            0.2899,
+            0.2899,
+            0.2841,
+            0.2841
+          ],
+          "longitudinalTireForceN": 88
+        },
+        {
+          "seconds": 1.708,
+          "speedKmh": 0.036,
+          "distanceM": 7.854,
+          "heightM": 0.597,
+          "pitchDeg": -0.004,
+          "normalLoadsN": [
+            5502,
+            5502,
+            5289.3,
+            5289.3
+          ],
+          "suspensionM": [
+            0.2871,
+            0.2871,
+            0.2869,
+            0.2869
+          ],
+          "longitudinalTireForceN": -166.3
+        },
+        {
+          "seconds": 1.808,
+          "speedKmh": 0.009,
+          "distanceM": 7.854,
+          "heightM": 0.597,
+          "pitchDeg": -0.037,
+          "normalLoadsN": [
+            5462.5,
+            5462.5,
+            5327,
+            5327
+          ],
+          "suspensionM": [
+            0.2861,
+            0.2861,
+            0.2879,
+            0.2879
+          ],
+          "longitudinalTireForceN": -142.7
+        },
+        {
+          "seconds": 1.908,
+          "speedKmh": -0.006,
+          "distanceM": 7.854,
+          "heightM": 0.597,
+          "pitchDeg": -0.024,
+          "normalLoadsN": [
+            5406.3,
+            5406.3,
+            5382.3,
+            5382.3
+          ],
+          "suspensionM": [
+            0.2864,
+            0.2864,
+            0.2876,
+            0.2876
+          ],
+          "longitudinalTireForceN": -44
+        },
+        {
+          "seconds": 2.008,
+          "speedKmh": -0.007,
+          "distanceM": 7.854,
+          "heightM": 0.597,
+          "pitchDeg": -0.005,
+          "normalLoadsN": [
+            5380.5,
+            5380.5,
+            5407.9,
+            5407.9
+          ],
+          "suspensionM": [
+            0.2869,
+            0.2869,
+            0.2872,
+            0.2872
+          ],
+          "longitudinalTireForceN": 16.1
+        },
+        {
+          "seconds": 2.108,
+          "speedKmh": -0.003,
+          "distanceM": 7.854,
+          "heightM": 0.597,
+          "pitchDeg": 0.005,
+          "normalLoadsN": [
+            5381,
+            5381,
+            5407.6,
+            5407.6
+          ],
+          "suspensionM": [
+            0.2871,
+            0.2871,
+            0.2869,
+            0.2869
+          ],
+          "longitudinalTireForceN": 25.3
+        }
+      ]
+    },
+    {
+      "label": "100 km/h, empty gas, explicit brake",
+      "input": {
+        "speedKmh": 100,
+        "gas": "empty",
+        "throttle": 0,
+        "brake": 1,
+        "tireMu": 1.25
+      },
+      "valid": true,
+      "massKg": 1950,
+      "initialPressureBar": 0,
+      "initialHeightM": 0.6064249999817727,
+      "initialSuspensionM": [
+        0.2964249999715899,
+        0.2964249999715899,
+        0.2964249999715899,
+        0.2964249999715899
+      ],
+      "idealFrictionLimitMps2": 12.262500000000001,
+      "idealFrictionStoppingDistanceM": 31.461975056946173,
+      "stop": {
+        "seconds": 2.266666666666726,
+        "distanceM": 30.967773608522506,
+        "speedKmh": 0.24742973408332763
+      },
+      "stopStable": true,
+      "observedDurationS": 3.266666666666776,
+      "finalSpeedKmh": -0.00008316228302109541,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.6064254531428344,
+        "z": -49.04622054353833
+      },
+      "averageDecelerationUntilStopMps2": 12.224579689450254,
+      "speedReductionMps": 27.777800878411952,
+      "averageDecelerationMps2": 8.50340843216664,
+      "maximumDecelerationMps2": 12.55780187747547,
+      "bodyContactSteps": 0,
+      "wheelBumpStopContactSteps": 0,
+      "minimumWheelContacts": 4,
+      "notFourWheelSteps": 0,
+      "minimumSuspensionM": 0.25193537982913694,
+      "maximumSuspensionM": 0.3407564597894196,
+      "maximumPitchDeg": 1.7913432157466853,
+      "averageNormalLoadN": 19134.66243938967,
+      "averageLongitudinalTireBrakingN": 16444.07755695356,
+      "records": [
+        {
+          "seconds": 0.008,
+          "speedKmh": 99.625,
+          "distanceM": 0.231,
+          "heightM": 0.6064,
+          "pitchDeg": -0.009,
+          "normalLoadsN": [
+            4782.4,
+            4782.4,
+            4782.4,
+            4782.4
+          ],
+          "suspensionM": [
+            0.2964,
+            0.2964,
+            0.2964,
+            0.2964
+          ],
+          "longitudinalTireForceN": -23911.9
+        },
+        {
+          "seconds": 0.108,
+          "speedKmh": 95.114,
+          "distanceM": 2.93,
+          "heightM": 0.6064,
+          "pitchDeg": -0.884,
+          "normalLoadsN": [
+            7607.7,
+            7607.7,
+            1943.4,
+            1943.4
+          ],
+          "suspensionM": [
+            0.2768,
+            0.2768,
+            0.3162,
+            0.3162
+          ],
+          "longitudinalTireForceN": -23877.8
+        },
+        {
+          "seconds": 0.208,
+          "speedKmh": 90.595,
+          "distanceM": 5.505,
+          "heightM": 0.6062,
+          "pitchDeg": -1.643,
+          "normalLoadsN": [
+            8050.1,
+            8050.1,
+            1523.8,
+            1523.8
+          ],
+          "suspensionM": [
+            0.2567,
+            0.2567,
+            0.3363,
+            0.3363
+          ],
+          "longitudinalTireForceN": -23934.6
+        },
+        {
+          "seconds": 0.308,
+          "speedKmh": 86.09,
+          "distanceM": 7.955,
+          "heightM": 0.606,
+          "pitchDeg": -1.787,
+          "normalLoadsN": [
+            7649.5,
+            7649.5,
+            1945.8,
+            1945.8
+          ],
+          "suspensionM": [
+            0.252,
+            0.252,
+            0.3407,
+            0.3407
+          ],
+          "longitudinalTireForceN": -23988.4
+        },
+        {
+          "seconds": 0.408,
+          "speedKmh": 81.6,
+          "distanceM": 10.28,
+          "heightM": 0.606,
+          "pitchDeg": -1.69,
+          "normalLoadsN": [
+            7371.1,
+            7371.1,
+            2212.4,
+            2212.4
+          ],
+          "suspensionM": [
+            0.2542,
+            0.2542,
+            0.3384,
+            0.3384
+          ],
+          "longitudinalTireForceN": -23958.8
+        },
+        {
+          "seconds": 0.508,
+          "speedKmh": 77.122,
+          "distanceM": 12.48,
+          "heightM": 0.6061,
+          "pitchDeg": -1.615,
+          "normalLoadsN": [
+            7329,
+            7329,
+            2240.2,
+            2240.2
+          ],
+          "suspensionM": [
+            0.2562,
+            0.2562,
+            0.3365,
+            0.3365
+          ],
+          "longitudinalTireForceN": -23923
+        },
+        {
+          "seconds": 0.608,
+          "speedKmh": 72.65,
+          "distanceM": 14.556,
+          "heightM": 0.6062,
+          "pitchDeg": -1.602,
+          "normalLoadsN": [
+            7369.6,
+            7369.6,
+            2196.5,
+            2196.5
+          ],
+          "suspensionM": [
+            0.2567,
+            0.2567,
+            0.3361,
+            0.3361
+          ],
+          "longitudinalTireForceN": -23915.2
+        },
+        {
+          "seconds": 0.708,
+          "speedKmh": 68.182,
+          "distanceM": 16.507,
+          "heightM": 0.6062,
+          "pitchDeg": -1.612,
+          "normalLoadsN": [
+            7397.8,
+            7397.8,
+            2171,
+            2171
+          ],
+          "suspensionM": [
+            0.2565,
+            0.2565,
+            0.3364,
+            0.3364
+          ],
+          "longitudinalTireForceN": -23922
+        },
+        {
+          "seconds": 0.808,
+          "speedKmh": 63.718,
+          "distanceM": 18.335,
+          "heightM": 0.6062,
+          "pitchDeg": -1.62,
+          "normalLoadsN": [
+            7402.1,
+            7402.1,
+            2168.6,
+            2168.6
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23926.8
+        },
+        {
+          "seconds": 0.908,
+          "speedKmh": 59.258,
+          "distanceM": 20.038,
+          "heightM": 0.6062,
+          "pitchDeg": -1.621,
+          "normalLoadsN": [
+            7397.5,
+            7397.5,
+            2172.8,
+            2172.8
+          ],
+          "suspensionM": [
+            0.2562,
+            0.2562,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23925.8
+        },
+        {
+          "seconds": 1.008,
+          "speedKmh": 54.804,
+          "distanceM": 21.618,
+          "heightM": 0.6062,
+          "pitchDeg": -1.62,
+          "normalLoadsN": [
+            7393.9,
+            7393.9,
+            2175.1,
+            2175.1
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23922.4
+        },
+        {
+          "seconds": 1.108,
+          "speedKmh": 50.354,
+          "distanceM": 23.074,
+          "heightM": 0.6062,
+          "pitchDeg": -1.619,
+          "normalLoadsN": [
+            7392.7,
+            7392.7,
+            2175.2,
+            2175.2
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23919.7
+        },
+        {
+          "seconds": 1.208,
+          "speedKmh": 45.909,
+          "distanceM": 24.406,
+          "heightM": 0.6062,
+          "pitchDeg": -1.619,
+          "normalLoadsN": [
+            7392.7,
+            7392.7,
+            2174.6,
+            2174.6
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23918.2
+        },
+        {
+          "seconds": 1.308,
+          "speedKmh": 41.468,
+          "distanceM": 25.615,
+          "heightM": 0.6062,
+          "pitchDeg": -1.619,
+          "normalLoadsN": [
+            7392.7,
+            7392.7,
+            2174.2,
+            2174.2
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23917.2
+        },
+        {
+          "seconds": 1.408,
+          "speedKmh": 37.03,
+          "distanceM": 26.701,
+          "heightM": 0.6062,
+          "pitchDeg": -1.619,
+          "normalLoadsN": [
+            7392.4,
+            7392.4,
+            2174.1,
+            2174.1
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23916.3
+        },
+        {
+          "seconds": 1.508,
+          "speedKmh": 32.596,
+          "distanceM": 27.663,
+          "heightM": 0.6062,
+          "pitchDeg": -1.619,
+          "normalLoadsN": [
+            7392.1,
+            7392.1,
+            2174,
+            2174
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23915.3
+        },
+        {
+          "seconds": 1.608,
+          "speedKmh": 28.166,
+          "distanceM": 28.502,
+          "heightM": 0.6062,
+          "pitchDeg": -1.618,
+          "normalLoadsN": [
+            7391.8,
+            7391.8,
+            2174,
+            2174
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23914.4
+        },
+        {
+          "seconds": 1.708,
+          "speedKmh": 23.739,
+          "distanceM": 29.218,
+          "heightM": 0.6062,
+          "pitchDeg": -1.618,
+          "normalLoadsN": [
+            7391.6,
+            7391.6,
+            2173.9,
+            2173.9
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23913.6
+        },
+        {
+          "seconds": 1.808,
+          "speedKmh": 19.315,
+          "distanceM": 29.811,
+          "heightM": 0.6062,
+          "pitchDeg": -1.618,
+          "normalLoadsN": [
+            7391.4,
+            7391.4,
+            2173.8,
+            2173.8
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23913
+        },
+        {
+          "seconds": 1.908,
+          "speedKmh": 14.894,
+          "distanceM": 30.281,
+          "heightM": 0.6062,
+          "pitchDeg": -1.618,
+          "normalLoadsN": [
+            7391.2,
+            7391.2,
+            2173.8,
+            2173.8
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23912.5
+        },
+        {
+          "seconds": 2.008,
+          "speedKmh": 10.475,
+          "distanceM": 30.629,
+          "heightM": 0.6062,
+          "pitchDeg": -1.618,
+          "normalLoadsN": [
+            7391.1,
+            7391.1,
+            2173.7,
+            2173.7
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23912.2
+        },
+        {
+          "seconds": 2.108,
+          "speedKmh": 6.058,
+          "distanceM": 30.853,
+          "heightM": 0.6062,
+          "pitchDeg": -1.618,
+          "normalLoadsN": [
+            7391.1,
+            7391.1,
+            2173.7,
+            2173.7
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23911.9
+        },
+        {
+          "seconds": 2.208,
+          "speedKmh": 1.699,
+          "distanceM": 30.955,
+          "heightM": 0.6062,
+          "pitchDeg": -1.617,
+          "normalLoadsN": [
+            7385.1,
+            7385.1,
+            2179.7,
+            2179.7
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -20771.9
+        },
+        {
+          "seconds": 2.308,
+          "speedKmh": -0.123,
+          "distanceM": 30.968,
+          "heightM": 0.6063,
+          "pitchDeg": -1.198,
+          "normalLoadsN": [
+            5723,
+            5723,
+            3858,
+            3858
+          ],
+          "suspensionM": [
+            0.2651,
+            0.2651,
+            0.3277,
+            0.3277
+          ],
+          "longitudinalTireForceN": -3350.3
+        },
+        {
+          "seconds": 2.408,
+          "speedKmh": -0.308,
+          "distanceM": 30.96,
+          "heightM": 0.6064,
+          "pitchDeg": -0.348,
+          "normalLoadsN": [
+            4337.7,
+            4337.7,
+            5218.4,
+            5218.4
+          ],
+          "suspensionM": [
+            0.2863,
+            0.2863,
+            0.3066,
+            0.3066
+          ],
+          "longitudinalTireForceN": 314.9
+        },
+        {
+          "seconds": 2.508,
+          "speedKmh": -0.15,
+          "distanceM": 30.954,
+          "heightM": 0.6065,
+          "pitchDeg": 0.125,
+          "normalLoadsN": [
+            4234.9,
+            4234.9,
+            5318.9,
+            5318.9
+          ],
+          "suspensionM": [
+            0.2991,
+            0.2991,
+            0.2939,
+            0.2939
+          ],
+          "longitudinalTireForceN": 1007.1
+        },
+        {
+          "seconds": 2.608,
+          "speedKmh": -0.005,
+          "distanceM": 30.952,
+          "heightM": 0.6065,
+          "pitchDeg": 0.175,
+          "normalLoadsN": [
+            4572.7,
+            4572.7,
+            4991,
+            4991
+          ],
+          "suspensionM": [
+            0.3009,
+            0.3009,
+            0.292,
+            0.292
+          ],
+          "longitudinalTireForceN": 529.8
+        },
+        {
+          "seconds": 2.708,
+          "speedKmh": 0.039,
+          "distanceM": 30.953,
+          "heightM": 0.6064,
+          "pitchDeg": 0.073,
+          "normalLoadsN": [
+            4808.4,
+            4808.4,
+            4758.6,
+            4758.6
+          ],
+          "suspensionM": [
+            0.2985,
+            0.2985,
+            0.2944,
+            0.2944
+          ],
+          "longitudinalTireForceN": 40.7
+        },
+        {
+          "seconds": 2.808,
+          "speedKmh": 0.026,
+          "distanceM": 30.954,
+          "heightM": 0.6064,
+          "pitchDeg": -0.005,
+          "normalLoadsN": [
+            4857.8,
+            4857.8,
+            4708.4,
+            4708.4
+          ],
+          "suspensionM": [
+            0.2964,
+            0.2964,
+            0.2964,
+            0.2964
+          ],
+          "longitudinalTireForceN": -125.2
+        },
+        {
+          "seconds": 2.908,
+          "speedKmh": 0.005,
+          "distanceM": 30.954,
+          "heightM": 0.6064,
+          "pitchDeg": -0.024,
+          "normalLoadsN": [
+            4821.4,
+            4821.4,
+            4743.5,
+            4743.5
+          ],
+          "suspensionM": [
+            0.2958,
+            0.2958,
+            0.297,
+            0.297
+          ],
+          "longitudinalTireForceN": -88.7
+        },
+        {
+          "seconds": 3.008,
+          "speedKmh": -0.004,
+          "distanceM": 30.954,
+          "heightM": 0.6064,
+          "pitchDeg": -0.013,
+          "normalLoadsN": [
+            4785,
+            4785,
+            4779.4,
+            4779.4
+          ],
+          "suspensionM": [
+            0.2961,
+            0.2961,
+            0.2968,
+            0.2968
+          ],
+          "longitudinalTireForceN": -19.1
+        },
+        {
+          "seconds": 3.108,
+          "speedKmh": -0.004,
+          "distanceM": 30.954,
+          "heightM": 0.6064,
+          "pitchDeg": -0.001,
+          "normalLoadsN": [
+            4772.9,
+            4772.9,
+            4791.6,
+            4791.6
+          ],
+          "suspensionM": [
+            0.2964,
+            0.2964,
+            0.2965,
+            0.2965
+          ],
+          "longitudinalTireForceN": 13.4
+        },
+        {
+          "seconds": 3.208,
+          "speedKmh": -0.001,
+          "distanceM": 30.954,
+          "heightM": 0.6064,
+          "pitchDeg": 0.003,
+          "normalLoadsN": [
+            4775.8,
+            4775.8,
+            4788.9,
+            4788.9
+          ],
+          "suspensionM": [
+            0.2965,
+            0.2965,
+            0.2964,
+            0.2964
+          ],
+          "longitudinalTireForceN": 13.7
+        }
+      ]
+    },
+    {
+      "label": "50 km/h, empty gas, explicit brake",
+      "input": {
+        "speedKmh": 50,
+        "gas": "empty",
+        "throttle": 0,
+        "brake": 1,
+        "tireMu": 1.25
+      },
+      "valid": true,
+      "massKg": 1950,
+      "initialPressureBar": 0,
+      "initialHeightM": 0.6064249999817727,
+      "initialSuspensionM": [
+        0.2964249999715899,
+        0.2964249999715899,
+        0.2964249999715899,
+        0.2964249999715899
+      ],
+      "idealFrictionLimitMps2": 12.262500000000001,
+      "idealFrictionStoppingDistanceM": 7.865493764236543,
+      "stop": {
+        "seconds": 1.150000000000004,
+        "distanceM": 7.777729944841184,
+        "speedKmh": 0.24660223712727292
+      },
+      "stopStable": true,
+      "observedDurationS": 2.1500000000000536,
+      "finalSpeedKmh": -0.0000821697982939729,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.6064254508983901,
+        "z": -72.23626643844102
+      },
+      "averageDecelerationUntilStopMps2": 12.017728928230087,
+      "speedReductionMps": 13.88891171383286,
+      "averageDecelerationMps2": 6.459958936666285,
+      "maximumDecelerationMps2": 12.355529129607774,
+      "bodyContactSteps": 0,
+      "wheelBumpStopContactSteps": 0,
+      "minimumWheelContacts": 4,
+      "notFourWheelSteps": 0,
+      "minimumSuspensionM": 0.2520200697704925,
+      "maximumSuspensionM": 0.3407883427093471,
+      "maximumPitchDeg": 1.7902788972034465,
+      "averageNormalLoadN": 19130.36215795554,
+      "averageLongitudinalTireBrakingN": 12556.148933953415,
+      "records": [
+        {
+          "seconds": 0.008,
+          "speedKmh": 49.629,
+          "distanceM": 0.115,
+          "heightM": 0.6064,
+          "pitchDeg": -0.009,
+          "normalLoadsN": [
+            4782.4,
+            4782.4,
+            4782.4,
+            4782.4
+          ],
+          "suspensionM": [
+            0.2964,
+            0.2964,
+            0.2964,
+            0.2964
+          ],
+          "longitudinalTireForceN": -23911.9
+        },
+        {
+          "seconds": 0.108,
+          "speedKmh": 45.182,
+          "distanceM": 1.427,
+          "heightM": 0.6064,
+          "pitchDeg": -0.884,
+          "normalLoadsN": [
+            7606.6,
+            7606.6,
+            1942.7,
+            1942.7
+          ],
+          "suspensionM": [
+            0.2768,
+            0.2768,
+            0.3162,
+            0.3162
+          ],
+          "longitudinalTireForceN": -23873.1
+        },
+        {
+          "seconds": 0.208,
+          "speedKmh": 40.734,
+          "distanceM": 2.615,
+          "heightM": 0.6062,
+          "pitchDeg": -1.642,
+          "normalLoadsN": [
+            8044.8,
+            8044.8,
+            1521.4,
+            1521.4
+          ],
+          "suspensionM": [
+            0.2567,
+            0.2567,
+            0.3363,
+            0.3363
+          ],
+          "longitudinalTireForceN": -23915.6
+        },
+        {
+          "seconds": 0.308,
+          "speedKmh": 36.289,
+          "distanceM": 3.68,
+          "heightM": 0.6061,
+          "pitchDeg": -1.786,
+          "normalLoadsN": [
+            7641.1,
+            7641.1,
+            1943.4,
+            1943.4
+          ],
+          "suspensionM": [
+            0.252,
+            0.252,
+            0.3408,
+            0.3408
+          ],
+          "longitudinalTireForceN": -23961.3
+        },
+        {
+          "seconds": 0.408,
+          "speedKmh": 31.852,
+          "distanceM": 4.622,
+          "heightM": 0.6061,
+          "pitchDeg": -1.688,
+          "normalLoadsN": [
+            7363.2,
+            7363.2,
+            2210.7,
+            2210.7
+          ],
+          "suspensionM": [
+            0.2543,
+            0.2543,
+            0.3384,
+            0.3384
+          ],
+          "longitudinalTireForceN": -23934.6
+        },
+        {
+          "seconds": 0.508,
+          "speedKmh": 27.423,
+          "distanceM": 5.44,
+          "heightM": 0.6062,
+          "pitchDeg": -1.613,
+          "normalLoadsN": [
+            7323.3,
+            7323.3,
+            2238.7,
+            2238.7
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3365,
+            0.3365
+          ],
+          "longitudinalTireForceN": -23905
+        },
+        {
+          "seconds": 0.608,
+          "speedKmh": 22.999,
+          "distanceM": 6.136,
+          "heightM": 0.6062,
+          "pitchDeg": -1.601,
+          "normalLoadsN": [
+            7365.6,
+            7365.6,
+            2194.9,
+            2194.9
+          ],
+          "suspensionM": [
+            0.2568,
+            0.2568,
+            0.3361,
+            0.3361
+          ],
+          "longitudinalTireForceN": -23901.2
+        },
+        {
+          "seconds": 0.708,
+          "speedKmh": 18.576,
+          "distanceM": 6.708,
+          "heightM": 0.6062,
+          "pitchDeg": -1.611,
+          "normalLoadsN": [
+            7394.3,
+            7394.3,
+            2169.4,
+            2169.4
+          ],
+          "suspensionM": [
+            0.2565,
+            0.2565,
+            0.3364,
+            0.3364
+          ],
+          "longitudinalTireForceN": -23909.3
+        },
+        {
+          "seconds": 0.808,
+          "speedKmh": 14.155,
+          "distanceM": 7.158,
+          "heightM": 0.6062,
+          "pitchDeg": -1.619,
+          "normalLoadsN": [
+            7398.6,
+            7398.6,
+            2167.2,
+            2167.2
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23914.6
+        },
+        {
+          "seconds": 0.908,
+          "speedKmh": 9.736,
+          "distanceM": 7.485,
+          "heightM": 0.6062,
+          "pitchDeg": -1.62,
+          "normalLoadsN": [
+            7394.2,
+            7394.2,
+            2171.7,
+            2171.7
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23914.5
+        },
+        {
+          "seconds": 1.008,
+          "speedKmh": 5.32,
+          "distanceM": 7.689,
+          "heightM": 0.6062,
+          "pitchDeg": -1.619,
+          "normalLoadsN": [
+            7390.9,
+            7390.9,
+            2174.1,
+            2174.1
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3366,
+            0.3366
+          ],
+          "longitudinalTireForceN": -23912.6
+        },
+        {
+          "seconds": 1.108,
+          "speedKmh": 1.155,
+          "distanceM": 7.771,
+          "heightM": 0.6062,
+          "pitchDeg": -1.603,
+          "normalLoadsN": [
+            7268,
+            7268,
+            2299.4,
+            2299.4
+          ],
+          "suspensionM": [
+            0.2565,
+            0.2565,
+            0.3364,
+            0.3364
+          ],
+          "longitudinalTireForceN": -16687
+        },
+        {
+          "seconds": 1.208,
+          "speedKmh": -0.203,
+          "distanceM": 7.777,
+          "heightM": 0.6063,
+          "pitchDeg": -1.056,
+          "normalLoadsN": [
+            5385.1,
+            5385.1,
+            4193.2,
+            4193.2
+          ],
+          "suspensionM": [
+            0.2684,
+            0.2684,
+            0.3243,
+            0.3243
+          ],
+          "longitudinalTireForceN": -2376.2
+        },
+        {
+          "seconds": 1.308,
+          "speedKmh": -0.292,
+          "distanceM": 7.769,
+          "heightM": 0.6064,
+          "pitchDeg": -0.232,
+          "normalLoadsN": [
+            4251.8,
+            4251.8,
+            5301.6,
+            5301.6
+          ],
+          "suspensionM": [
+            0.2893,
+            0.2893,
+            0.3036,
+            0.3036
+          ],
+          "longitudinalTireForceN": 581.2
+        },
+        {
+          "seconds": 1.408,
+          "speedKmh": -0.12,
+          "distanceM": 7.763,
+          "heightM": 0.6065,
+          "pitchDeg": 0.156,
+          "normalLoadsN": [
+            4282.3,
+            4282.3,
+            5273.2,
+            5273.2
+          ],
+          "suspensionM": [
+            0.3,
+            0.3,
+            0.293,
+            0.293
+          ],
+          "longitudinalTireForceN": 967.1
+        },
+        {
+          "seconds": 1.508,
+          "speedKmh": 0.009,
+          "distanceM": 7.762,
+          "heightM": 0.6065,
+          "pitchDeg": 0.162,
+          "normalLoadsN": [
+            4626,
+            4626,
+            4938.8,
+            4938.8
+          ],
+          "suspensionM": [
+            0.3006,
+            0.3006,
+            0.2923,
+            0.2923
+          ],
+          "longitudinalTireForceN": 430.3
+        },
+        {
+          "seconds": 1.608,
+          "speedKmh": 0.039,
+          "distanceM": 7.763,
+          "heightM": 0.6064,
+          "pitchDeg": 0.056,
+          "normalLoadsN": [
+            4827.7,
+            4827.7,
+            4739.3,
+            4739.3
+          ],
+          "suspensionM": [
+            0.298,
+            0.298,
+            0.2948,
+            0.2948
+          ],
+          "longitudinalTireForceN": -9.2
+        },
+        {
+          "seconds": 1.708,
+          "speedKmh": 0.022,
+          "distanceM": 7.764,
+          "heightM": 0.6064,
+          "pitchDeg": -0.012,
+          "normalLoadsN": [
+            4854.6,
+            4854.6,
+            4711.4,
+            4711.4
+          ],
+          "suspensionM": [
+            0.2962,
+            0.2962,
+            0.2966,
+            0.2966
+          ],
+          "longitudinalTireForceN": -127.8
+        },
+        {
+          "seconds": 1.808,
+          "speedKmh": 0.002,
+          "distanceM": 7.764,
+          "heightM": 0.6064,
+          "pitchDeg": -0.023,
+          "normalLoadsN": [
+            4814,
+            4814,
+            4750.8,
+            4750.8
+          ],
+          "suspensionM": [
+            0.2958,
+            0.2958,
+            0.297,
+            0.297
+          ],
+          "longitudinalTireForceN": -76.1
+        },
+        {
+          "seconds": 1.908,
+          "speedKmh": -0.005,
+          "distanceM": 7.764,
+          "heightM": 0.6064,
+          "pitchDeg": -0.011,
+          "normalLoadsN": [
+            4781.4,
+            4781.4,
+            4783.1,
+            4783.1
+          ],
+          "suspensionM": [
+            0.2961,
+            0.2961,
+            0.2967,
+            0.2967
+          ],
+          "longitudinalTireForceN": -10.6
+        },
+        {
+          "seconds": 2.008,
+          "speedKmh": -0.004,
+          "distanceM": 7.764,
+          "heightM": 0.6064,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            4772.8,
+            4772.8,
+            4791.8,
+            4791.8
+          ],
+          "suspensionM": [
+            0.2964,
+            0.2964,
+            0.2964,
+            0.2964
+          ],
+          "longitudinalTireForceN": 15
+        },
+        {
+          "seconds": 2.108,
+          "speedKmh": -0.001,
+          "distanceM": 7.764,
+          "heightM": 0.6064,
+          "pitchDeg": 0.003,
+          "normalLoadsN": [
+            4776.8,
+            4776.8,
+            4788,
+            4788
+          ],
+          "suspensionM": [
+            0.2965,
+            0.2965,
+            0.2964,
+            0.2964
+          ],
+          "longitudinalTireForceN": 12.3
+        }
+      ]
+    },
+    {
+      "label": "100 km/h, W and Space held together",
+      "input": {
+        "speedKmh": 100,
+        "gas": "full",
+        "throttle": 1,
+        "brake": 1,
+        "tireMu": 1.25
+      },
+      "valid": false,
+      "massKg": 2199.5582002848946,
+      "initialPressureBar": 350,
+      "initialHeightM": 0.5970089755245234,
+      "initialSuspensionM": [
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731
+      ],
+      "idealFrictionLimitMps2": 12.262500000000001,
+      "idealFrictionStoppingDistanceM": 31.461975056946173,
+      "stop": null,
+      "stopStable": false,
+      "observedDurationS": 11.999999999999797,
+      "finalSpeedKmh": 1.3912883320137928,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.59700897713394,
+        "z": -29.758399760153427
+      },
+      "averageDecelerationUntilStopMps2": null,
+      "speedReductionMps": 27.391308796662837,
+      "averageDecelerationMps2": 2.2826090663886083,
+      "maximumDecelerationMps2": 8.54415691361055,
+      "bodyContactSteps": 0,
+      "wheelBumpStopContactSteps": 0,
+      "minimumWheelContacts": 4,
+      "notFourWheelSteps": 0,
+      "minimumSuspensionM": 0.2550160446947184,
+      "maximumSuspensionM": 0.31889659121193814,
+      "maximumPitchDeg": 1.2885452930566945,
+      "averageNormalLoadN": 21579.29091325649,
+      "averageLongitudinalTireBrakingN": 4957.733817302276,
+      "records": [
+        {
+          "seconds": 0.008,
+          "speedKmh": 99.744,
+          "distanceM": 0.231,
+          "heightM": 0.597,
+          "pitchDeg": -0.006,
+          "normalLoadsN": [
+            5394.4,
+            5394.4,
+            5394.4,
+            5394.4
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": -18237.4
+        },
+        {
+          "seconds": 0.108,
+          "speedKmh": 96.69,
+          "distanceM": 2.955,
+          "heightM": 0.597,
+          "pitchDeg": -0.624,
+          "normalLoadsN": [
+            7425.5,
+            7425.5,
+            3356.4,
+            3356.4
+          ],
+          "suspensionM": [
+            0.2732,
+            0.2732,
+            0.3009,
+            0.3009
+          ],
+          "longitudinalTireForceN": -17509.7
+        },
+        {
+          "seconds": 0.208,
+          "speedKmh": 93.844,
+          "distanceM": 5.599,
+          "heightM": 0.5969,
+          "pitchDeg": -1.181,
+          "normalLoadsN": [
+            7746.1,
+            7746.1,
+            3048.4,
+            3048.4
+          ],
+          "suspensionM": [
+            0.2584,
+            0.2584,
+            0.3156,
+            0.3156
+          ],
+          "longitudinalTireForceN": -16739.7
+        },
+        {
+          "seconds": 0.308,
+          "speedKmh": 90.961,
+          "distanceM": 8.163,
+          "heightM": 0.5968,
+          "pitchDeg": -1.287,
+          "normalLoadsN": [
+            7462.9,
+            7462.9,
+            3345.5,
+            3345.5
+          ],
+          "suspensionM": [
+            0.255,
+            0.255,
+            0.3189,
+            0.3189
+          ],
+          "longitudinalTireForceN": -17482.5
+        },
+        {
+          "seconds": 0.408,
+          "speedKmh": 87.987,
+          "distanceM": 10.646,
+          "heightM": 0.5968,
+          "pitchDeg": -1.228,
+          "normalLoadsN": [
+            7297.6,
+            7297.6,
+            3505.8,
+            3505.8
+          ],
+          "suspensionM": [
+            0.2563,
+            0.2563,
+            0.3175,
+            0.3175
+          ],
+          "longitudinalTireForceN": -17883.2
+        },
+        {
+          "seconds": 0.508,
+          "speedKmh": 84.989,
+          "distanceM": 13.045,
+          "heightM": 0.5968,
+          "pitchDeg": -1.188,
+          "normalLoadsN": [
+            7283.2,
+            7283.2,
+            3511.9,
+            3511.9
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3164,
+            0.3164
+          ],
+          "longitudinalTireForceN": -17898.4
+        },
+        {
+          "seconds": 0.608,
+          "speedKmh": 82.002,
+          "distanceM": 15.361,
+          "heightM": 0.5969,
+          "pitchDeg": -1.183,
+          "normalLoadsN": [
+            7306.2,
+            7306.2,
+            3485.9,
+            3485.9
+          ],
+          "suspensionM": [
+            0.2577,
+            0.2577,
+            0.3163,
+            0.3163
+          ],
+          "longitudinalTireForceN": -17833.5
+        },
+        {
+          "seconds": 0.708,
+          "speedKmh": 79.025,
+          "distanceM": 17.595,
+          "heightM": 0.5969,
+          "pitchDeg": -1.188,
+          "normalLoadsN": [
+            7317.8,
+            7317.8,
+            3475.3,
+            3475.3
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3164,
+            0.3164
+          ],
+          "longitudinalTireForceN": -17807
+        },
+        {
+          "seconds": 0.808,
+          "speedKmh": 76.053,
+          "distanceM": 19.746,
+          "heightM": 0.5969,
+          "pitchDeg": -1.191,
+          "normalLoadsN": [
+            7318.3,
+            7318.3,
+            3476,
+            3476
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17808.7
+        },
+        {
+          "seconds": 0.908,
+          "speedKmh": 73.083,
+          "distanceM": 21.814,
+          "heightM": 0.5969,
+          "pitchDeg": -1.191,
+          "normalLoadsN": [
+            7316.5,
+            7316.5,
+            3478,
+            3478
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17813.7
+        },
+        {
+          "seconds": 1.008,
+          "speedKmh": 70.116,
+          "distanceM": 23.8,
+          "heightM": 0.5969,
+          "pitchDeg": -1.191,
+          "normalLoadsN": [
+            7315.4,
+            7315.4,
+            3478.5,
+            3478.5
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17814.9
+        },
+        {
+          "seconds": 1.108,
+          "speedKmh": 67.152,
+          "distanceM": 25.703,
+          "heightM": 0.5969,
+          "pitchDeg": -1.191,
+          "normalLoadsN": [
+            7315,
+            7315,
+            3478.1,
+            3478.1
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17814
+        },
+        {
+          "seconds": 1.208,
+          "speedKmh": 64.192,
+          "distanceM": 27.525,
+          "heightM": 0.5969,
+          "pitchDeg": -1.191,
+          "normalLoadsN": [
+            7314.8,
+            7314.8,
+            3477.8,
+            3477.8
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17813.2
+        },
+        {
+          "seconds": 1.308,
+          "speedKmh": 61.234,
+          "distanceM": 29.264,
+          "heightM": 0.5969,
+          "pitchDeg": -1.191,
+          "normalLoadsN": [
+            7314.7,
+            7314.7,
+            3477.6,
+            3477.6
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17812.7
+        },
+        {
+          "seconds": 1.408,
+          "speedKmh": 58.279,
+          "distanceM": 30.92,
+          "heightM": 0.5969,
+          "pitchDeg": -1.191,
+          "normalLoadsN": [
+            7314.5,
+            7314.5,
+            3477.5,
+            3477.5
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17812.4
+        },
+        {
+          "seconds": 1.508,
+          "speedKmh": 55.327,
+          "distanceM": 32.495,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7314.4,
+            7314.4,
+            3477.4,
+            3477.4
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17812.2
+        },
+        {
+          "seconds": 1.608,
+          "speedKmh": 52.378,
+          "distanceM": 33.988,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7314.2,
+            7314.2,
+            3477.3,
+            3477.3
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17811.8
+        },
+        {
+          "seconds": 1.708,
+          "speedKmh": 49.431,
+          "distanceM": 35.399,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7314,
+            7314,
+            3477.1,
+            3477.1
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17811.5
+        },
+        {
+          "seconds": 1.808,
+          "speedKmh": 46.487,
+          "distanceM": 36.728,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7313.8,
+            7313.8,
+            3477,
+            3477
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17811.3
+        },
+        {
+          "seconds": 1.908,
+          "speedKmh": 43.545,
+          "distanceM": 37.975,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7313.7,
+            7313.7,
+            3476.9,
+            3476.9
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17811
+        },
+        {
+          "seconds": 2.008,
+          "speedKmh": 40.606,
+          "distanceM": 39.141,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7313.6,
+            7313.6,
+            3476.8,
+            3476.8
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17810.8
+        },
+        {
+          "seconds": 2.108,
+          "speedKmh": 37.669,
+          "distanceM": 40.225,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7313.4,
+            7313.4,
+            3476.7,
+            3476.7
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17810.5
+        },
+        {
+          "seconds": 2.208,
+          "speedKmh": 34.734,
+          "distanceM": 41.227,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7313.3,
+            7313.3,
+            3476.7,
+            3476.7
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17810.3
+        },
+        {
+          "seconds": 2.308,
+          "speedKmh": 31.801,
+          "distanceM": 42.148,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7313.2,
+            7313.2,
+            3476.6,
+            3476.6
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17810.1
+        },
+        {
+          "seconds": 2.408,
+          "speedKmh": 28.87,
+          "distanceM": 42.988,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7313.1,
+            7313.1,
+            3476.5,
+            3476.5
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17810
+        },
+        {
+          "seconds": 2.508,
+          "speedKmh": 25.941,
+          "distanceM": 43.746,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7313,
+            7313,
+            3476.5,
+            3476.5
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17809.8
+        },
+        {
+          "seconds": 2.608,
+          "speedKmh": 23.015,
+          "distanceM": 44.422,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7312.9,
+            7312.9,
+            3476.4,
+            3476.4
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17809.7
+        },
+        {
+          "seconds": 2.708,
+          "speedKmh": 20.09,
+          "distanceM": 45.018,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7312.9,
+            7312.9,
+            3476.3,
+            3476.3
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17809.6
+        },
+        {
+          "seconds": 2.808,
+          "speedKmh": 17.166,
+          "distanceM": 45.532,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7312.8,
+            7312.8,
+            3476.3,
+            3476.3
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17809.4
+        },
+        {
+          "seconds": 2.908,
+          "speedKmh": 14.245,
+          "distanceM": 45.965,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7312.7,
+            7312.7,
+            3476.3,
+            3476.3
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17809.4
+        },
+        {
+          "seconds": 3.008,
+          "speedKmh": 11.324,
+          "distanceM": 46.317,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7312.7,
+            7312.7,
+            3476.2,
+            3476.2
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17809.3
+        },
+        {
+          "seconds": 3.108,
+          "speedKmh": 8.406,
+          "distanceM": 46.587,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7312.7,
+            7312.7,
+            3476.2,
+            3476.2
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17809.2
+        },
+        {
+          "seconds": 3.208,
+          "speedKmh": 5.488,
+          "distanceM": 46.777,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7312.6,
+            7312.6,
+            3476.2,
+            3476.2
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17809.2
+        },
+        {
+          "seconds": 3.308,
+          "speedKmh": 2.573,
+          "distanceM": 46.886,
+          "heightM": 0.5969,
+          "pitchDeg": -1.19,
+          "normalLoadsN": [
+            7312.6,
+            7312.6,
+            3476.2,
+            3476.2
+          ],
+          "suspensionM": [
+            0.2575,
+            0.2575,
+            0.3165,
+            0.3165
+          ],
+          "longitudinalTireForceN": -17807.1
+        },
+        {
+          "seconds": 3.408,
+          "speedKmh": 1.302,
+          "distanceM": 46.932,
+          "heightM": 0.5969,
+          "pitchDeg": -0.933,
+          "normalLoadsN": [
+            6202,
+            6202,
+            4596.7,
+            4596.7
+          ],
+          "suspensionM": [
+            0.2627,
+            0.2627,
+            0.3113,
+            0.3113
+          ],
+          "longitudinalTireForceN": -2529.8
+        },
+        {
+          "seconds": 3.508,
+          "speedKmh": 1.16,
+          "distanceM": 46.965,
+          "heightM": 0.597,
+          "pitchDeg": -0.297,
+          "normalLoadsN": [
+            5090.2,
+            5090.2,
+            5695.6,
+            5695.6
+          ],
+          "suspensionM": [
+            0.2784,
+            0.2784,
+            0.2956,
+            0.2956
+          ],
+          "longitudinalTireForceN": 145
+        },
+        {
+          "seconds": 3.608,
+          "speedKmh": 1.265,
+          "distanceM": 46.999,
+          "heightM": 0.597,
+          "pitchDeg": 0.098,
+          "normalLoadsN": [
+            4919,
+            4919,
+            5862.7,
+            5862.7
+          ],
+          "suspensionM": [
+            0.289,
+            0.289,
+            0.2851,
+            0.2851
+          ],
+          "longitudinalTireForceN": 829.2
+        },
+        {
+          "seconds": 3.708,
+          "speedKmh": 1.379,
+          "distanceM": 47.035,
+          "heightM": 0.597,
+          "pitchDeg": 0.164,
+          "normalLoadsN": [
+            5167.6,
+            5167.6,
+            5619.6,
+            5619.6
+          ],
+          "suspensionM": [
+            0.2912,
+            0.2912,
+            0.2829,
+            0.2829
+          ],
+          "longitudinalTireForceN": 523.2
+        },
+        {
+          "seconds": 3.808,
+          "speedKmh": 1.424,
+          "distanceM": 47.075,
+          "heightM": 0.597,
+          "pitchDeg": 0.081,
+          "normalLoadsN": [
+            5392.8,
+            5392.8,
+            5397.3,
+            5397.3
+          ],
+          "suspensionM": [
+            0.2892,
+            0.2892,
+            0.2848,
+            0.2848
+          ],
+          "longitudinalTireForceN": 92.3
+        },
+        {
+          "seconds": 3.908,
+          "speedKmh": 1.418,
+          "distanceM": 47.114,
+          "heightM": 0.597,
+          "pitchDeg": 0.002,
+          "normalLoadsN": [
+            5466.5,
+            5466.5,
+            5323.5,
+            5323.5
+          ],
+          "suspensionM": [
+            0.2872,
+            0.2872,
+            0.2868,
+            0.2868
+          ],
+          "longitudinalTireForceN": -104.2
+        },
+        {
+          "seconds": 4.008,
+          "speedKmh": 1.399,
+          "distanceM": 47.153,
+          "heightM": 0.597,
+          "pitchDeg": -0.024,
+          "normalLoadsN": [
+            5444.2,
+            5444.2,
+            5345,
+            5345
+          ],
+          "suspensionM": [
+            0.2864,
+            0.2864,
+            0.2876,
+            0.2876
+          ],
+          "longitudinalTireForceN": -99.2
+        },
+        {
+          "seconds": 4.108,
+          "speedKmh": 1.388,
+          "distanceM": 47.192,
+          "heightM": 0.597,
+          "pitchDeg": -0.017,
+          "normalLoadsN": [
+            5404.9,
+            5404.9,
+            5383.8,
+            5383.8
+          ],
+          "suspensionM": [
+            0.2865,
+            0.2865,
+            0.2875,
+            0.2875
+          ],
+          "longitudinalTireForceN": -32.1
+        },
+        {
+          "seconds": 4.208,
+          "speedKmh": 1.387,
+          "distanceM": 47.23,
+          "heightM": 0.597,
+          "pitchDeg": -0.004,
+          "normalLoadsN": [
+            5385.3,
+            5385.3,
+            5403.4,
+            5403.4
+          ],
+          "suspensionM": [
+            0.2869,
+            0.2869,
+            0.2871,
+            0.2871
+          ],
+          "longitudinalTireForceN": 12.4
+        },
+        {
+          "seconds": 4.308,
+          "speedKmh": 1.389,
+          "distanceM": 47.269,
+          "heightM": 0.597,
+          "pitchDeg": 0.003,
+          "normalLoadsN": [
+            5384.5,
+            5384.5,
+            5404.3,
+            5404.3
+          ],
+          "suspensionM": [
+            0.2871,
+            0.2871,
+            0.2869,
+            0.2869
+          ],
+          "longitudinalTireForceN": 21.1
+        },
+        {
+          "seconds": 4.408,
+          "speedKmh": 1.391,
+          "distanceM": 47.308,
+          "heightM": 0.597,
+          "pitchDeg": 0.004,
+          "normalLoadsN": [
+            5390.3,
+            5390.3,
+            5398.5,
+            5398.5
+          ],
+          "suspensionM": [
+            0.2871,
+            0.2871,
+            0.2869,
+            0.2869
+          ],
+          "longitudinalTireForceN": 12.7
+        },
+        {
+          "seconds": 4.508,
+          "speedKmh": 1.392,
+          "distanceM": 47.346,
+          "heightM": 0.597,
+          "pitchDeg": 0.002,
+          "normalLoadsN": [
+            5394.6,
+            5394.6,
+            5394.3,
+            5394.3
+          ],
+          "suspensionM": [
+            0.2871,
+            0.2871,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 4.1
+        },
+        {
+          "seconds": 4.608,
+          "speedKmh": 1.392,
+          "distanceM": 47.385,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5395.6,
+            5395.6,
+            5393.2,
+            5393.2
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 0.9
+        },
+        {
+          "seconds": 4.708,
+          "speedKmh": 1.391,
+          "distanceM": 47.424,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5395,
+            5395,
+            5393.9,
+            5393.9
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 1.5
+        },
+        {
+          "seconds": 4.808,
+          "speedKmh": 1.391,
+          "distanceM": 47.462,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394.2,
+            5394.2,
+            5394.7,
+            5394.7
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 2.9
+        },
+        {
+          "seconds": 4.908,
+          "speedKmh": 1.391,
+          "distanceM": 47.501,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5393.8,
+            5393.8,
+            5395,
+            5395
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.7
+        },
+        {
+          "seconds": 5.008,
+          "speedKmh": 1.391,
+          "distanceM": 47.54,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5393.9,
+            5393.9,
+            5395,
+            5395
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.8
+        },
+        {
+          "seconds": 5.108,
+          "speedKmh": 1.391,
+          "distanceM": 47.578,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.6
+        },
+        {
+          "seconds": 5.208,
+          "speedKmh": 1.391,
+          "distanceM": 47.617,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394.1,
+            5394.1,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.4
+        },
+        {
+          "seconds": 5.308,
+          "speedKmh": 1.391,
+          "distanceM": 47.655,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394.1,
+            5394.1,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.4
+        },
+        {
+          "seconds": 5.408,
+          "speedKmh": 1.391,
+          "distanceM": 47.694,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394.1,
+            5394.1,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.4
+        },
+        {
+          "seconds": 5.508,
+          "speedKmh": 1.391,
+          "distanceM": 47.733,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 5.608,
+          "speedKmh": 1.391,
+          "distanceM": 47.771,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 5.708,
+          "speedKmh": 1.391,
+          "distanceM": 47.81,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 5.808,
+          "speedKmh": 1.391,
+          "distanceM": 47.849,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 5.908,
+          "speedKmh": 1.391,
+          "distanceM": 47.887,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.008,
+          "speedKmh": 1.391,
+          "distanceM": 47.926,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.108,
+          "speedKmh": 1.391,
+          "distanceM": 47.965,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.208,
+          "speedKmh": 1.391,
+          "distanceM": 48.003,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.308,
+          "speedKmh": 1.391,
+          "distanceM": 48.042,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.408,
+          "speedKmh": 1.391,
+          "distanceM": 48.081,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.508,
+          "speedKmh": 1.391,
+          "distanceM": 48.119,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.608,
+          "speedKmh": 1.391,
+          "distanceM": 48.158,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.708,
+          "speedKmh": 1.391,
+          "distanceM": 48.197,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.808,
+          "speedKmh": 1.391,
+          "distanceM": 48.235,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 6.908,
+          "speedKmh": 1.391,
+          "distanceM": 48.274,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.008,
+          "speedKmh": 1.391,
+          "distanceM": 48.312,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.108,
+          "speedKmh": 1.391,
+          "distanceM": 48.351,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.208,
+          "speedKmh": 1.391,
+          "distanceM": 48.39,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.308,
+          "speedKmh": 1.391,
+          "distanceM": 48.428,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.408,
+          "speedKmh": 1.391,
+          "distanceM": 48.467,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.508,
+          "speedKmh": 1.391,
+          "distanceM": 48.506,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.608,
+          "speedKmh": 1.391,
+          "distanceM": 48.544,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.708,
+          "speedKmh": 1.391,
+          "distanceM": 48.583,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.808,
+          "speedKmh": 1.391,
+          "distanceM": 48.622,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 7.908,
+          "speedKmh": 1.391,
+          "distanceM": 48.66,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.008,
+          "speedKmh": 1.391,
+          "distanceM": 48.699,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.108,
+          "speedKmh": 1.391,
+          "distanceM": 48.738,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.208,
+          "speedKmh": 1.391,
+          "distanceM": 48.776,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.308,
+          "speedKmh": 1.391,
+          "distanceM": 48.815,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.408,
+          "speedKmh": 1.391,
+          "distanceM": 48.854,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.508,
+          "speedKmh": 1.391,
+          "distanceM": 48.892,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.608,
+          "speedKmh": 1.391,
+          "distanceM": 48.931,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.708,
+          "speedKmh": 1.391,
+          "distanceM": 48.969,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.808,
+          "speedKmh": 1.391,
+          "distanceM": 49.008,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 8.908,
+          "speedKmh": 1.391,
+          "distanceM": 49.047,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.008,
+          "speedKmh": 1.391,
+          "distanceM": 49.085,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.108,
+          "speedKmh": 1.391,
+          "distanceM": 49.124,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.208,
+          "speedKmh": 1.391,
+          "distanceM": 49.163,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.308,
+          "speedKmh": 1.391,
+          "distanceM": 49.201,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.408,
+          "speedKmh": 1.391,
+          "distanceM": 49.24,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.508,
+          "speedKmh": 1.391,
+          "distanceM": 49.279,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.608,
+          "speedKmh": 1.391,
+          "distanceM": 49.317,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.708,
+          "speedKmh": 1.391,
+          "distanceM": 49.356,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.808,
+          "speedKmh": 1.391,
+          "distanceM": 49.395,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 9.908,
+          "speedKmh": 1.391,
+          "distanceM": 49.433,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.008,
+          "speedKmh": 1.391,
+          "distanceM": 49.472,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.108,
+          "speedKmh": 1.391,
+          "distanceM": 49.511,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.208,
+          "speedKmh": 1.391,
+          "distanceM": 49.549,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.308,
+          "speedKmh": 1.391,
+          "distanceM": 49.588,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.408,
+          "speedKmh": 1.391,
+          "distanceM": 49.626,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.508,
+          "speedKmh": 1.391,
+          "distanceM": 49.665,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.608,
+          "speedKmh": 1.391,
+          "distanceM": 49.704,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.708,
+          "speedKmh": 1.391,
+          "distanceM": 49.742,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.808,
+          "speedKmh": 1.391,
+          "distanceM": 49.781,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 10.908,
+          "speedKmh": 1.391,
+          "distanceM": 49.82,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.008,
+          "speedKmh": 1.391,
+          "distanceM": 49.858,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.108,
+          "speedKmh": 1.391,
+          "distanceM": 49.897,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.208,
+          "speedKmh": 1.391,
+          "distanceM": 49.936,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.308,
+          "speedKmh": 1.391,
+          "distanceM": 49.974,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.408,
+          "speedKmh": 1.391,
+          "distanceM": 50.013,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.508,
+          "speedKmh": 1.391,
+          "distanceM": 50.052,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.608,
+          "speedKmh": 1.391,
+          "distanceM": 50.09,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.708,
+          "speedKmh": 1.391,
+          "distanceM": 50.129,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.808,
+          "speedKmh": 1.391,
+          "distanceM": 50.168,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        },
+        {
+          "seconds": 11.908,
+          "speedKmh": 1.391,
+          "distanceM": 50.206,
+          "heightM": 0.597,
+          "pitchDeg": 0,
+          "normalLoadsN": [
+            5394,
+            5394,
+            5394.8,
+            5394.8
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 3.5
+        }
+      ]
+    },
+    {
+      "label": "100 km/h, mu 0.85 engineering sensitivity",
+      "input": {
+        "speedKmh": 100,
+        "gas": "full",
+        "throttle": 0,
+        "brake": 1,
+        "tireMu": 0.85
+      },
+      "valid": true,
+      "massKg": 2199.5582002848946,
+      "initialPressureBar": 350,
+      "initialHeightM": 0.5970089755245234,
+      "initialSuspensionM": [
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731
+      ],
+      "idealFrictionLimitMps2": 8.3385,
+      "idealFrictionStoppingDistanceM": 46.26761037786203,
+      "stop": {
+        "seconds": 3.300000000000111,
+        "distanceM": 45.39140923372096,
+        "speedKmh": 0.2669837027979366
+      },
+      "stopStable": true,
+      "observedDurationS": 4.300000000000161,
+      "finalSpeedKmh": -0.0009483513629821127,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.5970096825567096,
+        "z": -34.61898476817163
+      },
+      "averageDecelerationUntilStopMps2": 8.395035041851743,
+      "speedReductionMps": 27.77804120871194,
+      "averageDecelerationMps2": 6.46000958342114,
+      "maximumDecelerationMps2": 8.602294470597371,
+      "bodyContactSteps": 0,
+      "wheelBumpStopContactSteps": 0,
+      "minimumWheelContacts": 4,
+      "notFourWheelSteps": 0,
+      "minimumSuspensionM": 0.2526311278138549,
+      "maximumSuspensionM": 0.3212753992361981,
+      "maximumPitchDeg": 1.3845990841068698,
+      "averageNormalLoadN": 21582.187798357467,
+      "averageLongitudinalTireBrakingN": 14045.856402807738,
+      "records": [
+        {
+          "seconds": 0.008,
+          "speedKmh": 99.743,
+          "distanceM": 0.231,
+          "heightM": 0.597,
+          "pitchDeg": -0.006,
+          "normalLoadsN": [
+            5394.4,
+            5394.4,
+            5394.4,
+            5394.4
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": -18341
+        },
+        {
+          "seconds": 0.108,
+          "speedKmh": 96.653,
+          "distanceM": 2.955,
+          "heightM": 0.597,
+          "pitchDeg": -0.629,
+          "normalLoadsN": [
+            7444.5,
+            7444.5,
+            3337.2,
+            3337.2
+          ],
+          "suspensionM": [
+            0.2731,
+            0.2731,
+            0.301,
+            0.301
+          ],
+          "longitudinalTireForceN": -18328.9
+        },
+        {
+          "seconds": 0.208,
+          "speedKmh": 93.558,
+          "distanceM": 5.594,
+          "heightM": 0.5969,
+          "pitchDeg": -1.234,
+          "normalLoadsN": [
+            7919.7,
+            7919.7,
+            2873.3,
+            2873.3
+          ],
+          "suspensionM": [
+            0.2572,
+            0.2572,
+            0.3168,
+            0.3168
+          ],
+          "longitudinalTireForceN": -18348.1
+        },
+        {
+          "seconds": 0.308,
+          "speedKmh": 90.472,
+          "distanceM": 8.147,
+          "heightM": 0.5968,
+          "pitchDeg": -1.384,
+          "normalLoadsN": [
+            7642.8,
+            7642.8,
+            3167.2,
+            3167.2
+          ],
+          "suspensionM": [
+            0.2526,
+            0.2526,
+            0.3213,
+            0.3213
+          ],
+          "longitudinalTireForceN": -18376.9
+        },
+        {
+          "seconds": 0.408,
+          "speedKmh": 87.396,
+          "distanceM": 10.614,
+          "heightM": 0.5967,
+          "pitchDeg": -1.306,
+          "normalLoadsN": [
+            7374.4,
+            7374.4,
+            3431.7,
+            3431.7
+          ],
+          "suspensionM": [
+            0.2543,
+            0.2543,
+            0.3195,
+            0.3195
+          ],
+          "longitudinalTireForceN": -18370.4
+        },
+        {
+          "seconds": 0.508,
+          "speedKmh": 84.327,
+          "distanceM": 12.996,
+          "heightM": 0.5968,
+          "pitchDeg": -1.227,
+          "normalLoadsN": [
+            7304.5,
+            7304.5,
+            3491.1,
+            3491.1
+          ],
+          "suspensionM": [
+            0.2564,
+            0.2564,
+            0.3175,
+            0.3175
+          ],
+          "longitudinalTireForceN": -18352.5
+        },
+        {
+          "seconds": 0.608,
+          "speedKmh": 81.261,
+          "distanceM": 15.293,
+          "heightM": 0.5968,
+          "pitchDeg": -1.206,
+          "normalLoadsN": [
+            7336.9,
+            7336.9,
+            3454.2,
+            3454.2
+          ],
+          "suspensionM": [
+            0.2571,
+            0.2571,
+            0.3169,
+            0.3169
+          ],
+          "longitudinalTireForceN": -18344.8
+        },
+        {
+          "seconds": 0.708,
+          "speedKmh": 78.199,
+          "distanceM": 17.505,
+          "heightM": 0.5969,
+          "pitchDeg": -1.216,
+          "normalLoadsN": [
+            7372,
+            7372,
+            3420.1,
+            3420.1
+          ],
+          "suspensionM": [
+            0.2569,
+            0.2569,
+            0.3171,
+            0.3171
+          ],
+          "longitudinalTireForceN": -18346.6
+        },
+        {
+          "seconds": 0.808,
+          "speedKmh": 75.138,
+          "distanceM": 19.631,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7382.3,
+            7382.3,
+            3412,
+            3412
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18350.2
+        },
+        {
+          "seconds": 0.908,
+          "speedKmh": 72.082,
+          "distanceM": 21.673,
+          "heightM": 0.5968,
+          "pitchDeg": -1.229,
+          "normalLoadsN": [
+            7378.5,
+            7378.5,
+            3416.3,
+            3416.3
+          ],
+          "suspensionM": [
+            0.2565,
+            0.2565,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18351.2
+        },
+        {
+          "seconds": 1.008,
+          "speedKmh": 69.028,
+          "distanceM": 23.63,
+          "heightM": 0.5968,
+          "pitchDeg": -1.228,
+          "normalLoadsN": [
+            7373.6,
+            7373.6,
+            3420.5,
+            3420.5
+          ],
+          "suspensionM": [
+            0.2565,
+            0.2565,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18350
+        },
+        {
+          "seconds": 1.108,
+          "speedKmh": 65.978,
+          "distanceM": 25.502,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7371.6,
+            7371.6,
+            3421.5,
+            3421.5
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18348.4
+        },
+        {
+          "seconds": 1.208,
+          "speedKmh": 62.931,
+          "distanceM": 27.289,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7371.7,
+            7371.7,
+            3420.9,
+            3420.9
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18347.3
+        },
+        {
+          "seconds": 1.308,
+          "speedKmh": 59.887,
+          "distanceM": 28.992,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7372,
+            7372,
+            3420.2,
+            3420.2
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18346.7
+        },
+        {
+          "seconds": 1.408,
+          "speedKmh": 56.846,
+          "distanceM": 30.61,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7372.1,
+            7372.1,
+            3419.9,
+            3419.9
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18346.3
+        },
+        {
+          "seconds": 1.508,
+          "speedKmh": 53.808,
+          "distanceM": 32.144,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7371.8,
+            7371.8,
+            3419.8,
+            3419.8
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18345.9
+        },
+        {
+          "seconds": 1.608,
+          "speedKmh": 50.773,
+          "distanceM": 33.593,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7371.6,
+            7371.6,
+            3419.8,
+            3419.8
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18345.3
+        },
+        {
+          "seconds": 1.708,
+          "speedKmh": 47.74,
+          "distanceM": 34.958,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7371.3,
+            7371.3,
+            3419.7,
+            3419.7
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18344.8
+        },
+        {
+          "seconds": 1.808,
+          "speedKmh": 44.71,
+          "distanceM": 36.239,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7371.1,
+            7371.1,
+            3419.6,
+            3419.6
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18344.3
+        },
+        {
+          "seconds": 1.908,
+          "speedKmh": 41.683,
+          "distanceM": 37.435,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7371,
+            7371,
+            3419.5,
+            3419.5
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18343.9
+        },
+        {
+          "seconds": 2.008,
+          "speedKmh": 38.658,
+          "distanceM": 38.548,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370.8,
+            7370.8,
+            3419.5,
+            3419.5
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18343.5
+        },
+        {
+          "seconds": 2.108,
+          "speedKmh": 35.635,
+          "distanceM": 39.577,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370.7,
+            7370.7,
+            3419.4,
+            3419.4
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18343.1
+        },
+        {
+          "seconds": 2.208,
+          "speedKmh": 32.615,
+          "distanceM": 40.521,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370.6,
+            7370.6,
+            3419.3,
+            3419.3
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18342.8
+        },
+        {
+          "seconds": 2.308,
+          "speedKmh": 29.596,
+          "distanceM": 41.382,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370.4,
+            7370.4,
+            3419.2,
+            3419.2
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18342.5
+        },
+        {
+          "seconds": 2.408,
+          "speedKmh": 26.58,
+          "distanceM": 42.159,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370.3,
+            7370.3,
+            3419.2,
+            3419.2
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18342.2
+        },
+        {
+          "seconds": 2.508,
+          "speedKmh": 23.566,
+          "distanceM": 42.852,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370.2,
+            7370.2,
+            3419.1,
+            3419.1
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18341.9
+        },
+        {
+          "seconds": 2.608,
+          "speedKmh": 20.553,
+          "distanceM": 43.461,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370.1,
+            7370.1,
+            3419.1,
+            3419.1
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18341.7
+        },
+        {
+          "seconds": 2.708,
+          "speedKmh": 17.543,
+          "distanceM": 43.987,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370.1,
+            7370.1,
+            3419.1,
+            3419.1
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18341.5
+        },
+        {
+          "seconds": 2.808,
+          "speedKmh": 14.534,
+          "distanceM": 44.429,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370,
+            7370,
+            3419,
+            3419
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18341.4
+        },
+        {
+          "seconds": 2.908,
+          "speedKmh": 11.527,
+          "distanceM": 44.788,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7370,
+            7370,
+            3419,
+            3419
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18341.2
+        },
+        {
+          "seconds": 3.008,
+          "speedKmh": 8.521,
+          "distanceM": 45.063,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7369.9,
+            7369.9,
+            3419,
+            3419
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18341.1
+        },
+        {
+          "seconds": 3.108,
+          "speedKmh": 5.517,
+          "distanceM": 45.254,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7369.9,
+            7369.9,
+            3419,
+            3419
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18341
+        },
+        {
+          "seconds": 3.208,
+          "speedKmh": 2.514,
+          "distanceM": 45.363,
+          "heightM": 0.5969,
+          "pitchDeg": -1.226,
+          "normalLoadsN": [
+            7369.9,
+            7369.9,
+            3419,
+            3419
+          ],
+          "suspensionM": [
+            0.2566,
+            0.2566,
+            0.3174,
+            0.3174
+          ],
+          "longitudinalTireForceN": -18341
+        },
+        {
+          "seconds": 3.308,
+          "speedKmh": 0.183,
+          "distanceM": 45.392,
+          "heightM": 0.5969,
+          "pitchDeg": -1.156,
+          "normalLoadsN": [
+            6944.2,
+            6944.2,
+            3850.7,
+            3850.7
+          ],
+          "suspensionM": [
+            0.2578,
+            0.2578,
+            0.3162,
+            0.3162
+          ],
+          "longitudinalTireForceN": -6145
+        },
+        {
+          "seconds": 3.408,
+          "speedKmh": -0.221,
+          "distanceM": 45.389,
+          "heightM": 0.597,
+          "pitchDeg": -0.585,
+          "normalLoadsN": [
+            5454,
+            5454,
+            5338.7,
+            5338.7
+          ],
+          "suspensionM": [
+            0.2711,
+            0.2711,
+            0.3029,
+            0.3029
+          ],
+          "longitudinalTireForceN": -747.2
+        },
+        {
+          "seconds": 3.508,
+          "speedKmh": -0.188,
+          "distanceM": 45.383,
+          "heightM": 0.597,
+          "pitchDeg": -0.032,
+          "normalLoadsN": [
+            4899,
+            4899,
+            5882,
+            5882
+          ],
+          "suspensionM": [
+            0.2854,
+            0.2854,
+            0.2886,
+            0.2886
+          ],
+          "longitudinalTireForceN": 717
+        },
+        {
+          "seconds": 3.608,
+          "speedKmh": -0.057,
+          "distanceM": 45.38,
+          "heightM": 0.597,
+          "pitchDeg": 0.168,
+          "normalLoadsN": [
+            5035.8,
+            5035.8,
+            5748.8,
+            5748.8
+          ],
+          "suspensionM": [
+            0.2911,
+            0.2911,
+            0.283,
+            0.283
+          ],
+          "longitudinalTireForceN": 724.8
+        },
+        {
+          "seconds": 3.708,
+          "speedKmh": 0.022,
+          "distanceM": 45.38,
+          "heightM": 0.597,
+          "pitchDeg": 0.126,
+          "normalLoadsN": [
+            5309.4,
+            5309.4,
+            5480,
+            5480
+          ],
+          "suspensionM": [
+            0.2903,
+            0.2903,
+            0.2837,
+            0.2837
+          ],
+          "longitudinalTireForceN": 264.9
+        },
+        {
+          "seconds": 3.808,
+          "speedKmh": 0.033,
+          "distanceM": 45.38,
+          "heightM": 0.597,
+          "pitchDeg": 0.032,
+          "normalLoadsN": [
+            5452.2,
+            5452.2,
+            5338,
+            5338
+          ],
+          "suspensionM": [
+            0.288,
+            0.288,
+            0.2861,
+            0.2861
+          ],
+          "longitudinalTireForceN": -53.2
+        },
+        {
+          "seconds": 3.908,
+          "speedKmh": 0.016,
+          "distanceM": 45.381,
+          "heightM": 0.597,
+          "pitchDeg": -0.019,
+          "normalLoadsN": [
+            5461.6,
+            5461.6,
+            5328,
+            5328
+          ],
+          "suspensionM": [
+            0.2866,
+            0.2866,
+            0.2874,
+            0.2874
+          ],
+          "longitudinalTireForceN": -122.5
+        },
+        {
+          "seconds": 4.008,
+          "speedKmh": 0,
+          "distanceM": 45.381,
+          "heightM": 0.597,
+          "pitchDeg": -0.023,
+          "normalLoadsN": [
+            5421.8,
+            5421.8,
+            5367.1,
+            5367.1
+          ],
+          "suspensionM": [
+            0.2864,
+            0.2864,
+            0.2876,
+            0.2876
+          ],
+          "longitudinalTireForceN": -66.8
+        },
+        {
+          "seconds": 4.108,
+          "speedKmh": -0.005,
+          "distanceM": 45.381,
+          "heightM": 0.597,
+          "pitchDeg": -0.01,
+          "normalLoadsN": [
+            5391.4,
+            5391.4,
+            5397.2,
+            5397.2
+          ],
+          "suspensionM": [
+            0.2867,
+            0.2867,
+            0.2873,
+            0.2873
+          ],
+          "longitudinalTireForceN": -6.1
+        },
+        {
+          "seconds": 4.208,
+          "speedKmh": -0.004,
+          "distanceM": 45.381,
+          "heightM": 0.597,
+          "pitchDeg": 0.001,
+          "normalLoadsN": [
+            5383.5,
+            5383.5,
+            5405.2,
+            5405.2
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": 17.5
+        }
+      ]
+    },
+    {
+      "label": "100 km/h, accelerator released, first second only",
+      "input": {
+        "speedKmh": 100,
+        "gas": "full",
+        "throttle": 0,
+        "brake": 0,
+        "tireMu": 1.25
+      },
+      "valid": true,
+      "massKg": 2199.5582002848946,
+      "initialPressureBar": 350,
+      "initialHeightM": 0.5970089755245234,
+      "initialSuspensionM": [
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731,
+        0.2870089754226731
+      ],
+      "idealFrictionLimitMps2": 12.262500000000001,
+      "idealFrictionStoppingDistanceM": 31.461975056946173,
+      "stop": null,
+      "stopStable": false,
+      "observedDurationS": 0.9999999999999964,
+      "finalSpeedKmh": 95.5633067339778,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.5969987079572293,
+        "z": -52.84103508754396
+      },
+      "averageDecelerationUntilStopMps2": null,
+      "speedReductionMps": 1.232414796117279,
+      "averageDecelerationMps2": 1.2324147961172836,
+      "maximumDecelerationMps2": 1.2475427447846243,
+      "bodyContactSteps": 0,
+      "wheelBumpStopContactSteps": 0,
+      "minimumWheelContacts": 4,
+      "notFourWheelSteps": 0,
+      "minimumSuspensionM": 0.28292609232090704,
+      "maximumSuspensionM": 0.291076145626027,
+      "maximumPitchDeg": 0.16441681542596662,
+      "averageNormalLoadN": 21579.681375718097,
+      "averageLongitudinalTireBrakingN": 2208.765453862547,
+      "records": [
+        {
+          "seconds": 0.008,
+          "speedKmh": 99.963,
+          "distanceM": 0.231,
+          "heightM": 0.597,
+          "pitchDeg": -0.001,
+          "normalLoadsN": [
+            5394.4,
+            5394.4,
+            5394.4,
+            5394.4
+          ],
+          "suspensionM": [
+            0.287,
+            0.287,
+            0.287,
+            0.287
+          ],
+          "longitudinalTireForceN": -2160
+        },
+        {
+          "seconds": 0.108,
+          "speedKmh": 99.524,
+          "distanceM": 3.002,
+          "heightM": 0.597,
+          "pitchDeg": -0.074,
+          "normalLoadsN": [
+            5637,
+            5637,
+            5151.9,
+            5151.9
+          ],
+          "suspensionM": [
+            0.2854,
+            0.2854,
+            0.2887,
+            0.2887
+          ],
+          "longitudinalTireForceN": -2169.5
+        },
+        {
+          "seconds": 0.208,
+          "speedKmh": 99.084,
+          "distanceM": 5.76,
+          "heightM": 0.597,
+          "pitchDeg": -0.146,
+          "normalLoadsN": [
+            5694,
+            5694,
+            5095.7,
+            5095.7
+          ],
+          "suspensionM": [
+            0.2835,
+            0.2835,
+            0.2905,
+            0.2905
+          ],
+          "longitudinalTireForceN": -2179.2
+        },
+        {
+          "seconds": 0.308,
+          "speedKmh": 98.643,
+          "distanceM": 8.505,
+          "heightM": 0.597,
+          "pitchDeg": -0.164,
+          "normalLoadsN": [
+            5661.7,
+            5661.7,
+            5128.7,
+            5128.7
+          ],
+          "suspensionM": [
+            0.2829,
+            0.2829,
+            0.2911,
+            0.2911
+          ],
+          "longitudinalTireForceN": -2188.9
+        },
+        {
+          "seconds": 0.408,
+          "speedKmh": 98.201,
+          "distanceM": 11.239,
+          "heightM": 0.597,
+          "pitchDeg": -0.156,
+          "normalLoadsN": [
+            5631.2,
+            5631.2,
+            5159.2,
+            5159.2
+          ],
+          "suspensionM": [
+            0.2831,
+            0.2831,
+            0.2909,
+            0.2909
+          ],
+          "longitudinalTireForceN": -2198.7
+        },
+        {
+          "seconds": 0.508,
+          "speedKmh": 97.758,
+          "distanceM": 13.96,
+          "heightM": 0.597,
+          "pitchDeg": -0.147,
+          "normalLoadsN": [
+            5624.7,
+            5624.7,
+            5165.4,
+            5165.4
+          ],
+          "suspensionM": [
+            0.2833,
+            0.2833,
+            0.2907,
+            0.2907
+          ],
+          "longitudinalTireForceN": -2208.7
+        },
+        {
+          "seconds": 0.608,
+          "speedKmh": 97.314,
+          "distanceM": 16.669,
+          "heightM": 0.597,
+          "pitchDeg": -0.145,
+          "normalLoadsN": [
+            5629.9,
+            5629.9,
+            5159.9,
+            5159.9
+          ],
+          "suspensionM": [
+            0.2834,
+            0.2834,
+            0.2906,
+            0.2906
+          ],
+          "longitudinalTireForceN": -2218.8
+        },
+        {
+          "seconds": 0.708,
+          "speedKmh": 96.868,
+          "distanceM": 19.365,
+          "heightM": 0.597,
+          "pitchDeg": -0.147,
+          "normalLoadsN": [
+            5635.1,
+            5635.1,
+            5154.7,
+            5154.7
+          ],
+          "suspensionM": [
+            0.2834,
+            0.2834,
+            0.2906,
+            0.2906
+          ],
+          "longitudinalTireForceN": -2229
+        },
+        {
+          "seconds": 0.808,
+          "speedKmh": 96.422,
+          "distanceM": 22.049,
+          "heightM": 0.597,
+          "pitchDeg": -0.149,
+          "normalLoadsN": [
+            5637.3,
+            5637.3,
+            5152.6,
+            5152.6
+          ],
+          "suspensionM": [
+            0.2833,
+            0.2833,
+            0.2907,
+            0.2907
+          ],
+          "longitudinalTireForceN": -2239.3
+        },
+        {
+          "seconds": 0.908,
+          "speedKmh": 95.975,
+          "distanceM": 24.721,
+          "heightM": 0.597,
+          "pitchDeg": -0.15,
+          "normalLoadsN": [
+            5637.9,
+            5637.9,
+            5152.1,
+            5152.1
+          ],
+          "suspensionM": [
+            0.2833,
+            0.2833,
+            0.2907,
+            0.2907
+          ],
+          "longitudinalTireForceN": -2249.7
+        }
+      ]
+    }
+  ]
+}

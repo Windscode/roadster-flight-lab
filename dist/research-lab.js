@@ -1,0 +1,105 @@
+import {DEFAULT_PARAMS} from './physics.js';
+import {MODEL_VERSION} from './vehicle-models.js';
+import {MODEL_BUILD_ID} from './model-build.js';
+import {EXPERIMENTS,PROTOCOL_VERSION,RESEARCH_PARAMETERS,normalizeResearchRequest} from './research-protocol.js';
+import {PAIR_KEYS,PAIRS,SWEEP_KEYS,buildStudyRequests,studyArchive,importStudy} from './research-study.js';
+const $=id=>document.getElementById(id),colors=['#c4dfb4','#e9b781','#8bc3d3','#ce9bc2','#a9afe1','#d2ce8c','#80ba9f'];
+const labels={completed:'计算完成',stable_stop:'持续停止已确认',stable_landing:'稳定着陆已确认',recovered:'持续回稳已确认',not_recovered_in_window:'窗口内未恢复',held_in_window:'窗口内悬停保持',hover_not_held:'悬停未保持',height_hold_lost:'高度未保持',rejected:'预检拒绝',window_ended_without_stable_landing:'窗口内未稳定着陆',window_ended_without_stop:'窗口内未停止'};
+const channels={beta:['有效道路侧偏 / °','°'],yaw:['偏航速率 / °/s','°/s'],steer:['实际路轮角 / °','°'],speed:['实际前进速度 / km/h','km/h'],height:['重心高度 / m','m'],targetHeight:['高度参考 / m','m'],heightError:['高度误差 / m','m'],vertical:['垂直速度 / m/s','m/s'],roll:['滚转角 / °','°'],rollTravel:['累计解缠滚转 / °','°'],positionError:['水平位置偏移 / m','m'],grip:['最大轮胎附着利用率',''],gas:['剩余气量 / kg','kg'],flow:['实际质量流率 / kg/s','kg/s'],pressure:['罐压 / bar','bar'],temperature:['罐温 / K','K'],thrustMargin:['额定主推力 / 车重',''],allocationError:['分配残差 / 归一化','']};
+const channelSets={steer:['beta','yaw','steer','speed','grip'],brake:['speed','yaw','beta','grip'],attitude:['roll','heightError','height','vertical','positionError'],rise:['height','targetHeight','vertical','heightError'],hover:['heightError','height','positionError','vertical'],roll:['height','rollTravel','roll','vertical']};
+let params={...DEFAULT_PARAMS},entries=[],selected=new Set(),activeId=null,worker=null,pendingReject=null,generation=0,imported=[],chartSeries=[],chartRange=null;
+const storeKey='roadster-research-library-v2';
+const fmt=(v,n=2)=>typeof v==='number'&&Number.isFinite(v)?v.toFixed(n):'—';
+function option(value,text){const o=document.createElement('option');o.value=value;o.textContent=text;return o;}
+function setStatus(message,error=false){$('lab-status').textContent=message;$('lab-status').style.color=error?'#eac18f':'';}
+function renderParameterFields(){
+ $('lab-parameters').replaceChildren();for(const [key,p]of Object.entries(RESEARCH_PARAMETERS)){const label=document.createElement('label');label.htmlFor='lab-param-'+key;label.textContent=p.label;const unit=document.createElement('span');unit.textContent=p.unit;label.append(unit);const input=document.createElement('input');Object.assign(input,{id:'lab-param-'+key,type:'number',min:p.min,max:p.max,step:'any',value:params[key]});input.dataset.parameter=key;$('lab-parameters').append(label,input);}
+ $('lab-supply').value=params.supplyMode;$('lab-gas-model').value=params.gasModel;$('lab-nozzle-model').value=params.nozzleModel;$('lab-steering-assist').checked=params.steeringAssist;$('lab-traction-assist').checked=params.tractionAssist;
+}
+function collectRequest(){const p={...params};for(const [key]of Object.entries(RESEARCH_PARAMETERS))p[key]=+$('lab-param-'+key).value;Object.assign(p,{supplyMode:$('lab-supply').value,gasModel:$('lab-gas-model').value,nozzleModel:$('lab-nozzle-model').value,steeringAssist:$('lab-steering-assist').checked,tractionAssist:$('lab-traction-assist').checked});return normalizeResearchRequest({kind:$('lab-kind').value,params:p,speedKmh:['steer','brake'].includes($('lab-kind').value)?+$('lab-speed').value:80,angleDeg:$('lab-kind').value==='steer'?+$('lab-angle').value:2,steerInput:$('lab-kind').value==='steer'?+$('lab-steer-input').value:.22,steeringProtocol:$('lab-steering-protocol').value,initialRollDeg:$('lab-kind').value==='attitude'?+$('lab-roll').value:35,heightM:$('lab-kind').value==='attitude'?+$('lab-height').value:12,stabilization:$('lab-stabilization').checked});}
+function updateSweep(){const p=RESEARCH_PARAMETERS[$('sweep-key').value];if(!p)return;const center=+($('lab-param-'+$('sweep-key').value)?.value||params[$('sweep-key').value]);for(const id of ['sweep-from','sweep-to']){const e=$(id);e.min=p.min;e.max=p.max;e.step='any';}$('sweep-from').value=Math.max(p.min,+(center*.7).toPrecision(4));$('sweep-to').value=Math.min(p.max,+(center*1.3).toPrecision(4));}
+function updateForm(reset=false){
+ const kind=$('lab-kind').value,mode=$('lab-mode').value;
+ $('protocol-description').textContent=EXPERIMENTS[kind].description;
+ $('road-fields').hidden=!['steer','brake'].includes(kind);$('steer-fields').hidden=kind!=='steer';$('attitude-fields').hidden=kind!=='attitude';
+ $('pair-fields').hidden=mode!=='pair';$('sweep-fields').hidden=mode!=='sweep';
+ if(reset){$('lab-pair').replaceChildren(...PAIR_KEYS[kind].map(k=>option(k,PAIRS[k].label)));$('sweep-key').replaceChildren(...SWEEP_KEYS[kind].map(k=>option(k,RESEARCH_PARAMETERS[k].label)));updateSweep();}
+ if(mode==='pair'&&$('lab-pair').value==='steeringAssist')$('lab-steering-protocol').value='driver';
+ $('wheel-angle-field').hidden=$('lab-steering-protocol').value!=='wheel';$('driver-input-field').hidden=$('lab-steering-protocol').value!=='driver';
+ $('lab-steering-protocol').disabled=mode==='pair'&&$('lab-pair').value==='steeringAssist';
+ const pair=PAIRS[$('lab-pair').value];$('pair-description').textContent=pair?'同一初态与时序：'+pair.labels.join(' ↔ ')+(pair.key==='steeringAssist'?'。自动采用相同驾驶输入，保留辅助差异。':'。'):'';
+ for(const e of document.querySelectorAll('#protocol-form input,#protocol-form select'))if(!['lab-kind','lab-mode','study-note'].includes(e.id))e.disabled=mode==='imported'||e.id==='lab-steering-protocol'&&mode==='pair'&&$('lab-pair').value==='steeringAssist';
+ if(mode==='imported')$('protocol-description').textContent=`已导入${imported.length}个冻结方案；点击运行后按当前${PROTOCOL_VERSION}协议重新计算，不采信文件中的旧指标。`;
+}
+function save(){try{localStorage.setItem(storeKey,JSON.stringify(entries));}catch{setStatus('实验完成；本机存储空间不足，请导出研究包。',true);}}
+function active(){return entries.find(e=>e.id===activeId)||entries.at(-1);}
+function compatible(){const a=active();return entries.filter(e=>selected.has(e.id)&&e.report.kind===a?.report.kind);}
+function metricSet(r){const m=r.metrics;
+ switch(r.kind){
+  case'steer':return[['最大有效侧偏',m.maxBetaDeg,'°'],['实际速度 RMSE',m.speedRmseKmh,'km/h'],['峰值偏航速率',m.maxYawRateDegS,'°/s'],['驾驶器饱和',m.driverSaturationSeconds,'s']];
+  case'brake':return[['制动距离',m.stop?.distanceM,'m'],['指令至停止',m.stop?.timeSeconds,'s'],['最大偏航偏移',m.maxHeadingDeviationDeg,'°'],['最大侧向偏移',m.maxLateralDeviationM,'m']];
+  case'attitude':return[['持续回稳时刻',m.recoveredAtSeconds,'s'],['高度误差 RMSE',m.heightRmseM,'m'],['喷口饱和时间',m.nozzleSaturationSeconds,'s'],['实际通过气量',m.throughputKg,'kg']];
+  case'rise':return[['最大上升速率',m.maxVerticalMps,'m/s'],['松开后的续升',m.releaseOvershootM,'m'],['高度误差 RMSE',m.heightRmseM,'m'],['实际通过气量',m.throughputKg,'kg']];
+  case'hover':return[['额定能力不足时刻',m.lossOfSupportSeconds,'s'],['持续高度超限时刻',m.heightHoldLostSeconds,'s'],['最大水平漂移',m.maxPositionErrorM,'m'],['实际通过气量',m.throughputKg,'kg']];
+  case'roll':return[['累计解缠旋转',m.rollTravelDeg,'°'],['首次承载前垂速',m.touchdown?.speedMps,'m/s'],['稳定着陆确认',m.stableLanding?.time,'s'],['剩余车载气体',m.remainingGasKg,'kg']];
+ }
+}
+function summaryValue(r){const m=r.metrics;switch(r.kind){case'steer':return['最大有效侧偏',m.maxBetaDeg,'°'];case'brake':return['制动距离',m.stop?.distanceM,'m'];case'attitude':return['持续回稳时刻',m.recoveredAtSeconds,'s'];case'hover':return['持续高度超限时刻',m.heightHoldLostSeconds,'s'];case'rise':return['最大上升速率',m.maxVerticalMps,'m/s'];case'roll':return['稳定着陆确认',m.stableLanding?.time,'s'];}}
+function drawTime(canvas,series,key){
+ const g=canvas.getContext('2d'),w=canvas.width,h=canvas.height,L=65,R=w-25,T=24,B=h-34;
+ g.clearRect(0,0,w,h);g.font='14px Consolas';const values=series.flatMap(e=>e.report.rows.map(r=>r[key])).filter(v=>typeof v==='number'&&Number.isFinite(v));
+ let lo=values.length?Math.min(0,...values):0,hi=values.length?Math.max(...values):1;if(hi-lo<.01){hi+=.5;lo-=.5;}const pad=(hi-lo)*.08;lo-=pad;hi+=pad;
+ const maxT=Math.max(1,...series.map(e=>e.report.input.duration));
+ for(let i=0;i<5;i++){const y=T+(B-T)*i/4;g.strokeStyle='#304448';g.lineWidth=1;g.beginPath();g.moveTo(L,y);g.lineTo(R,y);g.stroke();g.fillStyle='#96aaa7';g.fillText((hi-(hi-lo)*i/4).toFixed(Math.abs(hi-lo)<5?2:0),4,y+4);}
+ for(let i=0;i<=4;i++){g.fillStyle='#91aaa4';g.fillText((maxT*i/4).toFixed(1)+'s',L+(R-L)*i/4-8,h-8);}
+ if(!values.length){g.fillStyle='#b6c1b4';g.fillText('无有效样本 / 该量在此工况不适用',L+30,(T+B)/2);}
+ series.forEach((e,j)=>{g.strokeStyle=colors[j%colors.length];g.lineWidth=2.3;g.beginPath();let connected=false;for(const row of e.report.rows){const v=row[key];if(typeof v!=='number'||!Number.isFinite(v)){connected=false;continue;}const x=L+(R-L)*row.time/maxT,y=B-(v-lo)/(hi-lo)*(B-T);if(connected)g.lineTo(x,y);else g.moveTo(x,y);connected=true;}g.stroke();});
+ return{L,R,T,B,maxT,lo,hi};
+}
+function drawSummary(series){
+ const c=$('summary-chart'),g=c.getContext('2d'),w=c.width,h=c.height,L=56,R=w-18,T=24,B=h-45;g.clearRect(0,0,w,h);g.font='13px Consolas';
+ const summary=summaryValue(active().report);$('summary-chart-title').textContent=summary[0];$('summary-unit').textContent=summary[2];
+ const vals=series.map(e=>summaryValue(e.report)[1]),hi=Math.max(1,...vals.filter(v=>typeof v==='number'))*1.15,span=(R-L)/Math.max(1,series.length);
+ for(let i=0;i<4;i++){const y=B-(B-T)*i/3;g.strokeStyle='#304448';g.beginPath();g.moveTo(L,y);g.lineTo(R,y);g.stroke();g.fillStyle='#8ca49e';g.fillText((hi*i/3).toFixed(1),5,y+4);}
+ series.forEach((e,i)=>{const value=vals[i],x=L+i*span+span*.23;g.fillStyle=colors[i%colors.length];if(typeof value==='number'){const bh=value/hi*(B-T);g.fillRect(x,B-bh,span*.54,Math.max(1,bh));g.fillText(fmt(value),x,Math.max(T,B-bh-8));}else{g.fillText('未发生',x,B-15);}g.fillStyle='#a7bbb5';g.fillText(String(i+1),x+span*.15,h-18);});
+}
+function renderCharts(){const a=active();if(!a)return;chartSeries=compatible();if(!chartSeries.length)chartSeries=[a];chartRange=drawTime($('response-chart'),chartSeries,$('chart-channel').value);drawTime($('budget-chart'),chartSeries,$('budget-channel').value);drawSummary(chartSeries);$('response-legend').replaceChildren(...chartSeries.map((e,i)=>{const span=document.createElement('span'),mark=document.createElement('i');mark.style.background=colors[i%colors.length];span.append(mark,document.createTextNode(`${i+1}. ${e.label}`));return span;}));}
+function renderDetails(r){const node=$('report-details');node.replaceChildren();for(const [title,value]of [['实验判据',r.definitions],['事件时序',r.events],['强制协议覆盖',r.overrides],['模型假设',r.assumptions],['参数快照',r.appliedParams],['初态与终态',{initial:r.initialState,final:r.finalState}]]){const h=document.createElement('h4');h.textContent=title;const pre=document.createElement('pre');pre.textContent=JSON.stringify(value,null,2);node.append(h,pre);}}
+function renderComparison(){
+ const a=active();if(!a)return;const r=a.report;
+ const first=compatible()[0],baseline=first&&first.id!==a.id?metricSet(first.report):null;
+ $('metric-cards').replaceChildren(...metricSet(r).map(([name,value,unit],i)=>{const div=document.createElement('div');div.className='metric';const label=document.createElement('span'),n=document.createElement('b'),small=document.createElement('small');label.textContent=name;n.textContent=fmt(value)+(typeof value==='number'?' '+unit:'');small.textContent=baseline&&typeof value==='number'&&typeof baseline[i][1]==='number'?'相对首条 Δ '+fmt(value-baseline[i][1])+' '+unit:typeof value==='number'?'本次完整120Hz响应统计':'窗口内未发生 / 不适用';div.append(label,n,small);return div;}));
+ // DOM-visible diagnostics support independent UI verification without private state access.
+ $('analysis-content').dataset.result=JSON.stringify({kind:r.kind,outcome:r.outcome,runId:r.runId,records:entries.length,metrics:r.metrics,selected:compatible().length});
+ renderCharts();
+}
+function render(){
+ const a=active();$('lab-empty').hidden=!!a;$('analysis-content').hidden=!a;$('export-study').disabled=!entries.length;$('export-rows').disabled=!entries.length;$('record-count').textContent=entries.length+' / 12';
+ $('record-table').replaceChildren(...[...entries].reverse().map(e=>{const tr=document.createElement('tr');tr.classList.toggle('active',a?.id===e.id);const td=document.createElement('td'),check=document.createElement('input');check.type='checkbox';check.checked=selected.has(e.id);check.setAttribute('aria-label','叠加 '+e.label);check.onchange=()=>{if(check.checked)selected.add(e.id);else selected.delete(e.id);renderComparison();};td.append(check);tr.append(td);const name=document.createElement('td'),button=document.createElement('button'),small=document.createElement('small');button.textContent=EXPERIMENTS[e.report.kind].title+' · '+e.label;small.textContent=e.report.runId+' / '+e.report.appliedParams.supplyMode;button.onclick=()=>{activeId=e.id;selected.add(e.id);render();};name.append(button,small);tr.append(name);for(const value of [labels[e.report.outcome]||e.report.outcome,fmt(summaryValue(e.report)[1])+' '+summaryValue(e.report)[2],fmt(e.report.metrics.gasUsedKg)]){const cell=document.createElement('td');cell.textContent=value;tr.append(cell);}return tr;}));
+ if(!a)return;const r=a.report;$('active-protocol').textContent=r.runId+' · '+r.protocolVersion+' · 模型 '+r.modelVersion+' · '+r.modelBuildId.slice(0,10);$('active-title').textContent=EXPERIMENTS[r.kind].title+' / '+a.label;$('active-outcome').textContent=labels[r.outcome]||r.outcome;$('active-outcome').classList.toggle('caution',r.warnings.length>0||['rejected','hover_not_held','not_recovered_in_window'].includes(r.outcome));
+ const messages=[...r.warnings,...r.overrides];if(r.appliedParams.supplyMode==='bench')messages.push('恒压试验台：车载气量不变，实际通过气量来自外部气源。');$('result-warnings').classList.toggle('notice',!r.warnings.length);$('result-warnings').hidden=!messages.length;$('result-warnings').textContent=messages.join('\n');
+ const old=$('chart-channel').value,options=channelSets[r.kind];$('chart-channel').replaceChildren(...options.map(k=>option(k,channels[k][0])));$('chart-channel').value=options.includes(old)?old:options[0];renderDetails(r);renderComparison();
+
+}
+function compute(request){return new Promise((resolve,reject)=>{pendingReject=reject;worker=new Worker('./experiment-worker.js',{type:'module'});worker.onmessage=e=>{worker.terminate();worker=null;pendingReject=null;e.data.ok?resolve(e.data.report):reject(Error(e.data.error));};worker.onerror=e=>{worker?.terminate();worker=null;pendingReject=null;reject(Error(e.message));};worker.postMessage(request);});}
+async function run(event){event?.preventDefault();const turn=++generation;let jobs;
+ try{jobs=$('lab-mode').value==='imported'?imported:buildStudyRequests(collectRequest(),{mode:$('lab-mode').value,pairKey:$('lab-pair').value,sweepKey:$('sweep-key').value,from:+$('sweep-from').value,to:+$('sweep-to').value,count:+$('sweep-count').value});if(!jobs.length)throw Error('没有可运行方案');}catch(e){setStatus(e.message,true);return;}
+ $('lab-run').disabled=true;$('lab-cancel').disabled=false;$('results-title').scrollIntoView({behavior:'smooth',block:'start'});const batch=Date.now().toString(36),ids=[],frozenNote=$('study-note').value;
+ try{for(let i=0;i<jobs.length;i++){if(turn!==generation)break;const job=jobs[i];setStatus(`计算 ${i+1} / ${jobs.length}：${job.label} · 不改变三维场景`);const report=await compute(job.request);if(turn!==generation)break;const entry={id:batch+'-'+i,batchId:batch,label:job.label,factor:job.factor||null,note:frozenNote,report};entries.push(entry);entries=entries.slice(-12);ids.push(entry.id);activeId=entry.id;selected=new Set(ids);save();render();}if(turn===generation)setStatus(`已完成 ${ids.length} / ${jobs.length} · 参数与原始数据已保存在本机`);}catch(e){if(turn===generation)setStatus('计算未完成：'+e.message,true);}finally{if(turn===generation){$('lab-run').disabled=false;$('lab-cancel').disabled=true;}}
+}
+function cancel(){generation++;worker?.terminate();worker=null;pendingReject?.(Error('已停止'));pendingReject=null;$('lab-run').disabled=false;$('lab-cancel').disabled=true;setStatus('已停止；已完成的实验记录保留。');}
+function download(text,name,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([text],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('protocol-form').onsubmit=run;$('lab-cancel').onclick=cancel;$('lab-kind').onchange=()=>{imported=[];if($('lab-mode').value==='imported')$('lab-mode').value='single';updateForm(true);};for(const id of ['lab-mode','lab-pair','lab-steering-protocol'])$(id).onchange=()=>updateForm();$('sweep-key').onchange=updateSweep;
+$('lab-defaults').onclick=()=>{params={...DEFAULT_PARAMS};renderParameterFields();updateSweep();setStatus('已恢复默认研究参数。');};
+for(const b of document.querySelectorAll('[data-preset]'))b.onclick=()=>{cancel();const kind=b.dataset.preset;$('lab-kind').value=kind;$('lab-mode').value=kind==='brake'?'sweep':'pair';updateForm(true);if(kind==='brake'){$('sweep-key').value='tireMu';updateSweep();$('sweep-from').value=.65;$('sweep-to').value=1.25;$('sweep-count').value='3';}else $('lab-pair').value=kind==='attitude'?'stabilization':'supplyMode';updateForm();setStatus('方案已载入：'+EXPERIMENTS[kind].title+'，点击运行开始。');};
+$('chart-channel').onchange=renderCharts;$('budget-channel').onchange=renderCharts;
+$('response-chart').onpointermove=e=>{if(!chartRange||!chartSeries.length)return;const c=e.currentTarget,rect=c.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width*c.width,time=clamp((x-chartRange.L)/(chartRange.R-chartRange.L),0,1)*chartRange.maxT,key=$('chart-channel').value;const values=chartSeries.map((s,i)=>{const row=s.report.rows.reduce((a,b)=>Math.abs(b.time-time)<Math.abs(a.time-time)?b:a,s.report.rows[0]);return`${i+1}: ${row?fmt(row[key]):'—'} ${channels[key]?.[1]||''}`;});$('chart-readout').textContent=`t ≈ ${fmt(time)} s　`+values.join('　|　');};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+$('export-study').onclick=()=>download(JSON.stringify(studyArchive(entries,$('study-note').value),null,2),'roadster-research-study.json','application/json');
+$('export-rows').onclick=()=>{const chosen=(compatible().length?compatible():entries).filter(e=>e.report.rows.length),a=chosen[0];if(!a?.report.rows.length)return;const keys=Object.keys(a.report.rows[0]),cell=v=>v===null||v===undefined?'':typeof v==='number'?v.toPrecision(10):'"'+String(v).replaceAll('"','""')+'"';const lines=['# Roadster model '+MODEL_VERSION+' / '+PROTOCOL_VERSION,'# Full protocol, definitions and parameters are in the matching study JSON',['run_id','case',...keys].join(',')];for(const e of chosen)for(const row of e.report.rows)lines.push([e.report.runId,e.label,...keys.map(k=>row[k])].map(cell).join(','));download('\uFEFF'+lines.join('\r\n'),'roadster-research-source-data.csv','text/csv;charset=utf-8');};
+$('import-study').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>6e6)throw Error('研究包需小于6MB');imported=importStudy(JSON.parse(await file.text()));$('lab-mode').value='imported';updateForm();setStatus(`已导入${imported.length}条方案；点击运行按当前协议重算。`);}catch(error){setStatus('导入失败：'+error.message,true);}finally{e.target.value='';}};
+$('clear-library').onclick=()=>{if(worker){setStatus('请先停止运行，再清空记录。',true);return;}entries=[];selected.clear();activeId=null;save();render();setStatus('本机实验记录已清空。');};
+$('lab-kind').replaceChildren(...Object.entries(EXPERIMENTS).map(([k,v])=>option(k,v.domain+' / '+v.title)));$('model-version').textContent=MODEL_VERSION+' / '+PROTOCOL_VERSION;
+try{const handoff=JSON.parse(localStorage.getItem('roadster-research-parameter-handoff')||'null');if(handoff&&Date.now()-handoff.time<300000){params=normalizeResearchRequest({params:handoff.params}).params;$('handoff-note').hidden=false;$('handoff-note').textContent='已载入三维场景的参数；实验采用独立标准初态。';localStorage.removeItem('roadster-research-parameter-handoff');}}catch{}
+renderParameterFields();updateForm(true);
+try{const stored=JSON.parse(localStorage.getItem(storeKey)||'[]');entries=stored.filter(e=>e.report?.schemaVersion===2&&e.report.modelVersion===MODEL_VERSION&&e.report.modelBuildId===MODEL_BUILD_ID&&EXPERIMENTS[e.report.kind]&&Array.isArray(e.report.rows)&&e.report.rows.length<=200).slice(-12);if(entries.length){activeId=entries.at(-1).id;selected.add(activeId);}}catch{}render();

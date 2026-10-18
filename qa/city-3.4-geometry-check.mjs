@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import{writeFileSync}from'node:fs';
+import{createHash}from'node:crypto';
+import*as THREE from'../dist/vendor/three.module.js';
+import{RoadsterSim}from'../dist/physics.js';
+import{CITY,CITY_BUILDINGS,CITY_COLLIDERS,CITY_LOCATIONS,CITY_ROUTES}from'../dist/city-data.js';
+import{CITY_PLAN,CITY_PLAN_SOLIDS,CITY_STREETS,CITY_NODES,roadSurfaceRectangles}from'../dist/city-plan.js';
+import{buildUrbanArchitecture}from'../dist/urban-architecture.js';
+import{buildStreetLife}from'../dist/street-life.js';
+const checks=[],sim=new RoadsterSim(),geometry=sim.getWorldGeometry(),root=new THREE.Group(),record=(name,count)=>checks.push({name,count,status:'passed'});
+assert.equal(CITY_PLAN.districts.length,3);assert.equal(CITY_NODES.length,3);assert.ok(CITY_PLAN.walks.some(w=>w.elevation===5.4));assert.ok(CITY_PLAN.streets.some(w=>w.type==='service'&&w.width<10));record('three district identities, three architectural nodes and a street hierarchy',3);
+let pairs=0;for(let i=0;i<CITY_BUILDINGS.length;i++)for(let j=i+1;j<CITY_BUILDINGS.length;j++){const a=CITY_BUILDINGS[i],b=CITY_BUILDINGS[j];if(a.baseY!==b.baseY)continue;assert.ok(Math.abs(a.x-b.x)>=(a.w+b.w)/2||Math.abs(a.z-b.z)>=(a.d+b.d)/2,`overlapping parcels: ${a.id} / ${b.id}`);pairs++;}record('independent pairwise building footprint overlap audit',pairs);
+const obstacleBoxes=geometry.filter(g=>g.kind!=='floor').map(g=>({...g,inverse:new THREE.Quaternion(...g.quaternion).invert()}));
+const inside=(p,g)=>{const v=new THREE.Vector3(p.x-g.position[0],p.y-g.position[1],p.z-g.position[2]).applyQuaternion(g.inverse);return Math.abs(v.x)<g.size[0]/2-.005&&Math.abs(v.y)<g.size[1]/2-.005&&Math.abs(v.z)<g.size[2]/2-.005;};
+let routeSamples=0;const errors=[];
+for(const street of CITY_STREETS)for(let j=1;j<street.points.length;j++){
+ const a=street.points[j-1],b=street.points[j],dx=b[0]-a[0],dz=b[2]-a[2],length=Math.hypot(dx,dz),count=Math.ceil(length/3),nx=dz/length,nz=-dx/length;
+ for(let i=0;i<=count;i++)for(const side of [-1,0,1]){
+  const t=i/count,p={x:a[0]+dx*t+nx*side*1.05,y:a[1]+(b[1]-a[1])*t,z:a[2]+dz*t+nz*side*1.05};
+  const hit=sim.traceSurface({x:p.x,y:p.y+.22,z:p.z},{x:0,y:-1,z:0},.5);if(!hit||Math.abs(hit.point.y-p.y)>.17)errors.push({street:street.id,type:'support',p,hit});
+  for(const h of [.40,1.15,1.75]){const point={...p,y:p.y+h},obstacle=obstacleBoxes.find(g=>inside(point,g));if(obstacle)errors.push({street:street.id,type:'clearance',p,h,obstacle:obstacle.id});}
+  routeSamples++;
+ }
+}
+if(errors.length){console.log(JSON.stringify(errors.slice(0,24),null,2));throw Error(errors.length+' authored street corridor failures');}record('all planned street centrelines support a 2.1 m wide vehicle with 1.75 m clearance',routeSamples);
+let deckSamples=0;for(const route of CITY_ROUTES)for(let i=1;i<route.points.length;i++){const a=route.points[i-1],b=route.points[i],p=a.map((v,k)=>(v+b[k])/2);const hit=sim.traceSurface({x:p[0],y:p[1]+.25,z:p[2]},{x:0,y:-1,z:0},.5);assert.ok(hit&&Math.abs(hit.point.y-p[1])<.04,route.id+'/'+i);assert.ok(Math.abs(p[0])+route.width/2<CITY.extent&&Math.abs(p[2])+route.width/2<CITY.extent);deckSamples++;}record('elevated roads retain visible/physical height parity and remain within city bounds',deckSamples);
+for(const spawn of CITY_LOCATIONS){const p=spawn.position;const hit=sim.traceSurface({x:p[0],y:p[1]+.2,z:p[2]},{x:0,y:-1,z:0},1.4);assert.ok(hit&&Math.abs((p[1]-.62)-hit.point.y)<.18,spawn.id+' lost support');}record('all six exploration spawn points retain a road/support surface',CITY_LOCATIONS.length);
+const rects=roadSurfaceRectangles(CITY_STREETS,8);let rectanglePairs=0;for(let i=0;i<rects.length;i++)for(let j=i+1;j<rects.length;j++){const a=rects[i],b=rects[j],area=Math.max(0,Math.min(a[2],b[2])-Math.max(a[0],b[0]))*Math.max(0,Math.min(a[3],b[3])-Math.max(a[1],b[1]));assert.ok(area<1e-8);rectanglePairs++;}record('upper asphalt union has no coplanar overlap at intersections',rectanglePairs);
+let shared=0;for(const row of CITY_PLAN_SOLIDS){const actual=geometry.find(g=>g.id===row.id);assert.ok(actual);assert.deepEqual(actual.size,row.size);assert.deepEqual(actual.position,row.position);assert.ok(actual.size.every(n=>n>0&&Number.isFinite(n)));shared++;}for(const step of CITY_PLAN_SOLIDS.filter(g=>g.id.startsWith('plan-weave-stair-'))){const top=step.position[1]+step.size[1]/2;for(const h of [.4,1.2,1.75]){const point={x:step.position[0],y:top+h,z:step.position[2]},obstacle=obstacleBoxes.find(g=>inside(point,g));assert.ok(!obstacle,step.id+' has obstructed headroom at '+h+' m: '+obstacle?.id);}}
+record('all node/walkway solids are physical; both access stairs retain 1.75 m headroom',shared);
+// The new outer ridge must clear the forum roof/court, not cross its volume.
+let forumSegments=0;for(const g of geometry.filter(g=>g.id.startsWith('east-ridge-')&&g.kind==='urban-road')){if(g.position[2]<330||g.position[2]>400)continue;assert.ok(g.position[0]-g.size[0]/2>560,'ridge crosses the forum');forumSegments++;}assert.ok(forumSegments>0);record('outer ridge is separated from the civic court and its roof',forumSegments);
+const architecture=buildUrbanArchitecture(THREE,root,CITY_BUILDINGS),street=buildStreetLife(THREE,root);root.traverse(o=>{if(!o.geometry)return;assert.ok(o.geometry.attributes.position.array.every(Number.isFinite));if(o.isInstancedMesh)assert.ok(o.instanceMatrix.array.every(Number.isFinite));});assert.ok(architecture.stats.triangles<1_800_000&&street.stats.triangles<300_000);assert.ok(architecture.stats.drawBatches+street.stats.drawBatches<340);assert.ok(street.stats.stalls<=14);record('geometry remains finite while windows, clutter and batch budgets decrease',architecture.stats.instances+street.stats.instances);
+const result={status:'passed',date:'2026-10-18',geometrySHA256:createHash('sha256').update(JSON.stringify(geometry)).digest('hex'),checks,plan:{districts:CITY_PLAN.districts.length,nodes:CITY_NODES.length,streets:CITY_STREETS.length,buildingCount:CITY_BUILDINGS.length,roadSegments:deckSamples,cityColliders:CITY_COLLIDERS.length},architecture:architecture.stats,streetLife:street.stats,limits:['Road clearance checks sample a 2.1 m vehicle corridor; they are not a traffic/navigation solver.','Wide street paint sits on the existing continuous ground/terrace support.','Decorative facade details use conservative building envelopes; no interiors are promised.','The parent must rebake indirect light after the 3.4 geometry freeze.']};writeFileSync(new URL('./city-3.4-geometry.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));architecture.dispose();street.dispose();

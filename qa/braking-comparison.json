@@ -1,0 +1,209 @@
+{
+  "generatedAt": "2026-10-18T10:47:53.110Z",
+  "scope": "Internal reduced-order model only. These are engineering assumptions and numerical experiments, not measured Tesla Roadster specifications.",
+  "protocol": "120 Hz; level floor; x=0,z=-80; settle 3 s; set initial forward speed; no steering or suction; no jets except the explicitly named boost-input interlock experiment. Stop threshold <=0.1 m/s, followed by >=1 s of four-wheel hold <=0.15 m/s. Body collision invalidates a brake stop; compressed-wheel safety contacts are counted separately. The averageDecelerationUntilStop field excludes the 1 s hold; observation averages include it.",
+  "beforePhysicsSha256": "91c05e2b6fee7af9b7d10320d10bf48b099669eff8b90024f735491157934335",
+  "afterPhysicsSha256": "92d12c71c5fc3c67b298c37bf62801ca678583c54150822a41db92b84bd04389",
+  "observations": [
+    "Pure explicit braking was already limited by the assumed high tire friction, not too little brake demand; the fix preserves roughly the same stop distance.",
+    "The accelerator/brake conflict was a real cause of long stops and creep. Deliberate braking now has priority over motor and driving boost.",
+    "The progressive stop reduces forward suspension compression. This geometry change can slightly lengthen the pure-brake distance without weakening the brake command.",
+    "Every reported successful stop has four positive tire loads and no hull collision or automatic reset. Zero-friction compression-stop contacts are counted separately."
+  ],
+  "experiments": [
+    {
+      "label": "100 km/h, full gas, explicit brake",
+      "before": {
+        "stop": {
+          "seconds": 2.27500000000006,
+          "distanceM": 31.188854013243784,
+          "speedKmh": 0.25387042693947526
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0010100465716818084,
+        "minimumSuspensionM": 0.2383402979657826,
+        "maximumPitchDeg": 1.959688013679944
+      },
+      "after": {
+        "stop": {
+          "seconds": 2.266666666666726,
+          "distanceM": 30.98269237966631,
+          "speedKmh": 0.2711878525499464
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0009634654809379648,
+        "minimumSuspensionM": 0.24773363548737193,
+        "maximumPitchDeg": 1.722455720757007,
+        "bodyContactSteps": 0,
+        "wheelBumpStopContactSteps": 0
+      }
+    },
+    {
+      "label": "50 km/h, full gas, explicit brake",
+      "before": {
+        "stop": {
+          "seconds": 1.1583333333333377,
+          "distanceM": 7.869568233997597,
+          "speedKmh": 0.24195828882109194
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.000980825557543683,
+        "minimumSuspensionM": 0.23841522028034767,
+        "maximumPitchDeg": 1.9592419002510584
+      },
+      "after": {
+        "stop": {
+          "seconds": 1.150000000000004,
+          "distanceM": 7.772663205678342,
+          "speedKmh": 0.26814684396936955
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0009266923210184659,
+        "minimumSuspensionM": 0.24775258049108473,
+        "maximumPitchDeg": 1.7225313716292858,
+        "bodyContactSteps": 0,
+        "wheelBumpStopContactSteps": 0
+      }
+    },
+    {
+      "label": "100 km/h, empty gas, explicit brake",
+      "before": {
+        "stop": {
+          "seconds": 2.266666666666726,
+          "distanceM": 30.967773608522506,
+          "speedKmh": 0.24742973408332763
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.00008316228302109541,
+        "minimumSuspensionM": 0.25193537982913694,
+        "maximumPitchDeg": 1.7913432157466853
+      },
+      "after": {
+        "stop": {
+          "seconds": 2.266666666666726,
+          "distanceM": 30.96800695829249,
+          "speedKmh": 0.24755901876350617
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.00008330896684763662,
+        "minimumSuspensionM": 0.2531592015122849,
+        "maximumPitchDeg": 1.7651947338821756,
+        "bodyContactSteps": 0,
+        "wheelBumpStopContactSteps": 0
+      }
+    },
+    {
+      "label": "50 km/h, empty gas, explicit brake",
+      "before": {
+        "stop": {
+          "seconds": 1.150000000000004,
+          "distanceM": 7.777729944841184,
+          "speedKmh": 0.24660223712727292
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0000821697982939729,
+        "minimumSuspensionM": 0.2520200697704925,
+        "maximumPitchDeg": 1.7902788972034465
+      },
+      "after": {
+        "stop": {
+          "seconds": 1.150000000000004,
+          "distanceM": 7.777724434497188,
+          "speedKmh": 0.24790436965020207
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0000844785510752292,
+        "minimumSuspensionM": 0.25319613533618446,
+        "maximumPitchDeg": 1.765121722358186,
+        "bodyContactSteps": 0,
+        "wheelBumpStopContactSteps": 0
+      }
+    },
+    {
+      "label": "100 km/h, W and Space held together",
+      "before": {
+        "stop": null,
+        "stopStable": false,
+        "finalSpeedKmh": 1.3912883320137928,
+        "minimumSuspensionM": 0.2550160446947184,
+        "maximumPitchDeg": 1.2885452930566945
+      },
+      "after": {
+        "stop": {
+          "seconds": 2.266666666666726,
+          "distanceM": 30.98261573551199,
+          "speedKmh": 0.2657141140112536
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0009405313783914205,
+        "minimumSuspensionM": 0.24773363548737193,
+        "maximumPitchDeg": 1.722455720757007,
+        "bodyContactSteps": 0,
+        "wheelBumpStopContactSteps": 0
+      }
+    },
+    {
+      "label": "100 km/h, W + Shift + Space held together",
+      "before": null,
+      "after": {
+        "stop": {
+          "seconds": 2.266666666666726,
+          "distanceM": 30.98261573551199,
+          "speedKmh": 0.2657141140112536
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0009405313783914205,
+        "minimumSuspensionM": 0.24773363548737193,
+        "maximumPitchDeg": 1.722455720757007,
+        "bodyContactSteps": 0,
+        "wheelBumpStopContactSteps": 0
+      }
+    },
+    {
+      "label": "100 km/h, mu 0.85 engineering sensitivity",
+      "before": {
+        "stop": {
+          "seconds": 3.300000000000111,
+          "distanceM": 45.39140923372096,
+          "speedKmh": 0.2669837027979366
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0009483513629821127,
+        "minimumSuspensionM": 0.2526311278138549,
+        "maximumPitchDeg": 1.3845990841068698
+      },
+      "after": {
+        "stop": {
+          "seconds": 3.300000000000111,
+          "distanceM": 45.391603545613975,
+          "speedKmh": 0.2670709078453567
+        },
+        "stopStable": true,
+        "finalSpeedKmh": -0.0009485406950639826,
+        "minimumSuspensionM": 0.2535701871516778,
+        "maximumPitchDeg": 1.362097694334489,
+        "bodyContactSteps": 0,
+        "wheelBumpStopContactSteps": 0
+      }
+    },
+    {
+      "label": "100 km/h, accelerator released, first second only",
+      "before": {
+        "stop": null,
+        "stopStable": false,
+        "finalSpeedKmh": 95.5633067339778,
+        "minimumSuspensionM": 0.28292609232090704,
+        "maximumPitchDeg": 0.16441681542596662
+      },
+      "after": {
+        "stop": null,
+        "stopStable": false,
+        "finalSpeedKmh": 95.5633067339778,
+        "minimumSuspensionM": 0.28292609232090704,
+        "maximumPitchDeg": 0.16441681542596662,
+        "bodyContactSteps": 0,
+        "wheelBumpStopContactSteps": 0
+      }
+    }
+  ]
+}

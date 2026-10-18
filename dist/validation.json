@@ -1,0 +1,749 @@
+{
+  "generatedAt": "2026-10-18T13:08:21.605Z",
+  "model": "Roadster Flight Lab 3.4.0",
+  "scope": "软件内部动力学验收，不代表Tesla真实车辆标定",
+  "physics": {
+    "status": "passed",
+    "fixedStepHz": 120,
+    "total": 26,
+    "checks": [
+      {
+        "test": "Asymmetric torque-free rotation conserves world angular momentum and rotational energy",
+        "status": "PASS",
+        "ms": 1950
+      },
+      {
+        "test": "Rotational midpoint integration shows second-order step-size convergence",
+        "status": "PASS",
+        "ms": 3609
+      },
+      {
+        "test": "10 s ground rest: four contacts, no translation or rotational drift",
+        "status": "PASS",
+        "ms": 2114
+      },
+      {
+        "test": "1 s free fall follows gravity without hidden altitude or attitude forces",
+        "status": "PASS",
+        "ms": 259
+      },
+      {
+        "test": "Motor acceleration, friction-limited braking and steering turn the actual body",
+        "status": "PASS",
+        "ms": 1496
+      },
+      {
+        "test": "Bench-fed hover tracks height, translates and returns to a low-speed hold",
+        "status": "PASS",
+        "ms": 3123
+      },
+      {
+        "test": "Ceiling pressure holds for 10 s, permits tire-driven movement, then releases",
+        "status": "PASS",
+        "ms": 2535
+      },
+      {
+        "test": "Suction requires a nearby supporting surface: no magnetic capture in free air",
+        "status": "PASS",
+        "ms": 167
+      },
+      {
+        "test": "Finite gas consumption equals summed nozzle impulse divided by effective exhaust velocity",
+        "status": "PASS",
+        "ms": 685
+      },
+      {
+        "test": "Exhausted gas removes all thrust; prolonged finite hover loses support",
+        "status": "PASS",
+        "ms": 8170
+      },
+      {
+        "test": "A full roll is a six-DOF actuator maneuver with inversion, ballistic descent and recovery",
+        "status": "PASS",
+        "ms": 14983
+      },
+      {
+        "test": "180° arch traversal continuously climbs from ground and stops upside down",
+        "status": "PASS",
+        "ms": 21337
+      },
+      {
+        "test": "Mode takeover, non-finite input guards and scenario resets remain finite",
+        "status": "PASS",
+        "ms": 20119
+      },
+      {
+        "test": "Normal test runs reject a hidden recovery instead of accepting a shortened simulation",
+        "status": "PASS",
+        "ms": 1742
+      },
+      {
+        "test": "Collision geometry exposes every static collider, including arch and boundaries",
+        "status": "PASS",
+        "ms": 41
+      },
+      {
+        "test": "Released accelerator coasts with mild regeneration instead of hidden hard braking",
+        "status": "PASS",
+        "ms": 2046
+      },
+      {
+        "test": "Valve output has finite rise and decay, and consumed gas follows delivered force",
+        "status": "PASS",
+        "ms": 466
+      },
+      {
+        "test": "Adiabatic blowdown cools the tank and has lower pressure than the equal-mass isothermal case",
+        "status": "PASS",
+        "ms": 1607
+      },
+      {
+        "test": "After a roll, hover does not retain opposing side jets in the allocator null space",
+        "status": "PASS",
+        "ms": 9301
+      },
+      {
+        "test": "Finite-tank automatic roll remains airborne, recovers low and lands before fuel loses support",
+        "status": "PASS",
+        "ms": 5254
+      },
+      {
+        "test": "Twenty-Hz telemetry is uniform at 30, 60 and 144 display frames per second",
+        "status": "PASS",
+        "ms": 4453
+      },
+      {
+        "test": "Power exhaustion removes motor, fan and jet authority even with an external gas supply",
+        "status": "PASS",
+        "ms": 378
+      },
+      {
+        "test": "A slow altitude integral rejects a constant unmodelled vertical load without pose correction",
+        "status": "PASS",
+        "ms": 24892
+      },
+      {
+        "test": "CSV schema contains quaternion, gas temperature and both nozzle command and delivered force",
+        "status": "PASS",
+        "ms": 159
+      },
+      {
+        "test": "World-space exhaust preserves force sign and does not attach old gas to a moving vehicle",
+        "status": "PASS",
+        "ms": 666
+      },
+      {
+        "test": "Mist emission count is frame-rate independent and rear outlets share one actuator force",
+        "status": "PASS",
+        "ms": 715
+      }
+    ]
+  },
+  "independentRotationCheck": {
+    "initialAngularVelocityRadPerSec": [
+      0.7,
+      1.2,
+      0.4
+    ],
+    "hz": 120,
+    "durationSeconds": 10,
+    "worldAngularMomentumRelativeError": 5.802611747128903e-13,
+    "peakRotationalEnergyRelativeError": 0.0000017699754394596218,
+    "stepConvergence": "second order"
+  },
+  "browserVisualQA": {
+    "status": "passed_with_documented_limits",
+    "version": "3.4.0",
+    "protocol": "flat-lab-2",
+    "modelBuildId": "e32968b841f980ca59dc326992c804b3d162761e926344cfc3493d3f0cbc7fc2",
+    "date": "2026-10-18T13:26:10.074Z",
+    "source": "Actual in-app browser UI and DOM-visible diagnostics; no private application state",
+    "checks": [
+      "Final city boots in normal daylight with 114 buildings, 3 districts, 12 streets, 3 nodes and 11913 valid indirect-light probes",
+      "W acceleration and Space braking traverse the covered street; four wheel contacts and stopped upright state observed",
+      "M opens and closes map; a pause introduced by map resumes on closing, destination mark and clear update the HUD",
+      "Music classical/pop collections, native decode and time advancement for all five additions, per-recording attribution and normalization controls visible",
+      "Research finite/bench pair completes with two curves and distinct onboard/external gas budgets",
+      "Research G off/on pair completes; G on reports 1.54 s sustained recovery while G off does not recover in the window",
+      "Research friction sweep completes three cases with 37.59 / 25.84 / 19.69 m confirmed stops",
+      "Seven completed experiment reports survive page reload",
+      "Seven-point scan can be cancelled; completed records remain and controls return to idle",
+      "Selecting same-kind records updates curves, card deltas and DOM-visible selected count together",
+      "JSON study and CSV export controls invoked without page errors"
+    ],
+    "screenshots": [
+      "qa/research-3.4-braking.png",
+      "qa/research-3.4-energy.png",
+      "qa/city-map-3.4.png",
+      "qa/music-3.4-classical.png",
+      "qa/city-3.4-weave.png",
+      "qa/city-3.4-foundry.png",
+      "qa/city-3.4-forum.png"
+    ],
+    "render": {
+      "fps": 52,
+      "calls": 1954,
+      "triangles": 6598751,
+      "programs": 177,
+      "exposure": 0.993,
+      "scene": {
+        "cityPlan": {
+          "districts": 3,
+          "nodes": 3,
+          "streets": 12,
+          "version": "3.4"
+        },
+        "indirectLighting": {
+          "algorithm": "Offline 3-bounce diffuse path tracing / spatial order-2 SH",
+          "loaded": true,
+          "bounces": 3,
+          "validProbes": 11913,
+          "samplesPerProbe": 768,
+          "bytes": 1022544
+        },
+        "buildings": 114,
+        "architecture": {
+          "buildings": 114,
+          "heroBuildings": 39,
+          "shopfronts": 2176,
+          "recessedWindows": 9652,
+          "balconies": 602,
+          "mechanicalUnits": 721,
+          "instances": 132440,
+          "drawBatches": 180,
+          "triangles": 1559774,
+          "textureCount": 4,
+          "sectorSizeM": 300,
+          "sectorCount": 16,
+          "lightAnchors": 135,
+          "massingTiers": 534,
+          "setbackTerraces": 315,
+          "structuralBraces": 168,
+          "rotatedTowers": 26,
+          "industrialHalls": 9,
+          "sawtoothRoofs": 45,
+          "civicBuildings": 6,
+          "geometryMiB": 11.62
+        },
+        "streetLife": {
+          "marketSections": 7,
+          "stalls": 14,
+          "cafes": 5,
+          "repairShops": 1,
+          "flowerStalls": 3,
+          "produceStalls": 2,
+          "bookStalls": 1,
+          "foodStalls": 2,
+          "pedestrians": 11,
+          "bicycles": 2,
+          "benches": 8,
+          "goods": 329,
+          "trees": 8,
+          "instances": 20523,
+          "drawBatches": 130,
+          "triangles": 256832,
+          "collisionProxies": 108,
+          "originalAtlases": 1,
+          "sectorSizeM": 300,
+          "animals": 2,
+          "animalTriangles": 3798,
+          "animatedAnimals": 2,
+          "animalAssetErrors": []
+        },
+        "landmarks": {
+          "destinations": 3,
+          "trees": 84,
+          "leafInstances": 129024,
+          "shrubs": 961,
+          "colliders": 445,
+          "waterBodies": 3,
+          "waterSurfaceM2": 23920,
+          "instancedDrawCalls": 156,
+          "botanicalVaultMetres": [
+            44,
+            25,
+            82
+          ],
+          "assetLicense": "CC0 / Poly Haven",
+          "vegetationReady": true,
+          "activeVegetationCells": 4,
+          "shadowVegetationCells": 0
+        },
+        "routes": 4,
+        "shadowCascades": 3,
+        "wetReflections": false,
+        "daylight": "CC0 measured midday sky",
+        "vehicleLocalProbe": true
+      }
+    },
+    "cityFinal": {
+      "time": 5.758,
+      "scenario": "city",
+      "mode": "drive",
+      "paused": true,
+      "pressure": 350,
+      "height": 0.597,
+      "gas": 249.558,
+      "phase": null,
+      "contacts": 4,
+      "recorded": 0,
+      "plumes": 0,
+      "x": -200,
+      "z": -345,
+      "menu": true,
+      "heading": 0,
+      "pitch": 0,
+      "roll": 0,
+      "angularSpeed": 0,
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "stabilization": {
+        "armed": false,
+        "active": false
+      },
+      "dynamics": {
+        "beta": 0,
+        "steer": 0,
+        "flow": 0,
+        "exhaust": 566.7,
+        "hoverSeconds": 5.39,
+        "nozzleModel": "isentropic"
+      },
+      "jets": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "audio": null
+    },
+    "drivingObserved": {
+      "time": 36.708,
+      "scenario": "city",
+      "mode": "drive",
+      "paused": true,
+      "pressure": 350,
+      "height": 0.597,
+      "gas": 249.558,
+      "phase": null,
+      "contacts": 4,
+      "recorded": 0,
+      "plumes": 0,
+      "x": -200,
+      "z": -180.11,
+      "menu": false,
+      "heading": 0,
+      "pitch": 0,
+      "roll": 0,
+      "angularSpeed": 0,
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "stabilization": {
+        "armed": false,
+        "active": false
+      },
+      "dynamics": {
+        "beta": 0,
+        "steer": 0,
+        "flow": 0,
+        "exhaust": 566.7,
+        "hoverSeconds": 5.39,
+        "nozzleModel": "isentropic"
+      },
+      "jets": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "audio": null
+    },
+    "hoverObserved": {
+      "kind": "hover",
+      "outcome": "held_in_window",
+      "runId": "R-f5b2958f",
+      "records": 2,
+      "metrics": {
+        "maxBetaDeg": null,
+        "betaValidFraction": 0,
+        "maxYawRateDegS": 0,
+        "maxVerticalMps": 0.10217379174667096,
+        "maxHeightM": 4.009992427932147,
+        "minHeightM": 3.9194625492564765,
+        "maxAbsRollDeg": 0,
+        "rollTravelDeg": 0,
+        "completeRotation": false,
+        "inverted": false,
+        "gasUsedKg": 0,
+        "throughputKg": 380.79234153907134,
+        "massBalanceErrorKg": 0,
+        "deliveredImpulseNs": 215776.00962247862,
+        "remainingGasKg": 249.55820028489444,
+        "initialHoverEstimateSeconds": null,
+        "lossOfSupportSeconds": null,
+        "heightHoldLostSeconds": null,
+        "groundTouchSeconds": null,
+        "touchdown": null,
+        "stableLanding": null,
+        "stop": null,
+        "speedRmseKmh": null,
+        "meanSpeedKmh": null,
+        "minSpeedKmh": null,
+        "maxSpeedKmh": null,
+        "heightRmseM": 0.020729327003654506,
+        "maxPositionErrorM": 0,
+        "finalPositionErrorM": 0,
+        "releaseOvershootM": null,
+        "recoveredAtSeconds": null,
+        "recoveryMaintainedToEnd": false,
+        "driverSaturationSeconds": 0,
+        "nozzleSaturationSeconds": 0,
+        "allocationRmse": 0.01242422486345949,
+        "maxHeadingDeviationDeg": 0,
+        "maxLateralDeviationM": 0,
+        "hullContactSamples": 0
+      },
+      "selected": 2
+    },
+    "researchFinal": {
+      "kind": "brake",
+      "outcome": "stable_stop",
+      "runId": "R-75a13e7f",
+      "records": 7,
+      "metrics": {
+        "maxBetaDeg": 0,
+        "betaValidFraction": 0.2125,
+        "maxYawRateDegS": 0,
+        "maxVerticalMps": 0.1530120918540831,
+        "maxHeightM": 0.6098090483990645,
+        "minHeightM": 0.5961005288643326,
+        "maxAbsRollDeg": 0,
+        "rollTravelDeg": 0,
+        "completeRotation": false,
+        "inverted": false,
+        "gasUsedKg": 0,
+        "throughputKg": 0,
+        "massBalanceErrorKg": 0,
+        "deliveredImpulseNs": 0,
+        "remainingGasKg": 249.55820028489444,
+        "initialHoverEstimateSeconds": 5.385219990492912,
+        "lossOfSupportSeconds": null,
+        "heightHoldLostSeconds": null,
+        "groundTouchSeconds": null,
+        "touchdown": null,
+        "stableLanding": null,
+        "stop": {
+          "timeSeconds": 1.8083333333333271,
+          "distanceM": 19.686617096873665,
+          "confirmedAt": 2.7999999999999927,
+          "thresholdMps": 0.1,
+          "confirmationSeconds": 0.5
+        },
+        "speedRmseKmh": null,
+        "meanSpeedKmh": null,
+        "minSpeedKmh": null,
+        "maxSpeedKmh": null,
+        "heightRmseM": null,
+        "maxPositionErrorM": 30.643267908031305,
+        "finalPositionErrorM": 30.629287576263778,
+        "releaseOvershootM": null,
+        "recoveredAtSeconds": null,
+        "recoveryMaintainedToEnd": false,
+        "driverSaturationSeconds": 0,
+        "nozzleSaturationSeconds": 0,
+        "allocationRmse": 0,
+        "maxHeadingDeviationDeg": 0,
+        "maxLateralDeviationM": 0,
+        "hullContactSamples": 0
+      },
+      "selected": 3
+    },
+    "musicAdditions": [
+      {
+        "title": "D大调卡农 / Canon in D Major",
+        "state": {
+          "currentTime": 36.058571,
+          "duration": 355.682993,
+          "error": null,
+          "muted": true,
+          "paused": false,
+          "readyState": 4
+        }
+      },
+      {
+        "title": "第一号吉姆诺佩蒂 / Gymnopédie No. 1",
+        "state": {
+          "currentTime": 46.122966,
+          "duration": 187.089002,
+          "error": null,
+          "muted": true,
+          "paused": false,
+          "readyState": 4
+        }
+      },
+      {
+        "title": "C大调前奏曲 BWV 846 / Prelude in C Major",
+        "state": {
+          "currentTime": 51.522984,
+          "duration": 162.92,
+          "error": null,
+          "muted": true,
+          "paused": false,
+          "readyState": 4
+        }
+      },
+      {
+        "title": "Goodbye To Spring",
+        "state": {
+          "currentTime": 0.016555,
+          "duration": 246.324943,
+          "error": null,
+          "muted": true,
+          "paused": false,
+          "readyState": 4
+        }
+      },
+      {
+        "title": "I'm Letting Go",
+        "state": {
+          "currentTime": 15.837689,
+          "duration": 192.173333,
+          "error": null,
+          "muted": true,
+          "paused": false,
+          "readyState": 4
+        }
+      }
+    ],
+    "console": {
+      "city": [],
+      "research": []
+    },
+    "limits": [
+      "No subjective loudspeaker listening assessment; browser music checks were muted",
+      "File-picker import was not exercised through browser UI; archive validation and import/recompute were exercised by numerical tests and CLI round-trip",
+      "All six research protocols passed backend tests; browser UI exercised the three recommended presets",
+      "Static low-order indirect light and procedural city assets remain below Cyberpunk 2077 production quality",
+      "Internal dynamics checks do not establish Tesla real-vehicle validity",
+      "Single observed FPS is not a sustained performance benchmark"
+    ]
+  },
+  "realVehicleValidation": {
+    "status": "not_performed",
+    "reason": "OEM calibration and vehicle test data are not available"
+  },
+  "integration": {
+    "status": "passed",
+    "fixedUiElements": 147,
+    "modulesChecked": 53,
+    "meshCount": 197,
+    "vertices": 151126,
+    "externalRuntimeModules": 0,
+    "carPhysicsIntegrationFrames": 120
+  },
+  "regressions": {
+    "researchStudy": {
+      "status": "passed",
+      "checks": [
+        "Exported model build identity matches the source hashes of the solver, fixture, protocol and imported geometry",
+        "Isolated hover captures the same horizontal reference as its initial state and reports external through-flow separately from tank depletion",
+        "Finite hover distinguishes capacity loss, sustained tracking error and ground contact while conserving gas mass",
+        "Matched attitude A/B changes only the real stabilizer and requires a sustained low-error low-angular-rate recovery",
+        "Roll separates complete rotation, pre-contact velocity and confirmed landing; intentional descent is not a height-hold failure and rejected maneuvers have no fabricated samples",
+        "Single-factor friction sweep keeps identical initial conditions and produces monotonic measured brake distances with confirmed stops",
+        "Fixed-wheel protocol exposes its assistance override while fixed-driver A/B retains an actual difference in road-wheel angle and logs speed accuracy",
+        "Identical model and protocol reproduce complete source curves at uniform 20 Hz and protocol identity ignores parameter ordering",
+        "Study archive import revalidates frozen requests, ignores supplied metrics and rejects oversized, non-finite or scientifically inapplicable protocols"
+      ]
+    },
+    "researchDynamics": {
+      "status": "passed",
+      "checks": [
+        "60–160 km/h brief keyboard turns remain below one degree sideslip and settle without resetting pose or velocity",
+        "Ackermann inner and outer angles differ; disabling assistance permits real saturation while every combined tire force remains friction-bounded",
+        "Normal E enters a bounded climb-rate controller, release brakes the rise; the separately labelled manual mode retains full physical thrust",
+        "Temperature-pressure exhaust stays below the ideal energy limit, cools, and conserves actual mass flow and delivered impulse",
+        "Finite ground and airborne ballistic rolls land softly without hull impacts; gas and attitude prechecks reject infeasible launches without changing mode",
+        "Independent research fixtures are deterministic, retain applied parameters and assumptions, and record uniform 20 Hz source data",
+        "The local radio includes instrumental, English and Chinese recordings with explicit attribution licenses and matching asset hashes"
+      ]
+    },
+    "cityArchitecture": {
+      "status": "passed",
+      "checks": [
+        {
+          "name": "three district identities, three architectural nodes and a street hierarchy",
+          "count": 3,
+          "status": "passed"
+        },
+        {
+          "name": "independent pairwise building footprint overlap audit",
+          "count": 5793,
+          "status": "passed"
+        },
+        {
+          "name": "all planned street centrelines support a 2.1 m wide vehicle with 1.75 m clearance",
+          "count": 4254,
+          "status": "passed"
+        },
+        {
+          "name": "elevated roads retain visible/physical height parity and remain within city bounds",
+          "count": 113,
+          "status": "passed"
+        },
+        {
+          "name": "all six exploration spawn points retain a road/support surface",
+          "count": 6,
+          "status": "passed"
+        },
+        {
+          "name": "upper asphalt union has no coplanar overlap at intersections",
+          "count": 105,
+          "status": "passed"
+        },
+        {
+          "name": "all node/walkway solids are physical; both access stairs retain 1.75 m headroom",
+          "count": 212,
+          "status": "passed"
+        },
+        {
+          "name": "outer ridge is separated from the civic court and its roof",
+          "count": 7,
+          "status": "passed"
+        },
+        {
+          "name": "geometry remains finite while windows, clutter and batch budgets decrease",
+          "count": 152963,
+          "status": "passed"
+        }
+      ]
+    },
+    "airStabilization": {
+      "status": "passed",
+      "checks": [
+        "25–175 degree disturbed attitudes recover on the explicit bench with real torque and ballistic height loss",
+        "Disabling stabilization releases the physical valves and restores gravity-driven free fall",
+        "Armed assistance stays inactive on tires and during ceiling adhesion",
+        "Manual front/rear jet pairs override stabilization and automatic recovery resumes on release",
+        "Power loss and low tank pressure prevent unphysical stabilization or unlimited lift",
+        "Armed ground takeoff retains the hover target and CSV records both assistance states",
+        "Finite-tank recovery consumes temperature-dependent actual mass flow without hidden refill"
+      ]
+    },
+    "indirectLighting": {
+      "status": "passed",
+      "checks": [
+        "Isotropic radiance integrates to pi times radiance on six normals without double cosine convolution",
+        "Directional SH evaluation agrees with the independent Three.js irradiance implementation across 64 normals",
+        "Every stored probe has finite coefficients, consistent validity, exact dimensions and a verified content hash",
+        "Four city locations retain nonnegative bounce energy and agree with a 1536-ray transport reference within the documented spot-check tolerance",
+        "Contact AO affects only indirect diffuse; spatial probe samples use explicit LOD in divergent geometry branches",
+        "Camera adaptation responds to spatial shade and sun visibility, stays bounded and has an unloaded fixed-exposure fallback"
+      ]
+    },
+    "handlingControlsAudioAndBroadphase": {
+      "status": "passed",
+      "checks": [
+        "Keyboard, arrow, touch-key and gamepad steering share driver-right coordinates",
+        "100–300 km/h perturbed braking remains upright with load-proportional EBD and bounded tire forces",
+        "Front/rear pair overrides retain pitch moment, valve lag, pressure limits and gas conservation",
+        "EV level responds to actual drive/regen load; rolling and gas sources stay separate and idle is silent",
+        "Static-city grid matches reference collision pairs and surface rays across 160 randomized poses",
+        "Six safe city spawns and the full waterfront ramp retain four tire contacts without hull impacts"
+      ]
+    },
+    "braking": {
+      "status": "passed",
+      "checks": [
+        "Explicit brake takes priority over held accelerator and remains at rest",
+        "Explicit brake inhibits driving boost as well as motor torque",
+        "Unpowered vehicle retains mechanical service braking",
+        "Loaded and empty vehicles brake within the wheel-arch compression contract"
+      ]
+    },
+    "vehicleGeometry": {
+      "status": "passed",
+      "checks": [
+        {
+          "test": "Every authored position and normal is finite; nonzero normals are unit length",
+          "status": "PASS",
+          "ms": 11
+        },
+        {
+          "test": "Full suspension travel is represented directly, without shrinking or visually clamping tyres",
+          "status": "PASS",
+          "ms": 13
+        },
+        {
+          "test": "Whole tyre sweep clears arch, roof, inner wheelhouse and isolated thrust duct",
+          "status": "PASS",
+          "ms": 610
+        },
+        {
+          "test": "Continuous pressure chamber has an airtight roof, isolated wheel/jet cutouts and surface-following seal",
+          "status": "PASS",
+          "ms": 11
+        },
+        {
+          "test": "Cabin glazing, body aperture, individual LED lenses and suspension articulation exist",
+          "status": "PASS",
+          "ms": 0
+        },
+        {
+          "test": "Pressed door has interior surface samples and each lamp is an actual opening in paint",
+          "status": "PASS",
+          "ms": 23
+        },
+        {
+          "test": "All 20 physical seal segments and interpolation correction survive exterior rebuilding",
+          "status": "PASS",
+          "ms": 1
+        }
+      ],
+      "sweep": {
+        "samples": 1774080,
+        "lengthRangeM": [
+          0.24,
+          0.41
+        ],
+        "frontSteerRangeRad": [
+          -0.49,
+          0.49
+        ],
+        "tyreRadiusM": 0.372,
+        "minimumArchLinerMarginM": 0.017689963530136996,
+        "minimumRoofMarginM": 0.017206905838350772,
+        "minimumInnerWallMarginM": 0.07619499326628021,
+        "minimumLiftDuctMarginM": 0.0709447795558538
+      }
+    },
+    "cityAndSeal": {
+      "status": "passed",
+      "checks": [
+        "shared perimeter lip follows the actual surface and obeys the fan power budget",
+        "an enlarged seal gap removes inverted holding authority",
+        "the 1.24 km city and elevated deck use physical shared geometry",
+        "both drivable ramp and deck follow the specified height profile",
+        "113 authored road segments match their visible top, and the 8 m upper district supports all wheels",
+        "the market street is physically traversable beneath its raised footbridge"
+      ]
+    }
+  },
+  "totalAcceptanceChecks": 87
+}

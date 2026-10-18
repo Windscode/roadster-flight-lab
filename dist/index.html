@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#142021">
+  <meta name="description" content="Tesla Roadster 2026 独立动力学研究。驾驶、冷气飞行、倒悬与姿态控制，在同一座三维物理试验场中探索。">
+  <title>ROADSTER — Flight Lab</title>
+  <link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./game.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23142122'/%3E%3Cpath d='M18 47V17h17q12 0 12 10t-12 10H21m11 0 15 10' stroke='%23d6f4d5' stroke-width='5' fill='none'/%3E%3C/svg%3E">
+</head>
+<body>
+  <main id="app" aria-label="Roadster 三维仿真试验场">
+    <section id="game-menu" class="game-menu" role="dialog" aria-modal="true" aria-label="驾驶菜单">
+      <div class="menu-rail"><div class="game-wordmark">ROADSTER<span>CITY RESEARCH / 03.4</span></div><nav aria-label="游戏菜单"><a class="research-page-link" href="./research.html">实验与分析 ↗</a><button data-menu-page="home" class="selected">自由探索</button><button data-menu-page="experiments">场景与实验</button><button data-game-panel="render">车辆与画质</button><button data-game-panel="telemetry">工程遥测</button><button data-game-panel="research">研究工作台</button><button data-game-panel="parameters">模型与参数</button><button data-game-panel="map">城市规划图</button><button data-game-panel="radio">车载音乐</button><button data-game-panel="help">操作说明</button><button data-game-panel="about">模型与依据</button></nav><p>独立车辆与飞行仿真<br>VESPER CITY · 原创城市</p></div>
+      <div class="menu-main"><button class="menu-back" id="menu-resume">开始驾驶 <kbd>ESC</kbd></button><div id="menu-home" class="menu-page"><p class="game-eyebrow">01 / VESPER CITY</p><h1>从一个问题，开始试验。</h1><p class="menu-copy">在研究工作区比较车辆、控制与气源响应。<br>进入三维城市，观察和操纵同一套物理模型。</p><a class="play-button research-page-link" href="./research.html">进入研究工作区 <span>→</span></a><button class="play-button" id="play-city">进入城市 <span>→</span></button><div class="destination-grid"><button data-spawn="city"><span>01</span><strong>织桥街</strong><small>弧顶厅 / 双层步廊</small></button><button data-spawn="harbor"><span>02</span><strong>上城议庭</strong><small>林荫大道 / 半环柱廊</small></button><button data-spawn="skyway"><span>03</span><strong>空中长廊</strong><small>14 m 高架 / 坡道可达</small></button><button data-spawn="garden"><span>04</span><strong>穹顶植物园</strong><small>曲面温室 / 树冠栈道</small></button><button data-spawn="waterfront"><span>05</span><strong>南岸水庭</strong><small>滨水长廊 / 工业遗构</small></button><button data-spawn="sculpture"><span>06</span><strong>潮汐广场</strong><small>公共艺术 / 露天剧场</small></button></div><a class="garage-link" href="./vehicle-inspection.html" target="_blank" rel="noopener">车辆工坊 <span>外观 · 底盘 · 悬架行程 ↗</span></a></div><div id="menu-experiments" class="menu-page hidden"><p class="game-eyebrow">02 / VEHICLE LAB</p><h1>选择实验。</h1><p class="menu-copy">每项实验载入独立初态。进入后仍可自由操纵。</p><div id="experiment-container"></div><div class="menu-actions"><button data-game-command="hover">辅助飞行 <kbd>H</kbd></button><button data-game-command="stabilize" id="stabilize-btn" aria-pressed="false"><span id="stabilize-label">空中稳姿</span> <kbd>G</kbd></button><button data-game-command="suction">吸附系统 <kbd>F</kbd></button><button data-game-command="roll">自动滚转 <kbd>X</kbd></button><button data-game-command="land">自动着陆 <kbd>L</kbd></button></div></div><footer class="menu-footer"><span id="menu-location">VESPER / DOWNTOWN</span><span>菜单内暂停仿真 · 按 ESC 返回</span></footer></div>
+    </section>
+    <div class="game-tools"><button id="game-camera" aria-label="切换驾驶视角">◉ <kbd>C</kbd></button><button id="menu-btn" aria-label="打开驾驶菜单">☰ <kbd>ESC</kbd></button></div>
+    <section class="driver-hud" aria-label="驾驶仪表"><div class="map-block"><span id="district-label">DOWNTOWN</span><small id="hud-waypoint" class="hidden"></small><canvas id="mini-map" width="288" height="288" aria-label="城市导航小地图"></canvas><small>N ↑ <b>VESPER CITY</b></small></div><div class="speed-block"><div class="drive-mode"><span id="hud-mode">DRIVE</span><span id="hud-seal"></span></div><div class="speed-number"><strong id="hud-speed">0</strong><span>km/h</span></div><div id="hud-flight" class="hud-flight hidden"></div><div class="air-reserve"><span id="hud-air-label">气源</span><i><b id="hud-air-fill"></b></i></div><p class="drive-hint">W / S 加速与制动　SPACE 制动　H 飞行</p></div></section>
+    <div id="viewport" tabindex="0" aria-label="三维场景。WASD 驾驶，空格制动，H 悬停，1 前轮喷气，2 后轮喷气，E Q 升降，G 空中稳姿，P 暂停。"></div>
+    <div class="screen-shade" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Roadster Flight Lab 首页"><svg viewBox="0 0 38 36" aria-hidden="true"><path d="M7 28V8h14c7 0 10 3 10 7s-3 7-10 7H9m11 0 11 6"/></svg><span>ROADSTER<small>FLIGHT LAB</small></span></a>
+      <nav class="top-nav" aria-label="主导航"><button class="nav-item active" id="drive-tab">试验场</button><button class="nav-item" data-open="engineering">工程面板</button><button class="nav-item" data-open="about">模型与依据 <span>↗</span></button></nav>
+      <div class="top-actions"><span class="live-pill"><i></i><span id="sim-state">系统就绪</span></span><button class="icon-button" id="help-btn" title="操作说明" aria-label="操作说明">?</button><button class="icon-button" id="fullscreen-btn" title="全屏" aria-label="全屏"><svg viewBox="0 0 20 20"><path d="M3 7V3h4m6 0h4v4M3 13v4h4m6 0h4v-4"/></svg></button></div>
+    </header>
+
+    <aside class="left-hud" id="left-hud">
+      <div class="eyebrow"><span class="tiny-rule"></span> TESLA ROADSTER · 2026</div>
+      <h1>路面之外。</h1>
+      <p class="intro-copy">一个关于牵引、重力与飞行的<br>独立动力学试验场。</p>
+      <section class="experiment-menu" aria-label="选择试验初态">
+        <div class="section-caption">选择试验 <span>01 — 04</span></div>
+        <button class="experiment active" data-scenario="free"><span class="experiment-number">01</span><span class="experiment-text"><strong>开放试验场</strong><small>地面驾驶 / 自由探索</small></span><span class="experiment-arrow">↗</span></button>
+        <button class="experiment" data-scenario="hover"><span class="experiment-number">02</span><span class="experiment-text"><strong>垂直飞行</strong><small>定高悬停 / 喷气滚转</small></span><span class="experiment-arrow">↗</span></button>
+        <button class="experiment" data-scenario="ceiling"><span class="experiment-number">03</span><span class="experiment-text"><strong>倒悬实验室</strong><small>密封吸附 / 顶面行驶</small></span><span class="experiment-arrow">↗</span></button>
+        <button class="experiment" data-scenario="ramp"><span class="experiment-number">04</span><span class="experiment-text"><strong>重力弧桥</strong><small>连续曲面 / 垂直爬升</small></span><span class="experiment-arrow">↗</span></button>
+      </section>
+      <button class="subtle-button" id="collapse-hud"><span>收起面板</span><span>←</span></button>
+    </aside>
+    <button class="hud-reopen hidden" id="expand-hud" aria-label="展开试验选择">试验 <span>→</span></button>
+
+    <div class="world-label" id="world-label"><span class="coordinate">MORROW PROVING GROUND</span><span>虚拟封闭试验设施 <span class="label-dot">·</span> <b id="weather-label">日间 / 晴间多云</b></span></div>
+    <div class="viewport-tools">
+      <button class="tool-button" id="camera-btn" title="切换视角 C"><svg viewBox="0 0 20 20"><path d="M3 5h4l1-2h4l1 2h4v12H3Z"/><circle cx="10" cy="10.5" r="3"/></svg><span id="camera-name">环绕视角</span><kbd>C</kbd></button>
+      <button class="tool-button" id="forces-btn" aria-pressed="false" title="显示力矢量 V"><svg viewBox="0 0 20 20"><path d="M5 15 15 5M7 5h8v8M5 6v9h9"/></svg><span>力矢量</span><kbd>V</kbd></button>
+      <button class="tool-button" id="trail-btn" aria-pressed="false" title="显示运动轨迹"><svg viewBox="0 0 20 20"><path d="M3 16c0-9 6-1 6-8s8-5 8-5"/></svg><span>轨迹</span></button>
+    </div>
+    <div class="orientation-widget" aria-label="姿态指示"><svg id="horizon-svg" viewBox="0 0 100 100"><defs><clipPath id="horizon-clip"><circle cx="50" cy="50" r="37"/></clipPath></defs><circle cx="50" cy="50" r="47" class="horizon-outer"/><g clip-path="url(#horizon-clip)"><g id="horizon-disk"><rect x="0" y="-100" width="100" height="150" fill="#a3c4bf" fill-opacity=".32"/><rect x="0" y="50" width="100" height="150" fill="#b99169" fill-opacity=".26"/><path d="M0 50h100 M38 39h24 M43 28h14 M38 61h24 M43 72h14" stroke="#e5efdf" stroke-width="1" fill="none"/></g></g><path d="M25 50h15l5 5h10l5-5h15 M50 9v7" stroke="#e7efd7" stroke-width="2" fill="none"/><circle cx="50" cy="50" r="37" class="horizon-inner"/></svg><span id="attitude-label">ROLL 0.0°</span></div>
+
+    <section class="launch-card" id="launch-card">
+      <div><span class="eyebrow" id="launch-kicker">READY FOR A DIFFERENT KIND OF DRIVE</span><h2 id="launch-title">驾驶，从这里开始。</h2><p id="launch-description">WASD 控制车辆，按 H 启动飞行控制。拖动场景，自由观察。</p></div>
+      <button class="primary-button" id="start-btn">进入试验 <span>↗</span></button>
+    </section>
+
+    <div class="status-banner hidden" id="status-banner" role="status"></div>
+    <div class="toast hidden" id="toast" role="status"></div>
+
+    <section class="bottom-console" aria-label="仿真控制与遥测">
+      <div class="control-strip">
+        <div class="segmented" aria-label="控制模式"><button class="active" data-mode="drive">地面驾驶</button><button data-mode="hover">辅助飞行</button><button data-mode="manual">直接推力</button></div>
+        <div class="maneuver-actions"><button id="suction-btn" aria-pressed="false"><i class="toggle-dot"></i>吸附 <kbd>F</kbd></button><button id="roll-btn">↻ 滚转 <kbd>X</kbd></button><button id="land-btn">↓ 降落 <kbd>L</kbd></button></div>
+        <div class="run-actions"><button id="refill-btn" title="试验干预：恢复初始气源">补气 <kbd>T</kbd></button><button class="run-icon" id="reset-btn" title="重置当前试验 R" aria-label="重置当前试验">↺</button><button class="run-icon" id="pause-btn" title="继续 / 暂停 P" aria-label="继续或暂停">▶</button></div>
+      </div>
+      <div class="telemetry-row">
+        <div class="readout speed-readout"><span class="readout-label">地速 <small>GROUND SPEED</small></span><div><strong id="speed-value">0</strong><span class="unit">km/h</span></div><span class="readout-sub" id="drive-state">驻车待命</span></div>
+        <div class="readout"><span class="readout-label">重心高度 <small>CG ALTITUDE</small></span><div><strong id="altitude-value">0.62</strong><span class="unit">m</span></div><span class="readout-sub">垂速 <b id="vertical-value">0.00</b> m/s</span></div>
+        <div class="readout"><span class="readout-label">喷口总推力 <small>COLD GAS</small></span><div><strong id="thrust-value">0.0</strong><span class="unit">kN</span></div><div class="mini-meter"><i id="thrust-meter"></i></div></div>
+        <div class="readout"><span class="readout-label">吸附力 <small>SUCTION FORCE</small></span><div><strong id="suction-value">0.0</strong><span class="unit">kN</span></div><span class="readout-sub">接触轮数 <b id="contacts-value">4 / 4</b></span></div>
+        <div class="readout gas-readout"><span class="readout-label">储气压力 <small id="supply-label">FINITE SUPPLY</small></span><div><strong id="pressure-value">350</strong><span class="unit">bar</span></div><div class="gas-meter"><i id="gas-meter"></i></div></div>
+        <button class="telemetry-expand" data-open="engineering"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-10M15 5h5v5"/></svg><span>查看<br>实时遥测</span></button>
+      </div>
+      <div class="console-footer"><span><i></i> <span id="solver-label">6DOF · 固定步长</span> <b class="separator">/</b> <span id="time-value">T+ 000.0 s</span></span><span class="keyboard-hint"><kbd>W A S D</kbd> 驾驶 <span>·</span> <kbd>SPACE</kbd> 制动 <span>·</span> <kbd>E / Q</kbd> 升降</span><span id="performance-label">WEBGL 2</span></div>
+    </section>
+    <div class="touch-controls" id="touch-controls"><div><button data-touch="KeyW" aria-label="前进">▲</button><span><button data-touch="KeyA" aria-label="左转">◀</button><button data-touch="KeyS" aria-label="后退">▼</button><button data-touch="KeyD" aria-label="右转">▶</button></span></div><div><span><button data-touch="Digit1" aria-label="前轮向下喷气">前喷</button><button data-touch="Digit2" aria-label="后轮向下喷气">后喷</button></span><button data-touch="KeyE" aria-label="升高">＋</button><button data-touch="Space" aria-label="制动">制动</button><button data-touch="KeyQ" aria-label="降低">－</button></div></div>
+
+    <div class="drawer-scrim hidden" id="drawer-scrim"></div>
+    <aside class="drawer hidden" id="engineering-drawer" aria-label="工程面板" aria-modal="true" role="dialog">
+      <header class="drawer-header"><div><span class="eyebrow">ENGINEERING WORKSPACE</span><h2>看见每一个力。</h2></div><button class="close-button" data-close aria-label="关闭">×</button></header>
+      <nav class="drawer-tabs"><button class="active" data-engineering-tab="telemetry">遥测</button><button data-engineering-tab="parameters">参数</button><button data-engineering-tab="render">视景</button><button data-engineering-tab="research">实验</button></nav>
+      <div class="drawer-content" id="engineering-telemetry">
+        <div class="drawer-section-title">实时响应 <span>最近 20 s · 仿真时间</span></div><canvas id="telemetry-chart" width="760" height="290" aria-label="高度与目标高度曲线"></canvas><div class="chart-legend"><span><i class="mint"></i>重心高度 / m</span><span><i class="sand"></i>目标高度 / m</span></div>
+        <div class="drawer-section-title">主升力通道 <span>车体 Y 轴 · kN</span></div><canvas id="force-chart" width="760" height="250" aria-label="车体升力指令和实际输出曲线"></canvas><div class="chart-legend"><span><i class="mint"></i>实际输出</span><span><i class="sand"></i>控制指令</span></div>
+        <div class="drawer-section-title">气源状态 <span>压力 / bar · 温度 / K</span></div><canvas id="gas-chart" width="760" height="250" aria-label="气瓶压力与温度曲线"></canvas><div class="chart-legend"><span><i class="mint"></i>压力 / 左轴</span><span><i class="sand"></i>温度 / 右轴</span></div>
+        <div class="detail-grid" id="details-grid"></div>
+        <div class="drawer-section-title">执行器分配 <span>各喷口实际输出</span></div><div id="nozzle-bars" class="nozzle-bars"></div>
+        <div class="model-note"><strong>从输入到受力，再到位姿。</strong><p>控制器输出通过喷口分配形成推力与力矩。轮胎、悬架、重力、阻力和吸附力共同进入刚体积分。</p></div>
+        <div class="button-row"><button class="secondary-button" id="record-btn">● 开始记录</button><button class="secondary-button" id="csv-btn">导出 CSV ↓</button></div><p class="field-help" id="record-status">CSV 包含当前参数、控制模式、时间、位姿、速度、气源与执行器数据。</p>
+      </div>
+      <div class="drawer-content hidden" id="engineering-parameters">
+        <div class="model-note"><strong>参数是可检验的假设。</strong><p>以下数值用于工程实验；Tesla 未公开完整质量、惯量、轮胎与喷口数据。修改结构参数会重置当前试验。</p></div>
+        <label class="field-label" for="supply-mode">气源工况</label><select id="supply-mode"><option value="finite">有限储气 · 车辆工况</option><option value="bench">恒压试验台 · 理想对照</option></select><p class="field-help">恒压工况用于长时间调参，假设外部气源持续供给，不表示实车可以无限悬停。</p>
+        <label class="field-label"><input id="steering-assist" type="checkbox" checked> 道路转向辅助 · 随速度限制路轮角</label><label class="field-label"><input id="traction-assist" type="checkbox" checked> 理想牵引分配 · 为侧向附着留余量</label><p class="field-help">可关闭辅助研究原始操纵。轮胎仍按实际受力滑移，不锁定车辆侧向速度。</p><label class="field-label" for="nozzle-model">喷管模型</label><select id="nozzle-model"><option value="isentropic">温压相关等熵模型 · 默认</option><option value="constant">固定650 m/s · 旧模型对照</option></select><p class="field-help">默认考虑罐温下降和环境背压，定速度效率0.90为研究假设。</p><label class="field-label" for="gas-model">气源热力学</label><select id="gas-model"><option value="adiabatic">绝热放空 + 环境换热 · 默认</option><option value="isothermal">等温对照 · 温度恒定假设</option></select><p class="field-help">高压理想空气近似，未作真实气体标定。默认温度随放气降低；气量未归零也可能失去推力。</p>
+        <div id="parameter-fields"></div>
+        <div class="field-label">目标重心高度 <b id="target-height-label">4.0 m</b></div><input id="target-height" type="range" min="1" max="20" step=".5" value="4" aria-label="目标重心高度">
+        <div class="field-label">仿真速率 <b id="time-scale-label">1.00 ×</b></div><input id="time-scale" type="range" min=".1" max="1" step=".05" value="1" aria-label="仿真速率"><p class="field-help">慢动作仍使用同样的固定物理步长。隐藏页面会自动暂停。</p>
+        <button class="secondary-button full-width" id="defaults-btn">恢复默认实验参数</button>
+      </div>
+      <div class="drawer-content hidden" id="engineering-research">
+        <a class="research-page-link research-panel-link" href="./research.html">打开完整研究工作区 ↗<small>参数扫描 · 配对对照 · 多曲线 · 实验库</small></a><div class="model-note"><strong>实验与场景驾驶分开。</strong><p>以下在独立水平试验台计算，不改变你当前车辆。参数、输入、工况与20Hz原始样本可一起导出；结论属于本模型，未作Tesla实车标定。</p></div>
+        <label class="field-label" for="experiment-kind">可复现实验</label><select id="experiment-kind"><option value="steer">路轮转角阶跃 / 侧偏响应</option><option value="rise">普通 E 上升 / 2秒后松开</option><option value="hover">气源放空 / 悬停裕度</option><option value="roll">弹道滚转 / 着陆与气耗</option></select><p id="experiment-description" class="field-help"></p>
+        <label class="field-label" for="experiment-speed">转向实验初速 / km/h</label><input id="experiment-speed" type="number" value="80" min="20" max="160" step="10"><label class="field-label" for="experiment-angle">转向实验路轮角 / °</label><input id="experiment-angle" type="number" value="2" min=".2" max="5" step=".2">
+        <div class="button-row"><button class="secondary-button" id="experiment-run">运行实验</button><button class="secondary-button" id="experiment-cancel">停止</button></div><p id="experiment-status" class="field-help" role="status">就绪 · 固定120Hz / 记录20Hz</p><canvas id="experiment-chart" width="760" height="290" aria-label="独立试验响应曲线"></canvas><pre id="experiment-results" class="experiment-results">运行后显示侧偏、升速、气耗或着陆指标。</pre><div class="button-row"><button class="secondary-button" id="experiment-json" disabled>导出完整研究报告</button><button class="secondary-button" id="experiment-csv" disabled>导出原始 CSV</button></div>
+      </div>
+      <div class="drawer-content hidden" id="engineering-render">
+        <label class="field-label"><input id="auto-exposure" type="checkbox" checked> 镜头明暗适应</label><p class="field-help">缓慢适应街巷与桥下的明暗，保留阳光高光。关闭可使用固定曝光做光照对照。</p><label class="field-label" for="quality">画质预设</label><select id="quality"><option value="high">高 · 间接光 / 级联阴影 / 接触遮蔽</option><option value="ultra">极高 · 间接光 / 精细阴影 / 局部反射</option><option value="balanced">流畅 · 降低像素密度</option></select><p class="field-help">性能取决于浏览器和显卡。极高画质适合独立显卡；物理精度不随画质下降。</p>
+        <div class="setting-row"><span>城市时间</span><span id="day-btn">日间 · 晴间多云</span></div>
+        <div class="setting-row"><span>车身半透明 · 观察结构</span><button class="switch" id="cutaway-btn" role="switch" aria-checked="false" aria-label="车身半透明"><i></i></button></div>
+        <div class="setting-row"><span>合成电驱 / 喷气声音</span><button class="switch" id="sound-btn" role="switch" aria-checked="false" aria-label="声音"><i></i></button></div>
+        <label class="field-label" for="sound-volume">声音音量 <b id="sound-volume-label">25%</b></label><input id="sound-volume" type="range" min="0" max="100" step="1" value="25"><p class="field-help">电驱声随实际轮端负载与回收制动变化。独立的路噪、风扇和气阀声；均为低音量合成音。</p><label class="field-label">车身涂装</label><div class="swatches"><button class="swatch active" style="--swatch:#eef0e8" data-color="#e8e9e7" title="Ano White 白色" aria-label="白色"></button><button class="swatch" style="--swatch:#a8b6b9" data-color="#91a7ab" title="实验银色" aria-label="银色"></button><button class="swatch" style="--swatch:#882f25" data-color="#9b3027" title="实验红色" aria-label="红色"></button><button class="swatch" style="--swatch:#283e3d" data-color="#294d48" title="实验墨绿" aria-label="墨绿"></button></div>
+        <div class="model-note"><strong>2026 展示外形重建</strong><p>按官方照片重建的可交互几何，包含车轮、灯组、车窗、车翼和喷口。尺寸与内部结构采用明确假设。</p></div><button class="secondary-button full-width" id="export-model-btn">导出当前车辆模型 · GLB ↓</button>
+        <p class="field-help">导出原创重建几何与材质；不含 Tesla 原厂 CAD 或生产设计数据。车轮按实际悬架位置显示；完整行程与转向包络另有几何检查。</p>
+      </div>
+    </aside>
+
+    <aside class="drawer about-drawer hidden" id="about-drawer" aria-label="模型与依据" aria-modal="true" role="dialog">
+      <header class="drawer-header"><div><span class="eyebrow">THE MODEL / THE EVIDENCE</span><h2>让想象，有依据。</h2></div><button class="close-button" data-close aria-label="关闭">×</button></header>
+      <div class="drawer-content"><a class="text-link" href="https://www.tesla.com/en_GB/roadster" target="_blank" rel="noopener">Tesla 官方外形与演示参考 ↗</a><p class="image-credit">公开参考与本项目原创重建分开。未附带 Tesla 原图再分发许可。</p><h3>这一次，是 2026 Roadster。</h3><p class="about-copy">以 2026 年 10 月发布的 Roadster 演示和当前官方说明为依据，重建白色楔形车身，以及地面、吸附和冷气推进三类运动。此项目为独立工程研究。</p>
+        <div class="evidence-tabs"><span class="evidence-badge">公开功能</span><span class="evidence-badge assumption">工程假设</span><span class="evidence-badge boundary">模型边界</span></div>
+        <div id="research-content"><p class="about-copy">正在载入参考依据…</p></div>
+        <h3>实际求解什么？</h3><div class="equation-card"><span>平动 / 转动</span><code>m v̇ = ΣF　　I ω̇ + ω × Iω = Στ</code></div><div class="equation-card"><span>表面吸附 / 偏置喷口</span><code>Fₛ = Δp · A · η　　τᵢ = rᵢ × Fᵢ</code></div><p class="about-copy">刚体动力学与四轮接触、弹簧阻尼、轮胎附着饱和、风扇密封、气源温压状态、45 ms 开阀与25 ms 关阀假设共同计算。每一个试验都有独立初态；重置、补气与参数变更属于明确的试验干预。</p>
+        <div class="model-note"><strong>精度边界</strong><p>这是可检查源码的实时工程近似模型。未包含 CFD、结构有限元、柔性车身、真实高压气体状态方程、原车控制代码或实测标定；主动尾翼目前只做视觉联动，没有单独标定的气动力模型；不用于车辆设计、安全评估或性能认证。实时浏览器视景也不等同于原生 3A 引擎完整制作管线。</p></div>
+        <h3>原始资料</h3><div id="source-links" class="source-links"></div><h3>运行与复现</h3><p class="about-copy">物理测试及完整实现可在项目源码中检查。仿真在本机浏览器运行，不上传你的操纵和遥测记录。按 M 查看城市规划图；按 F9 隐藏或恢复仪表。</p><a class="secondary-button full-width download-link" href="https://github.com/Windscode/roadster-flight-lab/archive/refs/heads/main.zip">下载完整项目源码 ↓</a><a class="text-link" href="./validation.json" target="_blank" rel="noopener">查看数值验证结果 ↗</a><p class="image-credit">Three.js · cannon-es · Poly Haven CC0 环境素材<br>非 Tesla 官方软件，品牌名称仅用于研究对象识别。</p>
+      </div>
+    </aside>
+
+    <aside class="drawer city-map-panel hidden" id="map-drawer" aria-label="城市规划图" aria-modal="true" role="dialog"><header class="drawer-header"><div><span class="eyebrow">VESPER / DISTRICTS & CONNECTIONS</span><h2>街区与路径。</h2></div><button class="close-button" data-close aria-label="关闭">×</button></header><div class="drawer-content"><p class="field-help">白色为当前车辆；金色虚线为高架，灰绿为地面主次街，细虚线为步行连接。选择节点标记入口，返回驾驶后显示直线距离。</p><div class="city-map-layout"><canvas id="city-plan-canvas" width="900" height="900" aria-label="三个街区、主次道路与多层交通规划图"></canvas><div><div id="city-plan-nodes"></div><div id="city-plan-detail"></div><p class="field-help">织桥街：压缩街谷与双层步廊。<br>机造里：锯齿厂房与服务庭院。<br>上城议庭：林荫大道与半环柱廊。</p><a class="research-page-link text-link" href="./research.html">定量研究请进入独立试验台 ↗</a></div></div></div></aside>
+    <button id="radio-chip" class="radio-chip hidden" title="打开车载音乐"></button>
+    <aside class="drawer hidden" id="radio-drawer" aria-label="车载音乐" aria-modal="true" role="dialog"><header class="drawer-header"><div><span class="eyebrow">VESPER / CAR RADIO</span><h2>路上的声音。</h2></div><button class="close-button" data-close aria-label="关闭">×</button></header><div class="drawer-content">
+      <label class="field-label" for="radio-collection">音乐分类</label><select id="radio-collection"><option value="all">全部曲目</option><option value="classical">古典器乐</option><option value="pop">独立流行 / 演唱</option><option value="ambient">氛围 / 电子</option><option value="local">本地导入</option></select><label class="field-label" for="radio-track">曲目</label><select id="radio-track"></select><h3 id="radio-title">准备本地电台…</h3><p id="radio-artist"></p><p class="field-help"><span id="radio-license"></span> · <span id="radio-note"></span></p><div class="button-row"><button class="secondary-button" id="radio-prev">上一首</button><button class="secondary-button" id="radio-play">播放</button><button class="secondary-button" id="radio-next">下一首</button></div><label class="field-label" for="radio-seek">播放进度 <b id="radio-time">0:00 / 0:00</b></label><input id="radio-seek" type="range" min="0" max="100" step=".1" value="0"><label class="field-label" for="radio-volume">音乐音量 <b id="radio-volume-label">18%</b></label><input id="radio-volume" type="range" min="0" max="100" value="18"><label class="field-label"><input id="radio-muted" type="checkbox"> 静音</label><label class="field-label"><input id="radio-normalize" type="checkbox" checked> 曲目响度补偿</label><p class="field-help" id="radio-gain-note">古典与流行录音的响度不同，按录音测量值平滑补偿。</p><p id="radio-status" class="field-help" role="status">选择播放后启用，不自动外放。</p><p id="radio-credit" class="field-help"></p><a id="radio-source" class="text-link" target="_blank" rel="noopener">作者原始曲目与许可 ↗</a><p class="field-help">古典、独立流行与氛围曲目。录音许可与作者署名随曲目显示。<a href="./assets/music/CREDITS.txt" target="_blank">全部署名与许可</a></p><label class="field-label" for="radio-import">导入本地音频</label><input id="radio-import" type="file" accept="audio/*" multiple><p class="field-help">文件仅在本机播放，不上传，也不打包进项目。J 播放/暂停，K 下一首。</p>
+    </div></aside>
+    <section class="help-modal hidden" id="help-modal" role="dialog" aria-modal="true" aria-label="操作说明"><header><div><span class="eyebrow">YOUR QUICK FLIGHT BRIEFING</span><h2>握住方向，试着起飞。</h2></div><button class="close-button" id="help-close" aria-label="关闭">×</button></header><div class="help-grid"><div><h3>地面操纵</h3><p><kbd>W / S</kbd> 加速 / 制动后倒车</p><p><kbd>A / D</kbd> 方向盘</p><p><kbd>SPACE</kbd> 车轮制动</p><p><kbd>SHIFT</kbd> 后喷口推进</p></div><div><h3>飞行与吸附</h3><p><kbd>H</kbd> 辅助飞行 / 地面模式</p><p><kbd>G</kbd> 空中自动回正与稳定开关</p><p><kbd>E / Q</kbd> 受限升降率 / 松开定高</p><p><kbd>Z / B</kbd> 辅助飞行横移 / 手动滚转</p><p><kbd>1 / 2</kbd> 前 / 后两轮向下喷气；松开关阀</p><p><kbd>F</kbd> 吸附系统开关</p><p><kbd>X / L</kbd> 自动滚转 / 降落</p></div><div><h3>试验操作</h3><p><kbd>P</kbd> 暂停 / 继续</p><p><kbd>R</kbd> 重置当前试验</p><p><kbd>T</kbd> 恢复储气初态</p><p><kbd>C / V</kbd> 视角 / 力矢量</p><p><kbd>M</kbd> 城市规划图</p><p><kbd>F9</kbd> 隐藏仪表</p><p><kbd>J / K</kbd> 音乐播放 / 下一首</p><p><kbd>ESC</kbd> 关闭面板</p></div></div><div class="model-note"><strong>先试倒悬，再试飞行。</strong><p>普通 E 使用受限升降率，不再直接满阀冲天。1 / 2 和直接推力模式为原始阀门控制，不作自动配平；同时按住为四轮喷射，消耗有限储气。倒悬实验室从已贴顶初态开始，可停住和缓慢移动。关闭吸附会自然下落。垂直飞行从空中初态开始，默认有限储气；工程面板可切换恒压试验台，方便长时间研究。弧桥入口需要保持对正、开启吸附并用较低速度爬升。</p></div><button class="primary-button" id="help-done">明白了，开始探索 <span>↗</span></button></section>
+    <div id="loading-screen"><div class="loading-brand">ROADSTER<span>FLIGHT LAB</span></div><div class="loading-line"><i></i></div><p id="loading-message">正在构建物理世界与三维视景…</p></div>
+    <div class="error-screen hidden" id="error-screen"><h2>视景暂时未能启动</h2><p id="error-message"></p><button class="primary-button" onclick="location.reload()">重新加载</button></div>
+  </main>
+  <script>window.addEventListener('error',function(e){if(!window.roadsterReady){document.getElementById('error-screen').classList.remove('hidden');document.getElementById('loading-screen').style.display='none';document.getElementById('error-message').textContent='启动遇到错误：'+(e.message||'资源加载失败')+'。请使用支持 WebGL 2 的桌面浏览器并开启硬件加速。';}});</script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
+
+
