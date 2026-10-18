@@ -7,8 +7,8 @@ import {SUN_DIRECTION,irradianceAt} from './irradiance-math.js';
 export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
   const empty=new THREE.DataArrayTexture(new Uint16Array(4),1,1,1);empty.type=THREE.HalfFloatType;empty.format=THREE.RGBAFormat;empty.needsUpdate=true;
   const uniforms={giCity:{value:empty},giStreet:{value:empty},giSky:{value:Array.from({length:9},()=>new THREE.Vector3())},giReady:{value:0},giAO:{value:null},giAOEnabled:{value:0},giViewport:{value:new THREE.Vector2(1,1)}};
-  const stats={algorithm:'Offline 3-bounce diffuse path tracing / spatial order-2 SH',loaded:false,bounces:3};
-  let metadata=null;const cpuVolumes=[];
+  const stats={algorithm:'Offline 3-bounce diffuse path tracing / spatial order-2 SH',loaded:false,bounces:3,evaluation:'fragment',maximumFieldTextureReadsPerFragment:36};
+  let metadata=null,evaluation='fragment';const cpuVolumes=[];
   const ready=(async()=>{
     const base=new URL('./assets/irradiance/',import.meta.url),response=await fetchAsset(new URL('manifest.json',base));if(!response.ok)throw Error('Missing irradiance manifest');metadata=await response.json();
     metadata.skySH.forEach((v,i)=>uniforms.giSky.value[Math.floor(i/3)].setComponent(i%3,v));
@@ -56,16 +56,24 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
   `;
   function inject(shader){
     Object.assign(shader.uniforms,uniforms);
-    shader.vertexShader='varying vec3 giWorld;\n'+shader.vertexShader;
+    const vertex=evaluation==='vertex';
+    // The smooth preset evaluates the same physical baked SH coefficients at
+    // vertices. This removes 18 (or 36 in the fine street volume) texture reads
+    // per shaded pixel; it changes interpolation resolution, not light energy.
+    if(vertex){
+      shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\n'+glsl+'\nvarying vec3 giVertexIrradiance;');
+      shader.fragmentShader='uniform float giReady,giAOEnabled;uniform sampler2D giAO;uniform vec2 giViewport;varying vec3 giVertexIrradiance;\n'+shader.fragmentShader;
+    }else shader.vertexShader='varying vec3 giWorld;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`
       vec4 giPosition=vec4(transformed,1.);
       #ifdef USE_INSTANCING
       giPosition=instanceMatrix*giPosition;
       #endif
       giWorld=(modelMatrix*giPosition).xyz;
+      ${vertex?'giVertexIrradiance=giIrradiance(giWorld,inverseTransformDirection(transformedNormal,viewMatrix));':''}
       #include <project_vertex>`);
-    shader.fragmentShader=glsl+shader.fragmentShader;
-    shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_maps>',THREE.ShaderChunk.lights_fragment_maps.replace('iblIrradiance += getIBLIrradiance( geometryNormal );','if(giReady>.5)iblIrradiance+=giIrradiance(giWorld,inverseTransformDirection(geometryNormal,viewMatrix));else iblIrradiance+=getIBLIrradiance(geometryNormal);'));
+    if(!vertex)shader.fragmentShader=glsl+shader.fragmentShader;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_maps>',THREE.ShaderChunk.lights_fragment_maps.replace('iblIrradiance += getIBLIrradiance( geometryNormal );',`if(giReady>.5)iblIrradiance+=${vertex?'giVertexIrradiance':'giIrradiance(giWorld,inverseTransformDirection(geometryNormal,viewMatrix))'};else iblIrradiance+=getIBLIrradiance(geometryNormal);`));
     shader.fragmentShader=shader.fragmentShader.replace('#include <aomap_fragment>',`#include <aomap_fragment>
       if(giAOEnabled>.5){float contactAO=texture2D(giAO,gl_FragCoord.xy/giViewport).r;reflectedLight.indirectDiffuse*=mix(.78,1.,contactAO);}`);
   }
@@ -98,7 +106,9 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
     return .90*Math.max(1,Math.min(3,Math.sqrt(reference/Math.max(.025,metered))));
   }
 
-  return{ready,stats,inject,uniforms,exposureAt,get metadata(){return metadata;},setContactAO(t){uniforms.giAO.value=t;},setAOEnabled(v){uniforms.giAOEnabled.value=v?1:0;},resize(){renderer.getDrawingBufferSize(uniforms.giViewport.value);}};
+  return{ready,stats,inject,uniforms,exposureAt,get metadata(){return metadata;},get shaderKey(){return 'gi-'+evaluation+'-v3';},
+    setQuality(q,profile={}){evaluation=profile.giMode||(q==='balanced'?'vertex':'fragment');stats.evaluation=evaluation;stats.maximumFieldTextureReadsPerFragment=evaluation==='vertex'?0:36;},
+    setContactAO(t){uniforms.giAO.value=t;},setAOEnabled(v){uniforms.giAOEnabled.value=v?1:0;},resize(){renderer.getDrawingBufferSize(uniforms.giViewport.value);}};
 }
 
 export function makeSunlessEnvironment(hdr,metadata){

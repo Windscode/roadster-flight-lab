@@ -15,7 +15,7 @@ function measure(Model){
   const speed=coast.body.velocity.length();run(coast,1);
   const bench=new Model({supplyMode:'bench'});bench.reset('hover');bench.startManeuver('roll');
   const hold=run(bench,11);
-  const finite=new Model();finite.reset('hover');finite.startManeuver('roll');
+  const finite=new Model({supplyMode:'finite'});finite.reset('hover');finite.startManeuver('roll');
   let minimum=Infinity,inverted=false,firstTouch=null,settledTime=null;
   const last=run(finite,12,{},t=>{
     if(t.maneuver&&t.maneuver.phase!=='land')minimum=Math.min(minimum,t.heightWorld);

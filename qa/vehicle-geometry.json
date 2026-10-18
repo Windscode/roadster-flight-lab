@@ -1,10 +1,104 @@
 {
   "status": "passed",
-  "asOf": "2026-10-18T13:08:28.226Z",
-  "model": "Roadster photograph reconstruction v4",
+  "asOf": "2026-10-18T16:29:09.903Z",
+  "model": "Roadster photograph reconstruction v5",
   "geometry": {
-    "meshes": 157,
-    "vertices": 145976
+    "meshes": 149,
+    "vertices": 148660
+  },
+  "profiles": {
+    "balanced": {
+      "atRest": {
+        "quality": "balanced",
+        "drawables": 74,
+        "meshes": 74,
+        "vertices": 42764,
+        "triangles": 49535,
+        "shadowMeshes": 5
+      },
+      "forceNozzles": {
+        "quality": "balanced",
+        "drawables": 94,
+        "meshes": 94,
+        "vertices": 45624,
+        "triangles": 53635,
+        "shadowMeshes": 5
+      },
+      "cutaway": {
+        "quality": "balanced",
+        "drawables": 178,
+        "meshes": 174,
+        "vertices": 59508,
+        "triangles": 66103,
+        "shadowMeshes": 5
+      }
+    },
+    "high": {
+      "atRest": {
+        "quality": "high",
+        "drawables": 144,
+        "meshes": 140,
+        "vertices": 145008,
+        "triangles": 221603,
+        "shadowMeshes": 119
+      },
+      "forceNozzles": {
+        "quality": "high",
+        "drawables": 174,
+        "meshes": 170,
+        "vertices": 151958,
+        "triangles": 231203,
+        "shadowMeshes": 129
+      },
+      "cutaway": {
+        "quality": "high",
+        "drawables": 178,
+        "meshes": 174,
+        "vertices": 155142,
+        "triangles": 235971,
+        "shadowMeshes": 133
+      }
+    },
+    "ultra": {
+      "atRest": {
+        "quality": "ultra",
+        "drawables": 144,
+        "meshes": 140,
+        "vertices": 219080,
+        "triangles": 358057,
+        "shadowMeshes": 119
+      },
+      "forceNozzles": {
+        "quality": "ultra",
+        "drawables": 174,
+        "meshes": 170,
+        "vertices": 230450,
+        "triangles": 375097,
+        "shadowMeshes": 129
+      },
+      "cutaway": {
+        "quality": "ultra",
+        "drawables": 178,
+        "meshes": 174,
+        "vertices": 234394,
+        "triangles": 381117,
+        "shadowMeshes": 133
+      }
+    }
+  },
+  "glazingBoundaryNormals": {
+    "balanced": {
+      "coincidentBoundaryPairs": 34,
+      "maximumNormalAngleDeg": 0.018051009148609187
+    },
+    "high": {
+      "coincidentBoundaryPairs": 76,
+      "maximumNormalAngleDeg": 0.019080792191188394
+    },
+    "ultra": {
+      "coincidentBoundaryPairs": 100,
+      "maximumNormalAngleDeg": 0.019080792191188394
+    }
   },
   "sweep": {
     "samples": 1774080,
@@ -18,7 +112,7 @@
     ],
     "tyreRadiusM": 0.372,
     "minimumArchLinerMarginM": 0.017689963530136996,
-    "minimumRoofMarginM": 0.017206905838350772,
+    "minimumRoofMarginM": 0.016675756702111966,
     "minimumInnerWallMarginM": 0.07619499326628021,
     "minimumLiftDuctMarginM": 0.0709447795558538
   },
@@ -112,28 +206,29 @@
         -2.04
       ]
     ],
-    "sealMaximumExtension": 0.44
+    "sealMaximumExtension": 0.44,
+    "sealGeometryUpdates": 6
   },
   "tests": [
     {
       "test": "Every authored position and normal is finite; nonzero normals are unit length",
       "status": "PASS",
-      "ms": 11
+      "ms": 63
     },
     {
       "test": "Full suspension travel is represented directly, without shrinking or visually clamping tyres",
       "status": "PASS",
-      "ms": 13
+      "ms": 18
     },
     {
       "test": "Whole tyre sweep clears arch, roof, inner wheelhouse and isolated thrust duct",
       "status": "PASS",
-      "ms": 610
+      "ms": 2742
     },
     {
       "test": "Continuous pressure chamber has an airtight roof, isolated wheel/jet cutouts and surface-following seal",
       "status": "PASS",
-      "ms": 11
+      "ms": 7
     },
     {
       "test": "Cabin glazing, body aperture, individual LED lenses and suspension articulation exist",
@@ -143,12 +238,32 @@
     {
       "test": "Pressed door has interior surface samples and each lamp is an actual opening in paint",
       "status": "PASS",
-      "ms": 23
+      "ms": 138
     },
     {
       "test": "All 20 physical seal segments and interpolation correction survive exterior rebuilding",
       "status": "PASS",
-      "ms": 1
+      "ms": 3
+    },
+    {
+      "test": "Render profiles reduce actual geometry and preserve articulated object identities and state",
+      "status": "PASS",
+      "ms": 1500
+    },
+    {
+      "test": "Separate glazing panels share continuous derivative normals at every quality",
+      "status": "PASS",
+      "ms": 17
+    },
+    {
+      "test": "Balanced cutaway reveals real hardware and an unchanged seal does not rebuild its mesh",
+      "status": "PASS",
+      "ms": 14
+    },
+    {
+      "test": "Late-created force nozzles use the selected profile and switching back reuses cached geometry",
+      "status": "PASS",
+      "ms": 66
     }
   ],
   "limitations": [

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
-import {writeFileSync,readFileSync,existsSync} from 'node:fs';
+import {writeFileSync} from 'node:fs';
 import {RoadsterSim, SCENARIOS} from '../dist/physics.js';
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {Vec3} from '../dist/vendor/cannon-es.js';
 import * as THREE from '../dist/vendor/three.module.js';
 import {ColdGasExhaust,plumeOutlets} from '../dist/exhaust.js';
@@ -24,7 +25,7 @@ const run=(s,seconds,input={},observe,{allowFault=false}={})=>{
 };
 const close=(actual,expected,tolerance,label)=>assert.ok(Math.abs(actual-expected)<=tolerance,
   `${label}: ${actual} versus ${expected} ± ${tolerance}`);
-const test=(name,fn)=>{const start=performance.now();fn();results.push({test:name,status:'PASS',ms:Math.round(performance.now()-start)});};
+const test=(name,fn)=>{const start=performance.now();console.log('RUN: '+name);fn();const ms=Math.round(performance.now()-start);results.push({test:name,status:'PASS',ms});console.log('PASS: '+name+' ('+ms+' ms)');};
 
 const spinInvariants=b=>{
   const local=b.quaternion.conjugate().vmult(b.angularVelocity);
@@ -117,7 +118,7 @@ test('Suction requires a nearby supporting surface: no magnetic capture in free 
 });
 
 test('Finite gas consumption equals summed nozzle impulse divided by effective exhaust velocity',()=>{
-  const s=new RoadsterSim();s.reset('hover');const before=s.gasMass;let impulse=0;
+  const s=new RoadsterSim({supplyMode:'finite'});s.reset('hover');const before=s.gasMass;let impulse=0;
   const t=run(s,3,{},frame=>{impulse+=frame.massFlowKgS/120;});
   close(before-s.gasMass,impulse,.0001,'propellant bookkeeping');
   close(t.mass,s.params.dryMass+s.gasMass,.31,'changing total mass');assert.ok(t.pressureBar<250);
@@ -125,9 +126,9 @@ test('Finite gas consumption equals summed nozzle impulse divided by effective e
 });
 
 test('Exhausted gas removes all thrust; prolonged finite hover loses support',()=>{
-  const empty=new RoadsterSim();empty.reset('hover');empty.gasMass=0;
+  const empty=new RoadsterSim({supplyMode:'finite'});empty.reset('hover');empty.gasMass=0;
   const t=run(empty,.5);assert.equal(t.thrustN,0);assert.ok(t.verticalSpeed<-4);
-  const finite=new RoadsterSim();finite.reset('hover');const depleted=run(finite,10);
+  const finite=new RoadsterSim({supplyMode:'finite'});finite.reset('hover');const depleted=run(finite,10);
   // Cooling leaves a little unusable gas; loss of pressure, not an exactly
   // empty tank, is the physical condition that removes support.
   assert.ok(depleted.gasFraction<.04);assert.ok(depleted.thrustMargin<.1);assert.ok(depleted.heightWorld<1.1);assert.ok(depleted.pressureLimited);
@@ -187,14 +188,14 @@ test('Released accelerator coasts with mild regeneration instead of hidden hard 
 });
 
 test('Valve output has finite rise and decay, and consumed gas follows delivered force',()=>{
-  const s=new RoadsterSim();s.reset('hover');s.setMode('manual');const t=s.step(1/120,{lift:1});
+  const s=new RoadsterSim({supplyMode:'finite'});s.reset('hover');s.setMode('manual');const t=s.step(1/120,{lift:1});
   assert.ok(t.thrustN>1000&&t.thrustN<25000,`first-step thrust ${t.thrustN}`);
   assert.ok(t.nozzles.some(n=>n.command>n.force*2));run(s,.3,{lift:1});const before=s.telemetry().thrustN;const next=s.step(1/120);
   assert.ok(next.thrustN>0&&next.thrustN<before);run(s,.5);assert.ok(s.telemetry().thrustN<.01);
 });
 
 test('Adiabatic blowdown cools the tank and has lower pressure than the equal-mass isothermal case',()=>{
-  const s=new RoadsterSim();s.reset('hover');run(s,2);
+  const s=new RoadsterSim({supplyMode:'finite'});s.reset('hover');run(s,2);
   const t=s.telemetry(),isothermal=t.gasFraction*s.params.initialPressureBar;
   assert.ok(t.gasTemperatureK<270);assert.ok(t.pressureBar<isothermal);
   close(t.pressureBar,t.gasMass*287.05*t.gasTemperatureK/(s.params.tankLitres/1000)/1e5,1e-8,'ideal gas pressure');
@@ -208,7 +209,7 @@ test('After a roll, hover does not retain opposing side jets in the allocator nu
 });
 
 test('Finite-tank automatic roll remains airborne, recovers low and lands before fuel loses support',()=>{
-  const s=new RoadsterSim();s.reset('hover');s.startManeuver('roll');let minimum=99,inverted=false,firstContact=null;
+  const s=new RoadsterSim({supplyMode:'finite'});s.reset('hover');s.startManeuver('roll');let minimum=99,inverted=false,firstContact=null;
   const t=run(s,10,{},frame=>{
     if(frame.maneuver&&frame.maneuver.phase!=='land'){minimum=Math.min(minimum,frame.heightWorld);assert.equal(frame.contactCount,0);}
     if(s.body.quaternion.vmult({x:0,y:1,z:0}).y<-.9)inverted=true;
@@ -265,10 +266,10 @@ test('Mist emission count is frame-rate independent and rear outlets share one a
 console.table(results);
 console.log(`${results.length} meaningful physics acceptance checks passed.`);
 if(process.argv.includes('--report'))writeFileSync(new URL('../dist/validation.json',import.meta.url),JSON.stringify({
-  generatedAt:new Date().toISOString(),model:'Roadster Flight Lab 3.4.0',scope:'软件内部动力学验收，不代表Tesla真实车辆标定',
+  generatedAt:new Date().toISOString(),model:'Roadster Flight Lab '+MODEL_VERSION,scope:'软件内部动力学验收，不代表Tesla真实车辆标定',
   physics:{status:'passed',fixedStepHz:120,total:results.length,checks:results},
   independentRotationCheck:rotationReport,
-  browserVisualQA:existsSync(new URL('../qa/browser.json',import.meta.url))?JSON.parse(readFileSync(new URL('../qa/browser.json',import.meta.url),'utf8')):{status:'not_performed',reason:'Run the local browser QA and save qa/browser.json; numerical tests do not constitute visual QA.'},
+  browserVisualQA:{status:'not_performed',modelVersion:MODEL_VERSION,reason:'This version has numerical, geometric, static integration and offline shader checks; no current browser, GPU frame-time or visual acceptance has been performed.',historicalReports:['qa/browser.json','qa/city-3.4-browser-assets.json'],historyScope:'Retained older-version records are not evidence of current-version browser acceptance.'},
   realVehicleValidation:{status:'not_performed',reason:'OEM calibration and vehicle test data are not available'}
 },null,2)+'\n');
 

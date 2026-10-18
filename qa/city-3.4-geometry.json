@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "date": "2026-10-18",
-  "geometrySHA256": "57ebf75ee10277f819e3a64b22b5d03f613530db3a5f96c631732eab8cc523aa",
+  "geometrySHA256": "03d4eb0ea6e01e82d5a36d54b9db76374dc1ae6234aa6b50e7b29bc6d4f3dd57",
   "checks": [
     {
       "name": "three district identities, three architectural nodes and a street hierarchy",
@@ -44,7 +44,7 @@
       "status": "passed"
     },
     {
-      "name": "geometry remains finite while windows, clutter and batch budgets decrease",
+      "name": "geometry remains finite; 3.5 uses a visible draw/triangle budget rather than a global allocated batch limit",
       "count": 152963,
       "status": "passed"
     }
@@ -53,8 +53,8 @@
     "districts": 3,
     "nodes": 3,
     "streets": 12,
-    "buildingCount": 114,
     "roadSegments": 113,
+    "buildingCount": 114,
     "cityColliders": 1779
   },
   "architecture": {
@@ -65,11 +65,11 @@
     "balconies": 602,
     "mechanicalUnits": 721,
     "instances": 132440,
-    "drawBatches": 180,
+    "drawBatches": 1049,
     "triangles": 1559774,
     "textureCount": 0,
-    "sectorSizeM": 300,
-    "sectorCount": 16,
+    "sectorSizeM": 160,
+    "sectorCount": 196,
     "lightAnchors": 135,
     "massingTiers": 534,
     "setbackTerraces": 315,
@@ -78,6 +78,18 @@
     "industrialHalls": 9,
     "sawtoothRoofs": 45,
     "civicBuildings": 6,
+    "renderBudget": {
+      "quality": "balanced",
+      "allocatedBatches": 1049,
+      "allocatedTriangles": 1559774,
+      "activeBatches": 263,
+      "activeTriangles": 465208,
+      "shadowBatches": 54,
+      "shadowTriangles": 145224,
+      "culledBatches": 786,
+      "updates": 1,
+      "updateMs": 3.0188280000002123
+    },
     "geometryMiB": 11.62
   },
   "streetLife": {
@@ -95,20 +107,34 @@
     "goods": 329,
     "trees": 8,
     "instances": 20523,
-    "drawBatches": 130,
+    "drawBatches": 176,
     "triangles": 256832,
     "collisionProxies": 108,
     "originalAtlases": 0,
-    "sectorSizeM": 300,
+    "sectorSizeM": 80,
     "animals": 0,
     "animalTriangles": 0,
     "animatedAnimals": 0,
-    "animalAssetErrors": []
+    "animalAssetErrors": [],
+    "renderBudget": {
+      "quality": "balanced",
+      "allocatedBatches": 176,
+      "allocatedTriangles": 256832,
+      "activeBatches": 61,
+      "activeTriangles": 70860,
+      "shadowBatches": 0,
+      "shadowTriangles": 0,
+      "culledBatches": 115,
+      "updates": 1,
+      "updateMs": 1.2293369999997594
+    },
+    "activeAnimations": 2,
+    "animationHz": 15
   },
   "limits": [
     "Road clearance checks sample a 2.1 m vehicle corridor; they are not a traffic/navigation solver.",
     "Wide street paint sits on the existing continuous ground/terrace support.",
     "Decorative facade details use conservative building envelopes; no interiors are promised.",
-    "The parent must rebake indirect light after the 3.4 geometry freeze."
+    "Indirect light is verified separately against canonical static geometry and the current shared material palette."
   ]
 }

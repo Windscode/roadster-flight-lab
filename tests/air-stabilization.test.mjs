@@ -33,7 +33,7 @@ console.log('PASS: Manual front/rear jet pairs override stabilization and automa
 console.log('PASS: Power loss and low tank pressure prevent unphysical stabilization or unlimited lift');
 
 {
- const s=new RoadsterSim();s.reset('free');s.setAirStabilization(true);s.setMode('hover');for(let k=0;k<360;k++)s.step(dt);const t=s.telemetry();assert.ok(t.heightWorld>3.8&&t.heightWorld<4.2);assert.equal(t.stabilizationActive,true);const row=telemetryRow(t);assert.equal(row.length,TELEMETRY_COLUMNS.length);assert.deepEqual(row.slice(-2),[1,1]);
+ const s=new RoadsterSim();s.reset('free');s.setAirStabilization(true);s.setMode('hover');for(let k=0;k<360;k++)s.step(dt);const t=s.telemetry();assert.ok(t.heightWorld>3.8&&t.heightWorld<4.2);assert.equal(t.stabilizationActive,true);const row=telemetryRow(t);assert.equal(row.length,TELEMETRY_COLUMNS.length);assert.deepEqual(['air_stabilization_armed','air_stabilization_active'].map(name=>row[TELEMETRY_COLUMNS.indexOf(name)]),[1,1]);
 }
 console.log('PASS: Armed ground takeoff retains the hover target and CSV records both assistance states');
 

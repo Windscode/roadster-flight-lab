@@ -5,7 +5,8 @@ import {HDRLoader} from '../dist/vendor/addons/loaders/HDRLoader.js';
 import {RoadsterSim} from '../dist/physics.js';
 import {CITY_BUILDINGS,CITY_COLLIDERS} from '../dist/city-data.js';
 import {LANDMARK_COLLIDERS} from '../dist/city-landmarks.js';
-import {GI_VOLUMES,GI_HEIGHTS,SUN_DIRECTION,shBasis,fibonacciDirection,irradianceAt} from '../dist/irradiance-math.js';
+import {URBAN_MATERIAL_PALETTE} from '../dist/urban-architecture.js';
+import {GI_VOLUMES,GI_HEIGHTS,SUN_DIRECTION,shBasis,fibonacciDirection,irradianceAt,canonicalGeometryJSON} from '../dist/irradiance-math.js';
 
 // Offline diffuse path tracing of the city's shared solid envelopes. Specular
 // paths, vegetation microgeometry and moving objects are deliberately excluded.
@@ -15,11 +16,13 @@ const bytes=readFileSync(new URL('../dist/assets/daylight.hdr',import.meta.url))
 const hdr=new HDRLoader().setDataType(THREE.FloatType).parse(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength));
 const normalize=a=>{const n=Math.hypot(...a);return a.map(v=>v/n);},dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 const sun=normalize(SUN_DIRECTION),colour=h=>{const c=new THREE.Color(h);return[c.r,c.g,c.b];};
-const walls=[0x9b998b,0xb1a58d,0x929e98,0xa1988c,0x929488].map(colour);
+const walls=URBAN_MATERIAL_PALETTE.map(p=>colour(p.wall));
+const roadTint=colour(0x92989c),oldRoadTint=colour(0x999da0),roadAlbedo=[.072,.075,.078].map((v,i)=>v*roadTint[i]/oldRoadTint[i]);
+const materialModel={version:'3.5',source:'dist/urban-architecture.js / URBAN_MATERIAL_PALETTE',wallTintSRGB:URBAN_MATERIAL_PALETTE.map(p=>p.wall),wallDiffuseScale:.76,roadTintSRGB:0x92989c,roadAverageLinear:roadAlbedo,assumption:'Static envelope averages; scanned asphalt baseline average is rescaled by the current linear material tint. Individual windows, metal, shop interiors and textured facade variation are averaged.'};
 const buildings=new Map(CITY_BUILDINGS.map(b=>[b.id,b])),landmarks=new Map(LANDMARK_COLLIDERS.map(g=>[g.id,g])),sourceSolids=new Map(CITY_COLLIDERS.map(g=>[g.id,g]));
 const plannedAlbedos=Object.fromEntries(Object.entries({'warm-stone':0x9b9988,basalt:0x697573,ivory:0xc5c2ae,'aged-copper':0x826f59,oxide:0x967052}).map(([k,v])=>[k,colour(v).map(c=>c*.80)]));
 function albedo(g){
-  if(g.kind==='floor'||g.kind==='urban-road'||g.kind==='skyway')return[.072,.075,.078];
+  if(g.kind==='floor'||g.kind==='urban-road'||g.kind==='skyway')return roadAlbedo;
   const original=sourceSolids.get(g.id),material=original?.data?.material||landmarks.get(g.id)?.data?.material;
   if(plannedAlbedos[material])return plannedAlbedos[material];if(material==='glazing')return[.09,.12,.13];
   if(g.kind==='building'){const b=buildings.get(original?.buildingId||g.id.split('-tier-')[0]);return(b?.archetype==='civic'?colour(0xc3c1ad):walls[(g.style??b?.style??0)%5]).map(v=>v*.76);}
@@ -70,5 +73,5 @@ for(const volume of GI_VOLUMES){const[nx,nz]=volume.size,ny=GI_HEIGHTS.length,da
   }
   const name=volume.id+'.bin';writeFileSync(new URL(name,output),new Uint8Array(data.buffer));volumes.push({...volume,heights:GI_HEIGHTS,file:name,validProbes:validHere,bytes:data.byteLength,sha256:createHash('sha256').update(new Uint8Array(data.buffer)).digest('hex')});console.log(volume.id,validHere,'valid probes');
 }
-const report={version:1,algorithm:'Offline diffuse path tracing / explicit sun next-event estimation / cosine hemisphere / order-2 real SH',bounces,samplesPerProbe:samples,sunDirection:sun,sunIntensity:2.7,skyIntensity:.8,skySH,sunFill,skyUpIrradiance:irradianceAt(skySH,[0,1,0]),volumes,totalProbes:total,validProbes:valid,staticEnvelopes:boxes.length,seconds:(performance.now()-start)/1000,geometrySHA256:createHash('sha256').update(JSON.stringify(geometry)).digest('hex'),limitations:['Static shared solid envelopes and average diffuse reflectances; fine facade, foliage and animated people are not path-traced.','Three surface events; not an unlimited-bounce solution, hardware ray tracing or DDGI.','Invalid solid probes are rejected; finite probe spacing may leak or blur lighting near thin geometry.','Specular reflections remain rasterized local probes; transparent transport and participating media are excluded.']};
+const report={version:1,algorithm:'Offline diffuse path tracing / explicit sun next-event estimation / cosine hemisphere / order-2 real SH',bounces,samplesPerProbe:samples,sunDirection:sun,sunIntensity:2.7,skyIntensity:.8,skySH,sunFill,skyUpIrradiance:irradianceAt(skySH,[0,1,0]),volumes,totalProbes:total,validProbes:valid,staticEnvelopes:boxes.length,seconds:(performance.now()-start)/1000,geometrySHA256:createHash('sha256').update(JSON.stringify(geometry)).digest('hex'),geometryCanonicalSHA256:createHash('sha256').update(canonicalGeometryJSON(geometry)).digest('hex'),geometryHashQuantization:1e-9,materialModel,materialModelSHA256:createHash('sha256').update(JSON.stringify(materialModel)).digest('hex'),limitations:['Static shared solid envelopes and average diffuse reflectances; fine facade, foliage and animated people are not path-traced.','Three surface events; not an unlimited-bounce solution, hardware ray tracing or DDGI.','Invalid solid probes are rejected; finite probe spacing may leak or blur lighting near thin geometry.','Specular reflections remain rasterized local probes; transparent transport and participating media are excluded.']};
 writeFileSync(new URL('manifest.json',output),JSON.stringify(report,null,2)+'\n');writeFileSync(new URL('../qa/irradiance-bake.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log('Baked',valid,'/',total,'in',report.seconds.toFixed(1),'seconds. Sky upward E:',report.skyUpIrradiance);

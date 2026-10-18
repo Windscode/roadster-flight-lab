@@ -5,7 +5,7 @@ import {RoadsterSim}from'../dist/physics.js';
 import {nozzleExhaustVelocity}from'../dist/vehicle-models.js';
 import {runExperiment}from'../dist/experiment-worker.js';
 const dt=1/120,checks=[],values={};const pass=s=>{checks.push(s);console.log('PASS: '+s);};
-const flat=(params={})=>{const s=new RoadsterSim(params);for(const b of [...s.world.bodies])if(b!==s.body&&b.userData?.id!=='ground')s.world.removeBody(b);s.body.position.set(0,.62,-350);for(let k=0;k<240;k++)s.step(dt);return s;};
+const flat=(params={})=>{const s=new RoadsterSim({supplyMode:'finite',...params});for(const b of [...s.world.bodies])if(b!==s.body&&b.userData?.id!=='ground')s.world.removeBody(b);s.body.position.set(0,.62,-350);for(let k=0;k<240;k++)s.step(dt);return s;};
 values.turns=[];
 for(const speed of[60,100,160]){const s=flat();s.body.velocity.z=speed/3.6;let beta=0,steer=0;for(let k=0;k<42;k++){const t=s.step(dt,{steer:1});beta=Math.max(beta,Math.abs(t.bodySlipDeg));steer=Math.max(steer,Math.abs(t.steeringCentreDeg));assert.ok(t.wheelStates.every(w=>w.gripUse<=1+1e-10));}for(let k=0;k<360;k++)s.step(dt);assert.ok(beta<1&&Math.abs(s.telemetry().bodySlipDeg)<.05);values.turns.push({speedKmh:speed,peakBetaDeg:beta,peakSteerDeg:steer,settledBetaDeg:s.telemetry().bodySlipDeg});}
 pass('60–160 km/h brief keyboard turns remain below one degree sideslip and settle without resetting pose or velocity');

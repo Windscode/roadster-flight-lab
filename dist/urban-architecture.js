@@ -10,12 +10,24 @@
  */
 import {buildingMassing,buildingStoreys} from './city-data.js';
 import {buildingExtras} from './city-plan.js';
+import {architectureDetailLevel,createCityVisibility} from './city-render-budget.js';
+import {createCityExteriorMaterials} from './city-exterior-materials.js';
+
+// The offline bounce-light baker imports this same palette. These are authored
+// sRGB material tints, not measurements of a real district or extracted assets.
+export const URBAN_MATERIAL_PALETTE=Object.freeze([
+  {wall:0x909b9d,trim:0x34454c,paint:0x496c76,glass:0x233e4b},
+  {wall:0xb3a594,trim:0x60544c,paint:0x966149,glass:0x2c4149},
+  {wall:0x8c999c,trim:0x314a52,paint:0x376a76,glass:0x243e50},
+  {wall:0xa89e94,trim:0x464d53,paint:0x927455,glass:0x304149},
+  {wall:0x919997,trim:0x3d4b50,paint:0x5b6f74,glass:0x293d4a},
+].map(p=>Object.freeze(p)));
 
 export function buildUrbanArchitecture(THREE,root,buildings) {
   const group=new THREE.Group();group.name='Urban architecture / original modular facades';root.add(group);
-  const lightAnchors=[],batches=new Map(),geometries=[],materials=[],textures=[];
+  const lightAnchors=[],batches=new Map(),geometries=[],materials=[],textures=[],visibility=createCityVisibility(THREE),surfaces=createCityExteriorMaterials(THREE);
   const stats={buildings:0,heroBuildings:0,shopfronts:0,recessedWindows:0,balconies:0,mechanicalUnits:0,
-    instances:0,drawBatches:0,triangles:0,textureCount:0,sectorSizeM:300,sectorCount:0,lightAnchors:0,massingTiers:0,setbackTerraces:0,structuralBraces:0,rotatedTowers:0,industrialHalls:0,sawtoothRoofs:0,civicBuildings:0};
+    instances:0,drawBatches:0,triangles:0,textureCount:0,sectorSizeM:160,sectorCount:0,lightAnchors:0,massingTiers:0,setbackTerraces:0,structuralBraces:0,rotatedTowers:0,industrialHalls:0,sawtoothRoofs:0,civicBuildings:0,entrancePortals:0,continuousPlinths:0,shutterPanels:0,interiorAtlases:0,surfaces:surfaces.stats,renderBudget:visibility.stats};
   const transform=new THREE.Object3D(),colourCache=new Map(),white=new THREE.Color(0xffffff);
   const unitBox=new THREE.BoxGeometry(1,1,1),unitPlane=new THREE.PlaneGeometry(1,1),
     unitCylinder=new THREE.CylinderGeometry(.5,.5,1,12),unitCircle=new THREE.CircleGeometry(.5,16);
@@ -25,8 +37,8 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
   function colour(value){if(value?.isColor)return value;if(!colourCache.has(value))colourCache.set(value,new THREE.Color(value));return colourCache.get(value);}
 
-  // Both atlases are painted here. They contain recognisable human-scale
-  // interiors and typography instead of a city-wide random-window shader.
+  // Original exterior typography. Shop windows remain reflective facade
+  // surfaces; no interior picture or room geometry is generated.
   function canvasTexture(size,paint){
     if(typeof document==='undefined')return null;
     const canvas=document.createElement('canvas');canvas.width=canvas.height=size;
@@ -69,36 +81,6 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       ctx.restore();
     }
   });
-  const roomAtlas=canvasTexture(1024,(ctx,size)=>{
-    const rng=randFor(.227);ctx.fillStyle='#10191b';ctx.fillRect(0,0,size,size);
-    for(let i=0;i<16;i++){
-      const ox=i%4*256,oy=Math.floor(i/4)*256;ctx.save();ctx.translate(ox,oy);
-      const warm=i%3!==0,glow=warm?'#92826a':'#6a8586';
-      const gradient=ctx.createLinearGradient(0,0,0,256);gradient.addColorStop(0,'#182426');gradient.addColorStop(.5,glow);gradient.addColorStop(1,'#242b29');
-      ctx.fillStyle=gradient;ctx.fillRect(4,4,248,248);
-      ctx.fillStyle='#28312e';ctx.beginPath();ctx.moveTo(4,4);ctx.lineTo(55,48);ctx.lineTo(55,210);ctx.lineTo(4,252);ctx.fill();
-      ctx.fillStyle='#35403a';ctx.beginPath();ctx.moveTo(252,4);ctx.lineTo(201,48);ctx.lineTo(201,210);ctx.lineTo(252,252);ctx.fill();
-      ctx.fillStyle='#333d36';ctx.beginPath();ctx.moveTo(4,4);ctx.lineTo(252,4);ctx.lineTo(201,48);ctx.lineTo(55,48);ctx.fill();
-      ctx.fillStyle='#34362f';ctx.beginPath();ctx.moveTo(4,252);ctx.lineTo(252,252);ctx.lineTo(201,210);ctx.lineTo(55,210);ctx.fill();
-      ctx.fillStyle=warm?'#e2c799':'#bdd5d1';ctx.fillRect(93,45,70,5);
-      if(i%4===0){
-        ctx.fillStyle='#162223';ctx.fillRect(69,91,119,89);ctx.fillStyle='#44514a';
-        for(let j=0;j<3;j++){ctx.fillRect(72,107+j*25,113,4);for(let k=0;k<8;k++){ctx.fillStyle=['#8f7255','#7b8d79','#c0af88'][k%3];ctx.fillRect(76+k*12,92+j*25,6+rng()*3,15);}}
-      }else if(i%4===1){
-        ctx.fillStyle='#41443a';ctx.fillRect(70,151,123,31);ctx.fillStyle='#252e2c';ctx.fillRect(68,148,127,5);
-        ctx.fillStyle='#a3a68b';ctx.fillRect(164,94,16,53);ctx.fillStyle='#2b4538';ctx.beginPath();ctx.arc(172,85,24,0,Math.PI*2);ctx.fill();
-      }else if(i%4===2){
-        ctx.fillStyle='#534b3a';ctx.fillRect(65,129,126,58);ctx.fillStyle='#938665';ctx.fillRect(70,131,115,8);
-        ctx.fillStyle='#1a2628';ctx.fillRect(106,94,53,35);ctx.fillStyle='#62766b';ctx.fillRect(111,99,43,24);
-      }else{
-        ctx.fillStyle='#968369';ctx.fillRect(65,83,40,108);ctx.fillRect(154,83,37,108);ctx.fillStyle='#2e3029';
-        for(let k=0;k<7;k++){ctx.fillRect(66+k*5,83,2,108);ctx.fillRect(155+k*5,83,2,108);}
-      }
-      // Soft reflected streaks read as dusty glass at street distance.
-      ctx.globalAlpha=.09;ctx.fillStyle='#c9d9cf';ctx.beginPath();ctx.moveTo(12,8);ctx.lineTo(58,8);ctx.lineTo(145,248);ctx.lineTo(108,248);ctx.fill();
-      ctx.globalAlpha=.25;ctx.strokeStyle='#0e191c';ctx.lineWidth=4;ctx.strokeRect(4,4,248,248);ctx.restore();
-    }
-  });
 
   function material(name,options={}){
     const m=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.75,metalness:0,...options});m.name='Urban / '+name;materials.push(m);return m;
@@ -109,8 +91,8 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     ceramic:material('painted enamel and tile',{roughness:.59,metalness:.08}),
     metal:material('weathered steel',{roughness:.7,metalness:.58}),
     edges:material('anodised frame',{roughness:.37,metalness:.74}),
-    glass:material('continuous dark glazing',{roughness:.19,metalness:.43,envMapIntensity:.85}),
-    rooms:material('original shop interior atlas',{map:roomAtlas,emissiveMap:roomAtlas,emissive:roomAtlas?0xffffff:0x000000,emissiveIntensity:.09,roughness:.27,metalness:.22}),
+    glass:material('sealed exterior glazing',{roughness:.13,metalness:0,envMapIntensity:1.05}),
+    shutter:material('rolled metal shutter',{roughness:.54,metalness:.72}),
     signs:material('original painted sign atlas',{map:signAtlas,emissiveMap:signAtlas,emissive:signAtlas?0xffffff:0x000000,emissiveIntensity:.18,roughness:.6,metalness:.12}),
     lamp:material('small practical light',{color:0xffdcb1,emissive:0xffc994,emissiveIntensity:2.1,roughness:.35}),
     accent:material('restrained signage accent',{emissive:0xffffff,emissiveIntensity:1.3,roughness:.4,metalness:.15}),
@@ -122,48 +104,10 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       #endif`);
   };
   mat.accent.customProgramCacheKey=()=> 'urban-practical-instance-colour-v1';
-  const plasterMaps=typeof document==='undefined'?null:['concrete.jpg','concrete-normal.jpg'].map((name,i)=>{const t=new THREE.TextureLoader().load('./assets/'+name);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8;if(i===0)t.colorSpace=THREE.SRGBColorSpace;textures.push(t);return t;});
-  // Metre-scale plaster variation follows world position, so 80 m walls do not
-  // stretch a single noise tile. Actual facade relief comes from the meshes.
-  for(const m of [mat.concrete,mat.darkConcrete,mat.ceramic]){
-    m.onBeforeCompile=shader=>{
-      shader.vertexShader='varying vec3 vUrbanWorld;\n'+shader.vertexShader;
-      shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
-        vec4 urbanP=vec4(transformed,1.0);
-        #ifdef USE_INSTANCING
-          urbanP=instanceMatrix*urbanP;
-        #endif
-        vUrbanWorld=(modelMatrix*urbanP).xyz;`);
-      shader.fragmentShader=`varying vec3 vUrbanWorld;
-        float urbanHash(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
-        float urbanNoise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
-          return mix(mix(mix(urbanHash(i),urbanHash(i+vec3(1,0,0)),f.x),mix(urbanHash(i+vec3(0,1,0)),urbanHash(i+vec3(1,1,0)),f.x),f.y),
-          mix(mix(urbanHash(i+vec3(0,0,1)),urbanHash(i+vec3(1,0,1)),f.x),mix(urbanHash(i+vec3(0,1,1)),urbanHash(i+vec3(1,1,1)),f.x),f.y),f.z);}
-        `+shader.fragmentShader;
-      shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
-        float urbanGrain=urbanNoise(vUrbanWorld*15.0);
-        float urbanStain=urbanNoise(vUrbanWorld*vec3(.63,.09,.63));
-        diffuseColor.rgb*=.83+.13*urbanGrain+.13*urbanStain;`);
-      shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
-        roughnessFactor=clamp(roughnessFactor+(urbanGrain-.5)*.12,.35,1.0);`);
-      if(plasterMaps){
-        shader.uniforms.urbanMineral={value:plasterMaps[0]};shader.uniforms.urbanMineralNormal={value:plasterMaps[1]};
-        shader.fragmentShader='uniform sampler2D urbanMineral,urbanMineralNormal;\n'+shader.fragmentShader;
-        shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
-          vec3 urbanFace=abs(normalize(cross(dFdx(vUrbanWorld),dFdy(vUrbanWorld))));
-          vec2 mineralUv=(urbanFace.y>.7?vUrbanWorld.xz:urbanFace.x>.7?vUrbanWorld.zy:vUrbanWorld.xy)*.38;
-          diffuseColor.rgb*=mix(vec3(.88),texture2D(urbanMineral,mineralUv).rgb*1.65,.60);`);
-        shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
-          vec3 mineralN=texture2D(urbanMineralNormal,mineralUv).xyz*2.-1.;mineralN.xy*=.24;
-          vec3 mineralQ0=dFdx(-vViewPosition),mineralQ1=dFdy(-vViewPosition);vec2 mineralS0=dFdx(mineralUv),mineralS1=dFdy(mineralUv);
-          vec3 mineralT=normalize(mineralQ0*mineralS1.y-mineralQ1*mineralS0.y),mineralB=normalize(-mineralQ0*mineralS1.x+mineralQ1*mineralS0.x);
-          normal=normalize(mat3(mineralT,mineralB,normal)*mineralN);`);
-      }
-    };m.customProgramCacheKey=()=>`urban-plaster-world-v2-${m.name}`;
-  }
+  for(const [key,kind]of Object.entries({concrete:'concrete',darkConcrete:'concrete',ceramic:'enamel',metal:'metal',edges:'frame',glass:'glass',shutter:'shutter'}))surfaces.attach(mat[key],kind);
   // One atlas material per sector, with per-instance UV rects, rather than one
   // draw call for every sign or one material for every illuminated window.
-  for(const m of [mat.rooms,mat.signs])if(m.map){
+  for(const m of [mat.signs])if(m.map){
     m.onBeforeCompile=shader=>{
       shader.vertexShader='attribute vec4 urbanUvRect;\nvarying vec4 vUrbanUvRect;\nvarying vec2 vUrbanBaseUv;\n'+shader.vertexShader;
       shader.vertexShader=shader.vertexShader.replace('#include <uv_vertex>','#include <uv_vertex>\nvUrbanUvRect=urbanUvRect;vUrbanBaseUv=uv;');
@@ -177,19 +121,14 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
         #endif`);
     };m.customProgramCacheKey=()=>`urban-original-atlas-v1-${m.name}`;
   }
-  const palette=[
-    {wall:0x9b998b,trim:0x535f5a,paint:0x687d73,glass:0x2d4143},
-    {wall:0xb1a58d,trim:0x625c50,paint:0x8c6854,glass:0x304047},
-    {wall:0x929e98,trim:0x435653,paint:0x506f71,glass:0x2e414a},
-    {wall:0xa1988c,trim:0x57544e,paint:0x8f7c5b,glass:0x34423d},
-    {wall:0x929488,trim:0x53594f,paint:0x69745b,glass:0x344447},
-  ];
+  const palette=URBAN_MATERIAL_PALETTE;
   const accentColours=[0x78c4bd,0xd3a074,0xb7b597,0xb08e9d];
   let sector='';
   function add(kind,geometry,size,position,rotation=[0,0,0],tint=white,variation=1,tile=-1){
     if(size.some(n=>!Number.isFinite(n)||n<=0))return;
-    const key=sector+'|'+kind+'|'+geometry;
-    let batch=batches.get(key);if(!batch){batch={sector,kind,geometry,instances:[]};batches.set(key,batch);}
+    const level=kind==='shutter'?'facade':architectureDetailLevel(kind,geometry,size),cellSize=level==='detail'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
+    const key=cell+'|'+kind+'|'+geometry+'|'+level;
+    let batch=batches.get(key);if(!batch){batch={sector:cell,kind,geometry,level,instances:[]};batches.set(key,batch);}
     transform.position.set(...position);transform.rotation.set(...rotation,'YXZ');transform.scale.set(...size);transform.updateMatrix();
     const c=colour(tint);batch.instances.push({matrix:transform.matrix.toArray(),colour:[c.r*variation,c.g*variation,c.b*variation],tile});stats.instances++;
   }
@@ -238,7 +177,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
           if((side===1||side===3)&&j===Math.floor(count/2)){
             stats.shopfronts++;
             f.put('darkConcrete',[bay-.45,4.5,.14],along,2.55,.12,0x25383a,1);
-            for(let k=0;k<12;k++)f.put('metal',[bay-.48,.23,.10],along,.42+k*.34,.22,0x5a7070,.94);
+            f.put('shutter',[bay-.48,4.0,.10],along,2.25,.22,0x5a7070,.94);stats.shutterPanels++;
             f.put('ceramic',[bay+.12,.55,.22],along,5.27,.20,0xb68b5b,.96);
             f.put('signs',[Math.min(4.0,bay-.8),.58,1],along,6.05,.25,0xffffff,.95,'plane',7);
           }
@@ -261,15 +200,17 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       const f=face(side*Math.PI/2,b.w,b.d),count=Math.max(1,Math.floor((f.span-.8)/(b.archetype==='civic'?10.5:hero?5.3:8.8))),bay=(f.span-.8)/count;
       // Ground-floor frames are thick enough to cast real street-level shadows.
       f.put('concrete',[f.span-.04,.6,.78],0,shopH-.30,-.02,p.wall,plasterShade);
+      // A continuous grounded base and deep first-storey reveals organize the
+      // street wall before small signs or hardware enter the frame.
+      f.put('concrete',[f.span-.03,.42,.18],0,.39,.31,p.trim,.92);stats.continuousPlinths++;
       for(let j=0;j<=count;j++)f.put('concrete',[hero?.34:.42,shopH-.55,.75],-f.span/2+.4+j*bay,(shopH-.55)/2+.2,-.02,p.wall,plasterShade);
       for(let j=0;j<count;j++){
         const x=-f.span/2+.4+(j+.5)*bay,shopWidth=bay-.48,shutter=(j+side+Math.floor(rng()*5))%5===0;
         stats.shopfronts++;
         if(shutter){
-          f.put('metal',[shopWidth,shopH-1.0,.16],x,(shopH-.9)/2+.3,-.41,p.trim,.79);
-          if(detail>0)for(let slat=0;slat<12;slat++)f.put('edges',[shopWidth,.035,.065],x,.45+slat*(shopH-1.05)/12,-.30,p.trim,.85);
+          f.put('shutter',[shopWidth,shopH-1.0,.16],x,(shopH-.9)/2+.3,-.32,p.trim,.86);stats.shutterPanels++;
         }else{
-          f.put('rooms',[shopWidth,shopH-1.02,1],x,(shopH-1.0)/2+.3,-.43,0xffffff,.84+rng()*.13,'plane',(j+side*3+Math.floor(b.seed*15))%16);
+          f.put('glass',[shopWidth,shopH-1.02,.075],x,(shopH-1.0)/2+.3,-.43,p.glass,.92+rng()*.08);
           f.put('edges',[.07,shopH-1.0,.12],x,(shopH-1)/2+.3,-.23,p.trim,.8);
           f.put('edges',[shopWidth,.07,.12],x,shopH-1.0,-.23,p.trim,.8);
           if(detail>0){
@@ -279,6 +220,10 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
             f.put('edges',[1.27,.075,.15],doorX,2.85,-.12,p.trim,.92);
             f.put('edges',[.045,.47,.10],doorX+.38,1.45,.005,0xa5a69b,.9);
             f.put('metal',[shopWidth,.18,.32],x,.39,-.28,p.trim,.8);
+            if(hero&&j===Math.floor(count/2)&&(side===1||side===3)){
+              for(const edge of [-1,1])f.put('metal',[.18,2.85,.35],doorX+edge*.74,1.67,.28,p.trim,.94);
+              f.put('metal',[1.66,.21,.35],doorX,3.15,.28,p.trim,.94);stats.entrancePortals++;
+            }
           }
         }
         const hasSign=b.archetype==='civic'?j===Math.floor(count/2):hero||j%3===1;
@@ -291,7 +236,8 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
         }
         if(detail>0&&j%2===0){
           const awningWidth=shopWidth+.15;
-          f.put('ceramic',[awningWidth,.13,.86],x,shopH-1.1,.015,p.paint,.86, 'box',-1,[-.10,0,0]);
+          f.put('ceramic',[awningWidth,.18,.88],x,shopH-1.1,.015,p.paint,.86, 'box',-1,[-.06,0,0]);
+          f.put('metal',[awningWidth,.08,.08],x,shopH-1.16,.42,p.trim,.92);
           f.put('metal',[.045,.5,.045],x-awningWidth*.39,shopH-1.38,.27,p.trim,.7);
           f.put('metal',[.045,.5,.045],x+awningWidth*.39,shopH-1.38,.27,p.trim,.7);
         }
@@ -312,7 +258,8 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       for(let side=0;side<4;side++){
         const f=face(side*Math.PI/2,w,d),count=Math.max(1,Math.floor((f.span-.65)/(b.style===4?4.4:3.35))),bay=(f.span-.65)/count;
         f.put('concrete',[f.span-.02,.49,.66],0,bottom+.34,-.03,p.wall,plasterShade);
-        f.put('concrete',[f.span-.02,.27,.58],0,bottom+floorH-.20,-.02,p.wall,plasterShade);
+        const structuralBelt=floor%3===2;
+        f.put('concrete',[f.span-.02,structuralBelt?.34:.18,structuralBelt?.66:.48],0,bottom+floorH-.20,-.02,p.wall,plasterShade);
         if(!detailed){
           f.put('glass',[f.span-.6,Math.max(.6,floorH-.92),.11],0,centre+.06,-.40,p.glass,.87+rng()*.16);
           for(let j=0;j<=count;j+=b.style===2?2:3)f.put(b.style===3?'edges':'concrete',[.19,floorH-.14,.46],-f.span/2+.33+j*bay,centre,-.04,b.style===3?p.trim:p.wall,plasterShade);
@@ -321,8 +268,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
         for(let j=0;j<=count;j++)f.put('concrete',[.22,floorH-.15,.64],-f.span/2+.33+j*bay,centre,-.02,p.wall,plasterShade);
         for(let j=0;j<count;j++){
           stats.recessedWindows++;const x=-f.span/2+.33+(j+.5)*bay,ww=bay-.30,wh=Math.max(.7,floorH-1.0),wy=centre+.07;
-          const occupied=hero&&floor<4&&(j+floor*2+side)%5===2;
-          f.put(occupied?'rooms':'glass',[ww,wh,occupied?1:.075],x,wy,-.43,occupied?0xffffff:p.glass,occupied?.68:.91+rng()*.12,occupied?'plane':'box',occupied?(j+floor*3+side)%16:-1);
+          f.put('glass',[ww,wh,.075],x,wy,-.43,p.glass,.94+rng()*.06);
           f.put('edges',[.055,wh,.10],x,wy,-.30,p.trim,.82);
           f.put('edges',[ww,.065,.28],x,bottom+.59,-.18,p.trim,.86);
           // Occupied apartment projections are irregular but coherent in stack.
@@ -332,7 +278,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
             f.put('concrete',[bw,.14,.98],x,by,-.03,p.wall,plasterShade*.88);
             f.put('metal',[bw,.06,.05],x,by+.97,.405,p.trim,.77);
             f.put('metal',[bw,.045,.045],x,by+.47,.405,p.trim,.77);
-            for(let post=0;post<4;post++)f.put('metal',[.032,.97,.035],x-bw/2+post*bw/3,by+.48,.405,p.trim,.77);
+            for(let post=0;post<3;post++)f.put('metal',[.032,.97,.035],x-bw/2+post*bw/2,by+.48,.405,p.trim,.77);
             for(const end of [-1,1])f.put('metal',[.04,.055,.91],x+end*bw/2,by+.97,-.02,p.trim,.77);
             if(j%2===0)f.put('ceramic',[.45,.31,.28],x+bw*.23,by+.24,.20,p.paint,.7);
           }
@@ -344,7 +290,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
               f.put('edges',[.38,.38,1],hx-.17,hy,.366,0x606a61,.8,'circle');
               for(let blade=0;blade<3;blade++)f.put('metal',[.25,.045,.022],hx-.17,hy,.38,0x333d38,.7,'box',-1,[0,0,blade*Math.PI/3]);
             }
-            for(let slat=0;slat<4;slat++)f.put('edges',[.24,.02,.035],hx+.20,hy-.15+slat*.1,.38,0x7b8174,.9);
+            f.put('shutter',[.24,.36,.035],hx+.20,hy,.38,0x7b8174,.9);
           }
         }
       }
@@ -420,11 +366,12 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   for(const batch of batches.values()){
     const count=batch.instances.length,g=sourceGeometries[batch.geometry].clone();geometries.push(g);
     const uvRects=new Float32Array(count*4);
-    if(batch.kind==='rooms'||batch.kind==='signs'){
+    if(batch.kind==='signs'){
       for(let i=0;i<count;i++)uvRects.set(atlasRect(batch.instances[i].tile),i*4);
       g.setAttribute('urbanUvRect',new THREE.InstancedBufferAttribute(uvRects,4));
     }
-    const mesh=new THREE.InstancedMesh(g,mat[batch.kind],count);mesh.name=`Urban ${batch.sector} / ${batch.kind} / ${batch.geometry}`;
+    if(mat[batch.kind].userData.exteriorSurface)surfaces.installGeometry(g,batch.instances,batch.geometry);
+    const mesh=new THREE.InstancedMesh(g,mat[batch.kind],count);mesh.name=`Urban ${batch.sector} / ${batch.level} / ${batch.kind} / ${batch.geometry}`;
     const c=new THREE.Color();
     for(let i=0;i<count;i++){
       transform.matrix.fromArray(batch.instances[i].matrix);mesh.setMatrixAt(i,transform.matrix);
@@ -436,14 +383,14 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     mesh.castShadow=['concrete','darkConcrete','metal'].includes(batch.kind)&&batch.geometry==='box';
     mesh.receiveShadow=true;mesh.frustumCulled=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();
     mesh.userData.urbanArchitecture=true;mesh.userData.sector=batch.sector;
-    group.add(mesh);sectors.add(batch.sector);stats.drawBatches++;
+    group.add(mesh);visibility.add(mesh,{level:batch.level});sectors.add(batch.sector);stats.drawBatches++;
     stats.triangles+=(g.index?g.index.count:g.attributes.position.count)/3*count;
   }
-  stats.textureCount=textures.length;stats.sectorCount=sectors.size;stats.lightAnchors=lightAnchors.length;
+  stats.textureCount=textures.length+surfaces.stats.textureCount;stats.sectorCount=sectors.size;stats.lightAnchors=lightAnchors.length;
   stats.geometryMiB=+(stats.instances*(16+3+4)*4/1048576).toFixed(2);
   group.userData.stats=stats;group.userData.referenceStudy='Original modular construction; visual study of Dan Hargreaves and Kacper Niepokolczycki Kabuki portfolios. No game assets used.';
   batches.clear();
-  return {group,stats,lightAnchors,dispose(){
-    root.remove(group);for(const geometry of geometries)geometry.dispose();for(const m of materials)m.dispose();for(const texture of textures)texture.dispose();group.clear();
+  return {group,stats,lightAnchors,ready:surfaces.ready,setQuality(q,profile){visibility.setQuality(q,profile);surfaces.setQuality(q);},update(time,p){visibility.update(time,p);},dispose(){
+    root.remove(group);for(const geometry of geometries)geometry.dispose();for(const m of materials)m.dispose();for(const texture of textures)texture.dispose();surfaces.dispose();group.clear();
   }};
 }

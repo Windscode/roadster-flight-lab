@@ -21,7 +21,7 @@ export const DEFAULT_PARAMS = Object.freeze({
   liftNozzleMax: 20000, sideNozzleMax: 5500, axialNozzleMax: 11000,
   suctionPressurePa: 8200, suctionArea: 4.8, sealRange: .08,
   fanPower:26000,fanEfficiency:.75,sealPerimeter:SEAL_PERIMETER,sealLeakCd:.6,sealLipGap:.003,skirtReach:SKIRT_MAX_EXTENSION+.126,
-  batteryKWh: 200, supplyMode: 'finite', hoverHeight: 4,
+  batteryKWh: 200, supplyMode: 'bench', hoverHeight: 4,
 });
 export const PHYSICS_HZ=120, TELEMETRY_HZ=20;
 
@@ -101,6 +101,10 @@ export class RoadsterSim {
   constructor(params={}) {
     this.params = {...DEFAULT_PARAMS,...params};
     this.world = new CANNON.World({gravity:V(0,-this.params.gravity,0)});
+    // Sparse contact history avoids clearing N(N-1)/2 static-city pairs at 120 Hz.
+    // Cannon's native object matrix preserves contact / collision event semantics.
+    this.world.collisionMatrix = new CANNON.ObjectCollisionMatrix();
+    this.world.collisionMatrixPrevious = new CANNON.ObjectCollisionMatrix();
     this.world.solver.iterations = 16;
     this.world.solver.tolerance = 1e-7;
     this.world.allowSleep = false;
@@ -132,7 +136,7 @@ export class RoadsterSim {
     this._nozzles.push(this._nozzle('front-brake',V(0,0,2.07),V(0,0,-1),'longitudinal'));
     this.wheelStates = WHEEL_LOCATIONS.map((a,i)=>({id:WHEEL_NAMES[i],steer:0,rotation:0,suspensionLength:.30,
       contact:false,position:{x:a[0],y:a[1]-.30,z:a[2]},normalLoadN:0,slipAngle:0}));
-    this.airStabilization=false;
+    this.stabilizationMode='off';this.airStabilization=false;
     this.reset('free');
   }
 
@@ -202,6 +206,10 @@ export class RoadsterSim {
     this._fanLevel=this.suctionEnabled?1:0;this._sealLipExtensions=SEAL_OUTLINE.map(()=>this.suctionEnabled?.30:SKIRT_RETRACTED_EXTENSION);this._sealLipContacts=SEAL_OUTLINE.map(()=>null);
     this.simTime=0;this._accumulator=0;this._energyUsed=0;this._motorWork=0;this._stepCount=0;
     this._heightTarget=s.position[1];this._headingTarget=s.rotation[1];
+    // A scenario reset explicitly releases an old world-space hold reference.
+    if(this.stabilizationMode==='hold')this.stabilizationMode='level';
+    this.airStabilization=this.stabilizationMode!=='off';
+    this._holdPositionTarget=null;this._holdQuaternionTarget=null;this._holdActive=false;this._holdFeasible=null;this._holdStatus='inactive';
     this._stabilizationActive=false;this._heightJogging=false;this._stableJogging=false;this._stableHeight=s.position[1];this._stableHeading=s.rotation[1];
     this._positionTarget=this.body.position.clone();
     this._maneuver=null;this._rollReference=0;this._lastVelocity=V();
@@ -216,6 +224,7 @@ export class RoadsterSim {
 
   setMode(mode) {
     if(!['drive','hover','manual'].includes(mode)) return;
+    if(this.stabilizationMode==='hold')this.setStabilizationMode('level');
     this.mode=mode;this._maneuver=null;
     this._heightIntegral=0;
     this._headingTarget=this._angles().heading;
@@ -226,11 +235,36 @@ export class RoadsterSim {
     this.status=mode==='hover'?'高度 / 姿态闭环接管':mode==='manual'?'手动喷口控制':'轮胎驱动';
   }
 
-  setSuction(enabled) { this.suctionEnabled=!!enabled; }
-  setAirStabilization(enabled){
-    this.airStabilization=!!enabled;this._stabilizationActive=false;
-    if(enabled){this._maneuver=null;this._stableHeight=this.body.position.y;this._stableHeading=this._angles().heading;}
+  setSuction(enabled) {
+    if(this.stabilizationMode==='hold'&&this.suctionEnabled!==!!enabled)this.setStabilizationMode('level');
+    this.suctionEnabled=!!enabled;
   }
+  setStabilizationMode(mode){
+    if(!['off','level','hold'].includes(mode))return false;
+    if(this.stabilizationMode==='hold'&&mode!=='hold'){
+      // Hand the underlying hover mode the current reference, not a stale
+      // position from before hold. Only controller references change here.
+      this._positionTarget.copy(this.body.position);this._heightTarget=this.body.position.y;
+      this._headingTarget=this._angles().heading;this._heightIntegral=0;this._heightJogging=false;this._stableJogging=false;
+    }
+    this.stabilizationMode=mode;this.airStabilization=mode!=='off';this._stabilizationActive=false;
+    this._holdActive=false;this._holdFeasible=null;this._holdStatus='inactive';
+    this._holdPositionTarget=null;this._holdQuaternionTarget=null;
+    if(mode!=='off'){
+      this._maneuver=null;this._stableHeight=this.body.position.y;this._stableHeading=this._angles().heading;
+    }
+    if(mode==='hold'){
+      // Capture once at the pilot's command, even when contact temporarily
+      // inhibits thrust. Never recapture a drifting reference every substep.
+      this._holdPositionTarget=this.body.position.clone();this._holdQuaternionTarget=this.body.quaternion.clone();
+      this._holdStatus=this._contactCount||this.suctionEnabled?'surface':'tracking';
+      this.status='定姿定点：已捕获当前姿态与位置，喷口闭环减速';
+    }
+    return true;
+  }
+  // Historical research archives store a boolean; true remains the original
+  // level-and-damp controller, never the new fixed-attitude hold controller.
+  setAirStabilization(enabled){return this.setStabilizationMode(enabled?'level':'off');}
   setSupplyMode(mode) { this.setParam('supplyMode',mode); }
   refillGas() { this._resetMass();this._pressureLimited=false;this.status='试验气源已补充'; }
 
@@ -445,6 +479,23 @@ export class RoadsterSim {
     // contacts or pressure adhesion. Direct 1/2 valve overrides still take
     // precedence in _advance; the stabilizer resumes after their release.
     const stabilize=this.airStabilization&&this._contactCount===0&&!this.suctionEnabled&&!this._maneuver;
+    this._holdActive=false;
+    if(this.stabilizationMode==='hold'){
+      const surfaceContact=this._contactCount>0||this.world.contacts.some(c=>c.bi===b||c.bj===b);
+      this._holdActive=stabilize&&!surfaceContact;this._stabilizationActive=this._holdActive;
+      if(!this._holdActive){this._holdStatus='surface';return desired;}
+      // Full 6-DOF feedback: force is expressed in body axes before allocation,
+      // so gravity can be supported at a tilted attitude without levelling it.
+      // These are bounded acceleration requests, not velocity/pose constraints.
+      const error=this._holdPositionTarget.vsub(b.position);
+      const accel=V(clamp(error.x*2.4-b.velocity.x*3.1,-6,6),
+        clamp(error.y*3.2-b.velocity.y*3.6,-p.gravity*.8,p.gravity*1.4),
+        clamp(error.z*2.4-b.velocity.z*3.1,-6,6));
+      const force=b.quaternion.conjugate().vmult(accel.vadd(V(0,p.gravity,0)).scale(m));
+      const torque=this._attitudeTorque(this._holdQuaternionTarget,3.6);
+      this._heightTarget=this._holdPositionTarget.y;this._thrustWanted=force.y;
+      return[force.x,force.y,force.z,...torque];
+    }
     if(stabilize){
       if(!this._stabilizationActive){this._stableHeight=this.mode==='hover'?Math.max(b.position.y,this._heightTarget):b.position.y;this._stableHeading=angles.heading;}
       this._stabilizationActive=true;
@@ -562,7 +613,7 @@ export class RoadsterSim {
     // Start at zero: retaining the previous unconstrained null-space component
     // made opposing side jets keep wasting gas after a maneuver had ended.
     const direct=input.frontJets>0||input.rearJets>0;
-    if(direct)this._stabilizationActive=false;
+    if(direct){this._stabilizationActive=false;this._holdActive=false;}
     for(let pass=0;pass<(direct?0:28);pass++) {
       for(let i=0;i<this._nozzles.length;i++) {
         const col=columns[i];
@@ -608,8 +659,37 @@ export class RoadsterSim {
       this.gasTemperature+=(p.gasTemperatureK-this.gasTemperature)*(1-Math.exp(-dt/p.tankThermalTime));
     }
     this._allocationError=Math.hypot(...desired.map((d,k)=>(d-this._achievedWrench[k])/scales[k]));
-    this._pressureLimited=derate<.99 || (this.mode==='hover'&&this._thrustWanted>maxes.slice(0,4).reduce((a,c)=>a+c,0)*.95);
+    this._pressureLimited=derate<.99 || ((this.mode==='hover'||this._holdActive)&&this._thrustWanted>maxes.slice(0,4).reduce((a,c)=>a+c,0)*.95);
+    if(this.stabilizationMode==='hold'){
+      this._holdFeasible=this._holdTrimFeasible(maxes);
+      if(this._holdActive){
+        const error=this._holdErrors();
+        this._holdStatus=!this._holdFeasible||this._allocationError>.08?'limited':
+          error.position<.08&&error.attitude<.35&&b.velocity.length()<.08&&b.angularVelocity.length()<.02?'holding':'tracking';
+      }
+    }
     this._updateMass();
+  }
+
+  _holdTrimFeasible(maxes) {
+    if(!this._holdQuaternionTarget)return null;
+    // Exact static trim for this symmetric ten-nozzle layout. Axial jets act
+    // through the centre line. Equal front/rear side forces cancel yaw; their
+    // +0.22*Fx roll moment is balanced by a left/right lift differential.
+    // Any opposing-jet common mode only uses more capacity, so testing this
+    // minimum-flow solution certifies support without another iterative solve.
+    const f=this._holdQuaternionTarget.conjugate().vmult(V(0,this.body.mass*this.params.gravity,0));
+    const differential=.22*f.x/.59;
+    const trim=this._nozzles.map(n=>n.kind==='lift'?(f.y-Math.sign(n.position.x)*differential)/4:
+      n.kind==='roll'?Math.max(0,f.x*n.direction.x)/2:Math.max(0,f.z*n.direction.z));
+    return trim.every((force,i)=>force>=-1e-7&&force<=maxes[i]+1e-7);
+  }
+
+  _holdErrors() {
+    if(!this._holdPositionTarget||!this._holdQuaternionTarget)return{position:null,attitude:null};
+    const q=this.body.quaternion.conjugate().mult(this._holdQuaternionTarget);
+    return{position:this._holdPositionTarget.vsub(this.body.position).length(),
+      attitude:2*Math.atan2(Math.hypot(q.x,q.y,q.z),Math.abs(q.w))*180/Math.PI};
   }
 
   _aero(dt) {
@@ -629,6 +709,11 @@ export class RoadsterSim {
     const input={throttle:clamp(finite(raw.throttle),-1,1),steer:clamp(finite(raw.steer),-1,1),
       brake:clamp(finite(raw.brake),0,1),lift:clamp(finite(raw.lift),-1,1),roll:clamp(finite(raw.roll),-1,1),boost:!!raw.boost,
       frontJets:clamp(finite(raw.frontJets),0,1),rearJets:clamp(finite(raw.rearJets),0,1)};
+    // A deliberate control input is an explicit pilot takeover. Holding a
+    // fixed pose never silently converts stick motion into a drifting target.
+    // Return to the existing assisted manual controller; 1/2 still bypass it.
+    if(this.stabilizationMode==='hold'&&(Math.abs(input.throttle)>.02||Math.abs(input.steer)>.02||
+      Math.abs(input.lift)>.02||Math.abs(input.roll)>.02||input.brake>.02||input.boost||input.frontJets>0||input.rearJets>0))this.setStabilizationMode('level');
     if(this.mode==='drive'&&input.brake>.01)input.boost=false;
     if(input.frontJets>0||input.rearJets>0)this._maneuver=null;
     if(this._maneuver?.name==='ramp') {
@@ -654,11 +739,14 @@ export class RoadsterSim {
     this._sanity();
     if(this._fault) this.status=this._fault;
     else if(!this._hasPower)this.status='电池耗尽：电驱、风扇与喷口已失去供电';
-    else if(this.params.supplyMode==='finite'&&this.pressureBar()<1.2&&this.mode!=='drive') this.status='气源压差耗尽：推进器失去支撑';
+    else if(this.params.supplyMode==='finite'&&this.pressureBar()<1.2&&(this.mode!=='drive'||this.airStabilization)) this.status='气源压差耗尽：推进器失去支撑';
     else if(this._pressureLimited&&this.mode==='hover') this.status='供压降低：可用推力受限';
     else if(!this._maneuver) {
       if(this.suctionEnabled&&this._sealQuality>.5) this.status=this.body.quaternion.vmult(Y).y<-.6?'倒挂：压差吸附保持':'近表面：压差吸附有效';
       else if(this.suctionEnabled) this.status='未形成近表面密封：无吸附';
+      else if(this.stabilizationMode==='hold')this.status=this._holdStatus==='surface'?'定姿定点待命：接触表面，喷口保持让行':
+        this._holdStatus==='limited'?'定姿定点受限：当前姿态或制动需求超出可用喷口能力':
+        this._holdStatus==='holding'?'定姿定点：姿态与位置闭环保持':'定姿定点：正在减速 / 收敛至捕获参考';
       else if(this._stabilizationActive)this.status='自动稳姿：回正 / 速度阻尼 / 高度保持';
       else if(this.mode==='hover') this.status='高度 / 姿态闭环';
       else if(this.mode==='manual') this.status='手动喷口控制';
@@ -696,7 +784,7 @@ export class RoadsterSim {
   get interpolationAlpha(){return clamp(this._accumulator*PHYSICS_HZ,0,1);}
 
   telemetry() {
-    const b=this.body,a=this._angles(),p=this.params;
+    const b=this.body,a=this._angles(),p=this.params,holdError=this._holdErrors();
     const localVelocity=b.quaternion.conjugate().vmult(b.velocity),budget=hoverBudget(p,this.gasMass,this.gasTemperature);
     const downFrom=b.position.vadd(V(0,.01,0)),downTo=b.position.vadd(V(0,-200,0));
     const hit=this._raySurface(downFrom,downTo);
@@ -716,6 +804,10 @@ export class RoadsterSim {
       sealQuality:this._sealQuality||0,sealLipExtensions:[...this._sealLipExtensions],sealLipContacts:this._sealLipContacts.map(c=>c?{point:{...c.point},normal:{...c.normal},distance:c.distance}:null),sealDistanceM:this._sealDistanceCount?this._sealDistanceSum/this._sealDistanceCount:null,suctionEnabled:this.suctionEnabled,contactCount:this._contactCount,
       energyKWh:Math.max(0,p.batteryKWh-this._energyUsed),energyUsedKWh:this._energyUsed,
       gLoad:this._gLoad,mode:this.mode,airStabilization:this.airStabilization,stabilizationActive:this._stabilizationActive,status:this.status,simTime:this.simTime,scenario:this.scenario,
+      stabilizationMode:this.stabilizationMode,holdActive:this._holdActive,holdStatus:this._holdStatus,holdFeasible:this._holdFeasible,
+      holdPositionError:holdError.position,holdAttitudeErrorDeg:holdError.attitude,holdSpeed:b.velocity.length(),holdWrenchResidual:this._allocationError,
+      holdPositionTarget:this._holdPositionTarget?plain(this._holdPositionTarget):null,
+      holdQuaternionTarget:this._holdQuaternionTarget?{x:this._holdQuaternionTarget.x,y:this._holdQuaternionTarget.y,z:this._holdQuaternionTarget.z,w:this._holdQuaternionTarget.w}:null,
       targetAltitude:this._heightTarget,maneuver:this._maneuver?{...this._maneuver}:null,
       position:plain(b.position),velocity:plain(b.velocity),quaternion:{x:b.quaternion.x,y:b.quaternion.y,z:b.quaternion.z,w:b.quaternion.w},
       angularVelocity:plain(b.angularVelocity),fault:this._fault,

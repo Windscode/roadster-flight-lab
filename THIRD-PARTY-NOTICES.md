@@ -8,7 +8,7 @@
 | cannon-es | `dist/vendor/CANNON-LICENSE.txt`，原许可 |
 | SMAA | `dist/vendor/SMAA-LICENSE.txt`，原许可与署名 |
 | 天空HDR、扫描路面与植被 | Poly Haven CC0；`dist/assets/`下相关manifest和`dist/assets/landmarks/README.md`保留作者/来源 |
-| 狐狸、柴犬与骨骼动画 | Quaternius CC0；`dist/assets/characters/manifest.json`与LICENSE.txt |
+| 历史狐狸、柴犬与骨骼动画文件（3.6场景不再加载） | Quaternius CC0；`dist/assets/characters/manifest.json`与LICENSE.txt |
 | 音乐录音 | 每首独立CC BY4.0或CC0；以`dist/assets/music/manifest.json`与CREDITS.txt逐曲声明为准。作品作曲者、演奏/录音作者、编码修改、原始来源与哈希分开记录 |
 
 播放器显示曲名、作者、录音许可与来源。录屏或在其他媒介使用CC BY录音时，保留相应署名。中文《岁月的痕迹》保留作者披露的AI参与说明。

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {writeFileSync} from 'node:fs';
+import {readFileSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import * as THREE from '../dist/vendor/three.module.js';
 import {createRoadster,VEHICLE_GEOMETRY as G,sampleVehicleSurface} from '../dist/vehicle.js';
@@ -110,7 +110,70 @@ test('All 20 physical seal segments and interpolation correction survive exterio
     }
   }
 });
-const report={status:'passed',asOf:new Date().toISOString(),model:'Roadster photograph reconstruction v4',geometry:{meshes,vertices},sweep:{samples:sweepSamples,lengthRangeM:[.24,.41],frontSteerRangeRad:[-.49,.49],tyreRadiusM:.372,minimumArchLinerMarginM:minArchMargin,minimumRoofMarginM:minRoofMargin,minimumInnerWallMarginM:minWheelhouseWall,minimumLiftDuctMarginM:minJetMargin},pressureChamber:car.chamber.root.userData,tests:results,limitations:['A sampled geometric clearance test, not a tolerance stack-up or deformable tyre contact analysis.','Suspension links and pressure chamber are independently authored layouts, not OEM CAD or measured suspension kinematics.','Full tyre travel envelope is guaranteed only for the stated suspension and steering range.']};
+const profiles={},glassSeams={},poseBefore={group:car.group.uuid,wheels:car.wheels.map(w=>({assembly:w.assembly.uuid,position:w.assembly.position.toArray(),rotation:w.spin.rotation.toArray()}))};
+test('Render profiles reduce actual geometry and preserve articulated object identities and state',()=>{
+  car.setCutaway(false);
+  for(const quality of ['balanced','high','ultra']){
+    car.setQuality(quality);profiles[quality]={atRest:car.getRenderCost()};
+    assert.equal(car.group.uuid,poseBefore.group);
+    car.wheels.forEach((w,i)=>{assert.equal(w.assembly.uuid,poseBefore.wheels[i].assembly);assert.deepEqual(w.assembly.position.toArray(),poseBefore.wheels[i].position);assert.deepEqual(w.spin.rotation.toArray(),poseBefore.wheels[i].rotation);});
+    car.group.traverse(o=>{
+      if(!o.geometry)return;const p=o.geometry.attributes.position,n=o.geometry.attributes.normal;
+      assert.ok(p.array.every(Number.isFinite),quality+': '+o.name+' has nonfinite positions');
+      if(n)for(let i=0;i<n.count;i++)assert.ok(Math.abs(Math.hypot(n.getX(i),n.getY(i),n.getZ(i))-1)<.0005,quality+': '+o.name+' has invalid normals');
+    });
+  }
+  assert.ok(profiles.balanced.atRest.drawables<profiles.high.atRest.drawables*.60,'balanced keeps too many visible model parts');
+  assert.ok(profiles.balanced.atRest.triangles<profiles.high.atRest.triangles*.30,'balanced retains the high-detail triangle budget');
+  assert.ok(profiles.ultra.atRest.triangles>profiles.high.atRest.triangles,'ultra does not refine curved body and wheel surfaces');
+});
+test('Separate glazing panels share continuous derivative normals at every quality',()=>{
+  for(const quality of ['balanced','high','ultra']){
+    car.setQuality(quality);let pairs=0,maximumAngleDeg=0;
+    car.group.traverse(o=>{
+      if(!o.isMesh||![car.materials.glass,car.materials.balancedGlass].includes(o.material))return;
+      const p=o.geometry.attributes.position,n=o.geometry.attributes.normal,seen=new Map();
+      for(let i=0;i<p.count;i++){
+        const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
+        if(Math.abs(x)>.5||![.04,-.76].some(v=>Math.abs(z-v)<1e-6))continue;
+        const key=[x,y,z].map(v=>v.toFixed(6)).join(':');
+        if(seen.has(key)){const j=seen.get(key),dot=n.getX(i)*n.getX(j)+n.getY(i)*n.getY(j)+n.getZ(i)*n.getZ(j);maximumAngleDeg=Math.max(maximumAngleDeg,Math.acos(Math.min(1,Math.max(-1,dot)))*180/Math.PI);pairs++;}
+        else seen.set(key,i);
+      }
+    });
+    assert.ok(pairs>20,quality+' is missing adjoining glazing samples');
+    assert.ok(maximumAngleDeg<.05,quality+' glazing produces a reflection seam');
+    glassSeams[quality]={coincidentBoundaryPairs:pairs,maximumNormalAngleDeg:maximumAngleDeg};
+  }
+});
+test('Balanced cutaway reveals real hardware and an unchanged seal does not rebuild its mesh',()=>{
+  car.setQuality('balanced');assert.ok(car.suspensions.every(s=>!s.group.visible));
+  car.setCutaway(true);assert.ok(car.suspensions.every(s=>s.group.visible));assert.equal(car.chamber.roof.visible,false);
+  car.setCutaway(false);assert.ok(car.suspensions.every(s=>!s.group.visible));assert.equal(car.chamber.roof.visible,true);
+  const telemetry={sealLipExtensions:SEAL_OUTLINE.map(()=>.18)};
+  car.update(telemetry,1/60);const before=car.chamber.root.userData.sealGeometryUpdates;
+  for(let i=0;i<120;i++)car.update(telemetry,1/60);
+  assert.equal(car.chamber.root.userData.sealGeometryUpdates,before,'stationary lip rebuilt every render frame');
+  telemetry.sealLipExtensions[7]=.19;car.update(telemetry,1/60);
+  assert.equal(car.chamber.root.userData.sealGeometryUpdates,before+1,'changed physical seal segment did not update the mesh');
+});
+test('Late-created force nozzles use the selected profile and switching back reuses cached geometry',()=>{
+  const nozzles=[];for(let i=0;i<10;i++)nozzles.push({id:'audit-'+i,kind:i<4?'lift':i<8?'roll':'longitudinal',position:{x:i%2?.59:-.59,y:-.29,z:i%4<2?1.42:-1.42},direction:{x:i<4?0:i<8?(i%2?1:-1):0,y:i<4?1:0,z:i>=8?(i===8?1:-1):0},force:1000,maxForce:8000});
+  car.setQuality('balanced');car.update({nozzles,mode:'hover'},1/60);
+  const cached=new Map();car.group.traverse(o=>{if(o.geometry)cached.set(o.uuid,o.geometry.uuid);});
+  for(const quality of ['high','ultra','balanced']){
+    car.setQuality(quality);profiles[quality].forceNozzles=car.getRenderCost();
+    car.setCutaway(true);profiles[quality].cutaway=car.getRenderCost();car.setCutaway(false);
+  }
+  car.group.traverse(o=>{if(o.geometry)assert.equal(o.geometry.uuid,cached.get(o.uuid),'quality toggle allocated a duplicate geometry');});
+  assert.equal(car.getRenderCost().shadowMeshes,5,'balanced must retain one body and four tyre shadow silhouettes');
+  car.group.traverseVisible(o=>{if(o.castShadow)assert.ok([car.materials.paint,car.materials.balancedPaint,car.materials.rubber].includes(o.material),'small hardware ignored balanced shadow profile');});
+  car.setColor(0xff8877);assert.equal(car.materials.paint.color.getHex(),car.materials.balancedPaint.color.getHex());
+});
+const renderBaseline=JSON.parse(readFileSync(fileURLToPath(new URL('../qa/vehicle-3.4-render-cost.json',import.meta.url)),'utf8'));
+const renderAudit={status:'passed',asOf:new Date().toISOString(),method:renderBaseline.method,baselineCommit:renderBaseline.commit,baseline:{atRest:renderBaseline.atRest,forceNozzles:renderBaseline.forceNozzles,cutaway:renderBaseline.cutaway},profiles,glazingBoundaryNormals:glassSeams,balancedReductionAtRest:{visibleDrawables:1-profiles.balanced.atRest.drawables/renderBaseline.atRest.drawables,triangles:1-profiles.balanced.atRest.triangles/renderBaseline.atRest.triangles},limitations:['Static scene-graph budgets do not establish frame rate. Driver overhead, shadows, culling, reflections, resolution and GPU throughput require browser profiling.','The ten-visible-actuator comparison fixture is a conservative hardware visibility budget; it does not simulate a flight maneuver.']};
+writeFileSync(fileURLToPath(new URL('../qa/vehicle-3.6-render-cost.json',import.meta.url)),JSON.stringify(renderAudit,null,2)+'\n');
+const report={status:'passed',asOf:new Date().toISOString(),model:'Roadster photograph reconstruction v5',geometry:{meshes,vertices},profiles,glazingBoundaryNormals:glassSeams,sweep:{samples:sweepSamples,lengthRangeM:[.24,.41],frontSteerRangeRad:[-.49,.49],tyreRadiusM:.372,minimumArchLinerMarginM:minArchMargin,minimumRoofMarginM:minRoofMargin,minimumInnerWallMarginM:minWheelhouseWall,minimumLiftDuctMarginM:minJetMargin},pressureChamber:car.chamber.root.userData,tests:results,limitations:['A sampled geometric clearance test, not a tolerance stack-up or deformable tyre contact analysis.','Suspension links and pressure chamber are independently authored layouts, not OEM CAD or measured suspension kinematics.','Full tyre travel envelope is guaranteed only for the stated suspension and steering range.']};
 writeFileSync(fileURLToPath(new URL('../qa/vehicle-geometry.json',import.meta.url)),JSON.stringify(report,null,2)+'\n');
 car.dispose();
 console.log(JSON.stringify(report,null,2));

@@ -18,7 +18,7 @@ const sun=new THREE.DirectionalLight(0xfff9f1,2.2);sun.position.set(3,7,4);sun.c
 const fill=new THREE.DirectionalLight(0xd3d9df,.24);fill.position.set(-3,2,-4);scene.add(fill);
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:0x24282c,roughness:.50,metalness:.08}));ground.rotation.x=-Math.PI/2;ground.position.y=-.599;ground.receiveShadow=true;scene.add(ground);
 const underLight=new THREE.DirectionalLight(0xc9d7e0,2.8);underLight.position.set(1,-4,3);underLight.visible=false;scene.add(underLight);
-const car=createRoadster();scene.add(car.group);const pmrem=new THREE.PMREMGenerator(renderer);
+const car=createRoadster({quality:'ultra'});scene.add(car.group);const pmrem=new THREE.PMREMGenerator(renderer);
 const studio=new THREE.Scene();studio.background=new THREE.Color(0x11151b);
 function softbox(w,h,p,r,intensity){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color().setRGB(intensity,intensity,intensity),side:THREE.DoubleSide}));m.position.set(...p);m.rotation.set(...r);studio.add(m);}
 softbox(1.15,8,[-1.6,4,0],[Math.PI/2,0,0],5);softbox(.65,7,[2,3.5,-.2],[Math.PI/2,0,.1],4);

@@ -1,4 +1,4 @@
-export const MODEL_VERSION='3.4.0';
+export const MODEL_VERSION='3.6.0';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 // Reduced engineering models. Parameters are explicit hypotheses, not OEM data.
 export function roadWheelAngle(input,speed,p){

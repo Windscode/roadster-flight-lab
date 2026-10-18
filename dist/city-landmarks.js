@@ -1,4 +1,5 @@
 import {CITY_STREET_TREES} from './city-plan.js';
+import {createCityVisibility} from './city-render-budget.js';
 // Original, metre-scale destinations. This module is also imported by the
 // headless physics runner: authoring data below never touches THREE or the DOM.
 export const LANDMARK_RESERVATIONS = [
@@ -215,10 +216,10 @@ export const LANDMARK_COLLIDERS=solids;
 export function buildCityLandmarks(THREE,root,roadMaterial=null){
   const group=new THREE.Group();group.name='Destinations / botanical · south quay · tidal plaza';root.add(group);
   const assetBase=new URL('./assets/landmarks/',import.meta.url).href;
-  const textureLoader=new THREE.TextureLoader(),tmp=new THREE.Object3D(),buckets=new Map(),vegetationLods=[],unitBox=new THREE.BoxGeometry(),unitCylinder=new THREE.CylinderGeometry(.60,1,1,12,1),windUniform={value:0};
+  const textureLoader=new THREE.TextureLoader(),tmp=new THREE.Object3D(),buckets=new Map(),vegetationLods=[],unitBox=new THREE.BoxGeometry(),unitCylinder=new THREE.CylinderGeometry(.60,1,1,12,1),windUniform={value:0},visibility=createCityVisibility(THREE);
   const spatialKey=(x,z)=>Math.floor(x/120)+','+Math.floor(z/120);
   const textures=[],textureTasks=[];
-  function texture(path,srgb=false){let finish;textureTasks.push(new Promise(resolve=>finish=resolve));const t=textureLoader.load(new URL(path,assetBase).href,()=>finish(true),undefined,()=>finish(false));t.colorSpace=srgb?THREE.SRGBColorSpace:THREE.NoColorSpace;t.anisotropy=8;textures.push(t);return t;}
+  function texture(path,srgb=false){let finish;textureTasks.push(new Promise(resolve=>finish=resolve));const t=typeof document==='undefined'?new THREE.Texture():textureLoader.load(new URL(path,assetBase).href,()=>finish(true),undefined,()=>finish(false));if(typeof document==='undefined')finish(false);t.colorSpace=srgb?THREE.SRGBColorSpace:THREE.NoColorSpace;t.anisotropy=4;textures.push(t);return t;}
   const soilMap=texture('forest_leaves_02/textures/forest_leaves_02_diffuse_1k.jpg',true),soilNormal=texture('forest_leaves_02/textures/forest_leaves_02_nor_gl_1k.jpg'),soilRough=texture('forest_leaves_02/textures/forest_leaves_02_rough_1k.jpg');
   const grassMap=texture('leafy_grass/textures/leafy_grass_diff_1k.jpg',true),grassNormal=texture('leafy_grass/textures/leafy_grass_nor_gl_1k.jpg'),gravelMap=texture('grass_path_2/textures/grass_path_2_diff_1k.jpg',true),gravelNormal=texture('grass_path_2/textures/grass_path_2_nor_gl_1k.jpg'),gravelRough=texture('grass_path_2/textures/grass_path_2_rough_1k.jpg');
   const leafMap=texture('island_tree_03/textures/island_tree_03_leaves_diff_1k.jpg',true),leafArm=texture('island_tree_03/textures/island_tree_03_leaves_arm_1k.jpg');
@@ -355,6 +356,7 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
   for(const f of waterfalls){const mesh=new THREE.Mesh(new THREE.BoxGeometry(f.w,f.h,f.d),fallMat);mesh.position.set(f.x,f.y-f.h/2,f.z);group.add(mesh);}
   const lightAnchors=[];
   for(const s of signs){
+    if(typeof document==='undefined')continue;
     const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=Math.max(128,Math.round(2048*s.h/s.w));const ctx=canvas.getContext('2d');ctx.fillStyle='#263832';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#d4d9c9';ctx.font=`500 ${Math.round(canvas.height*.52)}px Arial,Microsoft YaHei`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s.text,canvas.width/2,canvas.height*.51,canvas.width*.94);ctx.fillStyle='#a89664';ctx.fillRect(canvas.width*.03,canvas.height*.85,canvas.width*.94,3);
     const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;textures.push(map);const material=new THREE.MeshStandardMaterial({map,roughness:.76,metalness:.05});const mesh=new THREE.Mesh(new THREE.PlaneGeometry(s.w,s.h),material);mesh.position.set(s.x,s.y,s.z);mesh.rotation.y=s.rotation;group.add(mesh);
   }
@@ -363,16 +365,20 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
   }
   let drawCalls=0,leafInstances=0;
   for(const b of buckets.values()){
+    // Interleave leaves from every tree in a cell. Reducing an instance count
+    // then changes density consistently instead of deleting entire trees.
+    if(b.mat===mats.foliage){for(const v of b.items){const p=v.pos;let h=(Math.imul(Math.round(p[0]*1024),73856093)^Math.imul(Math.round(p[1]*1024),19349663)^Math.imul(Math.round(p[2]*1024),83492791))>>>0;h=Math.imul(h^(h>>>16),0x45d9f3b)>>>0;v.priority=h;}b.items.sort((a,c)=>a.priority-c.priority);}
     const mesh=new THREE.InstancedMesh(b.geo,b.mat,b.items.length);mesh.castShadow=true;mesh.receiveShadow=true;mesh.name=b.mat===mats.foliage?'photographed individual leaf instances':'landscape structures / '+b.mat.name;
     b.items.forEach((v,i)=>{if(v.matrix)mesh.setMatrixAt(i,v.matrix);else{tmp.position.set(...v.pos);tmp.rotation.set(...v.rotation);tmp.scale.set(...v.scale);tmp.updateMatrix();mesh.setMatrixAt(i,tmp.matrix);}if(v.color)mesh.setColorAt(i,v.color);});
     if(b.mat===mats.foliage)mesh.customDepthMaterial=leafDepth;
-    mesh.computeBoundingBox();mesh.computeBoundingSphere();group.add(mesh);drawCalls++;if(b.mat===mats.foliage){leafInstances+=b.items.length;vegetationLods.push({mesh,center:mesh.boundingSphere.center.clone(),radius:mesh.boundingSphere.radius,drawDistance:290,shadowDistance:80,kind:'leaf'});}
+    mesh.computeBoundingBox();mesh.computeBoundingSphere();group.add(mesh);drawCalls++;if(b.mat===mats.foliage){leafInstances+=b.items.length;vegetationLods.push({mesh,center:mesh.boundingSphere.center.clone(),radius:mesh.boundingSphere.radius,fullCount:mesh.count,kind:'leaf'});}
   }
-  const stats={destinations:3,trees:trees.length,leafInstances,shrubs:0,colliders:solids.length,waterBodies:LANDMARK_WATER_VOLUMES.length,waterSurfaceM2:LANDMARK_WATER_VOLUMES.reduce((s,w)=>s+(w.maxX-w.minX)*(w.maxZ-w.minZ),0),instancedDrawCalls:drawCalls,botanicalVaultMetres:[44,25,82],assetLicense:'CC0 / Poly Haven',vegetationReady:false};
+  const bounds=new THREE.Box3(),dimensions=new THREE.Vector3();group.traverse(o=>{if(!o.isMesh)return;bounds.setFromObject(o).getSize(dimensions);const vegetation=o.material===mats.foliage;visibility.add(o,{level:vegetation?'vegetation':Math.max(dimensions.x,dimensions.z)>18||dimensions.y>9?'mass':'street',shadow:o.castShadow});});
+  const stats={destinations:3,trees:trees.length,leafInstances,shrubs:0,colliders:solids.length,waterBodies:LANDMARK_WATER_VOLUMES.length,waterSurfaceM2:LANDMARK_WATER_VOLUMES.reduce((s,w)=>s+(w.maxX-w.minX)*(w.maxZ-w.minZ),0),instancedDrawCalls:drawCalls,botanicalVaultMetres:[44,25,82],assetLicense:'CC0 / Poly Haven',vegetationReady:false,renderBudget:visibility.stats};
   // The local shrub glTF has four unskinned, uncompressed mesh variants. Read
   // its explicit accessors, retaining original traced leaf geometry and UVs;
   // do not carry an 80 MB tree model into a freely explorable browser city.
-  const ready=(async()=>{
+  const ready=typeof document==='undefined'?Promise.resolve(false):(async()=>{
     const base=assetBase+'shrub_03/',[jsonResponse,bufferResponse]=await Promise.all([fetch(base+'shrub_03.gltf'),fetch(base+'shrub_03.bin')]);
     if(!jsonResponse.ok||!bufferResponse.ok)throw new Error('Local CC0 shrub asset missing');
     const [gltf,buffer]=await Promise.all([jsonResponse.json(),bufferResponse.arrayBuffer()]);
@@ -384,11 +390,24 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
     for(const p of shrubPatches)for(let i=0;i<p.count;i++){const height=1.3+r()*1.7;placements[i%variants.length].push({x:p.x+(r()-.5)*p.w,z:p.z+(r()-.5)*p.d,y:p.y,height,rotation:r()*Math.PI*2});}
     variants.forEach((g,i)=>{
       const cells=new Map();for(const p of placements[i]){const key=spatialKey(p.x,p.z),a=cells.get(key)||[];a.push(p);cells.set(key,a);}
-      for(const [cell,plants]of cells){const mesh=new THREE.InstancedMesh(g,material,plants.length);mesh.name='CC0 photographed shrub variant '+i+' / '+cell;mesh.castShadow=true;mesh.receiveShadow=true;plants.forEach((p,k)=>{tmp.position.set(p.x,p.y,p.z);tmp.rotation.set(0,p.rotation,0);tmp.scale.setScalar(p.height);tmp.updateMatrix();mesh.setMatrixAt(k,tmp.matrix);});mesh.computeBoundingBox();mesh.computeBoundingSphere();group.add(mesh);stats.shrubs+=plants.length;stats.instancedDrawCalls++;vegetationLods.push({mesh,center:mesh.boundingSphere.center.clone(),radius:mesh.boundingSphere.radius,drawDistance:160,shadowDistance:60,kind:'shrub'});}
+      for(const [cell,plants]of cells){const mesh=new THREE.InstancedMesh(g,material,plants.length);mesh.name='CC0 photographed shrub variant '+i+' / '+cell;mesh.castShadow=true;mesh.receiveShadow=true;plants.forEach((p,k)=>{tmp.position.set(p.x,p.y,p.z);tmp.rotation.set(0,p.rotation,0);tmp.scale.setScalar(p.height);tmp.updateMatrix();mesh.setMatrixAt(k,tmp.matrix);});mesh.computeBoundingBox();mesh.computeBoundingSphere();group.add(mesh);stats.shrubs+=plants.length;stats.instancedDrawCalls++;vegetationLods.push({mesh,center:mesh.boundingSphere.center.clone(),radius:mesh.boundingSphere.radius,fullCount:mesh.count,kind:'shrub'});visibility.add(mesh,{level:'vegetation'});}
     });stats.vegetationReady=(await Promise.all(textureTasks)).every(Boolean);if(!stats.vegetationReady)throw new Error('A local landscape texture could not be loaded');return true;
   })().catch(error=>{stats.assetError=error.message;console.warn('Landscape shrub asset:',error.message);return false;});
   return {root:group,ready,stats,colliders:LANDMARK_COLLIDERS,lightAnchors,waterVolumes:LANDMARK_WATER_VOLUMES,
-    update(time,p){windUniform.value=time;waterUniforms.forEach(u=>u.value=time);if(p){let visible=0,shadow=0;for(const v of vegetationLods){const edge=Math.max(0,Math.hypot(v.center.x-p.x,v.center.z-p.z)-v.radius);v.mesh.visible=edge<v.drawDistance;v.mesh.castShadow=edge<v.shadowDistance;if(v.mesh.visible)visible++;if(v.mesh.visible&&v.mesh.castShadow)shadow++;}stats.activeVegetationCells=visible;stats.shadowVegetationCells=shadow;}},
+    setQuality(q,profile={}){visibility.setQuality(q,{...profile,massDistance:q==='balanced'?400:q==='high'?850:1400});textures.forEach(t=>t.anisotropy=q==='balanced'?2:8);},
+    update(time,p){
+      windUniform.value=time;waterUniforms.forEach(u=>u.value=time);if(!p)return;
+      const profile=visibility.profile;let visible=0,shadow=0,activeLeaves=0;
+      for(const v of vegetationLods){
+        const edge=Math.max(0,Math.hypot(v.center.x-p.x,v.center.y-p.y,v.center.z-p.z)-v.radius);
+        const nearDensity=profile.giMode==='vertex'?.48:profile.detailDistance<150?.78:1;
+        const density=v.kind==='leaf'?nearDensity*(edge>profile.vegetationDistance*.55?.55:1):1;
+        v.mesh.count=Math.max(1,Math.round(v.fullCount*density));
+      }
+      visibility.update(time,p);
+      for(const v of vegetationLods){if(v.kind==='leaf'&&profile.giMode==='vertex')v.mesh.castShadow=false;if(v.mesh.visible){visible++;if(v.kind==='leaf')activeLeaves+=v.mesh.count;}if(v.mesh.visible&&v.mesh.castShadow)shadow++;}
+      stats.activeVegetationCells=visible;stats.shadowVegetationCells=shadow;stats.activeLeafInstances=activeLeaves;
+    },
     dispose(){group.removeFromParent();const seen=new Set();group.traverse(o=>{if(o.geometry&&!seen.has(o.geometry)){seen.add(o.geometry);o.geometry.dispose();}for(const m of Array.isArray(o.material)?o.material:[o.material])if(m&&m!==roadMaterial&&!seen.has(m)){seen.add(m);m.dispose();}});leafDepth.dispose();textures.forEach(t=>t.dispose());}
   };
 }

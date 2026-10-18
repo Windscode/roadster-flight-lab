@@ -13,6 +13,23 @@ const TAU = PI * 2;
 const clamp = THREE.MathUtils.clamp;
 const lerp = THREE.MathUtils.lerp;
 const DOWN = new THREE.Vector3(0, -1, 0);
+const geometryDetail = new WeakMap();
+const QUALITY = Object.freeze({balanced:0,high:1,ultra:2});
+
+// A profile replaces tessellation, never the physical outline or suspension
+// state. Variants are built on demand once and reused across quality changes.
+function detailGeometry(mesh,build) {
+  geometryDetail.set(mesh,{build,cache:new Map([['high',mesh.geometry]])});
+  return mesh;
+}
+function applyGeometryQuality(root,quality) {
+  root.traverse(o=>{
+    const detail=geometryDetail.get(o);if(!detail)return;
+    if(!detail.cache.has(quality))detail.cache.set(quality,detail.build(quality));
+    o.geometry=detail.cache.get(quality);
+  });
+}
+const segmentsFor=(n,quality,minimum=3)=>quality==='balanced'?Math.max(minimum,Math.ceil(n*.45)):quality==='ultra'?Math.ceil(n*1.3):n;
 
 function interpolate(keys, z) {
   if (z <= keys[0][0]) return keys[0][1];
@@ -41,7 +58,7 @@ export const VEHICLE_GEOMETRY = Object.freeze({
   suspensionMinimum:.24,suspensionMaximum:.41,maxSteer:.49,
   archCentreY:-.22,archLongRadius:.452,archVerticalRadius:.435,
   linerInnerX:.54,linerOuterX:1.040,
-  model:'v4 independent surface reconstruction from Tesla October 2026 photographs; not OEM CAD'
+  model:'v5 independent surface reconstruction from Tesla October 2026 photographs; not OEM CAD'
 });
 const smoothstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
 function archCrown(z){
@@ -54,10 +71,11 @@ function archCrown(z){
 }
 function bodySurfaceY(x,z){
   const f=Math.abs(x)/widthAt(z),center=interpolate(DECK,z),shoulder=interpolate(SHOULDER,z);
-  let y;
-  if(f<=.70)y=center+.013*(1-(f/.70)**2);
-  else if(f<=.88)y=lerp(center,shoulder,(f-.70)/.18);
-  else y=lerp(shoulder,shoulder-.019,clamp((f-.88)/.12,0,1));
+  const deck=center+.013*(1-(f/.70)**2),ridge=lerp(center,shoulder,(f-.70)/.18),edge=lerp(shoulder,shoulder-.019,(f-.88)/.12);
+  // Tiny real-radius shoulder transitions retain the photograph's broad
+  // facets while removing discontinuous specular normals across the paint.
+  const panel=lerp(deck,ridge,smoothstep(.685,.715,f));
+  let y=lerp(panel,edge,smoothstep(.866,.894,f));
   // The whole fender crown clears the steered / fully compressed tyre. Merely
   // cutting a hole in the side panel leaves the old bonnet inside the tyre.
   const delta=archCrown(z)+.012-y,raise=(delta+Math.sqrt(delta*delta+.000036))*.5;
@@ -87,6 +105,11 @@ function addMesh(parent, geometry, mat, name = '') {
 }
 
 function setGraphNormals(mesh,sideSurface=0){
+  const detail=geometryDetail.get(mesh);
+  if(detail){
+    const source=detail.build;
+    detail.build=quality=>{const temp={geometry:source(quality)};setGraphNormals(temp,sideSurface);return temp.geometry;};
+  }
   const p=mesh.geometry.attributes.position,n=mesh.geometry.attributes.normal,delta=.0005,q=new THREE.Vector3();
   for(let i=0;i<p.count;i++){
     const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
@@ -102,7 +125,7 @@ function setGraphNormals(mesh,sideSurface=0){
   n.needsUpdate=true;
 }
 
-function grid(parent, mat, fn, nu = 16, nv = 32, reverse = false, name = '') {
+function gridGeometry(fn,nu,nv,reverse,analyticNormals=false) {
   const positions = [], uv = [], indices = [];
   for (let j = 0; j <= nv; j++) {
     for (let i = 0; i <= nu; i++) {
@@ -120,7 +143,25 @@ function grid(parent, mat, fn, nu = 16, nv = 32, reverse = false, name = '') {
   g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
   g.setIndex(indices);
   g.computeVertexNormals();
-  return addMesh(parent,g,mat,name);
+  if(analyticNormals){
+    const normal=g.attributes.normal,du=new THREE.Vector3(),dv=new THREE.Vector3(),n=new THREE.Vector3(),delta=.00002;
+    for(let j=0;j<=nv;j++)for(let i=0;i<=nu;i++){
+      const u=i/nu,v=j/nv,ua=clamp(u-delta,0,1),ub=clamp(u+delta,0,1),va=clamp(v-delta,0,1),vb=clamp(v+delta,0,1);
+      const a=fn(ua,v),b=fn(ub,v),c=fn(u,va),d=fn(u,vb);
+      du.set(b[0]-a[0],b[1]-a[1],b[2]-a[2]);dv.set(d[0]-c[0],d[1]-c[1],d[2]-c[2]);n.crossVectors(du,dv);
+      if(n.lengthSq()>1e-24){n.normalize().multiplyScalar(reverse?-1:1);normal.setXYZ(j*(nu+1)+i,n.x,n.y,n.z);}
+    }
+  }
+  return g;
+}
+
+function grid(parent, mat, fn, nu = 16, nv = 32, reverse = false, name = '') {
+  const smoothGlass=mat.isMeshPhysicalMaterial&&mat.transparent;
+  const build=quality=>gridGeometry(fn,segmentsFor(nu,quality,Math.min(nu,3)),segmentsFor(nv,quality,Math.min(nv,6)),reverse,smoothGlass);
+  const mesh=addMesh(parent,build('high'),mat,name);
+  // Seal vertices are physically deformed by all twenty independent lip
+  // segments. Their topology stays fixed at every rendering profile.
+  return parent.name==='surface-following perimeter seal'?mesh:detailGeometry(mesh,build);
 }
 
 function polygon(parent, points, mat, name = '', double = false) {
@@ -153,6 +194,7 @@ function cutSurfaceOpenings(mesh,openings){
   // Clip the actual body mesh at each lamp perimeter. A black triangle resting
   // on top of paint cannot show a recessed housing / edge thickness correctly.
   const source=mesh.geometry,pos=source.attributes.position,norm=source.attributes.normal,uv=source.attributes.uv;
+  const detail=geometryDetail.get(mesh);
   const positions=[],normals=[],uvs=[],indices=[],cache=new Map();
   const read=i=>[pos.getX(i),pos.getY(i),pos.getZ(i),norm.getX(i),norm.getY(i),norm.getZ(i),uv.getX(i),uv.getY(i)];
   const vertex=v=>{const key=v.slice(0,3).map(a=>Math.round(a*1e7)).join(',');if(cache.has(key))return cache.get(key);const i=positions.length/3,n=new THREE.Vector3(v[3],v[4],v[5]).normalize();positions.push(...v.slice(0,3));normals.push(n.x,n.y,n.z);uvs.push(v[6],v[7]);cache.set(key,i);return i;};
@@ -186,6 +228,10 @@ function cutSurfaceOpenings(mesh,openings){
   }
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.setIndex(indices);g.computeBoundingSphere();source.dispose();mesh.geometry=g;
   mesh.userData.hasRecessedLampOpenings=true;
+  if(detail){
+    const build=detail.build;
+    detailGeometry(mesh,quality=>{const proxy={geometry:build(quality),userData:{}};cutSurfaceOpenings(proxy,openings);return proxy.geometry;});
+  }
 }
 
 function recessedLamp(parent,outline,materials){
@@ -211,11 +257,14 @@ function curve(parent, points, radius, mat, name = '', smooth = true) {
   const p = points.map(p => new THREE.Vector3(...p));
   const path = smooth ? new THREE.CatmullRomCurve3(p,false,'centripetal') : new THREE.CurvePath();
   if (!smooth) for (let i=1;i<p.length;i++) path.add(new THREE.LineCurve3(p[i-1],p[i]));
-  return addMesh(parent,new THREE.TubeGeometry(path,Math.max(8,points.length*2),radius,5,false),mat,name);
+  const base=Math.max(8,Math.min(224,Math.ceil(points.length*1.2)));
+  const build=quality=>new THREE.TubeGeometry(path,segmentsFor(base,quality,Math.min(base,8)),radius,quality==='balanced'?3:quality==='ultra'?7:5,false);
+  return detailGeometry(addMesh(parent,build('high'),mat,name),build);
 }
 
 function cylinder(parent,r1,r2,h,mat,p=[0,0,0],axis='y',segments=32,name='') {
-  const m=addMesh(parent,new THREE.CylinderGeometry(r1,r2,h,segments,1,false),mat,name);
+  const build=quality=>new THREE.CylinderGeometry(r1,r2,h,segmentsFor(segments,quality,8),1,false);
+  const m=detailGeometry(addMesh(parent,build('high'),mat,name),build);
   m.position.set(...p);
   if(axis==='x')m.rotation.z=PI/2;
   if(axis==='z')m.rotation.x=PI/2;
@@ -223,7 +272,8 @@ function cylinder(parent,r1,r2,h,mat,p=[0,0,0],axis='y',segments=32,name='') {
 }
 
 function ring(parent,r,t,mat,p=[0,0,0],axis='x',segments=56,name='') {
-  const m=addMesh(parent,new THREE.TorusGeometry(r,t,t<.006?4:6,segments),mat,name);
+  const build=quality=>new THREE.TorusGeometry(r,t,quality==='balanced'?3:quality==='ultra'?8:t<.006?4:6,segmentsFor(segments,quality,12));
+  const m=detailGeometry(addMesh(parent,build('high'),mat,name),build);
   m.position.set(...p);
   if(axis==='x')m.rotation.y=PI/2;
   if(axis==='y')m.rotation.x=PI/2;
@@ -244,7 +294,8 @@ function roundedBoxGeometry(w,h,d,r=.025,segments=3) {
 }
 
 function box(parent,w,h,d,mat,p=[0,0,0],r=.02,name='') {
-  const m=addMesh(parent,roundedBoxGeometry(w,h,d,Math.min(r,w/2,h/2,d/2)),mat,name);
+  const build=quality=>roundedBoxGeometry(w,h,d,Math.min(r,w/2,h/2,d/2),quality==='balanced'?2:3);
+  const m=detailGeometry(addMesh(parent,build('high'),mat,name),build);
   m.position.set(...p);return m;
 }
 
@@ -253,11 +304,12 @@ function carbonTexture() {
   for(let y=0;y<size;y++)for(let x=0;x<size;x++) {
     const a=((Math.floor(x/4)+Math.floor(y/4))%4)<2;
     const f=a ? (x%4)/3 : (y%4)/3;
-    const k=19+Math.round(7*Math.sin(f*PI))+(((x*17+y*29)%11)-5)*.35;
+    const k=190+Math.round(18*Math.sin(f*PI))+(((x*17+y*29)%11)-5)*.35;
     const i=(y*size+x)*4;data[i]=k;data[i+1]=k+2;data[i+2]=k+3;data[i+3]=255;
   }
   const t=new THREE.DataTexture(data,size,size,THREE.RGBAFormat);
   t.needsUpdate=true;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(14,14);t.colorSpace=THREE.SRGBColorSpace;
+  t.magFilter=THREE.LinearFilter;t.minFilter=THREE.LinearMipmapLinearFilter;t.generateMipmaps=true;
   t.anisotropy=4;return t;
 }
 
@@ -291,9 +343,28 @@ function vectorLabel(parent,text,height,mat,position,reverse=false) {
   if(reverse)parent.scale.x=-1;
 }
 
+function combineGeometries(geometries) {
+  let count=0,indexCount=0;
+  for(const g of geometries){count+=g.attributes.position.count;indexCount+=g.index?.count||g.attributes.position.count;}
+  const positions=new Float32Array(count*3),normals=new Float32Array(count*3),uvs=new Float32Array(count*2);
+  const indices=count<65536?new Uint16Array(indexCount):new Uint32Array(indexCount);
+  let offset=0,io=0;
+  for(const g of geometries){
+    positions.set(g.attributes.position.array,offset*3);
+    if(g.attributes.normal)normals.set(g.attributes.normal.array,offset*3);
+    if(g.attributes.uv)uvs.set(g.attributes.uv.array,offset*2);
+    if(g.index)for(let i=0;i<g.index.count;i++)indices[io++]=g.index.getX(i)+offset;
+    else for(let i=0;i<g.attributes.position.count;i++)indices[io++]=i+offset;
+    offset+=g.attributes.position.count;g.dispose();
+  }
+  const combined=new THREE.BufferGeometry();
+  combined.setAttribute('position',new THREE.BufferAttribute(positions,3));combined.setAttribute('normal',new THREE.BufferAttribute(normals,3));combined.setAttribute('uv',new THREE.BufferAttribute(uvs,2));combined.setIndex(new THREE.BufferAttribute(indices,1));combined.computeBoundingSphere();
+  return combined;
+}
+
 function mergeStaticMeshes(parent,recursive=true,keep=new Set()) {
-  // Retain articulated assemblies, consolidate fixed parts by their PBR material.
-  // The shapes stay detailed while a whole wheel uses about a dozen draw calls.
+  // A material batch owns the builders of its original parts. A lower detail
+  // mesh therefore stays one draw call instead of rebuilding hundreds of parts.
   parent.updateWorldMatrix(true,true);
   const inverse=parent.matrixWorld.clone().invert(),byMaterial=new Map();
   const visit=obj=>{
@@ -302,28 +373,19 @@ function mergeStaticMeshes(parent,recursive=true,keep=new Set()) {
     byMaterial.get(obj.material).push(obj);
   };
   if(recursive)parent.traverse(visit);else [...parent.children].forEach(visit);
-  for(const [mat,objects] of byMaterial) {
+  for(const [mat,objects] of byMaterial){
     if(objects.length<2)continue;
-    let count=0,indexCount=0;
-    const transformed=objects.map(obj=>{
-      const g=obj.geometry.clone();g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(inverse,obj.matrixWorld));
-      count+=g.attributes.position.count;indexCount+=g.index?g.index.count:g.attributes.position.count;return g;
-    });
-    const positions=new Float32Array(count*3),normals=new Float32Array(count*3),uvs=new Float32Array(count*2),indices=new Uint32Array(indexCount);
-    let offset=0,io=0;
-    for(const g of transformed) {
-      positions.set(g.attributes.position.array,offset*3);
-      if(g.attributes.normal)normals.set(g.attributes.normal.array,offset*3);
-      if(g.attributes.uv)uvs.set(g.attributes.uv.array,offset*2);
-      if(g.index)for(let i=0;i<g.index.count;i++)indices[io++]=g.index.getX(i)+offset;
-      else for(let i=0;i<g.attributes.position.count;i++)indices[io++]=i+offset;
-      offset+=g.attributes.position.count;g.dispose();
-    }
-    const combined=new THREE.BufferGeometry();
-    combined.setAttribute('position',new THREE.BufferAttribute(positions,3));combined.setAttribute('normal',new THREE.BufferAttribute(normals,3));combined.setAttribute('uv',new THREE.BufferAttribute(uvs,2));combined.setIndex(new THREE.BufferAttribute(indices,1));combined.computeBoundingSphere();
-    const names=objects.map(o=>o.name);
+    const parts=objects.map(o=>({
+      transform:new THREE.Matrix4().multiplyMatrices(inverse,o.matrixWorld),
+      geometry:o.geometry,
+      build:geometryDetail.get(o)?.build,
+    }));
+    const build=quality=>combineGeometries(parts.map(p=>(p.build?p.build(quality):p.geometry.clone()).applyMatrix4(p.transform)));
+    const combined=combineGeometries(parts.map(p=>p.geometry.clone().applyMatrix4(p.transform)));
+    const names=objects.flatMap(o=>[o.name,...o.userData.parts||[]]);
+    const cast=objects.some(o=>o.castShadow),receive=objects.some(o=>o.receiveShadow);
     objects.forEach(o=>{o.removeFromParent();o.geometry.dispose();});
-    const mesh=addMesh(parent,combined,mat,names[0]);mesh.userData.parts=names;
+    const mesh=detailGeometry(addMesh(parent,combined,mat,names[0]),build);mesh.userData.parts=names;mesh.castShadow=cast;mesh.receiveShadow=receive;
   }
 }
 
@@ -340,8 +402,11 @@ function buildWheel(parent,side,z,materials) {
     profile.push([radius,a]);
   }
   profile.push([.367,half-.031],[.354,half-.011],[.324,half+.001],[.285,half-.006],[.285,-half+.006]);
-  const tireGeometry=new THREE.LatheGeometry(profile.map(([r,a])=>new THREE.Vector2(r,a)),112);tireGeometry.normalizeNormals();
-  const tire=addMesh(spin,tireGeometry,materials.rubber,'performance tire');tire.rotation.z=PI/2;
+  const buildTyre=quality=>{
+    const crossSection=quality==='balanced'?profile.filter((p,i)=>i<4||i>=profile.length-5||(i-4)%5===0):profile;
+    const g=new THREE.LatheGeometry(crossSection.map(([r,a])=>new THREE.Vector2(r,a)),quality==='balanced'?48:quality==='ultra'?160:112);g.normalizeNormals();return g;
+  };
+  const tire=detailGeometry(addMesh(spin,buildTyre('high'),materials.rubber,'performance tire'),buildTyre);tire.rotation.z=PI/2;
   tire.userData={role:'tyre-contact-envelope',radiusMetres:.372,widthMetres:w};
   const face=side*(half+.002);
   const sidewall=materials.sidewall;
@@ -360,7 +425,7 @@ function buildWheel(parent,side,z,materials) {
     }
   }
   const tg=new THREE.BufferGeometry();tg.setAttribute('position',new THREE.Float32BufferAttribute(tread,3));
-  const tl=new THREE.LineSegments(tg,new THREE.LineBasicMaterial({color:0x090b0d}));spin.add(tl);
+  const tl=new THREE.LineSegments(tg,new THREE.LineBasicMaterial({color:0x090b0d}));tl.name='submillimetre tread sipes';spin.add(tl);
   cylinder(spin,.294,.294,.19,materials.wheelBarrel,[0,0,0],'x',56,'forged rim barrel');
   cylinder(spin,.249,.249,.017,materials.rotor,[side*(half-.04),0,0],'x',48,'ventilated brake rotor');
   for(let i=0;i<24;i++) {
@@ -410,13 +475,14 @@ function buildSuspension(parent,wheel,materials){
   const points=[];for(let i=0;i<=224;i++){const t=i/224,a=t*TAU*8;points.push([.061*Math.cos(a),lerp(-.17,.17,t),.061*Math.sin(a)]);}
   curve(springRoot,points,.0084,materials.damper,'gold inboard coil spring',false);
   for(const y of [-.185,.185])cylinder(springRoot,.071,.071,.018,materials.nozzle,[0,y,0],'y',28,'spring perch');
-  const from=new THREE.Vector3(),to=new THREE.Vector3(),up=new THREE.Vector3(0,1,0);
+  mergeStaticMeshes(springRoot);
+  const from=new THREE.Vector3(),to=new THREE.Vector3(),delta=new THREE.Vector3(),up=new THREE.Vector3(0,1,0);
   function update(){
     for(const link of links){
       from.set(...link.a);const p=link.b;
       const angle=wheel.assembly.rotation.y,c=Math.cos(angle),s=Math.sin(angle),dx=p.x-wheel.assembly.position.x;
       to.set(wheel.assembly.position.x+dx*c+p.dz*s,wheel.assembly.position.y+p.dy,z-dx*s+p.dz*c);
-      const delta=to.clone().sub(from);link.mesh.position.copy(from).add(to).multiplyScalar(.5);link.mesh.scale.y=delta.length();link.mesh.quaternion.setFromUnitVectors(up,delta.normalize());
+      delta.copy(to).sub(from);link.mesh.position.copy(from).add(to).multiplyScalar(.5);link.mesh.scale.y=delta.length();link.mesh.quaternion.setFromUnitVectors(up,delta.normalize());
     }
     springRoot.scale.y=clamp(1+((.06-wheel.assembly.position.y)-.287)*1.4,.91,1.17);
   }
@@ -456,6 +522,11 @@ function buildCockpit(cabin,mats){
   const dash=box(cabin,1.42,.10,.25,mats.upholstery,[0,.192,.48],.040,'stitched dashboard brow');dash.rotation.x=.06;
   box(cabin,1.34,.011,.030,mats.black,[0,.164,.338],.004,'full width dash ventilation slot');
   for(const side of [-1,1])box(cabin,.19,.014,.033,mats.carbon,[side*.53,.163,.332],.004,'flush dash air vent');
+  for(const side of [-1,1]){
+    const instrument=new THREE.Group();instrument.position.set(side*.51,.272,.429);instrument.rotation.x=-.15;cabin.add(instrument);
+    box(instrument,.205,.072,.013,mats.black,[0,0,0],.007,'forward auxiliary display bezel');
+    box(instrument,.190,.058,.002,mats.screen,[0,0,-.008],.003,'forward auxiliary driving display');
+  }
   box(cabin,.203,.072,.328,mats.interior,[0,.058,.08],.020,'sculpted centre console');
   const screen=new THREE.Group();screen.position.set(0,.293,.299);screen.rotation.x=-.11;cabin.add(screen);
   box(screen,.322,.207,.016,mats.black,[0,0,0],.008,'landscape cabin display housing');
@@ -526,35 +597,46 @@ function buildPressureChamber(parent,materials){
   skirt.scale.y=1;
   const deformed=skirt.children.filter(o=>o.isMesh&&o.geometry.attributes.position);
   root.userData.sealMaximumExtension=SKIRT_MAX_EXTENSION;
+  root.userData.sealGeometryUpdates=0;
+  const lastExtensions=new Float64Array(outline.length).fill(NaN),extensions=new Float64Array(outline.length);
+  const q=new THREE.Quaternion(),p=new THREE.Vector3(),down=new THREE.Vector3(),origin=new THREE.Vector3(),point=new THREE.Vector3(),normal=new THREE.Vector3();
+  for(const mesh of deformed){
+    mesh.geometry.computeBoundingBox();mesh.geometry.boundingBox.min.y=-SKIRT_MAX_EXTENSION;mesh.geometry.boundingBox.max.y=0;
+    mesh.geometry.boundingSphere=mesh.geometry.boundingBox.getBoundingSphere(new THREE.Sphere());
+  }
   return {root,roof,skirt,update(t,dt){
     const near=t.contactCount>0||(t.sealQuality||0)>.025;
     const fallback=t.suctionEnabled&&near?.255:.074;
-    const extensions=Array.isArray(t.sealLipExtensions)?[...t.sealLipExtensions]:outline.map(()=>fallback);
+    for(let i=0;i<extensions.length;i++)extensions[i]=Number.isFinite(t.sealLipExtensions?.[i])?clamp(t.sealLipExtensions[i],.04,SKIRT_MAX_EXTENSION):fallback;
     if(t.sealLipContacts&&t.position&&t.quaternion){
-      const q=new THREE.Quaternion(t.quaternion.x,t.quaternion.y,t.quaternion.z,t.quaternion.w),p=new THREE.Vector3(t.position.x,t.position.y,t.position.z),down=new THREE.Vector3(0,-1,0).applyQuaternion(q);
-      outline.forEach(([x,z],i)=>{const contact=t.sealLipContacts[i];if(!contact)return;const origin=new THREE.Vector3(x,SKIRT_BASE_Y,z).applyQuaternion(q).add(p),point=new THREE.Vector3(contact.point.x,contact.point.y,contact.point.z),normal=new THREE.Vector3(contact.normal.x,contact.normal.y,contact.normal.z),denom=down.dot(normal);if(Math.abs(denom)>.3){const renderedDistance=point.sub(origin).dot(normal)/denom;extensions[i]=clamp(extensions[i]+renderedDistance-contact.distance,.04,SKIRT_MAX_EXTENSION);}});
-    }
-    for(const mesh of deformed){const attr=mesh.geometry.attributes.position,rows=outline.length*3,width=attr.count/(rows+1),isLip=mesh.name.includes('replaceable');
-      for(let j=0;j<=rows;j++){const sample=(j/rows*outline.length)%outline.length,a=Math.floor(sample),f=sample-a,e=lerp(extensions[a],extensions[(a+1)%extensions.length],f);for(let i=0;i<width;i++)attr.setY(j*width+i,-e*(isLip?1:i/(width-1)));}
-      attr.needsUpdate=true;mesh.geometry.computeVertexNormals();mesh.geometry.computeBoundingSphere();
+      q.set(t.quaternion.x,t.quaternion.y,t.quaternion.z,t.quaternion.w);p.set(t.position.x,t.position.y,t.position.z);down.set(0,-1,0).applyQuaternion(q);
+      outline.forEach(([x,z],i)=>{const contact=t.sealLipContacts[i];if(!contact)return;origin.set(x,SKIRT_BASE_Y,z).applyQuaternion(q).add(p);point.set(contact.point.x,contact.point.y,contact.point.z);normal.set(contact.normal.x,contact.normal.y,contact.normal.z);const denom=down.dot(normal);if(Math.abs(denom)>.3){const renderedDistance=point.sub(origin).dot(normal)/denom;extensions[i]=clamp(extensions[i]+renderedDistance-contact.distance,.04,SKIRT_MAX_EXTENSION);}});
     }
     skirt.userData.extensionMetres=Math.max(...extensions);
+    if(extensions.every((e,i)=>Math.abs(e-lastExtensions[i])<1e-7))return;
+    lastExtensions.set(extensions);root.userData.sealGeometryUpdates++;
+    for(const mesh of deformed){const attr=mesh.geometry.attributes.position,rows=outline.length*3,width=attr.count/(rows+1),isLip=mesh.name.includes('replaceable');
+      for(let j=0;j<=rows;j++){const sample=(j/rows*outline.length)%outline.length,a=Math.floor(sample),f=sample-a,e=lerp(extensions[a],extensions[(a+1)%extensions.length],f);for(let i=0;i<width;i++)attr.setY(j*width+i,-e*(isLip?1:i/(width-1)));}
+      attr.needsUpdate=true;mesh.geometry.computeVertexNormals();
+    }
   }};
 }
 
 function nozzleGeometry(parent,materials,name) {
   const root=new THREE.Group();root.name=name;parent.add(root);
   const profile=[ [.071,0],[.071,.012],[.062,.021],[.043,.082],[.039,.095],[.029,.095],[.032,.080],[.054,.016],[.064,.008],[.064,0] ];
-  const bellGeometry=new THREE.LatheGeometry(profile.map(p=>new THREE.Vector2(...p)),20);bellGeometry.normalizeNormals();
-  addMesh(root,bellGeometry,materials.nozzle,'titanium nozzle bell');
-  ring(root,.068,.0044,materials.chrome,[0,.004,0],'y',20,'nozzle lip');
-  cylinder(root,.048,.048,.031,materials.carbon,[0,.090,0],'y',16,'gimbal jacket');
+  const build=quality=>{const g=new THREE.LatheGeometry(profile.map(p=>new THREE.Vector2(...p)),quality==='balanced'?16:quality==='ultra'?48:32);g.normalizeNormals();return g;};
+  detailGeometry(addMesh(root,build('high'),materials.nozzle,'titanium nozzle bell'),build);
+  ring(root,.068,.0044,materials.nozzle,[0,.004,0],'y',32,'radiused titanium nozzle lip');
+  const jacket=cylinder(root,.048,.048,.031,materials.carbon,[0,.090,0],'y',16,'gimbal jacket');jacket.userData.minimumQuality=1;
   cylinder(root,.029,.029,.005,materials.seam,[0,.067,0],'y',16,'nozzle throat');
+  mergeStaticMeshes(root);
+  root.traverse(o=>{if(o.isMesh)o.castShadow=o.name.includes('titanium nozzle');});
   // Hardware stays on the body; condensation is emitted in world coordinates.
   return {root,level:0};
 }
 
-export function createRoadster() {
+export function createRoadster({quality:initialQuality='high'}={}) {
   const group=new THREE.Group();group.name='Tesla Roadster — 2026 exterior study';
   group.userData={type:'independent parametric visual reconstruction',units:'metres',forward:'+Z',reference:'https://www.tesla.com/roadster',dimensionsAssumed:true};
   const shell=new THREE.Group();shell.name='exterior body panels';group.add(shell);
@@ -564,9 +646,9 @@ export function createRoadster() {
   const wheelsRoot=new THREE.Group();wheelsRoot.name='four suspension uprights';group.add(wheelsRoot);
   const transparentMaterials=[];
   const mats={
-    paint:new THREE.MeshPhysicalMaterial({color:0xe5e7e9,metalness:.02,roughness:.29,clearcoat:1,clearcoatRoughness:.085,envMapIntensity:1.05,side:THREE.DoubleSide}),
-    glass:new THREE.MeshPhysicalMaterial({color:0x342d2b,metalness:.04,roughness:.045,clearcoat:1,clearcoatRoughness:.025,envMapIntensity:1.1,transparent:true,opacity:.86,depthWrite:false,side:THREE.DoubleSide}),
-    carbon:material(0x4d555a,.42,.35,{map:carbonTexture(),side:THREE.DoubleSide}),
+    paint:new THREE.MeshPhysicalMaterial({color:0xe9ebeb,metalness:.02,roughness:.23,clearcoat:.90,clearcoatRoughness:.13,envMapIntensity:1.0,side:THREE.DoubleSide}),
+    glass:new THREE.MeshPhysicalMaterial({color:0x624737,metalness:0,roughness:.10,ior:1.52,clearcoat:.12,clearcoatRoughness:.06,specularColor:0xffffff,envMapIntensity:1.0,transparent:true,opacity:.86,depthWrite:false,side:THREE.DoubleSide}),
+    carbon:material(0x4d555a,.08,.35,{map:carbonTexture(),side:THREE.DoubleSide}),
     black:material(0x11161a,.36,.25,{side:THREE.DoubleSide}),
     seam:material(0x060a0c,.05,.72),
     rubber:material(0x101317,.01,.81),
@@ -582,8 +664,8 @@ export function createRoadster() {
     tailLight:material(0xc90003,.05,.22,{emissive:0xff0003,emissiveIntensity:1.25,toneMapped:false,side:THREE.DoubleSide}),
     amberLight:material(0xa4541c,.1,.25,{emissive:0xb84b05,emissiveIntensity:.4}),
     interior:material(0x262829,.04,.79),
-    interiorTrim:material(0x9e9d96,.04,.62),
-    upholstery:material(0x3c4145,.01,.88),
+    interiorTrim:material(0x686d70,.02,.84),
+    upholstery:material(0xd3d3cd,.01,.86),
     stitch:material(0x797e80,.01,.82),
     screen:material(0x080f17,.12,.16,{emissive:0x0a1b28,emissiveIntensity:.32}),
     screenInk:material(0x8ba8b8,.03,.40,{emissive:0x285268,emissiveIntensity:.3}),
@@ -595,20 +677,27 @@ export function createRoadster() {
     undertray:material(0x293239,.40,.52,{side:THREE.DoubleSide}),
     damper:material(0xb18b4f,.77,.23),
     liner:material(0x111518,.05,.92,{side:THREE.DoubleSide}),
-    lens:new THREE.MeshPhysicalMaterial({color:0xe6f1f7,metalness:.06,roughness:.12,clearcoat:1,transparent:true,opacity:.24,depthWrite:false,side:THREE.DoubleSide}),
-    frontPanel:new THREE.MeshPhysicalMaterial({color:0x242b33,metalness:.48,roughness:.22,clearcoat:.7,clearcoatRoughness:.08,envMapIntensity:1.1,side:THREE.DoubleSide}),
+    lens:new THREE.MeshPhysicalMaterial({color:0xe6f1f7,metalness:0,roughness:.12,ior:1.49,clearcoat:0,transparent:true,opacity:.24,depthWrite:false,side:THREE.DoubleSide}),
+    frontPanel:new THREE.MeshPhysicalMaterial({color:0x242b33,metalness:.03,roughness:.22,clearcoat:.82,clearcoatRoughness:.08,envMapIntensity:1.1,side:THREE.DoubleSide}),
   };
-  transparentMaterials.push(mats.paint,mats.glass);
-  // Fine carbon weave is bump-scale rather than high-contrast painted stripes.
+  mats.balancedPaint=material(mats.paint.color.clone(),mats.paint.metalness,.27,{envMapIntensity:1.05,side:THREE.DoubleSide});
+  mats.balancedGlass=material(mats.glass.color.clone(),0,.12,{envMapIntensity:1.0,transparent:true,opacity:.86,depthWrite:false,side:THREE.DoubleSide});
+  transparentMaterials.push(mats.paint,mats.glass,mats.balancedPaint,mats.balancedGlass);
+  for(const mat of Object.values(mats))mat.forceSinglePass=true;
+  // The weave map modulates the carbon base colour around a light neutral.
+  // Multiplying the previous near-black map by a dark base crushed its diffuse
+  // response a second time. Mip filtering keeps the fine
+  // weave stable in a moving camera. These finishes are visual estimates, not
+  // manufacturer optical measurements; glazing uses a dielectric reflection.
   mats.carbon.color.setHex(0x31373b);mats.carbon.roughness=.41;
 
   // Three continuous panels leave a genuine cabin aperture, rather than a
   // solid bonnet sheet hidden beneath an opaque glass bubble. Fine surface
   // sampling is concentrated around actual fender curvature and cabin edges.
   for(const side of [-1,1])for(const panel of [
-    {a:.80,b:2.30,f:0,n:80,name:'front clamshell'},
-    {a:-2.30,b:-1.57,f:0,n:48,name:'rear clamshell'},
-    {a:-1.57,b:.80,f:.918,n:72,name:'door shoulder'}
+    {a:.80,b:2.30,f:0,n:96,name:'front clamshell'},
+    {a:-2.30,b:-1.57,f:0,n:64,name:'rear clamshell'},
+    {a:-1.57,b:.80,f:.918,n:88,name:'door shoulder'}
   ]){
     const panelMesh=grid(shell,mats.paint,(u,v)=>{
     const z=lerp(panel.b,panel.a,v),x=side*lerp(panel.f,1,u)*widthAt(z);
@@ -630,7 +719,7 @@ export function createRoadster() {
       const sidePanel=grid(shell,mats.paint,(u,v)=>{
         const z=lerp(edges[segment],edges[segment+1],v),top=fenderEdgeY(z),base=centre===null?lower:archY+archRY*Math.sqrt(Math.max(0,1-((z-centre)/archRadius)**2));
         const y=lerp(top,base,u);return[side*sideSurfaceX(z,y),y,z];
-      },20,centre===null?32:72,side>0,side<0?'left sculpted door and fenders':'right sculpted door and fenders');
+      },24,centre===null?36:88,side>0,side<0?'left sculpted door and fenders':'right sculpted door and fenders');
       setGraphNormals(sidePanel,side);
     }
     for(const zc of [1.42,-1.42]) {
@@ -680,7 +769,7 @@ export function createRoadster() {
     return[side*lerp(w,lowerX,u),lerp(top,lowerY,u)+.012*Math.sin(u*PI),z];
   };
   for(const [front,back,name] of [[.8,.04,'compound curved windscreen'],[.04,-.76,'panoramic roof glazing'],[-.76,-1.57,'curved rear backlight']]){
-    grid(shell,mats.glass,(u,v)=>canopySurface(lerp(-1,1,u),lerp(front,back,v)),36,30,false,name);
+    grid(shell,mats.glass,(u,v)=>canopySurface(lerp(-1,1,u),lerp(front,back,v)),48,40,false,name);
   }
   for(const z of [.04,-.76])grid(shell,mats.seam,(u,v)=>{
     const p=canopySurface(lerp(-1,1,u),z+lerp(-.0025,.0025,v));p[1]+=.0017;return p;
@@ -816,7 +905,11 @@ export function createRoadster() {
   for(const side of [-1,1]) {
     const strut=box(group,.035,.12,.05,mats.black,[side*.527,.30,-2.009],.005,'wing actuator');
     wingStruts.push(strut);
+    cylinder(wing,.017,.017,.057,mats.nozzle,[side*.527,-.007,.057],'x',24,'upper active wing pivot');
+    cylinder(underbody,.019,.019,.057,mats.nozzle,[side*.527,.264,-2.009],'x',24,'lower active wing pivot');
+    for(const dx of [-.026,.026])box(wing,.009,.039,.059,mats.carbon,[side*.527+dx,.007,.053],.004,'paired wing support clevis');
   }
+  mergeStaticMeshes(wing);
 
   // The airtight roof and skirt form a real visual enclosure; the old large
   // flat plate occupied the tyre sweep and did not explain the sealing path.
@@ -845,7 +938,44 @@ export function createRoadster() {
   shell.traverse(o=>{if(o.isMesh&&[mats.seam,mats.black,mats.whiteLight,mats.tailLight,mats.lens].includes(o.material))o.castShadow=false;});
   const jets=[];
   const jetsRoot=new THREE.Group();jetsRoot.name='simulated force application nozzles';group.add(jetsRoot);
-  let time=0,cutaway=false,wingExtension=0;
+  const jetExhaust=new THREE.Vector3(),shadowDefaults=new WeakMap();
+  let time=0,cutaway=false,wingExtension=0,quality='high';
+
+  function applyProfileObjects(root){
+    root.traverse(o=>{
+      if(Number.isFinite(o.userData.minimumQuality))o.visible=cutaway||QUALITY[quality]>=o.userData.minimumQuality;
+      if(!o.isMesh)return;
+      if(!shadowDefaults.has(o))shadowDefaults.set(o,o.castShadow);
+      const silhouette=[mats.paint,mats.balancedPaint,mats.rubber].includes(o.material);
+      o.castShadow=shadowDefaults.get(o)&&(quality!=='balanced'||silhouette);
+      if(o.material===mats.paint||o.material===mats.balancedPaint)o.material=quality==='balanced'?mats.balancedPaint:mats.paint;
+      if(o.material===mats.glass||o.material===mats.balancedGlass)o.material=quality==='balanced'?mats.balancedGlass:mats.glass;
+    });
+  }
+
+  function setQuality(value){
+    quality=Object.hasOwn(QUALITY,value)?value:'high';
+    applyGeometryQuality(group,quality);applyProfileObjects(group);
+    const anisotropy=quality==='balanced'?2:8;
+    if(mats.carbon.map.anisotropy!==anisotropy){mats.carbon.map.anisotropy=anisotropy;mats.carbon.map.needsUpdate=true;}
+    for(const s of suspensions)s.group.visible=quality!=='balanced'||cutaway;
+    cabin.visible=quality!=='balanced'||cutaway;
+    for(const wheel of wheels)wheel.spin.traverse(o=>{
+      if(o.isLineSegments||[mats.sidewall,mats.seam,mats.chrome].includes(o.material))o.visible=quality!=='balanced'||cutaway;
+    });
+    group.userData.quality=quality;
+    return quality;
+  }
+
+  function getRenderCost(){
+    const cost={quality,drawables:0,meshes:0,vertices:0,triangles:0,shadowMeshes:0};
+    group.traverseVisible(o=>{
+      if(!o.geometry)return;cost.drawables++;cost.meshes+=!!o.isMesh;cost.vertices+=o.geometry.attributes.position?.count||0;
+      if(o.isMesh)cost.triangles+=(o.geometry.index?.count||o.geometry.attributes.position?.count||0)/3;
+      cost.shadowMeshes+=!!o.castShadow;
+    });
+    return cost;
+  }
 
   function updateJet(jet,force,maxForce,dt,phase) {
     jet.level=clamp(Math.abs(force)/(maxForce||1),0,1);jet.root.userData.actualForce=force;
@@ -865,16 +995,19 @@ export function createRoadster() {
         w.spin.rotation.x+=((telemetry.speedKmh||0)/3.6/.37)*dt;
       }
     }
-    suspensions.forEach(s=>s.update());chamber.update(telemetry,dt);
+    suspensions.forEach(s=>{if(s.group.visible)s.update();});chamber.update(telemetry,dt);
     const nozzles=telemetry.nozzles||[];
     let rearThrust=0,rearMax=1;
     for(let i=0;i<nozzles.length;i++) {
       const n=nozzles[i];
-      if(!jets[i])jets[i]=nozzleGeometry(jetsRoot,mats,n.id||'force nozzle '+i);
+      if(!jets[i]){
+        jets[i]=nozzleGeometry(jetsRoot,mats,n.id||'force nozzle '+i);
+        applyGeometryQuality(jets[i].root,quality);applyProfileObjects(jets[i].root);
+      }
       const jet=jets[i];
       if(n.position)jet.root.position.set(n.position.x,n.position.y,n.position.z);
       const d=n.direction||{x:0,y:1,z:0};
-      const exhaust=new THREE.Vector3(-d.x,-d.y,-d.z).normalize();
+      const exhaust=jetExhaust.set(-d.x,-d.y,-d.z).normalize();
       if(exhaust.lengthSq()>.5)jet.root.quaternion.setFromUnitVectors(DOWN,exhaust);
       // Moving an outlet along its force axis does not change its force moment.
       // Wheel-centre equivalent side actuators emerge through the outer hubs.
@@ -901,24 +1034,29 @@ export function createRoadster() {
     mats.tailLight.emissiveIntensity=brake>.02?2.4:1.25;
   }
 
-  function setColor(color) {mats.paint.color.set(color);}
+  function setColor(color) {mats.paint.color.set(color);mats.balancedPaint.color.copy(mats.paint.color);}
   function setCutaway(enabled) {
     cutaway=!!enabled;equipment.visible=cutaway;
     for(const mat of transparentMaterials) {
-      mat.transparent=cutaway||mat===mats.glass;mat.opacity=cutaway?(mat===mats.glass ? .08 : .17):(mat===mats.glass?.86:1);
-      mat.depthWrite=!cutaway&&mat!==mats.glass;mat.needsUpdate=true;
+      const glass=mat===mats.glass||mat===mats.balancedGlass;
+      mat.transparent=cutaway||glass;mat.opacity=cutaway?(glass?.08:.17):(glass?.86:1);
+      mat.depthWrite=!cutaway&&!glass;mat.needsUpdate=true;
     }
     chamber.roof.visible=!cutaway;
+    setQuality(quality);
   }
   function dispose() {
     const geometries=new Set(),materials=new Set(),textures=new Set();
     group.traverse(o=>{
       if(o.geometry)geometries.add(o.geometry);
+      const detail=geometryDetail.get(o);if(detail){detail.cache.forEach(g=>geometries.add(g));detail.cache.clear();geometryDetail.delete(o);}
       for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m){materials.add(m);for(const k in m)if(m[k]?.isTexture)textures.add(m[k]);}
     });
+    for(const m of Object.values(mats)){materials.add(m);for(const k in m)if(m[k]?.isTexture)textures.add(m[k]);}
     geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());
   }
   group.userData.pressureChamber={...chamber.root.userData};
-  return {group,update,setColor,setCutaway,dispose,wheels,materials:mats,wing,chamber,suspensions};
+  setQuality(initialQuality);
+  return {group,update,setColor,setCutaway,setQuality,getRenderCost,get quality(){return quality;},dispose,wheels,materials:mats,wing,chamber,suspensions};
 }
 

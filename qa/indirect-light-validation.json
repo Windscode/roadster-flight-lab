@@ -3,7 +3,7 @@
   "checks": [
     "Isotropic radiance integrates to pi times radiance on six normals without double cosine convolution",
     "Directional SH evaluation agrees with the independent Three.js irradiance implementation across 64 normals",
-    "Every stored probe has finite coefficients, consistent validity, exact dimensions and a verified content hash",
+    "Every stored probe has finite coefficients, consistent validity, exact dimensions and verified data, canonical geometry and material identities",
     "Four city locations retain nonnegative bounce energy and agree with a 1536-ray transport reference within the documented spot-check tolerance",
     "Contact AO affects only indirect diffuse; spatial probe samples use explicit LOD in divergent geometry branches",
     "Camera adaptation responds to spatial shade and sun visibility, stays bounded and has an unloaded fixed-exposure fallback"
@@ -12,6 +12,10 @@
   "totalProbes": 14202,
   "bounces": 3,
   "samplesPerProbe": 768,
+  "geometrySHA256": "03d4eb0ea6e01e82d5a36d54b9db76374dc1ae6234aa6b50e7b29bc6d4f3dd57",
+  "geometryCanonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+  "geometryHashQuantization": 1e-9,
+  "materialModelSHA256": "eace8ec3864e6adecfe3c3df384723a87696b8680e69eda4eb342538b42d205f",
   "limits": [
     "Static shared solid envelopes and average diffuse reflectances; fine facade, foliage and animated people are not path-traced.",
     "Three surface events; not an unlimited-bounce solution, hardware ray tracing or DDGI.",

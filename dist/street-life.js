@@ -7,11 +7,11 @@
  * buildStreetLife(THREE, root) -> {group, update(seconds,vehiclePosition),
  * lightAnchors, colliders, stats, dispose}. Colliders are static metre-scale
  * box proxies in the same {id,kind,size,position,rotation} format as city-data.
- * Pedestrians follow short sidewalk paths, yield to a nearby vehicle and do
- * not cross the carriageway. They are visual residents, not collision bodies.
+ * Static exterior furnishings only. No people, animals, interior display
+ * assets or animation mixers are allocated by this factory.
  */
 import {CITY_BUILDINGS} from './city-data.js';
-import {GLTFLoader} from './vendor/addons/loaders/GLTFLoader.js';
+import {createCityVisibility} from './city-render-budget.js';
 
 // Shared placement plan is deliberately independent of Three, Canvas and the
 // browser. The physics world and the asset factory consume identical records.
@@ -56,11 +56,11 @@ for(const [ci,x,z]of courts){
 }
 
 export function buildStreetLife(THREE,root){
-  const group=new THREE.Group();group.name='Street life / sparse neighbourhood accents';root.add(group);
-  const batches=new Map(),materials=[],textures=[],geometries=[],lightAnchors=[],colliders=STREET_COLLIDERS,people=[],animals=[];
+  const group=new THREE.Group();group.name='Street exteriors / composed static furnishings';root.add(group);
+  const batches=new Map(),materials=[],textures=[],geometries=[],lightAnchors=[],colliders=STREET_COLLIDERS,visibility=createCityVisibility(THREE);
   const stats={marketSections:0,stalls:0,cafes:0,repairShops:0,flowerStalls:0,produceStalls:0,
     bookStalls:0,foodStalls:0,pedestrians:0,bicycles:0,benches:0,goods:0,trees:0,
-    instances:0,drawBatches:0,triangles:0,collisionProxies:0,originalAtlases:0,sectorSizeM:300,animals:0,animalTriangles:0,animatedAnimals:0,animalAssetErrors:[]};
+    instances:0,drawBatches:0,triangles:0,collisionProxies:0,originalAtlases:0,sectorSizeM:80,animals:0,animalTriangles:0,animatedAnimals:0,animalAssetErrors:[],activeAnimations:0,animationHz:0,crowdsEnabled:false,externalCharacterLoads:0,renderBudget:visibility.stats};
   const rand=(seed=>()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;})(930217);
   const unit={box:new THREE.BoxGeometry(),cylinder:new THREE.CylinderGeometry(.5,.5,1,10),
     cone:new THREE.ConeGeometry(.5,1,10),sphere:new THREE.SphereGeometry(.5,10,7),
@@ -86,16 +86,6 @@ export function buildStreetLife(THREE,root){
   }
   unit.counter=roundedBox(3.65,.76,.72,.027);unit.counterTop=roundedBox(3.73,.055,.79,.016);
   unit.seat=roundedBox(.43,.055,.43,.016);unit.chairBack=roundedBox(.42,.15,.035,.014);
-  // Elliptical ring sections provide shoulders, a flatter back, waist and jaw.
-  // The former circular torso and cuboid jaw read as toy parts at street level.
-  unit.jacket=ringMesh([[0,.145,.092],[.08,.148,.098],[.19,.147,.089],[.36,.18,.104],[.465,.205,.090],[.495,.146,.076],[.515,.075,.065]]);
-  unit.head=ringMesh([[-.116,.022,.035,.019],[-.096,.054,.052,.016],[-.05,.075,.069,.008],[.025,.081,.077],[.085,.069,.067,-.002],[.119,.030,.039,-.005],[.125,.001,.001,-.005]]);
-  unit.hair=ringMesh([[.030,.080,.075,-.009],[.065,.081,.077,-.009],[.105,.067,.065,-.009],[.133,.027,.035,-.009],[.137,.001,.001,-.009]]);
-  unit.shoe=ringMesh([[-.037,.051,.104,.008],[-.028,.065,.124,.004],[.005,.062,.121],[.032,.050,.088,-.023],[.041,.029,.046,-.041]],10);
-  // A bone's +Y endpoint is its distal joint, so the narrow cylinder radius
-  // belongs at +Y (ankle / wrist), not at the shoulder as on the old figures.
-  unit.leg=new THREE.CylinderGeometry(.052,.071,1,9);
-  unit.sleeve=ringMesh([[-.5,.001,.001],[-.47,.067,.065],[-.30,.074,.071],[.25,.062,.061],[.48,.055,.053],[.5,.001,.001]],10);
   unit.loaf=ringMesh([[0,.115,.065],[.025,.132,.074],[.075,.106,.062],[.11,.035,.025],[.114,.001,.001]],12);
   unit.bowl=new THREE.LatheGeometry([[.026,-.046],[.064,-.040],[.108,.017],[.121,.045],[.111,.045],[.098,.017],[.057,-.030],[.026,-.034]].map(p=>new THREE.Vector2(...p)),14);
   unit.cup=new THREE.LatheGeometry([[.032,-.058],[.047,-.057],[.052,.058],[.045,.058],[.040,-.047],[.032,-.049]].map(p=>new THREE.Vector2(...p)),14);
@@ -115,12 +105,12 @@ export function buildStreetLife(THREE,root){
   const colours=new Map(),object=new THREE.Object3D(),rotationQ=new THREE.Quaternion();
   const colour=value=>{if(!colours.has(value))colours.set(value,new THREE.Color(value));return colours.get(value);};
   const mat=(name,options={})=>{const m=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.78,...options});m.name='Street / '+name;materials.push(m);return m;};
-  const m={metal:mat('brushed stainless',{metalness:.78,roughness:.33}),steel:mat('powder-coated metal',{metalness:.42,roughness:.57}),wood:mat('worn timber',{roughness:.86}),
-    ceramic:mat('glazed ceramics',{roughness:.33}),rubber:mat('tyres and soles',{roughness:.94}),paper:mat('paper and cartons',{roughness:.95}),
+  const m={metal:mat('brushed stainless',{metalness:.90,roughness:.31}),steel:mat('powder-coated metal',{metalness:0,roughness:.46}),wood:mat('worn timber',{roughness:.86}),
+    ceramic:mat('glazed ceramics',{roughness:.33}),rubber:mat('tyres and trim',{roughness:.94}),paper:mat('paper and cartons',{roughness:.95}),
     food:mat('fruit vegetables and meals',{roughness:.56}),leaf:mat('living foliage',{roughness:.91,side:THREE.DoubleSide}),
-    cloth:mat('woven clothing',{roughness:.91}),awning:mat('tensioned woven canvas',{roughness:.94,side:THREE.DoubleSide,vertexColors:true}),skin:mat('skin',{roughness:.69}),hair:mat('hair',{roughness:.89}),
+    cloth:mat('woven canvas bindings',{roughness:.91}),awning:mat('tensioned woven canvas',{roughness:.94,side:THREE.DoubleSide,vertexColors:true}),
     sign:mat('painted market sign'),lamp:mat('small practical lamps',{color:0xe9dbb4,emissive:0xffdaa1,emissiveIntensity:1.8,roughness:.4}),
-    glass:mat('vending display glazing',{color:0x88a6a1,roughness:.18,metalness:.45}),stone:mat('planter stone',{roughness:.94})};
+    glass:mat('sealed exterior display glazing',{color:0x88a6a1,roughness:.15,metalness:0}),stone:mat('planter stone',{roughness:.94})};
   function paintTexture(w,h,paint){
     if(typeof document==='undefined')return null;const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');if(!g)return null;paint(g,w,h);
     const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;textures.push(t);stats.originalAtlases++;return t;
@@ -168,7 +158,8 @@ export function buildStreetLife(THREE,root){
   let sector='';
   function add(material,geometry,size,pos,rot=[0,0,0],tint=0xffffff,tile=-1){
     if(size.some(v=>!Number.isFinite(v)||v<=0))return null;
-    const key=sector+'|'+Object.keys(m).find(k=>m[k]===material)+'|'+geometry;
+    const cell=Math.floor(pos[0]/80)+','+Math.floor(pos[2]/80);
+    const key=cell+'|'+Object.keys(m).find(k=>m[k]===material)+'|'+geometry;
     let b=batches.get(key);if(!b){b={material,geometry,items:[]};batches.set(key,b);}
     object.position.set(...pos);object.rotation.set(...rot,'YXZ');object.scale.set(...size);object.updateMatrix();
     const item={matrix:object.matrix.clone(),colour:colour(tint),tile,index:b.items.length,batch:b};b.items.push(item);stats.instances++;return item;
@@ -196,8 +187,8 @@ export function buildStreetLife(THREE,root){
       for(const zz of [-1,1])f.cube(m.wood,[.033,.29,.033],u+side*(w/2-.04),y-.015,v+zz*(d/2-.04),0x796248);
     }
     if(goods===0)return;
-    for(let a=0;a<3;a++)for(let b=0;b<3;b++){
-      const xx=u+(a-1)*w*.23,zz=v+(b-1)*d*.23,yy=y+.04+rand()*.045;
+    for(let a=0;a<2;a++)for(let b=0;b<2;b++){
+      const xx=u+(a-.5)*w*.46,zz=v+(b-.5)*d*.46,yy=y+.04+rand()*.045;
       if(goods%4===1){f.put(m.food,'sphere',[.115,.102,.113],xx,yy,zz,a%2?0xb4402c:0x896f29);f.put(m.leaf,'leaf',[.023,.055,1],xx,yy+.051,zz,0x465839,[-Math.PI/2,rand()*3,.2]);}
       else if(goods%4===2){f.put(m.food,'sphere',[.16,.14,.145],xx,yy,zz,0x73845c);for(let q=0;q<2;q++)f.put(m.leaf,'sphere',[.13,.055,.15],xx,yy+.04,zz,0x556e49,[.4,rand()*5,0]);}
       else if(goods%4===3){f.put(m.food,'cone',[.052,.24,.05],xx,yy,zz,0xbf753a,[.5,rand(),.7]);f.put(m.leaf,'leaf',[.045,.14,1],xx+.06,yy+.11,zz,0x496644,[0,0,-.5]);}
@@ -298,15 +289,12 @@ export function buildStreetLife(THREE,root){
     f.cube(m.steel,[.75,.52,.42],u-1.03,1.21,.50,0x5e7466);f.cube(m.metal,[.78,.055,.45],u-1.03,1.50,.50,0xa0a798);
     f.cube(m.steel,[.67,.13,.42],u-1.03,1.36,.74,0x384940);f.cube(m.metal,[.66,.04,.20],u-1.03,1.08,.82,0x8b9685);
     for(const dx of [-.16,.16])f.put(m.metal,'cylinder',[.06,.06,.06],u-1.03+dx,1.30,.80,0xa0a895);
-    for(let k=0;k<7;k++){f.put(m.ceramic,'cup',[1,1,1],u-.42+k*.26,1.01,.74,0xd1ceba);f.put(m.ceramic,'torus',[.06,.06,.27],u-.36+k*.26,1.02,.74,0xd1ceba,[0,Math.PI/2,0]);}
+    for(let k=0;k<3;k++){f.put(m.ceramic,'cup',[1,1,1],u-.18+k*.52,1.01,.74,0xd1ceba);f.put(m.ceramic,'torus',[.06,.06,.27],u-.12+k*.52,1.02,.74,0xd1ceba,[0,Math.PI/2,0]);}
     f.cube(m.wood,[1.57,.04,.39],u+.71,1.02,.31,0x786147);
-    for(let k=0;k<8;k++){
-      const xx=u+.12+(k%4)*.32,zz=.23+Math.floor(k/4)*.17;
+    for(let k=0;k<3;k++){
+      const xx=u+.18+k*.48,zz=.34;
       f.put(m.food,'loaf',[.86,1,.97],xx,1.04,zz,0xb28b51,[0,k*.2,0]);
-      // Three shallow flour scores sit on the rounded crust rather than
-      // adding another stack of rectangular bakery products.
-      for(let q=0;q<3;q++)f.cube(m.paper,[.007,.002,.063],xx+(q-1)*.034,1.139-Math.abs(q-1)*.012,zz,0xc9b784,[0,k*.2+.3,0]);
-    }stats.goods+=15;
+    }stats.goods+=6;
   }
   const shopTypes=[produce,kitchen,books,coffee,repair,flower,kitchen,coffee];
   function bicycle(f,u,v,tint=0x62766b){
@@ -349,82 +337,6 @@ export function buildStreetLife(THREE,root){
       }
     }
   }
-  function residentPose(person,time,active){
-    const q={},phase=time*3.7+person.phase,swing=active?Math.sin(phase):0;
-    for(const side of [-1,1]){
-      q['hip'+side]=[side*.087,.925,0];q['knee'+side]=[side*.09,.51,.019+swing*side*.12];
-      q['ankle'+side]=[side*.09,.089+Math.max(0,swing*side)*.06,.025+swing*side*.22];
-      q['shoulder'+side]=[side*.19,1.357,0];q['elbow'+side]=[side*.234,1.065,.035-swing*side*.09];
-      q['wrist'+side]=[side*.23,.785,.065-swing*side*.20];
-    }
-    if(!person.walking){
-      const pose=person.index%5;
-      if(pose===0)for(const side of [-1,1]){q['elbow'+side]=[side*.225,1.08,.15];q['wrist'+side]=[side*.20,1.06,.365];}
-      if(pose===1){q.elbow1=[.23,1.06,.16];q.wrist1=[.13,1.18,.28];}
-      if(pose===2){q['elbow-1']=[-.31,1.09,.025];q['wrist-1']=[-.154,.99,.02];}
-      if(pose===3){q['elbow-1']=[-.23,1.045,.15];q['wrist-1']=[-.11,1.13,.29];q.elbow1=[.225,1.025,.17];q.wrist1=[.025,1.13,.28];}
-      if(pose===4){q.elbow1=[.265,1.08,.14];q.wrist1=[.25,1.20,.21];}
-    }
-    const breath=Math.sin(time*.94+person.phase)*.0025;
-    q.head=[0,1.606+breath,.004];q.root=[0,.923+breath,0];
-    q.leanX=Math.sin(time*.31+person.phase)*.009;q.leanZ=person.walking?.014:(person.index%5===0?.045:.007);
-    q.headYaw=Math.sin(time*.22+person.phase)*.10+(person.index%3-1)*.08;
-    return q;
-  }
-  const personA=new THREE.Vector3(),personB=new THREE.Vector3(),personQ=new THREE.Quaternion(),personYawQ=new THREE.Quaternion(),upAxis=new THREE.Vector3(0,1,0);
-  function placeResidentPart(p,part,pose,walk=0){
-    const transform=(point,target)=>{
-      let [x,y,z]=point;x+=pose.leanX*(y-.923);z+=pose.leanZ*(y-.923);x*=p.build;z*=p.build;y*=p.height;
-      const a=p.relativeYaw,world=p.f.point(p.u+walk+Math.cos(a)*x+Math.sin(a)*z,y,p.v-Math.sin(a)*x+Math.cos(a)*z);return target.set(...world);
-    };
-    if(part.bone){
-      transform(pose[part.bone[0]],personA);transform(pose[part.bone[1]],personB);personB.sub(personA);
-      object.position.copy(personA).addScaledVector(personB,.5);object.quaternion.setFromUnitVectors(upAxis,personB.clone().normalize());object.scale.set(part.size[0]*p.build,personB.length()+.035*p.height,part.size[2]*p.build);
-    }else{
-      let [x,y,z]=part.pos;const rot=part.rot.slice();
-      if(part.anchor){const anchor=pose[part.anchor];x+=anchor[0];y+=anchor[1];z+=anchor[2];}
-      if(part.head){const dx=x,dz=z-.004;x=Math.cos(pose.headYaw)*dx+Math.sin(pose.headYaw)*dz;z=.004-Math.sin(pose.headYaw)*dx+Math.cos(pose.headYaw)*dz;y+=pose.head[1]-1.606;rot[1]+=pose.headYaw;}
-      transform([x,y,z],personA);object.position.copy(personA);personQ.setFromEuler(new THREE.Euler(rot[0]+pose.leanZ,rot[1],rot[2]-pose.leanX,'YXZ'));personYawQ.setFromAxisAngle(upAxis,p.yaw);object.quaternion.copy(personYawQ).multiply(personQ);object.scale.set(part.size[0]*p.build,part.size[1]*p.height,part.size[2]*p.build);
-    }
-    object.updateMatrix();return object.matrix;
-  }
-  function resident(f,u,v,index,walking=false){
-    const skin=[0xa67b60,0xc6a086,0x8b644b,0xb58a6a][index%4],jacket=[0x667168,0x594f48,0x687477,0x8a785b,0x73666c][index%5],trousers=[0x414a47,0x4c5049,0x51534c][index%3],parts=[];
-    const relativeYaw=walking?Math.PI/2:(index%3-1)*.24,yaw=f.yaw+relativeYaw;
-    const p={f,u,v,yaw,relativeYaw,parts,walking,index,world:f.point(u,0,v),phase:index*2.397,speed:.32+(index%4)*.08,height:.96+(index%5)*.018,build:.93+(index%4)*.045},pose=residentPose(p,0,false);
-    // Preserve the articulated matrix: add() uses the common placement object.
-    function part(geo,size,pos,material,tint,options={}){
-      const entry={size,pos,rot:[0,0,0],...options},matrix=placeResidentPart(p,entry,pose).clone(),item=add(material,geo,[1,1,1],[0,0,0],undefined,tint);
-      if(item){item.matrix.copy(matrix);entry.item=item;parts.push(entry);}return entry;
-    }
-    part('jacket',[1,1,1],[0,.923,0],m.cloth,jacket);
-    part('box',[.008,.34,.007],[0,1.19,.102],m.cloth,0x464c43);
-    for(const side of [-1,1])part('box',[.074,.008,.009],[side*.105,1.14,.102],m.cloth,0x4c544b,{rot:[0,0,side*.05]});
-    part('cylinder',[.088,.12,.086],[0,1.457,0],m.skin,skin);
-    part('head',[1,1,1],[0,1.606,.004],m.skin,skin,{head:true});
-    part('hair',[1,1,1],[0,1.606,.004],m.hair,[0x34352d,0x565143,0x3f3830][index%3],{head:true});
-    if(index%4===1)part('sphere',[.069,.079,.075],[0,1.661,-.090],m.hair,0x4b4134,{head:true});
-    part('sphere',[.027,.047,.042],[0,1.589,.084],m.skin,skin,{head:true});
-    part('box',[.035,.004,.004],[0,1.549,.070],m.skin,0x875b4b,{head:true});
-    for(const side of [-1,1]){
-      part('sphere',[.025,.048,.027],[side*.081,1.60,-.001],m.skin,skin,{head:true});
-      part('sphere',[.017,.007,.007],[side*.030,1.621,.073],m.paper,0xc5b5a3,{head:true});
-      part('sphere',[.008,.008,.005],[side*.030,1.621,.076],m.hair,0x30312c,{head:true});
-      part('box',[.030,.005,.005],[side*.030,1.637,.075],m.hair,0x4b4134,{head:true,rot:[0,0,side*.10]});
-      part('leg',[1,1,1],[0,0,0],m.cloth,trousers,{bone:['hip'+side,'knee'+side]});
-      part('leg',[.75,1,.75],[0,0,0],m.cloth,trousers,{bone:['knee'+side,'ankle'+side]});
-      part('shoe',[1,1,1],[0,-.040,.055],m.rubber,0x4c5046,{anchor:'ankle'+side});
-      part('shoe',[1.04,.24,1.04],[0,-.080,.055],m.rubber,0x262e28,{anchor:'ankle'+side});
-      part('sleeve',[1,1,1],[0,0,0],m.cloth,jacket,{bone:['shoulder'+side,'elbow'+side]});
-      part('sleeve',[.76,1,.76],[0,0,0],m.cloth,jacket,{bone:['elbow'+side,'wrist'+side]});
-      part('sphere',[.061,.096,.038],[0,-.036,.007],m.skin,skin,{anchor:'wrist'+side});
-      part('sphere',[.023,.043,.025],[-side*.029,-.020,.020],m.skin,skin,{anchor:'wrist'+side,rot:[0,0,side*.35]});
-    }
-    if(!walking&&index%5===1)part('cup',[.83,.83,.83],[0,.009,.031],m.ceramic,0xc7c7af,{anchor:'wrist1'});
-    if(!walking&&index%5===3)part('box',[.064,.106,.009],[0,.017,.028],m.steel,0x303c36,{anchor:'wrist-1',rot:[-.40,0,0]});
-    stats.pedestrians++;people.push(p);
-  }
-
   // Shops are part of the architecture. Only four small lower-city pockets
   // receive outdoor kiosks; the continuous street wall remains the main scene.
   for(const s of sections.filter(s=>s.district==='lower')){
@@ -439,19 +351,17 @@ export function buildStreetLife(THREE,root){
     for(let k=0;k<count;k++){
       const u=(k-(count-1)/2)*spacing,type=(bi*3+k)%shopTypes.length;
       shopTypes[type](shopF,u,b.id+'-'+k,fabric[(bi+k)%fabric.length]);
-      if(k===0)resident(f,u+2.18,1.20,bi*6+k,false);
       if((bi+k)%5===0)bicycle(f,u+2.30,.40,0x6b7563);
     }
     // Small walkable cross-alley at the end of the frontage: crates and a
     // public seat are on the sidewalk side, never inside a solid building.
     if(span>35&&count>0){const u=span/2-1.6;crate(f,u,.40,.55,.66,.52,0);crate(f,u,.73,.55,.62,.49,0);for(const edge of [-1,1]){const uu=edge*(span/2-2.5);table(f,uu,3.25);chair(f,uu-.91,3.25,Math.PI/2);chair(f,uu+.91,3.25,-Math.PI/2);}}
-    if(count>0&&bi%2===0)resident(f,-span/2+.7,4.00,bi+81,true);
   }
   for(const s of sections.filter(s=>s.district==='industrial')){
     const {b,bi,count,spacing}=s,f=surface(s.x,s.z,s.y,s.yaw);if(count)stats.marketSections++;
     for(let k=0;k<count;k++){
       const u=(k-(count-1)/2)*spacing;[repair,books,coffee,repair][(bi+k)%4](f,u,b.id+'-'+k,fabric[(bi+k+2)%6]);
-      if(k===0){bicycle(f,u+2.8,.68,0x67766a);resident(f,u+2.4,1.3,180+bi*5+k,false);}
+      if(k===0)bicycle(f,u+2.8,.68,0x67766a);
       crate(f,u+2.5,.40,.30,.65,.58,0);
     }
   }
@@ -461,7 +371,6 @@ export function buildStreetLife(THREE,root){
       const {b,bi,dir,count,spacing}=s,f=surface(s.x,s.z,s.y,s.yaw);if(count)stats.marketSections++;
       for(let k=0;k<count;k++){
         const u=(k-(count-1)/2)*spacing;[flower,coffee,books,produce,coffee][(bi+k)%5](f,u,b.id+'-'+dir+'-'+k,fabric[(bi+k)%6]);
-        if(k===0)resident(f,u+2.5,.65,260+bi*7+k,false);
       }
   }
   // Attractive destinations in the open terrace pockets: garden dining and a
@@ -473,21 +382,20 @@ export function buildStreetLife(THREE,root){
     for(let row=0;row<43;row++)for(let col=0;col<19;col++){
       const u=-11.25+col*1.20+(row%2)*.60,v=-12.6+row*.60;
       if(Math.abs(u)>11.4)continue;
-      f.cube(m.stone,[1.18,.035,.58],u,-.025,v,[0xa5a18a,0x9d9c87,0xb0a991,0x9b9f8d][(col+row*3)%4]);
+      f.put(m.stone,'plane',[1.18,.58,1],u,-.0075,v,[0xa5a18a,0x9d9c87,0xb0a991,0x9b9f8d][(col+row*3)%4],[-Math.PI/2,0,0]);
     }
     for(const side of [-1,1])f.cube(m.stone,[.12,.055,27],side*11.8,-.005,0,0x717c69);
     for(const side of [-1,1])for(const vv of [-9,9]){tree(f,side*7.6,vv,1.22);bench(f,side*3.4,vv);}
     for(let i=0;i<6;i++){const u=(i%3-1)*4.4,v=(Math.floor(i/3)-.5)*7;table(f,u,v);chair(f,u-.91,v,Math.PI/2);chair(f,u+.91,v,-Math.PI/2);}
     const back=surface(x,z-13.5,8.12,0);[coffee,flower,books][courtIndex](back,-4,'courtyard-'+courtIndex+'-a',fabric[1]);coffee(back,3,'courtyard-'+courtIndex+'-b',fabric[4]);
-    for(let k=0;k<2;k++)resident(f,(k*2-1)*4.4+1.2,-5,340+courtIndex*11+k,k===1);
     sign(f,0,3.1,-12.9,7.6,.86,courtIndex?13:3);
     for(const xx of [-8,8]){f.put(m.steel,'cylinder',[.075,3.1,.075],xx,1.58,-11.4,0x53634d);f.wire([xx,3.12,-11.4],[xx,3.12,11.4],.012,0x52624c);}
     for(let k=0;k<10;k++)for(const side of [-1,1]){f.put(m.lamp,'sphere',[.09,.09,.09],side*8,3.03,-10+k*2.2,0xe3d8b2);}
     lightAnchors.push({position:f.point(0,3.1,0),color:0xf5d9ab,intensity:65,range:16});
   }
 
-  // Each geometry/material is instanced per 300 m sector so a dense street is
-  // still frustum culled as a street, not one giant always-visible city batch.
+  // 80 m cells let the adjacent block retire without retaining every item on
+  // a 300 m street. Individual shop objects still share geometry/materials.
   for(const b of batches.values()){
     const geometry=unit[b.geometry].clone();geometries.push(geometry);
     if(b.material===m.sign){const uv=new Float32Array(b.items.length*4);b.items.forEach((it,i)=>{const tile=Math.max(0,it.tile)%16,pad=3/2048;uv.set([tile%4*.25+pad,1-(Math.floor(tile/4)+1)*.25+pad,.25-pad*2,.25-pad*2],i*4);});geometry.setAttribute('streetUv',new THREE.InstancedBufferAttribute(uv,4));}
@@ -496,46 +404,19 @@ export function buildStreetLife(THREE,root){
     // Small products and printed signs sit under larger awnings/counters.
     // Their supporting geometry provides the street shadow without submitting
     // every cup, page and face to all three city shadow cascades.
-    mesh.castShadow=![m.sign,m.food,m.paper,m.skin,m.hair,m.glass,m.lamp,m.ceramic].includes(b.material);mesh.receiveShadow=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();group.add(mesh);b.mesh=mesh;
+    mesh.castShadow=![m.sign,m.food,m.paper,m.glass,m.lamp,m.ceramic].includes(b.material);mesh.receiveShadow=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();group.add(mesh);b.mesh=mesh;visibility.add(mesh,{level:[m.food,m.paper].includes(b.material)?'detail':'street',padding:0});
     stats.drawBatches++;stats.triangles+=(geometry.index?.count||geometry.attributes.position.count)/3*b.items.length;
   }
-  // A pair of original Quaternius CC0 animals replaces crowd-as-decoration.
-  // They stand in sidewalk/courtyard pockets, never on a vehicle lane. Skinning
-  // and idle clips retain the authored joints; no existing game IP is imported.
-  const animalPlan=[
-    {name:'Quaternius fox / lower-city pocket',file:'quaternius-fox.glb',position:[-207.0,.12,-361.6],yaw:-.70,scale:.22,clip:'Idle'},
-    {name:'Quaternius shiba / upper garden',file:'quaternius-shiba-inu.glb',position:[320.4,8.05,279.4],yaw:1.10,scale:.20,clip:'Idle_2'},
-  ];
-  const ready=typeof document==='undefined'?Promise.resolve([]):Promise.allSettled(animalPlan.map(async plan=>{
-    try{
-      const gltf=await new GLTFLoader().loadAsync(new URL('./assets/characters/'+plan.file,import.meta.url).href),asset=gltf.scene;
-      asset.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(asset),center=bounds.getCenter(new THREE.Vector3());
-      asset.position.set(-center.x,-bounds.min.y,-center.z);
-      const wrapper=new THREE.Group();wrapper.name=plan.name;wrapper.add(asset);wrapper.scale.setScalar(plan.scale);wrapper.position.set(...plan.position);wrapper.rotation.y=plan.yaw;group.add(wrapper);
-      let triangles=0;asset.traverse(o=>{if(!o.isMesh)return;o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;for(const material of Array.isArray(o.material)?o.material:[o.material]){material.roughness=.82;material.metalness=0;}});
-      const mixer=new THREE.AnimationMixer(asset),clip=gltf.animations.find(a=>a.name===plan.clip)||gltf.animations.find(a=>a.name==='Idle');
-      if(clip){mixer.clipAction(clip).play();stats.animatedAnimals++;}mixer.update(0);
-      animals.push({wrapper,mixer});stats.animals++;stats.animalTriangles+=triangles;
-      return{file:plan.file,triangles,clip:clip?.name};
-    }catch(error){stats.animalAssetErrors.push(plan.file+': '+error.message);throw error;}
-  }));
+  // Deliberately no character asset request or animation mixer. All remaining
+  // objects are static street construction or furniture with existing proxies.
+  const ready=Promise.resolve([]);
   stats.collisionProxies=colliders.length;
   let last=-1;
   return{group,lightAnchors,colliders,stats,ready,
+    setQuality(q,profile){visibility.setQuality(q,profile);},
     update(time,vehiclePosition){
-      if(!Number.isFinite(time)||time===last)return;const elapsed=last<0?0:Math.min(.1,Math.max(0,time-last));last=time;const touched=new Set();
-      for(const animal of animals){const p=animal.wrapper.position,distance=vehiclePosition?Math.hypot(p.x-vehiclePosition.x,p.z-vehiclePosition.z):0;animal.wrapper.visible=distance<160;if(distance<90)animal.mixer.update(elapsed);}
-      for(const p of people){
-        const world=p.world,distance=vehiclePosition?Math.hypot(world[0]-vehiclePosition.x,world[2]-vehiclePosition.z):0;if(distance>95)continue;
-        let active=p.walking&&distance>2.8,walk=p.walk??0;
-        if(active){const target=.7*(1+Math.sin(time*p.speed+p.phase)),step=elapsed*p.speed*.7;walk+=Math.max(-step,Math.min(step,target-walk));const next=p.f.point(p.u+walk,0,p.v);for(const neighbour of people){if(neighbour===p||neighbour.walking)continue;const other=neighbour.world;if(Math.abs(next[1]-other[1])<.4&&Math.hypot(next[0]-other[0],next[2]-other[2])<.58){walk=p.walk??0;active=false;break;}}}
-        p.walk=walk;const pose=residentPose(p,time,active);
-        for(const part of p.parts){
-          part.item.batch.mesh.setMatrixAt(part.item.index,placeResidentPart(p,part,pose,walk));touched.add(part.item.batch.mesh);
-        }
-      }
-      touched.forEach(mesh=>mesh.instanceMatrix.needsUpdate=true);
+      if(!Number.isFinite(time)||time===last)return;last=time;visibility.update(time,vehiclePosition);
     },
-    dispose(){group.removeFromParent();for(const animal of animals){animal.mixer.stopAllAction();animal.wrapper.traverse(o=>{if(!o.isMesh)return;o.geometry?.dispose();for(const material of Array.isArray(o.material)?o.material:[o.material])material?.dispose();});}materials.forEach(o=>o.dispose());textures.forEach(o=>o.dispose());geometries.forEach(o=>o.dispose());}
+    dispose(){group.removeFromParent();materials.forEach(o=>o.dispose());textures.forEach(o=>o.dispose());geometries.forEach(o=>o.dispose());}
   };
 }

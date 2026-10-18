@@ -1,0 +1,265 @@
+{
+  "status": "passed",
+  "method": "Real Three geometry/frustum and material lifecycle; no GPU context or browser timing",
+  "checks": [
+    {
+      "name": "Repeated quality round trip replaces 1 / 2 / 3 cascade systems and invalidates disposed CSM uniform caches",
+      "status": "passed",
+      "disposedMaterialProgramStates": 232
+    },
+    {
+      "name": "Balanced allocates no cube camera and moves baked irradiance reads out of the fragment stage",
+      "status": "passed"
+    },
+    {
+      "name": "Five authored city views halve baseline triangles with fewer than 400 beauty submissions",
+      "status": "passed",
+      "views": [
+        {
+          "view": "weave-street",
+          "drawCalls": 300,
+          "triangles": 483068,
+          "instances": 36133,
+          "shadowDrawCalls": 53,
+          "shadowTriangles": 141492
+        },
+        {
+          "view": "foundry-avenue",
+          "drawCalls": 94,
+          "triangles": 100634,
+          "instances": 5830,
+          "shadowDrawCalls": 32,
+          "shadowTriangles": 8064
+        },
+        {
+          "view": "civic-terrace",
+          "drawCalls": 114,
+          "triangles": 204060,
+          "instances": 15552,
+          "shadowDrawCalls": 51,
+          "shadowTriangles": 61320
+        },
+        {
+          "view": "aerial",
+          "drawCalls": 125,
+          "triangles": 307122,
+          "instances": 25461,
+          "shadowDrawCalls": 43,
+          "shadowTriangles": 60144
+        },
+        {
+          "view": "botanical",
+          "drawCalls": 126,
+          "triangles": 259606,
+          "instances": 24918,
+          "shadowDrawCalls": 82,
+          "shadowTriangles": 103560
+        }
+      ]
+    },
+    {
+      "name": "Balanced shadow cadence caps at 30 Hz and refreshes immediately after a teleport",
+      "status": "passed"
+    },
+    {
+      "name": "Tessellated ground remains visible at 500 m and exactly matches the existing physical floor top",
+      "status": "passed"
+    },
+    {
+      "name": "Rendering LOD, texture interpolation and palettes leave the entire physical collision world unchanged",
+      "status": "passed",
+      "geometrySHA256": "03d4eb0ea6e01e82d5a36d54b9db76374dc1ae6234aa6b50e7b29bc6d4f3dd57",
+      "canonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146"
+    }
+  ],
+  "profiles": {
+    "balanced": {
+      "massDistance": 1800,
+      "facadeDistance": 210,
+      "detailDistance": 70,
+      "streetDistance": 95,
+      "vegetationDistance": 115,
+      "actorDistance": 45,
+      "actorHz": 15,
+      "shadowCascades": 1,
+      "shadowSize": 1024,
+      "shadowHz": 30,
+      "shadowFar": 105,
+      "probeSize": 0,
+      "probeInterval": 0,
+      "probeDistance": 0,
+      "probeFar": 0,
+      "giMode": "vertex"
+    },
+    "high": {
+      "massDistance": 1800,
+      "facadeDistance": 380,
+      "detailDistance": 135,
+      "streetDistance": 165,
+      "vegetationDistance": 210,
+      "actorDistance": 80,
+      "actorHz": 24,
+      "shadowCascades": 2,
+      "shadowSize": 1536,
+      "shadowHz": 45,
+      "shadowFar": 195,
+      "probeSize": 128,
+      "probeInterval": 5,
+      "probeDistance": 28,
+      "probeFar": 125,
+      "giMode": "fragment"
+    },
+    "ultra": {
+      "massDistance": 1800,
+      "facadeDistance": 560,
+      "detailDistance": 205,
+      "streetDistance": 225,
+      "vegetationDistance": 285,
+      "actorDistance": 110,
+      "actorHz": 30,
+      "shadowCascades": 3,
+      "shadowSize": 2048,
+      "shadowHz": 60,
+      "shadowFar": 265,
+      "probeSize": 256,
+      "probeInterval": 4,
+      "probeDistance": 22,
+      "probeFar": 180,
+      "giMode": "fragment"
+    }
+  },
+  "views": {
+    "balanced": [
+      {
+        "view": "weave-street",
+        "drawCalls": 300,
+        "triangles": 483068,
+        "instances": 36133,
+        "shadowDrawCalls": 53,
+        "shadowTriangles": 141492
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 94,
+        "triangles": 100634,
+        "instances": 5830,
+        "shadowDrawCalls": 32,
+        "shadowTriangles": 8064
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 114,
+        "triangles": 204060,
+        "instances": 15552,
+        "shadowDrawCalls": 51,
+        "shadowTriangles": 61320
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 125,
+        "triangles": 307122,
+        "instances": 25461,
+        "shadowDrawCalls": 43,
+        "shadowTriangles": 60144
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 126,
+        "triangles": 259606,
+        "instances": 24918,
+        "shadowDrawCalls": 82,
+        "shadowTriangles": 103560
+      }
+    ],
+    "high": [
+      {
+        "view": "weave-street",
+        "drawCalls": 472,
+        "triangles": 804698,
+        "instances": 54109,
+        "shadowDrawCalls": 100,
+        "shadowTriangles": 232616
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 118,
+        "triangles": 134376,
+        "instances": 8672,
+        "shadowDrawCalls": 48,
+        "shadowTriangles": 51612
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 202,
+        "triangles": 442098,
+        "instances": 46264,
+        "shadowDrawCalls": 66,
+        "shadowTriangles": 119952
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 246,
+        "triangles": 519376,
+        "instances": 38545,
+        "shadowDrawCalls": 87,
+        "shadowTriangles": 189456
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 162,
+        "triangles": 427826,
+        "instances": 50287,
+        "shadowDrawCalls": 86,
+        "shadowTriangles": 125580
+      }
+    ],
+    "ultra": [
+      {
+        "view": "weave-street",
+        "drawCalls": 552,
+        "triangles": 970172,
+        "instances": 66903,
+        "shadowDrawCalls": 133,
+        "shadowTriangles": 282620
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 133,
+        "triangles": 140004,
+        "instances": 9141,
+        "shadowDrawCalls": 51,
+        "shadowTriangles": 53616
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 237,
+        "triangles": 509526,
+        "instances": 54096,
+        "shadowDrawCalls": 72,
+        "shadowTriangles": 155340
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 352,
+        "triangles": 693782,
+        "instances": 51496,
+        "shadowDrawCalls": 122,
+        "shadowTriangles": 270600
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 188,
+        "triangles": 546710,
+        "instances": 64231,
+        "shadowDrawCalls": 87,
+        "shadowTriangles": 270072
+      }
+    ]
+  },
+  "limits": [
+    "Beauty submission estimates omit the vehicle, externally loaded characters/shrubs and canvas label meshes.",
+    "Shadow counts in comparison files are visible casting candidates, not draws measured inside each light frustum.",
+    "More spatial batches can increase draws in sparse views while removing many vertices; the total allocated batch count is not a performance gate.",
+    "Actual browser FPS, GPU shader execution and visual appearance need a supported browser on target hardware."
+  ]
+}

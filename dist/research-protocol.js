@@ -24,7 +24,10 @@ export const RESEARCH_PARAMETERS={
 };
 const enums={supplyMode:['finite','bench'],gasModel:['adiabatic','isothermal'],nozzleModel:['isentropic','constant']};
 export function validateResearchParams(params={}){
- const out={...DEFAULT_PARAMS};
+ // Scientific protocol defaults remain finite and reproducible even when the
+ // interactive city defaults to continuous external supply. Explicit requests
+ // can still select the bench comparison.
+ const out={...DEFAULT_PARAMS,supplyMode:'finite'};
  for(const [key,value] of Object.entries(params)){
   if(!(key in DEFAULT_PARAMS))throw Error('未知参数：'+key);
   if(enums[key]){if(!enums[key].includes(value))throw Error('参数枚举无效：'+key);}

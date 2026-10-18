@@ -4,7 +4,7 @@ import {driverAxes} from '../dist/controls.js';
 import {soundState} from '../dist/audio.js';
 import * as CANNON from '../dist/vendor/cannon-es.js';
 const dt=1/PHYSICS_HZ;
-const flat=()=>{const s=new RoadsterSim();for(const b of [...s.world.bodies])if(b!==s.body&&b.userData?.id!=='ground')s.world.removeBody(b);s.body.position.set(0,.62,-350);for(let k=0;k<360;k++)s.step(dt);return s;};
+const flat=()=>{const s=new RoadsterSim({supplyMode:'finite'});for(const b of [...s.world.bodies])if(b!==s.body&&b.userData?.id!=='ground')s.world.removeBody(b);s.body.position.set(0,.62,-350);for(let k=0;k<360;k++)s.step(dt);return s;};
 
 for(const [key,sign]of [['KeyD',-1],['ArrowRight',-1],['KeyA',1],['ArrowLeft',1]]){
   const s=flat(),i=driverAxes(new Set([key]));assert.equal(Math.sign(i.steer),sign);s.body.velocity.z=10;
