@@ -31,6 +31,10 @@ Roadster Flight Lab 是一个独立、可玩的车辆与飞行仿真研究项目
 
 [车辆工坊](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) 是专门的外形检查入口：锁定焦距与机位，查看曲面、玻璃、灯具、轮毂、转向和悬架行程。它展示的是依照照片制作的原创几何，不是 Tesla CAD。
 
+![3.9 实际英语数值研究界面：历史配置重算后的湿地 ABS 结果](qa/screenshots/3.9-verified-study-webgl-unavailable.jpg)
+
+*实际 3.9 浏览器界面：从历史配置显式重算湿地 ABS，生成独立新记录。截图环境没有 WebGL，因此这里展示的是可运行的数值研究，不是城市或车辆的三维画质样张。[浏览器实测与原始导出](qa/browser-release-3.9.json)。*
+
 ## 几个值得做的实验
 
 - **同样全力制动，为什么方向不同？** 选择干地、湿地或左右分离附着，比较 ABS 开 / 关的制动距离、抱死时间和航向偏移。ABS 调节每轮制动压力，不等于 ESC；距离与方向稳定性可能存在权衡。

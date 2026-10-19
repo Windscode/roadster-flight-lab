@@ -1,0 +1,204 @@
+{
+  "schema": "roadster.browser-release-evidence",
+  "version": 1,
+  "status": "passed_with_graphics_unavailable",
+  "recordedAt": "2026-10-19T11:02:34.371249+00:00",
+  "runtimeSourceCommit": "75e980dfd1a1c8b1a2b755489683a50aeb45b3a6",
+  "modelVersion": "3.9.0",
+  "modelBuildId": "b353a90366f128bcf4c188fee0c4a3aad38e6a9f83baf27272c8b5828369ad70",
+  "protocolVersion": "flat-lab-3",
+  "method": "Direct interaction with the deployed Pages site in the cloud Chrome browser. Standard experiments ran in the browser native Worker, using the actual solver. JSON/CSV downloads were obtained via their visible export controls and inspected without rewriting them.",
+  "verifiedURLs": [
+    "https://windscode.github.io/roadster-flight-lab/",
+    "https://windscode.github.io/roadster-flight-lab/?view=lab",
+    "https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html"
+  ],
+  "browser": {
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+    "glVendor": "Disabled",
+    "glRenderer": "Disabled",
+    "lastObservedWebGLErrorAt": "2026-10-19T10:59:01.542Z",
+    "frameStatus": "3D not running · No frame-rate data",
+    "framebufferResolution": null,
+    "p50FrameMs": null,
+    "p95FrameMs": null,
+    "p99FrameMs": null,
+    "gpuFrameTimeMs": null
+  },
+  "checks": [
+    {
+      "name": "English numerical UI and no-GPU fallback",
+      "status": "passed",
+      "observed": "Same-page study, Run/Stop and export controls remain usable; no fabricated FPS sampling. English choice survives reload."
+    },
+    {
+      "name": "Input-only persistence on the actual page",
+      "status": "passed",
+      "eventPath": "fill speed 60, fill angle 3; inspect DOM pending configuration without blur/change; reload, open same-page study",
+      "immediate": {
+        "speedKmh": 60,
+        "angleDeg": 3,
+        "pendingAngleDeg": 3
+      },
+      "afterReload": {
+        "speedKmh": 60,
+        "angleDeg": 3,
+        "pendingAngleDeg": 3,
+        "language": "en"
+      },
+      "selectedHistoricalRunId": "R-72013665",
+      "initialBug": "The first c042588 build updated numeric drafts only on change; a visible 3-degree edit could leave pending angle 2. Corrected with input/change synchronization and finite numeric validation."
+    },
+    {
+      "name": "Explicit history loading is separate from execution",
+      "status": "passed",
+      "beforeLoadRecordCount": 2,
+      "afterLoadRecordCount": 2,
+      "runEnabled": true,
+      "stopEnabled": false,
+      "loaded": {
+        "kind": "brake",
+        "speedKmh": 80,
+        "roadSurface": "wet",
+        "absEnabled": true
+      },
+      "sourceConfiguration": {
+        "id": "mvf4c4vx-roadster-study-1-2-1",
+        "runId": "R-72013665",
+        "modelVersion": "3.9.0",
+        "modelBuildId": "c042588f8f511ffd0688ca2036b82cd82c17a8ddfa426cb8093022c47e65916b",
+        "protocolVersion": "flat-lab-3",
+        "edited": false
+      }
+    },
+    {
+      "name": "Native Worker recompute produces a new current-build result",
+      "status": "passed",
+      "newRunId": "R-922bc233",
+      "newEntryId": "mvf56u7o-roadster-study-1-1-0",
+      "recordCount": 3,
+      "stop": {
+        "timeSeconds": 3.716666666666665,
+        "distanceM": 42.408379905152586,
+        "confirmedAt": 4.708333333333357,
+        "thresholdMps": 0.1,
+        "confirmationSeconds": 0.5
+      },
+      "lockedWheelSeconds": 0,
+      "absActiveSeconds": 3.4999999999999902,
+      "allOriginalEntriesUnchanged": true,
+      "metricsAndRetainedRowsExactlyMatchPriorWetABSOnResult": true,
+      "interpretation": "This is an explicit standard-request recompute, not execution by the unavailable old model. Previous records retain c042588 build identity; the new result has b353a903 build identity."
+    },
+    {
+      "name": "Actual full-library JSON and selected-record CSV have explicit scopes",
+      "status": "passed",
+      "jsonEntryCount": 3,
+      "jsonAttemptCount": 2,
+      "csvRunId": "R-922bc233",
+      "csvRows": 200,
+      "sampling": {
+        "declaredHz": 20,
+        "storedRows": 200,
+        "uniform": true,
+        "storedIntervalS": 0.049999999999999996,
+        "note": "Use row time; metadata belongs to this stored report"
+      },
+      "metricsEqualSelectedJSONReport": true,
+      "statisticsSource": "all120Hzsolversteps",
+      "statisticsSteps": 1200,
+      "statisticsDt": 0.008333333333333333
+    },
+    {
+      "name": "Vehicle inspection no-GPU metadata is not an image claim",
+      "status": "passed",
+      "graphicsAvailable": false,
+      "camera": null,
+      "resolution": null,
+      "limits": "Metadata only: this JSON does not attest that a framebuffer was captured. PNG exports require a live WebGL renderer. No automatic image-quality or FPS verdict; dimensions are engineering assumptions. 3.8 baseline retains its own original glass/body materials under the current light rig.",
+      "pngButtonsDisabled": true,
+      "jsonExportUsable": true
+    },
+    {
+      "name": "Direct same-page laboratory URL remains usable without graphics",
+      "status": "passed",
+      "url": "https://windscode.github.io/roadster-flight-lab/?view=lab",
+      "studyRunVisible": true
+    }
+  ],
+  "firstPublishedBuildEvidence": {
+    "sourceCommit": "09abd0ef6fa8fcd24b3723322c947a172ee80450",
+    "modelBuildId": "c042588f8f511ffd0688ca2036b82cd82c17a8ddfa426cb8093022c47e65916b",
+    "actualWetAB": [
+      {
+        "runId": "R-91b6ca3e",
+        "absEnabled": false,
+        "stopDistanceM": 47.660222531435814,
+        "lockedSeconds": 3.933333333333322
+      },
+      {
+        "runId": "R-72013665",
+        "absEnabled": true,
+        "stopDistanceM": 42.408379905152586,
+        "lockedSeconds": 0
+      }
+    ],
+    "originalInspectionMetadataCaveat": "The original download unconditionally said Real local framebuffer capture even though graphicsAvailable=false; it described PNG capability too broadly. The corrected export explicitly states metadata-only. Both actual downloads remain unchanged."
+  },
+  "artifacts": [
+    {
+      "path": "qa/fixtures/browser-3.9-wet-abs-library.json",
+      "bytes": 708387,
+      "sha256": "1969a65c657d140d354843766733dc93dba4e3cdcbf923599457b47b9a669df2"
+    },
+    {
+      "path": "qa/fixtures/browser-3.9-wet-abs-selected.csv",
+      "bytes": 142017,
+      "sha256": "0dc6178f113fc68bcf032ec869818c70a1b85ac236c3d3699f2c1d7b2bc48911"
+    },
+    {
+      "path": "qa/fixtures/browser-3.9-inspection-metadata.json",
+      "bytes": 3556,
+      "sha256": "3ad4000b938042fcbd4582a28979787fd4b92435c550982f77128eba8d9563cd"
+    },
+    {
+      "path": "qa/fixtures/browser-3.9-final-library.json",
+      "bytes": 1068972,
+      "sha256": "7025b0ff474705eb8371eaa883df90967c0f0e2345f91e6273fa385a6aacb7bb"
+    },
+    {
+      "path": "qa/fixtures/browser-3.9-final-selected.csv",
+      "bytes": 141816,
+      "sha256": "e5096a5edf5358783d7a3ebc3d64538f93889ae7c145dcc7e537f58a63c8bb7c"
+    },
+    {
+      "path": "qa/fixtures/browser-3.9-final-inspection-metadata.json",
+      "bytes": 3641,
+      "sha256": "3e0b07add6d1e8ff09642e7d649f15e19d6599ef16c32906055b86665b3d6bc3"
+    },
+    {
+      "path": "qa/screenshots/3.9-english-study-webgl-unavailable.jpg",
+      "bytes": 129082,
+      "sha256": "94c39d9db7f9efce4bb35a16f96e8e04c7c524c154d623817b16597fbbd2b2ab",
+      "imageSize": [
+        1363,
+        936
+      ]
+    },
+    {
+      "path": "qa/screenshots/3.9-verified-study-webgl-unavailable.jpg",
+      "bytes": 131685,
+      "sha256": "c6e5f826b60cdb270befd7264e67e928ccf9ac87c8938a98005e6624cf882655",
+      "imageSize": [
+        1363,
+        936
+      ]
+    }
+  ],
+  "notAccepted": [
+    "Actual city or vehicle WebGL pixels, matched city before/after captures, lighting quality, reflections, shadow contact and visual similarity.",
+    "Real driving feel, GPU frame times, display p50/p95/p99, steady-route FPS and performance improvements.",
+    "Full English layout inside a running 3D scene. DOM translation coverage is separate from this native browser result."
+  ],
+  "publicationNote": "The final evidence-only commit may follow this runtime commit. It must preserve modelBuildId and dist bytes; final Pages sourceCommit/workflow are checked separately after that commit."
+}

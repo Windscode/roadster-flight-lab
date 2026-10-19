@@ -31,6 +31,10 @@ External supply is a convenient practice and comparison condition. It sustains s
 
 The [vehicle studio](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) provides fixed focal length and camera views for body surfaces, glass, lamps, wheels, steering and suspension travel. Its geometry is an original reconstruction from photographs, not Tesla CAD.
 
+![Actual 3.9 English numerical research UI showing wet-road ABS recomputed from a historical request](qa/screenshots/3.9-verified-study-webgl-unavailable.jpg)
+
+*Actual 3.9 browser UI: explicitly recomputing a historical wet-road ABS request creates a separate new record. This browser has no WebGL, so the image shows working numerical research, not a city or vehicle rendering sample. [Browser evidence and original exports](qa/browser-release-3.9.json).*
+
 ## Experiments worth trying
 
 - **Same full braking, different direction.** Compare ABS on / off on dry, wet and split-friction surfaces. Inspect stopping distance, lock-up time and heading deviation. ABS regulates individual brake pressures; it is not ESC, and stopping distance can trade off against directional stability.
