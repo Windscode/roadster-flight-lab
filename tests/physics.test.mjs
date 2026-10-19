@@ -208,10 +208,10 @@ test('After a roll, hover does not retain opposing side jets in the allocator nu
   assert.ok(side<10,`idle side thrust ${side}`);assert.ok(Math.abs(t.thrustN-t.mass*9.81)<30);
 });
 
-test('Finite-tank automatic roll remains airborne, recovers low and lands before fuel loses support',()=>{
-  const s=new RoadsterSim({supplyMode:'finite'});s.reset('hover');s.startManeuver('roll');let minimum=99,inverted=false,firstContact=null;
+test('A ground-origin automatic roll with adequate finite impulse returns to a gentle landing before fuel loses support',()=>{
+  const s=new RoadsterSim({supplyMode:'finite',tankLitres:900});s.reset('free');assert.equal(s.startManeuver('roll'),true);let minimum=99,inverted=false,firstContact=null;
   const t=run(s,10,{},frame=>{
-    if(frame.maneuver&&frame.maneuver.phase!=='land'){minimum=Math.min(minimum,frame.heightWorld);assert.equal(frame.contactCount,0);}
+    if(frame.maneuver?.phase==='rotate'){minimum=Math.min(minimum,frame.heightWorld);assert.equal(frame.contactCount,0);}
     if(s.body.quaternion.vmult({x:0,y:1,z:0}).y<-.9)inverted=true;
     if(frame.simTime>2&&frame.contactCount&&!firstContact)firstContact={speed:Math.abs(frame.verticalSpeed),gas:frame.gasMass};
   });

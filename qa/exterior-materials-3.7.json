@@ -1,0 +1,508 @@
+{
+  "status": "passed",
+  "version": "3.6",
+  "createdAt": "2026-10-19T03:36:46.278Z",
+  "method": "Real Three geometry, matrices, frusta, material callbacks and independently checked seam coverage; no browser/GPU context.",
+  "sourceSHA256": {
+    "qa/exterior-materials-check.mjs": "5630df31d514ed0f7d16432f5711c1dcddab8730eb0005c2b694f03868b27a9a",
+    "qa/exterior-baseline-3.5.json": "9b01779d7794598a80abd44a5424ab4ec47456766358e5ccff3b25f9e0131c38",
+    "dist/city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
+    "dist/urban-architecture.js": "a121055403ffefe02d297df173f1fbc3568cba9bd4ade8c8f1055945d7b8d1d7",
+    "dist/street-life.js": "48ae4edfdba06f252cd65066ca29c0640b5dba1cef16078ededebedfdeb422e3",
+    "dist/city-data.js": "ba228d0e2b51ce357062346c6452e63514b93ba39c2ffa52eb38359ffec1f9b9",
+    "dist/city-plan.js": "3f17f0eadca4d84f386b202fae8afc179f0ceac547cf57c4dfe0190d162a9549",
+    "dist/city-render-budget.js": "c7cb69daf59a80af4ff4009badb3b819c2429a75c88036b7ce84e576e40ccb3f"
+  },
+  "baselineSourceCommit": "b88b49b",
+  "checks": [
+    {
+      "name": "Static collision world, 108 street proxies and shared average wall palette retain their 3.5 identities",
+      "status": "passed",
+      "canonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+      "streetColliderSHA256": "af19849ce02e365a14437f4c410f7894db790a6a7c95afe9ce72b641656f48be",
+      "paletteSHA256": "59d75d6043157e63757657a7c23c6c9aabf20a8fc235235f5a24c775448cc296",
+      "quantization": 1e-9
+    },
+    {
+      "name": "Every exterior instance carries finite metre dimensions that match its actual transform",
+      "status": "passed",
+      "metricInstances": 126782,
+      "finiteInstances": 148194,
+      "metricMaxErrorM": 0.0000033998318684780315
+    },
+    {
+      "name": "Metre UV edge lengths stay physical through yaw, 45-degree crossings and tilted anisotropic boxes",
+      "status": "passed",
+      "rotations": 6,
+      "edgeComparisons": 72,
+      "scope": "Single-sided opaque city box faces with positive instance scale; not a general mirrored/DoubleSide proof."
+    },
+    {
+      "name": "All new plinths, portal frames, awnings, drip edges and floor belts fit inside existing physical building envelopes",
+      "status": "passed",
+      "components": {
+        "plinth": 420,
+        "portalJamb": 96,
+        "portalLintel": 48,
+        "awning": 686,
+        "dripEdge": 686,
+        "floorBelt": 6508
+      },
+      "toleranceM": 0.00005,
+      "scope": "Solid facade collision envelopes stay conservative; shallow reveals are visual surfaces, not enterable rooms."
+    },
+    {
+      "name": "Periodic seam filtering matches physical covered area and distant glass/paint seams converge to their mean",
+      "status": "passed",
+      "seamSamples": 1184,
+      "seamMaxError": 5.960509863456309e-15,
+      "numericScope": "Production scalar GLSL expressions evaluated in JS double precision; no claim of GPU execution."
+    },
+    {
+      "name": "Six opaque exterior responses, texture colour spaces and quality-switch upload invalidation are correct",
+      "status": "passed",
+      "materialKinds": [
+        "concrete",
+        "glass",
+        "frame",
+        "metal",
+        "shutter",
+        "enamel"
+      ],
+      "mineralScanMean": {
+        "linearRGB": [
+          0.20091006904210976,
+          0.169245237992863,
+          0.11505865403087426
+        ],
+        "roughness": 0.5171397340038038
+      },
+      "interiorTextures": 0,
+      "loaderContract": "Stub file delivery with real Three Texture version events; no image or GPU upload asserted."
+    },
+    {
+      "name": "No crowds or character requests are constructed; 480 updates and three quality levels leave all street matrices untouched",
+      "status": "passed",
+      "frames": 480,
+      "matrixSHA256": "04b6923b326ef0f2432c492618269b6b1c2c0ffc6ef045089568183b0c47ea69",
+      "instanceMatrixUploadVersionBefore": 0,
+      "instanceMatrixUploadVersionAfter": 0,
+      "people": 0,
+      "animals": 0,
+      "characterRequests": 0
+    },
+    {
+      "name": "Authored exterior upgrades reduce allocated geometry and all 15 matched-view draw counts remain within the 3.5 budget",
+      "status": "passed",
+      "allocatedTrianglesBefore": 1816606,
+      "allocatedTrianglesAfter": 1730292,
+      "allocatedBatchesBefore": 1225,
+      "allocatedBatchesAfter": 1197,
+      "comparison": "Last balanced pass after balanced/high/ultra/balanced, five views in the original order; cold start preserved separately."
+    }
+  ],
+  "architecture": {
+    "buildings": 114,
+    "heroBuildings": 39,
+    "shopfronts": 2176,
+    "recessedWindows": 9652,
+    "balconies": 602,
+    "mechanicalUnits": 721,
+    "instances": 128326,
+    "drawBatches": 1034,
+    "triangles": 1536776,
+    "textureCount": 0,
+    "sectorSizeM": 160,
+    "sectorCount": 196,
+    "lightAnchors": 135,
+    "massingTiers": 534,
+    "setbackTerraces": 315,
+    "structuralBraces": 168,
+    "rotatedTowers": 26,
+    "industrialHalls": 9,
+    "sawtoothRoofs": 45,
+    "civicBuildings": 6,
+    "entrancePortals": 48,
+    "continuousPlinths": 420,
+    "shutterPanels": 443,
+    "interiorAtlases": 0,
+    "surfaces": {
+      "quality": "balanced",
+      "materialKinds": [
+        "concrete",
+        "enamel",
+        "metal",
+        "frame",
+        "glass",
+        "shutter"
+      ],
+      "textureCount": 0,
+      "scanLoaded": false,
+      "scanTileMetres": 2.5,
+      "uvContract": "Local face UV multiplied by each instance metre dimensions; independent of world yaw.",
+      "normalContract": "Cotangent frame with UV determinant, tangent length and normal length guards.",
+      "fineDetail": "Derivative-filtered, with an additional distance fade; no displacement.",
+      "interiorTextures": 0,
+      "transparentMaterials": 0
+    },
+    "renderBudget": {
+      "quality": "balanced",
+      "allocatedBatches": 1034,
+      "allocatedTriangles": 1536776,
+      "activeBatches": 199,
+      "activeTriangles": 211938,
+      "shadowBatches": 37,
+      "shadowTriangles": 17724,
+      "culledBatches": 835,
+      "updates": 20,
+      "updateMs": 0.2336200000002009
+    },
+    "geometryMiB": 11.26
+  },
+  "street": {
+    "marketSections": 7,
+    "stalls": 14,
+    "cafes": 5,
+    "repairShops": 1,
+    "flowerStalls": 3,
+    "produceStalls": 2,
+    "bookStalls": 1,
+    "foodStalls": 2,
+    "pedestrians": 0,
+    "bicycles": 2,
+    "benches": 8,
+    "goods": 234,
+    "trees": 8,
+    "instances": 19868,
+    "drawBatches": 163,
+    "triangles": 193516,
+    "collisionProxies": 108,
+    "originalAtlases": 0,
+    "sectorSizeM": 80,
+    "animals": 0,
+    "animalTriangles": 0,
+    "animatedAnimals": 0,
+    "animalAssetErrors": [],
+    "activeAnimations": 0,
+    "animationHz": 0,
+    "crowdsEnabled": false,
+    "externalCharacterLoads": 0,
+    "renderBudget": {
+      "quality": "balanced",
+      "allocatedBatches": 163,
+      "allocatedTriangles": 193516,
+      "activeBatches": 0,
+      "activeTriangles": 0,
+      "shadowBatches": 0,
+      "shadowTriangles": 0,
+      "culledBatches": 163,
+      "updates": 20,
+      "updateMs": 0.0373859999999695
+    }
+  },
+  "views": {
+    "balanced": [
+      {
+        "view": "weave-street",
+        "drawCalls": 202,
+        "triangles": 428490,
+        "instances": 34120,
+        "shadowDrawCalls": 28,
+        "shadowTriangles": 140964
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 56,
+        "triangles": 60736,
+        "instances": 5087,
+        "shadowDrawCalls": 19,
+        "shadowTriangles": 7140
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 56,
+        "triangles": 105052,
+        "instances": 8782,
+        "shadowDrawCalls": 21,
+        "shadowTriangles": 30156
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 75,
+        "triangles": 297744,
+        "instances": 25300,
+        "shadowDrawCalls": 21,
+        "shadowTriangles": 54468
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 23,
+        "triangles": 33568,
+        "instances": 2814,
+        "shadowDrawCalls": 12,
+        "shadowTriangles": 3972
+      }
+    ],
+    "high": [
+      {
+        "view": "weave-street",
+        "drawCalls": 260,
+        "triangles": 610250,
+        "instances": 48476,
+        "shadowDrawCalls": 61,
+        "shadowTriangles": 217700
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 74,
+        "triangles": 93672,
+        "instances": 7821,
+        "shadowDrawCalls": 24,
+        "shadowTriangles": 37152
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 136,
+        "triangles": 265974,
+        "instances": 30336,
+        "shadowDrawCalls": 24,
+        "shadowTriangles": 47520
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 117,
+        "triangles": 423272,
+        "instances": 35724,
+        "shadowDrawCalls": 31,
+        "shadowTriangles": 161424
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 43,
+        "triangles": 65656,
+        "instances": 5528,
+        "shadowDrawCalls": 13,
+        "shadowTriangles": 12372
+      }
+    ],
+    "ultra": [
+      {
+        "view": "weave-street",
+        "drawCalls": 318,
+        "triangles": 746420,
+        "instances": 59873,
+        "shadowDrawCalls": 77,
+        "shadowTriangles": 253844
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 83,
+        "triangles": 97980,
+        "instances": 8180,
+        "shadowDrawCalls": 26,
+        "shadowTriangles": 38568
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 164,
+        "triangles": 296744,
+        "instances": 32850,
+        "shadowDrawCalls": 28,
+        "shadowTriangles": 73848
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 190,
+        "triangles": 565926,
+        "instances": 46297,
+        "shadowDrawCalls": 39,
+        "shadowTriangles": 204936
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 46,
+        "triangles": 78980,
+        "instances": 6638,
+        "shadowDrawCalls": 13,
+        "shadowTriangles": 12372
+      }
+    ]
+  },
+  "coldStart": [
+    {
+      "view": "weave-street",
+      "drawCalls": 210,
+      "triangles": 465874,
+      "instances": 37204,
+      "shadowDrawCalls": 28,
+      "shadowTriangles": 140964
+    },
+    {
+      "view": "foundry-avenue",
+      "drawCalls": 56,
+      "triangles": 60736,
+      "instances": 5087,
+      "shadowDrawCalls": 19,
+      "shadowTriangles": 7140
+    },
+    {
+      "view": "civic-terrace",
+      "drawCalls": 56,
+      "triangles": 105052,
+      "instances": 8782,
+      "shadowDrawCalls": 21,
+      "shadowTriangles": 30156
+    },
+    {
+      "view": "aerial",
+      "drawCalls": 75,
+      "triangles": 297744,
+      "instances": 25300,
+      "shadowDrawCalls": 21,
+      "shadowTriangles": 54468
+    },
+    {
+      "view": "botanical",
+      "drawCalls": 23,
+      "triangles": 33568,
+      "instances": 2814,
+      "shadowDrawCalls": 12,
+      "shadowTriangles": 3972
+    }
+  ],
+  "baselineViews": {
+    "balanced": [
+      {
+        "view": "weave-street",
+        "drawCalls": 225,
+        "triangles": 455554,
+        "instances": 34668,
+        "shadowDrawCalls": 34,
+        "shadowTriangles": 140556
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 69,
+        "triangles": 90222,
+        "instances": 5491,
+        "shadowDrawCalls": 23,
+        "shadowTriangles": 7440
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 72,
+        "triangles": 131542,
+        "instances": 9148,
+        "shadowDrawCalls": 27,
+        "shadowTriangles": 30660
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 87,
+        "triangles": 289340,
+        "instances": 24807,
+        "shadowDrawCalls": 29,
+        "shadowTriangles": 54756
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 27,
+        "triangles": 31150,
+        "instances": 2650,
+        "shadowDrawCalls": 18,
+        "shadowTriangles": 4380
+      }
+    ],
+    "high": [
+      {
+        "view": "weave-street",
+        "drawCalls": 281,
+        "triangles": 636110,
+        "instances": 49352,
+        "shadowDrawCalls": 73,
+        "shadowTriangles": 230600
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 88,
+        "triangles": 122968,
+        "instances": 8250,
+        "shadowDrawCalls": 34,
+        "shadowTriangles": 50148
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 151,
+        "triangles": 315826,
+        "instances": 31093,
+        "shadowDrawCalls": 37,
+        "shadowTriangles": 59568
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 137,
+        "triangles": 438842,
+        "instances": 36000,
+        "shadowDrawCalls": 39,
+        "shadowTriangles": 160956
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 47,
+        "triangles": 62856,
+        "instances": 5433,
+        "shadowDrawCalls": 19,
+        "shadowTriangles": 12684
+      }
+    ],
+    "ultra": [
+      {
+        "view": "weave-street",
+        "drawCalls": 345,
+        "triangles": 777488,
+        "instances": 61338,
+        "shadowDrawCalls": 95,
+        "shadowTriangles": 269660
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 97,
+        "triangles": 127276,
+        "instances": 8609,
+        "shadowDrawCalls": 36,
+        "shadowTriangles": 52140
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 176,
+        "triangles": 349372,
+        "instances": 33860,
+        "shadowDrawCalls": 41,
+        "shadowTriangles": 85860
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 210,
+        "triangles": 595552,
+        "instances": 47786,
+        "shadowDrawCalls": 50,
+        "shadowTriangles": 204492
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 63,
+        "triangles": 105936,
+        "instances": 6902,
+        "shadowDrawCalls": 19,
+        "shadowTriangles": 12684
+      }
+    ]
+  },
+  "limits": [
+    "Counts cover architecture and static street furnishings only, excluding vehicle, environment extras and canvas text.",
+    "Aerial and botanical views may submit modestly more triangles after selected facade elements were strengthened; every matched view submits fewer draws and combined allocated geometry is lower.",
+    "Solid building envelopes still block shallow visual shop recesses; the simulation does not model enterable interiors.",
+    "Texture image average measurements preserve the existing envelope diffuse model approximately; no detailed interior or new per-facade bounce bake is claimed.",
+    "This audit does not establish actual target-device frame rate, rendered appearance, GPU numeric precision or arbitrary mirrored/DoubleSide normal-map behavior."
+  ]
+}

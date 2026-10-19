@@ -1,0 +1,1132 @@
+{
+  "format": "roadster-offline-city-shader-validation-1",
+  "createdAt": "2026-10-19T03:17:38.047Z",
+  "status": "passed",
+  "validator": {
+    "name": "glslangValidator",
+    "version": "Glslang Version: 11:12.0.0\nESSL Version: OpenGL ES GLSL 3.20 glslang Khronos. 12.0.0\nGLSL Version: 4.60 glslang Khronos. 12.0.0\nSPIR-V Version 0x00010600, Revision 1\nGLSL.std.450 Version 100, Revision 1\nKhronos Tool ID 8\nSPIR-V Generator Version 11\nGL_KHR_vulkan_glsl version 100\nARB_GL_gl_spirv version 100"
+  },
+  "method": "Exact vendored Three.js WebGLProgram emitter captured through a fake GL sink, with the live CSM ShaderChunk mutations copied to the temporary emitter. External glslangValidator compiles and links each vertex/fragment pair; no GL context is created.",
+  "scope": "Balanced vertex irradiance and high/ultra fragment irradiance, 1/2/3 fading CSM cascades, regular/instanced Standard/Physical materials, scanned road and exterior concrete/glass/enamel shaders, dedicated local sun visibility branch, packed-depth capture and plain wind-lab PBR materials after city CSM globally changes ShaderChunk.",
+  "limitations": [
+    "Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.",
+    "Any compiler-only compatibility rename is recorded alongside the exact failure. Production vendor shaders remain unchanged.",
+    "This finite matrix covers the new CSM/GI paths, not every possible material, skinning or morph-target permutation."
+  ],
+  "summary": {
+    "programPairs": 41,
+    "stages": 82,
+    "exactPass": 0,
+    "compatibilityPass": 41,
+    "failed": 0
+  },
+  "sourceHashes": {
+    "scripts/validate-city-shaders.mjs": "b9e5c862e68fce03b6afa05b8ebf723832f581a1f324bec745c88d1710d60c9d",
+    "dist/vendor/three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
+    "dist/vendor/three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
+    "dist/vendor/addons/csm/CSM.js": "6876eaa29c95daeb82e846788e84bde03126e066165c34286ee2ee18ea58c018",
+    "dist/vendor/addons/csm/CSMShader.js": "7fef360105e6c09d44a9810bc1563e17e3851f99f5499cdb04de667c2724f48d",
+    "dist/indirect-lighting.js": "69546395fefb109d8968b6ac0452f4e4dbf7d64f5433c4401b8d304150ca0bc7",
+    "dist/irradiance-math.js": "f4c9de47c61ebf8a661d9cfddfbcf0a47c77266438f43909090cd1032b1637f9",
+    "dist/city-render-budget.js": "c7cb69daf59a80af4ff4009badb3b819c2429a75c88036b7ce84e576e40ccb3f",
+    "dist/city-environment.js": "44f44a4ead112dc274e606067a4bc7de6e250beda4e159eb191b98e832e5f451",
+    "dist/local-probe-sun.js": "518069c383e4815dcaf796576d969a568356ddfc202e922055d17bbd871a1f1a",
+    "dist/road-surface-material.js": "f4534aa0a8d896dfd6b0d4e56967ca3b9564af57658e46226dbb0998315a7619",
+    "dist/city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
+    "dist/wind-laboratory.js": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d"
+  },
+  "results": [
+    {
+      "name": "balanced-single-standard",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": false,
+        "material": "standard",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "1bd97d0025a8bd9030078144074f40b05336c9cd5ea6970bc0341b8c3c48186f",
+        "frag": "44add0e00006f14a719f832f570e7f31d26d79245585ed0c179a321de40584a2"
+      },
+      "diagnostics": "balanced-single-standard.vert\nERROR: balanced-single-standard.vert:100: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-standard.vert:100: 'average' : can't find function \nERROR: balanced-single-standard.vert:100: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-single-standard.frag\nERROR: balanced-single-standard.frag:140: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-standard.frag:140: 'average' : can't find function \nERROR: balanced-single-standard.frag:140: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-single-standard.vert\ncompiler-normalized-balanced-single-standard.frag\n"
+      }
+    },
+    {
+      "name": "balanced-single-physical",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": false,
+        "material": "Physical with clearcoat, albedo, normal and roughness maps",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "539c260b9fe93171fd13c9d1cddac9e72fb71de9ac06ac7cfa4b4a5c8d917c8f",
+        "frag": "a29b30b7ae2f2629dfa6ccc48f605f5755ee9389669d9068cdabba7a08252596"
+      },
+      "diagnostics": "balanced-single-physical.vert\nERROR: balanced-single-physical.vert:105: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-physical.vert:105: 'average' : can't find function \nERROR: balanced-single-physical.vert:105: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-single-physical.frag\nERROR: balanced-single-physical.frag:145: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-physical.frag:145: 'average' : can't find function \nERROR: balanced-single-physical.frag:145: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-single-physical.vert\ncompiler-normalized-balanced-single-physical.frag\n"
+      }
+    },
+    {
+      "name": "balanced-single-asphalt",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": false,
+        "material": "asphalt",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "1320950bf54fd142a823efa7c25ac63ee25f8396ecdcf2478ea81f10cd8d23a1",
+        "frag": "5611d222db813a229cf3de2350504bcd41d244911b85026592542c48fe241cd1"
+      },
+      "diagnostics": "balanced-single-asphalt.vert\nERROR: balanced-single-asphalt.vert:101: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-asphalt.vert:101: 'average' : can't find function \nERROR: balanced-single-asphalt.vert:101: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-single-asphalt.frag\nERROR: balanced-single-asphalt.frag:151: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-asphalt.frag:151: 'average' : can't find function \nERROR: balanced-single-asphalt.frag:151: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-single-asphalt.vert\ncompiler-normalized-balanced-single-asphalt.frag\n"
+      }
+    },
+    {
+      "name": "balanced-single-exterior-concrete",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": false,
+        "material": "exterior-concrete",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "2c16c1793d210d2f162cfece2866ada42f76e45e1aee62e749a18aa4e9802c78",
+        "frag": "16e34c4ef8503bb7440f727d2c5c3eb4a1a5305deada87d535d302cd84d3bb09"
+      },
+      "diagnostics": "balanced-single-exterior-concrete.vert\nERROR: balanced-single-exterior-concrete.vert:105: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-exterior-concrete.vert:105: 'average' : can't find function \nERROR: balanced-single-exterior-concrete.vert:105: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-single-exterior-concrete.frag\nERROR: balanced-single-exterior-concrete.frag:140: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-exterior-concrete.frag:140: 'average' : can't find function \nERROR: balanced-single-exterior-concrete.frag:140: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-single-exterior-concrete.vert\ncompiler-normalized-balanced-single-exterior-concrete.frag\n"
+      }
+    },
+    {
+      "name": "balanced-single-exterior-glass",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": false,
+        "material": "exterior-glass",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "e7c7aed2a98a4220ddb9c3fab1a8242780120f8fab5623367884a70b36942e51",
+        "frag": "ebd555597153fe05fcc6dd0e63794dd50ab2e06c1473095bf05c1a5d41e49eba"
+      },
+      "diagnostics": "balanced-single-exterior-glass.vert\nERROR: balanced-single-exterior-glass.vert:105: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-exterior-glass.vert:105: 'average' : can't find function \nERROR: balanced-single-exterior-glass.vert:105: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-single-exterior-glass.frag\nERROR: balanced-single-exterior-glass.frag:140: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-exterior-glass.frag:140: 'average' : can't find function \nERROR: balanced-single-exterior-glass.frag:140: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-single-exterior-glass.vert\ncompiler-normalized-balanced-single-exterior-glass.frag\n"
+      }
+    },
+    {
+      "name": "balanced-single-exterior-enamel",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": false,
+        "material": "exterior-enamel",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "278a7cdb5a6df1680c106c0530dd97c7ef41b163310777069306aae2c78436dd",
+        "frag": "151eccf978cfeae44ae4d23d83b20b7fa799f41d99621d790ca9afc4801570ce"
+      },
+      "diagnostics": "balanced-single-exterior-enamel.vert\nERROR: balanced-single-exterior-enamel.vert:105: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-exterior-enamel.vert:105: 'average' : can't find function \nERROR: balanced-single-exterior-enamel.vert:105: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-single-exterior-enamel.frag\nERROR: balanced-single-exterior-enamel.frag:140: 'average' : function name is redeclaration of existing name \nERROR: balanced-single-exterior-enamel.frag:140: 'average' : can't find function \nERROR: balanced-single-exterior-enamel.frag:140: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-single-exterior-enamel.vert\ncompiler-normalized-balanced-single-exterior-enamel.frag\n"
+      }
+    },
+    {
+      "name": "balanced-instanced-standard",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": true,
+        "material": "standard",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "4d9b82783034ec7f2ac0da590f62455f26fd37ebd89e36dc4139c6f6709ac669",
+        "frag": "73917276ba5471b575a032df9ce8f7f7bdf6b45f6999e2ba697ca233689f268f"
+      },
+      "diagnostics": "balanced-instanced-standard.vert\nERROR: balanced-instanced-standard.vert:102: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-standard.vert:102: 'average' : can't find function \nERROR: balanced-instanced-standard.vert:102: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-instanced-standard.frag\nERROR: balanced-instanced-standard.frag:141: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-standard.frag:141: 'average' : can't find function \nERROR: balanced-instanced-standard.frag:141: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-instanced-standard.vert\ncompiler-normalized-balanced-instanced-standard.frag\n"
+      }
+    },
+    {
+      "name": "balanced-instanced-physical",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": true,
+        "material": "Physical with clearcoat, albedo, normal and roughness maps",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "ddcd96bc444cd76bc0416cab77bdd5b8cba8a1c9612fc45b769d7033714ae7b6",
+        "frag": "c1950409e951c7817bfcfe4044e160401c50ebdf6fbb12b7299b4fe27128256d"
+      },
+      "diagnostics": "balanced-instanced-physical.vert\nERROR: balanced-instanced-physical.vert:107: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-physical.vert:107: 'average' : can't find function \nERROR: balanced-instanced-physical.vert:107: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-instanced-physical.frag\nERROR: balanced-instanced-physical.frag:146: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-physical.frag:146: 'average' : can't find function \nERROR: balanced-instanced-physical.frag:146: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-instanced-physical.vert\ncompiler-normalized-balanced-instanced-physical.frag\n"
+      }
+    },
+    {
+      "name": "balanced-instanced-asphalt",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": true,
+        "material": "asphalt",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "d3521e0a7d84c871beb06d2b4016c1a0aa4708fc8d86bdcac2f1cce7f55bde7f",
+        "frag": "5d4141d45ebb624987e71b6515acc1b65a4d9490482076a2c6e7eaed5ed3d3a6"
+      },
+      "diagnostics": "balanced-instanced-asphalt.vert\nERROR: balanced-instanced-asphalt.vert:103: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-asphalt.vert:103: 'average' : can't find function \nERROR: balanced-instanced-asphalt.vert:103: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-instanced-asphalt.frag\nERROR: balanced-instanced-asphalt.frag:152: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-asphalt.frag:152: 'average' : can't find function \nERROR: balanced-instanced-asphalt.frag:152: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-instanced-asphalt.vert\ncompiler-normalized-balanced-instanced-asphalt.frag\n"
+      }
+    },
+    {
+      "name": "balanced-instanced-exterior-concrete",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": true,
+        "material": "exterior-concrete",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "347b54e6a199dd66f16328b9634dcac7a77e5e47d9f8ff7725f31321244f9f47",
+        "frag": "24bcdeba887a022d0f05fb2bf886fa10d21bdef9caabd2f187987105c51efc1e"
+      },
+      "diagnostics": "balanced-instanced-exterior-concrete.vert\nERROR: balanced-instanced-exterior-concrete.vert:107: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-exterior-concrete.vert:107: 'average' : can't find function \nERROR: balanced-instanced-exterior-concrete.vert:107: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-instanced-exterior-concrete.frag\nERROR: balanced-instanced-exterior-concrete.frag:141: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-exterior-concrete.frag:141: 'average' : can't find function \nERROR: balanced-instanced-exterior-concrete.frag:141: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-instanced-exterior-concrete.vert\ncompiler-normalized-balanced-instanced-exterior-concrete.frag\n"
+      }
+    },
+    {
+      "name": "balanced-instanced-exterior-glass",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": true,
+        "material": "exterior-glass",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "3b049a44194d573c358d62b91bd04e2401742defcc2e8e1c4ba9f2e3591f1c4a",
+        "frag": "7b1d767ffd80a10fc626281f660d2cb9a321f54101b76fe67ce46193ff03ce41"
+      },
+      "diagnostics": "balanced-instanced-exterior-glass.vert\nERROR: balanced-instanced-exterior-glass.vert:107: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-exterior-glass.vert:107: 'average' : can't find function \nERROR: balanced-instanced-exterior-glass.vert:107: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-instanced-exterior-glass.frag\nERROR: balanced-instanced-exterior-glass.frag:141: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-exterior-glass.frag:141: 'average' : can't find function \nERROR: balanced-instanced-exterior-glass.frag:141: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-instanced-exterior-glass.vert\ncompiler-normalized-balanced-instanced-exterior-glass.frag\n"
+      }
+    },
+    {
+      "name": "balanced-instanced-exterior-enamel",
+      "coverage": {
+        "quality": "balanced",
+        "cascades": 1,
+        "giEvaluation": "vertex",
+        "instanced": true,
+        "material": "exterior-enamel",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "f37768495166f96ef4be662f4bdb19d14e215cf6ebb6e99bfff25405bff4b816",
+        "frag": "d4c190a10b4bda07c44363c74b0fea1f75eb966faea17153dc5f13f56c8c1658"
+      },
+      "diagnostics": "balanced-instanced-exterior-enamel.vert\nERROR: balanced-instanced-exterior-enamel.vert:107: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-exterior-enamel.vert:107: 'average' : can't find function \nERROR: balanced-instanced-exterior-enamel.vert:107: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nbalanced-instanced-exterior-enamel.frag\nERROR: balanced-instanced-exterior-enamel.frag:141: 'average' : function name is redeclaration of existing name \nERROR: balanced-instanced-exterior-enamel.frag:141: 'average' : can't find function \nERROR: balanced-instanced-exterior-enamel.frag:141: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-balanced-instanced-exterior-enamel.vert\ncompiler-normalized-balanced-instanced-exterior-enamel.frag\n"
+      }
+    },
+    {
+      "name": "high-single-standard",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "standard",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "3ddf76619c4105123b32b6f11dee6436a6171a352b68c3a6d43aba125f1b77a8",
+        "frag": "31a2f4eee409758252cd1632504f0e694e00476c34c5514a79f2563112a8cc92"
+      },
+      "diagnostics": "high-single-standard.vert\nERROR: high-single-standard.vert:101: 'average' : function name is redeclaration of existing name \nERROR: high-single-standard.vert:101: 'average' : can't find function \nERROR: high-single-standard.vert:101: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-single-standard.frag\nERROR: high-single-standard.frag:177: 'average' : function name is redeclaration of existing name \nERROR: high-single-standard.frag:177: 'average' : can't find function \nERROR: high-single-standard.frag:177: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-single-standard.vert\ncompiler-normalized-high-single-standard.frag\n"
+      }
+    },
+    {
+      "name": "high-single-physical",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "Physical with clearcoat, albedo, normal and roughness maps",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "b04f0e4a6f2a8b77e7e03477fef5610ca4e84de55cead37bc82c62f7f5710b74",
+        "frag": "c6298b2b33389b69e72424477a87b742c8978d187d3fb13ac4207a6a500658da"
+      },
+      "diagnostics": "high-single-physical.vert\nERROR: high-single-physical.vert:106: 'average' : function name is redeclaration of existing name \nERROR: high-single-physical.vert:106: 'average' : can't find function \nERROR: high-single-physical.vert:106: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-single-physical.frag\nERROR: high-single-physical.frag:182: 'average' : function name is redeclaration of existing name \nERROR: high-single-physical.frag:182: 'average' : can't find function \nERROR: high-single-physical.frag:182: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-single-physical.vert\ncompiler-normalized-high-single-physical.frag\n"
+      }
+    },
+    {
+      "name": "high-single-asphalt",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "asphalt",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "3c34a240b2db4c1e2c67d6d9a8434b9f13c8a0d3941ccdae6ed1027780c03085",
+        "frag": "4797883ba600abc162374ca0e87d47b4bc954f548faa7c5d9f0a9cfe08895554"
+      },
+      "diagnostics": "high-single-asphalt.vert\nERROR: high-single-asphalt.vert:102: 'average' : function name is redeclaration of existing name \nERROR: high-single-asphalt.vert:102: 'average' : can't find function \nERROR: high-single-asphalt.vert:102: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-single-asphalt.frag\nERROR: high-single-asphalt.frag:188: 'average' : function name is redeclaration of existing name \nERROR: high-single-asphalt.frag:188: 'average' : can't find function \nERROR: high-single-asphalt.frag:188: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-single-asphalt.vert\ncompiler-normalized-high-single-asphalt.frag\n"
+      }
+    },
+    {
+      "name": "high-single-exterior-concrete",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "exterior-concrete",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "2b536bbe4315e19a939ad2886141e047cef69bc507e9d3f118ac9f84800663f6",
+        "frag": "e9284a6b49295e9380b5871ea8fa7d994b500e64868d3dfa258c6e29de07941a"
+      },
+      "diagnostics": "high-single-exterior-concrete.vert\nERROR: high-single-exterior-concrete.vert:106: 'average' : function name is redeclaration of existing name \nERROR: high-single-exterior-concrete.vert:106: 'average' : can't find function \nERROR: high-single-exterior-concrete.vert:106: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-single-exterior-concrete.frag\nERROR: high-single-exterior-concrete.frag:177: 'average' : function name is redeclaration of existing name \nERROR: high-single-exterior-concrete.frag:177: 'average' : can't find function \nERROR: high-single-exterior-concrete.frag:177: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-single-exterior-concrete.vert\ncompiler-normalized-high-single-exterior-concrete.frag\n"
+      }
+    },
+    {
+      "name": "high-single-exterior-glass",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "exterior-glass",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "3f3f2af87fe6a0f0356958031260af4b181fc8f978d089be5b4c531093161864",
+        "frag": "aa0bdbfc87e2ac560f9cb08a5c1e451897555967f49d7815add95bc07da5d7be"
+      },
+      "diagnostics": "high-single-exterior-glass.vert\nERROR: high-single-exterior-glass.vert:106: 'average' : function name is redeclaration of existing name \nERROR: high-single-exterior-glass.vert:106: 'average' : can't find function \nERROR: high-single-exterior-glass.vert:106: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-single-exterior-glass.frag\nERROR: high-single-exterior-glass.frag:177: 'average' : function name is redeclaration of existing name \nERROR: high-single-exterior-glass.frag:177: 'average' : can't find function \nERROR: high-single-exterior-glass.frag:177: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-single-exterior-glass.vert\ncompiler-normalized-high-single-exterior-glass.frag\n"
+      }
+    },
+    {
+      "name": "high-single-exterior-enamel",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "exterior-enamel",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "448377be9b83d70e754c339940570f3492d9aab42d87c13ee3604d6c1d2c1dbb",
+        "frag": "1d315e0d16377acacfedc6a1987233765d74161e8212acca0ac7493f175ebaee"
+      },
+      "diagnostics": "high-single-exterior-enamel.vert\nERROR: high-single-exterior-enamel.vert:106: 'average' : function name is redeclaration of existing name \nERROR: high-single-exterior-enamel.vert:106: 'average' : can't find function \nERROR: high-single-exterior-enamel.vert:106: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-single-exterior-enamel.frag\nERROR: high-single-exterior-enamel.frag:177: 'average' : function name is redeclaration of existing name \nERROR: high-single-exterior-enamel.frag:177: 'average' : can't find function \nERROR: high-single-exterior-enamel.frag:177: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-single-exterior-enamel.vert\ncompiler-normalized-high-single-exterior-enamel.frag\n"
+      }
+    },
+    {
+      "name": "high-instanced-standard",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "standard",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "9af1af88423a2a6585564d38496a3881fade5ef7b94f57a74b5811f53bb75310",
+        "frag": "19745ae41219e0ed9f0498493826bc4c6420a2d428271e989a4dd67290865c7d"
+      },
+      "diagnostics": "high-instanced-standard.vert\nERROR: high-instanced-standard.vert:103: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-standard.vert:103: 'average' : can't find function \nERROR: high-instanced-standard.vert:103: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-instanced-standard.frag\nERROR: high-instanced-standard.frag:178: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-standard.frag:178: 'average' : can't find function \nERROR: high-instanced-standard.frag:178: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-instanced-standard.vert\ncompiler-normalized-high-instanced-standard.frag\n"
+      }
+    },
+    {
+      "name": "high-instanced-physical",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "Physical with clearcoat, albedo, normal and roughness maps",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "fbbb561a611643a2c682cb130bd329cc6e4f869edc364b92936468cb951eb46b",
+        "frag": "e08a041fd1259ac36b5dcd49beedb3082726b118f3be00568325f5e87550b1f2"
+      },
+      "diagnostics": "high-instanced-physical.vert\nERROR: high-instanced-physical.vert:108: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-physical.vert:108: 'average' : can't find function \nERROR: high-instanced-physical.vert:108: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-instanced-physical.frag\nERROR: high-instanced-physical.frag:183: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-physical.frag:183: 'average' : can't find function \nERROR: high-instanced-physical.frag:183: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-instanced-physical.vert\ncompiler-normalized-high-instanced-physical.frag\n"
+      }
+    },
+    {
+      "name": "high-instanced-asphalt",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "asphalt",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "f8e33bf4633a2badbb3b21f5603e7bde27a950c6d3ffec460dd4989bb1b92d0e",
+        "frag": "1489de06a3f2f92b782ff46adca7e4fa3cbba90aa9617ab584fe766d8bc6c3a6"
+      },
+      "diagnostics": "high-instanced-asphalt.vert\nERROR: high-instanced-asphalt.vert:104: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-asphalt.vert:104: 'average' : can't find function \nERROR: high-instanced-asphalt.vert:104: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-instanced-asphalt.frag\nERROR: high-instanced-asphalt.frag:189: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-asphalt.frag:189: 'average' : can't find function \nERROR: high-instanced-asphalt.frag:189: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-instanced-asphalt.vert\ncompiler-normalized-high-instanced-asphalt.frag\n"
+      }
+    },
+    {
+      "name": "high-instanced-exterior-concrete",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "exterior-concrete",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "00f856d8c42e26b440caeeb906ec4b64bf19158db3d70922baeede04bb3504d2",
+        "frag": "76c92736fc6d91ad8e4a09bff4ba6c6a4d4ed9b4240a78c19bfedecf88732700"
+      },
+      "diagnostics": "high-instanced-exterior-concrete.vert\nERROR: high-instanced-exterior-concrete.vert:108: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-exterior-concrete.vert:108: 'average' : can't find function \nERROR: high-instanced-exterior-concrete.vert:108: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-instanced-exterior-concrete.frag\nERROR: high-instanced-exterior-concrete.frag:178: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-exterior-concrete.frag:178: 'average' : can't find function \nERROR: high-instanced-exterior-concrete.frag:178: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-instanced-exterior-concrete.vert\ncompiler-normalized-high-instanced-exterior-concrete.frag\n"
+      }
+    },
+    {
+      "name": "high-instanced-exterior-glass",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "exterior-glass",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "796a5f132bb61fb0cf0adbf4fb4bed33f68d2eb6bc09ce0577a39bff6239068d",
+        "frag": "44f7f65e75be838d3a71926eafd369ae05f70cb0d116289b8b270a917ab01404"
+      },
+      "diagnostics": "high-instanced-exterior-glass.vert\nERROR: high-instanced-exterior-glass.vert:108: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-exterior-glass.vert:108: 'average' : can't find function \nERROR: high-instanced-exterior-glass.vert:108: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-instanced-exterior-glass.frag\nERROR: high-instanced-exterior-glass.frag:178: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-exterior-glass.frag:178: 'average' : can't find function \nERROR: high-instanced-exterior-glass.frag:178: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-instanced-exterior-glass.vert\ncompiler-normalized-high-instanced-exterior-glass.frag\n"
+      }
+    },
+    {
+      "name": "high-instanced-exterior-enamel",
+      "coverage": {
+        "quality": "high",
+        "cascades": 2,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "exterior-enamel",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "200701c8e5740f47023180d2813b0973603c64de5022e88ed13e7b715c2b64df",
+        "frag": "00ede8556d2dc22d7414b517c35ef8aa1e8be930ff8cb7cba607a5e919dfeea1"
+      },
+      "diagnostics": "high-instanced-exterior-enamel.vert\nERROR: high-instanced-exterior-enamel.vert:108: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-exterior-enamel.vert:108: 'average' : can't find function \nERROR: high-instanced-exterior-enamel.vert:108: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nhigh-instanced-exterior-enamel.frag\nERROR: high-instanced-exterior-enamel.frag:178: 'average' : function name is redeclaration of existing name \nERROR: high-instanced-exterior-enamel.frag:178: 'average' : can't find function \nERROR: high-instanced-exterior-enamel.frag:178: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-high-instanced-exterior-enamel.vert\ncompiler-normalized-high-instanced-exterior-enamel.frag\n"
+      }
+    },
+    {
+      "name": "ultra-single-standard",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "standard",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "c99f58fc6e9e6193e4ff402c4d0ceb43a0a96821e681a737bff8d94845de0025",
+        "frag": "4b9dbb7e7529f92cfc5be1ba60a91ec7098019e25b3a5c5cc98a60d76c0859fa"
+      },
+      "diagnostics": "ultra-single-standard.vert\nERROR: ultra-single-standard.vert:101: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-standard.vert:101: 'average' : can't find function \nERROR: ultra-single-standard.vert:101: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-single-standard.frag\nERROR: ultra-single-standard.frag:177: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-standard.frag:177: 'average' : can't find function \nERROR: ultra-single-standard.frag:177: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-single-standard.vert\ncompiler-normalized-ultra-single-standard.frag\n"
+      }
+    },
+    {
+      "name": "ultra-single-physical",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "Physical with clearcoat, albedo, normal and roughness maps",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "9c016324b94dc80246e1b45a31032525d8cb67f8f4639e0f398665689149e1d7",
+        "frag": "991f06227a9fe009695400fb2143a73c85f19cbb055feac4c9787665c51b2e7f"
+      },
+      "diagnostics": "ultra-single-physical.vert\nERROR: ultra-single-physical.vert:106: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-physical.vert:106: 'average' : can't find function \nERROR: ultra-single-physical.vert:106: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-single-physical.frag\nERROR: ultra-single-physical.frag:182: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-physical.frag:182: 'average' : can't find function \nERROR: ultra-single-physical.frag:182: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-single-physical.vert\ncompiler-normalized-ultra-single-physical.frag\n"
+      }
+    },
+    {
+      "name": "ultra-single-asphalt",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "asphalt",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "ab7a7411034f4b1577e444443ae25b0d2083e322cefee2837f406c02af904b99",
+        "frag": "257ca4639d59c69b3d694513d77f3b21e9bf16a73fee9ae1252d30b53f5bd7aa"
+      },
+      "diagnostics": "ultra-single-asphalt.vert\nERROR: ultra-single-asphalt.vert:102: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-asphalt.vert:102: 'average' : can't find function \nERROR: ultra-single-asphalt.vert:102: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-single-asphalt.frag\nERROR: ultra-single-asphalt.frag:188: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-asphalt.frag:188: 'average' : can't find function \nERROR: ultra-single-asphalt.frag:188: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-single-asphalt.vert\ncompiler-normalized-ultra-single-asphalt.frag\n"
+      }
+    },
+    {
+      "name": "ultra-single-exterior-concrete",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "exterior-concrete",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "fbb56783ffb749e53f51ca093a815f5e3662f7e24ad6547124065f6f2ef20066",
+        "frag": "10bd72131558dfd6a60c52cb0abb139a650d1727f63eb73e5ab268cef97d71d1"
+      },
+      "diagnostics": "ultra-single-exterior-concrete.vert\nERROR: ultra-single-exterior-concrete.vert:106: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-exterior-concrete.vert:106: 'average' : can't find function \nERROR: ultra-single-exterior-concrete.vert:106: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-single-exterior-concrete.frag\nERROR: ultra-single-exterior-concrete.frag:177: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-exterior-concrete.frag:177: 'average' : can't find function \nERROR: ultra-single-exterior-concrete.frag:177: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-single-exterior-concrete.vert\ncompiler-normalized-ultra-single-exterior-concrete.frag\n"
+      }
+    },
+    {
+      "name": "ultra-single-exterior-glass",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "exterior-glass",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "302f58dfaaaae8ebf4f1407c42b119fb02aba6530f6c71df5223760792aa01e1",
+        "frag": "89a9f573e800b4b8159d19edb91c0d08671f8eecf9b2c97af03b507707b86776"
+      },
+      "diagnostics": "ultra-single-exterior-glass.vert\nERROR: ultra-single-exterior-glass.vert:106: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-exterior-glass.vert:106: 'average' : can't find function \nERROR: ultra-single-exterior-glass.vert:106: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-single-exterior-glass.frag\nERROR: ultra-single-exterior-glass.frag:177: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-exterior-glass.frag:177: 'average' : can't find function \nERROR: ultra-single-exterior-glass.frag:177: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-single-exterior-glass.vert\ncompiler-normalized-ultra-single-exterior-glass.frag\n"
+      }
+    },
+    {
+      "name": "ultra-single-exterior-enamel",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": false,
+        "material": "exterior-enamel",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "3eab31cb43e7b6f23453d1fc4064154296814f3036bf0bab6e20009e29a44b5f",
+        "frag": "274f28277f807c77ba6f496fd1a1e2694835670b2b59c537a17224299ad08d90"
+      },
+      "diagnostics": "ultra-single-exterior-enamel.vert\nERROR: ultra-single-exterior-enamel.vert:106: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-exterior-enamel.vert:106: 'average' : can't find function \nERROR: ultra-single-exterior-enamel.vert:106: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-single-exterior-enamel.frag\nERROR: ultra-single-exterior-enamel.frag:177: 'average' : function name is redeclaration of existing name \nERROR: ultra-single-exterior-enamel.frag:177: 'average' : can't find function \nERROR: ultra-single-exterior-enamel.frag:177: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-single-exterior-enamel.vert\ncompiler-normalized-ultra-single-exterior-enamel.frag\n"
+      }
+    },
+    {
+      "name": "ultra-instanced-standard",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "standard",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "9764fd634b3336c245d073eb26cd140e31a844b20f97091e27b2790909656b9b",
+        "frag": "3b33a77fc7694baa05cafadfd69a25a1bf9fa674c620fbe5b085a87410969292"
+      },
+      "diagnostics": "ultra-instanced-standard.vert\nERROR: ultra-instanced-standard.vert:103: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-standard.vert:103: 'average' : can't find function \nERROR: ultra-instanced-standard.vert:103: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-instanced-standard.frag\nERROR: ultra-instanced-standard.frag:178: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-standard.frag:178: 'average' : can't find function \nERROR: ultra-instanced-standard.frag:178: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-instanced-standard.vert\ncompiler-normalized-ultra-instanced-standard.frag\n"
+      }
+    },
+    {
+      "name": "ultra-instanced-physical",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "Physical with clearcoat, albedo, normal and roughness maps",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "54d5bfa5137817ed90e1a94b0063f6e43010ea37a9cfd34b36693364a728e540",
+        "frag": "0248404e17738725845d0a64809fe69a35f138226344026cf830b282963c6dd0"
+      },
+      "diagnostics": "ultra-instanced-physical.vert\nERROR: ultra-instanced-physical.vert:108: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-physical.vert:108: 'average' : can't find function \nERROR: ultra-instanced-physical.vert:108: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-instanced-physical.frag\nERROR: ultra-instanced-physical.frag:183: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-physical.frag:183: 'average' : can't find function \nERROR: ultra-instanced-physical.frag:183: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-instanced-physical.vert\ncompiler-normalized-ultra-instanced-physical.frag\n"
+      }
+    },
+    {
+      "name": "ultra-instanced-asphalt",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "asphalt",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "e6b103e2fde524198e712e2d774163c13f77c61511618760c9d6054bed0fd06b",
+        "frag": "ef93d526460a41a44a48d32d42ed6fceb95621a93c6bcf26dec195105ff09862"
+      },
+      "diagnostics": "ultra-instanced-asphalt.vert\nERROR: ultra-instanced-asphalt.vert:104: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-asphalt.vert:104: 'average' : can't find function \nERROR: ultra-instanced-asphalt.vert:104: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-instanced-asphalt.frag\nERROR: ultra-instanced-asphalt.frag:189: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-asphalt.frag:189: 'average' : can't find function \nERROR: ultra-instanced-asphalt.frag:189: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-instanced-asphalt.vert\ncompiler-normalized-ultra-instanced-asphalt.frag\n"
+      }
+    },
+    {
+      "name": "ultra-instanced-exterior-concrete",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "exterior-concrete",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "a898a5bd2f42ae1c92446e8ae185bcf4b202b830359cfb7bd49fbf4809c07249",
+        "frag": "df0b0bcb199976129e4873c084a53ad4d1a67f8a430f198e54de449c9fa131d5"
+      },
+      "diagnostics": "ultra-instanced-exterior-concrete.vert\nERROR: ultra-instanced-exterior-concrete.vert:108: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-exterior-concrete.vert:108: 'average' : can't find function \nERROR: ultra-instanced-exterior-concrete.vert:108: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-instanced-exterior-concrete.frag\nERROR: ultra-instanced-exterior-concrete.frag:178: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-exterior-concrete.frag:178: 'average' : can't find function \nERROR: ultra-instanced-exterior-concrete.frag:178: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-instanced-exterior-concrete.vert\ncompiler-normalized-ultra-instanced-exterior-concrete.frag\n"
+      }
+    },
+    {
+      "name": "ultra-instanced-exterior-glass",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "exterior-glass",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "fd22b0c25e47382f51319c54d1f61836b570b01477e738bee622232619a05e48",
+        "frag": "562e3dac29088cfffea4b55c64fbfa9389198f27a08c40357a2fc4aa59fffbd8"
+      },
+      "diagnostics": "ultra-instanced-exterior-glass.vert\nERROR: ultra-instanced-exterior-glass.vert:108: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-exterior-glass.vert:108: 'average' : can't find function \nERROR: ultra-instanced-exterior-glass.vert:108: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-instanced-exterior-glass.frag\nERROR: ultra-instanced-exterior-glass.frag:178: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-exterior-glass.frag:178: 'average' : can't find function \nERROR: ultra-instanced-exterior-glass.frag:178: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-instanced-exterior-glass.vert\ncompiler-normalized-ultra-instanced-exterior-glass.frag\n"
+      }
+    },
+    {
+      "name": "ultra-instanced-exterior-enamel",
+      "coverage": {
+        "quality": "ultra",
+        "cascades": 3,
+        "giEvaluation": "fragment",
+        "instanced": true,
+        "material": "exterior-enamel",
+        "shadowMap": "PCF soft main view; dedicated local sun depth branch in cube capture",
+        "environment": "CubeUV IBL",
+        "fade": true
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "17304084ff900d42855b0149f1d6288616d341dd6bd9727ffbceca4a076807b4",
+        "frag": "a6d9ea8f9ff90d9bae154c89a339cbfef960ce8ddd12deb4626f500fb5cdb25f"
+      },
+      "diagnostics": "ultra-instanced-exterior-enamel.vert\nERROR: ultra-instanced-exterior-enamel.vert:108: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-exterior-enamel.vert:108: 'average' : can't find function \nERROR: ultra-instanced-exterior-enamel.vert:108: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nultra-instanced-exterior-enamel.frag\nERROR: ultra-instanced-exterior-enamel.frag:178: 'average' : function name is redeclaration of existing name \nERROR: ultra-instanced-exterior-enamel.frag:178: 'average' : can't find function \nERROR: ultra-instanced-exterior-enamel.frag:178: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-ultra-instanced-exterior-enamel.vert\ncompiler-normalized-ultra-instanced-exterior-enamel.frag\n"
+      }
+    },
+    {
+      "name": "windlab-standard-single",
+      "coverage": {
+        "context": "windlab",
+        "cityCSM": false,
+        "cityGI": false,
+        "globalCityShaderChunksStillPresent": true,
+        "lights": "One shadowed key, one unshadowed fill, hemisphere",
+        "environment": "Static indoor CubeUV PMREM"
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "208e1942e31e543f52aef6e1007355c6d08745cac6b8b7786283e06267aea1f0",
+        "frag": "8bd08d12083f67f2e9ef2531c0d186ed5cbe641e3d812416a469da90109e755d"
+      },
+      "diagnostics": "windlab-standard-single.vert\nERROR: windlab-standard-single.vert:94: 'average' : function name is redeclaration of existing name \nERROR: windlab-standard-single.vert:94: 'average' : can't find function \nERROR: windlab-standard-single.vert:94: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nwindlab-standard-single.frag\nERROR: windlab-standard-single.frag:135: 'average' : function name is redeclaration of existing name \nERROR: windlab-standard-single.frag:135: 'average' : can't find function \nERROR: windlab-standard-single.frag:135: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-windlab-standard-single.vert\ncompiler-normalized-windlab-standard-single.frag\n"
+      }
+    },
+    {
+      "name": "windlab-standard-instanced",
+      "coverage": {
+        "context": "windlab",
+        "cityCSM": false,
+        "cityGI": false,
+        "globalCityShaderChunksStillPresent": true,
+        "lights": "One shadowed key, one unshadowed fill, hemisphere",
+        "environment": "Static indoor CubeUV PMREM"
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "bb47856b07bef89a24539383e274728498e8fad14779a2a94ed714d3ddec4b91",
+        "frag": "8a6279551e8b6cafebf4ceb23bfbe99008d2cf6b67a02bbd7c35d022ff6aa5c8"
+      },
+      "diagnostics": "windlab-standard-instanced.vert\nERROR: windlab-standard-instanced.vert:96: 'average' : function name is redeclaration of existing name \nERROR: windlab-standard-instanced.vert:96: 'average' : can't find function \nERROR: windlab-standard-instanced.vert:96: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nwindlab-standard-instanced.frag\nERROR: windlab-standard-instanced.frag:136: 'average' : function name is redeclaration of existing name \nERROR: windlab-standard-instanced.frag:136: 'average' : can't find function \nERROR: windlab-standard-instanced.frag:136: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-windlab-standard-instanced.vert\ncompiler-normalized-windlab-standard-instanced.frag\n"
+      }
+    },
+    {
+      "name": "windlab-physical-single",
+      "coverage": {
+        "context": "windlab",
+        "cityCSM": false,
+        "cityGI": false,
+        "globalCityShaderChunksStillPresent": true,
+        "lights": "One shadowed key, one unshadowed fill, hemisphere",
+        "environment": "Static indoor CubeUV PMREM"
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "bcb8e15abe45177eff0ef5464d548deda94cc45a926f87e0208216c5d2ff2b93",
+        "frag": "068863739f1ea60fdb9470f94d5194d2b10131cf67bbe278827fa4f6b20211a6"
+      },
+      "diagnostics": "windlab-physical-single.vert\nERROR: windlab-physical-single.vert:95: 'average' : function name is redeclaration of existing name \nERROR: windlab-physical-single.vert:95: 'average' : can't find function \nERROR: windlab-physical-single.vert:95: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nwindlab-physical-single.frag\nERROR: windlab-physical-single.frag:137: 'average' : function name is redeclaration of existing name \nERROR: windlab-physical-single.frag:137: 'average' : can't find function \nERROR: windlab-physical-single.frag:137: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-windlab-physical-single.vert\ncompiler-normalized-windlab-physical-single.frag\n"
+      }
+    },
+    {
+      "name": "windlab-physical-instanced",
+      "coverage": {
+        "context": "windlab",
+        "cityCSM": false,
+        "cityGI": false,
+        "globalCityShaderChunksStillPresent": true,
+        "lights": "One shadowed key, one unshadowed fill, hemisphere",
+        "environment": "Static indoor CubeUV PMREM"
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "53e8fd3c6e67e5bd07dea2530a637c336f42d5d5ccad7d44c839e56d58d56522",
+        "frag": "b8505054a351017dd676772de7ed8b8f3c2b0bb9eb42ec8f3359c1a545e113b8"
+      },
+      "diagnostics": "windlab-physical-instanced.vert\nERROR: windlab-physical-instanced.vert:97: 'average' : function name is redeclaration of existing name \nERROR: windlab-physical-instanced.vert:97: 'average' : can't find function \nERROR: windlab-physical-instanced.vert:97: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nwindlab-physical-instanced.frag\nERROR: windlab-physical-instanced.frag:138: 'average' : function name is redeclaration of existing name \nERROR: windlab-physical-instanced.frag:138: 'average' : can't find function \nERROR: windlab-physical-instanced.frag:138: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-windlab-physical-instanced.vert\ncompiler-normalized-windlab-physical-instanced.frag\n"
+      }
+    },
+    {
+      "name": "probe-packed-depth-opaque",
+      "coverage": {
+        "material": "Double-sided opaque RGBADepthPacking; local orthographic solar visibility capture"
+      },
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "5973771fc65799eacf092db209f4959d06dac0ecc005ea18942386f946b64fb6",
+        "frag": "fe8291b9f10c0c1c5bc93146aa0a539e21fc609fdb8fb86188401a90075b6d16"
+      },
+      "diagnostics": "probe-packed-depth-opaque.vert\nERROR: probe-packed-depth-opaque.vert:84: 'average' : function name is redeclaration of existing name \nERROR: probe-packed-depth-opaque.vert:84: 'average' : can't find function \nERROR: probe-packed-depth-opaque.vert:84: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nprobe-packed-depth-opaque.frag\nERROR: probe-packed-depth-opaque.frag:76: 'average' : function name is redeclaration of existing name \nERROR: probe-packed-depth-opaque.frag:76: 'average' : can't find function \nERROR: probe-packed-depth-opaque.frag:76: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking vertex stage: Missing entry point: Each stage requires one entry point\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unchanged stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-probe-packed-depth-opaque.vert\ncompiler-normalized-probe-packed-depth-opaque.frag\n"
+      }
+    }
+  ]
+}

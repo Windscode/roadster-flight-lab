@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "model": "Roadster engineering approximation",
+  "checks": [
+    "The city defaults to continuous external supply; finite research defaults and the boolean stabilization API remain explicit and compatible",
+    "Hold captures the exact world position and quaternion once, preserves initial velocities and brakes through finite-response physical valves",
+    "Newton and angular-momentum balances reconstruct the held vehicle response solely from delivered nozzle force, r × F torque and gravity",
+    "Supported combined pitch/roll attitudes converge to their captured pose and position, reject an external impulse, and retain finite braking overshoot",
+    "Unsupported attitudes, absent power, empty gas and undersized nozzles cannot freeze or support the vehicle; feasibility and residual expose the limitation",
+    "Finite-tank hold loses support as pressure and temperature fall and conserves every kilogram of delivered nozzle mass flow without hidden replenishment",
+    "Deliberate pilot inputs release research hold to manual attitude control, explicit raw-valve API inputs retain priority, and mode/suction/reset commands release stale references",
+    "Tire contact, hull contact and ceiling adhesion inhibit hold thrust without repeatedly relatching the captured world reference",
+    "Hold is independent of 30/60/144 Hz render cadence and converges when the actual physical integration step is halved"
+  ],
+  "values": {
+    "externalSupply": {
+      "throughputKg": 76.27580125124071,
+      "vehicleGasMassChangeKg": 0
+    },
+    "firstStep": {
+      "velocityErrorMps": 1.034223631270153e-18,
+      "momentumErrorNms": 4.2724665528328796e-15
+    },
+    "tracking": [
+      {
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "yawRad": 0.5,
+        "peakPositionErrorM": 0.49924736927621427,
+        "positionErrorM": 0.00020796749424964177,
+        "attitudeErrorDeg": 0.000008203995968978142,
+        "speedMps": 0.00012510014633059318,
+        "impulseRecoveryPositionErrorM": 0.0001956367180683676
+      },
+      {
+        "pitchDeg": 10,
+        "rollDeg": 20,
+        "yawRad": 0.9,
+        "peakPositionErrorM": 0.48635813796956884,
+        "positionErrorM": 0.00024341638230573957,
+        "attitudeErrorDeg": 0.000007530548375349421,
+        "speedMps": 0.00012200914647775384,
+        "impulseRecoveryPositionErrorM": 0.00024367512568240112
+      },
+      {
+        "pitchDeg": -12,
+        "rollDeg": -22,
+        "yawRad": -0.7,
+        "peakPositionErrorM": 0.656869291535873,
+        "positionErrorM": 0.000281941568508081,
+        "attitudeErrorDeg": 0.0000031995775457445636,
+        "speedMps": 0.000214916428487177,
+        "impulseRecoveryPositionErrorM": 0.000258114665218056
+      }
+    ],
+    "unsupported": [
+      {
+        "rollDeg": 70,
+        "positionErrorM": 2.318997882055152,
+        "verticalSpeedMps": -4.155164632902447,
+        "wrenchResidual": 1.7735801521381198
+      },
+      {
+        "rollDeg": 180,
+        "positionErrorM": 4.9337737879214885,
+        "verticalSpeedMps": -9.768621835586892,
+        "wrenchResidual": 0.6473299783438448
+      }
+    ],
+    "depletion": {
+      "supportLost": {
+        "time": 5.408333333333392,
+        "pressureBar": 12.142220698098294
+      },
+      "consumedKg": 246.08287437059383,
+      "massBalanceErrorKg": -8.526512829121202e-14,
+      "finalPositionErrorM": 27.61973871327951,
+      "finalVerticalSpeedMps": -22.83692212784167
+    },
+    "timestep": {
+      "render30Vs60": 9.574257339115482e-17,
+      "render144Vs60": 2.384251114248413e-16,
+      "referenceHz": 960,
+      "error60Hz": 0.02201619193842133,
+      "error120Hz": 0.01030580445415874,
+      "error240Hz": 0.004423934404502804,
+      "errorDefinition": "position norm + velocity norm + quaternion angle (mixed-unit convergence diagnostic)"
+    }
+  },
+  "limits": "Synthetic disturbance acceptance and exact static trim for the model nozzle layout; not an OEM controller identification or an arbitrary-attitude flight guarantee."
+}

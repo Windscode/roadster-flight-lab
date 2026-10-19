@@ -1,11 +1,11 @@
 {
   "name": "roadster-flight-lab",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "private": true,
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.mjs --open",
-    "test": "node tests/physics.test.mjs && node tests/braking.test.mjs && node tests/vehicle-geometry.test.mjs && node tests/city-seal.test.mjs && node tests/handling-controls.test.mjs && node tests/air-stabilization.test.mjs && node tests/pose-hold.test.mjs && node tests/render-performance.test.mjs && node tests/local-probe-sun.test.mjs && node qa/exterior-materials-check.mjs && node tests/physics-cpu.test.mjs && node qa/render-budget-check.mjs && node tests/indirect-lighting.test.mjs && node tests/research-dynamics.test.mjs && node tests/research-study.test.mjs && node qa/city-3.4-geometry-check.mjs",
+    "test": "node tests/physics.test.mjs && node tests/braking.test.mjs && node tests/vehicle-geometry.test.mjs && node tests/city-seal.test.mjs && node tests/handling-controls.test.mjs && node tests/air-stabilization.test.mjs && node tests/pose-hold.test.mjs && node tests/render-performance.test.mjs && node tests/local-probe-sun.test.mjs && node qa/exterior-materials-check.mjs && node tests/physics-cpu.test.mjs && node qa/render-budget-check.mjs && node tests/indirect-lighting.test.mjs && node tests/research-dynamics.test.mjs && node tests/research-study.test.mjs && node qa/city-3.4-geometry-check.mjs && node tests/flight-controls-3.7.test.mjs && node tests/flight-programs.test.mjs && node tests/wind-laboratory.test.mjs",
     "validate": "node scripts/validate.mjs",
     "compare": "node scripts/compare-models.mjs",
     "package": "python scripts/package-source.py",
@@ -13,6 +13,8 @@
     "research": "node scripts/run-study.mjs",
     "test:render": "node tests/render-performance.test.mjs && node tests/local-probe-sun.test.mjs && node qa/exterior-materials-check.mjs && node qa/render-budget-check.mjs",
     "test:hold": "node tests/pose-hold.test.mjs",
-    "test:cpu": "node tests/physics-cpu.test.mjs"
+    "test:cpu": "node tests/physics-cpu.test.mjs",
+    "test:flight": "node tests/flight-controls-3.7.test.mjs && node tests/flight-programs.test.mjs",
+    "test:windlab": "node tests/wind-laboratory.test.mjs"
   }
 }

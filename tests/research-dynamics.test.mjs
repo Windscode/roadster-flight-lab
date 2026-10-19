@@ -18,17 +18,33 @@ pass('Ackermann inner and outer angles differ; disabling assistance permits real
  const assisted=flat(),raw=flat();raw.setMode('manual');for(let k=0;k<120;k++){assisted.step(dt,{lift:1});raw.step(dt,{lift:1});}const a=assisted.telemetry(),b=raw.telemetry();assert.equal(a.mode,'hover');assert.ok(a.verticalSpeed<1.6&&a.heightWorld<1.6);assert.ok(b.verticalSpeed>20&&b.heightWorld>10);values.eKey={assisted:{height:a.heightWorld,vertical:a.verticalSpeed},raw:{height:b.heightWorld,vertical:b.verticalSpeed}};
  for(let k=0;k<90;k++)assisted.step(dt);assert.ok(Math.abs(assisted.body.velocity.y)<.3);
 }
-pass('Normal E enters a bounded climb-rate controller, release brakes the rise; the separately labelled manual mode retains full physical thrust');
+pass('Normal E enters a bounded climb-rate controller, release brakes the rise; the separate raw research API retains full physical thrust');
 {
  const s=flat(),before=s.gasMass;s.body.position.y=5;s.setMode('hover');let used=0,impulse=0,ve0;for(let k=0;k<240;k++){const t=s.step(dt);used+=t.massFlowKgS*dt;impulse+=t.thrustN*dt;ve0??=t.effectiveExhaustVelocity;const ideal=Math.sqrt(2*s.params.gasGamma/(s.params.gasGamma-1)*287.05*t.gasTemperatureK);assert.ok(t.effectiveExhaustVelocity<ideal*1.02);}
  assert.ok(Math.abs(before-s.gasMass-used)<1e-8);assert.ok(Math.abs(s.telemetry().deliveredImpulseNs-impulse)<1e-6);assert.ok(s.telemetry().effectiveExhaustVelocity<ve0);assert.equal(nozzleExhaustVelocity({...s.params,nozzleModel:'constant'},50,100),650);values.exhaust={initial:ve0,cooled:s.telemetry().effectiveExhaustVelocity,usedKg:used,initialHoverSeconds:flat().telemetry().hoverSecondsEstimate};
 }
 pass('Temperature-pressure exhaust stays below the ideal energy limit, cools, and conserves actual mass flow and delivered impulse');
 {
- values.rolls=[];for(const scenario of['free','hover']){const s=flat();s.reset(scenario);s.startManeuver('roll');let inverted=false,touch=null,air=false;for(let k=0;k<960;k++){const t=s.step(dt);inverted||=s.body.quaternion.vmult({x:0,y:1,z:0}).y<-.9;if(!t.contactCount)air=true;if(k>180&&air&&t.contactCount&&!touch)touch={time:t.simTime,speed:Math.abs(t.verticalSpeed),gas:t.gasMass};assert.equal(s.world.contacts.filter(c=>c.bi===s.body||c.bj===s.body).length,0);}assert.ok(inverted&&touch&&touch.speed<.65&&touch.gas>10);assert.equal(s.mode,'drive');values.rolls.push({scenario,...touch,gasRemaining:s.gasMass});}
+ values.rolls=[];
+ for(const [scenario,tankLitres]of [['free',900],['hover',1100]]){
+  const s=flat({tankLitres});s.reset(scenario);const origin=s.body.position.y;
+  assert.equal(s.startManeuver('roll'),true);let inverted=false,touch=null,air=false;
+  for(let k=0;k<1440;k++){
+   const t=s.step(dt);inverted ||= s.body.quaternion.vmult({x:0,y:1,z:0}).y<-.9;
+   if(!t.contactCount)air=true;
+   if(k>180&&air&&t.contactCount&&!touch)touch={time:t.simTime,speed:Math.abs(t.verticalSpeed),gas:t.gasMass};
+   assert.equal(s.world.contacts.filter(c=>c.bi===s.body||c.bj===s.body).length,0);
+   if(scenario==='hover')assert.equal(t.contactCount,0,'Air-origin roll must not land and re-launch');
+   if(!t.maneuver)break; // Assess the completed maneuver before subsequent finite hover depletes its reserve.
+  }
+  assert.ok(inverted);assert.equal(s.telemetry().maneuver,null);
+  if(scenario==='free'){assert.ok(touch&&touch.speed<.65&&touch.gas>10);assert.equal(s.mode,'drive');}
+  else{assert.equal(touch,null);assert.equal(s.mode,'hover');assert.ok(Math.abs(s.body.position.y-origin)<.1);}
+  values.rolls.push({scenario,tankLitres,originHeightM:origin,finalHeightM:s.body.position.y,touchdown:touch,gasRemaining:s.gasMass});
+ }
  const blocked=new RoadsterSim();blocked.reset('ceiling');const mode=blocked.mode;assert.equal(blocked.startManeuver('roll'),false);assert.equal(blocked.mode,mode);const low=flat();low.gasMass*=.5;assert.equal(low.startManeuver('roll'),false);assert.equal(low.mode,'drive');
 }
-pass('Finite ground and airborne ballistic rolls land softly without hull impacts; gas and attitude prechecks reject infeasible launches without changing mode');
+pass('Sufficient finite ground rolls land softly and airborne rolls recover their original height without hull impacts; gas and attitude prechecks reject infeasible launches atomically');
 {
  const a=runExperiment({kind:'steer',speedKmh:80,angleDeg:2}),b=runExperiment({kind:'steer',speedKmh:80,angleDeg:2});assert.deepEqual(a.metrics,b.metrics);assert.equal(a.rows.length,80);assert.equal(a.appliedParams.steeringAssist,false);assert.ok(a.metrics.maxBetaDeg<5);assert.ok(a.rows.every((r,i)=>Math.abs(r.time-(i+1)/20)<1e-8));assert.ok(a.assumptions.length>=3);
  const rise=runExperiment({kind:'rise'});assert.ok(rise.metrics.maxVerticalMps<1.7);values.experiments={steer:a.metrics,rise:rise.metrics};
@@ -39,4 +55,4 @@ pass('Independent research fixtures are deterministic, retain applied parameters
  for(const t of m.tracks){const data=readFileSync('dist/'+t.src);assert.equal(data.length,t.bytes);assert.equal(createHash('sha256').update(data).digest('hex'),t.sha256);assert.ok(['CC-BY-4.0','CC0-1.0'].includes(t.license)&&t.attribution&&t.licenseEvidenceUrl);}
 }
 pass('The local radio includes instrumental, English and Chinese recordings with explicit attribution licenses and matching asset hashes');
-writeFileSync('qa/research-dynamics-3.4.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');
+writeFileSync('qa/research-dynamics-3.7.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');

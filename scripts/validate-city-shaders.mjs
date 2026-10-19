@@ -18,14 +18,14 @@ import {createCityExteriorMaterials} from '../dist/city-exterior-materials.js';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const dist=new URL('../dist/',import.meta.url);
 let validator=process.env.GLSLANG_VALIDATOR||'glslangValidator';
-let reportPath=path.join(root,'qa/render-shaders-3.6.json');
+let reportPath=path.join(root,'qa/render-shaders-3.7.json');
 const args=process.argv.slice(2);
 for(let i=0;i<args.length;i++){
   if(args[i]==='--validatorPath')validator=args[++i];
   else if(args[i].startsWith('--validatorPath='))validator=args[i].slice(16);
   else if(args[i]==='--report')reportPath=path.resolve(args[++i]);
   else if(args[i]==='--help'){
-    console.log('Usage: node scripts/validate-city-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shaders-3.6.json]\nRequires an existing glslangValidator; no compiler is downloaded or installed.');
+    console.log('Usage: node scripts/validate-city-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shaders-3.7.json]\nRequires an existing glslangValidator; no compiler is downloaded or installed.');
     process.exit(0);
   }else throw Error('Unknown argument: '+args[i]);
 }
@@ -44,7 +44,7 @@ const temporary=await fs.mkdtemp(path.join(os.tmpdir(),'roadster-city-shaders-')
 const sourceFiles=['scripts/validate-city-shaders.mjs','dist/vendor/three.module.js','dist/vendor/three.core.js',
   'dist/vendor/addons/csm/CSM.js','dist/vendor/addons/csm/CSMShader.js','dist/indirect-lighting.js',
   'dist/irradiance-math.js','dist/city-render-budget.js','dist/city-environment.js',
-  'dist/local-probe-sun.js','dist/road-surface-material.js','dist/city-exterior-materials.js'];
+  'dist/local-probe-sun.js','dist/road-surface-material.js','dist/city-exterior-materials.js','dist/wind-laboratory.js'];
 
 try{
   const version=await run(validator,['--version']);
@@ -130,6 +130,21 @@ try{
         normalMapUv:'uv',roughnessMap:physical,roughnessMapUv:'uv'},coverage);
     }finally{csm.remove();csm.dispose();material.dispose();}
   }
+  // The lab shares Three.js with the city, whose CSM rewrites ShaderChunk
+  // globally. Its ordinary single-key materials must still compile without
+  // city CSM or irradiance defines when we switch contexts in the same page.
+  Object.assign(emittedTHREE.ShaderChunk,THREE.ShaderChunk);
+  for(const physical of [false,true])for(const instanced of [false,true]){
+    const name='windlab-'+(physical?'physical':'standard')+'-'+(instanced?'instanced':'single');
+    await compile(name,{...THREE.ShaderLib.physical,defines:physical?{PHYSICAL:''}:{}},{
+      shaderType:physical?'MeshPhysicalMaterial':'MeshStandardMaterial',shaderName:name,
+      instancing:instanced,instancingColor:instanced,vertexColors:false,shadowMapEnabled:true,
+      shadowMapType:THREE.PCFSoftShadowMap,numDirLights:2,numDirLightShadows:1,numHemiLights:1,
+      envMap:true,envMapMode:THREE.CubeUVReflectionMapping,envMapCubeUVHeight:512,combine:THREE.MultiplyOperation,
+      clearcoat:physical,opaque:true,map:true,mapUv:'uv',roughnessMap:false,
+    },{context:'windlab',cityCSM:false,cityGI:false,globalCityShaderChunksStillPresent:true,
+      lights:'One shadowed key, one unshadowed fill, hemisphere',environment:'Static indoor CubeUV PMREM'});
+  }
   const depthShader=THREE.ShaderLib.depth;
   await compile('probe-packed-depth-opaque',{...depthShader,defines:{}},{shaderType:'MeshDepthMaterial',shaderName:'ProbeSunDepth',
     useDepthPacking:true,depthPacking:THREE.RGBADepthPacking,doubleSided:true},
@@ -140,7 +155,7 @@ try{
   const report={format:'roadster-offline-city-shader-validation-1',createdAt:new Date().toISOString(),status:failed?'failed':'passed',
     validator:{name:path.basename(validator),version:version.stdout.trim()},
     method:'Exact vendored Three.js WebGLProgram emitter captured through a fake GL sink, with the live CSM ShaderChunk mutations copied to the temporary emitter. External glslangValidator compiles and links each vertex/fragment pair; no GL context is created.',
-    scope:'Balanced vertex irradiance and high/ultra fragment irradiance, 1/2/3 fading CSM cascades, regular/instanced Standard/Physical materials, scanned road and exterior concrete/glass/enamel shaders, dedicated local sun visibility branch and packed-depth capture.',
+    scope:'Balanced vertex irradiance and high/ultra fragment irradiance, 1/2/3 fading CSM cascades, regular/instanced Standard/Physical materials, scanned road and exterior concrete/glass/enamel shaders, dedicated local sun visibility branch, packed-depth capture and plain wind-lab PBR materials after city CSM globally changes ShaderChunk.',
     limitations:['Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.',
       'Any compiler-only compatibility rename is recorded alongside the exact failure. Production vendor shaders remain unchanged.',
       'This finite matrix covers the new CSM/GI paths, not every possible material, skinning or morph-target permutation.'],

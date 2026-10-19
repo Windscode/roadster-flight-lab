@@ -44,7 +44,12 @@ for(const [frontJets,rearJets]of [[1,0],[0,1],[1,1]]){
 }
 const weak=flat();weak.body.position.y=5;weak.setParam('initialPressureBar',20);weak.step(dt,{frontJets:1});assert.ok(weak.telemetry().nozzles[0].command<8000);
 const dead=flat();dead._energyUsed=dead.params.batteryKWh;dead.step(dt,{frontJets:1,rearJets:1});assert.equal(dead.telemetry().thrustN,0);
-assert.equal(driverAxes(new Set(['Digit1'])).frontJets,1);assert.equal(driverAxes(new Set(['Numpad2'])).rearJets,1);
+assert.equal(driverAxes(new Set(['Digit1'])).pitch,1);assert.equal(driverAxes(new Set(['Numpad2'])).pitch,-1);
+assert.equal(driverAxes(new Set(['Digit1','Digit2'])).pitch,0);
+assert.equal(driverAxes(new Set(['Digit1'])).frontJets,0);assert.equal(driverAxes(new Set(['Digit2'])).rearJets,0);
+const pitchPad={connected:true,axes:[0,0,0],buttons:[{},{},{},{},{value:.7},{value:.2}]};
+assert.ok(Math.abs(driverAxes(new Set(),pitchPad).pitch-.5)<1e-12);
+assert.equal(driverAxes(new Set(['Digit2']),pitchPad).pitch,-1);
 console.log('PASS: Front/rear pair overrides retain pitch moment, valve lag, pressure limits and gas conservation');
 
 const rest={forwardSpeedKmh:0,motorLoad:0,regenForceN:0,thrustN:0,suctionN:0,contactCount:4};

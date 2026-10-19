@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-18T16:28:55.367Z",
-  "model": "Roadster Flight Lab 3.6.0",
+  "generatedAt": "2026-10-19T03:36:32.717Z",
+  "model": "Roadster Flight Lab 3.7.0",
   "scope": "软件内部动力学验收，不代表Tesla真实车辆标定",
   "physics": {
     "status": "passed",
@@ -10,132 +10,132 @@
       {
         "test": "Asymmetric torque-free rotation conserves world angular momentum and rotational energy",
         "status": "PASS",
-        "ms": 2281
+        "ms": 270
       },
       {
         "test": "Rotational midpoint integration shows second-order step-size convergence",
         "status": "PASS",
-        "ms": 2110
+        "ms": 330
       },
       {
         "test": "10 s ground rest: four contacts, no translation or rotational drift",
         "status": "PASS",
-        "ms": 1808
+        "ms": 275
       },
       {
         "test": "1 s free fall follows gravity without hidden altitude or attitude forces",
         "status": "PASS",
-        "ms": 203
+        "ms": 35
       },
       {
         "test": "Motor acceleration, friction-limited braking and steering turn the actual body",
         "status": "PASS",
-        "ms": 1183
+        "ms": 229
       },
       {
         "test": "Bench-fed hover tracks height, translates and returns to a low-speed hold",
         "status": "PASS",
-        "ms": 1763
+        "ms": 306
       },
       {
         "test": "Ceiling pressure holds for 10 s, permits tire-driven movement, then releases",
         "status": "PASS",
-        "ms": 1695
+        "ms": 288
       },
       {
         "test": "Suction requires a nearby supporting surface: no magnetic capture in free air",
         "status": "PASS",
-        "ms": 80
+        "ms": 23
       },
       {
         "test": "Finite gas consumption equals summed nozzle impulse divided by effective exhaust velocity",
         "status": "PASS",
-        "ms": 473
+        "ms": 95
       },
       {
         "test": "Exhausted gas removes all thrust; prolonged finite hover loses support",
         "status": "PASS",
-        "ms": 1537
+        "ms": 298
       },
       {
         "test": "A full roll is a six-DOF actuator maneuver with inversion, ballistic descent and recovery",
         "status": "PASS",
-        "ms": 1160
+        "ms": 185
       },
       {
         "test": "180° arch traversal continuously climbs from ground and stops upside down",
         "status": "PASS",
-        "ms": 3203
+        "ms": 737
       },
       {
         "test": "Mode takeover, non-finite input guards and scenario resets remain finite",
         "status": "PASS",
-        "ms": 2665
+        "ms": 470
       },
       {
         "test": "Normal test runs reject a hidden recovery instead of accepting a shortened simulation",
         "status": "PASS",
-        "ms": 515
+        "ms": 99
       },
       {
         "test": "Collision geometry exposes every static collider, including arch and boundaries",
         "status": "PASS",
-        "ms": 39
+        "ms": 16
       },
       {
         "test": "Released accelerator coasts with mild regeneration instead of hidden hard braking",
         "status": "PASS",
-        "ms": 477
+        "ms": 125
       },
       {
         "test": "Valve output has finite rise and decay, and consumed gas follows delivered force",
         "status": "PASS",
-        "ms": 175
+        "ms": 32
       },
       {
         "test": "Adiabatic blowdown cools the tank and has lower pressure than the equal-mass isothermal case",
         "status": "PASS",
-        "ms": 378
+        "ms": 86
       },
       {
         "test": "After a roll, hover does not retain opposing side jets in the allocator null space",
         "status": "PASS",
-        "ms": 958
+        "ms": 215
       },
       {
-        "test": "Finite-tank automatic roll remains airborne, recovers low and lands before fuel loses support",
+        "test": "A ground-origin automatic roll with adequate finite impulse returns to a gentle landing before fuel loses support",
         "status": "PASS",
-        "ms": 957
+        "ms": 269
       },
       {
         "test": "Twenty-Hz telemetry is uniform at 30, 60 and 144 display frames per second",
         "status": "PASS",
-        "ms": 770
+        "ms": 205
       },
       {
         "test": "Power exhaustion removes motor, fan and jet authority even with an external gas supply",
         "status": "PASS",
-        "ms": 82
+        "ms": 34
       },
       {
         "test": "A slow altitude integral rejects a constant unmodelled vertical load without pose correction",
         "status": "PASS",
-        "ms": 4268
+        "ms": 872
       },
       {
         "test": "CSV schema contains quaternion, gas temperature and both nozzle command and delivered force",
         "status": "PASS",
-        "ms": 78
+        "ms": 18
       },
       {
         "test": "World-space exhaust preserves force sign and does not attach old gas to a moving vehicle",
         "status": "PASS",
-        "ms": 214
+        "ms": 50
       },
       {
         "test": "Mist emission count is frame-rate independent and rear outlets share one actuator force",
         "status": "PASS",
-        "ms": 767
+        "ms": 95
       }
     ]
   },
@@ -153,7 +153,7 @@
   },
   "browserVisualQA": {
     "status": "not_performed",
-    "modelVersion": "3.6.0",
+    "modelVersion": "3.7.0",
     "reason": "No browser, GPU frame-time or visual acceptance was performed for this release. Numerical, geometric, static integration and offline shader checks have separate scopes.",
     "historicalReports": [
       "qa/browser.json",
@@ -167,14 +167,71 @@
   },
   "integration": {
     "status": "passed",
-    "fixedUiElements": 160,
-    "modulesChecked": 59,
+    "researchPanelIds": 69,
+    "samePageLab": true,
+    "fixedUiElements": 164,
+    "modulesChecked": 64,
     "meshCount": 179,
     "vertices": 155610,
     "externalRuntimeModules": 0,
     "carPhysicsIntegrationFrames": 120
   },
   "regressions": {
+    "flightControls": {
+      "status": "passed",
+      "checks": [
+        "Medium-speed steering produces smaller real turn radii while tyre friction, wheel contact and high-speed steering limits remain physical",
+        "E enters the same controlled takeoff with suction armed or disarmed, including release of an already established seal",
+        "Continuing Q on supported wheels completes touchdown in either city stabilization state and closes valves without a hover re-launch",
+        "X latches ground/air origin, completes a genuine inversion, respects its planned headroom and returns airborne starts without any touchdown",
+        "Finite-X checks impulse before starting, adequate finite tanks preserve the requested return state, and insufficient overhead clearance declines without moving the vehicle",
+        "Non-level Z/B command continuous full roll in either direction, retain finite rates, physically brake on release and do not fake inverted support",
+        "Fast manual descent can use bounded physical braking thrust, remains controllable through G takeover, and still collides when an unplanned roll lacks clearance",
+        "Normalized 1/2 pitch requests change supported attitude smoothly while world-position feedback arrests translation and holds the result",
+        "Research pose targets validate atomically, can take off through real force from supported wheels, expose bounded tuning and report unsupported inversion honestly",
+        "Program input providers and wind advance at exactly 120 Hz independently of 30/60/144 Hz rendering, while the existing 20 Hz sample callback is retained",
+        "Prescribed lab wind acts through relative-airflow aerodynamic force with deterministic gust timing, validated parameters and a true calm reset"
+      ]
+    },
+    "flightPrograms": {
+      "status": "passed",
+      "checks": [
+        "versioned presets round-trip with independent copies and bounded stages",
+        "reject non-finite, coerced, unknown, over-budget and unsafe imported data",
+        "shortcut conflicts and all reserved game/browser keys are rejected",
+        "controller persistence validates before writing and corruption falls back visibly",
+        "attitude convention raises the nose and quaternion error ignores sign",
+        "fixed-step schedule is identical across rendering frame groupings",
+        "pose stages issue references only and preserve initial full quaternion",
+        "every pilot axis cancels immediately without changing pilot values or rigid-body state",
+        "scene changes and reset cancel on original simulation and restore its wind / supply",
+        "wind preset changes only references and restores prior settings after completion",
+        "continuous rotation is rate bounded, can span 360°, then captures measured attitude",
+        "settling stage needs sustained measured stability and records unreachable timeout honestly",
+        "builtin maneuver completion is observed; precheck refusal and timeout never succeed",
+        "landing requires contact and descent convergence and remains drive after success",
+        "20 Hz gas accounting measures bench throughput instead of reservoir difference",
+        "bounded result persistence retains honest outcome and compact samples",
+        "actual rigid-body pose-step preset reaches its target without state assignment",
+        "actual gust-rejection preset measures crosswind response and restores calm",
+        "actual ground-start roll preset only completes after physically returning to ground",
+        "actual airborne roll preset finishes near starting height and keeps physical hold",
+        "actual finite-tank preset lands and preserves measured consumption when supply restores"
+      ]
+    },
+    "windLaboratory": {
+      "status": "passed",
+      "checks": [
+        "The rendered collision solids match actual laboratory physics transforms",
+        "The physical floor, roof and clear test volume use one metre-based datum",
+        "All qualities keep finite geometry and a bounded scene budget without reallocating meshes",
+        "Flow is passive advection of the given velocity and stops at zero physical time",
+        "Commanded pose display reads target position/quaternion without modifying simulation state",
+        "A single stable-direction studio shadow obeys profile cadence and quality changes",
+        "Failed indoor reflection capture restores renderer and foreign visibility state",
+        "Disposal releases owned GPU resources once and leaves shared arrow geometry untouched"
+      ]
+    },
     "localReflectionSun": {
       "status": "passed",
       "checks": [
@@ -293,7 +350,7 @@
         "Supported combined pitch/roll attitudes converge to their captured pose and position, reject an external impulse, and retain finite braking overshoot",
         "Unsupported attitudes, absent power, empty gas and undersized nozzles cannot freeze or support the vehicle; feasibility and residual expose the limitation",
         "Finite-tank hold loses support as pressure and temperature fall and conserves every kilogram of delivered nozzle mass flow without hidden replenishment",
-        "Deliberate pilot inputs release fixed hold to level assistance, manual 1/2 valves retain priority, and explicit mode/suction/reset commands release stale references",
+        "Deliberate pilot inputs release research hold to manual attitude control, explicit raw-valve API inputs retain priority, and mode/suction/reset commands release stale references",
         "Tire contact, hull contact and ceiling adhesion inhibit hold thrust without repeatedly relatching the captured world reference",
         "Hold is independent of 30/60/144 Hz render cadence and converges when the actual physical integration step is halved"
       ]
@@ -316,7 +373,7 @@
         "Isolated hover captures the same horizontal reference as its initial state and reports external through-flow separately from tank depletion",
         "Finite hover distinguishes capacity loss, sustained tracking error and ground contact while conserving gas mass",
         "Matched attitude A/B changes only the real stabilizer and requires a sustained low-error low-angular-rate recovery",
-        "Roll separates complete rotation, pre-contact velocity and confirmed landing; intentional descent is not a height-hold failure and rejected maneuvers have no fabricated samples",
+        "Finite 900 L ground roll completes a full rotation and confirmed stable landing with conserved gas and remaining reserve; finite 600 L and 200 L preflight rejections leave state unchanged with no samples, impulse or gas use",
         "Single-factor friction sweep keeps identical initial conditions and produces monotonic measured brake distances with confirmed stops",
         "Fixed-wheel protocol exposes its assistance override while fixed-driver A/B retains an actual difference in road-wheel angle and logs speed accuracy",
         "Identical model and protocol reproduce complete source curves at uniform 20 Hz and protocol identity ignores parameter ordering",
@@ -328,9 +385,9 @@
       "checks": [
         "60–160 km/h brief keyboard turns remain below one degree sideslip and settle without resetting pose or velocity",
         "Ackermann inner and outer angles differ; disabling assistance permits real saturation while every combined tire force remains friction-bounded",
-        "Normal E enters a bounded climb-rate controller, release brakes the rise; the separately labelled manual mode retains full physical thrust",
+        "Normal E enters a bounded climb-rate controller, release brakes the rise; the separate raw research API retains full physical thrust",
         "Temperature-pressure exhaust stays below the ideal energy limit, cools, and conserves actual mass flow and delivered impulse",
-        "Finite ground and airborne ballistic rolls land softly without hull impacts; gas and attitude prechecks reject infeasible launches without changing mode",
+        "Sufficient finite ground rolls land softly and airborne rolls recover their original height without hull impacts; gas and attitude prechecks reject infeasible launches atomically",
         "Independent research fixtures are deterministic, retain applied parameters and assumptions, and record uniform 20 Hz source data",
         "The local radio includes instrumental, English and Chinese recordings with explicit attribution licenses and matching asset hashes"
       ]
@@ -434,22 +491,22 @@
         {
           "test": "Every authored position and normal is finite; nonzero normals are unit length",
           "status": "PASS",
-          "ms": 63
+          "ms": 12
         },
         {
           "test": "Full suspension travel is represented directly, without shrinking or visually clamping tyres",
           "status": "PASS",
-          "ms": 18
+          "ms": 4
         },
         {
           "test": "Whole tyre sweep clears arch, roof, inner wheelhouse and isolated thrust duct",
           "status": "PASS",
-          "ms": 2742
+          "ms": 623
         },
         {
           "test": "Continuous pressure chamber has an airtight roof, isolated wheel/jet cutouts and surface-following seal",
           "status": "PASS",
-          "ms": 7
+          "ms": 2
         },
         {
           "test": "Cabin glazing, body aperture, individual LED lenses and suspension articulation exist",
@@ -459,32 +516,32 @@
         {
           "test": "Pressed door has interior surface samples and each lamp is an actual opening in paint",
           "status": "PASS",
-          "ms": 138
+          "ms": 38
         },
         {
           "test": "All 20 physical seal segments and interpolation correction survive exterior rebuilding",
           "status": "PASS",
-          "ms": 3
+          "ms": 1
         },
         {
           "test": "Render profiles reduce actual geometry and preserve articulated object identities and state",
           "status": "PASS",
-          "ms": 1500
+          "ms": 310
         },
         {
           "test": "Separate glazing panels share continuous derivative normals at every quality",
           "status": "PASS",
-          "ms": 17
+          "ms": 3
         },
         {
           "test": "Balanced cutaway reveals real hardware and an unchanged seal does not rebuild its mesh",
           "status": "PASS",
-          "ms": 14
+          "ms": 1
         },
         {
           "test": "Late-created force nozzles use the selected profile and switching back reuses cached geometry",
           "status": "PASS",
-          "ms": 66
+          "ms": 11
         }
       ],
       "sweep": {
@@ -516,14 +573,21 @@
       ]
     }
   },
-  "totalAcceptanceChecks": 132,
+  "totalAcceptanceChecks": 172,
   "sourceIdentity": {
-    "modelBuildId": "e7400a1f1e57f257cb8a312380eae40cb27c2ac1b6077675eff2ab59d705668b",
+    "modelBuildId": "204d9ba23dfa5df51fdd5ead194a141a8e3c3482649f6619fe65372baa5214bc",
     "sourceHashes": {
-      "physics.js": "b8619637305b090b138b66692012591f0cf104801a075ab50bf615ef22b18487",
-      "vehicle-models.js": "46f5d343699d885e63b2df432ba85f266227d4773c07bdc598b1b6144c9c0d2a",
+      "physics.js": "9a2e4fb1ffb22153126f56c1156c74ff451ec054e732cb817beca820bbdbe355",
+      "wind-lab-data.js": "27ce72f8053b99037462be6c4b62d37d371021d6e02fca96d4392587d9f2ab41",
+      "flight-programs.js": "6608c3d0e088bc0f03772ff50625cac3dceffae56d43ac966da5aed8e3636288",
+      "main.js": "7965e2e5dfd88e2bf237245f1e7a3481fb9579428183f7a75a95193ac38d95c3",
+      "research-console.js": "c95d7b9dba935eaaf2966eca37f751f5038c10143e4fe11a4e96de261d7721bc",
+      "wind-laboratory.js": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d",
+      "research-lab.js": "d31a19249ae3db6c111b44d56f3a94d68f461551ad3ee69367c1518ae3f4b63b",
+      "research-workbench.js": "f28d5a76aad53020e8ca0454dec866743718a6c1740553958ae0688cbb1af665",
+      "vehicle-models.js": "db9a0479e1c50735dee2eeed8c1c686ae2e0dba2fd435d87110f9db724a709cc",
       "vehicle-layout.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
-      "controls.js": "2707db9b0317018588634580a351a51e4c427780075f7739fd181858f919201f",
+      "controls.js": "aedb51653e11249d6693ae140059539939a749b29d323ba990b1f8b731c0e6e7",
       "static-city-broadphase.js": "02e290e83ffd4d341211b75a70f2408010006001fb600a2d0a279fb8d8c45a14",
       "experiment-worker.js": "e4c47960f334d88b725b4836fc0338e1b65889b5cf438265129bf738b8f66ac4",
       "research-protocol.js": "b859da8b26ca26e18bfc3d012d4251728e7357e3bfa03f26a6e1769fee8c7898",
@@ -542,8 +606,8 @@
   "offlineShaderValidation": {
     "scope": "Offline syntax and stage-interface checks, not WebGL driver, framebuffer, rendered-pixel or FPS validation.",
     "postProcessing": {
-      "report": "qa/render-shader-validation-3.6.json",
-      "createdAt": "2026-10-18T16:24:07.243Z",
+      "report": "qa/render-shader-validation-3.7.json",
+      "createdAt": "2026-10-19T03:17:34.158Z",
       "sourceHashesCurrent": true,
       "status": "passed_with_documented_compiler_normalization",
       "programPairs": 18,
@@ -558,14 +622,14 @@
       ]
     },
     "cityLighting": {
-      "report": "qa/render-shaders-3.6.json",
-      "createdAt": "2026-10-18T16:24:11.189Z",
+      "report": "qa/render-shaders-3.7.json",
+      "createdAt": "2026-10-19T03:17:38.047Z",
       "sourceHashesCurrent": true,
       "status": "passed_with_documented_compiler_normalization",
-      "programPairs": 37,
-      "stages": 74,
+      "programPairs": 41,
+      "stages": 82,
       "exactPass": 0,
-      "compatibilityPass": 37,
+      "compatibilityPass": 41,
       "failed": 0,
       "limitations": [
         "Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.",
@@ -574,5 +638,41 @@
       ]
     }
   },
-  "completedAt": "2026-10-18T16:32:33Z"
+  "domInteractionQA": {
+    "status": "passed",
+    "scope": "DOM events with actual application/controller code and explicit graphics/Worker facades. No actual browser layout, WebGL execution or FPS validation.",
+    "acceptanceGroups": 16,
+    "mainPage": {
+      "report": "qa/same-page-ui-3.7.json",
+      "sourceHashesCurrent": true,
+      "status": "passed",
+      "scope": "DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.",
+      "checks": [
+        "Actual main.js boots the city through the primary entry and advances the real 120 Hz simulation with a single viewport canvas",
+        "Actual G event routing has only off/level states, and keyboard/numpad 1/2 deliver normalized pitch without opening raw valves",
+        "City/lab switching keeps one document and renderer, uses isolated real physics worlds, preserves the city vehicle state and routes drawing to the active scene",
+        "All three quality changes and context round trips update the active car/environment and restore city AO to the right scene while keeping it disabled in the lab",
+        "Actual form-focus events suppress driving, stabilization and saved-program shortcuts, and clear a previously held throttle",
+        "The actual editor persists a custom shortcut, runs its real force-controlled program in both scenes and yields immediately to pilot pitch or the stop control",
+        "Closing the advanced study while its real lazy import is pending does not reopen a late panel or duplicate its DOM/styles",
+        "Actual advanced-study DOM pauses the live vehicle, isolates form parameters and driving shortcuts, copies current parameters without mutation, then resumes exactly once on Escape",
+        "Closing the study preserves an existing pause, and switching back to the city closes the reused panel and restores the correct single-viewport scene"
+      ]
+    },
+    "advancedStudy": {
+      "report": "qa/research-panel-dom-3.7.json",
+      "sourceHashesCurrent": true,
+      "status": "passed",
+      "scope": "JSDOM events and state, with four actual deterministic solver reports through an asynchronous Worker API facade. Historical-version fixtures test storage only. Canvas is stubbed; no browser layout, actual Worker-thread scheduling, GPU pixels or FPS evidence.",
+      "checks": [
+        "Two mounted study instances have local fields, unique labels and scoped CSS",
+        "Reading current parameters does not reset or advance the live laboratory vehicle",
+        "A complete A/B study runs two frozen requests and renders actual solver responses",
+        "Sweep configuration, archive export and imported-mode exit remain usable",
+        "Cancelling, closing and disposal stop workers and keep the active page intact",
+        "Historical fixtures remain readable and cannot overwrite or co-plot with a new model at the storage cap",
+        "Oversized old archives are protected before parsing and new session results remain exportable"
+      ]
+    }
+  }
 }

@@ -30,7 +30,18 @@ export function enrichValidationReport(report){
     historicalReports:['qa/browser.json','qa/city-3.4-browser-assets.json'],
     historyScope:'Older-version reports are preserved as history and do not validate this release.'};
   report.offlineShaderValidation={scope:'Offline syntax and stage-interface checks, not WebGL driver, framebuffer, rendered-pixel or FPS validation.',
-    postProcessing:shaderEvidence('qa/render-shader-validation-3.6.json'),
-    cityLighting:shaderEvidence('qa/render-shaders-3.6.json')};
+    postProcessing:shaderEvidence('qa/render-shader-validation-3.7.json'),
+    cityLighting:shaderEvidence('qa/render-shaders-3.7.json')};
+  function domEvidence(file){
+    if(!existsSync(new URL(file,root)))return{report:file,status:'not_performed',checks:[]};
+    const evidence=read(file),hashes=Object.entries(evidence.sourceHashes||{});
+    const current=hashes.length>0&&hashes.every(([name,expected])=>existsSync(new URL(name,root))&&createHash('sha256').update(readFileSync(new URL(name,root))).digest('hex')===expected);
+    const groups=evidence.checks||evidence.tests||[],passed=evidence.status==='passed'||evidence.pass===true||groups.length>0&&groups.every(group=>group.status==='PASS');
+    return{report:file,sourceHashesCurrent:current,status:!current?'outdated_source':passed?'passed':'failed',scope:evidence.scope||evidence.limits,checks:groups.map(group=>typeof group==='string'?group:group.name)};
+  }
+  const mainPage=domEvidence('qa/same-page-ui-3.7.json'),advancedStudy=domEvidence('qa/research-panel-dom-3.7.json');
+  report.domInteractionQA={status:[mainPage,advancedStudy].every(e=>e.status==='passed')?'passed':'incomplete_or_stale',
+    scope:'DOM events with actual application/controller code and explicit graphics/Worker facades. No actual browser layout, WebGL execution or FPS validation.',
+    acceptanceGroups:mainPage.checks.length+advancedStudy.checks.length,mainPage,advancedStudy};
   return report;
 }

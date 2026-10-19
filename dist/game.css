@@ -35,3 +35,22 @@ body{font-family:Arial,'Microsoft YaHei',sans-serif;background:var(--ink)}
 body[data-quality="balanced"] .game-menu,body[data-quality="balanced"] .game-tools button,body[data-quality="balanced"] .drawer-scrim{backdrop-filter:none}
 @media(max-height:800px){.menu-page{margin-top:28px}.menu-page #play-city{min-height:91px;padding:20px 25px}.destination-grid button{min-height:83px;padding:13px}.menu-footer{margin-top:23px;padding-top:18px}}
 @media(max-width:650px){.menu-page h1{font-size:27px}.menu-page #play-city{padding:19px 16px;min-height:106px}.city-entry strong{font-size:21px}.city-entry small{font-size:9px;line-height:1.7;max-width:160px}.city-entry .entry-arrow{font-size:26px}.entry-actions{margin-top:23px}.workbench-entry{font-size:11px}.workbench-entry small{font-size:9px}.render-stat-chip{top:22px;left:18px;font-size:8px;padding:6px}.hud-hold{font-size:8px}.performance-grid b{font-size:14px}}
+
+/* Same-page city / wind-lab shell. The workbench keeps the live viewport visible. */
+button.workbench-entry{width:100%;background:transparent;border:0;border-bottom:1px solid #809dad38;text-align:left;cursor:pointer;font-family:inherit}
+button.research-panel-link{width:100%;text-align:left;font:inherit;cursor:pointer}
+.game-tools .context-switch,.game-tools .research-tool{font-size:11px;letter-spacing:.4px;padding:11px 13px}
+.game-tools .context-switch{color:#bedccf;border-color:#739f9180}
+body[data-context="lab"] .screen-shade{opacity:.3}
+body[data-context="lab"] .status-banner{max-width:330px;top:77px}
+.research-open .status-banner{left:25px;transform:none;top:126px;max-width:320px}
+.body-menu .rc-running-chip{visibility:hidden}
+@media(min-width:1100px){.research-open .speed-block{margin-right:440px}}
+@media(max-width:1099px){.research-open .speed-block{display:none}}
+@media(max-width:900px){.game-tools{gap:6px}.game-tools .context-switch,.game-tools .research-tool{font-size:10px;padding:10px}.game-tools kbd{display:none}.game-tools button{padding:9px 11px}.research-open .driver-hud{opacity:.25}}
+@media(max-width:650px){.game-tools{top:12px;right:10px}.game-tools .context-switch{max-width:95px;padding:8px;font-size:9px}.game-tools .research-tool{font-size:9px;padding:8px}.game-tools #game-camera{padding:6px 10px}.game-tools #menu-btn{padding:6px 9px}.render-stat-chip{top:55px}.research-open .render-stat-chip{opacity:0}.research-open .status-banner{display:none}}
+
+#research-study-root{position:fixed;z-index:49;top:74px;right:24px;bottom:24px;width:min(920px,72vw);border:1px solid #7795986b;border-radius:8px;overflow:hidden;background:#101c21;box-shadow:0 16px 60px #0006}
+.study-open .speed-block{display:none}.study-open .status-banner{display:none}
+.body-cinema #research-study-root{visibility:hidden}
+@media(max-width:900px){#research-study-root{left:12px;right:12px;top:66px;bottom:12px;width:auto}.study-open .driver-hud{opacity:.2}}

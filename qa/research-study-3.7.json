@@ -1,0 +1,520 @@
+{
+  "status": "passed",
+  "checks": [
+    "Exported model build identity matches the source hashes of the solver, fixture, protocol and imported geometry",
+    "Isolated hover captures the same horizontal reference as its initial state and reports external through-flow separately from tank depletion",
+    "Finite hover distinguishes capacity loss, sustained tracking error and ground contact while conserving gas mass",
+    "Matched attitude A/B changes only the real stabilizer and requires a sustained low-error low-angular-rate recovery",
+    "Finite 900 L ground roll completes a full rotation and confirmed stable landing with conserved gas and remaining reserve; finite 600 L and 200 L preflight rejections leave state unchanged with no samples, impulse or gas use",
+    "Single-factor friction sweep keeps identical initial conditions and produces monotonic measured brake distances with confirmed stops",
+    "Fixed-wheel protocol exposes its assistance override while fixed-driver A/B retains an actual difference in road-wheel angle and logs speed accuracy",
+    "Identical model and protocol reproduce complete source curves at uniform 20 Hz and protocol identity ignores parameter ordering",
+    "Study archive import revalidates frozen requests, ignores supplied metrics and rejects oversized, non-finite or scientifically inapplicable protocols"
+  ],
+  "values": {
+    "benchHover": {
+      "maxBetaDeg": null,
+      "betaValidFraction": 0,
+      "maxYawRateDegS": 0,
+      "maxVerticalMps": 0.10217379174667099,
+      "maxHeightM": 4.009992427932147,
+      "minHeightM": 3.9194625492564765,
+      "maxAbsRollDeg": 0,
+      "rollTravelDeg": 0,
+      "completeRotation": false,
+      "inverted": false,
+      "gasUsedKg": 0,
+      "throughputKg": 380.79234153907123,
+      "massBalanceErrorKg": 0,
+      "deliveredImpulseNs": 215776.00962247862,
+      "remainingGasKg": 249.55820028489444,
+      "initialHoverEstimateSeconds": null,
+      "lossOfSupportSeconds": null,
+      "heightHoldLostSeconds": null,
+      "groundTouchSeconds": null,
+      "touchdown": null,
+      "stableLanding": null,
+      "stop": null,
+      "speedRmseKmh": null,
+      "meanSpeedKmh": null,
+      "minSpeedKmh": null,
+      "maxSpeedKmh": null,
+      "heightRmseM": 0.02072932700365456,
+      "maxPositionErrorM": 0,
+      "finalPositionErrorM": 0,
+      "releaseOvershootM": null,
+      "recoveredAtSeconds": null,
+      "recoveryMaintainedToEnd": false,
+      "driverSaturationSeconds": 0,
+      "nozzleSaturationSeconds": 0,
+      "allocationRmse": 0.01242422486345949,
+      "maxHeadingDeviationDeg": 0,
+      "maxLateralDeviationM": 0,
+      "hullContactSamples": 0
+    },
+    "finiteHover": {
+      "maxBetaDeg": null,
+      "betaValidFraction": 0,
+      "maxYawRateDegS": 9.854272697908391e-8,
+      "maxVerticalMps": 0.7873101327215958,
+      "maxHeightM": 4.0110014645136784,
+      "minHeightM": 0.5427497511425193,
+      "maxAbsRollDeg": 0.0009646870330490768,
+      "rollTravelDeg": 4.612476168780829e-12,
+      "completeRotation": false,
+      "inverted": false,
+      "gasUsedKg": 246.282888726036,
+      "throughputKg": 246.2828887260362,
+      "massBalanceErrorKg": -1.9895196601282805e-13,
+      "deliveredImpulseNs": 115203.12079564626,
+      "remainingGasKg": 3.2753115588584616,
+      "initialHoverEstimateSeconds": 5.385219990492912,
+      "lossOfSupportSeconds": 5.408333333333392,
+      "heightHoldLostSeconds": 6.216666666666765,
+      "groundTouchSeconds": 6.433333333333443,
+      "touchdown": {
+        "time": 6.433333333333443,
+        "speedMps": 7.79665266575153,
+        "postStepSpeedMps": 7.12564400435624,
+        "remainingGasKg": 3.6521122420460816,
+        "definition": "首次承载轮胎射线；垂速取接触前一个120Hz样本，不等于接触冲量求解峰值"
+      },
+      "stableLanding": null,
+      "stop": null,
+      "speedRmseKmh": null,
+      "meanSpeedKmh": null,
+      "minSpeedKmh": null,
+      "maxSpeedKmh": null,
+      "heightRmseM": 2.077799518037182,
+      "maxPositionErrorM": 0.000008407200647876021,
+      "finalPositionErrorM": 0.000001193122684892031,
+      "releaseOvershootM": null,
+      "recoveredAtSeconds": null,
+      "recoveryMaintainedToEnd": false,
+      "driverSaturationSeconds": 0,
+      "nozzleSaturationSeconds": 1.0166666666666655,
+      "allocationRmse": 0.20542729556993142,
+      "maxHeadingDeviationDeg": 8.571419130021241e-10,
+      "maxLateralDeviationM": 0.000008334411029858765,
+      "hullContactSamples": 32
+    },
+    "attitude": [
+      {
+        "outcome": "not_recovered_in_window",
+        "metrics": {
+          "maxBetaDeg": null,
+          "betaValidFraction": 0,
+          "maxYawRateDegS": 30.290318690856587,
+          "maxVerticalMps": 1.1987555732750315,
+          "maxHeightM": 12,
+          "minHeightM": 0.5664192411046985,
+          "maxAbsRollDeg": 59.51400347885532,
+          "rollTravelDeg": -35.00000274678194,
+          "completeRotation": false,
+          "inverted": false,
+          "gasUsedKg": 0,
+          "throughputKg": 0,
+          "massBalanceErrorKg": 0,
+          "deliveredImpulseNs": 0,
+          "remainingGasKg": 249.55820028489444,
+          "initialHoverEstimateSeconds": 5.385219990492912,
+          "lossOfSupportSeconds": null,
+          "heightHoldLostSeconds": 0.6416666666666668,
+          "groundTouchSeconds": 1.4916666666666638,
+          "touchdown": {
+            "time": 1.4916666666666638,
+            "speedMps": 14.457472045802545,
+            "postStepSpeedMps": 5.5630188669140175,
+            "remainingGasKg": 249.55820028489444,
+            "definition": "首次承载轮胎射线；垂速取接触前一个120Hz样本，不等于接触冲量求解峰值"
+          },
+          "stableLanding": null,
+          "stop": null,
+          "speedRmseKmh": null,
+          "meanSpeedKmh": null,
+          "minSpeedKmh": null,
+          "maxSpeedKmh": null,
+          "heightRmseM": 9.456468971970258,
+          "maxPositionErrorM": 0.01946840031184405,
+          "finalPositionErrorM": 0.007492002435222249,
+          "releaseOvershootM": null,
+          "recoveredAtSeconds": null,
+          "recoveryMaintainedToEnd": false,
+          "driverSaturationSeconds": 0,
+          "nozzleSaturationSeconds": 0,
+          "allocationRmse": 0,
+          "maxHeadingDeviationDeg": 8.507321828333136,
+          "maxLateralDeviationM": 0.018831505351257157,
+          "hullContactSamples": 85
+        }
+      },
+      {
+        "outcome": "recovered",
+        "metrics": {
+          "maxBetaDeg": null,
+          "betaValidFraction": 0,
+          "maxYawRateDegS": 5.582592446206395,
+          "maxVerticalMps": 0.14800084954270573,
+          "maxHeightM": 12.025794864352504,
+          "minHeightM": 11.935061767176249,
+          "maxAbsRollDeg": 35.55175794004581,
+          "rollTravelDeg": -35.00002132933758,
+          "completeRotation": false,
+          "inverted": false,
+          "gasUsedKg": 178.17339612904726,
+          "throughputKg": 178.1733961290475,
+          "massBalanceErrorKg": -2.2737367544323206e-13,
+          "deliveredImpulseNs": 91750.2109424386,
+          "remainingGasKg": 71.38480415584716,
+          "initialHoverEstimateSeconds": 5.385219990492912,
+          "lossOfSupportSeconds": null,
+          "heightHoldLostSeconds": null,
+          "groundTouchSeconds": null,
+          "touchdown": null,
+          "stableLanding": null,
+          "stop": null,
+          "speedRmseKmh": null,
+          "meanSpeedKmh": null,
+          "minSpeedKmh": null,
+          "maxSpeedKmh": null,
+          "heightRmseM": 0.024435844237274434,
+          "maxPositionErrorM": 2.442547075336915,
+          "finalPositionErrorM": 2.442547075336915,
+          "releaseOvershootM": null,
+          "recoveredAtSeconds": 1.5416666666666636,
+          "recoveryMaintainedToEnd": true,
+          "driverSaturationSeconds": 0,
+          "nozzleSaturationSeconds": 0,
+          "allocationRmse": 0.037474318411663474,
+          "maxHeadingDeviationDeg": 0.3164905442043846,
+          "maxLateralDeviationM": 2.370939722316625,
+          "hullContactSamples": 0
+        }
+      }
+    ],
+    "roll": {
+      "maxBetaDeg": null,
+      "betaValidFraction": 0,
+      "maxYawRateDegS": 0.01660583390135176,
+      "maxVerticalMps": 10.99161338582091,
+      "maxHeightM": 13.620262948634746,
+      "minHeightM": 0.5911115169561715,
+      "maxAbsRollDeg": 179.51677978655084,
+      "rollTravelDeg": 360.00212043533173,
+      "completeRotation": true,
+      "inverted": true,
+      "gasUsedKg": 322.8310990299134,
+      "throughputKg": 322.83109902991265,
+      "massBalanceErrorKg": 7.389644451905042e-13,
+      "deliveredImpulseNs": 160550.67013901696,
+      "remainingGasKg": 51.5062013974283,
+      "initialHoverEstimateSeconds": 7.814716454030733,
+      "lossOfSupportSeconds": null,
+      "heightHoldLostSeconds": null,
+      "groundTouchSeconds": null,
+      "touchdown": {
+        "time": 7.166666666666813,
+        "speedMps": 0.2989997368340564,
+        "postStepSpeedMps": 0.29787154038215724,
+        "remainingGasKg": 53.98596385138934,
+        "definition": "首次承载轮胎射线；垂速取接触前一个120Hz样本，不等于接触冲量求解峰值"
+      },
+      "stableLanding": {
+        "time": 7.691666666666839,
+        "confirmationSeconds": 0.5,
+        "remainingGasKg": 51.5062013997753
+      },
+      "stop": null,
+      "speedRmseKmh": null,
+      "meanSpeedKmh": null,
+      "minSpeedKmh": null,
+      "maxSpeedKmh": null,
+      "heightRmseM": null,
+      "maxPositionErrorM": 1.9619198611666926,
+      "finalPositionErrorM": 0.2436733445051365,
+      "releaseOvershootM": null,
+      "recoveredAtSeconds": null,
+      "recoveryMaintainedToEnd": false,
+      "driverSaturationSeconds": 0,
+      "nozzleSaturationSeconds": 0.37500000000000033,
+      "allocationRmse": 0.10158184074284811,
+      "maxHeadingDeviationDeg": 0.004314583872105146,
+      "maxLateralDeviationM": 1.9619198608741488,
+      "hullContactSamples": 0
+    },
+    "rollFixture": {
+      "supplyMode": "finite",
+      "tankLitres": 900,
+      "outcome": "stable_landing",
+      "initialState": {
+        "position": {
+          "x": 0,
+          "y": 0.5923018217781622,
+          "z": -350
+        },
+        "velocity": {
+          "x": 0,
+          "y": -9.327023233058687e-7,
+          "z": 0
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "angularVelocity": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "gasKg": 374.3373004273417,
+        "temperatureK": 293.15,
+        "pressureBar": 350,
+        "mode": "drive",
+        "contacts": 4
+      },
+      "finalState": {
+        "position": {
+          "x": -0.24367191775014063,
+          "y": 0.6046896966673806,
+          "z": -349.9991661401271
+        },
+        "velocity": {
+          "x": 0.0009429566628389731,
+          "y": -0.008774968896511848,
+          "z": -0.000003859453260272472
+        },
+        "quaternion": {
+          "x": -1.2327628306697528e-7,
+          "y": 0.000003643798571247407,
+          "z": -0.00001850428950081705,
+          "w": -0.9999999998221495
+        },
+        "angularVelocity": {
+          "x": -0.0000056431688866590615,
+          "y": -2.021088275819191e-10,
+          "z": -0.0012123096069335015
+        },
+        "gasKg": 51.5062013974283,
+        "temperatureK": 137.3824059345098,
+        "pressureBar": 22.568655184004665,
+        "mode": "drive",
+        "contacts": 4
+      }
+    },
+    "rejectedRolls": [
+      {
+        "supplyMode": "finite",
+        "tankLitres": 600,
+        "outcome": "rejected",
+        "sampleCount": 0,
+        "initialState": {
+          "position": {
+            "x": 0,
+            "y": 0.5970093908740407,
+            "z": -350
+          },
+          "velocity": {
+            "x": 0,
+            "y": -0.00000213762181478917,
+            "z": 0
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "gasKg": 249.55820028489444,
+          "temperatureK": 293.15,
+          "pressureBar": 350,
+          "mode": "drive",
+          "contacts": 4
+        },
+        "finalState": {
+          "position": {
+            "x": 0,
+            "y": 0.5970093908740407,
+            "z": -350
+          },
+          "velocity": {
+            "x": 0,
+            "y": -0.00000213762181478917,
+            "z": 0
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "gasKg": 249.55820028489444,
+          "temperatureK": 293.15,
+          "pressureBar": 350,
+          "mode": "drive",
+          "contacts": 4
+        },
+        "metrics": {
+          "maxBetaDeg": null,
+          "betaValidFraction": 0,
+          "maxYawRateDegS": 0,
+          "maxVerticalMps": 0,
+          "maxHeightM": 0.5970093908740407,
+          "minHeightM": 0.5970093908740407,
+          "maxAbsRollDeg": 0,
+          "rollTravelDeg": 0,
+          "completeRotation": false,
+          "inverted": false,
+          "gasUsedKg": 0,
+          "throughputKg": 0,
+          "massBalanceErrorKg": 0,
+          "deliveredImpulseNs": 0,
+          "remainingGasKg": 249.55820028489444,
+          "initialHoverEstimateSeconds": 5.385219990492912,
+          "lossOfSupportSeconds": null,
+          "heightHoldLostSeconds": null,
+          "groundTouchSeconds": null,
+          "touchdown": null,
+          "stableLanding": null,
+          "stop": null,
+          "speedRmseKmh": null,
+          "meanSpeedKmh": null,
+          "minSpeedKmh": null,
+          "maxSpeedKmh": null,
+          "heightRmseM": null,
+          "maxPositionErrorM": 0,
+          "finalPositionErrorM": 0,
+          "releaseOvershootM": null,
+          "recoveredAtSeconds": null,
+          "recoveryMaintainedToEnd": false,
+          "driverSaturationSeconds": 0,
+          "nozzleSaturationSeconds": 0,
+          "allocationRmse": 0,
+          "maxHeadingDeviationDeg": 0,
+          "maxLateralDeviationM": 0,
+          "hullContactSamples": 0
+        }
+      },
+      {
+        "supplyMode": "finite",
+        "tankLitres": 200,
+        "outcome": "rejected",
+        "sampleCount": 0,
+        "initialState": {
+          "position": {
+            "x": 0,
+            "y": 0.6032864290984059,
+            "z": -350
+          },
+          "velocity": {
+            "x": 0,
+            "y": -0.0000011788416902517586,
+            "z": 0
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "gasKg": 83.18606676163148,
+          "temperatureK": 293.15,
+          "pressureBar": 350,
+          "mode": "drive",
+          "contacts": 4
+        },
+        "finalState": {
+          "position": {
+            "x": 0,
+            "y": 0.6032864290984059,
+            "z": -350
+          },
+          "velocity": {
+            "x": 0,
+            "y": -0.0000011788416902517586,
+            "z": 0
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "gasKg": 83.18606676163148,
+          "temperatureK": 293.15,
+          "pressureBar": 350,
+          "mode": "drive",
+          "contacts": 4
+        },
+        "metrics": {
+          "maxBetaDeg": null,
+          "betaValidFraction": 0,
+          "maxYawRateDegS": 0,
+          "maxVerticalMps": 0,
+          "maxHeightM": 0.6032864290984059,
+          "minHeightM": 0.6032864290984059,
+          "maxAbsRollDeg": 0,
+          "rollTravelDeg": 0,
+          "completeRotation": false,
+          "inverted": false,
+          "gasUsedKg": 0,
+          "throughputKg": 0,
+          "massBalanceErrorKg": 0,
+          "deliveredImpulseNs": 0,
+          "remainingGasKg": 83.18606676163148,
+          "initialHoverEstimateSeconds": 1.8807135251862355,
+          "lossOfSupportSeconds": null,
+          "heightHoldLostSeconds": null,
+          "groundTouchSeconds": null,
+          "touchdown": null,
+          "stableLanding": null,
+          "stop": null,
+          "speedRmseKmh": null,
+          "meanSpeedKmh": null,
+          "minSpeedKmh": null,
+          "maxSpeedKmh": null,
+          "heightRmseM": null,
+          "maxPositionErrorM": 0,
+          "finalPositionErrorM": 0,
+          "releaseOvershootM": null,
+          "recoveredAtSeconds": null,
+          "recoveryMaintainedToEnd": false,
+          "driverSaturationSeconds": 0,
+          "nozzleSaturationSeconds": 0,
+          "allocationRmse": 0,
+          "maxHeadingDeviationDeg": 0,
+          "maxLateralDeviationM": 0,
+          "hullContactSamples": 0
+        }
+      }
+    ],
+    "brakingDistancesM": [
+      37.591717929680925,
+      25.84385508244872,
+      19.686617096873665
+    ],
+    "speedRmseKmh": 0.7714720485382117
+  },
+  "scope": "Software and research-protocol validation; no physical Tesla calibration"
+}

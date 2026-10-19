@@ -103,16 +103,16 @@ pass('Unsupported attitudes, absent power, empty gas and undersized nozzles cann
 }
 pass('Finite-tank hold loses support as pressure and temperature fall and conserves every kilogram of delivered nozzle mass flow without hidden replenishment');
 {
- for(const input of [{throttle:.5},{steer:.5},{lift:.5},{roll:.5},{brake:1},{boost:true},{frontJets:1},{rearJets:1}]){
+ for(const input of [{throttle:.5},{steer:.5},{lift:.5},{roll:.5},{pitch:.5},{brake:1},{boost:true},{frontJets:1},{rearJets:1}]){
   const s=airborne({pitch:8,roll:12,velocity:[0,0,0],omega:[0,0,0]});s.setStabilizationMode('hold');run(s,.2);const t=s.step(dt,input);
-  assert.equal(t.stabilizationMode,'level');assert.equal(t.holdActive,false);assert.equal(t.holdPositionTarget,null);assert.equal(t.holdQuaternionTarget,null);
-  if(input.frontJets||input.rearJets){assert.equal(t.stabilizationActive,false);for(let i=0;i<4;i++)close(t.nozzles[i].command,(i<2?input.frontJets:input.rearJets)?20000:0,1e-8,'manual pair precedence');s.step(dt);assert.equal(s.telemetry().stabilizationActive,true);}
+  assert.equal(t.stabilizationMode,'off');assert.equal(t.holdActive,false);assert.equal(t.holdPositionTarget,null);assert.equal(t.holdQuaternionTarget,null);
+  if(input.frontJets||input.rearJets){assert.equal(t.stabilizationActive,false);for(let i=0;i<4;i++)close(t.nozzles[i].command,(i<2?input.frontJets:input.rearJets)?20000:0,1e-8,'manual pair precedence');s.step(dt);assert.equal(s.telemetry().stabilizationActive,false);}
  }
  const s=airborne();s.setStabilizationMode('hold');s.setMode('manual');assert.equal(s.stabilizationMode,'level');s.setStabilizationMode('hold');s.setSuction(true);assert.equal(s.stabilizationMode,'level');
  s.setStabilizationMode('hold');s.reset();assert.equal(s.stabilizationMode,'level');assert.equal(s.telemetry().holdPositionTarget,null);
  const h=airborne();h.setMode('hover');h.setStabilizationMode('hold');h.body.applyImpulse(new Vec3(800,0,0));run(h,.5);const position=vector(h.body.position),velocity=vector(h.body.velocity);h.setStabilizationMode('off');assert.deepEqual(vector(h._positionTarget),position);assert.equal(h._heightTarget,position.y);assert.deepEqual(vector(h.body.velocity),velocity);
 }
-pass('Deliberate pilot inputs release fixed hold to level assistance, manual 1/2 valves retain priority, and explicit mode/suction/reset commands release stale references');
+pass('Deliberate pilot inputs release research hold to manual attitude control, explicit raw-valve API inputs retain priority, and mode/suction/reset commands release stale references');
 {
  const s=new RoadsterSim();run(s,2);s.setStabilizationMode('hold');const target=s.telemetry().holdPositionTarget;const t=run(s,2);
  assert.equal(t.holdActive,false);assert.equal(t.holdStatus,'surface');assert.equal(t.thrustN,0);assert.deepEqual(t.holdPositionTarget,target);
@@ -135,4 +135,4 @@ pass('Tire contact, hull contact and ceiling adhesion inhibit hold thrust withou
  values.timestep={render30Vs60:stateError(base,render30),render144Vs60:stateError(base,render144),referenceHz:960,error60Hz:coarse,error120Hz:medium,error240Hz:fine,errorDefinition:'position norm + velocity norm + quaternion angle (mixed-unit convergence diagnostic)'};
 }
 pass('Hold is independent of 30/60/144 Hz render cadence and converges when the actual physical integration step is halved');
-writeFileSync('qa/pose-hold-3.6.json',JSON.stringify({status:'passed',model:'Roadster engineering approximation',checks,values,limits:'Synthetic disturbance acceptance and exact static trim for the model nozzle layout; not an OEM controller identification or an arbitrary-attitude flight guarantee.'},null,2)+'\n');
+writeFileSync('qa/pose-hold-3.7.json',JSON.stringify({status:'passed',model:'Roadster engineering approximation',checks,values,limits:'Synthetic disturbance acceptance and exact static trim for the model nozzle layout; not an OEM controller identification or an arbitrary-attitude flight guarantee.'},null,2)+'\n');

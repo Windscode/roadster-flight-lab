@@ -1,8 +1,19 @@
-export const MODEL_VERSION='3.6.0';
+export const MODEL_VERSION='3.7.0';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 // Reduced engineering models. Parameters are explicit hypotheses, not OEM data.
 export function roadWheelAngle(input,speed,p){
- const max=p.steeringAssist?Math.min(.49,Math.atan(2.84*Math.min(p.steeringAccelG,.75*p.tireMu)*p.gravity/(speed*speed+4))):.49;
+ // A road wheel needs both geometric curvature and a small tyre-slip angle.
+ // The old pure bicycle-angle cap fell below two degrees at ordinary highway
+ // speed, even before the compliant tyres could develop their target force.
+ // Use a bounded 0.9 g road envelope, derated by available friction, with the
+ // front/rear slip difference predicted by the same corner stiffness model.
+ // These are steering references only: the contact solver still decides grip.
+ const lateralG=Math.min(p.steeringAccelG,.85*p.tireMu);
+ const load=(p.dryMass+Math.max(0,p.initialPressureBar*1e5*(p.tankLitres/1000)/(287.05*p.gasTemperatureK)))*p.gravity/4;
+ const front=Math.max(1,p.cornerStiffnessFront)*Math.pow(Math.max(1,load)/5500,.9);
+ const rear=Math.max(1,p.cornerStiffnessRear)*Math.pow(Math.max(1,load)/5500,.9);
+ const slip=Math.max(0,load*lateralG*(1/front-1/rear));
+ const max=p.steeringAssist?Math.min(.49,Math.atan(2.84*lateralG*p.gravity/(speed*speed+4))+slip):.49;
  return clamp(input,-1,1)*max;
 }
 export function nozzleExhaustVelocity(p,pressureBar,temperatureK){
