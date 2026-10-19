@@ -1,6 +1,10 @@
-export const MODEL_VERSION='3.7.0';
+export const MODEL_VERSION='3.8.0';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 // Reduced engineering models. Parameters are explicit hypotheses, not OEM data.
+export function rearWingPose(deployment){
+ const u=clamp(deployment,0,1),incidenceRad=-.25*u,position={x:0,y:.325+.30*u,z:-2.065};
+ return{position,incidenceRad,applicationPoint:{x:0,y:position.y-.05*Math.sin(incidenceRad),z:position.z+.05*Math.cos(incidenceRad)}};
+}
 export function roadWheelAngle(input,speed,p){
  // A road wheel needs both geometric curvature and a small tyre-slip angle.
  // The old pure bicycle-angle cap fell below two degrees at ordinary highway

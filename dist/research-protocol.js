@@ -1,9 +1,10 @@
 import {DEFAULT_PARAMS} from './physics.js';
 import {MODEL_VERSION} from './vehicle-models.js';
 import {MODEL_BUILD_ID} from './model-build.js';
-export const PROTOCOL_VERSION='flat-lab-2';
+export const PROTOCOL_VERSION='flat-lab-3';
 export const EXPERIMENTS={
  steer:{title:'转向阶跃',domain:'车辆操稳',duration:4,description:'平路初速，0.5–2.5秒施加转向阶跃。速度由独立PI驾驶器维持，记录实际速度误差。'},
+ launch:{title:'轮速与牵引起步',domain:'车辆操稳',duration:8,description:'相同静置初态，0.5–6.5秒全油门，随后松开。记录每轮角速度、滑移、TCS调制、距离和能量耗散；可选择干地、湿地或左右分离附着。'},
  brake:{title:'直线制动',domain:'车辆操稳',duration:10,description:'平路初速，0.5秒开始持续制动。距离从制动指令时刻积分，停止需持续0.5秒确认。'},
  attitude:{title:'空中稳姿恢复',domain:'飞行控制',duration:4,description:'12米空中初态，给定滚转扰动；比较G稳姿开启与关闭。没有额外位置锁定。'},
  rise:{title:'升降与释放',domain:'飞行控制',duration:4,description:'普通E升降输入持续2秒后释放，观察实际高度参考、上升速度与耗气。'},
@@ -22,7 +23,7 @@ export const RESEARCH_PARAMETERS={
  valveRiseTime:{label:'阀门开启时间常数',unit:'s',min:.005,max:.2,step:.005,domain:'飞行'},
  climbRateMps:{label:'普通升降率上限',unit:'m/s',min:.3,max:3,step:.1,domain:'飞行'},
 };
-const enums={supplyMode:['finite','bench'],gasModel:['adiabatic','isothermal'],nozzleModel:['isentropic','constant']};
+const enums={roadSurface:['dry','wet','split'],wingMode:['fixed','active'],supplyMode:['finite','bench'],gasModel:['adiabatic','isothermal'],nozzleModel:['isentropic','constant']};
 export function validateResearchParams(params={}){
  // Scientific protocol defaults remain finite and reproducible even when the
  // interactive city defaults to continuous external supply. Explicit requests
@@ -35,7 +36,7 @@ export function validateResearchParams(params={}){
   else {if(!Number.isFinite(value)||value<0||value>2e6)throw Error('参数数值无效：'+key);const limits=RESEARCH_PARAMETERS[key];if(limits&&(value<limits.min||value>limits.max))throw Error(limits.label+'超出研究界面允许范围');}
   out[key]=value;
  }
- const inherited={springRate:[25000,200000],suspensionDamping:[1500,18000],suctionPressurePa:[0,25000],hoverHeight:[1,40],steeringAccelG:[.2,1.2]};
+ const inherited={springRate:[25000,200000],suspensionDamping:[1500,18000],suctionPressurePa:[0,25000],hoverHeight:[1,40],steeringAccelG:[.2,1.2],wingDeployment:[0,1],positionGain:[.2,8],velocityGain:[.3,8],altitudeGain:[.3,10],verticalDamping:[.5,10],attitudeResponse:[1,7],rollRateDegS:[15,180],pitchRateDegS:[5,90],yawRateDegS:[5,100],angularAccelerationDegS2:[20,300]};
  for(const [key,value] of Object.entries(out))if(!RESEARCH_PARAMETERS[key]&&!enums[key]&&typeof value!=='boolean'&&value!==DEFAULT_PARAMS[key]){const limits=inherited[key];if(!limits||value<limits[0]||value>limits[1])throw Error('本版未开放该模型常数：'+key);}
  return out;
 }

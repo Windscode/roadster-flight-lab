@@ -27,7 +27,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   const group=new THREE.Group();group.name='Urban architecture / original modular facades';root.add(group);
   const lightAnchors=[],batches=new Map(),geometries=[],materials=[],textures=[],visibility=createCityVisibility(THREE),surfaces=createCityExteriorMaterials(THREE);
   const stats={buildings:0,heroBuildings:0,shopfronts:0,recessedWindows:0,balconies:0,mechanicalUnits:0,
-    instances:0,drawBatches:0,triangles:0,textureCount:0,sectorSizeM:160,sectorCount:0,lightAnchors:0,massingTiers:0,setbackTerraces:0,structuralBraces:0,rotatedTowers:0,industrialHalls:0,sawtoothRoofs:0,civicBuildings:0,entrancePortals:0,continuousPlinths:0,shutterPanels:0,interiorAtlases:0,surfaces:surfaces.stats,renderBudget:visibility.stats};
+    instances:0,drawBatches:0,triangles:0,textureCount:0,sectorSizeM:160,sectorCount:0,lightAnchors:0,massingTiers:0,setbackTerraces:0,structuralBraces:0,rotatedTowers:0,industrialHalls:0,sawtoothRoofs:0,civicBuildings:0,entrancePortals:0,continuousPlinths:0,shutterPanels:0,curatedWeaveFrontages:0,serviceBays:0,interiorAtlases:0,surfaces:surfaces.stats,renderBudget:visibility.stats};
   const transform=new THREE.Object3D(),colourCache=new Map(),white=new THREE.Color(0xffffff);
   const unitBox=new THREE.BoxGeometry(1,1,1),unitPlane=new THREE.PlaneGeometry(1,1),
     unitCylinder=new THREE.CylinderGeometry(.5,.5,1,12),unitCircle=new THREE.CircleGeometry(.5,16);
@@ -140,6 +140,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     if(![b.x,b.z,b.w,b.d,b.height].every(Number.isFinite)||b.w<4||b.d<4||b.height<5)continue;
     stats.buildings++;const hero=!!b.hero,detail=hero?2:Math.max(Math.abs(b.x),Math.abs(b.z))<385?1:0;
     if(hero)stats.heroBuildings++;
+    const weaveStreet=b.id.startsWith('market-front-'),weaveBand=b.z<-340?'arrival':b.z<-290?'market':b.z<-235?'exchange':'junction';
     const rng=randFor(b.seed),p=b.archetype==='civic'?{wall:0xc3c1ad,trim:0x5e6764,paint:0x8f7959,glass:0x3e555a}:palette[Math.abs(b.style||0)%palette.length],accent=accentColours[Math.abs(b.accent||0)%4];
     sector=`${Math.floor((b.x+600)/300)},${Math.floor((b.z+600)/300)}`;
     const plasterShade=.91+rng()*.15,{shopH,floorCount,floorH}=buildingStoreys(b),massing=buildingMassing(b);
@@ -197,7 +198,15 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     localBox('darkConcrete',[b.w-2.8,shopH,b.d-2.8],0,shopH/2,0,p.trim,.67);
     localBox('concrete',[b.w-.06,.22,b.d-.06],0,.20,0,p.wall,.75);
     for(let side=0;side<4;side++){
-      const f=face(side*Math.PI/2,b.w,b.d),count=Math.max(1,Math.floor((f.span-.8)/(b.archetype==='civic'?10.5:hero?5.3:8.8))),bay=(f.span-.8)/count;
+      const f=face(side*Math.PI/2,b.w,b.d),weaveFront=weaveStreet&&side===(b.x<-200?1:3),count=Math.max(1,Math.floor((f.span-.8)/(weaveFront?(weaveBand==='arrival'?8.0:6.4):b.archetype==='civic'?10.5:hero?5.3:8.8))),bay=(f.span-.8)/count;
+      if(weaveFront){
+        stats.curatedWeaveFrontages++;
+        // Coherent frontage datum, deep tiled entrance aprons and complete
+        // service bays replace the former identical small shop at every bay.
+        f.put('ceramic',[f.span-.15,1.12,.12],0,.89,.34,weaveBand==='arrival'?0x7c938f:weaveBand==='exchange'?0x9c7259:0x82949a,.91);
+        f.put('metal',[f.span-.15,.075,.22],0,1.48,.33,p.trim,.87);
+        f.put('ceramic',[f.span-.15,.46,.14],0,shopH-.62,.35,p.paint,.90);
+      }
       // Ground-floor frames are thick enough to cast real street-level shadows.
       f.put('concrete',[f.span-.04,.6,.78],0,shopH-.30,-.02,p.wall,plasterShade);
       // A continuous grounded base and deep first-storey reveals organize the
@@ -205,7 +214,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       f.put('concrete',[f.span-.03,.42,.18],0,.39,.31,p.trim,.92);stats.continuousPlinths++;
       for(let j=0;j<=count;j++)f.put('concrete',[hero?.34:.42,shopH-.55,.75],-f.span/2+.4+j*bay,(shopH-.55)/2+.2,-.02,p.wall,plasterShade);
       for(let j=0;j<count;j++){
-        const x=-f.span/2+.4+(j+.5)*bay,shopWidth=bay-.48,shutter=(j+side+Math.floor(rng()*5))%5===0;
+        const x=-f.span/2+.4+(j+.5)*bay,shopWidth=bay-.48,shutter=weaveFront?(weaveBand==='arrival'?j%3!==1:weaveBand==='junction'?j%3===0:j===count-1):(j+side+Math.floor(rng()*5))%5===0;
         stats.shopfronts++;
         if(shutter){
           f.put('shutter',[shopWidth,shopH-1.0,.16],x,(shopH-.9)/2+.3,-.32,p.trim,.86);stats.shutterPanels++;
@@ -226,15 +235,24 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
             }
           }
         }
-        const hasSign=b.archetype==='civic'?j===Math.floor(count/2):hero||j%3===1;
+        const hasSign=weaveFront?(j===0||j===Math.floor(count/2)||weaveBand==='market'):b.archetype==='civic'?j===Math.floor(count/2):hero||j%3===1;
         if(hasSign){
-          const signW=Math.min(shopWidth-.15,hero?4.5:5.8),sy=shopH-.66,tile=(j+side*3+Math.floor(b.seed*71))%12;
+          const signW=Math.min(shopWidth-.15,hero?4.5:5.8),sy=shopH-.66,tile=weaveFront?(weaveBand==='arrival'?[2,7,11][j%3]:weaveBand==='exchange'?[6,8,10][j%3]:weaveBand==='junction'?[9,1,3][j%3]:[0,3,10][j%3]):(j+side*3+Math.floor(b.seed*71))%12;
           f.put('metal',[signW+.18,.82,.20],x,sy,.12,p.trim,.8);
           f.put('signs',[signW,.66,1],x,sy,.235,0xffffff,.91,'plane',tile);
           // A small practical underneath, not a neon outline on every building.
           if(hero&&j%2===0){f.put('lamp',[1.1,.045,.08],x,sy-.51,.25,0xffffff,1);}
         }
-        if(detail>0&&j%2===0){
+        if(weaveFront&&shutter){
+          stats.serviceBays++;
+          // Corner protection, head lintel, threshold and a numbered service
+          // plate belong to a single working entrance. Nothing enters the lane.
+          for(const edge of [-1,1])f.put('ceramic',[.22,2.6,.20],x+edge*(shopWidth/2-.10),1.64,.26,0xb9a175,.85);
+          f.put('metal',[shopWidth,.16,.30],x,.42,.10,0x55686c,.83);
+          f.put('signs',[1.02,.35,1],x-shopWidth*.32,3.1,.38,0xffffff,.86,'plane',7);
+          f.put('lamp',[.74,.04,.08],x,shopH-.91,.33,0xffffff,1);
+        }
+        if(detail>0&&(weaveFront?!shutter:j%2===0)){
           const awningWidth=shopWidth+.15;
           f.put('ceramic',[awningWidth,.18,.88],x,shopH-1.1,.015,p.paint,.86, 'box',-1,[-.06,0,0]);
           f.put('metal',[awningWidth,.08,.08],x,shopH-1.16,.42,p.trim,.92);

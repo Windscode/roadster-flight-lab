@@ -1,43 +1,25 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Roadster · 车辆工坊</title>
-<style>html,body{margin:0;height:100%;overflow:hidden;background:#10141b;color:#dce4ea;font:13px system-ui}canvas{display:block}aside{position:fixed;left:24px;top:24px;max-width:320px;background:#111821de;border:1px solid #ffffff1f;padding:20px;backdrop-filter:blur(16px);border-radius:14px}h1{font-size:18px;margin:0 0 8px}p{font-size:12px;line-height:1.8;color:#9daab5}button,select{background:#253240;color:#e1e9f1;border:1px solid #64748370;border-radius:6px;padding:8px 10px;margin:3px}input{width:100%}label{display:block;margin:14px 0 4px}small{color:#7b8c9d;font-size:11px}</style>
-<aside><h1>ROADSTER · 车辆工坊</h1><p>依据 Tesla 官方多视角照片重建外观。底盘低压腔与悬架枢轴为独立工程布局，并非原厂 CAD。拖动环视，滚轮缩放。</p>
-<div><button id="front">前侧</button><button id="nose">正前</button><button id="side">正侧</button><button id="rear">后侧</button><button id="cockpit">座舱</button><button id="under">底盘</button><button id="cutaway">剖视</button><button id="lighting">自然光</button></div>
-<label for="suspension">悬架长度 <span id="length">0.287 m</span></label><input id="suspension" type="range" min=".24" max=".41" step=".001" value=".287">
-<label for="steer">前轮转角 <span id="angle">0°</span></label><input id="steer" type="range" min="-.49" max=".49" step=".01" value="0">
-<button id="seal">展开近地密封裙</button><p id="ready">正在载入车辆…</p><small>轮胎 R 0.372 m · 满压缩 0.24 m · 检查范围 ±28.1°</small></aside>
-<script type="module">
-import * as THREE from './vendor/three.module.js';
-import {OrbitControls} from './vendor/addons/controls/OrbitControls.js';
-import {HDRLoader} from './vendor/addons/loaders/HDRLoader.js';
-import {createRoadster} from './vehicle.js';
-const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;document.body.append(renderer.domElement);
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x10151b);const camera=new THREE.PerspectiveCamera(36,innerWidth/innerHeight,.05,100);camera.position.set(4,1.6,5.9);camera.setViewOffset(innerWidth,innerHeight,-140,0,innerWidth,innerHeight);
-const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,.03,0);controls.enableDamping=true;controls.minDistance=1.1;controls.maxDistance=13;controls.maxPolarAngle=Math.PI*.97;
-const hemi=new THREE.HemisphereLight(0xcbd0d6,0x24262b,.14);scene.add(hemi);
-const sun=new THREE.DirectionalLight(0xfff9f1,2.2);sun.position.set(3,7,4);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-4;sun.shadow.camera.right=4;sun.shadow.camera.top=4;sun.shadow.camera.bottom=-4;sun.shadow.normalBias=.0025;sun.shadow.bias=-.00015;sun.shadow.radius=3;scene.add(sun);
-const fill=new THREE.DirectionalLight(0xd3d9df,.24);fill.position.set(-3,2,-4);scene.add(fill);
-const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:0x24282c,roughness:.50,metalness:.08}));ground.rotation.x=-Math.PI/2;ground.position.y=-.599;ground.receiveShadow=true;scene.add(ground);
-const underLight=new THREE.DirectionalLight(0xc9d7e0,2.8);underLight.position.set(1,-4,3);underLight.visible=false;scene.add(underLight);
-const car=createRoadster({quality:'ultra'});scene.add(car.group);const pmrem=new THREE.PMREMGenerator(renderer);
-const studio=new THREE.Scene();studio.background=new THREE.Color(0x11151b);
-function softbox(w,h,p,r,intensity){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color().setRGB(intensity,intensity,intensity),side:THREE.DoubleSide}));m.position.set(...p);m.rotation.set(...r);studio.add(m);}
-softbox(1.15,8,[-1.6,4,0],[Math.PI/2,0,0],5);softbox(.65,7,[2,3.5,-.2],[Math.PI/2,0,.1],4);
-softbox(5,2.3,[-4,1.4,0],[0,Math.PI/2,0],2.4);softbox(4,.7,[1,2.4,-4],[0,0,0],3);
-softbox(5,2.3,[4,1.4,.5],[0,-Math.PI/2,0],2.6);softbox(3,.7,[0,1.2,4],[0,Math.PI,0],2.4);
-const studioEnv=pmrem.fromScene(studio,.035).texture;scene.environment=studioEnv;scene.environmentIntensity=.60;
-let daylightEnv=null,daylight=false;
-new HDRLoader().load('./assets/environment.hdr',tex=>{tex.mapping=THREE.EquirectangularReflectionMapping;daylightEnv=pmrem.fromEquirectangular(tex).texture;tex.dispose();pmrem.dispose();document.querySelector('#ready').textContent='车辆已就绪 · 条带光棚检查曲面连续性';});
-let cut=false,sealed=false;
-document.querySelector('#front').onclick=()=>{camera.position.set(4,1.6,5.9);controls.target.set(0,.03,0);ground.visible=true;underLight.visible=false;};
-document.querySelector('#nose').onclick=()=>{camera.position.set(0,.40,6.5);controls.target.set(0,.02,0);ground.visible=true;underLight.visible=false;};
-document.querySelector('#side').onclick=()=>{camera.position.set(7.3,.34,.0);controls.target.set(0,.02,0);ground.visible=true;underLight.visible=false;};
-document.querySelector('#rear').onclick=()=>{camera.position.set(-3.7,1.5,-5.8);controls.target.set(0,-.02,-.1);ground.visible=true;underLight.visible=false;};
-document.querySelector('#cockpit').onclick=()=>{camera.position.set(-.45,.46,-.65);controls.target.set(-.12,.28,.42);ground.visible=true;underLight.visible=false;};
-document.querySelector('#under').onclick=()=>{camera.position.set(3.0,-2.8,4.5);controls.target.set(0,-.25,0);ground.visible=false;underLight.visible=true;};
-document.querySelector('#cutaway').onclick=()=>car.setCutaway(cut=!cut);
-document.querySelector('#seal').onclick=()=>{sealed=!sealed;document.querySelector('#seal').textContent=sealed?'收回密封裙':'展开近地密封裙';};
-document.querySelector('#lighting').onclick=()=>{if(!daylightEnv)return;daylight=!daylight;scene.environment=daylight?daylightEnv:studioEnv;document.querySelector('#lighting').textContent=daylight?'条带光棚':'自然光';};
-function frame(){const length=+document.querySelector('#suspension').value,steer=+document.querySelector('#steer').value;document.querySelector('#length').textContent=length.toFixed(3)+' m';document.querySelector('#angle').textContent=(steer*180/Math.PI).toFixed(1)+'°';car.group.position.y=length-.287;car.update({wheelStates:car.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0},1/60);controls.update();renderer.render(scene,camera);requestAnimationFrame(frame);}frame();
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.setViewOffset(innerWidth,innerHeight,-140,0,innerWidth,innerHeight);camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
-</script></html>
-
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Roadster · 50 mm 曲面检视</title><link rel="stylesheet" href="./vehicle-inspection.css"></head>
+<body>
+<main id="inspection-stage" aria-label="Roadster 三维车辆检视"><div id="inspection-failure" role="alert" hidden></div></main>
+<aside class="inspection-panel">
+  <a class="back" href="./">← 返回城市与实验室</a><p class="eyebrow">ROADSTER / SURFACE STUDY</p>
+  <h1>曲面与比例检视</h1><p>同一支 50 mm 镜头、同一光棚，对照当前模型和 3.7 外观基线。拖动环视；固定机位用于重复采集。</p>
+  <fieldset><legend>模型对照</legend><div class="two"><button id="model-current" class="selected">当前 3.8 外观</button><button id="model-baseline">3.7 外观基线</button></div><small id="baseline-note">旧模型仅按需载入此检视页；不影响驾驶与物理。</small></fieldset>
+  <fieldset><legend>锁定焦距 · 50 mm</legend><div id="inspection-cameras" class="camera-grid"></div><div class="two"><button id="under">底盘 / 运动包络</button><button id="cutaway">剖视关闭</button></div></fieldset>
+  <fieldset><legend>表面光照</legend><div class="two"><button id="studio-light" class="selected">车库条灯</button><button id="day-light">宽面自然光</button></div><p class="muted">检查条带高光是否连续、接缝是否平齐。参考图未公布摄影焦距，50 mm 是本项目的固定检视条件。</p></fieldset>
+  <fieldset><legend>运动与细节</legend>
+    <label for="inspection-quality">渲染预算<select id="inspection-quality"><option value="high">驾驶细节</option><option value="ultra" selected>近距离检视</option><option value="balanced">流畅预算</option></select></label>
+    <label for="suspension">悬架长度 <output id="length">0.287 m</output></label><input id="suspension" type="range" min=".24" max=".41" step=".001" value=".287">
+    <label for="steer">前轮转角 <output id="angle">0°</output></label><input id="steer" type="range" min="-.49" max=".49" step=".01" value="0">
+    <label for="wing-deployment">物理尾翼指令 <output id="wing-value">0%</output></label><input id="wing-deployment" type="range" min="0" max="1" step=".01" value="0">
+    <div class="two"><button id="seal">展开近地密封裙</button><button id="sweep">扫查转向与悬架</button></div>
+  </fieldset>
+  <fieldset><legend>固定条件采集</legend><div class="two"><button id="capture-frame">导出当前 PNG</button><button id="capture-meta">导出机位与状态 JSON</button></div><small>PNG 来自当前设备真实 WebGL 帧。与上一次导出的同机位图片比较；此页不会合成未经渲染的效果图。</small></fieldset>
+  <details><summary>Tesla 官方参考与工程假设</summary><div id="reference-links"></div><p>轮距、轴距、隐藏机构和材料参数是独立重建。本站没有原厂 CAD 或尾翼标定。现存 3.7 模型只作为几何对照，尾翼动力学以当前主仿真为准。</p></details>
+  <p id="ready" role="status">正在载入车辆与光棚…</p><pre id="inspection-status"></pre>
+</aside>
+<div class="inspection-caption"><span id="view-caption">正前 / 50 mm</span><span id="model-caption">CURRENT / 3.8</span></div>
+<script type="module" src="./vehicle-inspection.js"></script>
+</body></html>

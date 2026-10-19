@@ -1,0 +1,221 @@
+{
+  "status": "passed",
+  "physicsHz": 120,
+  "checks": [
+    "Medium-speed steering produces smaller real turn radii while tyre friction, wheel contact and high-speed steering limits remain physical",
+    "E enters the same controlled takeoff with suction armed or disarmed, including release of an already established seal",
+    "Continuing Q on supported wheels completes touchdown in either city stabilization state and closes valves without a hover re-launch",
+    "X latches ground/air origin, completes a genuine inversion, respects its planned headroom and returns airborne starts without any touchdown",
+    "Finite-X checks impulse before starting, adequate finite tanks preserve the requested return state, and insufficient overhead clearance declines without moving the vehicle",
+    "Non-level Z/B command continuous full roll in either direction, retain finite rates, physically brake on release and do not fake inverted support",
+    "Fast manual descent can use bounded physical braking thrust, remains controllable through G takeover, and still collides when an unplanned roll lacks clearance",
+    "Normalized 1/2 pitch requests change supported attitude smoothly while world-position feedback arrests translation and holds the result",
+    "Research pose targets validate atomically, can take off through real force from supported wheels, expose bounded tuning and report unsupported inversion honestly",
+    "Program input providers and wind advance at exactly 120 Hz independently of 30/60/144 Hz rendering, while the existing 20 Hz sample callback is retained",
+    "Prescribed lab wind acts through relative-airflow aerodynamic force with deterministic gust timing, validated parameters and a true calm reset"
+  ],
+  "values": {
+    "steering": [
+      {
+        "startSpeedMps": 10,
+        "finalSpeedKmh": 41.01628442881823,
+        "beforeRadiusM": 22.276397731400028,
+        "afterRadiusM": 14.800392457375949,
+        "maxGrip": 0.8065380693857429,
+        "maxRollDeg": 2.7720078970857593,
+        "minContacts": 4
+      },
+      {
+        "startSpeedMps": 15,
+        "finalSpeedKmh": 59.113535232557204,
+        "beforeRadiusM": 45.87710586353648,
+        "afterRadiusM": 30.234219278560712,
+        "maxGrip": 0.8004633801274542,
+        "maxRollDeg": 2.8110893753815573,
+        "minContacts": 4
+      },
+      {
+        "startSpeedMps": 25,
+        "finalSpeedKmh": 94.94689665693127,
+        "beforeRadiusM": 124.18463454012517,
+        "afterRadiusM": 77.37273951918027,
+        "maxGrip": 0.7854048238574705,
+        "maxRollDeg": 2.7983737415097067,
+        "minContacts": 4
+      }
+    ],
+    "ascent": [
+      {
+        "suctionArmed": false,
+        "sealPreviouslySettled": false,
+        "heightM": 2.023232639835448,
+        "verticalSpeedMps": 1.465558028368224
+      },
+      {
+        "suctionArmed": true,
+        "sealPreviouslySettled": false,
+        "heightM": 2.023232639835448,
+        "verticalSpeedMps": 1.465558028368224
+      },
+      {
+        "suctionArmed": false,
+        "sealPreviouslySettled": true,
+        "heightM": 2.0232327210633168,
+        "verticalSpeedMps": 1.4655579934647933
+      },
+      {
+        "suctionArmed": true,
+        "sealPreviouslySettled": true,
+        "heightM": 2.0268990595153293,
+        "verticalSpeedMps": 1.4632568796634737
+      }
+    ],
+    "roll": [
+      {
+        "originHeightM": 0.5970093908740407,
+        "originGrounded": true,
+        "plannedPeakHeightM": 15.697074688486635,
+        "measuredPeakHeightM": 13.584048444867998,
+        "minRotationHeightM": 4.542115610464886,
+        "finalHeightM": 0.5970089771354053,
+        "finalMode": "drive",
+        "finalThrustN": 9.929468989430505e-98,
+        "airborneContacts": 0
+      },
+      {
+        "originHeightM": 4,
+        "originGrounded": false,
+        "plannedPeakHeightM": 19.100065650320282,
+        "measuredPeakHeightM": 16.910263388335014,
+        "minRotationHeightM": 7.8805650800406415,
+        "finalHeightM": 4.001384858902437,
+        "finalMode": "hover",
+        "finalThrustN": 21578.33699389212,
+        "airborneContacts": 0
+      },
+      {
+        "originHeightM": 18,
+        "originGrounded": false,
+        "plannedPeakHeightM": 33.10006565032028,
+        "measuredPeakHeightM": 30.910263388335007,
+        "minRotationHeightM": 21.880565080040636,
+        "finalHeightM": 18.00138485890242,
+        "finalMode": "hover",
+        "finalThrustN": 21578.336993892215,
+        "airborneContacts": 0
+      }
+    ],
+    "manualRoll": [
+      {
+        "input": -1,
+        "accumulatedRollDeg": 386.21135327430403,
+        "peakAngularRateRadS": 2.6357717094752657,
+        "releaseRollDeg": 26.211353274303946,
+        "settledRollDeg": 26.211019064703407,
+        "settledAngularRateRadS": 0.0002931368125187411,
+        "heightAfterM": 71.62937167917883,
+        "poseFeasible": true
+      },
+      {
+        "input": 1,
+        "accumulatedRollDeg": -386.2121370105486,
+        "peakAngularRateRadS": 2.635865108274838,
+        "releaseRollDeg": -26.21213701054869,
+        "settledRollDeg": -26.211862489195003,
+        "settledAngularRateRadS": 0.0002526057003155355,
+        "heightAfterM": 71.62916315668149,
+        "poseFeasible": true
+      }
+    ],
+    "pitch": [
+      {
+        "input": -1,
+        "settledPitchDeg": -19.48477259340995,
+        "peakAngularRateRadS": 0.6275639247103594,
+        "peakHorizontalDriftM": 0.03330705322845659,
+        "finalHeightM": 20.004026297737326,
+        "finalSpeedKmh": 0.0017194450017636977
+      },
+      {
+        "input": 1,
+        "settledPitchDeg": 19.4847726563012,
+        "peakAngularRateRadS": 0.6275634357984514,
+        "peakHorizontalDriftM": 0.03330803362358091,
+        "finalHeightM": 20.00402616117489,
+        "finalSpeedKmh": 0.0017193867218282313
+      }
+    ],
+    "finite": [
+      {
+        "tankLitres": 900,
+        "originHeightM": 0.62,
+        "completionTimeS": 9.200000000000118,
+        "completionHeightM": 0.6987727294470597,
+        "remainingGasKg": 52.322631770660294,
+        "pressureBar": 22.837587278598654,
+        "finalMode": "drive"
+      },
+      {
+        "tankLitres": 1100,
+        "originHeightM": 4,
+        "completionTimeS": 6.433333333333443,
+        "completionHeightM": 4.039404189809998,
+        "remainingGasKg": 168.7655239748553,
+        "pressureBar": 87.77086112742492,
+        "finalMode": "hover"
+      }
+    ],
+    "manualArrest": {
+      "baselineComfortCapLossM": 58.4592767840682,
+      "adequateClearance": [
+        {
+          "levelTakeover": false,
+          "originHeightM": 32,
+          "heldRollS": 3.4,
+          "minimumHeightM": 5.050778043069085,
+          "heightLossM": 26.949221956930913,
+          "peakVerticalForceN": 51546.82795857777,
+          "release": {
+            "heightM": 11.312137765886803,
+            "verticalSpeedMps": -11.299775542198237,
+            "rollDeg": -0.2591114585920509
+          },
+          "arrest": {
+            "timeS": 5.083333333333376,
+            "heightM": 5.050826754227405
+          },
+          "finalHeightM": 11.965667529991471
+        },
+        {
+          "levelTakeover": true,
+          "originHeightM": 32,
+          "heldRollS": 3.4,
+          "minimumHeightM": 6.480842537603229,
+          "heightLossM": 25.51915746239677,
+          "peakVerticalForceN": 51784.093466960156,
+          "release": {
+            "heightM": 11.312137765886803,
+            "verticalSpeedMps": -11.299775542198237,
+            "rollDeg": -0.2591114585920509
+          },
+          "arrest": {
+            "timeS": 4.250000000000001,
+            "heightM": 6.4811456329582935
+          },
+          "finalHeightM": 32.02633707844449
+        }
+      ],
+      "insufficient20mFirstContact": {
+        "timeS": 3.274999999999991,
+        "heightM": 0.8182034768063723,
+        "verticalSpeedMps": -12.409383776380325
+      }
+    },
+    "wind": {
+      "directionConvention": "0 deg toward +Z; 90 deg toward +X",
+      "forceAt20MpsN": 343,
+      "gustPeakMps": 25
+    }
+  },
+  "limits": "Deterministic reduced-order engineering model, not OEM identification. Flat-ground and authored lab fixtures are numerical acceptance checks. They do not certify arbitrary obstacles, all finite-tank parameters or real vehicle operation. One-way lift and bounded side jets cannot statically support every attitude; no inverse lift or pose freeze is introduced."
+}

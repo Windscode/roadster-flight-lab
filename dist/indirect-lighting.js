@@ -8,12 +8,12 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
   const empty=new THREE.DataArrayTexture(new Uint16Array(4),1,1,1);empty.type=THREE.HalfFloatType;empty.format=THREE.RGBAFormat;empty.needsUpdate=true;
   const uniforms={giCity:{value:empty},giStreet:{value:empty},giSky:{value:Array.from({length:9},()=>new THREE.Vector3())},giReady:{value:0},giAO:{value:null},giAOEnabled:{value:0},giViewport:{value:new THREE.Vector2(1,1)}};
   const stats={algorithm:'Offline 3-bounce diffuse path tracing / spatial order-2 SH',loaded:false,bounces:3,evaluation:'fragment',maximumFieldTextureReadsPerFragment:36};
-  let metadata=null,evaluation='fragment';const cpuVolumes=[];
+  let metadata=null,evaluation='fragment',enabled=true;const cpuVolumes=[];
   const ready=(async()=>{
     const base=new URL('./assets/irradiance/',import.meta.url),response=await fetchAsset(new URL('manifest.json',base));if(!response.ok)throw Error('Missing irradiance manifest');metadata=await response.json();
     metadata.skySH.forEach((v,i)=>uniforms.giSky.value[Math.floor(i/3)].setComponent(i%3,v));
     const textures=await Promise.all(metadata.volumes.map(async v=>{const r=await fetchAsset(new URL(v.file,base));if(!r.ok)throw Error('Missing '+v.file);const data=new Uint16Array(await r.arrayBuffer());if(data.length!==v.size[0]*v.size[1]*v.heights.length*9*4)throw Error('Invalid GI volume size');cpuVolumes.push({volume:v,coefficients:Float32Array.from(data,THREE.DataUtils.fromHalfFloat)});const t=new THREE.DataArrayTexture(data,v.size[0],v.size[1],v.heights.length*9);t.type=THREE.HalfFloatType;t.format=THREE.RGBAFormat;t.minFilter=t.magFilter=THREE.LinearFilter;t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;t.generateMipmaps=false;t.needsUpdate=true;return t;}));
-    uniforms.giCity.value=textures[0];uniforms.giStreet.value=textures[1];uniforms.giReady.value=1;Object.assign(stats,{loaded:true,validProbes:metadata.validProbes,samplesPerProbe:metadata.samplesPerProbe,bytes:metadata.volumes.reduce((s,v)=>s+v.bytes,0)});return true;
+    uniforms.giCity.value=textures[0];uniforms.giStreet.value=textures[1];uniforms.giReady.value=enabled?1:0;Object.assign(stats,{loaded:true,validProbes:metadata.validProbes,samplesPerProbe:metadata.samplesPerProbe,bytes:metadata.volumes.reduce((s,v)=>s+v.bytes,0)});return true;
   })().catch(error=>{stats.error=error.message;console.warn('Indirect-light field:',error.message);return false;});
   const glsl=`
     uniform highp sampler2DArray giCity,giStreet;
@@ -70,7 +70,7 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
       giPosition=instanceMatrix*giPosition;
       #endif
       giWorld=(modelMatrix*giPosition).xyz;
-      ${vertex?'giVertexIrradiance=giIrradiance(giWorld,inverseTransformDirection(transformedNormal,viewMatrix));':''}
+      ${vertex?'giVertexIrradiance=giReady>.5?giIrradiance(giWorld,inverseTransformDirection(transformedNormal,viewMatrix)):vec3(0.);':''}
       #include <project_vertex>`);
     if(!vertex)shader.fragmentShader=glsl+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_maps>',THREE.ShaderChunk.lights_fragment_maps.replace('iblIrradiance += getIBLIrradiance( geometryNormal );',`if(giReady>.5)iblIrradiance+=${vertex?'giVertexIrradiance':'giIrradiance(giWorld,inverseTransformDirection(geometryNormal,viewMatrix))'};else iblIrradiance+=getIBLIrradiance(geometryNormal);`));
@@ -106,7 +106,7 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
     return .90*Math.max(1,Math.min(3,Math.sqrt(reference/Math.max(.025,metered))));
   }
 
-  return{ready,stats,inject,uniforms,exposureAt,get metadata(){return metadata;},get shaderKey(){return 'gi-'+evaluation+'-v3';},
+  return{ready,stats,inject,uniforms,exposureAt,setEnabled(value){enabled=!!value;uniforms.giReady.value=enabled&&stats.loaded?1:0;stats.enabled=enabled;},get metadata(){return metadata;},get shaderKey(){return 'gi-'+evaluation+'-v3';},
     setQuality(q,profile={}){evaluation=profile.giMode||(q==='balanced'?'vertex':'fragment');stats.evaluation=evaluation;stats.maximumFieldTextureReadsPerFragment=evaluation==='vertex'?0:36;},
     setContactAO(t){uniforms.giAO.value=t;},setAOEnabled(v){uniforms.giAOEnabled.value=v?1:0;},resize(){renderer.getDrawingBufferSize(uniforms.giViewport.value);}};
 }

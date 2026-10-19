@@ -18,14 +18,14 @@ import {createCityExteriorMaterials} from '../dist/city-exterior-materials.js';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const dist=new URL('../dist/',import.meta.url);
 let validator=process.env.GLSLANG_VALIDATOR||'glslangValidator';
-let reportPath=path.join(root,'qa/render-shaders-3.7.json');
+let reportPath=path.join(root,'qa/render-shaders-3.8.json');
 const args=process.argv.slice(2);
 for(let i=0;i<args.length;i++){
   if(args[i]==='--validatorPath')validator=args[++i];
   else if(args[i].startsWith('--validatorPath='))validator=args[i].slice(16);
   else if(args[i]==='--report')reportPath=path.resolve(args[++i]);
   else if(args[i]==='--help'){
-    console.log('Usage: node scripts/validate-city-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shaders-3.7.json]\nRequires an existing glslangValidator; no compiler is downloaded or installed.');
+    console.log('Usage: node scripts/validate-city-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shaders-3.8.json]\nRequires an existing glslangValidator; no compiler is downloaded or installed.');
     process.exit(0);
   }else throw Error('Unknown argument: '+args[i]);
 }
@@ -44,7 +44,8 @@ const temporary=await fs.mkdtemp(path.join(os.tmpdir(),'roadster-city-shaders-')
 const sourceFiles=['scripts/validate-city-shaders.mjs','dist/vendor/three.module.js','dist/vendor/three.core.js',
   'dist/vendor/addons/csm/CSM.js','dist/vendor/addons/csm/CSMShader.js','dist/indirect-lighting.js',
   'dist/irradiance-math.js','dist/city-render-budget.js','dist/city-environment.js',
-  'dist/local-probe-sun.js','dist/road-surface-material.js','dist/city-exterior-materials.js','dist/wind-laboratory.js'];
+  'dist/local-probe-sun.js','dist/road-surface-material.js','dist/city-exterior-materials.js','dist/wind-laboratory.js',
+  'dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/visual-presets.js'];
 
 try{
   const version=await run(validator,['--version']);
@@ -101,8 +102,10 @@ try{
   await gi.ready;
   const probeSun=createLocalProbeSun(new THREE.Scene(),{}),exterior=createCityExteriorMaterials(THREE);
   const dummyTextures={albedo:new THREE.Texture(),normal:new THREE.Texture(),roughness:new THREE.Texture()};
-  for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const kind of ['standard','physical','asphalt','exterior-concrete','exterior-glass','exterior-enamel']){
-    const physical=kind==='physical';
+  for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const night of [false,true])for(const kind of ['standard','physical','asphalt','exterior-concrete','exterior-glass','exterior-enamel']){
+    if(night&&!['standard','physical','asphalt'].includes(kind))continue;
+    const physical=kind==='physical',spots=night?({balanced:3,high:5,ultra:6}[quality]):0;
+    gi.setEnabled(!night);
     const profile=CITY_RENDER_PRESETS[quality],count=profile.shadowCascades;
     const csm=new CSM({camera:new THREE.PerspectiveCamera(52,16/9,.1,1800),parent:new THREE.Scene(),
       cascades:count,maxFar:profile.shadowFar,shadowMapSize:profile.shadowSize});
@@ -117,14 +120,14 @@ try{
       // CSM mutates the original module's ShaderChunk object. The temporary
       // emitter owns a separate object and must receive those actual mutations.
       Object.assign(emittedTHREE.ShaderChunk,THREE.ShaderChunk);
-      const name=quality+'-'+(instanced?'instanced':'single')+'-'+kind;
+      const name=quality+'-'+(night?'wet-night-':'clear-day-')+(instanced?'instanced':'single')+'-'+kind;
       const defines={...material.defines};if(physical)defines.PHYSICAL='';
-      const coverage={quality,cascades:count,giEvaluation:profile.giMode,instanced,
+      const coverage={quality,weather:night?'wet-night':'clear-day',cascades:count,giEvaluation:night?'disabled (daytime bake excluded)':profile.giMode,spotLights:spots,spotShadows:spots,instanced,
         material:physical?'Physical with clearcoat, albedo, normal and roughness maps':kind,
         shadowMap:'PCF soft main view; dedicated local sun depth branch in cube capture',environment:'CubeUV IBL',fade:true};
       await compile(name,{...shader,defines},{shaderType:physical?'MeshPhysicalMaterial':'MeshStandardMaterial',shaderName:name,
         instancing:instanced,instancingColor:instanced,vertexColors:false,shadowMapEnabled:true,
-        shadowMapType:THREE.PCFSoftShadowMap,numDirLights:count,numDirLightShadows:count,numHemiLights:1,
+        shadowMapType:THREE.PCFSoftShadowMap,numDirLights:count,numDirLightShadows:night?0:count,numHemiLights:1,numSpotLights:spots,numSpotLightShadows:spots,
         envMap:true,envMapMode:THREE.CubeUVReflectionMapping,envMapCubeUVHeight:1024,combine:THREE.MultiplyOperation,
         clearcoat:physical,opaque:!physical,map:physical,mapUv:'uv',normalMap:physical,normalMapTangentSpace:physical,
         normalMapUv:'uv',roughnessMap:physical,roughnessMapUv:'uv'},coverage);
@@ -155,7 +158,7 @@ try{
   const report={format:'roadster-offline-city-shader-validation-1',createdAt:new Date().toISOString(),status:failed?'failed':'passed',
     validator:{name:path.basename(validator),version:version.stdout.trim()},
     method:'Exact vendored Three.js WebGLProgram emitter captured through a fake GL sink, with the live CSM ShaderChunk mutations copied to the temporary emitter. External glslangValidator compiles and links each vertex/fragment pair; no GL context is created.',
-    scope:'Balanced vertex irradiance and high/ultra fragment irradiance, 1/2/3 fading CSM cascades, regular/instanced Standard/Physical materials, scanned road and exterior concrete/glass/enamel shaders, dedicated local sun visibility branch, packed-depth capture and plain wind-lab PBR materials after city CSM globally changes ShaderChunk.',
+    scope:'Balanced vertex irradiance and high/ultra fragment irradiance, 1/2/3 fading CSM cascades, regular/instanced Standard/Physical materials, day/wet-night spotlight and scanned wet-reflection road and exterior concrete/glass/enamel shaders, dedicated local sun visibility branch, packed-depth capture and plain wind-lab PBR materials after city CSM globally changes ShaderChunk.',
     limitations:['Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.',
       'Any compiler-only compatibility rename is recorded alongside the exact failure. Production vendor shaders remain unchanged.',
       'This finite matrix covers the new CSM/GI paths, not every possible material, skinning or morph-target permutation.'],

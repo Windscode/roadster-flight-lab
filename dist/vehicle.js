@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {SEAL_OUTLINE,SKIRT_MAX_EXTENSION,SKIRT_BASE_Y} from './vehicle-layout.js';
+import {vehicleProjectedPixels,chooseVehicleGeometryProfile,VEHICLE_INSPECTION_RIG} from './visual-presets.js';
 
 /*
  * Roadster exterior study, built from Tesla's October 2026 public photographs.
@@ -47,8 +48,8 @@ function interpolate(keys, z) {
   return keys[keys.length - 1][1];
 }
 
-const WIDTH = [[-2.30,.950],[-2.06,.995],[-1.42,1.035],[-.55,.978],[.55,.976],[1.42,1.025],[1.96,.947],[2.30,.855]];
-const SHOULDER = [[-2.30,.225],[-2.02,.300],[-1.42,.339],[-.76,.316],[0,.288],[.73,.270],[1.42,.272],[1.95,.090],[2.30,-.026]];
+const WIDTH = [[-2.30,.950],[-2.06,.995],[-1.42,1.035],[-.68,.986],[-.12,.977],[.55,.976],[1.42,1.025],[1.96,.947],[2.30,.855]];
+const SHOULDER = [[-2.30,.225],[-2.02,.309],[-1.42,.345],[-.76,.323],[0,.296],[.73,.275],[1.42,.272],[1.95,.090],[2.30,-.026]];
 const DECK = [[-2.30,.237],[-1.90,.306],[-1.48,.311],[.55,.265],[1.09,.219],[1.54,.138],[2.30,-.010]];
 const widthAt = z => interpolate(WIDTH,z);
 const shoulderAt = z => interpolate(SHOULDER,z) - .019;
@@ -58,7 +59,8 @@ export const VEHICLE_GEOMETRY = Object.freeze({
   suspensionMinimum:.24,suspensionMaximum:.41,maxSteer:.49,
   archCentreY:-.22,archLongRadius:.452,archVerticalRadius:.435,
   linerInnerX:.54,linerOuterX:1.040,
-  model:'v5 independent surface reconstruction from Tesla October 2026 photographs; not OEM CAD'
+  model:'v6 / 3.8: reprofiled shoulder/canopy, recessed light ribbons, physical wing; independent official-photo reconstruction, not OEM CAD',
+  referenceRig:VEHICLE_INSPECTION_RIG.id
 });
 const smoothstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
 function archCrown(z){
@@ -71,7 +73,8 @@ function archCrown(z){
 }
 function bodySurfaceY(x,z){
   const f=Math.abs(x)/widthAt(z),center=interpolate(DECK,z),shoulder=interpolate(SHOULDER,z);
-  const deck=center+.013*(1-(f/.70)**2),ridge=lerp(center,shoulder,(f-.70)/.18),edge=lerp(shoulder,shoulder-.019,(f-.88)/.12);
+  const crown=.021*(1-smoothstep(1.82,2.30,z))+.011*smoothstep(1.82,2.30,z);
+  const deck=center+crown*(1-(f/.70)**2),ridge=lerp(center,shoulder,(f-.70)/.18),edge=lerp(shoulder,shoulder-.019,(f-.88)/.12);
   // Tiny real-radius shoulder transitions retain the photograph's broad
   // facets while removing discontinuous specular normals across the paint.
   const panel=lerp(deck,ridge,smoothstep(.685,.715,f));
@@ -646,8 +649,8 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   const wheelsRoot=new THREE.Group();wheelsRoot.name='four suspension uprights';group.add(wheelsRoot);
   const transparentMaterials=[];
   const mats={
-    paint:new THREE.MeshPhysicalMaterial({color:0xe9ebeb,metalness:.02,roughness:.23,clearcoat:.90,clearcoatRoughness:.13,envMapIntensity:1.0,side:THREE.DoubleSide}),
-    glass:new THREE.MeshPhysicalMaterial({color:0x624737,metalness:0,roughness:.10,ior:1.52,clearcoat:.12,clearcoatRoughness:.06,specularColor:0xffffff,envMapIntensity:1.0,transparent:true,opacity:.86,depthWrite:false,side:THREE.DoubleSide}),
+    paint:new THREE.MeshPhysicalMaterial({color:0xe9ebeb,metalness:.02,roughness:.215,clearcoat:.92,clearcoatRoughness:.085,envMapIntensity:1.0,side:THREE.DoubleSide}),
+    glass:new THREE.MeshPhysicalMaterial({color:0x715442,metalness:0,roughness:.075,ior:1.52,clearcoat:.18,clearcoatRoughness:.055,specularColor:0xfff1dd,envMapIntensity:1.0,transparent:true,opacity:.78,depthWrite:false,side:THREE.DoubleSide}),
     carbon:material(0x4d555a,.08,.35,{map:carbonTexture(),side:THREE.DoubleSide}),
     black:material(0x11161a,.36,.25,{side:THREE.DoubleSide}),
     seam:material(0x060a0c,.05,.72),
@@ -681,7 +684,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     frontPanel:new THREE.MeshPhysicalMaterial({color:0x242b33,metalness:.03,roughness:.22,clearcoat:.82,clearcoatRoughness:.08,envMapIntensity:1.1,side:THREE.DoubleSide}),
   };
   mats.balancedPaint=material(mats.paint.color.clone(),mats.paint.metalness,.27,{envMapIntensity:1.05,side:THREE.DoubleSide});
-  mats.balancedGlass=material(mats.glass.color.clone(),0,.12,{envMapIntensity:1.0,transparent:true,opacity:.86,depthWrite:false,side:THREE.DoubleSide});
+  mats.balancedGlass=material(mats.glass.color.clone(),0,.12,{envMapIntensity:1.0,transparent:true,opacity:.78,depthWrite:false,side:THREE.DoubleSide});
   transparentMaterials.push(mats.paint,mats.glass,mats.balancedPaint,mats.balancedGlass);
   for(const mat of Object.values(mats))mat.forceSinglePass=true;
   // The weave map modulates the carbon base colour around a light neutral.
@@ -757,16 +760,18 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   // The photographs show a shallow compound-curved canopy, not a flat top
   // stretched between two triangular side windows. The crown fades into both
   // the windscreen and backlight landing edges without a floating glass lip.
-  const canopyKeys=[[ -1.57,.335],[-1.40,.390],[-1.15,.525],[-.85,.630],[-.48,.672],[-.02,.658],[.27,.548],[.80,.268]];
-  const canopyW=[[-1.57,.775],[-1.12,.668],[-.65,.635],[-.02,.627],[.27,.657],[.80,.763]];
+  // The official side study has a long nearly level crest and a clean windscreen
+  // landing. Redistributed stations remove the former round bubble crown.
+  const canopyKeys=[[-1.57,.335],[-1.40,.408],[-1.15,.546],[-.85,.637],[-.58,.663],[-.22,.661],[.04,.625],[.29,.518],[.80,.268]];
+  const canopyW=[[-1.57,.775],[-1.12,.679],[-.65,.651],[-.02,.645],[.27,.668],[.80,.763]];
   const canopyEdge=z=>interpolate(canopyKeys,z)-.026*(1-smoothstep(.25,.80,z))*smoothstep(-1.57,-1.10,z);
   const canopySurface=(u,z)=>{
     const w=interpolate(canopyW,z),edge=canopyEdge(z),endBlend=(1-smoothstep(.30,.80,z))*smoothstep(-1.57,-1.15,z);
-    return[u*w,edge+.052*Math.cos(u*PI/2)*endBlend,z];
+    return[u*w,edge+.035*(1-u*u)*endBlend,z];
   };
   const sideGlassSurface=(side,u,z)=>{
     const top=canopyEdge(z),w=interpolate(canopyW,z),lowerX=widthAt(z)-.078,lowerY=Math.min(bodySurfaceY(lowerX,z)+.004,top-.004);
-    return[side*lerp(w,lowerX,u),lerp(top,lowerY,u)+.012*Math.sin(u*PI),z];
+    return[side*lerp(w,lowerX,u),lerp(top,lowerY,u)+.008*Math.sin(u*PI),z];
   };
   for(const [front,back,name] of [[.8,.04,'compound curved windscreen'],[.04,-.76,'panoramic roof glazing'],[-.76,-1.57,'curved rear backlight']]){
     grid(shell,mats.glass,(u,v)=>canopySurface(lerp(-1,1,u),lerp(front,back,v)),48,40,false,name);
@@ -802,8 +807,8 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     grid(shell,mats.paint,(u,v)=>{
       const start=lerp(-.94,-1.45,u),end=lerp(-1.61,-1.76,u),z=lerp(start,end,v),outer=widthAt(z),inner=interpolate(canopyW,Math.max(z,-1.57));
       const iy=canopyEdge(Math.max(z,-1.57));
-      const windowInset=lerp(.014,.105,v*v),x=lerp(inner+windowInset,outer,u);
-      return[side*x,lerp(iy,bodySurfaceY(outer,z),u)+.010*Math.sin(u*PI)*Math.sin(v*PI),z];
+      const windowInset=lerp(.014,.088,smoothstep(0,1,v)),x=lerp(inner+windowInset,outer,u);
+      return[side*x,lerp(iy,bodySurfaceY(outer,z),smoothstep(0,1,u))+.006*Math.sin(u*PI)*Math.sin(v*PI),z];
     },12,30,side<0,'curved rear buttress');
   }
   // Panel lines on the front service lid and rear deck.
@@ -848,7 +853,10 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     },12,10,side>0,'wrapped carbon lower bumper');
   }
   HEADLIGHTS.forEach(outline=>recessedLamp(shell,outline,mats));
-  curve(shell,[[-.647,-.022,2.314],[0,-.026,2.322],[.647,-.022,2.314]],.0062,mats.whiteLight,'front light blade');
+  // A shallow extruded ribbon has the photograph's flat optical face. Tubes
+  // made both lamps look like surface-mounted neon and rounded the silhouette.
+  grid(shell,mats.black,(u,v)=>{const x=lerp(-.653,.653,u);return[x,-.022+lerp(-.010,.010,v),2.315+.008*(1-(x/.653)**2)];},40,2,true,'front light recessed bezel');
+  grid(shell,mats.whiteLight,(u,v)=>{const x=lerp(-.647,.647,u);return[x,-.022+lerp(-.0035,.0035,v),2.317+.008*(1-(x/.647)**2)];},40,2,true,'front light blade');
   curve(underbody,[[-.85,-.412,2.283],[-.71,-.425,2.363],[0,-.425,2.388],[.71,-.425,2.363],[.85,-.412,2.283]],.008,mats.carbon,'front splitter outer lip');
   solidXZ(underbody,[[-.851,2.275],[-.719,2.363],[0,2.388],[.719,2.363],[.851,2.275],[.83,1.988],[-.83,1.988]],.027,-.414,mats.carbon,'front ground effect splitter');
   box(underbody,1.22,.052,.051,mats.carbon,[0,-.279,2.338],.008,'front intake horizontal vane');
@@ -863,7 +871,8 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     const x=lerp(-.940,.940,u),edge=Math.abs(x)/.940,y=lerp(.215,.009-.065*edge**6,v),z=-2.322+.037*edge**4+.006*Math.sin(v*PI);
     return[x,y,z];
   },48,14,false,'sculpted rear painted apron');
-  curve(shell,[[-.886,.222,-2.311],[0,.225,-2.323],[.886,.222,-2.311]],.009,mats.tailLight,'full width rear light');
+  grid(shell,mats.black,(u,v)=>{const x=lerp(-.911,.911,u),edge=(Math.abs(x)/.911)**4;return[x,.222+lerp(-.016,.017,v),-2.321+.018*edge];},48,3,false,'recessed rear optical channel');
+  grid(shell,mats.tailLight,(u,v)=>{const x=lerp(-.897,.897,u),edge=(Math.abs(x)/.897)**4;return[x,.222+lerp(-.008,.008,v),-2.324+.018*edge];},48,3,false,'full width rear light');
   curve(shell,[[-.884,.241,-2.306],[0,.244,-2.318],[.884,.241,-2.306]],.004,mats.paint,'rear trailing lip');
   box(underbody,.382,.112,.019,mats.chrome,[0,.112,-2.336],.009,'embossed rear plate surround');
   box(underbody,.366,.104,.014,mats.black,[0,.112,-2.350],.007,'rear RDSTR plate');
@@ -939,36 +948,48 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   const jets=[];
   const jetsRoot=new THREE.Group();jetsRoot.name='simulated force application nozzles';group.add(jetsRoot);
   const jetExhaust=new THREE.Vector3(),shadowDefaults=new WeakMap();
-  let time=0,cutaway=false,wingExtension=0,quality='high';
+  let time=0,cutaway=false,wingExtension=0,quality='high',geometryQuality='high',projectedPixels=null;
+  const viewPoint=new THREE.Vector3();
 
   function applyProfileObjects(root){
     root.traverse(o=>{
-      if(Number.isFinite(o.userData.minimumQuality))o.visible=cutaway||QUALITY[quality]>=o.userData.minimumQuality;
+      if(Number.isFinite(o.userData.minimumQuality))o.visible=cutaway||QUALITY[geometryQuality]>=o.userData.minimumQuality;
       if(!o.isMesh)return;
       if(!shadowDefaults.has(o))shadowDefaults.set(o,o.castShadow);
       const silhouette=[mats.paint,mats.balancedPaint,mats.rubber].includes(o.material);
-      o.castShadow=shadowDefaults.get(o)&&(quality!=='balanced'||silhouette);
-      if(o.material===mats.paint||o.material===mats.balancedPaint)o.material=quality==='balanced'?mats.balancedPaint:mats.paint;
-      if(o.material===mats.glass||o.material===mats.balancedGlass)o.material=quality==='balanced'?mats.balancedGlass:mats.glass;
+      o.castShadow=shadowDefaults.get(o)&&(geometryQuality!=='balanced'||silhouette);
+      if(o.material===mats.paint||o.material===mats.balancedPaint)o.material=geometryQuality==='balanced'?mats.balancedPaint:mats.paint;
+      if(o.material===mats.glass||o.material===mats.balancedGlass)o.material=geometryQuality==='balanced'?mats.balancedGlass:mats.glass;
     });
   }
 
+  function applyDisplayProfile(value){
+    geometryQuality=value;
+    applyGeometryQuality(group,geometryQuality);applyProfileObjects(group);
+    const anisotropy=geometryQuality==='balanced'?2:8;
+    if(mats.carbon.map.anisotropy!==anisotropy){mats.carbon.map.anisotropy=anisotropy;mats.carbon.map.needsUpdate=true;}
+    for(const s of suspensions)s.group.visible=geometryQuality!=='balanced'||cutaway;
+    cabin.visible=geometryQuality!=='balanced'||cutaway;
+    for(const wheel of wheels)wheel.spin.traverse(o=>{
+      if(o.isLineSegments||[mats.sidewall,mats.seam,mats.chrome].includes(o.material))o.visible=geometryQuality!=='balanced'||cutaway;
+    });
+    group.userData.quality=quality;group.userData.geometryQuality=geometryQuality;
+  }
   function setQuality(value){
     quality=Object.hasOwn(QUALITY,value)?value:'high';
-    applyGeometryQuality(group,quality);applyProfileObjects(group);
-    const anisotropy=quality==='balanced'?2:8;
-    if(mats.carbon.map.anisotropy!==anisotropy){mats.carbon.map.anisotropy=anisotropy;mats.carbon.map.needsUpdate=true;}
-    for(const s of suspensions)s.group.visible=quality!=='balanced'||cutaway;
-    cabin.visible=quality!=='balanced'||cutaway;
-    for(const wheel of wheels)wheel.spin.traverse(o=>{
-      if(o.isLineSegments||[mats.sidewall,mats.seam,mats.chrome].includes(o.material))o.visible=quality!=='balanced'||cutaway;
-    });
-    group.userData.quality=quality;
-    return quality;
+    applyDisplayProfile(quality);return quality;
+  }
+  function setViewBudget(camera,drawingBufferHeight,{inspection=false}={}){
+    if(!camera?.isPerspectiveCamera||!Number.isFinite(drawingBufferHeight))return geometryQuality;
+    group.getWorldPosition(viewPoint);viewPoint.applyMatrix4(camera.matrixWorldInverse);
+    projectedPixels=viewPoint.z>=0?0:vehicleProjectedPixels({distance:-viewPoint.z,fov:camera.fov,height:drawingBufferHeight});
+    const next=cutaway?quality:chooseVehicleGeometryProfile(quality,projectedPixels,{inspection,previous:geometryQuality});
+    if(next!==geometryQuality)applyDisplayProfile(next);
+    group.userData.projectedPixels=projectedPixels;return geometryQuality;
   }
 
   function getRenderCost(){
-    const cost={quality,drawables:0,meshes:0,vertices:0,triangles:0,shadowMeshes:0};
+    const cost={quality,geometryQuality,projectedPixels,drawables:0,meshes:0,vertices:0,triangles:0,shadowMeshes:0};
     group.traverseVisible(o=>{
       if(!o.geometry)return;cost.drawables++;cost.meshes+=!!o.isMesh;cost.vertices+=o.geometry.attributes.position?.count||0;
       if(o.isMesh)cost.triangles+=(o.geometry.index?.count||o.geometry.attributes.position?.count||0)/3;
@@ -1002,7 +1023,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
       const n=nozzles[i];
       if(!jets[i]){
         jets[i]=nozzleGeometry(jetsRoot,mats,n.id||'force nozzle '+i);
-        applyGeometryQuality(jets[i].root,quality);applyProfileObjects(jets[i].root);
+        applyGeometryQuality(jets[i].root,geometryQuality);applyProfileObjects(jets[i].root);
       }
       const jet=jets[i];
       if(n.position)jet.root.position.set(n.position.x,n.position.y,n.position.z);
@@ -1025,11 +1046,16 @@ export function createRoadster({quality:initialQuality='high'}={}) {
       jet.fan.rotation.z+=dt*(telemetry.suctionEnabled?22+14*(telemetry.sealQuality||0):5*clamp((telemetry.speedKmh||0)/130,0,1));
     });
     const brake=clamp(telemetry.brake??telemetry.brakeInput??0,0,1);
-    const speed=Math.abs(telemetry.speedKmh||0);
-    const airborne=telemetry.mode==='hover'||telemetry.mode==='flight'||telemetry.mode==='flip'||telemetry.mode==='ceiling';
-    const target=clamp((speed-70)/110,0,.60)+(brake>.2?.38:0)+(airborne?.26:0);
-    wingExtension=lerp(wingExtension,clamp(target,0,1),1-Math.exp(-dt*4));
-    wing.position.y=.325+wingExtension*.30;wing.rotation.x=-brake*.25;
+    // The physical actuator owns deployment and rate limiting. Rendering has
+    // no speed/brake-driven copy and never changes the aerodynamic state.
+    const wingState=telemetry.wing||{};
+    wingExtension=clamp(Number.isFinite(wingState.deployment)?wingState.deployment:0,0,1);
+    const physicalPosition=wingState.position,hasPhysicalPose=physicalPosition&&['x','y','z'].every(axis=>Number.isFinite(physicalPosition[axis]))&&Number.isFinite(wingState.incidenceRad);
+    // Legacy inspection fixtures only carry deployment; the running model
+    // supplies the complete actuator pose shared with its aerodynamic force.
+    if(hasPhysicalPose){wing.position.set(physicalPosition.x,physicalPosition.y,physicalPosition.z);wing.rotation.x=wingState.incidenceRad;}
+    else{wing.position.set(0,.325+wingExtension*.30,-2.065);wing.rotation.x=-wingExtension*.25;}
+    wing.userData.deployment=wingExtension;wing.userData.source=hasPhysicalPose?'telemetry.wing.position/incidenceRad':'telemetry.wing.deployment';
     for(const strut of wingStruts){strut.scale.y=1+wingExtension*2.5;strut.position.y=.30+wingExtension*.15;}
     mats.tailLight.emissiveIntensity=brake>.02?2.4:1.25;
   }
@@ -1039,7 +1065,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     cutaway=!!enabled;equipment.visible=cutaway;
     for(const mat of transparentMaterials) {
       const glass=mat===mats.glass||mat===mats.balancedGlass;
-      mat.transparent=cutaway||glass;mat.opacity=cutaway?(glass?.08:.17):(glass?.86:1);
+      mat.transparent=cutaway||glass;mat.opacity=cutaway?(glass?.08:.17):(glass?.78:1);
       mat.depthWrite=!cutaway&&!glass;mat.needsUpdate=true;
     }
     chamber.roof.visible=!cutaway;
@@ -1057,6 +1083,6 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   }
   group.userData.pressureChamber={...chamber.root.userData};
   setQuality(initialQuality);
-  return {group,update,setColor,setCutaway,setQuality,getRenderCost,get quality(){return quality;},dispose,wheels,materials:mats,wing,chamber,suspensions};
+  return {group,update,setColor,setCutaway,setQuality,setViewBudget,getRenderCost,get quality(){return quality;},dispose,wheels,materials:mats,wing,chamber,suspensions};
 }
 

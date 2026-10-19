@@ -192,5 +192,5 @@ pass('Old-grid/dense and optimized/sparse Roadster trajectories match exactly fo
 pass('Warm-up CPU benchmark records relative cost with unchanged physical rate, collider set and numerical output');
 
 report.sourceHashes=Object.fromEntries(['dist/physics.js','dist/static-city-broadphase.js','dist/vendor/cannon-es.js'].map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')]));
-writeFileSync(new URL('../qa/physics-cpu-3.7.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL('../qa/physics-cpu-3.8.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report.benchmark,null,2));

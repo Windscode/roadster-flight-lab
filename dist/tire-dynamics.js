@@ -1,0 +1,63 @@
+// Reduced longitudinal brush/sliding law coupled to an independent rotating
+// wheel. The implicit local contact solve prevents the stiff low-speed tire
+// from creating energy. This is an engineering approximation, not OEM data.
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+export function regularizedSlip(omega,v,radius,regularization=.75){return(omega*radius-v)/Math.max(regularization,Math.abs(v),Math.abs(omega*radius));}
+export function longitudinalTireForce(slip,capacity){
+  const a=Math.abs(slip),slide=1-.22*clamp((a-.16)/.74,0,1);
+  return capacity*Math.tanh(slip*15)*slide;
+}
+export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTorqueNm,brakeTorqueNm,rollingTorqueNm=0,radius,inertia,effectiveMass,gravityLong=0,absEnabled=true,tcsEnabled=true}){
+  const n=Math.max(1,Math.ceil(dt*600)),h=dt/n,capacity=Math.max(0,normalLoadN*mu);
+  let speed=vlong,impulse=0,latImpulse=0,brakeEnergy=0,tireEnergy=0,driveWork=0,actualDrive=0,actualBrake=0;
+  w.angularVelocityRadS??=0;w.absPressure??=1;w.tcsFactor??=1;
+  const startingOmega=w.angularVelocityRadS;
+  w.absActive=false;w.tcsActive=false;
+  for(let i=0;i<n;i++){
+    const slip=regularizedSlip(w.angularVelocityRadS,speed,radius),direction=Math.sign(speed)||Math.sign(w.angularVelocityRadS)||Math.sign(driveTorqueNm)||1;
+    const brakingSlip=-slip*direction,drivingSlip=slip*(Math.sign(driveTorqueNm)||direction);
+    if(absEnabled&&brakeTorqueNm>1&&Math.abs(speed)>1.2){
+      const rate=brakingSlip>.14?-45*(brakingSlip-.14):8*(.14-brakingSlip);
+      w.absPressure=clamp(w.absPressure+rate*h,.02,1);
+    }else w.absPressure=1;
+    if(tcsEnabled&&Math.abs(driveTorqueNm)>1&&Math.abs(w.angularVelocityRadS*radius)>1){
+      const rate=drivingSlip>.13?-35*(drivingSlip-.13):5*(.13-drivingSlip);
+      w.tcsFactor=clamp(w.tcsFactor+rate*h,.025,1);
+    }else w.tcsFactor=1;
+    const drive=driveTorqueNm*w.tcsFactor,brake=brakeTorqueNm*w.absPressure+rollingTorqueNm;
+    const omega0=w.angularVelocityRadS;
+    const advance=force=>{
+      const free=omega0+h*(drive-force*radius)/inertia;
+      return Math.sign(free)*Math.max(0,Math.abs(free)-h*brake/inertia);
+    };
+    const contact=force=>{
+      const omega=advance(force),v=speed+h*(force/effectiveMass+gravityLong);
+      const raw=longitudinalTireForce(regularizedSlip(omega,v,radius),capacity);
+      const scale=Math.min(1,capacity/Math.max(1e-12,Math.hypot(raw,lateralForceN)));
+      return{omega,v,force:raw*scale,lateral:lateralForceN*scale};
+    };
+    const exactRest=omega0===0&&speed===0&&drive===0&&gravityLong===0;
+    let lo=-capacity,hi=capacity;
+    if(capacity&&!exactRest)for(let k=0;k<18;k++){const mid=(lo+hi)*.5;if(mid>contact(mid).force)hi=mid;else lo=mid;}
+    // Zero is exact at rest; bisection brackets otherwise introduce a tiny
+    // force when both angular and translational initial velocities are zero.
+    const fx=capacity&&!exactRest?(lo+hi)*.5:0;
+    const next=contact(fx),omega1=advance(fx),midOmega=(omega0+omega1)*.5;
+    const appliedBrake=drive-fx*radius-inertia*(omega1-omega0)/h;
+    w.angularVelocityRadS=omega1;w.rotation+=midOmega*h;
+    brakeEnergy+=Math.max(0,appliedBrake*midOmega)*h;
+    tireEnergy+=Math.max(0,fx*(radius*omega1-next.v))*h;
+    driveWork+=Math.max(0,drive*midOmega)*h;
+    actualDrive+=drive*h;actualBrake+=Math.abs(appliedBrake)*h;
+    // The root solve has finite tolerance. Enforce the remaining lateral
+    // budget against the force actually integrated, so that tolerance cannot
+    // create a friction-circle overshoot at the contact patch.
+    const lateral=Math.sign(next.lateral)*Math.min(Math.abs(next.lateral),Math.sqrt(Math.max(0,capacity*capacity-fx*fx)));
+    impulse+=fx*h;latImpulse+=lateral*h;speed=next.v;
+    w.absActive||=w.absPressure<.98;w.tcsActive||=w.tcsFactor<.98;
+  }
+  w.slipRatio=regularizedSlip(w.angularVelocityRadS,speed,radius);w.contactSpeedMps=vlong;w.surfaceMu=mu;
+  w.driveTorqueNm=actualDrive/dt;w.brakeTorqueNm=actualBrake/dt;w.tireReactionTorqueNm=-impulse/dt*radius;
+  w.wheelEnergyJ=.5*inertia*w.angularVelocityRadS**2;
+  return{longitudinalForceN:impulse/dt,lateralForceN:latImpulse/dt,brakeEnergyJ:brakeEnergy,tireEnergyJ:tireEnergy,driveWorkJ:driveWork,spinMomentumChangeNms:inertia*(w.angularVelocityRadS-startingOmega)};
+}

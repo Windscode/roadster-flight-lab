@@ -29,7 +29,7 @@ const snapshot=sim=>JSON.stringify({position:sim.body.position,velocity:sim.body
 // 120 Hz, 1.5 s full steering / 0.15 throttle fixture before changing sources.
 const baselineRadii=new Map([[10,22.276397731400028],[15,45.87710586353648],[25,124.18463454012517]]);
 for(const speed of [10,15,25]){
-  const s=flat();s.body.velocity.z=speed;let minContacts=4,maxGrip=0,maxRoll=0;
+  const s=flat();s.body.velocity.z=speed;s.wheelStates.forEach(w=>w.angularVelocityRadS=speed/s.params.wheelRadius);let minContacts=4,maxGrip=0,maxRoll=0;
   const t=run(s,1.5,{steer:1,throttle:.15},sim=>{
     minContacts=Math.min(minContacts,sim._contactCount);maxRoll=Math.max(maxRoll,Math.abs(sim._angles().roll));
     for(const w of sim.wheelStates)maxGrip=Math.max(maxGrip,w.gripUse);
@@ -41,7 +41,7 @@ for(const speed of [10,15,25]){
 }
 for(const speed of [28,56,83]){
   const s=flat();assert.ok(roadWheelAngle(1,speed,s.params)<.04,'High-speed wheel demand remains bounded');
-  s.body.velocity.z=speed;const t=run(s,2,{steer:.8});assert.ok(Math.abs(t.rollDeg)<20);assert.ok(t.wheelStates.every(w=>w.gripUse<=1+1e-10));
+  s.body.velocity.z=speed;s.wheelStates.forEach(w=>w.angularVelocityRadS=speed/s.params.wheelRadius);const t=run(s,2,{steer:.8});assert.ok(Math.abs(t.rollDeg)<20);assert.ok(t.wheelStates.every(w=>w.gripUse<=1+1e-10));
 }
 pass('Medium-speed steering produces smaller real turn radii while tyre friction, wheel contact and high-speed steering limits remain physical');
 
@@ -203,6 +203,6 @@ pass('Program input providers and wind advance at exactly 120 Hz independently o
 }
 pass('Prescribed lab wind acts through relative-airflow aerodynamic force with deterministic gust timing, validated parameters and a true calm reset');
 
-writeFileSync('qa/flight-controls-3.7.json',JSON.stringify({status:'passed',physicsHz:PHYSICS_HZ,checks,values,
+writeFileSync('qa/flight-controls-3.8.json',JSON.stringify({status:'passed',physicsHz:PHYSICS_HZ,checks,values,
   limits:'Deterministic reduced-order engineering model, not OEM identification. Flat-ground and authored lab fixtures are numerical acceptance checks. They do not certify arbitrary obstacles, all finite-tank parameters or real vehicle operation. One-way lift and bounded side jets cannot statically support every attitude; no inverse lift or pose freeze is introduced.'},null,2)+'\n');
 console.log(`Flight controls 3.7: ${checks.length} acceptance groups passed.`);

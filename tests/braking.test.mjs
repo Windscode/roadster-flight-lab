@@ -14,6 +14,8 @@ function stopRun({throttle=0,boost=false,batteryKWh=200,gas='full',speedKmh=100}
   for(let i=0;i<3*PHYSICS_HZ;i++)sim.step(dt,{});
   assert.equal(sim.telemetry().contactCount,4,'The stop must start on four loaded tires');
   sim.body.velocity.set(0,0,speedKmh/3.6);sim.body.angularVelocity.setZero();
+  // Author a rolling initial condition rather than a locked wheel at speed.
+  sim.wheelStates.forEach(w=>w.angularVelocityRadS=sim.body.velocity.z/sim.params.wheelRadius);
   const start=sim.simTime,z0=sim.body.position.z;
   let stop=null,held=0,minSuspension=Infinity,allLoaded=true;
   // A broad bound derived from the assumed tire limit; the regression checks

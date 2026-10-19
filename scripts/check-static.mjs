@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const dist=resolve(root,'dist');
 const html=readFileSync(resolve(dist,'index.html'),'utf8');
-const main=readFileSync(resolve(dist,'main.js'),'utf8');
+const main=['main.js','app-shell.js'].map(name=>readFileSync(resolve(dist,name),'utf8')).join('\n');
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(ids).size,ids.length,'Duplicate HTML element IDs');
 for(const m of main.matchAll(/(?<!\$)\$\('([^']+)'\)/g))assert.ok(ids.includes(m[1]),'Missing fixed UI element '+m[1]);
@@ -17,10 +17,14 @@ function checkModule(file){
   if(imports.has(file))return;imports.add(file);const source=readFileSync(file,'utf8');
   execFileSync(process.execPath,['--check',file],{stdio:'pipe'});
   // Import patterns beginning at real module syntax; documentation is excluded.
-  const deps=[...source.matchAll(/(?:^|\n)\s*(?:import|export)\s+(?:[^;]*?\s+from\s+)?['"]([^'"]+)['"]/g)].map(m=>m[1]);
+  const deps=[...source.matchAll(/(?:^|\n)\s*(?:import|export)\s+(?:[^;]*?\s+from\s+)?['"]([^'"]+)['"]/g),...source.matchAll(/\bimport\(\s*['"]([^'"]+)['"]\s*\)/g)].map(m=>m[1]);
   for(const dep of deps){assert.ok(dep.startsWith('.'),'Unexpected runtime external dependency '+dep);const next=resolve(dirname(file),dep);assert.ok(existsSync(next),'Missing module '+next);checkModule(next);}
 }
-checkModule(resolve(dist,'main.js'));
+assert.match(html,/<script[^>]+src="\.\/app\.js"/,'The numerical application shell must be the entry before WebGL initialization');
+checkModule(resolve(dist,'app.js'));
+// Include workers and independent inspection/lazy modules, even when their
+// entry is constructed through new URL() instead of a static import.
+for(const entry of readdirSync(dist,{withFileTypes:true}))if(entry.isFile()&&entry.name.endsWith('.js'))checkModule(resolve(dist,entry.name));
 checkModule(resolve(dist,'research-lab.js'));
 checkModule(resolve(dist,'experiment-worker.js'));
 const researchEntry=readFileSync(resolve(dist,'research.html'),'utf8');

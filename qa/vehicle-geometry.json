@@ -1,87 +1,105 @@
 {
   "status": "passed",
-  "asOf": "2026-10-19T03:36:35.115Z",
-  "model": "Roadster photograph reconstruction v5",
+  "asOf": "2026-10-19T04:52:10.961Z",
+  "model": "Roadster photograph reconstruction v6 / 3.8",
   "geometry": {
     "meshes": 149,
-    "vertices": 148660
+    "vertices": 149190
   },
   "profiles": {
     "balanced": {
       "atRest": {
         "quality": "balanced",
+        "geometryQuality": "balanced",
+        "projectedPixels": null,
         "drawables": 74,
         "meshes": 74,
-        "vertices": 42764,
-        "triangles": 49535,
+        "vertices": 42990,
+        "triangles": 49847,
         "shadowMeshes": 5
       },
       "forceNozzles": {
         "quality": "balanced",
+        "geometryQuality": "balanced",
+        "projectedPixels": null,
         "drawables": 94,
         "meshes": 94,
-        "vertices": 45624,
-        "triangles": 53635,
+        "vertices": 45850,
+        "triangles": 53947,
         "shadowMeshes": 5
       },
       "cutaway": {
         "quality": "balanced",
+        "geometryQuality": "balanced",
+        "projectedPixels": null,
         "drawables": 178,
         "meshes": 174,
-        "vertices": 59508,
-        "triangles": 66103,
+        "vertices": 59734,
+        "triangles": 66415,
         "shadowMeshes": 5
       }
     },
     "high": {
       "atRest": {
         "quality": "high",
+        "geometryQuality": "high",
+        "projectedPixels": null,
         "drawables": 144,
         "meshes": 140,
-        "vertices": 145008,
-        "triangles": 221603,
+        "vertices": 145538,
+        "triangles": 222339,
         "shadowMeshes": 119
       },
       "forceNozzles": {
         "quality": "high",
+        "geometryQuality": "high",
+        "projectedPixels": null,
         "drawables": 174,
         "meshes": 170,
-        "vertices": 151958,
-        "triangles": 231203,
+        "vertices": 152488,
+        "triangles": 231939,
         "shadowMeshes": 129
       },
       "cutaway": {
         "quality": "high",
+        "geometryQuality": "high",
+        "projectedPixels": null,
         "drawables": 178,
         "meshes": 174,
-        "vertices": 155142,
-        "triangles": 235971,
+        "vertices": 155672,
+        "triangles": 236707,
         "shadowMeshes": 133
       }
     },
     "ultra": {
       "atRest": {
         "quality": "ultra",
+        "geometryQuality": "ultra",
+        "projectedPixels": null,
         "drawables": 144,
         "meshes": 140,
-        "vertices": 219080,
-        "triangles": 358057,
+        "vertices": 219952,
+        "triangles": 359381,
         "shadowMeshes": 119
       },
       "forceNozzles": {
         "quality": "ultra",
+        "geometryQuality": "ultra",
+        "projectedPixels": null,
         "drawables": 174,
         "meshes": 170,
-        "vertices": 230450,
-        "triangles": 375097,
+        "vertices": 231322,
+        "triangles": 376421,
         "shadowMeshes": 129
       },
       "cutaway": {
         "quality": "ultra",
+        "geometryQuality": "ultra",
+        "projectedPixels": null,
         "drawables": 178,
         "meshes": 174,
-        "vertices": 234394,
-        "triangles": 381117,
+        "vertices": 235266,
+        "triangles": 382441,
         "shadowMeshes": 133
       }
     }
@@ -89,15 +107,15 @@
   "glazingBoundaryNormals": {
     "balanced": {
       "coincidentBoundaryPairs": 34,
-      "maximumNormalAngleDeg": 0.018051009148609187
+      "maximumNormalAngleDeg": 0.01304206259289188
     },
     "high": {
-      "coincidentBoundaryPairs": 76,
-      "maximumNormalAngleDeg": 0.019080792191188394
+      "coincidentBoundaryPairs": 74,
+      "maximumNormalAngleDeg": 0.01685973268029142
     },
     "ultra": {
-      "coincidentBoundaryPairs": 100,
-      "maximumNormalAngleDeg": 0.019080792191188394
+      "coincidentBoundaryPairs": 96,
+      "maximumNormalAngleDeg": 0.017561048275707664
     }
   },
   "sweep": {
@@ -112,7 +130,7 @@
     ],
     "tyreRadiusM": 0.372,
     "minimumArchLinerMarginM": 0.017689963530136996,
-    "minimumRoofMarginM": 0.016675756702111966,
+    "minimumRoofMarginM": 0.016766269102844733,
     "minimumInnerWallMarginM": 0.07619499326628021,
     "minimumLiftDuctMarginM": 0.0709447795558538
   },
@@ -213,17 +231,17 @@
     {
       "test": "Every authored position and normal is finite; nonzero normals are unit length",
       "status": "PASS",
-      "ms": 12
+      "ms": 14
     },
     {
       "test": "Full suspension travel is represented directly, without shrinking or visually clamping tyres",
       "status": "PASS",
-      "ms": 4
+      "ms": 3
     },
     {
       "test": "Whole tyre sweep clears arch, roof, inner wheelhouse and isolated thrust duct",
       "status": "PASS",
-      "ms": 623
+      "ms": 612
     },
     {
       "test": "Continuous pressure chamber has an airtight roof, isolated wheel/jet cutouts and surface-following seal",
@@ -238,7 +256,7 @@
     {
       "test": "Pressed door has interior surface samples and each lamp is an actual opening in paint",
       "status": "PASS",
-      "ms": 38
+      "ms": 26
     },
     {
       "test": "All 20 physical seal segments and interpolation correction survive exterior rebuilding",
@@ -248,7 +266,7 @@
     {
       "test": "Render profiles reduce actual geometry and preserve articulated object identities and state",
       "status": "PASS",
-      "ms": 310
+      "ms": 295
     },
     {
       "test": "Separate glazing panels share continuous derivative normals at every quality",
@@ -258,12 +276,12 @@
     {
       "test": "Balanced cutaway reveals real hardware and an unchanged seal does not rebuild its mesh",
       "status": "PASS",
-      "ms": 1
+      "ms": 2
     },
     {
       "test": "Late-created force nozzles use the selected profile and switching back reuses cached geometry",
       "status": "PASS",
-      "ms": 11
+      "ms": 12
     }
   ],
   "limitations": [

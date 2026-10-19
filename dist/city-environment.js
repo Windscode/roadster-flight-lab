@@ -11,11 +11,14 @@ import {createIndirectLighting,makeSunlessEnvironment} from './indirect-lighting
 import {architectureDetailLevel,cityRenderProfile,createCityVisibility} from './city-render-budget.js';
 import {attachRoadSurface} from './road-surface-material.js';
 import {createLocalProbeSun} from './local-probe-sun.js';
+import {CITY_WEATHER_PRESETS,CITY_BENCHMARK_ROUTE} from './visual-presets.js';
+import {createCityPracticalLights} from './city-practical-lights.js';
+import {createWetRoadReflection} from './wet-road-reflection.js';
 
 export function createEnvironment(scene,renderer,geometry,camera){
   const indirect=createIndirectLighting(renderer);
   const probeSun=createLocalProbeSun(scene,renderer);
-  const root=new THREE.Group();root.name='Vesper 3.5 / layered mineral, glass and oxide street canyons';scene.add(root);
+  const root=new THREE.Group();root.name='Vesper 3.8 / Weave district, day and wet-night';scene.add(root);
   const unit=new THREE.BoxGeometry(),temp=new THREE.Object3D(),loader=new THREE.TextureLoader(),buckets=new Map();
   const loadTexture=path=>typeof document==='undefined'?new THREE.Texture():loader.load(path);
   const normal=loadTexture('./assets/roads/nor_gl.jpg'),rough=loadTexture('./assets/roads/rough.jpg'),albedo=loadTexture('./assets/roads/diff.jpg');albedo.colorSpace=THREE.SRGBColorSpace;
@@ -91,7 +94,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
   function sign(text,x,y,z,w=8,h=2,color='#eac896',rotation=Math.PI){
     if(typeof document==='undefined')return;
     const c=document.createElement('canvas');c.width=2048;c.height=Math.max(128,Math.round(2048*h/w));const g=c.getContext('2d');g.fillStyle='#151b1b';g.fillRect(0,0,c.width,c.height);g.fillStyle=color;g.font=`600 ${Math.round(c.height*.53)}px Arial,Microsoft YaHei`;g.textAlign='center';g.textBaseline='middle';g.fillText(text,c.width/2,c.height*.49,c.width*.94);g.fillRect(c.width*.025,c.height*.89,c.width*.95,2);
-    const map=new THREE.CanvasTexture(c);map.colorSpace=THREE.SRGBColorSpace;const mat=new THREE.MeshStandardMaterial({map,emissiveMap:map,emissive:0xffffff,emissiveIntensity:1.5,roughness:.65});const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);mesh.position.set(x,y,z);mesh.rotation.y=rotation;root.add(mesh);
+    const map=new THREE.CanvasTexture(c);map.colorSpace=THREE.SRGBColorSpace;const mat=new THREE.MeshStandardMaterial({map,emissiveMap:map,emissive:0xffffff,emissiveIntensity:.20,roughness:.65});const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);mesh.position.set(x,y,z);mesh.rotation.y=rotation;root.add(mesh);
   }
   sign('01  织 桥 街 / WEAVE QUARTER',-200,6.1,-319.85,15,1.2,'#b2cdd8');sign('交换厅 / EXCHANGE',-200,6.1,-286.12,15,1.0,'#dda37d');
   sign('环城高架   ←  CROSS CITY  →',-200,17.1,-236.1,18,1.7,'#a0c4cb');
@@ -102,16 +105,40 @@ export function createEnvironment(scene,renderer,geometry,camera){
   function verticalSign(text,x,y,z,color){
     if(typeof document==='undefined'){add([1.7,6.2,.15],[x,y,z],mats.steel);return;}
     const c=document.createElement('canvas');c.width=256;c.height=1024;const g=c.getContext('2d');g.fillStyle='#102022';g.fillRect(0,0,256,1024);g.strokeStyle=color;g.lineWidth=6;g.strokeRect(10,10,236,1004);g.fillStyle=color;g.font='bold 150px Arial,Microsoft YaHei';g.textAlign='center';g.textBaseline='middle';[...text].forEach((v,i)=>g.fillText(v,128,120+i*220,210));
-    const map=new THREE.CanvasTexture(c);map.colorSpace=THREE.SRGBColorSpace;const mat=new THREE.MeshStandardMaterial({map,emissiveMap:map,emissive:0xffffff,emissiveIntensity:1.9,roughness:.6});
+    const map=new THREE.CanvasTexture(c);map.colorSpace=THREE.SRGBColorSpace;const mat=new THREE.MeshStandardMaterial({map,emissiveMap:map,emissive:0xffffff,emissiveIntensity:.28,roughness:.6});
     for(const ry of [0,Math.PI]){const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,6),mat);m.position.set(x,y,z+(ry===0?.085:-.085));m.rotation.y=ry;root.add(m);}add([1.7,6.2,.15],[x,y,z],mats.steel);add([2.2,.13,.13],[x,y+2.8,z],mats.steel);
   }
   verticalSign('夜航旅店',-208.7,7.2,-333,'#5ed7d8');verticalSign('深夜食堂',-191.3,7,-307,'#eaa875');verticalSign('机能诊所',-208.7,8,-287,'#dc75b4');verticalSign('轨道通信',-191.3,10,-195,'#7bafc4');
-  const lightAnchors=[];
-  for(let z=-397;z<40;z+=28)for(const side of [-1,1]){
-    const x=-200+side*9.4;add([.13,7.5,.13],[x,3.75,z],mats.steel);add([1.4,.13,.48],[x-side*.6,7.52,z],mats.steel);add([.9,.035,.32],[x-side*.6,7.43,z],mats.amber);lightAnchors.push({position:[x-side*.6,7.30,z],color:0xb6d9dc,intensity:190,range:24});
+  // Curated entry, exchange and junction identity sits on existing frontage /
+  // bridge solids. No new interior, floating road or obstacle collider is added.
+  sign('南 岸 01 / WEAVE',-209.96,11.4,-370,15,3.8,'#c5d2d3',Math.PI/2);
+  sign('CITY EXCHANGE / 交换厅',-190.04,10.4,-270,18,2.8,'#e2b789',-Math.PI/2);
+  sign('CENTRAL / 中央横街 →',-200,4.85,-172.16,13,1.0,'#b8cbd1');
+  // Loading pockets, crosswalks and stop bars have a legible human scale. The
+  // unbroken road support and 2.1 m navigation corridor remain canonical.
+  for(const z of [-391,-143]){
+    for(let x=-206.0;x<=-194.0;x+=1.25)add([.56,.006,3.2],[x,.027,z],mats.paint,undefined,false);
+    add([7.5,.006,.25],[-200,.027,z-4.2],mats.paint,undefined,false);
   }
-  for(let x=-600;x<=600;x+=100)for(let z=-580;z<=580;z+=55)for(const side of [-1,1]){if(plannedDistrictAt(x,z))continue;add([.11,8,.11],[x+side*12.7,4,z],mats.steel);add([1.5,.10,.5],[x+side*12,8,z],mats.steel);add([1.1,.035,.35],[x+side*12,7.93,z],mats.amber);lightAnchors.push({position:[x+side*12,7.85,z],color:0xcad8d6,intensity:500,range:30});}
+  for(const [side,z]of [[-1,-358],[1,-295],[-1,-182]]){
+    const x=-200+side*7.7;
+    for(const zz of [z-5.4,z+5.4])add([1.65,.005,.075],[x,.026,zz],mats.paint,undefined,false);
+    add([.075,.005,10.8],[x-side*.84,.026,z],mats.paint,undefined,false);
+  }
+  // A continuous protected utility datum ties the exchange/service frontages
+  // together; its joints align to existing 12 m structural bays, not every window.
+  for(const side of [-1,1])for(const [a,b]of [[-392,-337],[-313,-287],[-282,-244],[-194,-151]]){
+    add([.12,.42,b-a],[-200+side*9.95,4.13,(a+b)/2],mats.steel,undefined,false);
+    add([.035,.065,b-a],[-200+side*9.88,4.22,(a+b)/2],mats['aged-copper'],undefined,false);
+  }
+  const lightAnchors=[];
+
+  for(let z=-397;z<40;z+=28)for(const side of [-1,1]){
+    const x=-200+side*9.4;add([.13,7.5,.13],[x,3.75,z],mats.steel);add([1.4,.13,.48],[x-side*.6,7.52,z],mats.steel);add([.9,.035,.32],[x-side*.6,7.43,z],mats.amber);lightAnchors.push({position:[x-side*.6,7.30,z],color:z<-310?0xf7c28e:z<-238?0xc7e2ef:0xe8bfa0,intensity:1550,range:28,practical:true});
+  }
+  for(let x=-600;x<=600;x+=100)for(let z=-580;z<=580;z+=55)for(const side of [-1,1]){if(plannedDistrictAt(x,z))continue;add([.11,8,.11],[x+side*12.7,4,z],mats.steel);add([1.5,.10,.5],[x+side*12,8,z],mats.steel);add([1.1,.035,.35],[x+side*12,7.93,z],mats.amber);lightAnchors.push({position:[x+side*12,7.85,z],color:0xf1d1a6,intensity:1600,range:30,practical:true});}
   for(let z=154;z<490;z+=34)for(const side of [-1,1]){const x=100+side*10.2;add([.12,7.2,.12],[x,3.6,z],mats.steel);add([1.2,.09,.45],[x-side*.45,7.2,z],mats.steel);add([.85,.025,.25],[x-side*.45,7.14,z],mats.amber);}
+  for(const [x,z]of [[-203.2,-279],[-196.8,-255],[-201.8,-230],[-198.2,-218]]){add([.80,.055,.26],[x,7.35,z],mats.amber,undefined,false);lightAnchors.push({position:[x,7.25,z],color:0xdeb996,intensity:1650,range:24,practical:true});}
   lightAnchors.push(...(architecture.lightAnchors||[]),...(streetLife.lightAnchors||[]),...(landmarks.lightAnchors||[]));
   // A little street furniture lives outside the drivable lane, at human scale.
   for(let k=0;k<30;k++){const z=-399+k*14,side=k%2?-1:1,x=-200+side*10.6;add([.75,1.1,.72],[x,.66,z],mats.steel);add([.8,.09,.77],[x,1.25,z],mats.dark);if(k%3===0){add([1.7,.06,.55],[x,.58,z+2],mats.paint);for(const dz of [-.6,.6])add([.08,.55,.4],[x,.29,z+2+dz],mats.steel);}}
@@ -136,12 +163,16 @@ export function createEnvironment(scene,renderer,geometry,camera){
   }`});
   const sky=new THREE.Mesh(new THREE.SphereGeometry(1700,32,16),skyMat);root.add(sky);
   const hemi=new THREE.HemisphereLight(0xd5e5f5,0x665c4d,.28);scene.add(hemi);
-  let quality='balanced',profile=cityRenderProfile(quality),csm=null,hdr=null,sunlessSky=null,skyEnvironment=null;
+  let quality='balanced',profile=cityRenderProfile(quality),csm=null,hdr=null,sunlessSky=null,skyEnvironment=null,nightEnvironment=null;
+  let weatherPreset='clear-day',presentation=CITY_WEATHER_PRESETS['clear-day'];
+  const practicals=createCityPracticalLights(scene,lightAnchors.filter(a=>a.practical));
+  const wetReflection=createWetRoadReflection(scene,renderer,camera,roadSurface);
+  const emissiveBases=new Map();
   let lastShadowTime=-Infinity,lastProbeTime=-Infinity,probeFace=-1,cubeTarget=null,cube=null,vehicleRoot=null;
   const lastShadowPoint=new THREE.Vector3(Infinity,Infinity,Infinity),lastProbe=new THREE.Vector3(Infinity,Infinity,Infinity);
   const originalMaterials=new Map(),probeMaterials=new Map(),particleAmbient=new THREE.Color(.70,.74,.76);
-  const renderStats={quality,shadowCascades:1,shadowSize:1024,shadowHz:30,shadowUpdates:0,shadowUpdatedThisFrame:false,pointLights:0,spotShadowMaps:0,planarReflectionPasses:0,probeSize:0,probeFacesPerFrame:0,probeFacesRendered:0,probeCaptures:0,probePendingFace:-1,probeShadowMode:'Dedicated local sun depth; one physical direct sun in cube faces',probeSun:probeSun.stats,lastProbeCpuMs:0,visibility:visibility.stats};
-  const stats={cityPlan:{districts:CITY_PLAN.districts.length,nodes:CITY_NODES.length,streets:CITY_STREETS.length,version:CITY_PLAN.version},indirectLighting:indirect.stats,roadSurface:roadSurface.model,buildings:CITY_BUILDINGS.length,architecture:architecture.stats,streetLife:streetLife.stats,landmarks:landmarks.stats,routes:CITY_ROUTES.length,shadowCascades:1,wetReflections:false,daylight:'CC0 measured midday sky / calibrated sun + baked diffuse',vehicleLocalProbe:false,renderBudget:renderStats,liveScene:{}};
+  const renderStats={quality,shadowCascades:1,shadowSize:1024,shadowHz:30,shadowUpdates:0,shadowUpdatedThisFrame:false,pointLights:0,spotShadowMaps:0,planarReflectionPasses:0,practicalLights:practicals.stats,wetRoadReflection:wetReflection.stats,probeSize:0,probeFacesPerFrame:0,probeFacesRendered:0,probeCaptures:0,probePendingFace:-1,probeShadowMode:'Dedicated local sun depth; one physical direct sun in cube faces',probeSun:probeSun.stats,lastProbeCpuMs:0,visibility:visibility.stats};
+  const stats={cityPlan:{districts:CITY_PLAN.districts.length,nodes:CITY_NODES.length,streets:CITY_STREETS.length,version:CITY_PLAN.version},indirectLighting:indirect.stats,roadSurface:roadSurface.model,buildings:CITY_BUILDINGS.length,architecture:architecture.stats,streetLife:streetLife.stats,landmarks:landmarks.stats,routes:CITY_ROUTES.length,shadowCascades:1,benchmarkRoute:{id:CITY_BENCHMARK_ROUTE.id,lengthMetres:CITY_BENCHMARK_ROUTE.lengthMetres,estimatedDurationS:CITY_BENCHMARK_ROUTE.estimatedDurationS},weatherPreset,wetReflections:false,daylight:'CC0 measured midday sky / calibrated sun + baked diffuse',vehicleLocalProbe:false,renderBudget:renderStats,liveScene:{}};
   scene.fog=new THREE.FogExp2(0xa2b5bf,.00055);
   function calibrateShadowBias(){
     csm?.lights.forEach(l=>{const camera=l.shadow.camera,texel=(camera.right-camera.left)/l.shadow.mapSize.x;l.shadow.normalBias=Math.min(.065,Math.max(.005,texel*.40));});
@@ -162,8 +193,8 @@ export function createEnvironment(scene,renderer,geometry,camera){
       // Material disposal clears renderer program state, retaining textures.
       for(const mat of originalMaterials.keys())mat.dispose();
     }
-    csm=new CSM({camera,parent:scene,cascades:profile.shadowCascades,maxFar:profile.shadowFar,mode:'custom',customSplitsCallback:(count,near,far,out)=>{if(count===1)out.push(1);else if(count===2)out.push(38/far,1);else out.push(22/far,82/far,1);},shadowMapSize:profile.shadowSize,shadowBias:-.00001,lightDirection:new THREE.Vector3(-.554,-.743,-.376).normalize(),lightIntensity:2.7,lightMargin:220,lightFar:650});
-    csm.fade=true;csm.updateFrustums();csm.lights.forEach(l=>{l.color.set(0xfff3e3);l.shadow.radius=2;});calibrateShadowBias();
+    csm=new CSM({camera,parent:scene,cascades:profile.shadowCascades,maxFar:profile.shadowFar,mode:'custom',customSplitsCallback:(count,near,far,out)=>{if(count===1)out.push(1);else if(count===2)out.push(38/far,1);else out.push(22/far,82/far,1);},shadowMapSize:profile.shadowSize,shadowBias:-.00001,lightDirection:new THREE.Vector3(-.554,-.743,-.376).normalize(),lightIntensity:presentation.sunIntensity,lightMargin:220,lightFar:650});
+    csm.fade=true;csm.updateFrustums();csm.lights.forEach(l=>{l.color.set(presentation.sunColor);l.castShadow=!presentation.night;l.shadow.radius=2;});calibrateShadowBias();
     for(const mat of originalMaterials.keys())bindMaterial(mat);setupMaterials();
     lastShadowTime=-Infinity;Object.assign(renderStats,{shadowCascades:profile.shadowCascades,shadowSize:profile.shadowSize,shadowHz:profile.shadowHz});stats.shadowCascades=profile.shadowCascades;
   }
@@ -172,7 +203,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
   }
   function configureProbe(){
     restoreVehicleEnvironment();probeMaterials.clear();vehicleRoot=null;probeFace=-1;lastProbeTime=-Infinity;lastProbe.set(Infinity,Infinity,Infinity);
-    probeSun.configure(profile.probeShadowSize??(quality==='balanced'?0:quality==='ultra'?768:512));
+    probeSun.configure(presentation.night?0:profile.probeShadowSize??(quality==='balanced'?0:quality==='ultra'?768:512));
     if(!profile.probeSize){cube?.removeFromParent();cubeTarget?.dispose();cube=cubeTarget=null;}
     else{
       if(!cubeTarget){cubeTarget=new THREE.WebGLCubeRenderTarget(profile.probeSize,{type:THREE.HalfFloatType,generateMipmaps:true,minFilter:THREE.LinearMipmapLinearFilter});cube=new THREE.CubeCamera(.3,profile.probeFar,cubeTarget);scene.add(cube);}
@@ -187,41 +218,66 @@ export function createEnvironment(scene,renderer,geometry,camera){
     roadSurface.setQuality(q);
     architecture.setQuality(q,profile);streetLife.setQuality(q,profile);landmarks.setQuality(q,profile);visibility.setQuality(q,profile);
     for(const t of [normal,rough,albedo]){const next=q==='balanced'?2:8;if(t.anisotropy!==next){t.anisotropy=next;t.needsUpdate=true;}}
+    practicals.configure(q);wetReflection.configure(q);wetReflection.setEnabled(presentation.night);stats.wetReflections=presentation.night&&q!=='balanced';
     createShadows();configureProbe();
   }
   const skyReady=typeof document==='undefined'?Promise.resolve(false):new Promise(resolve=>new HDRLoader().load('./assets/daylight.hdr',async t=>{
     hdr=t;t.mapping=THREE.EquirectangularReflectionMapping;
     await indirect.ready;sunlessSky=makeSunlessEnvironment(t,indirect.metadata);
     const pmrem=new THREE.PMREMGenerator(renderer);skyEnvironment=pmrem.fromEquirectangular(sunlessSky).texture;pmrem.dispose();
-    hemi.intensity=indirect.stats.loaded?0:.28;
-    scene.background=t;scene.backgroundIntensity=.75;scene.backgroundBlurriness=0;
-    scene.environment=skyEnvironment;scene.environmentIntensity=.80;sky.visible=false;resolve(true);
+    setWeatherPreset(weatherPreset);resolve(true);
   },undefined,()=>resolve(false)));
   const ready=Promise.all([skyReady,architecture.ready,landmarks.ready,streetLife.ready,indirect.ready]);
   // Register asynchronously arriving materials when the assets arrive. There
   // is no permanent two-second traversal of every city object.
   landmarks.ready.then(setupMaterials);streetLife.ready.then(setupMaterials);
-  function setDay(){
-    skyMat.uniforms.day.value=1;hemi.intensity=indirect.stats.loaded?0:.28;
-    scene.fog.color.set(0xa2b5bf);scene.fog.density=.00055;scene.environmentIntensity=.80;
+  function collectEmissives(){
+    root.traverse(o=>{if(!o.isMesh)return;for(const m of Array.isArray(o.material)?o.material:[o.material])if(m?.emissiveIntensity>0&&!emissiveBases.has(m))emissiveBases.set(m,m.emissiveIntensity);});
   }
-  setQuality('balanced');setDay();
+  function setWeatherPreset(value){
+    if(!Object.hasOwn(CITY_WEATHER_PRESETS,value))return false;
+    weatherPreset=value;presentation=CITY_WEATHER_PRESETS[value];const night=presentation.night;
+    // An offline daylight transport field is not a night solution. Disable it
+    // and use the low energy night environment plus actual selected fixtures.
+    indirect.setEnabled(!night);roadSurface.setWetness(presentation.wetness);practicals.setEnabled(night);wetReflection.setEnabled(night);
+    skyMat.uniforms.day.value=night?0:1;sky.visible=night||!hdr;
+    scene.background=!night&&hdr?hdr:new THREE.Color(presentation.fog);scene.backgroundIntensity=presentation.backgroundIntensity;scene.backgroundBlurriness=0;
+    scene.fog.color.set(presentation.fog);scene.fog.density=presentation.fogDensity;
+    if(night&&!nightEnvironment&&typeof document!=='undefined'){
+      const nightScene=new THREE.Scene();nightScene.background=new THREE.Color(0x111b2a);
+      const dome=new THREE.Mesh(new THREE.SphereGeometry(25,20,12),skyMat.clone());nightScene.add(dome);
+      const generator=new THREE.PMREMGenerator(renderer);const generated=generator.fromScene(nightScene,.06,.1,60);nightEnvironment=generated.texture;
+      generator.dispose();dome.geometry.dispose();dome.material.dispose();
+    }
+    scene.environment=night?nightEnvironment:skyEnvironment;scene.environmentIntensity=presentation.environmentIntensity;
+    hemi.intensity=night?presentation.ambientIntensity:indirect.stats.loaded?0:.28;hemi.color.set(night?0x89a9cf:0xd5e5f5);hemi.groundColor.set(night?0x15121d:0x665c4d);
+    csm?.lights.forEach(l=>{l.intensity=presentation.sunIntensity;l.color.set(presentation.sunColor);l.castShadow=!night;});
+    collectEmissives();for(const [m,base]of emissiveBases)m.emissiveIntensity=night?Math.min(2.3,Math.max(.5,base*4.4)):base;
+    particleAmbient.set(night?0x3a506c:0xb3bdc2);
+    stats.weatherPreset=value;stats.wetReflections=night&&quality!=='balanced';stats.daylight=night?'Night environment and shadowed local practicals; daylight GI disabled':'CC0 measured midday sky / calibrated sun + baked diffuse';
+    lastShadowTime=-Infinity;configureProbe();return true;
+  }
+  const setDay=value=>setWeatherPreset(value===false?'wet-night':'clear-day');
+  setQuality('balanced');setWeatherPreset('clear-day');
+  ready.then(()=>{collectEmissives();setWeatherPreset(weatherPreset);});
   let lastSceneStats=-Infinity;
-  return {root,ready,setDay,setQuality,stats,exposureAt:(p,sunVisible)=>indirect.exposureAt(p,sunVisible),setContactAO:t=>indirect.setContactAO(t),
+  return {root,ready,setDay,setWeatherPreset,get weatherPreset(){return weatherPreset;},getPresentation:()=>({...presentation}),getBenchmarkRoute:()=>CITY_BENCHMARK_ROUTE,setVehicleRoot:r=>practicals.setVehicleRoot(r),setQuality,stats,exposureAt:(p,sunVisible)=>presentation.night?presentation.exposure:indirect.exposureAt(p,sunVisible),setContactAO:t=>indirect.setContactAO(t),
     particleLighting(){return {ambient:particleAmbient,lights:[]};},
     resize(){csm.updateFrustums();calibrateShadowBias();indirect.resize();lastShadowTime=-Infinity;},
     wantsShadowUpdate(time,p){
       // Move shadow cameras only when their maps will be refreshed. Moving the
       // CSM light transform while reusing its old map makes shadows swim.
       const teleported=lastShadowPoint.distanceToSquared(p)>225;
-      const needed=teleported||time-lastShadowTime>=1/profile.shadowHz;
+      const sunNeeded=!presentation.night&&(teleported||time-lastShadowTime>=1/profile.shadowHz),localNeeded=practicals.wantsShadowUpdate(time);
+      const needed=sunNeeded||localNeeded;
       renderStats.shadowUpdatedThisFrame=needed;
-      if(needed){camera.updateMatrixWorld();csm.update();lastShadowTime=time;lastShadowPoint.copy(p);renderStats.shadowUpdates++;}
+      if(needed){if(sunNeeded){camera.updateMatrixWorld();csm.update();}lastShadowTime=time;lastShadowPoint.copy(p);renderStats.shadowUpdates++;}
       return needed;
     },
     update(time,p){
       renderStats.probeFacesPerFrame=0;probeSun.beginFrame();sky.position.copy(p);
-      architecture.update(time,p);streetLife.update(time,p);landmarks.update(time,p);visibility.update(time,p);
+      const viewpoint=camera.position;architecture.update(time,viewpoint);streetLife.update(time,viewpoint);landmarks.update(time,viewpoint);visibility.update(time,viewpoint);practicals.update(time,viewpoint);
+      renderStats.spotShadowMaps=practicals.stats.shadowMaps;renderStats.pointLights=0;
       if(time-lastSceneStats>.25){
         const budgets=[visibility.stats,architecture.stats.renderBudget,streetLife.stats.renderBudget,landmarks.stats.renderBudget];
         stats.liveScene={allocatedBatches:budgets.reduce((s,b)=>s+b.allocatedBatches,0),activeDistanceBatches:budgets.reduce((s,b)=>s+b.activeBatches,0),activeDistanceTriangles:budgets.reduce((s,b)=>s+b.activeTriangles,0),shadowDistanceBatches:budgets.reduce((s,b)=>s+b.shadowBatches,0),shadowDistanceTriangles:budgets.reduce((s,b)=>s+b.shadowTriangles,0),visibilityCpuMs:budgets.reduce((s,b)=>s+b.updateMs,0)};
@@ -229,7 +285,10 @@ export function createEnvironment(scene,renderer,geometry,camera){
       }
     },
     updateReflections(time,p,exclude=[]){
-      if(!cubeTarget||!hdr)return;
+      const aoBefore=indirect.uniforms.giAOEnabled.value;indirect.setAOEnabled(false);
+      try{wetReflection.render(time,exclude.slice(1));}finally{indirect.setAOEnabled(aoBefore>.5);}
+      renderStats.planarReflectionPasses=wetReflection.stats.passesThisFrame;
+      if(!cubeTarget||(!hdr&&!presentation.night))return;
       const vehicle=exclude[0];if(vehicle&&vehicle!==vehicleRoot){restoreVehicleEnvironment();probeMaterials.clear();vehicleRoot=vehicle;vehicle.traverse(o=>{if(!o.isMesh)return;for(const m of Array.isArray(o.material)?o.material:[o.material])if(m?.isMeshStandardMaterial&&!probeMaterials.has(m))probeMaterials.set(m,{envMap:m.envMap,intensity:m.envMapIntensity});});}
       if(probeFace<0){
         const age=time-lastProbeTime,moved=lastProbe.distanceToSquared(p)>=profile.probeDistance**2;
@@ -242,14 +301,14 @@ export function createEnvironment(scene,renderer,geometry,camera){
       const hidden=exclude.filter(Boolean),states=hidden.map(o=>o.visible),background=scene.background,backgroundIntensity=scene.backgroundIntensity,ao=indirect.uniforms.giAOEnabled.value;
       const target=renderer.getRenderTarget(),face=renderer.getActiveCubeFace(),mip=renderer.getActiveMipmapLevel(),xr=renderer.xr.enabled,shadowAuto=renderer.shadowMap.autoUpdate,shadowNeeded=renderer.shadowMap.needsUpdate;
       const viewport=renderer.getViewport(new THREE.Vector4()),scissor=renderer.getScissor(new THREE.Vector4()),scissorTest=renderer.getScissorTest();
-      scene.background=sunlessSky;scene.backgroundIntensity=.80;indirect.setAOEnabled(false);hidden.forEach(o=>o.visible=false);renderer.xr.enabled=false;
+      scene.background=presentation.night?new THREE.Color(presentation.fog):sunlessSky;scene.backgroundIntensity=presentation.night?1:.80;indirect.setAOEnabled(false);hidden.forEach(o=>o.visible=false);renderer.xr.enabled=false;
       renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=false;cubeTarget.texture.generateMipmaps=probeFace===5;
       const begin=performance.now();
       try{
         // Every face sees the same capture origin and dedicated sunlight map.
         // This sparse depth pass never replaces or refreshes the main CSM maps.
-        if(probeFace===0)probeSun.render(cube.position,profile.probeFar);
-        probeSun.setActive(true);renderer.setScissorTest(false);
+        if(probeFace===0&&!presentation.night)probeSun.render(cube.position,profile.probeFar);
+        probeSun.setActive(!presentation.night);renderer.setScissorTest(false);
         renderer.setRenderTarget(cubeTarget,probeFace,0);renderer.render(scene,cube.children[probeFace]);
         renderStats.probeFacesPerFrame=1;renderStats.probeFacesRendered++;probeFace++;
         if(probeFace===6){

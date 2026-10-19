@@ -7,11 +7,11 @@ import {runExperiment}from'../dist/experiment-worker.js';
 const dt=1/120,checks=[],values={};const pass=s=>{checks.push(s);console.log('PASS: '+s);};
 const flat=(params={})=>{const s=new RoadsterSim({supplyMode:'finite',...params});for(const b of [...s.world.bodies])if(b!==s.body&&b.userData?.id!=='ground')s.world.removeBody(b);s.body.position.set(0,.62,-350);for(let k=0;k<240;k++)s.step(dt);return s;};
 values.turns=[];
-for(const speed of[60,100,160]){const s=flat();s.body.velocity.z=speed/3.6;let beta=0,steer=0;for(let k=0;k<42;k++){const t=s.step(dt,{steer:1});beta=Math.max(beta,Math.abs(t.bodySlipDeg));steer=Math.max(steer,Math.abs(t.steeringCentreDeg));assert.ok(t.wheelStates.every(w=>w.gripUse<=1+1e-10));}for(let k=0;k<360;k++)s.step(dt);assert.ok(beta<1&&Math.abs(s.telemetry().bodySlipDeg)<.05);values.turns.push({speedKmh:speed,peakBetaDeg:beta,peakSteerDeg:steer,settledBetaDeg:s.telemetry().bodySlipDeg});}
+for(const speed of[60,100,160]){const s=flat();s.body.velocity.z=speed/3.6;s.wheelStates.forEach(w=>w.angularVelocityRadS=s.body.velocity.z/s.params.wheelRadius);let beta=0,steer=0;for(let k=0;k<42;k++){const t=s.step(dt,{steer:1});beta=Math.max(beta,Math.abs(t.bodySlipDeg));steer=Math.max(steer,Math.abs(t.steeringCentreDeg));assert.ok(t.wheelStates.every(w=>w.gripUse<=1+1e-10));}for(let k=0;k<360;k++)s.step(dt);assert.ok(beta<1&&Math.abs(s.telemetry().bodySlipDeg)<.05);values.turns.push({speedKmh:speed,peakBetaDeg:beta,peakSteerDeg:steer,settledBetaDeg:s.telemetry().bodySlipDeg});}
 pass('60–160 km/h brief keyboard turns remain below one degree sideslip and settle without resetting pose or velocity');
 {
- const a=flat({steeringAssist:false});a.body.velocity.z=15;for(let k=0;k<40;k++)a.step(dt,{steer:.5});const w=a.telemetry().wheelStates;assert.ok(w[1].steer>w[0].steer&&w[0].steer>0);assert.ok(a.body.position.x>0);
- const b=flat({steeringAssist:false,tractionAssist:false});b.body.velocity.z=100/3.6;let slip=0;for(let k=0;k<120;k++){const t=b.step(dt,{steer:.7,throttle:.5});slip=Math.max(slip,Math.abs(t.bodySlipDeg));assert.ok(t.wheelStates.every(w=>Math.hypot(w.lateralForceN,w.longitudinalForceN)<=b.params.tireMu*w.normalLoadN+1e-7));}assert.ok(slip>3);values.rawSteerPeakBetaDeg=slip;
+ const a=flat({steeringAssist:false});a.body.velocity.z=15;a.wheelStates.forEach(w=>w.angularVelocityRadS=15/a.params.wheelRadius);for(let k=0;k<40;k++)a.step(dt,{steer:.5});const w=a.telemetry().wheelStates;assert.ok(w[1].steer>w[0].steer&&w[0].steer>0);assert.ok(a.body.position.x>0);
+ const b=flat({steeringAssist:false,tractionAssist:false});b.body.velocity.z=100/3.6;b.wheelStates.forEach(w=>w.angularVelocityRadS=b.body.velocity.z/b.params.wheelRadius);let slip=0;for(let k=0;k<120;k++){const t=b.step(dt,{steer:.7,throttle:.5});slip=Math.max(slip,Math.abs(t.bodySlipDeg));assert.ok(t.wheelStates.every(w=>Math.hypot(w.lateralForceN,w.longitudinalForceN)<=b.params.tireMu*w.normalLoadN+1e-7));}assert.ok(slip>3);values.rawSteerPeakBetaDeg=slip;
 }
 pass('Ackermann inner and outer angles differ; disabling assistance permits real saturation while every combined tire force remains friction-bounded');
 {
@@ -55,4 +55,4 @@ pass('Independent research fixtures are deterministic, retain applied parameters
  for(const t of m.tracks){const data=readFileSync('dist/'+t.src);assert.equal(data.length,t.bytes);assert.equal(createHash('sha256').update(data).digest('hex'),t.sha256);assert.ok(['CC-BY-4.0','CC0-1.0'].includes(t.license)&&t.attribution&&t.licenseEvidenceUrl);}
 }
 pass('The local radio includes instrumental, English and Chinese recordings with explicit attribution licenses and matching asset hashes');
-writeFileSync('qa/research-dynamics-3.7.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');
+writeFileSync('qa/research-dynamics-3.8.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');

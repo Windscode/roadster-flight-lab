@@ -7,7 +7,7 @@ const dt=1/PHYSICS_HZ;
 const flat=()=>{const s=new RoadsterSim({supplyMode:'finite'});for(const b of [...s.world.bodies])if(b!==s.body&&b.userData?.id!=='ground')s.world.removeBody(b);s.body.position.set(0,.62,-350);for(let k=0;k<360;k++)s.step(dt);return s;};
 
 for(const [key,sign]of [['KeyD',-1],['ArrowRight',-1],['KeyA',1],['ArrowLeft',1]]){
-  const s=flat(),i=driverAxes(new Set([key]));assert.equal(Math.sign(i.steer),sign);s.body.velocity.z=10;
+  const s=flat(),i=driverAxes(new Set([key]));assert.equal(Math.sign(i.steer),sign);s.body.velocity.z=10;s.wheelStates.forEach(w=>w.angularVelocityRadS=10/s.params.wheelRadius);
   for(let k=0;k<120;k++)s.step(dt,{...i,throttle:.2});assert.ok(s.body.position.x*sign>.5,'Driver-right must curve toward local -X');
 }
 const pad={connected:true,axes:[.7,0,.6],buttons:[]};
@@ -17,19 +17,20 @@ assert.equal(driverAxes(new Set(['KeyB'])).roll,-1);
 console.log('PASS: Keyboard, arrow, touch-key and gamepad steering share driver-right coordinates');
 
 for(const speed of [100,200,300])for(const sign of [-1,1]){
-  const s=flat();s.body.velocity.z=speed/3.6;s.body.quaternion.setFromEuler(0,sign*1e-5,0);
+  const s=flat();s.body.velocity.z=speed/3.6;s.wheelStates.forEach(w=>w.angularVelocityRadS=s.body.velocity.z/s.params.wheelRadius);s.body.quaternion.setFromEuler(0,sign*1e-5,0);
   let maxYaw=0,stopped=false;
   for(let k=0;k<10*PHYSICS_HZ;k++){
     const t=s.step(dt,{brake:1});assert.equal(t.fault,null);assert.equal(t.contactCount,4);
     assert.equal(s.world.contacts.filter(c=>c.bi===s.body||c.bj===s.body).length,0,'A scenery impact must not create the stop');
     const fw=s.body.quaternion.vmult({x:0,y:0,z:1});maxYaw=Math.max(maxYaw,Math.abs(Math.atan2(fw.x,fw.z)));
-    const wheels=t.wheelStates,total=wheels.reduce((a,w)=>a+w.normalLoadN,0);
-    for(const w of wheels){assert.ok(Math.abs(w.brakeDemandN/s.params.brakeForce-w.normalLoadN/total)<1e-10);assert.ok(w.gripUse<=1+1e-10);}
+    const wheels=t.wheelStates;
+    assert.ok(Math.abs(wheels.reduce((a,w)=>a+w.brakeDemandN,0)-s.params.brakeForce)<1e-8,'All axle brake requests must sum to the service-brake demand');
+    for(const w of wheels){assert.ok(Number.isFinite(w.angularVelocityRadS));assert.ok(w.brakeTorqueNm<=w.brakeDemandN*s.params.wheelRadius+1e-6,'ABS may release requested torque, not exceed it');assert.ok(w.gripUse<=1+1e-10);}
     if(t.speedKmh<.36){stopped=true;break;}
   }
   assert.ok(stopped&&maxYaw<.01*Math.PI/180,'A microscopic yaw disturbance must not become a brake spin');
 }
-console.log('PASS: 100–300 km/h perturbed braking remains upright with load-proportional EBD and bounded tire forces');
+console.log('PASS: 100–300 km/h perturbed braking remains upright with physical wheel spin, bounded brake torque and tire forces');
 
 for(const [frontJets,rearJets]of [[1,0],[0,1],[1,1]]){
   const s=flat();s.body.position.y=5;s.setMode('drive');let impulse=0;const gas=s.gasMass;
@@ -77,6 +78,8 @@ console.log('PASS: Static-city grid matches reference collision pairs and surfac
 
 for(const name of ['city','harbor','skyway','garden','waterfront','sculpture']){const sim=new RoadsterSim();sim.reset(name);for(let k=0;k<240;k++)sim.step(dt);const t=sim.telemetry();assert.equal(t.fault,null);assert.equal(t.contactCount,4,name+' must spawn above a safe, load-bearing surface');assert.ok(Math.abs(t.pitchDeg)<1&&Math.abs(t.rollDeg)<1);}
 const dock=new RoadsterSim();dock.reset('waterfront');for(let k=0;k<240;k++)dock.step(dt);
-for(let k=0;k<1080;k++){const brake=dock.body.position.z<=-470;const t=dock.step(dt,{throttle:brake?0:.16,brake:brake?1:0});assert.equal(t.contactCount,4);assert.equal(t.fault,null);assert.equal(dock.world.contacts.filter(c=>c.bi===dock.body||c.bj===dock.body).length,0);}
+// Finite wheel/ABS pressure dynamics need their own stopping interval after
+// the approach marker; the old 9 s fixture encoded ideal-force brake timing.
+for(let k=0;k<1440;k++){const brake=dock.body.position.z<=-470;const t=dock.step(dt,{throttle:brake?0:.16,brake:brake?1:0});assert.equal(t.contactCount,4);assert.equal(t.fault,null);assert.equal(dock.world.contacts.filter(c=>c.bi===dock.body||c.bj===dock.body).length,0);}
 assert.ok(dock.body.position.z< -470&&dock.body.velocity.length()<.15,'Waterfront ramp must join the elevated quay and permit a stable stop');
 console.log('PASS: Six safe city spawns and the full waterfront ramp retain four tire contacts without hull impacts');
