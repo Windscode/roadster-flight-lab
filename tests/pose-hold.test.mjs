@@ -135,4 +135,4 @@ pass('Tire contact, hull contact and ceiling adhesion inhibit hold thrust withou
  values.timestep={render30Vs60:stateError(base,render30),render144Vs60:stateError(base,render144),referenceHz:960,error60Hz:coarse,error120Hz:medium,error240Hz:fine,errorDefinition:'position norm + velocity norm + quaternion angle (mixed-unit convergence diagnostic)'};
 }
 pass('Hold is independent of 30/60/144 Hz render cadence and converges when the actual physical integration step is halved');
-writeFileSync('qa/pose-hold-3.8.json',JSON.stringify({status:'passed',model:'Roadster engineering approximation',checks,values,limits:'Synthetic disturbance acceptance and exact static trim for the model nozzle layout; not an OEM controller identification or an arbitrary-attitude flight guarantee.'},null,2)+'\n');
+writeFileSync('qa/pose-hold-3.9.json',JSON.stringify({status:'passed',model:'Roadster engineering approximation',checks,values,limits:'Synthetic disturbance acceptance and exact static trim for the model nozzle layout; not an OEM controller identification or an arbitrary-attitude flight guarantee.'},null,2)+'\n');

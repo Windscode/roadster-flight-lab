@@ -12,13 +12,13 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const dist=new URL('../dist/',import.meta.url);
 const args=process.argv.slice(2);
 let validator=process.env.GLSLANG_VALIDATOR||'glslangValidator';
-let reportPath=path.join(root,'qa/render-shader-validation-3.8.json');
+let reportPath=path.join(root,'qa/render-shader-validation-3.9.json');
 for(let i=0;i<args.length;i++){
   if(args[i]==='--validatorPath')validator=args[++i];
   else if(args[i].startsWith('--validatorPath='))validator=args[i].slice(16);
   else if(args[i]==='--report')reportPath=path.resolve(args[++i]);
   else if(args[i]==='--help'){
-    console.log('Usage: node scripts/validate-render-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shader-validation-3.8.json]\nRequires an existing glslangValidator; this script does not download a compiler.');
+    console.log('Usage: node scripts/validate-render-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shader-validation-3.9.json]\nRequires an existing glslangValidator; this script does not download a compiler.');
     process.exit(0);
   }else throw Error('Unknown argument: '+args[i]);
 }

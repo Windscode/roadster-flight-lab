@@ -4,9 +4,9 @@
 <body>
 <main id="inspection-stage" aria-label="Roadster 三维车辆检视"><div id="inspection-failure" role="alert" hidden></div></main>
 <aside class="inspection-panel">
-  <a class="back" href="./">← 返回城市与实验室</a><p class="eyebrow">ROADSTER / SURFACE STUDY</p>
-  <h1>曲面与比例检视</h1><p>同一支 50 mm 镜头、同一光棚，对照当前模型和 3.7 外观基线。拖动环视；固定机位用于重复采集。</p>
-  <fieldset><legend>模型对照</legend><div class="two"><button id="model-current" class="selected">当前 3.8 外观</button><button id="model-baseline">3.7 外观基线</button></div><small id="baseline-note">旧模型仅按需载入此检视页；不影响驾驶与物理。</small></fieldset>
+  <a class="back" href="./">← 返回城市与实验室</a><label class="inspection-language">语言 / Language<select data-language-select aria-label="界面语言"><option value="zh">中文</option><option value="en">English</option></select></label><p class="eyebrow">ROADSTER / SURFACE STUDY</p>
+  <h1>曲面与比例检视</h1><p>同一支 50 mm 镜头、同一光棚，对照当前模型和 3.8 外观基线。拖动环视；固定机位用于重复采集。</p>
+  <fieldset><legend>模型对照</legend><div class="two"><button id="model-current" class="selected">当前 3.9 外观</button><button id="model-baseline">3.8 外观基线</button></div><small id="baseline-note">旧模型仅按需载入此检视页；不影响驾驶与物理。</small></fieldset>
   <fieldset><legend>锁定焦距 · 50 mm</legend><div id="inspection-cameras" class="camera-grid"></div><div class="two"><button id="under">底盘 / 运动包络</button><button id="cutaway">剖视关闭</button></div></fieldset>
   <fieldset><legend>表面光照</legend><div class="two"><button id="studio-light" class="selected">车库条灯</button><button id="day-light">宽面自然光</button></div><p class="muted">检查条带高光是否连续、接缝是否平齐。参考图未公布摄影焦距，50 mm 是本项目的固定检视条件。</p></fieldset>
   <fieldset><legend>运动与细节</legend>
@@ -16,10 +16,10 @@
     <label for="wing-deployment">物理尾翼指令 <output id="wing-value">0%</output></label><input id="wing-deployment" type="range" min="0" max="1" step=".01" value="0">
     <div class="two"><button id="seal">展开近地密封裙</button><button id="sweep">扫查转向与悬架</button></div>
   </fieldset>
-  <fieldset><legend>固定条件采集</legend><div class="two"><button id="capture-frame">导出当前 PNG</button><button id="capture-meta">导出机位与状态 JSON</button></div><small>PNG 来自当前设备真实 WebGL 帧。与上一次导出的同机位图片比较；此页不会合成未经渲染的效果图。</small></fieldset>
-  <details><summary>Tesla 官方参考与工程假设</summary><div id="reference-links"></div><p>轮距、轴距、隐藏机构和材料参数是独立重建。本站没有原厂 CAD 或尾翼标定。现存 3.7 模型只作为几何对照，尾翼动力学以当前主仿真为准。</p></details>
+  <fieldset><legend>固定条件采集</legend><button id="capture-pair">导出同机位 3.8 / 3.9 对照 PNG</button><div class="two"><button id="capture-frame">导出当前 PNG</button><button id="capture-meta">导出机位与状态 JSON</button></div><small>PNG 来自当前设备真实 WebGL 帧。与上一次导出的同机位图片比较；此页不会合成未经渲染的效果图。</small></fieldset>
+  <details><summary>Tesla 官方参考与工程假设</summary><div id="reference-links"></div><p>轮距、轴距、隐藏机构和材料参数是独立重建。本站没有原厂 CAD 或尾翼标定。现存 3.8 模型保留其原始几何和材质，两者使用当前同一光棚与物理尾翼状态；这是外观对比，不是旧渲染流水线。</p></details>
   <p id="ready" role="status">正在载入车辆与光棚…</p><pre id="inspection-status"></pre>
 </aside>
-<div class="inspection-caption"><span id="view-caption">正前 / 50 mm</span><span id="model-caption">CURRENT / 3.8</span></div>
+<div class="inspection-caption"><span id="view-caption">正前 / 50 mm</span><span id="model-caption">CURRENT / 3.9</span></div>
 <script type="module" src="./vehicle-inspection.js"></script>
 </body></html>

@@ -7,12 +7,13 @@ export function longitudinalTireForce(slip,capacity){
   const a=Math.abs(slip),slide=1-.22*clamp((a-.16)/.74,0,1);
   return capacity*Math.tanh(slip*15)*slide;
 }
-export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTorqueNm,brakeTorqueNm,rollingTorqueNm=0,radius,inertia,effectiveMass,gravityLong=0,absEnabled=true,tcsEnabled=true}){
+export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTorqueNm,brakeTorqueNm,rollingTorqueNm=0,radius,inertia,effectiveMass,gravityLong=0,absEnabled=true,tcsEnabled=true,maxDrivePowerW=Infinity}){
   const n=Math.max(1,Math.ceil(dt*600)),h=dt/n,capacity=Math.max(0,normalLoadN*mu);
-  let speed=vlong,impulse=0,latImpulse=0,brakeEnergy=0,tireEnergy=0,driveWork=0,actualDrive=0,actualBrake=0;
+  let speed=vlong,impulse=0,latImpulse=0,brakeEnergy=0,tireEnergy=0,driveWork=0,actualDrive=0,actualBrake=0,postTcsRequest=0;
   w.angularVelocityRadS??=0;w.absPressure??=1;w.tcsFactor??=1;
   const startingOmega=w.angularVelocityRadS;
-  w.absActive=false;w.tcsActive=false;
+  w.absActive=false;w.tcsActive=false;w.drivePowerLimited=false;
+  w.requestedDriveTorqueNm=driveTorqueNm;w.allocatedDrivePowerW=Number.isFinite(maxDrivePowerW)?Math.max(0,maxDrivePowerW):null;
   for(let i=0;i<n;i++){
     const slip=regularizedSlip(w.angularVelocityRadS,speed,radius),direction=Math.sign(speed)||Math.sign(w.angularVelocityRadS)||Math.sign(driveTorqueNm)||1;
     const brakingSlip=-slip*direction,drivingSlip=slip*(Math.sign(driveTorqueNm)||direction);
@@ -24,7 +25,22 @@ export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTor
       const rate=drivingSlip>.13?-35*(drivingSlip-.13):5*(.13-drivingSlip);
       w.tcsFactor=clamp(w.tcsFactor+rate*h,.025,1);
     }else w.tcsFactor=1;
-    const drive=driveTorqueNm*w.tcsFactor,brake=brakeTorqueNm*w.absPressure+rollingTorqueNm;
+    let drive=driveTorqueNm*w.tcsFactor;
+    postTcsRequest+=drive*h;
+    // Bound *actual midpoint work*, including spin acceleration during this
+    // substep. A beginning-of-step P/omega cap alone exceeds the power limit
+    // as the wheel accelerates. The friction circle bounds |contact torque|;
+    // passive brakes cannot increase |omega|. Thus this analytic upper bound
+    // is conservative for every force considered by the implicit contact solve:
+    // |T| (|omega0| + h (|T| + mu Fz r)/(2 I)) <= allocated power.
+    // Every wheel receives a share of ONE vehicle budget before this solve;
+    // unused power is not silently reassigned while solving another wheel.
+    if(Number.isFinite(maxDrivePowerW)){
+      const power=Math.max(0,maxDrivePowerW),a=h/(2*inertia),b=Math.abs(w.angularVelocityRadS)+a*capacity*radius;
+      const limit=power>0?2*power/(b+Math.sqrt(b*b+4*a*power)):0;
+      if(Math.abs(drive)>limit){drive=Math.sign(drive)*limit;w.drivePowerLimited=true;}
+    }
+    const brake=brakeTorqueNm*w.absPressure+rollingTorqueNm;
     const omega0=w.angularVelocityRadS;
     const advance=force=>{
       const free=omega0+h*(drive-force*radius)/inertia;
@@ -58,6 +74,7 @@ export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTor
   }
   w.slipRatio=regularizedSlip(w.angularVelocityRadS,speed,radius);w.contactSpeedMps=vlong;w.surfaceMu=mu;
   w.driveTorqueNm=actualDrive/dt;w.brakeTorqueNm=actualBrake/dt;w.tireReactionTorqueNm=-impulse/dt*radius;
+  w.postTcsTorqueRequestNm=postTcsRequest/dt;w.driveMechanicalPowerW=driveWork/dt;
   w.wheelEnergyJ=.5*inertia*w.angularVelocityRadS**2;
   return{longitudinalForceN:impulse/dt,lateralForceN:latImpulse/dt,brakeEnergyJ:brakeEnergy,tireEnergyJ:tireEnergy,driveWorkJ:driveWork,spinMomentumChangeNms:inertia*(w.angularVelocityRadS-startingOmega)};
 }

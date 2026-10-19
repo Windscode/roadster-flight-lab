@@ -10,7 +10,8 @@ export const ROAD_SURFACE_MODEL=Object.freeze({
   scannedTileMetres:4,diffuseScaleMean:ROAD_MEAN,jointCoverageMean:JOINT_MEAN,
   textureReads:{balanced:3,highNear:5,ultraNear:5},detailRangeMetres:[18,42],
   geometryDisplacement:false,additionalDrawCalls:0,
-  wetness:'Spatial metre-scale water coverage, roughness and normal attenuation; wet-night preset. It does not alter tyre friction.',
+  wetness:'Street-oriented wheel tracks, repairs and metre-scale water coverage, roughness and normal attenuation. Visual wetness does not alter tyre friction.',
+  streetScale:'Canonical 10/18/22 m route widths; repair joints follow the nearest street direction rather than a world-aligned tile grid.',
   planarReflection:'One clipped low-resolution ground-plane capture in the benchmark district, budgeted only in high/ultra; no SSR/ray-tracing claim.',
   assumptions:'Scanned asphalt with authored repair/water distribution. Water depth, drainage and optical properties are visual engineering estimates.'
 });
@@ -46,6 +47,7 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
         float nearLine=clamp((min(distanceToJoint+footprint*.5,halfWidth)-max(distanceToJoint-footprint*.5,-halfWidth))/footprint,0.,1.);
         return mix(nearLine,2.*halfWidth/spacing,smoothstep(.10,.7,footprint));
       }
+      float roadHash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
       `+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
       // Dominant-axis projection also gives vertical road-slab edges a valid
@@ -61,19 +63,32 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       float roadNear=roadFineDetail*(1.-smoothstep(18.,42.,length(vViewPosition)));
       vec3 roadColour=textureGrad(roadAlbedo,roadUv,roadDx,roadDy).rgb;
       if(roadNear>.001)roadColour=mix(roadColour,textureGrad(roadAlbedo,roadDetailUv,roadDetailDx,roadDetailDy).rgb,.20*roadNear);
-      float roadLongJoint=roadJoint(roadMetres.x,3.5,.010);
-      float roadCrossJoint=roadJoint(roadMetres.y+.28*sin(roadMetres.x*.23),13.,.0075);
+      // Orient large-scale wear to the authored streets. The scan's 4 m grain
+      // stays metric, while 9–22 m repair patches break its obvious repetition.
+      float roadAcross=roadMetres.x,roadAlong=roadMetres.y,roadWidth=18.;
+      float routeDistance=10000.,candidate;
+      candidate=abs(roadMetres.x+200.);if(roadMetres.y> -410.&&roadMetres.y<42.&&candidate<routeDistance){routeDistance=candidate;roadAcross=roadMetres.x+200.;roadWidth=10.;}
+      candidate=abs(roadMetres.x-100.);if(roadMetres.y> -412.&&roadMetres.y<492.&&candidate<routeDistance){routeDistance=candidate;roadAcross=roadMetres.x-100.;roadWidth=18.;}
+      candidate=abs(roadMetres.y+400.);if(roadMetres.x> -582.&&roadMetres.x<112.&&candidate<routeDistance){routeDistance=candidate;roadAcross=roadMetres.y+400.;roadAlong=roadMetres.x;roadWidth=22.;}
+      candidate=abs(roadMetres.y+132.5);if(roadMetres.x> -312.&&roadMetres.x<212.&&candidate<routeDistance){routeDistance=candidate;roadAcross=roadMetres.y+132.5;roadAlong=roadMetres.x;roadWidth=18.;}
+      float routeWearMask=(1.-smoothstep(roadWidth*.5,roadWidth*.5+1.,routeDistance))*(1.-smoothstep(.12,.25,abs(roadSurfaceWorld.y)));
+      float roadLongJoint=roadJoint(roadAcross,roadWidth*.5,.012);
+      float repairCell=floor(roadAlong/19.),repairShift=roadHash(vec2(repairCell,3.7))*6.;
+      float roadCrossJoint=roadJoint(roadAlong+repairShift,19.,.008)*(1.-smoothstep(roadWidth*.19,roadWidth*.48,abs(roadAcross)));
       float roadRepairJoint=roadLongJoint+roadCrossJoint-roadLongJoint*roadCrossJoint;
-      // Zero-centred broad variation and area-compensated joints preserve the
-      // 3.5 bake's mean diffuse scale. Texture mixing preserves its scan mean.
-      float roadWear=.5*sin(roadMetres.x*.37+sin(roadMetres.y*.12))*sin(roadMetres.y*.29);
+      // Keep the original scan scale. Added wear and wetness are approximate
+      // dynamic finishes; the retained static diffuse bake is not recomputed.
+      float roadWear=.5*sin(roadMetres.x*.21+sin(roadMetres.y*.09))*sin(roadMetres.y*.23);
       roadWear*=1.-smoothstep(.7,3.,max(length(dFdx(roadMetres)),length(dFdy(roadMetres))));
-      float roadWaterPattern=.5+.24*sin(roadMetres.x*.39+sin(roadMetres.y*.11))*sin(roadMetres.y*.17)+.16*sin(dot(roadMetres,vec2(.15,.23)));
+      float wheelTrack=routeWearMask*(1.-smoothstep(.18,1.5,abs(abs(roadAcross)-roadWidth*.25)));
+      float repairPatch=smoothstep(.08,.17,fract((roadAlong+repairShift)/19.))*(1.-smoothstep(.71,.79,fract((roadAlong+repairShift)/19.)));
+      repairPatch=mix(.4,repairPatch*smoothstep(.20,.29,roadHash(vec2(repairCell,floor((roadAcross+roadWidth*.5)/3.6)))),routeWearMask);
+      float roadWaterPattern=.54+.24*sin(roadMetres.x*.39+sin(roadMetres.y*.11))*sin(roadMetres.y*.17)+.16*sin(dot(roadMetres,vec2(.15,.23)))-.10*wheelTrack;
       float roadWater=roadWetness*smoothstep(.31,.73,roadWaterPattern)*smoothstep(.55,.95,roadAxis.y);
-      diffuseColor.rgb*=roadColour*(${ROAD_MEAN}+.060*roadWear-.10*(roadRepairJoint-${JOINT_MEAN}))*mix(1.,.52,roadWater);`);
+      diffuseColor.rgb*=roadColour*(${ROAD_MEAN}+.090*roadWear-.085*(roadRepairJoint-${JOINT_MEAN})-.055*wheelTrack-.045*(repairPatch-.4))*mix(1.,.57,roadWater);`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
       float roadScannedRoughness=textureGrad(roadRoughness,roadUv,roadDx,roadDy).g;
-      float roadDryRoughness=clamp(.885+.20*(roadScannedRoughness-.9314)+.055*roadWear-.055*roadRepairJoint,.72,.96);
+      float roadDryRoughness=clamp(.885+.20*(roadScannedRoughness-.9314)+.055*roadWear-.055*roadRepairJoint-.045*wheelTrack,.72,.96);
       roughnessFactor=mix(roadDryRoughness,.14+.11*(1.-roadWater),roadWater);`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
       vec3 roadN=textureGrad(roadNormal,roadUv,roadDx,roadDy).xyz*2.-1.;
@@ -111,13 +126,15 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
           roadReflected+=texture2D(roadReflection,roadReflectionUv+roadWarp+roadBlur*vec2(-1.,0.)).rgb*.15;
           roadReflected+=texture2D(roadReflection,roadReflectionUv+roadWarp+roadBlur*vec2(0.,1.)).rgb*.15;
           roadReflected+=texture2D(roadReflection,roadReflectionUv+roadWarp+roadBlur*vec2(0.,-1.)).rgb*.15;
-          float roadFresnel=.020+.42*pow(1.-clamp(dot(normal,normalize(vViewPosition)),0.,1.),5.);
-          outgoingLight+=roadReflected*roadFresnel*roadWater*roadReflectionMask;
+          float roadFresnel=.020+.98*pow(1.-clamp(dot(normal,normalize(vViewPosition)),0.,1.),5.);
+          // Replace the already counted environment specular over the captured
+          // puddle coverage. Adding both made grazing wet roads overbright.
+          outgoingLight+=(roadReflected*roadFresnel-reflectedLight.indirectSpecular)*roadWater*roadReflectionMask;
         }
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|road-surface-metres-wet-3.8';
+  material.customProgramCacheKey=()=>key+'|road-surface-street-repairs-wet-3.9';
   material.needsUpdate=true;
   return{uniforms,model:ROAD_SURFACE_MODEL,setWetness(value){uniforms.roadWetness.value=Math.min(1,Math.max(0,Number(value)||0));},setQuality(q){uniforms.roadFineDetail.value=q==='balanced'?0:1;}};
 }

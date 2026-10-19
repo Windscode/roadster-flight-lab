@@ -33,7 +33,12 @@ export function createCityPracticalLights(scene,anchors){
     if(time-lastSelect>.18||time<lastSelect){
       lastSelect=time;
       const ranked=anchors.map((anchor,index)=>({anchor,index,distance:Math.hypot(anchor.position[0]-p.x,anchor.position[1]-p.y,anchor.position[2]-p.z)}))
-        .filter(a=>a.distance<40).sort((a,b)=>a.distance-b.distance||a.index-b.index).slice(0,profile.street);
+        .filter(a=>a.distance<Math.min(40,(a.anchor.range||28)+8)).sort((a,b)=>a.distance-b.distance||a.index-b.index);
+      // At least one available road fixture survives nearby doorway lights.
+      // The rest of the same small pool can reveal the vehicle/facade contact.
+      const road=ranked.find(a=>a.anchor.role==='street'),selected=ranked.slice(0,profile.street);
+      if(road&&!selected.includes(road)&&selected.length)selected[selected.length-1]=road;
+      ranked.splice(0,ranked.length,...selected);
       const desired=new Set(ranked.map(a=>a.anchor)),occupied=new Set();
       for(const entry of pool.slice(0,profile.street))if(entry.anchor&&desired.has(entry.anchor)){entry.next=entry.anchor;occupied.add(entry.anchor);}else entry.next=null;
       for(const candidate of ranked.filter(a=>!occupied.has(a.anchor))){const free=pool.slice(0,profile.street).find(entry=>!entry.next);if(free)free.next=candidate.anchor;}
@@ -44,7 +49,7 @@ export function createCityPracticalLights(scene,anchors){
       entry.gain=THREE.MathUtils.damp(entry.gain,target,12,dt);
       if(changing&&entry.gain<.035){
         entry.anchor=entry.next;entry.gain=0;
-        if(entry.anchor){const a=entry.anchor;entry.light.position.set(...a.position);entry.light.target.position.set(a.position[0],Math.max(0,a.position[1]-10),a.position[2]);entry.light.color.set(a.color||0xffd0a2);entry.light.distance=Math.min(32,a.range||28);entry.light.shadow.camera.far=entry.light.distance;shadowDirty=true;}
+        if(entry.anchor){const a=entry.anchor;entry.light.position.set(...a.position);entry.light.target.position.set(...(a.target||[a.position[0],Math.max(0,a.position[1]-10),a.position[2]]));entry.light.color.set(a.color||0xffd0a2);entry.light.distance=Math.min(32,a.range||28);entry.light.shadow.camera.far=entry.light.distance;shadowDirty=true;}
       }
       entry.light.visible=active&&!!entry.anchor;
       entry.light.intensity=(entry.anchor?.intensity||1500)*entry.gain;

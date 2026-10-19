@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-19T04:52:08.390Z",
-  "model": "Roadster Flight Lab 3.8.0",
+  "generatedAt": "2026-10-19T10:24:31.475Z",
+  "model": "Roadster Flight Lab 3.9.0",
   "scope": "软件内部动力学验收，不代表Tesla真实车辆标定",
   "physics": {
     "status": "passed",
@@ -10,132 +10,132 @@
       {
         "test": "Asymmetric torque-free rotation conserves world angular momentum and rotational energy",
         "status": "PASS",
-        "ms": 280
+        "ms": 288
       },
       {
         "test": "Rotational midpoint integration shows second-order step-size convergence",
         "status": "PASS",
-        "ms": 311
+        "ms": 346
       },
       {
         "test": "10 s ground rest: four contacts, no translation or rotational drift",
         "status": "PASS",
-        "ms": 289
+        "ms": 356
       },
       {
         "test": "1 s free fall follows gravity without hidden altitude or attitude forces",
         "status": "PASS",
-        "ms": 46
+        "ms": 50
       },
       {
         "test": "Motor acceleration, friction-limited braking and steering turn the actual body",
         "status": "PASS",
-        "ms": 261
+        "ms": 312
       },
       {
         "test": "Bench-fed hover tracks height, translates and returns to a low-speed hold",
         "status": "PASS",
-        "ms": 345
+        "ms": 459
       },
       {
         "test": "Ceiling pressure holds for 10 s, permits tire-driven movement, then releases",
         "status": "PASS",
-        "ms": 329
+        "ms": 398
       },
       {
         "test": "Suction requires a nearby supporting surface: no magnetic capture in free air",
         "status": "PASS",
-        "ms": 23
+        "ms": 27
       },
       {
         "test": "Finite gas consumption equals summed nozzle impulse divided by effective exhaust velocity",
         "status": "PASS",
-        "ms": 122
+        "ms": 109
       },
       {
         "test": "Exhausted gas removes all thrust; prolonged finite hover loses support",
         "status": "PASS",
-        "ms": 307
+        "ms": 337
       },
       {
         "test": "A full roll is a six-DOF actuator maneuver with inversion, ballistic descent and recovery",
         "status": "PASS",
-        "ms": 203
+        "ms": 257
       },
       {
         "test": "180° arch traversal continuously climbs from ground and stops upside down",
         "status": "PASS",
-        "ms": 764
+        "ms": 826
       },
       {
         "test": "Mode takeover, non-finite input guards and scenario resets remain finite",
         "status": "PASS",
-        "ms": 524
+        "ms": 534
       },
       {
         "test": "Normal test runs reject a hidden recovery instead of accepting a shortened simulation",
         "status": "PASS",
-        "ms": 91
+        "ms": 88
       },
       {
         "test": "Collision geometry exposes every static collider, including arch and boundaries",
         "status": "PASS",
-        "ms": 23
+        "ms": 20
       },
       {
         "test": "Released accelerator coasts with mild regeneration instead of hidden hard braking",
         "status": "PASS",
-        "ms": 132
+        "ms": 125
       },
       {
         "test": "Valve output has finite rise and decay, and consumed gas follows delivered force",
         "status": "PASS",
-        "ms": 48
+        "ms": 51
       },
       {
         "test": "Adiabatic blowdown cools the tank and has lower pressure than the equal-mass isothermal case",
         "status": "PASS",
-        "ms": 112
+        "ms": 99
       },
       {
         "test": "After a roll, hover does not retain opposing side jets in the allocator null space",
         "status": "PASS",
-        "ms": 265
+        "ms": 272
       },
       {
         "test": "A ground-origin automatic roll with adequate finite impulse returns to a gentle landing before fuel loses support",
         "status": "PASS",
-        "ms": 266
+        "ms": 286
       },
       {
         "test": "Twenty-Hz telemetry is uniform at 30, 60 and 144 display frames per second",
         "status": "PASS",
-        "ms": 217
+        "ms": 207
       },
       {
         "test": "Power exhaustion removes motor, fan and jet authority even with an external gas supply",
         "status": "PASS",
-        "ms": 45
+        "ms": 43
       },
       {
         "test": "A slow altitude integral rejects a constant unmodelled vertical load without pose correction",
         "status": "PASS",
-        "ms": 753
+        "ms": 1000
       },
       {
         "test": "CSV schema contains quaternion, gas temperature and both nozzle command and delivered force",
         "status": "PASS",
-        "ms": 17
+        "ms": 20
       },
       {
         "test": "World-space exhaust preserves force sign and does not attach old gas to a moving vehicle",
         "status": "PASS",
-        "ms": 43
+        "ms": 47
       },
       {
         "test": "Mist emission count is frame-rate independent and rear outlets share one actuator force",
         "status": "PASS",
-        "ms": 86
+        "ms": 103
       }
     ]
   },
@@ -153,8 +153,8 @@
   },
   "browserVisualQA": {
     "status": "not_performed",
-    "modelVersion": "3.8.0",
-    "reason": "No browser, GPU frame-time or visual acceptance was performed for this release. Numerical, geometric, static integration and offline shader checks have separate scopes.",
+    "modelVersion": "3.9.0",
+    "reason": "No 3D pixels, human driving feel or actual GPU frame-time acceptance was performed for this release. The available cloud browser reports GL_VENDOR/GL_RENDERER Disabled; this is an environment limit, not evidence of a website render failure. Numerical, geometric, DOM and offline shader evidence has separate scope.",
     "historicalReports": [
       "qa/browser.json",
       "qa/city-3.4-browser-assets.json"
@@ -167,12 +167,12 @@
   },
   "integration": {
     "status": "passed",
-    "researchPanelIds": 74,
+    "researchPanelIds": 77,
     "samePageLab": true,
-    "fixedUiElements": 186,
-    "modulesChecked": 79,
+    "fixedUiElements": 194,
+    "modulesChecked": 90,
     "meshCount": 179,
-    "vertices": 156140,
+    "vertices": 158437,
     "externalRuntimeModules": 0,
     "carPhysicsIntegrationFrames": 120
   },
@@ -246,7 +246,7 @@
     "exteriorMaterials": {
       "status": "passed",
       "checks": [
-        "Static collision world, 108 street proxies and shared average wall palette retain their 3.5 identities",
+        "Original city subset, 108 street proxies and shared average wall palette retain their 3.5 identities; new shared roadside entities are explicit",
         "Every exterior instance carries finite metre dimensions that match its actual transform",
         "Metre UV edge lengths stay physical through yaw, 45-degree crossings and tilted anisotropic boxes",
         "All new plinths, portal frames, awnings, drip edges and floor belts fit inside existing physical building envelopes",
@@ -273,7 +273,7 @@
         {
           "name": "Repeated quality round trip replaces 1 / 2 / 3 cascade systems and invalidates disposed CSM uniform caches",
           "status": "passed",
-          "disposedMaterialProgramStates": 224
+          "disposedMaterialProgramStates": 240
         },
         {
           "name": "Balanced allocates no cube camera and moves baked irradiance reads out of the fragment stage",
@@ -285,11 +285,11 @@
           "views": [
             {
               "view": "weave-street",
-              "drawCalls": 279,
-              "triangles": 455356,
-              "instances": 35516,
+              "drawCalls": 287,
+              "triangles": 479416,
+              "instances": 37521,
               "shadowDrawCalls": 47,
-              "shadowTriangles": 141780
+              "shadowTriangles": 149832
             },
             {
               "view": "foundry-avenue",
@@ -309,11 +309,11 @@
             },
             {
               "view": "aerial",
-              "drawCalls": 113,
-              "triangles": 315308,
-              "instances": 25920,
+              "drawCalls": 117,
+              "triangles": 326756,
+              "instances": 26874,
               "shadowDrawCalls": 35,
-              "shadowTriangles": 59856
+              "shadowTriangles": 60672
             },
             {
               "view": "botanical",
@@ -334,10 +334,164 @@
           "status": "passed"
         },
         {
-          "name": "Rendering LOD, texture interpolation and palettes leave the entire physical collision world unchanged",
+          "name": "Original physical city retains its exact canonical identity; explicit new roadside entities match their shared plan",
           "status": "passed",
-          "geometrySHA256": "03d4eb0ea6e01e82d5a36d54b9db76374dc1ae6234aa6b50e7b29bc6d4f3dd57",
-          "canonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146"
+          "geometrySHA256": "a6fe59dd5d78436218f22e08121dabcf90cdafd05ab7dcf641a585cf59f542c7",
+          "canonicalSHA256": "9b8c5ef0d7f94adba2ee9155d7a1565bffa48ade384dacb940bcbc2b3d4a6fff",
+          "retainedGeometryCanonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+          "newSharedEntities": 150,
+          "newSharedEntityIds": [
+            "corridor-crosstown-link-walk--1",
+            "corridor-crosstown-link-lamp--1-0",
+            "corridor-crosstown-link-lamp--1-0-arm",
+            "corridor-crosstown-link-lamp--1-0-head",
+            "corridor-crosstown-link-lamp--1-1",
+            "corridor-crosstown-link-lamp--1-1-arm",
+            "corridor-crosstown-link-lamp--1-1-head",
+            "corridor-crosstown-link-lamp--1-2",
+            "corridor-crosstown-link-lamp--1-2-arm",
+            "corridor-crosstown-link-lamp--1-2-head",
+            "corridor-crosstown-link-lamp--1-3",
+            "corridor-crosstown-link-lamp--1-3-arm",
+            "corridor-crosstown-link-lamp--1-3-head",
+            "corridor-crosstown-link-lamp--1-4",
+            "corridor-crosstown-link-lamp--1-4-arm",
+            "corridor-crosstown-link-lamp--1-4-head",
+            "corridor-crosstown-link-lamp--1-5",
+            "corridor-crosstown-link-lamp--1-5-arm",
+            "corridor-crosstown-link-lamp--1-5-head",
+            "corridor-crosstown-link-lamp--1-6",
+            "corridor-crosstown-link-lamp--1-6-arm",
+            "corridor-crosstown-link-lamp--1-6-head",
+            "corridor-crosstown-link-lamp--1-7",
+            "corridor-crosstown-link-lamp--1-7-arm",
+            "corridor-crosstown-link-lamp--1-7-head",
+            "corridor-crosstown-link-cabinet--1",
+            "corridor-crosstown-link-walk-1",
+            "corridor-crosstown-link-lamp-1-0",
+            "corridor-crosstown-link-lamp-1-0-arm",
+            "corridor-crosstown-link-lamp-1-0-head",
+            "corridor-crosstown-link-lamp-1-1",
+            "corridor-crosstown-link-lamp-1-1-arm",
+            "corridor-crosstown-link-lamp-1-1-head",
+            "corridor-crosstown-link-lamp-1-2",
+            "corridor-crosstown-link-lamp-1-2-arm",
+            "corridor-crosstown-link-lamp-1-2-head",
+            "corridor-crosstown-link-lamp-1-3",
+            "corridor-crosstown-link-lamp-1-3-arm",
+            "corridor-crosstown-link-lamp-1-3-head",
+            "corridor-crosstown-link-lamp-1-4",
+            "corridor-crosstown-link-lamp-1-4-arm",
+            "corridor-crosstown-link-lamp-1-4-head",
+            "corridor-crosstown-link-lamp-1-5",
+            "corridor-crosstown-link-lamp-1-5-arm",
+            "corridor-crosstown-link-lamp-1-5-head",
+            "corridor-crosstown-link-lamp-1-6",
+            "corridor-crosstown-link-lamp-1-6-arm",
+            "corridor-crosstown-link-lamp-1-6-head",
+            "corridor-crosstown-link-lamp-1-7",
+            "corridor-crosstown-link-lamp-1-7-arm",
+            "corridor-crosstown-link-lamp-1-7-head",
+            "corridor-crosstown-link-cabinet-1",
+            "corridor-foundry-main-walk--1",
+            "corridor-foundry-main-lamp--1-0",
+            "corridor-foundry-main-lamp--1-0-arm",
+            "corridor-foundry-main-lamp--1-0-head",
+            "corridor-foundry-main-lamp--1-1",
+            "corridor-foundry-main-lamp--1-1-arm",
+            "corridor-foundry-main-lamp--1-1-head",
+            "corridor-foundry-main-lamp--1-2",
+            "corridor-foundry-main-lamp--1-2-arm",
+            "corridor-foundry-main-lamp--1-2-head",
+            "corridor-foundry-main-lamp--1-3",
+            "corridor-foundry-main-lamp--1-3-arm",
+            "corridor-foundry-main-lamp--1-3-head",
+            "corridor-foundry-main-lamp--1-4",
+            "corridor-foundry-main-lamp--1-4-arm",
+            "corridor-foundry-main-lamp--1-4-head",
+            "corridor-foundry-main-lamp--1-5",
+            "corridor-foundry-main-lamp--1-5-arm",
+            "corridor-foundry-main-lamp--1-5-head",
+            "corridor-foundry-main-lamp--1-6",
+            "corridor-foundry-main-lamp--1-6-arm",
+            "corridor-foundry-main-lamp--1-6-head",
+            "corridor-foundry-main-cabinet--1",
+            "corridor-foundry-main-walk-1",
+            "corridor-foundry-main-lamp-1-0",
+            "corridor-foundry-main-lamp-1-0-arm",
+            "corridor-foundry-main-lamp-1-0-head",
+            "corridor-foundry-main-lamp-1-1",
+            "corridor-foundry-main-lamp-1-1-arm",
+            "corridor-foundry-main-lamp-1-1-head",
+            "corridor-foundry-main-lamp-1-2",
+            "corridor-foundry-main-lamp-1-2-arm",
+            "corridor-foundry-main-lamp-1-2-head",
+            "corridor-foundry-main-lamp-1-3",
+            "corridor-foundry-main-lamp-1-3-arm",
+            "corridor-foundry-main-lamp-1-3-head",
+            "corridor-foundry-main-lamp-1-4",
+            "corridor-foundry-main-lamp-1-4-arm",
+            "corridor-foundry-main-lamp-1-4-head",
+            "corridor-foundry-main-lamp-1-5",
+            "corridor-foundry-main-lamp-1-5-arm",
+            "corridor-foundry-main-lamp-1-5-head",
+            "corridor-foundry-main-lamp-1-6",
+            "corridor-foundry-main-lamp-1-6-arm",
+            "corridor-foundry-main-lamp-1-6-head",
+            "corridor-foundry-main-cabinet-1",
+            "corridor-canal-link-walk--1",
+            "corridor-canal-link-lamp--1-0",
+            "corridor-canal-link-lamp--1-0-arm",
+            "corridor-canal-link-lamp--1-0-head",
+            "corridor-canal-link-lamp--1-1",
+            "corridor-canal-link-lamp--1-1-arm",
+            "corridor-canal-link-lamp--1-1-head",
+            "corridor-canal-link-lamp--1-2",
+            "corridor-canal-link-lamp--1-2-arm",
+            "corridor-canal-link-lamp--1-2-head",
+            "corridor-canal-link-lamp--1-3",
+            "corridor-canal-link-lamp--1-3-arm",
+            "corridor-canal-link-lamp--1-3-head",
+            "corridor-canal-link-lamp--1-4",
+            "corridor-canal-link-lamp--1-4-arm",
+            "corridor-canal-link-lamp--1-4-head",
+            "corridor-canal-link-lamp--1-5",
+            "corridor-canal-link-lamp--1-5-arm",
+            "corridor-canal-link-lamp--1-5-head",
+            "corridor-canal-link-lamp--1-6",
+            "corridor-canal-link-lamp--1-6-arm",
+            "corridor-canal-link-lamp--1-6-head",
+            "corridor-canal-link-cabinet--1",
+            "corridor-canal-seat--1--139",
+            "corridor-canal-seat--1--27",
+            "corridor-canal-seat--1-59",
+            "corridor-canal-link-walk-1",
+            "corridor-canal-link-lamp-1-0",
+            "corridor-canal-link-lamp-1-0-arm",
+            "corridor-canal-link-lamp-1-0-head",
+            "corridor-canal-link-lamp-1-1",
+            "corridor-canal-link-lamp-1-1-arm",
+            "corridor-canal-link-lamp-1-1-head",
+            "corridor-canal-link-lamp-1-2",
+            "corridor-canal-link-lamp-1-2-arm",
+            "corridor-canal-link-lamp-1-2-head",
+            "corridor-canal-link-lamp-1-3",
+            "corridor-canal-link-lamp-1-3-arm",
+            "corridor-canal-link-lamp-1-3-head",
+            "corridor-canal-link-lamp-1-4",
+            "corridor-canal-link-lamp-1-4-arm",
+            "corridor-canal-link-lamp-1-4-head",
+            "corridor-canal-link-lamp-1-5",
+            "corridor-canal-link-lamp-1-5-arm",
+            "corridor-canal-link-lamp-1-5-head",
+            "corridor-canal-link-lamp-1-6",
+            "corridor-canal-link-lamp-1-6-arm",
+            "corridor-canal-link-lamp-1-6-head",
+            "corridor-canal-link-cabinet-1",
+            "corridor-canal-seat-1--139",
+            "corridor-canal-seat-1--27",
+            "corridor-canal-seat-1-59"
+          ]
         }
       ]
     },
@@ -427,7 +581,7 @@
         },
         {
           "name": "all node/walkway solids are physical; both access stairs retain 1.75 m headroom",
-          "count": 212,
+          "count": 362,
           "status": "passed"
         },
         {
@@ -437,7 +591,7 @@
         },
         {
           "name": "geometry remains finite; The current release uses a visible draw/triangle budget rather than a global allocated batch limit",
-          "count": 148046,
+          "count": 152482,
           "status": "passed"
         }
       ]
@@ -459,7 +613,7 @@
       "checks": [
         "Isotropic radiance integrates to pi times radiance on six normals without double cosine convolution",
         "Directional SH evaluation agrees with the independent Three.js irradiance implementation across 64 normals",
-        "Every stored probe has finite coefficients, consistent validity, exact dimensions and verified data, canonical geometry and material identities",
+        "Every stored probe has finite coefficients, consistent validity, exact dimensions and verified data, retained canonical bake-subset and material identities",
         "Four city locations retain nonnegative bounce energy and agree with a 1536-ray transport reference within the documented spot-check tolerance",
         "Contact AO affects only indirect diffuse; spatial probe samples use explicit LOD in divergent geometry branches",
         "Camera adaptation responds to spatial shade and sun visibility, stays bounded and has an unloaded fixed-exposure fallback"
@@ -491,7 +645,7 @@
         {
           "test": "Every authored position and normal is finite; nonzero normals are unit length",
           "status": "PASS",
-          "ms": 14
+          "ms": 16
         },
         {
           "test": "Full suspension travel is represented directly, without shrinking or visually clamping tyres",
@@ -501,7 +655,7 @@
         {
           "test": "Whole tyre sweep clears arch, roof, inner wheelhouse and isolated thrust duct",
           "status": "PASS",
-          "ms": 612
+          "ms": 694
         },
         {
           "test": "Continuous pressure chamber has an airtight roof, isolated wheel/jet cutouts and surface-following seal",
@@ -526,7 +680,7 @@
         {
           "test": "Render profiles reduce actual geometry and preserve articulated object identities and state",
           "status": "PASS",
-          "ms": 295
+          "ms": 302
         },
         {
           "test": "Separate glazing panels share continuous derivative normals at every quality",
@@ -541,7 +695,7 @@
         {
           "test": "Late-created force nozzles use the selected profile and switching back reuses cached geometry",
           "status": "PASS",
-          "ms": 12
+          "ms": 13
         }
       ],
       "sweep": {
@@ -556,7 +710,7 @@
         ],
         "tyreRadiusM": 0.372,
         "minimumArchLinerMarginM": 0.017689963530136996,
-        "minimumRoofMarginM": 0.016766269102844733,
+        "minimumRoofMarginM": 0.016467778283158097,
         "minimumInnerWallMarginM": 0.07619499326628021,
         "minimumLiftDuctMarginM": 0.0709447795558538
       }
@@ -572,6 +726,44 @@
         "the market street is physically traversable beneath its raised footbridge"
       ]
     },
+    "boundedDriveAndFlightControls": {
+      "status": "passed",
+      "checks": [
+        "One four-wheel drive budget survives partial contacts, TCS and actual substep mechanical-work limits",
+        "Mechanical/electrical accounting remains physical during free spin and complete rigid-body takeoff/landing contact changes",
+        "Faster steering develops real tire-force curvature and yaw response on low/mid/high-speed circles and an authored city intersection",
+        "E/Q use the selected velocity immediately, brake smoothly on release and taper descent into real ground contact",
+        "G recovers level after manual pose changes and unsealed F arming, while real adhesion and finite thrust retain authority",
+        "New wheel, release-braking and recovery states preserve complete snapshot replay across display rates with seeded sensing and nozzle derating"
+      ],
+      "report": "qa/physics-controls-3.9.json",
+      "scope": "Actual fixed-step physics, original 3.8 fixture comparison and authored city bend; no human driving or GPU acceptance"
+    },
+    "reproductionConsistency": {
+      "status": "passed",
+      "checks": [
+        "Same snapshot, seeded delay/noise, wind phase, nozzle derating and recorded takeover give a measured reproduction match",
+        "60 / 120 / 240 Hz rendering groups retain the same physical response and reproduction verdict",
+        "A changed retained curve cannot pass merely because execution completes and its terminal state agrees",
+        "Terminal velocity, angular rate, gas, temperature, wheel speed and controller state are checked independently of position",
+        "Quaternion sign equivalence and small-angle precision avoid false pose errors, while a real tilt is detected",
+        "Steering memory, lateral relaxation, vertical/level references and disturbance clocks cannot silently diverge behind an identical body pose",
+        "Decimation compares only retained matching steps and never presents missing curves as full 120 Hz evidence",
+        "Anti-windup memory, final parameters and mass/inertia are required; equivalent plain sensor-history quaternions do not create false divergence",
+        "Cancellation and solver failures retain partial evidence without comparing an early state to a future terminal state",
+        "Controller A/B is explicitly fixed driver inputs with controller redecision, not a demand to reproduce the historical trajectory",
+        "Previous contact support and every required retained kinematic channel participate in the reproduction judgment",
+        "The actual archived 3.8 record stays historical, refuses exact execution and only migrates explicitly to current-model recomputation",
+        "Road study names include the actual road condition and both driver aids without changing recorded numeric requests"
+      ],
+      "report": "qa/reproduction-verdict-3.9.json"
+    },
+    "corridorAndReflection": {
+      "status": "passed",
+      "checks": [],
+      "report": "qa/visual-corridor-3.9.json",
+      "scope": "Canonical route geometry, exact projection and pass culling; not pixels or FPS"
+    },
     "physicalResearch": {
       "status": "passed",
       "checks": [
@@ -583,7 +775,7 @@
         "The finite-rate wing actuator generates no zero-q force and fixed/active choices change drag and rear wheel load in the physical state",
         "Seeded delay/noise changes the actual feedback solution, nozzle derating changes allocation, and onboard/external gas accounting stays distinct"
       ],
-      "report": "qa/physics-research-3.8.json"
+      "report": "qa/physics-research-3.9.json"
     },
     "liveExperimentReplay": {
       "status": "passed",
@@ -603,7 +795,7 @@
         "Imported replay validates finite state, command allowlist and exact step totals without executing content",
         "Program compressed CSV and standard historical CSV identify the stored report and truthful sample interval"
       ],
-      "report": "qa/experiment-records-3.8.json"
+      "report": "qa/experiment-records-3.9.json"
     },
     "publicRoadStudies": {
       "status": "passed",
@@ -613,7 +805,7 @@
         "Fixed-retracted and active wing standard comparison drives real actuator deployment and dynamic-pressure forces",
         "New road protocols preserve full-resolution statistic identity and deterministic rerun, with historical archives explicitly recomputed as requests"
       ],
-      "report": "qa/research-road-3.8.json"
+      "report": "qa/research-road-3.9.json"
     },
     "performanceBookkeeping": {
       "status": "passed",
@@ -623,77 +815,88 @@
         "Cancellation retains partial evidence and configuration/resolution changes are visible in exported comparison conditions",
         "Asynchronous GPU queries are attributed to their original frame once, and disjoint queries are discarded with evidence"
       ],
-      "report": "qa/performance-meter-3.8.json",
+      "report": "qa/performance-meter-3.9.json",
       "scope": "Measurement bookkeeping with a GL query facade, not actual GPU or FPS"
     },
     "visualStructure": {
       "status": "passed",
       "checks": [],
-      "report": "qa/visual-upgrade-3.8.json",
+      "report": "qa/visual-upgrade-3.9.json",
       "scope": "Geometry, light/reflection state and budget tests; no pixel acceptance"
     }
   },
-  "totalAcceptanceChecks": 201,
+  "totalAcceptanceChecks": 220,
   "sourceIdentity": {
-    "modelBuildId": "4accaa4482dc396a2d9fe5d09492e79bf5f2db4ede830f52a50a7f44758a9d4f",
+    "modelBuildId": "c042588f8f511ffd0688ca2036b82cd82c17a8ddfa426cb8093022c47e65916b",
     "sourceHashes": {
-      "app-shell.js": "4c02a4ef8f0392d6901cbb2076af9453e75a4758a683c4ffa213f4d4c4cecee8",
-      "app.js": "28ccb7056ad0188a436c175e2d4b621c0802fbcf2f43e6a49481fca3f7deb5ab",
+      "app-shell.js": "edc539c9f72ef8e26e667aaa1718d29f39f6ffac725757f63043fa0bc6c06a02",
+      "app.js": "49c58f3e595e60affc8d22af02408067b02ba6044bbb1fdd4349eb654e1404ad",
       "audio.js": "80b39ba94e8b7ff56dc526229188b7927e8b53b68894e52ad32818257d689141",
-      "car-radio.js": "327d6891619036f81e714c6038c87ecd9ded726f4a94533d65062133d4f91c48",
+      "car-radio.js": "c8ac1e1a4aa8ed52e6b2b67eb7d627c85464930bcd0bc91ed6e6587c86389f78",
+      "city-corridor-plan.js": "640a9f8d3d6ca9403338b419f973c3856d2164edba6b4854f76a7a87e8a96428",
       "city-data.js": "ba228d0e2b51ce357062346c6452e63514b93ba39c2ffa52eb38359ffec1f9b9",
-      "city-environment.js": "176d4553fc7316e463591e34be9e020c3234b91dbec11ef51e2190497a015798",
+      "city-environment.js": "554970187d6951095c0ff63415901e0bfde7e2c8ce6e5acf6945b569dbab556c",
       "city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
       "city-landmarks.js": "c9e9dcb0116c80ae610c07ba6c3c74859242e7732d62d219814c2095c2c81477",
-      "city-map.js": "466d800da185e20f9fbef47f05af30cba4c2b20fa540ae95c7d8e90aba657905",
-      "city-plan.js": "3f17f0eadca4d84f386b202fae8afc179f0ceac547cf57c4dfe0190d162a9549",
-      "city-practical-lights.js": "4fb2828ebb592688c50e2b430698d87007549ba9bf5ef7f047eb5e88d5e9d884",
+      "city-map.js": "2cfb23a2a01095aecc052ef0db36bfbddb0e6ce02267123a60ca468d538ecb01",
+      "city-plan.js": "0258b8489058b9051458e0b1809dcce3018e8013c3ea5b9bec10080947e9fc2c",
+      "city-practical-lights.js": "36ef52b1a1181c462c29a7dfef28807d73acd8e04018b9693cec1f4504e9cdae",
       "city-render-budget.js": "c7cb69daf59a80af4ff4009badb3b819c2429a75c88036b7ce84e576e40ccb3f",
       "contact-ao-pass.js": "b9b95f465bdab91bb1bbe91920b32ea60d12095088ad4cb617e3f1da934f238c",
       "control-observation.js": "8920e824d32dbece63aade3f0ab4da5c294225aa46419d6e556e603f2ed75cc8",
       "controls.js": "aedb51653e11249d6693ae140059539939a749b29d323ba990b1f8b731c0e6e7",
       "environment.js": "f5f90b08d2f9aa0ad4addcc9a09e11d772b970da329a1cdd909c7a8d846c12a5",
       "exhaust.js": "375429cd7095567bd9d8602c92825643defcd5525ec9b062b5e3ad9276c8dd10",
-      "experiment-console.js": "4a35f4d9bcb7e43077a540251779461b9e63f4d61f1d96916473c844e5c1ad1d",
-      "experiment-records.js": "1a8505a05547d7336c00351cd0740499698a96f68b38e8fbdfd677b27dd42075",
+      "experiment-console.js": "75c883e65c7b0c531557f970d487ddfc043ad7754692bd137cb97880f2b8e4f8",
+      "experiment-records.js": "90027e9be74f4e87db090609e2aff89f24b5cf38dab007e9cf47d8d7f629b979",
       "experiment-replay-worker.js": "8bed7be5c1a0ea4fefab0a9c0c967af0ffde054314a01702857b59064e395262",
+      "experiment-reproduction.js": "f757b9c59066904a0df3ef804e10f01a2fb935d0a92f80a0b52b95f0d5db1cb9",
       "experiment-worker.js": "95418f9b0e1a0dc8891a3fb3f152aa548a9bcb5f4c2f660f4176c20664e5d0fd",
       "flight-programs.js": "8da398cf6333c6f0be073705434704a245ec5963cfb6eb759da756b3f330ba96",
-      "game.css": "1dbf6e320b90f803ad864b048a6e91ee35088bff3d2e059f369d53a03b9792df",
-      "index.html": "c8886b42d68e8c84f2f5d800f626e85a6d12d12baf47368089ac78ad8212f376",
+      "game.css": "ba43c9a7f30e8a3dbbdc77a88918e8a4f67c64418fce2a301f6e7335ee44f7f3",
+      "i18n-main-en.js": "bebd581899a23faa5b3054c2d9f0f6e75b1548d50df795ce628841c9cdd9dc6d",
+      "i18n-research-en.js": "d4e21e67fb01abf128b6844a6e88f36ef0ed2f03a6a9edfe1319ff3c75776659",
+      "i18n-visual-en.js": "da4952997fd47df297b8ccbfcebc394bd7c7bdb5caba127e53830f2a9b14ee73",
+      "i18n.js": "6735cf85a82021768a89d1dec541c7b2f16eeb426decab129c53257f9135ef4b",
+      "index.html": "c4e7d4757f3b9c96799f3f2fc0d68103df067fcb8167fef65417b6a0c95a0ca5",
       "indirect-lighting.js": "d1de4a0108898d83337b674d0e5efd9e364608544c27686f7e90605a7b092ccc",
       "irradiance-math.js": "f4c9de47c61ebf8a661d9cfddfbcf0a47c77266438f43909090cd1032b1637f9",
       "local-probe-sun.js": "518069c383e4815dcaf796576d969a568356ddfc202e922055d17bbd871a1f1a",
-      "main.js": "3da769d12bb5e032f50b02542656e6a794d9df6f66253cee44d575052a809247",
+      "locale-bootstrap.js": "2bfa0300dbed844c2e80616e79ed7fdef4f06210adaa7aa6c66f6f4b66c1d7c1",
+      "main.js": "aee5fed679c0c48a555e378ce003568ada7d088c61856cbab49270ee0b1e8863",
+      "pavement-surface-material.js": "3cfc78c9596994becccfe9afb5656b97d4b7290540abe6e83a7bcc1664e80bbe",
       "performance-meter.js": "7f5dcc98c48a3a3014b41d3386af50b5d3a7eb3d0ebb5e9cb499b49e8dc0229b",
-      "physics.js": "57291855a1a0020810b02ba6d7fdfc1f0deb3623296a207b3d3610756d107da4",
+      "physics.js": "2124f9d40a0cfcc7b6cad1b019ba6959235a77edf8ff1b8b3f3d2283496cd8de",
       "render-profiles.js": "4442bc45eab81e0a98c66551afba46b2049f916e66abaa7274f3a9c4b30f9719",
-      "research-console.css": "8206b032b72b2a760faf1ba72ffdb859dc734267fd77a540bde7628aaad57773",
-      "research-console.js": "94f202f21dbd2e6bab506ec9d0aa3450bb707ab3fff7541f491b8e4f1d49482c",
+      "research-console.css": "a183831a7d13a1998b4d18195fcfe8fd1f200e90578eb39e3a0f16c48c36f046",
+      "research-console.js": "ff976e05a8d4d9cc08d1029329327ec40ceb34c8e8ffa697b810cda204103cf1",
       "research-entry.js": "dd4c073e1c659c847e13718d24c0880d9befd162273b630c03aa06618fef3987",
-      "research-lab.js": "27cfb732b149004d2e5d86783c76109a98315ccfcf7bbf0d9d8189cc8004cfa4",
-      "research-panel.html": "82063c4e3b88891f7cefcedfdf9f2e14f6bbb5506f7f0a0501ad6a09431201ee",
-      "research-protocol.js": "640464720c8788d9c19292dd6d4c365b44af19c9aa83b4198e3b8282335bc12a",
-      "research-study.js": "5eb062f42ae7f575d9e74f64f553585ac96021dafa9b9fd2232f189e52dd023c",
-      "research-workbench.js": "f28d5a76aad53020e8ca0454dec866743718a6c1740553958ae0688cbb1af665",
-      "research.css": "b60e4e872c5606203453361d264f98164358b0b824ab863db4219588db37f166",
+      "research-lab.js": "9c26cf4422b323e25942c71d15c7f854abc749e5d5e2815c5bd578412165ce0e",
+      "research-panel.html": "b2fbcacdfef863e19c455fde9221e8ee5ff6ef74f666a3ae49dea88718a15fff",
+      "research-protocol.js": "54ce8d586d267e0a1fd0b71d212f5b82c97b3d394d00538b1d6276e8038d62f7",
+      "research-study.js": "e265c41d8429c0ddbdd662ef0b0e85590740a14a305572aec8afbea1f305dee7",
+      "research-workbench.js": "850163f60c802083162621b5677a9276cacec13b09bf5c910aae0be88430f723",
+      "research.css": "31125482c90ada539a2aa83b109df939a0707e1aacc4b13ad155f2123b5de29d",
       "research.html": "a088f6e56ef218bf546961026a500587a0f23f7b4987f6fae61f31d9f9c6bce9",
-      "road-surface-material.js": "65e6f75dcf27b70833c22bdd403f09d86da808863489742cd55f1da05deeb4a8",
-      "simulation-snapshot.js": "a25ad73fab7448603587a9a44542aed2d147bf83fce5c843cbb40d2383572b10",
+      "road-surface-material.js": "ea87103bdd448a1868d9d7aed839505cbe47502965f926fa71c8f29ff7da172a",
+      "simulation-snapshot.js": "45566a5605c8e48a72e7a0e4c515e3b3cdb0660ab8bc5df84b730a5d80cd8a40",
       "static-city-broadphase.js": "02e290e83ffd4d341211b75a70f2408010006001fb600a2d0a279fb8d8c45a14",
       "street-life.js": "48ae4edfdba06f252cd65066ca29c0640b5dba1cef16078ededebedfdeb422e3",
       "style.css": "047f058f1ec95099570e4376d95b8b3a17c8ce0654ebe0b8fb4a056deb9de5e5",
       "telemetry.js": "d698282add7fd8a81a91e9183c823525183f3e83f67147a84aae0ac993f22fcf",
-      "tire-dynamics.js": "62810abd66caefb595afd1600860fe86b26c37484f06ebc579fd97efa1a30075",
-      "urban-architecture.js": "a086da07ae66ef947ce03cfc669cf2149cbee4abdb7c7f9ea1580776250b506c",
-      "vehicle-inspection.css": "56ca0f90e7b3bbc9ffc36890f3feef5ce90a314217aca6ad2d91b2f3729623a8",
-      "vehicle-inspection.html": "4e7cd6b9655b6419898a5a1dc08408954d7bae658ef410f4772afcdb02d7752e",
-      "vehicle-inspection.js": "f53b01beb17d2e14cce9ea7e9b07c6a196b51309f15faa4f3db2783b37c8e68c",
+      "tire-dynamics.js": "026425f3aedd162637bfa184cd279424f4a7604ee27db398bebd8834aca4dccd",
+      "ui-preferences.js": "747fb55a57f09e0ae275deecb84b80d8ff1d765bc7a65c5ff6af63423ee9e7ed",
+      "urban-architecture.js": "8255abe727f2ccd620dd63e9a33808d92eea07bfb1c5943edb9a4e441e884727",
+      "vehicle-inspection.css": "4164d0fbd138b2b4c319675a206119a1a30dbda6a0f6e4e925554ffef28d59a5",
+      "vehicle-inspection.html": "cff4db3e022728431f2f8f49dc923640529e938564b4224db60777125fd64936",
+      "vehicle-inspection.js": "855d971400b1ae1887a49ea415a3426dd10ea7fc0881a704f8879b7f721a2b53",
       "vehicle-layout.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
-      "vehicle-models.js": "7e55700ee792f1eba6e793f939f33406780af9266145f70d8c3dffa442464622",
+      "vehicle-models.js": "507f4b6cc881cea1e51323c67d8dda0d87021d12e8d8bb1df824a85fde0165c3",
       "vehicle-reference-3.7.js": "c15443cf9c69af3a2d0c6867a1000645deff12e2db2cc4eab1916134da54cd07",
+      "vehicle-reference-3.8.js": "9152de502fb086ca2027db690226d9ba88881915d6a54b4269e97ab08ffd885b",
       "vehicle-reference-layout-3.7.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
-      "vehicle.js": "3f532f879f1a86af187a7f89a8f860de61175bdef27d78a783e2ba7fb62763f7",
+      "vehicle-reference-layout-3.8.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+      "vehicle.js": "cb37f8d9ca5b502831f1ea0f4a3642c3c3a4436976a75e489d65a412a6f1d05a",
       "vendor/addons/controls/OrbitControls.js": "d3b6283dcec39e541db397bdd868fec380e118f3053ec26e9873252a14b7b5d6",
       "vendor/addons/csm/CSM.js": "6876eaa29c95daeb82e846788e84bde03126e066165c34286ee2ee18ea58c018",
       "vendor/addons/csm/CSMFrustum.js": "632b096b39c503ebe1c3f83e63dca25c51af2103ff0ca467ebf5dc1855196989",
@@ -723,8 +926,8 @@
       "vendor/cannon-es.js": "f0700cbd3a482954949b9d58c1b0f76dcc74767750297647a39d8c40dd63d37c",
       "vendor/three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
       "vendor/three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
-      "visual-presets.js": "b982476a73c5b39b052cfc11cf7169c0b423d7f46e936af84600809f6bb99a54",
-      "wet-road-reflection.js": "e747fa4a0fc9bc296e2dec1bd5a0d45528b6e2627d247f3fd2437dfa5b631b9c",
+      "visual-presets.js": "ec43ae9a980adc15a2266a4c8efe2bce6f460fee570ac7ab6bce64252abc1588",
+      "wet-road-reflection.js": "c5ee35789069abaa256a20cd3d8a88b738dc769b8b10b38f901b2b9433299764",
       "wind-lab-data.js": "27ce72f8053b99037462be6c4b62d37d371021d6e02fca96d4392587d9f2ab41",
       "wind-laboratory.js": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d"
     }
@@ -732,30 +935,18 @@
   "offlineShaderValidation": {
     "scope": "Offline syntax and stage-interface checks, not WebGL driver, framebuffer, rendered-pixel or FPS validation.",
     "postProcessing": {
-      "report": "qa/render-shader-validation-3.8.json",
-      "createdAt": "2026-10-19T04:44:16.123Z",
-      "sourceHashesCurrent": true,
-      "status": "passed_with_documented_compiler_normalization",
-      "programPairs": 18,
-      "stages": 36,
-      "exactPass": 13,
-      "compatibilityPass": 5,
-      "failed": 0,
-      "limitations": [
-        "Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.",
-        "Five bloom blur pairs may require a reported compiler-only identifier normalization for the unchanged Three.js common average(vec3) function. Such results are compatibility-pass, not exact-pass.",
-        "Built-in beauty/normal/depth material permutations are not exhaustively compiled by this script."
-      ]
+      "report": "qa/render-shader-validation-3.9.json",
+      "status": "not_performed"
     },
     "cityLighting": {
-      "report": "qa/render-shaders-3.8.json",
-      "createdAt": "2026-10-19T04:44:18.572Z",
+      "report": "qa/city-shaders-3.9.json",
+      "createdAt": "2026-10-19T10:13:14.635Z",
       "sourceHashesCurrent": true,
       "status": "passed_with_documented_compiler_normalization",
-      "programPairs": 59,
-      "stages": 118,
+      "programPairs": 71,
+      "stages": 142,
       "exactPass": 0,
-      "compatibilityPass": 59,
+      "compatibilityPass": 71,
       "failed": 0,
       "limitations": [
         "Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.",
@@ -767,14 +958,15 @@
   "domInteractionQA": {
     "status": "passed",
     "scope": "DOM events with actual application/controller code and explicit graphics/Worker facades. No actual browser layout, WebGL execution or FPS validation.",
-    "acceptanceGroups": 35,
+    "acceptanceGroups": 39,
     "mainPage": {
-      "report": "qa/same-page-ui-3.8.json",
+      "report": "qa/same-page-ui-3.9.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.",
       "checks": [
         "Actual main.js boots the city through the primary entry and advances the real 120 Hz simulation with a single viewport canvas",
+        "Visible E/Q response changes the active target-speed parameter and persists without resetting physical state; reset restores 3 m/s",
         "Actual G event routing has only off/level states, and keyboard/numpad 1/2 deliver normalized pitch without opening raw valves",
         "City/lab switching keeps one document and renderer, uses isolated real physics worlds, preserves the city vehicle state and routes drawing to the active scene",
         "All three quality changes and context round trips update the active car/environment and restore city AO to the right scene while keeping it disabled in the lab",
@@ -786,11 +978,12 @@
         "Road adhesion, actual ABS and wing controls route to physics; weather, screen-size LOD and fixed route camera metadata route to the active presentation",
         "Actual main adapter replays the recorded fixed-step state with zero terminal position error, restores weather/camera, and ends a new recording before returning to the previous scene state",
         "A context-lost event stops live simulation and closes its recording while retaining the same application and local research history",
-        "Without graphics, the same-page standard study executes the actual solver and keeps visible history, selected-record CSV and complete-library JSON usable"
+        "Without graphics, the same-page standard study executes the actual solver and keeps visible history, selected-record CSV and complete-library JSON usable",
+        "English reaches the actual main shell and lazy research UI, persists and switches back without changing snapshots or exported history"
       ]
     },
     "advancedStudy": {
-      "report": "qa/research-panel-dom-3.8.json",
+      "report": "qa/research-panel-dom-3.9.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM events and state, with actual deterministic solver reports through an asynchronous Worker API facade. Historical-version fixtures test storage only. Canvas is stubbed; no browser layout, actual Worker-thread scheduling, GPU pixels or FPS evidence.",
@@ -807,7 +1000,7 @@
       ]
     },
     "liveExperiments": {
-      "report": "qa/experiment-console-dom-3.8.json",
+      "report": "qa/experiment-console-dom-3.9.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "Actual console DOM and actual fixed-step RoadsterSim replay/A-B. Canvas and asynchronous Worker endpoints are facades; no browser layout, Worker-thread performance, WebGL pixels or FPS evidence.",
@@ -822,17 +1015,19 @@
         "A cancelled numerical Worker execution remains exported with source identity and partial statistics",
         "A synchronous Worker constructor failure preserves the requested A/B identity and gains, clears Run / Stop state, and permits retry",
         "Synchronous request and cancel postMessage failures each leave one failed attempt, terminate the Worker, and remain exportable",
+        "An altered retained sample produces the same completed-but-diverged verdict in live 3D and numerical replay, visibly and in exported evidence",
         "Refresh restores the full replayable archive and metadata; history remains visible with live controls disabled"
       ]
     },
     "withoutWebGL": {
-      "report": "qa/no-webgl-research-3.8.json",
+      "report": "qa/no-webgl-research-3.9.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.",
       "checks": [
         "Actual app.js initializes the research shell before a deliberately rejected WebGLRenderer and resolves ?view=lab to the same-page study",
-        "Without graphics, the same-page standard study executes the actual solver and keeps visible history, selected-record CSV and complete-library JSON usable"
+        "Without graphics, the same-page standard study executes the actual solver and keeps visible history, selected-record CSV and complete-library JSON usable",
+        "English reaches the actual main shell and lazy research UI, persists and switches back without changing snapshots or exported history"
       ]
     }
   }

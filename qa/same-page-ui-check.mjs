@@ -138,6 +138,11 @@ assert.equal(state().context,'city');assert.equal(state().scenario,'city');asser
 assert.equal(document.querySelectorAll('#viewport canvas').length,1);assert.ok($('play-city'));
 click('#play-city');tick(120);assert.equal(state().paused,false);assert.ok(state().simTime>1.9);
 pass('Actual main.js boots the city through the primary entry and advances the real 120 Hz simulation with a single viewport canvas');
+const initialResponseState=numerical(state());
+$('vertical-speed-command').value='6.4';$('vertical-speed-command').dispatchEvent(new window.Event('input',{bubbles:true}));$('vertical-speed-command').dispatchEvent(new window.Event('change',{bubbles:true}));
+assert.equal(window.roadsterLab.getParameters().climbRateMps,6.4);assert.equal(window.localStorage.getItem('roadster-vertical-speed'),'6.4');assert.equal(numerical(state()),initialResponseState,'Response preference must not reset or advance the vehicle');
+click('#vertical-speed-reset');assert.equal(window.roadsterLab.getParameters().climbRateMps,3);assert.equal(window.localStorage.getItem('roadster-vertical-speed'),'3');assert.equal(numerical(state()),initialResponseState);
+pass('Visible E/Q response changes the active target-speed parameter and persists without resetting physical state; reset restores 3 m/s');
 
 for(const expected of ['level','off','level','off']){tap('KeyG');tick(1);assert.equal(state().stabilizationMode,expected);assert.notEqual(state().stabilizationMode,'hold');}
 key('Digit1');tick(1);assert.equal(state().driverInput.pitch,1);assert.equal(state().driverInput.frontJets,0);assert.equal(state().driverInput.rearJets,0);key('Digit1',{type:'keyup'});
@@ -251,6 +256,7 @@ values.initializationFailure={shellReady:true,graphicsUnavailable:true,viewportC
 pass('Actual app.js initializes the research shell before a deliberately rejected WebGLRenderer and resolves ?view=lab to the same-page study');
 }
 
+assert.match($('render-stat-chip').textContent,/三维未运行/);assert.doesNotMatch($('render-stat-chip').textContent,/采样/);assert.match($('performance-label').textContent,/三维未运行/);
 assert.equal($('graphics-status').classList.contains('hidden'),false);assert.equal($('error-screen').classList.contains('hidden'),true);
 click('#graphics-open-records');assert.equal(window.roadsterApp.getState().research.open,true);assert.equal(q('[data-ex-action="record"]').disabled,true);assert.equal(q('[data-ex-action="replay"]').disabled,true);
 assert.equal(window.roadsterApp.getState().research.experiment.liveAvailable,false);
@@ -260,10 +266,26 @@ const field=id=>study().querySelector('[data-study-id="'+id+'"]'),change=element
 field('lab-kind').value='brake';change(field('lab-kind'));field('lab-mode').value='single';change(field('lab-mode'));field('protocol-form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
 await settle(()=>workerRequests.length>0&&!field('lab-run').disabled,'Actual numerical worker facade must finish a standard braking study without graphics');
 assert.ok(field('record-table').children.length>0);assert.equal(field('analysis-content').hidden,false);
-field('export-rows').click();const exported=await lastBlob.text();assert.match(exported,/model=3\.8\.0/);assert.match(exported,/run_id,case,/);
+field('export-rows').click();const exported=await lastBlob.text();assert.match(exported,/model=3\.9\.0/);assert.match(exported,/run_id,case,/);
 field('export-library').click();const library=JSON.parse(await lastBlob.text());assert.ok(library.entries.length>0);assert.ok(library.entries.at(-1).report.metrics.stop.distanceM>0);
 values.noGraphicsResearch={actualSolver:true,workerRequests:workerRequests.length,records:library.entries.length,csvSelectedRecord:true,jsonLibrary:true,graphicsStatus:window.roadsterApp.getState().graphics.status};
 pass('Without graphics, the same-page standard study executes the actual solver and keeps visible history, selected-record CSV and complete-library JSON usable');
+
+
+// Locale is display-only, including lazily loaded numerical panels and exports.
+const locale=(await getModule(resolve(dist,'i18n.js'))).namespace;
+const beforeLocale=JSON.stringify(library.entries),beforeSnapshot=numerical(state());
+$('language-select').value='en';$('language-select').dispatchEvent(new window.Event('change',{bubbles:true}));await new Promise(resolve=>setImmediate(resolve));
+assert.equal(document.documentElement.lang,'en');assert.equal(window.localStorage.getItem('roadster-language'),'en');
+assert.equal($('graphics-open-study').textContent,'Run numerical studies');assert.match($('render-stat-chip').textContent,/No frame-rate data/);
+assert.ok(!/[\u3400-\u9fff]/u.test(field('lab-run').textContent),'Run must have English copy');
+field('export-library').click();assert.equal(JSON.stringify(JSON.parse(await lastBlob.text()).entries),beforeLocale,'Locale must not rewrite library data or identity');assert.equal(numerical(state()),beforeSnapshot);
+const nodes=[],walk=document.createTreeWalker(document.body,4);let node;while((node=walk.nextNode())){if(node.parentElement?.closest('script,style,pre,code,textarea,[data-no-i18n]'))continue;const value=node.nodeValue?.trim();if(value&&/[\u3400-\u9fff]/u.test(value))nodes.push({text:value,parent:node.parentElement.tagName,id:node.parentElement.id});}
+values.english={entries:locale.getTranslationDiagnostics().entries,patterns:locale.getTranslationDiagnostics().patterns,remainingChinese:nodes,missing:locale.getTranslationDiagnostics().missing};
+if(process.env.ROADSTER_LOCALE_DIAGNOSTICS)await writeFile('/tmp/roadster-locale-diagnostics.json',JSON.stringify(values.english,null,2));
+assert.equal(nodes.length,0,'Untranslated application text: '+JSON.stringify(nodes.slice(0,18)));
+$('language-select').value='zh';$('language-select').dispatchEvent(new window.Event('change',{bubbles:true}));await new Promise(resolve=>setImmediate(resolve));assert.equal(document.documentElement.lang,'zh-CN');assert.equal($('graphics-open-study').textContent,'运行标准数值研究');
+pass('English reaches the actual main shell and lazy research UI, persists and switches back without changing snapshots or exported history');
 
 const cannonInstances=moduleConstructionCounts.get(resolve(dist,'vendor/cannon-es.js'))||0;
 assert.equal(cannonInstances,1,'The real physics and snapshot modules must share one Cannon module instance');
@@ -276,7 +298,7 @@ const report={status:'passed',generatedAt:new Date().toISOString(),checks,values
   environment:{node:process.version,jsdom:'26.1.0',moduleEvaluation:'Actual app.js / app-shell.js / main.js and its non-visual dependency graph in vm.SourceTextModule',physics:'Actual RoadsterSim, no rigid-body/control mock',context:'JSDOM document only'},
   excluded:{browser:false,webgl:false,gpuTiming:false,pixelVisualQA:false,independentWorkerExecution:false,actualSolverThroughWorkerFacade:true},
   mocks:[...mocks.keys()],limits:'DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.'};
-await writeFile(resolve(root,noGraphics?'qa/no-webgl-research-3.8.json':'qa/same-page-ui-3.8.json'),JSON.stringify(report,null,2)+'\n');
+await writeFile(resolve(root,noGraphics?'qa/no-webgl-research-3.9.json':'qa/same-page-ui-3.9.json'),JSON.stringify(report,null,2)+'\n');
 dom.window.close();console.log(`Same-page UI: ${checks.length} DOM integration groups passed; no browser or visual acceptance performed.`);
 
 dom.window.close();

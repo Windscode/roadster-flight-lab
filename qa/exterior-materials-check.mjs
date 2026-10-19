@@ -8,6 +8,7 @@ import {buildStreetLife,STREET_COLLIDERS} from '../dist/street-life.js';
 import {createCityExteriorMaterials,EXTERIOR_SURFACES,MINERAL_SCAN_MEAN} from '../dist/city-exterior-materials.js';
 import {countVisibleGeometry} from '../dist/city-render-budget.js';
 import {RoadsterSim} from '../dist/physics.js';
+import {partitionCityGeometry} from './city-geometry-scope.mjs';
 import {canonicalGeometryJSON} from '../dist/irradiance-math.js';
 
 // This is a geometry/material contract audit, not browser visual or FPS evidence.
@@ -21,9 +22,10 @@ await Promise.all([architecture.ready,street.ready]);
 const geometry=new RoadsterSim().getWorldGeometry(),canonicalSHA256=hash(canonicalGeometryJSON(geometry));
 assert.equal(hash(JSON.stringify(STREET_COLLIDERS)),base.colliderSHA256);
 assert.equal(hash(JSON.stringify(URBAN_MATERIAL_PALETTE)),base.paletteSHA256);
-assert.equal(canonicalSHA256,protocol.geometry.canonicalSHA256);
-record('Static collision world, 108 street proxies and shared average wall palette retain their 3.5 identities',{
-  canonicalSHA256,streetColliderSHA256:base.colliderSHA256,paletteSHA256:base.paletteSHA256,quantization:1e-9,
+const geometryScope=partitionCityGeometry(geometry),retainedGeometryCanonicalSHA256=hash(canonicalGeometryJSON(geometryScope.legacy));
+assert.equal(retainedGeometryCanonicalSHA256,protocol.geometry.canonicalSHA256);
+record('Original city subset, 108 street proxies and shared average wall palette retain their 3.5 identities; new shared roadside entities are explicit',{
+  canonicalSHA256,retainedGeometryCanonicalSHA256,newSharedEntities:geometryScope.added.length,streetColliderSHA256:base.colliderSHA256,paletteSHA256:base.paletteSHA256,quantization:1e-9,
 });
 
 let metricInstances=0,finiteInstances=0,metricMaxError=0;const matrix=new THREE.Matrix4(),materials=new Map();
@@ -149,6 +151,6 @@ record('Authored exterior upgrades reduce allocated geometry and all 15 matched-
 
 const sourceFiles=['qa/exterior-materials-check.mjs','qa/exterior-baseline-3.5.json','dist/city-exterior-materials.js','dist/urban-architecture.js','dist/street-life.js','dist/city-data.js','dist/city-plan.js','dist/city-render-budget.js'];
 const sourceSHA256=Object.fromEntries(sourceFiles.map(file=>[file,hash(readFileSync(new URL('../'+file,import.meta.url)))]));
-const result={status:'passed',version:'3.8',createdAt:new Date().toISOString(),method:'Real Three geometry, matrices, frusta, material callbacks and independently checked seam coverage; no browser/GPU context.',sourceSHA256,baselineSourceCommit:base.sourceCommit,checks,architecture:routeArchitecture.stats,street:routeStreet.stats,views,coldStart,baselineViews:base.views,limits:['Counts cover architecture and static street furnishings only, excluding vehicle, environment extras and canvas text.','Aerial and botanical views may submit modestly more triangles after selected facade elements were strengthened; every matched view submits fewer draws and combined allocated geometry is lower.','Solid building envelopes still block shallow visual shop recesses; the simulation does not model enterable interiors.','Texture image average measurements preserve the existing envelope diffuse model approximately; no detailed interior or new per-facade bounce bake is claimed.','This audit does not establish actual target-device frame rate, rendered appearance, GPU numeric precision or arbitrary mirrored/DoubleSide normal-map behavior.']};
-writeFileSync(new URL('./exterior-materials-3.8.json',import.meta.url),JSON.stringify(result,null,2)+'\n');routeArchitecture.dispose();routeStreet.dispose();
+const result={status:'passed',version:'3.9',createdAt:new Date().toISOString(),method:'Real Three geometry, matrices, frusta, material callbacks and independently checked seam coverage; no browser/GPU context.',sourceSHA256,baselineSourceCommit:base.sourceCommit,checks,architecture:routeArchitecture.stats,street:routeStreet.stats,views,coldStart,baselineViews:base.views,limits:['Counts cover architecture and static street furnishings only, excluding vehicle, environment extras and canvas text.','Aerial and botanical views may submit modestly more triangles after selected facade elements were strengthened; every matched view submits fewer draws and combined allocated geometry is lower.','Solid building envelopes still block shallow visual shop recesses; the simulation does not model enterable interiors.','Texture image average measurements preserve the existing envelope diffuse model approximately; no detailed interior or new per-facade bounce bake is claimed.','This audit does not establish actual target-device frame rate, rendered appearance, GPU numeric precision or arbitrary mirrored/DoubleSide normal-map behavior.']};
+writeFileSync(new URL('./exterior-materials-3.9.json',import.meta.url),JSON.stringify(result,null,2)+'\n');routeArchitecture.dispose();routeStreet.dispose();
 console.log(JSON.stringify({status:'passed',checks:checks.length,allocatedTrianglesBefore:oldTriangles,allocatedTrianglesAfter:newTriangles,balanced:views.balanced},null,2));

@@ -1,3 +1,4 @@
+import {createRouteCorridorPlan} from './city-corridor-plan.js';
 // Vesper 3.4: original city planning data, metres / Y up / [x,y,z].
 // The map, authored scene and collision world consume these records. These are
 // project dimensions, not measurements or extracted layouts from another game.
@@ -123,6 +124,8 @@ for(let i=0;i<24;i++){
 }
 box('forum-back-screen',[.8,11.8,51],[553,14.42,365],'aged-copper');
 for(const z of [340,390])box('forum-side-screen-'+z,[30,7,.30],[538,12.02,z],'aged-copper');
+export const CITY_ROUTE_CORRIDOR=createRouteCorridorPlan(CITY_STREETS);
+solids.push(...CITY_ROUTE_CORRIDOR.solids);
 export const CITY_PLAN_SOLIDS=solids;
 
 // Additional building solids: a factory roof has repeated sloped daylight

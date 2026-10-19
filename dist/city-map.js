@@ -1,3 +1,4 @@
+import {t as tr,onLanguageChange} from './i18n.js';
 import {CITY_BENCHMARK_ROUTE} from './visual-presets.js';
 import {CITY_PLAN,CITY_DISTRICTS,CITY_STREETS,CITY_NODES,CITY_WALKS} from './city-plan.js';
 import {CITY_BUILDINGS,CITY_ROUTES,CITY_LOCATIONS} from './city-data.js';
@@ -13,7 +14,7 @@ export function createCityMap(onWaypoint=()=>{}){
   for(const walk of CITY_WALKS)for(const points of walk.paths)line(points,walk.width,walk.elevation?'#c4aacc':'#88ad82',[3,4]);
   for(const r of CITY_ROUTES)line(r.points,r.width,'#d9b37c',[9,5]);
   const benchmarkSelected=target?.id===CITY_BENCHMARK_ROUTE.id;line(CITY_BENCHMARK_ROUTE.points,benchmarkSelected?4.5:2.4,benchmarkSelected?'#d8efc0':'#9abaa488',[5,4]);
-  g.font='17px Microsoft YaHei, sans-serif';g.textAlign='center';for(const d of CITY_DISTRICTS){g.fillStyle=d.color;g.fillText(d.label,px((d.bounds[0]+d.bounds[2])/2),pz(d.bounds[3])+23);}
+  g.font='17px Microsoft YaHei, sans-serif';g.textAlign='center';for(const d of CITY_DISTRICTS){g.fillStyle=d.color;g.fillText(tr(d.label),px((d.bounds[0]+d.bounds[2])/2),pz(d.bounds[3])+23);}
   for(const loc of CITY_LOCATIONS){g.fillStyle='#a6c5a3';g.beginPath();g.arc(px(loc.position[0]),pz(loc.position[2]),5,0,Math.PI*2);g.fill();}
   CITY_NODES.forEach((n,i)=>{const x=px(n.position[0]),y=pz(n.position[2]);g.fillStyle=target?.id===n.id?'#e5edbd':'#c1d8e0';g.beginPath();g.arc(x,y,target?.id===n.id?12:10,0,Math.PI*2);g.fill();g.fillStyle='#1c3036';g.font='bold 13px Consolas';g.fillText(i+1,x,y+4);});
   if(state){const x=px(state.position.x),y=pz(state.position.z);if(markedTarget){g.setLineDash([4,6]);g.strokeStyle='#bfe3d8';g.lineWidth=1.5;g.beginPath();g.moveTo(x,y);g.lineTo(px(markedTarget.position[0]),pz(markedTarget.position[2]));g.stroke();g.setLineDash([]);}g.save();g.translate(x,y);g.rotate(-state.headingDeg*Math.PI/180);g.fillStyle='#f1f8e5';g.beginPath();g.moveTo(0,-11);g.lineTo(-7,8);g.lineTo(0,4);g.lineTo(7,8);g.closePath();g.fill();g.restore();}
@@ -23,5 +24,6 @@ export function createCityMap(onWaypoint=()=>{}){
  CITY_NODES.forEach((n,i)=>{const b=document.createElement('button');b.className='city-node-button';b.textContent=(i+1)+' / '+n.label;b.onclick=()=>select(n);buttons.append(b);});
  canvas.onclick=e=>{const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width*w,y=(e.clientY-rect.top)/rect.height*h,node=CITY_NODES.find(n=>Math.hypot(px(n.position[0])-x,pz(n.position[2])-y)<25);if(node)select(node);};
  const routeButton=document.createElement('button');routeButton.className='city-node-button';routeButton.textContent='★ / 织桥 · 南岸环线 · 约2–3分钟';routeButton.onclick=()=>select({id:CITY_BENCHMARK_ROUTE.id,label:CITY_BENCHMARK_ROUTE.name,position:CITY_BENCHMARK_ROUTE.points[0],description:CITY_BENCHMARK_ROUTE.instructions.join(' ')});buttons.append(routeButton);
+ onLanguageChange(()=>draw(state));
  select(CITY_NODES[0]);return{update:draw,get waypoint(){return markedTarget;}};
 }

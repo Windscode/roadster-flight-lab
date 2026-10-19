@@ -5,7 +5,8 @@ import {RoadsterSim}from'../dist/physics.js';
 import {nozzleExhaustVelocity}from'../dist/vehicle-models.js';
 import {runExperiment}from'../dist/experiment-worker.js';
 const dt=1/120,checks=[],values={};const pass=s=>{checks.push(s);console.log('PASS: '+s);};
-const flat=(params={})=>{const s=new RoadsterSim({supplyMode:'finite',...params});for(const b of [...s.world.bodies])if(b!==s.body&&b.userData?.id!=='ground')s.world.removeBody(b);s.body.position.set(0,.62,-350);for(let k=0;k<240;k++)s.step(dt);return s;};
+// Historical 0.9 g / 1.5 m/s input fixture; unchanged assertions, new defaults tested separately.
+const flat=(params={})=>{const s=new RoadsterSim({supplyMode:'finite',steeringAccelG:.9,climbRateMps:1.5,...params});for(const b of [...s.world.bodies])if(b!==s.body&&b.userData?.id!=='ground')s.world.removeBody(b);s.body.position.set(0,.62,-350);for(let k=0;k<240;k++)s.step(dt);return s;};
 values.turns=[];
 for(const speed of[60,100,160]){const s=flat();s.body.velocity.z=speed/3.6;s.wheelStates.forEach(w=>w.angularVelocityRadS=s.body.velocity.z/s.params.wheelRadius);let beta=0,steer=0;for(let k=0;k<42;k++){const t=s.step(dt,{steer:1});beta=Math.max(beta,Math.abs(t.bodySlipDeg));steer=Math.max(steer,Math.abs(t.steeringCentreDeg));assert.ok(t.wheelStates.every(w=>w.gripUse<=1+1e-10));}for(let k=0;k<360;k++)s.step(dt);assert.ok(beta<1&&Math.abs(s.telemetry().bodySlipDeg)<.05);values.turns.push({speedKmh:speed,peakBetaDeg:beta,peakSteerDeg:steer,settledBetaDeg:s.telemetry().bodySlipDeg});}
 pass('60–160 km/h brief keyboard turns remain below one degree sideslip and settle without resetting pose or velocity');
@@ -15,7 +16,9 @@ pass('60–160 km/h brief keyboard turns remain below one degree sideslip and se
 }
 pass('Ackermann inner and outer angles differ; disabling assistance permits real saturation while every combined tire force remains friction-bounded');
 {
- const assisted=flat(),raw=flat();raw.setMode('manual');for(let k=0;k<120;k++){assisted.step(dt,{lift:1});raw.step(dt,{lift:1});}const a=assisted.telemetry(),b=raw.telemetry();assert.equal(a.mode,'hover');assert.ok(a.verticalSpeed<1.6&&a.heightWorld<1.6);assert.ok(b.verticalSpeed>20&&b.heightWorld>10);values.eKey={assisted:{height:a.heightWorld,vertical:a.verticalSpeed},raw:{height:b.heightWorld,vertical:b.verticalSpeed}};
+ // Direct speed reference intentionally removes the former altitude-target lag.
+ // Height cannot exceed initial height plus the configured speed over one second.
+ const assisted=flat(),raw=flat(),initialHeight=assisted.body.position.y;raw.setMode('manual');for(let k=0;k<120;k++){assisted.step(dt,{lift:1});raw.step(dt,{lift:1});}const a=assisted.telemetry(),b=raw.telemetry();assert.equal(a.mode,'hover');assert.ok(a.verticalSpeed<1.6&&a.heightWorld<=initialHeight+assisted.params.climbRateMps*1);assert.ok(b.verticalSpeed>20&&b.heightWorld>10);values.eKey={assisted:{height:a.heightWorld,vertical:a.verticalSpeed},raw:{height:b.heightWorld,vertical:b.verticalSpeed}};
  for(let k=0;k<90;k++)assisted.step(dt);assert.ok(Math.abs(assisted.body.velocity.y)<.3);
 }
 pass('Normal E enters a bounded climb-rate controller, release brakes the rise; the separate raw research API retains full physical thrust');
@@ -47,7 +50,7 @@ pass('Temperature-pressure exhaust stays below the ideal energy limit, cools, an
 pass('Sufficient finite ground rolls land softly and airborne rolls recover their original height without hull impacts; gas and attitude prechecks reject infeasible launches atomically');
 {
  const a=runExperiment({kind:'steer',speedKmh:80,angleDeg:2}),b=runExperiment({kind:'steer',speedKmh:80,angleDeg:2});assert.deepEqual(a.metrics,b.metrics);assert.equal(a.rows.length,80);assert.equal(a.appliedParams.steeringAssist,false);assert.ok(a.metrics.maxBetaDeg<5);assert.ok(a.rows.every((r,i)=>Math.abs(r.time-(i+1)/20)<1e-8));assert.ok(a.assumptions.length>=3);
- const rise=runExperiment({kind:'rise'});assert.ok(rise.metrics.maxVerticalMps<1.7);values.experiments={steer:a.metrics,rise:rise.metrics};
+ const rise=runExperiment({kind:'rise',params:{climbRateMps:1.5}});assert.ok(rise.metrics.maxVerticalMps<1.7);values.experiments={steer:a.metrics,rise:rise.metrics};
 }
 pass('Independent research fixtures are deterministic, retain applied parameters and assumptions, and record uniform 20 Hz source data');
 {
@@ -55,4 +58,4 @@ pass('Independent research fixtures are deterministic, retain applied parameters
  for(const t of m.tracks){const data=readFileSync('dist/'+t.src);assert.equal(data.length,t.bytes);assert.equal(createHash('sha256').update(data).digest('hex'),t.sha256);assert.ok(['CC-BY-4.0','CC0-1.0'].includes(t.license)&&t.attribution&&t.licenseEvidenceUrl);}
 }
 pass('The local radio includes instrumental, English and Chinese recordings with explicit attribution licenses and matching asset hashes');
-writeFileSync('qa/research-dynamics-3.8.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');
+writeFileSync('qa/research-dynamics-3.9.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');

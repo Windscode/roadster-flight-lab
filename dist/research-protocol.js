@@ -21,7 +21,7 @@ export const RESEARCH_PARAMETERS={
  liftNozzleMax:{label:'单主喷口额定推力',unit:'N',min:5000,max:30000,step:500,domain:'飞行'},
  nozzleVelocityEfficiency:{label:'喷管速度效率',unit:'',min:.5,max:1,step:.01,domain:'气源'},
  valveRiseTime:{label:'阀门开启时间常数',unit:'s',min:.005,max:.2,step:.005,domain:'飞行'},
- climbRateMps:{label:'普通升降率上限',unit:'m/s',min:.3,max:3,step:.1,domain:'飞行'},
+ climbRateMps:{label:'E/Q 目标垂直速度',unit:'m/s',min:.5,max:8,step:.1,domain:'飞行'},
 };
 const enums={roadSurface:['dry','wet','split'],wingMode:['fixed','active'],supplyMode:['finite','bench'],gasModel:['adiabatic','isothermal'],nozzleModel:['isentropic','constant']};
 export function validateResearchParams(params={}){

@@ -26,12 +26,12 @@ export function enrichValidationReport(report){
   report.model='Roadster Flight Lab '+MODEL_VERSION;
   report.sourceIdentity={modelBuildId:MODEL_BUILD_ID,sourceHashes:MODEL_SOURCE_HASHES};
   report.browserVisualQA={status:'not_performed',modelVersion:MODEL_VERSION,
-    reason:'No browser, GPU frame-time or visual acceptance was performed for this release. Numerical, geometric, static integration and offline shader checks have separate scopes.',
+    reason:'No 3D pixels, human driving feel or actual GPU frame-time acceptance was performed for this release. The available cloud browser reports GL_VENDOR/GL_RENDERER Disabled; this is an environment limit, not evidence of a website render failure. Numerical, geometric, DOM and offline shader evidence has separate scope.',
     historicalReports:['qa/browser.json','qa/city-3.4-browser-assets.json'],
     historyScope:'Older-version reports are preserved as history and do not validate this release.'};
   report.offlineShaderValidation={scope:'Offline syntax and stage-interface checks, not WebGL driver, framebuffer, rendered-pixel or FPS validation.',
-    postProcessing:shaderEvidence('qa/render-shader-validation-3.8.json'),
-    cityLighting:shaderEvidence('qa/render-shaders-3.8.json')};
+    postProcessing:shaderEvidence('qa/render-shader-validation-3.9.json'),
+    cityLighting:shaderEvidence('qa/city-shaders-3.9.json')};
   function domEvidence(file){
     if(!existsSync(new URL(file,root)))return{report:file,status:'not_performed',checks:[]};
     const evidence=read(file),hashes=Object.entries(evidence.sourceHashes||{});
@@ -39,7 +39,7 @@ export function enrichValidationReport(report){
     const groups=Array.isArray(evidence.checks)?evidence.checks:evidence.tests||[],passed=evidence.status==='passed'||evidence.pass===true||groups.length>0&&groups.every(group=>group.status==='PASS');
     return{report:file,sourceHashesCurrent:current,status:!current?'outdated_source':passed?'passed':'failed',scope:evidence.scope||evidence.limits,checks:groups.map(group=>typeof group==='string'?group:group.name)};
   }
-  const mainPage=domEvidence('qa/same-page-ui-3.8.json'),advancedStudy=domEvidence('qa/research-panel-dom-3.8.json'),liveExperiments=domEvidence('qa/experiment-console-dom-3.8.json'),withoutWebGL=domEvidence('qa/no-webgl-research-3.8.json');
+  const mainPage=domEvidence('qa/same-page-ui-3.9.json'),advancedStudy=domEvidence('qa/research-panel-dom-3.9.json'),liveExperiments=domEvidence('qa/experiment-console-dom-3.9.json'),withoutWebGL=domEvidence('qa/no-webgl-research-3.9.json');
   report.domInteractionQA={status:[mainPage,advancedStudy,liveExperiments,withoutWebGL].every(e=>e.status==='passed')?'passed':'incomplete_or_stale',
     scope:'DOM events with actual application/controller code and explicit graphics/Worker facades. No actual browser layout, WebGL execution or FPS validation.',
     acceptanceGroups:[mainPage,advancedStudy,liveExperiments,withoutWebGL].reduce((sum,e)=>sum+e.checks.length,0),mainPage,advancedStudy,liveExperiments,withoutWebGL};

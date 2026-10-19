@@ -105,16 +105,21 @@ await test('Weather preset switches actual GI, physical lights and water without
     assert.equal(environment.stats.indirectLighting.enabled,false);assert.equal(environment.getPresentation().wetness,1);assert.equal(environment.exposureAt(camera.position),CITY_WEATHER_PRESETS['wet-night'].exposure);
     assert.equal(environment.stats.renderBudget.practicalLights.enabled,true);
     environment.setWeatherPreset('clear-day');assert.equal(environment.stats.indirectLighting.enabled,true);assert.equal(environment.getPresentation().wetness,0);assert.equal(environment.stats.renderBudget.practicalLights.enabled,false);assert.equal(environment.root.children.length,children);assert.equal(environment.setWeatherPreset('unsupported'),false);
-    evidence.weather={dayGI:true,nightDaylightGI:false,nightExposure:1.08,cityGeometryRetained:true,nightEnvironmentPixels:'Not tested: Node run intentionally has no document or GPU.'};
+    evidence.weather={dayGI:true,nightDaylightGI:false,nightExposure:CITY_WEATHER_PRESETS['wet-night'].exposure,cityGeometryRetained:true,nightEnvironmentPixels:'Not tested: Node run intentionally has no document or GPU.'};
   }finally{globalThis.fetch=oldFetch;}
 });
-await test('Inspection rig retains fixed optical settings and an attributable unmodified 3.7 visual baseline',()=>{
-  assert.equal(VEHICLE_INSPECTION_RIG.focalLengthMm,50);assert.equal(VEHICLE_INSPECTION_RIG.cameras.length,6);
-  const baseline=readFileSync(new URL('../dist/vehicle-reference-3.7.js',import.meta.url),'utf8');assert.ok(baseline.includes('2411ede79f7d7d7501017dbb7f5346a50de2714a'));assert.ok(baseline.includes("'./vehicle-reference-layout-3.7.js'"));
-  assert.ok(readFileSync(new URL('../dist/vehicle-inspection.js',import.meta.url),'utf8').includes("import('./vehicle-reference-3.7.js')"));
-  evidence.inspection={rig:VEHICLE_INSPECTION_RIG.id,focalLengthMm:50,cameras:VEHICLE_INSPECTION_RIG.cameras.map(c=>c.id),baseline:'3.7 mesh/material under current renderer and lighting; not a complete old pipeline capture',actualScreenshots:'Not captured in this graphics-disabled environment'};
+await test('Inspection retains six calibrated views, adds two close-ups and freezes the actual 3.8 model source',()=>{
+  assert.equal(VEHICLE_INSPECTION_RIG.focalLengthMm,50);
+  const ids=VEHICLE_INSPECTION_RIG.cameras.map(c=>c.id);
+  for(const id of ['front','rear','side','front-quarter','rear-quarter','top','front-lamp','rear-wheel'])assert.ok(ids.includes(id),'Missing view '+id);
+  const baseline=readFileSync(new URL('../dist/vehicle-reference-3.8.js',import.meta.url),'utf8');
+  const original=baseline.replace("'./vehicle-reference-layout-3.8.js'","'./vehicle-layout.js'");
+  assert.equal(createHash('sha256').update(original).digest('hex'),'3f532f879f1a86af187a7f89a8f860de61175bdef27d78a783e2ba7fb62763f7');
+  assert.equal(createHash('sha256').update(readFileSync(new URL('../dist/vehicle-reference-layout-3.8.js',import.meta.url))).digest('hex'),'d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec');
+  const inspection=readFileSync(new URL('../dist/vehicle-inspection.js',import.meta.url),'utf8');assert.ok(inspection.includes("import('./vehicle-reference-3.8.js')"));assert.ok(inspection.includes("$('capture-pair').onclick"));
+  evidence.inspection={rig:VEHICLE_INSPECTION_RIG.id,focalLengthMm:50,cameras:ids,baseline:'Original 3.8 mesh/material, verified source SHA-256 after import rewiring, under current renderer and lighting; not a complete old pipeline capture',actualScreenshots:'Not captured in this graphics-disabled environment'};
 });
-const paths=['dist/visual-presets.js','dist/vehicle.js','dist/vehicle-inspection.js','dist/vehicle-inspection.html','dist/vehicle-inspection.css','dist/vehicle-reference-3.7.js','dist/vehicle-reference-layout-3.7.js','dist/city-environment.js','dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/road-surface-material.js','dist/indirect-lighting.js','dist/urban-architecture.js','dist/city-map.js','qa/visual-upgrade-check.mjs'];
+const paths=['dist/visual-presets.js','dist/vehicle.js','dist/vehicle-inspection.js','dist/vehicle-inspection.html','dist/vehicle-inspection.css','dist/vehicle-reference-3.8.js','dist/vehicle-reference-layout-3.8.js','dist/city-corridor-plan.js','dist/pavement-surface-material.js','dist/i18n-visual-en.js','dist/city-environment.js','dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/road-surface-material.js','dist/indirect-lighting.js','dist/urban-architecture.js','dist/city-map.js','qa/visual-upgrade-check.mjs'];
 const sourceHashes=Object.fromEntries(paths.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')]));
 const result={format:'roadster-visual-structure-acceptance-1',status:'passed',createdAt:new Date().toISOString(),checks,evidence,sourceHashes,limits:['Geometry, API state and renderer-contract tests only. No real WebGL frame, browser graphics driver, pixel/shadow-leak inspection, GPU performance or real driving experience is certified.','The reflection renderer is exercised through a state-recording stub; its real framebuffer needs target-device validation.','A 50 mm rig makes future comparison repeatable. Official image focal lengths and dimensions are not published.','Additional street facade surfaces remain within the existing conservative building envelopes; no buildings or city routes were removed.']};
-writeFileSync(new URL('./visual-upgrade-3.8.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:result.status,checks:checks.length,evidence},null,2));car.dispose();
+writeFileSync(new URL('./visual-upgrade-3.9.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:result.status,checks:checks.length,evidence},null,2));car.dispose();

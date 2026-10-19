@@ -9,7 +9,7 @@
  * Building: {id,x,z,w,d,height,style,accent,seed,tier,hero,baseY?}.
  */
 import {buildingMassing,buildingStoreys} from './city-data.js';
-import {buildingExtras} from './city-plan.js';
+import {buildingExtras,CITY_STREETS} from './city-plan.js';
 import {architectureDetailLevel,createCityVisibility} from './city-render-budget.js';
 import {createCityExteriorMaterials} from './city-exterior-materials.js';
 
@@ -23,11 +23,25 @@ export const URBAN_MATERIAL_PALETTE=Object.freeze([
   {wall:0x919997,trim:0x3d4b50,paint:0x5b6f74,glass:0x293d4a},
 ].map(p=>Object.freeze(p)));
 
+// One shared street plan chooses which facade actually addresses a road.
+// No separate art-only road width or invented building parcel is introduced.
+export function routeFacingFacade(b,side){
+  if((b.baseY||0)!==0||b.z> -95||b.z< -480||b.x< -320||b.x>210)return null;
+  const yaw=side*Math.PI/2,n=[Math.sin(yaw),Math.cos(yaw)],face=[b.x+n[0]*b.w/2,b.z+n[1]*b.d/2];
+  let best=null;
+  for(const street of CITY_STREETS.filter(s=>['weave-main','canal-link','crosstown-link','foundry-main'].includes(s.id))){
+    const a=street.points[0],c=street.points[1],dx=c[0]-a[0],dz=c[2]-a[2],u=Math.max(0,Math.min(1,((face[0]-a[0])*dx+(face[1]-a[2])*dz)/(dx*dx+dz*dz))),v=[a[0]+dx*u-face[0],a[2]+dz*u-face[1]],distance=Math.hypot(...v);
+    if(distance>75||distance<1|| (v[0]*n[0]+v[1]*n[1])/distance<.70)continue;
+    if(!best||distance<best.distance)best={street:street.id,distance,family:street.id==='weave-main'?'market':street.id==='canal-link'?'canal':street.id==='foundry-main'?'industrial':'civic'};
+  }
+  return best;
+}
+
 export function buildUrbanArchitecture(THREE,root,buildings) {
-  const group=new THREE.Group();group.name='Urban architecture / original modular facades';root.add(group);
+  const group=new THREE.Group();group.name='Urban architecture / street-facing civic, residential and working facades';root.add(group);
   const lightAnchors=[],batches=new Map(),geometries=[],materials=[],textures=[],visibility=createCityVisibility(THREE),surfaces=createCityExteriorMaterials(THREE);
   const stats={buildings:0,heroBuildings:0,shopfronts:0,recessedWindows:0,balconies:0,mechanicalUnits:0,
-    instances:0,drawBatches:0,triangles:0,textureCount:0,sectorSizeM:160,sectorCount:0,lightAnchors:0,massingTiers:0,setbackTerraces:0,structuralBraces:0,rotatedTowers:0,industrialHalls:0,sawtoothRoofs:0,civicBuildings:0,entrancePortals:0,continuousPlinths:0,shutterPanels:0,curatedWeaveFrontages:0,serviceBays:0,interiorAtlases:0,surfaces:surfaces.stats,renderBudget:visibility.stats};
+    instances:0,drawBatches:0,triangles:0,textureCount:0,sectorSizeM:160,sectorCount:0,lightAnchors:0,massingTiers:0,setbackTerraces:0,structuralBraces:0,rotatedTowers:0,industrialHalls:0,sawtoothRoofs:0,civicBuildings:0,entrancePortals:0,continuousPlinths:0,shutterPanels:0,curatedWeaveFrontages:0,routeFacingFrontages:0,facadePortals:0,backlitWindowPanels:0,serviceBays:0,interiorAtlases:0,surfaces:surfaces.stats,renderBudget:visibility.stats};
   const transform=new THREE.Object3D(),colourCache=new Map(),white=new THREE.Color(0xffffff);
   const unitBox=new THREE.BoxGeometry(1,1,1),unitPlane=new THREE.PlaneGeometry(1,1),
     unitCylinder=new THREE.CylinderGeometry(.5,.5,1,12),unitCircle=new THREE.CircleGeometry(.5,16);
@@ -91,12 +105,14 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     ceramic:material('painted enamel and tile',{roughness:.59,metalness:.08}),
     metal:material('weathered steel',{roughness:.7,metalness:.58}),
     edges:material('anodised frame',{roughness:.37,metalness:.74}),
-    glass:material('sealed exterior glazing',{roughness:.13,metalness:0,envMapIntensity:1.05}),
+    glass:material('sealed exterior glazing',{roughness:.16,metalness:0,envMapIntensity:1.12}),
+    litGlass:material('diffused exterior window pane',{roughness:.20,metalness:0,emissive:0xffd3a0,emissiveIntensity:.09,envMapIntensity:1.0}),
     shutter:material('rolled metal shutter',{roughness:.54,metalness:.72}),
     signs:material('original painted sign atlas',{map:signAtlas,emissiveMap:signAtlas,emissive:signAtlas?0xffffff:0x000000,emissiveIntensity:.18,roughness:.6,metalness:.12}),
     lamp:material('small practical light',{color:0xffdcb1,emissive:0xffc994,emissiveIntensity:2.1,roughness:.35}),
     accent:material('restrained signage accent',{emissive:0xffffff,emissiveIntensity:1.3,roughness:.4,metalness:.15}),
   };
+  mat.litGlass.userData.windowBacklight=true;
   mat.accent.onBeforeCompile=shader=>{
     shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
       #if defined(USE_COLOR) || defined(USE_INSTANCING_COLOR)
@@ -104,7 +120,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       #endif`);
   };
   mat.accent.customProgramCacheKey=()=> 'urban-practical-instance-colour-v1';
-  for(const [key,kind]of Object.entries({concrete:'concrete',darkConcrete:'concrete',ceramic:'enamel',metal:'metal',edges:'frame',glass:'glass',shutter:'shutter'}))surfaces.attach(mat[key],kind);
+  for(const [key,kind]of Object.entries({concrete:'concrete',darkConcrete:'concrete',ceramic:'enamel',metal:'metal',edges:'frame',glass:'glass',litGlass:'glass',shutter:'shutter'}))surfaces.attach(mat[key],kind);
   // One atlas material per sector, with per-instance UV rects, rather than one
   // draw call for every sign or one material for every illuminated window.
   for(const m of [mat.signs])if(m.map){
@@ -126,7 +142,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   let sector='';
   function add(kind,geometry,size,position,rotation=[0,0,0],tint=white,variation=1,tile=-1){
     if(size.some(n=>!Number.isFinite(n)||n<=0))return;
-    const level=kind==='shutter'?'facade':architectureDetailLevel(kind,geometry,size),cellSize=level==='detail'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
+    const level=kind==='shutter'||kind==='litGlass'?'facade':architectureDetailLevel(kind,geometry,size),cellSize=level==='detail'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
     const key=cell+'|'+kind+'|'+geometry+'|'+level;
     let batch=batches.get(key);if(!batch){batch={sector:cell,kind,geometry,level,instances:[]};batches.set(key,batch);}
     transform.position.set(...position);transform.rotation.set(...rotation,'YXZ');transform.scale.set(...size);transform.updateMatrix();
@@ -198,7 +214,25 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     localBox('darkConcrete',[b.w-2.8,shopH,b.d-2.8],0,shopH/2,0,p.trim,.67);
     localBox('concrete',[b.w-.06,.22,b.d-.06],0,.20,0,p.wall,.75);
     for(let side=0;side<4;side++){
-      const f=face(side*Math.PI/2,b.w,b.d),weaveFront=weaveStreet&&side===(b.x<-200?1:3),count=Math.max(1,Math.floor((f.span-.8)/(weaveFront?(weaveBand==='arrival'?8.0:6.4):b.archetype==='civic'?10.5:hero?5.3:8.8))),bay=(f.span-.8)/count;
+      const frontage=routeFacingFacade(b,side),f=face(side*Math.PI/2,b.w,b.d),weaveFront=weaveStreet&&side===(b.x<-200?1:3),count=Math.max(1,Math.floor((f.span-.8)/(weaveFront?(weaveBand==='arrival'?8.0:6.4):b.archetype==='civic'?10.5:hero?5.3:8.8))),bay=(f.span-.8)/count;
+      if(frontage){
+        stats.routeFacingFrontages++;
+        const ceramic=frontage.family==='canal'?0x8d705d:frontage.family==='industrial'?0x5d7777:frontage.family==='civic'?0xb2a88e:weaveBand==='arrival'?0x809b93:weaveBand==='exchange'?0xa47d61:0x748b94;
+        // A substantial two-storey entrance order replaces the same narrow
+        // grid at every street face. All returns stay inside the massing box.
+        f.put('ceramic',[f.span-.12,1.40,.20],0,1.04,.35,ceramic,.96);
+        f.put('concrete',[f.span-.10,.34,.46],0,shopH+.08,.24,p.wall,plasterShade*.95);
+        for(const end of [-1,1]){
+          f.put('concrete',[.78,shopH+.62,.68],end*(f.span/2-.57),(shopH+.62)/2,.15,p.wall,plasterShade*1.04);
+          f.put('metal',[.045,shopH-.40,.09],end*(f.span/2-.84),shopH/2,.405,p.trim,.82);
+        }
+        const portal=Math.max(1.6,Math.min(3.3,bay-.52)),portalX=-f.span/2+.4+(.5+Math.floor(count/2))*bay;
+        for(const end of [-1,1])f.put('concrete',[.24,3.18,.64],portalX+end*(portal/2+.11),1.81,.14,p.wall,plasterShade*.93);
+        f.put('concrete',[portal+.46,.31,.64],portalX,3.37,.14,p.wall,plasterShade*.95);stats.facadePortals++;
+        f.put('metal',[portal+.14,.12,.24],portalX,3.11,.28,p.trim,.90);
+        f.put('lamp',[portal-.12,.035,.13],portalX,3.035,.39,0xffffff,.85);
+        lightAnchors.push({position:f.point(portalX,3.02,.68),target:f.point(portalX,.12,3.3),color:frontage.family==='industrial'?0xc9e0e5:0xf0c798,intensity:180,range:10,practical:true,role:'door',building:b.id});
+      }
       if(weaveFront){
         stats.curatedWeaveFrontages++;
         // Coherent frontage datum, deep tiled entrance aprons and complete
@@ -272,11 +306,17 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       frame=tier;widths.push([w,d]);
       localBox('darkConcrete',[w-2.8,floorH-.13,d-2.8],0,centre,0,p.trim,.69);
       localBox('concrete',[w-.06,.19,d-.06],0,bottom+.03,0,p.wall,plasterShade*.96);
-      const detailed=floor<(b.archetype==='civic'?4:hero?Math.min(floorCount,8):detail?2:0);
+      const baseDetailed=floor<(b.archetype==='civic'?4:hero?Math.min(floorCount,8):detail?2:0);
       for(let side=0;side<4;side++){
-        const f=face(side*Math.PI/2,w,d),count=Math.max(1,Math.floor((f.span-.65)/(b.style===4?4.4:3.35))),bay=(f.span-.65)/count;
+        const frontage=routeFacingFacade(b,side),detailed=baseDetailed||!!frontage&&floor<5,f=face(side*Math.PI/2,w,d),count=Math.max(1,Math.floor((f.span-.65)/(b.style===4?4.4:3.35))),bay=(f.span-.65)/count;
         f.put('concrete',[f.span-.02,.49,.66],0,bottom+.34,-.03,p.wall,plasterShade);
         const structuralBelt=floor%3===2;
+        if(frontage&&floor<5){
+          // Group paired storeys with alternating vertical piers rather than
+          // making every facade a uniform matrix of tiny neon rectangles.
+          for(const end of [-1,1])f.put('concrete',[.58,floorH-.05,.58],end*(f.span/2-.52),centre,.14,p.wall,plasterShade*.97);
+          if(floor===1||floor===4)f.put('ceramic',[f.span-.85,.43,.36],0,bottom+.49,.16,frontage.family==='industrial'?0x62817e:frontage.family==='canal'?0x957559:p.paint,.90);
+        }
         f.put('concrete',[f.span-.02,structuralBelt?.34:.18,structuralBelt?.66:.48],0,bottom+floorH-.20,-.02,p.wall,plasterShade);
         if(!detailed){
           f.put('glass',[f.span-.6,Math.max(.6,floorH-.92),.11],0,centre+.06,-.40,p.glass,.87+rng()*.16);
@@ -286,7 +326,9 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
         for(let j=0;j<=count;j++)f.put('concrete',[.22,floorH-.15,.64],-f.span/2+.33+j*bay,centre,-.02,p.wall,plasterShade);
         for(let j=0;j<count;j++){
           stats.recessedWindows++;const x=-f.span/2+.33+(j+.5)*bay,ww=bay-.30,wh=Math.max(.7,floorH-1.0),wy=centre+.07;
-          f.put('glass',[ww,wh,.075],x,wy,-.43,p.glass,.94+rng()*.06);
+          const lighted=!!frontage&&(j*7+floor*3+side*11+Math.floor(b.seed*41))%13<2;
+          f.put(lighted?'litGlass':'glass',[ww,wh,.075],x,wy,-.43,lighted?0x737872:p.glass,.94+rng()*.06);if(lighted)stats.backlitWindowPanels++;
+          if(frontage&&b.style%2===0)for(const cross of [-1,1])f.put('edges',[.065,wh,.14],x+cross*ww*.29,wy,-.24,p.trim,.86);
           f.put('edges',[.055,wh,.10],x,wy,-.30,p.trim,.82);
           f.put('edges',[ww,.065,.28],x,bottom+.59,-.18,p.trim,.86);
           // Occupied apartment projections are irregular but coherent in stack.

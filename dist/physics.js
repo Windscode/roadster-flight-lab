@@ -16,11 +16,11 @@ export const DEFAULT_PARAMS = Object.freeze({
   suspensionDamping: 5800, suspensionRest: 0.37, suspensionMin: .24, suspensionDroop: .04, wheelRadius: 0.37,
   maxMotorForce: 24000, motorPower: 700000, brakeForce: 42000,
   regenForce: 2600, regenPower: 60000,
-  steeringAssist:true,tractionAssist:true,absEnabled:true,wheelInertia:1.8,roadSurface:'dry',wetGripMultiplier:.52,splitMuPositionX:0,steeringAccelG:.90,cornerStiffnessFront:82000,cornerStiffnessRear:90000,tireRelaxationLength:.35,
+  steeringAssist:true,tractionAssist:true,absEnabled:true,wheelInertia:1.8,roadSurface:'dry',wetGripMultiplier:.52,splitMuPositionX:0,steeringAccelG:1.0,cornerStiffnessFront:82000,cornerStiffnessRear:90000,tireRelaxationLength:.35,
   dragArea: 0.58, airDensity: 1.225,
   wingMode:'active',wingDeployment:0,wingAreaM2:.38,wingDragCoefficient:.75,wingDownforceCoefficient:1.1,wingActuatorRate:1.5,
   tankLitres: 600, initialPressureBar: 350, regulatorBar: 50,
-  gasTemperatureK: 293.15, exhaustVelocity: 650, nozzleModel:'isentropic',nozzleVelocityEfficiency:.90,ambientPressureBar:1,climbRateMps:1.5,
+  gasTemperatureK: 293.15, exhaustVelocity: 650, nozzleModel:'isentropic',nozzleVelocityEfficiency:.90,ambientPressureBar:1,climbRateMps:3.0,
   gasGamma: 1.4, tankThermalTime: 90, gasModel: 'adiabatic',
   valveRiseTime: .045, valveFallTime: .025,
   liftNozzleMax: 20000, sideNozzleMax: 5500, axialNozzleMax: 11000,
@@ -238,6 +238,9 @@ export class RoadsterSim {
     this._wing={deployment:this.params.wingMode==='fixed'?this.params.wingDeployment:0,command:0,dragN:0,downforceN:0,dynamicPressurePa:0,forceBody:{x:0,y:0,z:0},...rearWingPose(this.params.wingMode==='fixed'?this.params.wingDeployment:0)};
     this._observationSeed=this._observationConfig.seed>>>0;this._observationHistory=[];this._observation=null;this._observationBody=null;
     this._gasConsumedKg=0;this._externalGasKg=0;this._brakeDissipationJ=0;this._tireDissipationJ=0;
+    this._driveAccounting={torqueBudgetNm:0,requestedTorqueNm:0,postTcsTorqueNm:0,actualTorqueNm:0,mechanicalPowerLimitW:this.params.motorPower,mechanicalPowerW:0,electricalPowerW:0,mechanicalWorkJ:0,electricalWorkJ:0,powerLimited:false,airbornePolicy:this.params.tractionAssist?'unloaded-drive-cut':'equal-four-wheel-shares',shares:[0,0,0,0]};
+    this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:3,braking:false,pilotActive:false};
+    this._levelRecovery={active:false,status:'inactive',tiltErrorDeg:0,headingTargetRad:0,verticalSupportFeasible:true,torqueSaturated:false};
     this._hasPower=this._energyUsed<this.params.batteryKWh;this._sealQuality=0;this._sealDistanceSum=0;this._sealDistanceCount=0;
     measureControlState(this);
     return this;
@@ -251,7 +254,26 @@ export class RoadsterSim {
   setWing({mode=this.params.wingMode,deployment=this.params.wingDeployment}={}){if(!['active','fixed'].includes(mode)||!Number.isFinite(deployment)||deployment<0||deployment>1)return false;this.params.wingMode=mode;this.params.wingDeployment=deployment;return true;}
   setObservation(config={}){try{const next=observationConfiguration(config);this._observationConfig=next;this._observationSeed=next.seed>>>0;this._observationHistory=[];measureControlState(this);return true;}catch{return false;}}
   getObservation(){return{configuration:{...this._observationConfig},sample:this._observation?structuredClone(this._observation):null,truthTime:this.simTime,measurementModel:'sampled uniform bounded noise, deterministic Mulberry32, zero-order-hold delay',channels:'flight position / attitude / velocity feedback; wheel speed and contact switches remain ideal'};}
-  getReference(){return{mode:this.mode,stabilizationMode:this.stabilizationMode,position:this._holdPositionTarget?plain(this._holdPositionTarget):plain(this._positionTarget),quaternion:this._holdQuaternionTarget?{...plain(this._holdQuaternionTarget),w:this._holdQuaternionTarget.w}:this._manualQuaternionTarget?{...plain(this._manualQuaternionTarget),w:this._manualQuaternionTarget.w}:null,height:this._heightTarget,heading:this._headingTarget,manualRate:plain(this._manualReferenceRate),maneuver:this._maneuver?structuredClone(this._maneuver):null};}
+  getReference(){
+    const q=this.stabilizationMode==='level'?this._levelQuaternion():this._holdQuaternionTarget||this._manualQuaternionTarget;
+    return{mode:this.mode,stabilizationMode:this.stabilizationMode,position:this._holdPositionTarget?plain(this._holdPositionTarget):plain(this._positionTarget),quaternion:q?{...plain(q),w:q.w}:null,
+      height:this.stabilizationMode==='level'?this._stableHeight:this._heightTarget,heading:this.stabilizationMode==='level'?this._stableHeading:this._headingTarget,
+      manualRate:plain(this._manualReferenceRate),verticalVelocityMps:this._verticalControl.targetMps,maneuver:this._maneuver?structuredClone(this._maneuver):null};
+  }
+  _levelQuaternion(){const q=new CANNON.Quaternion();q.setFromEuler(0,this._stableHeading,0,'YXZ');return q;}
+  getControlAuthority(){
+    const p=this.params,b=this.body,derate=clamp((this.pressureBar()-p.ambientPressureBar)/(p.regulatorBar-p.ambientPressureBar),0,1)*Number(this._hasPower);
+    const maxes=this._nozzles.map(n=>(n.kind==='lift'?p.liftNozzleMax:n.kind==='roll'?p.sideNozzleMax:p.axialNozzleMax)*derate*(this._nozzleFault?.id===n.id?this._nozzleFault.scale:1));
+    const positive=[0,0,0],negative=[0,0,0];let verticalUpper=0;
+    this._nozzles.forEach((n,i)=>{verticalUpper+=Math.max(0,b.quaternion.vmult(n.direction).y)*maxes[i];for(let k=0;k<3;k++){positive[k]+=Math.max(0,n.column[k+3])*maxes[i];negative[k]+=Math.min(0,n.column[k+3])*maxes[i];}});
+    const weight=b.mass*p.gravity,lift=maxes.slice(0,4).reduce((a,v)=>a+v,0);
+    return{massKg:b.mass,weightN:weight,pressureBar:this.pressureBar(),regulatorBar:p.regulatorBar,liftMaxN:lift,hoverThrustRatio:lift/Math.max(1,weight),hoverReserveN:lift-weight,
+      bodyUpDot:b.quaternion.vmult(Y).y,verticalForceUpperBoundN:verticalUpper,verticalForceReserveUpperBoundN:verticalUpper-weight,
+      positiveTorqueUpperNm:{x:positive[0],y:positive[1],z:positive[2]},negativeTorqueLowerNm:{x:negative[0],y:negative[1],z:negative[2]},
+      currentPoseTrimFeasible:this._holdTrimFeasible(maxes,b.quaternion),levelTargetTrimFeasible:this._holdTrimFeasible(maxes,this._levelQuaternion()),
+      allocationResidual:this._allocationError,saturatedNozzles:this._nozzles.filter(n=>n.maxForce>0&&n.command>=n.maxForce*.985).map(n=>n.id),
+      boundMeaning:'independent-axis bounds; not simultaneously achievable, valve lag and allocation coupling remain'};
+  }
   setNozzleFault({id,scale}={}){if(!this._nozzles.some(n=>n.id===id)||!Number.isFinite(scale)||scale<0||scale>1)return false;this._nozzleFault={id,scale};return true;}
   clearNozzleFault(){this._nozzleFault=null;}
   _liftHealthFactor(){return this._nozzleFault?.id.startsWith('lift-')?(3+this._nozzleFault.scale)/4:1;}
@@ -262,6 +284,7 @@ export class RoadsterSim {
     if(!['drive','hover','manual'].includes(mode)) return;
     if(this.stabilizationMode==='hold')this.setStabilizationMode('level');
     this.mode=mode;this._maneuver=null;
+    this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:3,braking:false,pilotActive:false};
     this._heightIntegral=0;
     this._headingTarget=this._angles().heading;
     this._heightTarget=Math.max(this.body.position.y,1.5);
@@ -291,8 +314,16 @@ export class RoadsterSim {
     // This reference is subsequently moved by rate commands, never the body.
     if(mode==='off'){this._manualQuaternionTarget=this.body.quaternion.clone();this._manualReferenceRate=V();this._manualCommandInput=V();}
     if(mode!=='off'){
-      this._maneuver=null;this._stableHeight=this.body.position.y;this._stableHeading=this._angles().heading;
+      this._maneuver=null;this._stableHeight=this.mode==='hover'?Math.max(this.body.position.y,this._heightTarget):this.body.position.y;this._stableHeading=this._angles().heading;
+      this._stableJogging=false;this._heightJogging=false;this._heightIntegral=0;
+      this._manualReferenceRate.setZero();this._manualCommandInput.setZero();
+      // G captures projected heading only. A previous manually tilted pose is
+      // not the new level target, including near +/-180 degrees of Euler roll.
+      if(mode==='level')this._manualQuaternionTarget=this._levelQuaternion();
     }
+    this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:3,braking:false,pilotActive:false};
+    this._levelRecovery={active:false,status:mode==='level'?'armed':'inactive',tiltErrorDeg:Math.acos(clamp(this.body.quaternion.vmult(Y).y,-1,1))*180/Math.PI,
+      headingTargetRad:this._stableHeading,verticalSupportFeasible:true,torqueSaturated:false};
     if(mode==='hold'){
       // Capture once at the pilot's command, even when contact temporarily
       // inhibits thrust. Never recapture a drifting reference every substep.
@@ -344,7 +375,7 @@ export class RoadsterSim {
       tankLitres:[50,3000],initialPressureBar:[20,700],regulatorBar:[5,150],exhaustVelocity:[100,1000],
       liftNozzleMax:[1000,50000],sideNozzleMax:[100,20000],axialNozzleMax:[100,50000],
       suctionPressurePa:[0,25000],suctionArea:[.1,8],hoverHeight:[1,40],dragArea:[.1,3],
-      valveRiseTime:[.005,.2],valveFallTime:[.005,.2],regenForce:[0,8000],cornerStiffnessFront:[20000,150000],cornerStiffnessRear:[20000,150000],steeringAccelG:[.2,1.2],nozzleVelocityEfficiency:[.5,1],climbRateMps:[.3,3],
+      valveRiseTime:[.005,.2],valveFallTime:[.005,.2],regenForce:[0,8000],cornerStiffnessFront:[20000,150000],cornerStiffnessRear:[20000,150000],steeringAccelG:[.2,1.2],nozzleVelocityEfficiency:[.5,1],climbRateMps:[.5,8],
       positionGain:[.2,8],velocityGain:[.3,8],altitudeGain:[.3,10],verticalDamping:[.5,10],attitudeResponse:[1,7],
       rollRateDegS:[15,180],pitchRateDegS:[5,90],yawRateDegS:[5,100],angularAccelerationDegS2:[20,300]};
     if(!(key in limits)||!Number.isFinite(Number(value))) return;
@@ -442,7 +473,7 @@ export class RoadsterSim {
   _wheels(dt,input) {
     const b=this.body,p=this.params,up=b.quaternion.vmult(Y),down=up.negate();
     const steerTarget=roadWheelAngle(input.steer,Math.abs(b.velocity.dot(b.quaternion.vmult(Z))),p);
-    this._steerCentre+=clamp((steerTarget-this._steerCentre)*(1-Math.exp(-dt/.16)),-1.25*dt,1.25*dt);
+    this._steerCentre+=clamp((steerTarget-this._steerCentre)*(1-Math.exp(-dt/.10)),-1.8*dt,1.8*dt);
     const contacts=[];
     for(let i=0;i<4;i++) {
       const mount=V(...WHEEL_LOCATIONS[i]),from=b.pointToWorldFrame(mount);
@@ -485,19 +516,34 @@ export class RoadsterSim {
     this._motorForceN=0;this._regenForceN=0;
     let driveForce=this._hasPower&&input.brake<.01&&(this.mode==='drive'||contacts.length>0)?input.throttle*p.maxMotorForce:0;
     const speed=Math.abs(b.velocity.dot(b.quaternion.vmult(Z)));
-    const motorSpeed=Math.max(speed,...this.wheelStates.map(w=>Math.abs(w.angularVelocityRadS*p.wheelRadius)));
+    const poweredWheels=p.tractionAssist?this.wheelStates.filter(w=>w.contact):this.wheelStates;
+    const motorSpeed=Math.max(speed,...poweredWheels.map(w=>Math.abs(w.angularVelocityRadS*p.wheelRadius)));
     driveForce=clamp(driveForce,-p.motorPower/Math.max(8,motorSpeed),p.motorPower/Math.max(8,motorSpeed));
     const contactByWheel=new Map(contacts.map(c=>[c.w,c]));
+    // One axle torque/power budget is normalized across all four wheels. With
+    // TCS, unloaded wheels are cut rather than receiving an additional quarter
+    // of the already distributed grounded budget. Without TCS the fixed 25%
+    // shares allow real airborne spin and waste part of the available power.
+    const rawShares=this.wheelStates.map(w=>p.tractionAssist?(w.contact?w.normalLoadN/totalLoad:0):.25);
+    const shareScale=1/Math.max(1,rawShares.reduce((sum,value)=>sum+value,0));
+    const shares=rawShares.map(value=>value*shareScale),totalTorque=driveForce*p.wheelRadius;
+    const accounting=this._driveAccounting={torqueBudgetNm:Math.abs(totalTorque),requestedTorqueNm:0,postTcsTorqueNm:0,actualTorqueNm:0,
+      mechanicalPowerLimitW:p.motorPower,mechanicalPowerW:0,electricalPowerW:0,mechanicalWorkJ:0,electricalWorkJ:0,
+      powerLimited:false,airbornePolicy:p.tractionAssist?'unloaded-drive-cut':'equal-four-wheel-shares',shares:[...shares]};
     for(let i=0;i<4;i++) {
       const w=this.wheelStates[i],c=contactByWheel.get(w),effectiveMass=b.mass/n;
+      const driveTorque=totalTorque*shares[i],maxDrivePowerW=p.motorPower*shares[i];
+      accounting.requestedTorqueNm+=Math.abs(driveTorque);
       if(!c){
         // Free wheels retain spin and respond to axle/brake torque. Rotation is
         // never inferred from chassis speed, including immediately after lift.
         const result=integrateWheel(w,{dt,vlong:0,normalLoadN:0,mu:0,lateralForceN:0,
-          driveTorqueNm:driveForce*p.wheelRadius/4,brakeTorqueNm:input.brake*p.brakeForce*p.wheelRadius/4,
+          driveTorqueNm:driveTorque,maxDrivePowerW,brakeTorqueNm:input.brake*p.brakeForce*p.wheelRadius/4,
           radius:p.wheelRadius,inertia:p.wheelInertia,effectiveMass,absEnabled:false,tcsEnabled:p.tractionAssist});
         b.torque.vadd(b.quaternion.vmult(V(Math.cos(w.steer),0,-Math.sin(w.steer))).scale(-result.spinMomentumChangeNms/dt),b.torque);
         this._motorWork+=result.driveWorkJ/.9;this._brakeDissipationJ+=result.brakeEnergyJ;
+        this._motorForceN+=w.driveTorqueNm/p.wheelRadius;
+        accounting.postTcsTorqueNm+=Math.abs(w.postTcsTorqueRequestNm);accounting.actualTorqueNm+=Math.abs(w.driveTorqueNm);accounting.mechanicalWorkJ+=result.driveWorkJ;accounting.powerLimited||=w.drivePowerLimited;
         w.longitudinalForceN=0;w.lateralForceN=0;w.gripUse=0;w.slipRatio=null;continue;
       }
       const mu=this._surfaceMu(w.contactPointWorld),capacity=mu*w.normalLoadN;
@@ -510,8 +556,7 @@ export class RoadsterSim {
       // A brake torque distribution is not an ABS. Each wheel below has real
       // rotational inertia, contact reaction torque and a slip regulator that
       // releases/reapplies its requested pressure after measured wheel slip.
-      const loadShare=w.normalLoadN/totalLoad;
-      const driveTorque=driveForce*p.wheelRadius*(p.tractionAssist?loadShare:.25);
+      // TCS only releases its already budgeted torque; it never creates a new pool.
       const serviceBrake=input.brake*p.brakeForce*(i<2?.30:.20);
       const regen=this._hasPower?Math.min(p.regenForce,p.regenPower/Math.max(speed,1))/4:0;
       const released=Math.abs(input.throttle)<.015&&input.brake<=.01;
@@ -519,7 +564,7 @@ export class RoadsterSim {
       const brake=released?(holding?p.brakeForce/4:regen):serviceBrake;
       w.brakeDemandN=input.brake>.01?serviceBrake:0;
       const result=integrateWheel(w,{dt,vlong:c.vlong,normalLoadN:w.normalLoadN,mu,lateralForceN:lateral,
-        driveTorqueNm:driveTorque,brakeTorqueNm:brake*p.wheelRadius,
+        driveTorqueNm:driveTorque,maxDrivePowerW,brakeTorqueNm:brake*p.wheelRadius,
         rollingTorqueNm:Math.abs(input.throttle)>.015?p.gravity*b.mass*.011/4*p.wheelRadius:0,
         radius:p.wheelRadius,inertia:p.wheelInertia,effectiveMass,gravityLong:g.dot(c.forward),absEnabled:p.absEnabled,tcsEnabled:p.tractionAssist});
       const flong=result.longitudinalForceN,flat=result.lateralForceN;
@@ -533,8 +578,10 @@ export class RoadsterSim {
       // gyroscopic cross terms remain outside this reduced four-wheel model.
       b.torque.vadd(b.quaternion.vmult(V(Math.cos(w.steer),0,-Math.sin(w.steer))).scale(-result.spinMomentumChangeNms/dt),b.torque);
       this._motorWork+=result.driveWorkJ/.9;
+      accounting.postTcsTorqueNm+=Math.abs(w.postTcsTorqueRequestNm);accounting.actualTorqueNm+=Math.abs(w.driveTorqueNm);accounting.mechanicalWorkJ+=result.driveWorkJ;accounting.powerLimited||=w.drivePowerLimited;
       this._brakeDissipationJ+=result.brakeEnergyJ;this._tireDissipationJ+=result.tireEnergyJ+Math.max(0,-flat*c.vlat)*dt;
     }
+    accounting.mechanicalPowerW=accounting.mechanicalWorkJ/dt;accounting.electricalWorkJ=accounting.mechanicalWorkJ/.9;accounting.electricalPowerW=accounting.electricalWorkJ/dt;
   }
 
   _suction(dt) {
@@ -590,15 +637,40 @@ export class RoadsterSim {
     this._maneuver=null;this.mode='drive';this._heightTarget=this.body.position.y;
     this._positionTarget.copy(this.body.position);this._heightIntegral=0;this._heightJogging=false;this._stableJogging=false;
     this._manualQuaternionTarget=this.body.quaternion.clone();this._manualReferenceRate=V();
-    this._stabilizationActive=false;this._thrustWanted=0;this.status='着陆完成：轮胎接管，喷口阀门关闭';
+    this._stabilizationActive=false;this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:3,braking:false,pilotActive:false};this._thrustWanted=0;this.status='着陆完成：轮胎接管，喷口阀门关闭';
     return [0,0,0,0,0,0];
+  }
+
+  _pilotVerticalReference(input,holdReference){
+    const b=controllerBody(this),p=this.params,active=Math.abs(input.lift)>.01,command=active?input.lift*p.climbRateMps:0;
+    const previousActive=this._verticalControl.pilotActive;
+    let braking=this._verticalControl.braking;
+    if(active)braking=false;else if(previousActive)braking=true;
+    if(braking&&Math.abs(b.velocity.y)<.06){
+      braking=false;
+      // The post-release hold point is where finite-thrust braking actually
+      // ended. Do not accelerate toward an unreachable open-loop stop estimate.
+      if(this._stabilizationActive)this._stableHeight=b.position.y;
+      this._heightTarget=b.position.y;holdReference=0;
+    }
+    let reference=active?command:braking?0:holdReference;
+    // Q is a descent-speed request, with a physical stopping-distance approach
+    // near a surface. It must not drive an 8 m/s reference into a supported tire.
+    // Only the command is reduced: gravity, finite braking force and contact
+    // still decide whether the vehicle has sufficient room to stop.
+    if(active&&reference<0){
+      const surface=this.traceSurface(b.position,{x:0,y:-1,z:0},Math.max(3,reference*reference/6+2));
+      if(surface){const clearance=Math.max(0,surface.distance-.60);reference=Math.max(reference,-Math.max(.25,Math.sqrt(6*Math.max(0,clearance-.20)+1.44)-1.2));}
+    }
+    if(active&&reference>0)reference=Math.min(reference,Math.sqrt(6*Math.max(0,300-b.position.y)));
+    this._verticalControl={commandMps:command,targetMps:reference,accelerationLimitMps2:3,braking,pilotActive:active};return reference;
   }
 
   _manualFlightController(dt,input){
     const b=controllerBody(this),p=this.params,m=b.mass,rad=Math.PI/180;
     if(this._heightJogging&&Math.abs(input.lift)<.01)this._heightTarget=b.position.y+b.velocity.y*Math.abs(b.velocity.y)/6;
     this._heightJogging=Math.abs(input.lift)>.01;
-    this._heightTarget=clamp(this._heightTarget+input.lift*p.climbRateMps*dt,.45,300);
+    if(this._heightJogging)this._heightTarget=clamp(b.position.y,.45,300);
     const current=this._manualReferenceRate,wanted=V(-input.pitch*p.pitchRateDegS*rad,input.steer*p.yawRateDegS*rad,-input.roll*p.rollRateDegS*rad);
     const previous=current.clone(),rateStep=p.angularAccelerationDegS2*rad*dt;
     let target=this._manualQuaternionTarget;
@@ -634,7 +706,7 @@ export class RoadsterSim {
     }
     const heightError=this._heightTarget-b.position.y,up=b.quaternion.vmult(Y).y;
     if(this._hasPower&&!this._pressureLimited&&up>.7&&Math.abs(heightError)<.5&&Math.abs(b.velocity.y)<.2&&this._allocationError<.05)this._heightIntegral=clamp(this._heightIntegral+heightError*dt,-1.5,1.5);
-    const verticalReference=clamp(heightError*1.8,-p.climbRateMps,p.climbRateMps);
+    const verticalReference=this._pilotVerticalReference(input,clamp(heightError*1.8,-p.climbRateMps,p.climbRateMps));
     // Ordinary E/Q retains its 3 m/s2 comfort envelope. A fast fall after an
     // unsupported attitude needs the available braking thrust, rather than
     // spending tens of metres at that comfort cap. This changes only the
@@ -644,6 +716,7 @@ export class RoadsterSim {
     const capacity=this._availableLiftForce()/m-p.gravity;
     const arrestLimit=Math.max(3,Math.min(p.gravity*1.4,capacity*.85));
     const verticalLimit=clamp(3+2.5*fallExcess,3,arrestLimit);
+    this._verticalControl.accelerationLimitMps2=verticalLimit;
     const ay=clamp((verticalReference-b.velocity.y)*3.5+this._heightIntegral*.7,-3,verticalLimit);
     const worldForce=V(clamp(ax,-6,6),p.gravity+ay,clamp(az,-6,6)).scale(m);
     const force=b.quaternion.conjugate().vmult(worldForce);
@@ -657,6 +730,8 @@ export class RoadsterSim {
 
   _controller(dt,input) {
     const b=controllerBody(this),p=this.params,m=b.mass,angles=this._angles(b);
+    this._verticalControl={...this._verticalControl,commandMps:0,targetMps:0,accelerationLimitMps2:3};
+    this._levelRecovery.active=false;this._levelRecovery.status=this.stabilizationMode==='level'?(this._contactCount>0?'surface':'armed'):'inactive';
     if(this.mode==='drive'&&(input.lift>0||this._contactCount===0&&(Math.abs(input.pitch)>.01||Math.abs(input.roll)>.01))){this.setMode('hover');this._heightTarget=Math.max(.65,b.position.y);}
     let desired=[0,0,0,0,0,0];
     const groundSupport=this._contactCount>=2&&b.quaternion.vmult(Y).y>.65&&this.wheelStates.filter(w=>w.contact&&w.contactNormalWorld?.y>.65).length>=2;
@@ -671,7 +746,14 @@ export class RoadsterSim {
     // Armed on the ground, active only in free air. This never fights wheel
     // contacts or pressure adhesion. Raw research valve overrides still take
     // precedence in _advance; the stabilizer resumes after their release.
-    const stabilize=this.airStabilization&&this._contactCount===0&&!this.suctionEnabled&&!this._maneuver;
+    const adhered=this.suctionEnabled&&this._sealQuality>.05;
+    // Merely arming F in free air is not a surface constraint. Previously this
+    // disabled G even with zero seal/adhesion, leaving the tilted manual target
+    // active. A real seal or tire contact still yields control to the surface.
+    const stabilize=this.airStabilization&&this._contactCount===0&&!adhered&&!this._maneuver;
+    this._levelRecovery.active=this.stabilizationMode==='level'&&stabilize;
+    this._levelRecovery.status=this.stabilizationMode!=='level'?'inactive':adhered||this._contactCount>0?'surface':stabilize?'recovering':'armed';
+    if(this.stabilizationMode==='level'&&adhered){this._stabilizationActive=false;this._holdActive=false;this._thrustWanted=0;return desired;}
     this._holdActive=false;
     if(this.stabilizationMode==='hold'){
       const hullContact=this.world.contacts.some(c=>{const shape=c.bi===this.body?c.si:c.bj===this.body?c.sj:null;return shape&&shape.material!==this._wheelStopMaterial;});
@@ -698,16 +780,20 @@ export class RoadsterSim {
       return[force.x,force.y,force.z,...torque];
     }
     if(stabilize){
-      if(!this._stabilizationActive){this._stableHeight=this.mode==='hover'?Math.max(b.position.y,this._heightTarget):b.position.y;this._stableHeading=angles.heading;}
+      if(!this._stabilizationActive){this._stableHeight=this.mode==='hover'?Math.max(b.position.y,this._heightTarget):b.position.y;}
       this._stabilizationActive=true;
       this._stableHeading+=input.steer*.80*dt;
       if(this._stableJogging&&Math.abs(input.lift)<.01)this._stableHeight=b.position.y+b.velocity.y*Math.abs(b.velocity.y)/6;
-      this._stableJogging=Math.abs(input.lift)>.01;this._stableHeight=clamp(this._stableHeight+input.lift*p.climbRateMps*dt,.65,300);
-      const up=b.quaternion.vmult(Y),vertical=clamp((this._stableHeight-b.position.y)*3.2-b.velocity.y*3.3,-p.gravity*.8,p.gravity*1.4);
+      this._stableJogging=Math.abs(input.lift)>.01;
+      if(this._stableJogging)this._stableHeight=clamp(b.position.y,.65,300);
+      const verticalReference=this._pilotVerticalReference(input,(this._stableHeight-b.position.y)*3.2/3.3);
+      const pilotEnvelope=this._stableJogging||this._verticalControl.braking;
+      const up=b.quaternion.vmult(Y),vertical=clamp((verticalReference-b.velocity.y)*3.3,pilotEnvelope?-3:-p.gravity*.8,pilotEnvelope?3:p.gravity*1.4);
+      this._verticalControl.accelerationLimitMps2=pilotEnvelope?3:p.gravity*1.4;
       // Near inversion use torque to recover first, rather than commanding
       // maximum lift down into the ground. All forces still pass allocation.
       const lift=up.y>.35?m*(p.gravity+vertical)/up.y:m*p.gravity*clamp(up.y,0,.35);
-      const target=new CANNON.Quaternion();target.setFromEuler(0,this._stableHeading,0,'YXZ');
+      const target=this._levelQuaternion();
       const torque=this._attitudeTorque(target,3.3,V(0,input.steer*.80,0));
       const local=b.quaternion.conjugate().vmult(b.velocity);
       const fx=clamp(m*(input.roll*7-local.x)*1.35,-8500,8500),fz=clamp(m*(input.throttle*10-local.z)*1.35,-10000,10000);
@@ -817,7 +903,7 @@ export class RoadsterSim {
     // Start at zero: retaining the previous unconstrained null-space component
     // made opposing side jets keep wasting gas after a maneuver had ended.
     const direct=input.frontJets>0||input.rearJets>0;
-    if(direct){this._stabilizationActive=false;this._holdActive=false;}
+    if(direct){this._stabilizationActive=false;this._holdActive=false;this._levelRecovery.active=false;this._levelRecovery.status=this.stabilizationMode==='level'?'armed':'inactive';this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:3,braking:false,pilotActive:false};}
     for(let pass=0;pass<(direct?0:28);pass++) {
       for(let i=0;i<this._nozzles.length;i++) {
         const col=columns[i];
@@ -874,6 +960,15 @@ export class RoadsterSim {
       }
     }
     this._manualPoseFeasible=this.mode==='hover'&&this.stabilizationMode==='off'&&!this._maneuver?this._holdTrimFeasible(maxes,this._manualQuaternionTarget):null;
+    const recovery=this._levelRecovery;
+    recovery.tiltErrorDeg=Math.acos(clamp(b.quaternion.vmult(Y).y,-1,1))*180/Math.PI;recovery.headingTargetRad=this._stableHeading;
+    recovery.verticalSupportFeasible=this._holdTrimFeasible(maxes,b.quaternion);
+    recovery.torqueSaturated=this._nozzles.some(n=>n.maxForce>0&&n.command>=n.maxForce*.985)&&desired.slice(3).some(v=>Math.abs(v)>100);
+    if(recovery.active){
+      const targetFeasible=this._holdTrimFeasible(maxes,this._levelQuaternion());
+      recovery.status=!targetFeasible?'limited':recovery.tiltErrorDeg<.8&&b.angularVelocity.length()<.05?'level':
+        recovery.torqueSaturated||!recovery.verticalSupportFeasible?'limited':'recovering';
+    }
     this._updateMass();
   }
 
@@ -965,11 +1060,11 @@ export class RoadsterSim {
     else if(this._pressureLimited&&this.mode==='hover') this.status='供压降低：可用推力受限';
     else if(!this._maneuver) {
       if(this.suctionEnabled&&this._sealQuality>.5) this.status=this.body.quaternion.vmult(Y).y<-.6?'倒挂：压差吸附保持':'近表面：压差吸附有效';
-      else if(this.suctionEnabled) this.status='未形成近表面密封：无吸附';
+      else if(this.suctionEnabled&&!this._stabilizationActive) this.status='未形成近表面密封：无吸附';
       else if(this.stabilizationMode==='hold')this.status=this._holdStatus==='surface'?'定姿定点待命：接触表面，喷口保持让行':
         this._holdStatus==='limited'?'定姿定点受限：当前姿态或制动需求超出可用喷口能力':
         this._holdStatus==='holding'?'定姿定点：姿态与位置闭环保持':'定姿定点：正在减速 / 收敛至捕获参考';
-      else if(this._stabilizationActive)this.status='自动稳姿：回正 / 速度阻尼 / 高度保持';
+      else if(this._stabilizationActive)this.status=this._levelRecovery.status==='limited'?'自动回正受限：正在用可用力矩恢复，当前姿态可能继续掉高':'自动稳姿：恢复水平滚转 / 俯仰，保持当前航向';
       else if(this.mode==='hover') this.status=this._manualPoseFeasible===false?'姿态保持受限：该姿态不能由当前喷口持续承重':'手动定率调姿 / 松键稳姿 / 位置闭环';
       else if(this.mode==='manual') this.status='手动喷口控制';
       else this.status=this._contactCount?'轮胎接地':'自由飞行';
@@ -1024,6 +1119,7 @@ export class RoadsterSim {
       wing:{...this._wing,position:{...this._wing.position},forceBody:{...this._wing.forceBody},applicationPoint:{...this._wing.applicationPoint},mode:p.wingMode,actuatorRatePerS:p.wingActuatorRate},
       onboardGasConsumedKg:this._gasConsumedKg,externalGasSuppliedKg:this._externalGasKg,brakeDissipationJ:this._brakeDissipationJ,tireDissipationJ:this._tireDissipationJ,
       massFlowKgS:this._massFlowKgS,effectiveExhaustVelocity:this._effectiveExhaustVelocity,deliveredImpulseNs:this._impulseNs,hoverSecondsEstimate:budget.seconds,usableHoverImpulseNs:budget.impulseNs,nozzleModel:p.nozzleModel,
+      controlAuthority:this.getControlAuthority(),driveAccounting:{...this._driveAccounting,shares:[...this._driveAccounting.shares]},verticalControl:{...this._verticalControl},levelRecovery:{...this._levelRecovery},
       motorForceN:this._motorForceN,regenForceN:this._regenForceN,motorLoad:Math.abs(this._motorForceN)/Math.max(1,p.maxMotorForce),
       longitudinalAcceleration:this._longitudinalAcceleration,driverInput:{...this._lastInput},
       altitude,altitudeDatum:'重心至世界竖直向下最近碰撞面的距离',heightWorld:b.position.y,

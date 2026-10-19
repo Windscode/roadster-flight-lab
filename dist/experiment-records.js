@@ -2,6 +2,7 @@
  * fixed-step inputs. Curves are evidence; they are never used as replay state. */
 import {MODEL_VERSION} from './vehicle-models.js';
 import {MODEL_BUILD_ID} from './model-build.js';
+import {ExperimentReproductionCheck} from './experiment-reproduction.js';
 
 export const LIVE_PROTOCOL_VERSION='live-fixed-inputs-1';
 export const EXPERIMENT_SCHEMA='roadster.live-experiment';
@@ -45,8 +46,23 @@ export function captureExperimentSnapshot(sim,context='city',sceneConfiguration=
 export function replayEligibility(record){
   if(!record?.initialSnapshot?.physical)return{exact:false,recompute:false,reason:'这是旧曲线记录，没有完整初态与固定步输入；只能查看，不能按原条件重放'};
   if(record.schema!==EXPERIMENT_SCHEMA||record.version!==1||record.identity?.protocolVersion!==LIVE_PROTOCOL_VERSION)return{exact:false,recompute:false,reason:'此记录协议没有安装执行器；历史数据可以查看与导出'};
-  const current=currentExperimentIdentity();if(record.identity.modelVersion!==current.modelVersion)return{exact:false,recompute:false,reason:'原模型 '+record.identity.modelVersion+' 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。'};const exact=record.identity.modelVersion===current.modelVersion&&record.identity.modelBuildId===current.modelBuildId;
+  if(record.identity.modelVersion==='3.8.0'&&MODEL_VERSION==='3.9.0'&&record.initialSnapshot.physical.worldType==='city')return{exact:false,recompute:false,migrationRequired:false,reason:'3.8 城市记录的道路与碰撞几何已经改变，不能安全迁移完整现场状态；仍可查看与导出历史。请在当前城市重新建立实验。3.8 实验室 / 标准平地记录仍可选择明确的当前模型重算。'};
+  const current=currentExperimentIdentity();if(record.identity.modelVersion!==current.modelVersion){const migration=record.identity.modelVersion==='3.8.0'&&current.modelVersion==='3.9.0'&&record.initialSnapshot.physical.schemaVersion===1;return{exact:false,recompute:migration,migrationRequired:migration,reason:migration?'原 3.8 模型未安装，不能精确重放。可显式按当前模型重算历史初态：保留原参数、刚体、气源和控制状态，并补充当前模型新增的驱动诊断、升降制动与回正状态；迁移与差异单独留证。':'原模型 '+record.identity.modelVersion+' 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。'};}const exact=record.identity.modelVersion===current.modelVersion&&record.identity.modelBuildId===current.modelBuildId;
   return{exact,recompute:true,reason:exact?'可按原始条件执行当前相同模型 / 构建':'原始模型 / 构建未安装；不能精确重放。可明确选择按当前模型重新计算，并保留来源身份'};
+}
+export function prepareRecordedStateForCurrentModel(record,sim,{recompute=false}={}){
+  const physical=clone(record.initialSnapshot.physical),current=currentExperimentIdentity(),source=record.identity;
+  const compatibility={model:source.modelVersion===current.modelVersion&&source.modelBuildId===current.modelBuildId?'exact':'current-model-recompute',sourceIdentity:clone(source),executionIdentity:current,conditions:'original-complete-snapshot',migration:null};
+  if(physical.modelVersion!==current.modelVersion){
+    if(!recompute||source.modelVersion!=='3.8.0'||current.modelVersion!=='3.9.0'||physical.schemaVersion!==1)throw Error('没有此历史模型的显式状态迁移器');
+    const template=sim.exportState(),added=['_driveAccounting','_verticalControl','_levelRecovery'];
+    if(physical.worldType!==template.worldType||physical.geometrySignature!==template.geometrySignature)throw Error('历史场景几何与当前模型不同；不能把不同碰撞世界标作同一原始条件');
+    if(canonicalJSON(Object.keys(physical.params).sort())!==canonicalJSON(Object.keys(template.params).sort()))throw Error('历史参数契约不兼容，当前模型重算未开始');
+    const migrated=[];for(const key of added)if(!(key in physical.state)&&key in template.state){physical.state[key]=clone(template.state[key]);migrated.push('state.'+key);}
+    const unexpected=Object.keys(template.state).filter(key=>!(key in physical.state)&&!['_poseTakeoffOriginHeight','_poseTakeoffQuaternion'].includes(key));if(unexpected.length)throw Error('当前模型增加了尚未声明迁移的状态：'+unexpected.join(', '));
+    physical.modelVersion=current.modelVersion;compatibility.conditions='explicitly-migrated-historical-initial-state';compatibility.migration={from:'3.8.0',to:'3.9.0',addedDefaultState:migrated,defaultStateMeaning:'Current drive accounting, vertical braking/pilot-active control memory and level-recovery defaults. These control laws did not exist in 3.8; this is an explicit new-model condition mapping.',changed:['modelVersion'],preserved:'All historical parameters (including climbRateMps), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.',limitation:'The 3.8 solver is not executed. Current dynamics and controllers recalculate from the explicitly migrated initial state.'};
+  }
+  return{physical,compatibility};
 }
 export function validateExperimentRecord(value){
   assertJSON(value,'实验记录');
@@ -63,12 +79,12 @@ export function validateExperimentRecord(value){
   let lastStep=-1;for(const event of value.events){if(!Number.isInteger(event.step)||event.step<lastStep||event.step>value.stepCount)throw Error('事件步序不一致');lastStep=event.step;if(event.kind==='command'&&(!COMMAND_METHODS.includes(event.method)||!Array.isArray(event.args)))throw Error('事件含未允许的控制 API');}
   if(value.initialSnapshot.identity?.modelVersion!==value.identity.modelVersion||value.initialSnapshot.identity?.modelBuildId!==value.identity.modelBuildId)throw Error('初态与实验身份不一致');
   if(value.initialSnapshot.physical.modelVersion!==value.identity.modelVersion)throw Error('物理快照与模型身份不一致');
-  for(const sample of value.samples)if(!finite(sample.timeS)||sample.timeS<0)throw Error('采样时间无效');
+  let previousSample=-1;for(const sample of value.samples){if(!finite(sample.timeS)||sample.timeS<0||!Number.isInteger(sample.step)||sample.step<=previousSample||sample.step>value.stepCount||Math.abs(sample.timeS-sample.step/FIXED_HZ)>1e-8)throw Error('采样时间或固定步索引无效');previousSample=sample.step;}
   return value;
 }
 function measuredSample(t,step,initialTime){
   const target=t.mode==='hover'?(t.reference?.position??t.holdPositionTarget??null):null,q=t.reference?.quaternion??t.holdQuaternionTarget??t.manualQuaternionTarget;
-  return{step,timeS:step/FIXED_HZ,simTime:t.simTime??initialTime+step/FIXED_HZ,position:{...t.position},quaternion:{...t.quaternion},heightM:numeric(t.position?.y),targetHeightM:numeric(target?.y??t.targetAltitude),positionErrorM:poseError(t.position,target),attitudeErrorDeg:attitudeError(t.quaternion,q),speedMps:norm(t.velocity),rollDeg:numeric(t.rollDeg),pitchDeg:numeric(t.pitchDeg),pressureBar:numeric(t.pressureBar),gasMassKg:numeric(t.gasMass),tankTemperatureK:numeric(t.gasTemperatureK),massFlowKgS:Math.max(0,t.massFlowKgS||0),supplyMode:t.supplyMode,allocationError:numeric(t.allocationError),feasible:t.holdFeasible??t.manualPoseFeasible??null,contactCount:t.contactCount??0,wheelOmegaRadS:(t.wheelStates||[]).map(w=>numeric(w.angularVelocityRadS)),wheelSlip:(t.wheelStates||[]).map(w=>numeric(w.slipRatio)),wingDeployment:numeric(t.wing?.deployment??t.wingDeployment)};
+  return{step,timeS:step/FIXED_HZ,simTime:t.simTime??initialTime+step/FIXED_HZ,position:{...t.position},velocity:{...t.velocity},quaternion:{...t.quaternion},angularVelocity:{...t.angularVelocity},heightM:numeric(t.position?.y),targetHeightM:numeric(target?.y??t.targetAltitude),positionErrorM:poseError(t.position,target),attitudeErrorDeg:attitudeError(t.quaternion,q),speedMps:norm(t.velocity),rollDeg:numeric(t.rollDeg),pitchDeg:numeric(t.pitchDeg),pressureBar:numeric(t.pressureBar),gasMassKg:numeric(t.gasMass),tankTemperatureK:numeric(t.gasTemperatureK),massFlowKgS:Math.max(0,t.massFlowKgS||0),supplyMode:t.supplyMode,allocationError:numeric(t.allocationError),feasible:t.holdFeasible??t.manualPoseFeasible??null,contactCount:t.contactCount??0,wheelOmegaRadS:(t.wheelStates||[]).map(w=>numeric(w.angularVelocityRadS)),wheelSlip:(t.wheelStates||[]).map(w=>numeric(w.slipRatio)),wingDeployment:numeric(t.wing?.deployment??t.wingDeployment)};
 }
 function emptyStats(){return{source:'all fixed 120 Hz post-integration states; independent of stored display curve',version:1,count:0,positionCount:0,sumPositionSquared:0,peakPositionErrorM:null,peakAttitudeErrorDeg:null,allocationCount:0,saturatedCount:0,gasThroughputKg:0,onboardDischargedKg:0,externalSupplyKg:0,energyUsedKWh:0,peakSpeedMps:0,minimumHeightM:null,maximumHeightM:null};}
 function accumulate(stats,t,dt,previousEnergy){
@@ -132,14 +148,16 @@ export class ExperimentPlayback{
   constructor(record,{sim,recompute=false,controllerOverride=null,onEvent=()=>{}}={}){
     validateExperimentRecord(record);const eligible=replayEligibility(record);if(!recompute&&!eligible.exact)throw Error(eligible.reason);if(recompute&&!eligible.recompute)throw Error(eligible.reason);
     if(!sim||typeof sim.importState!=='function')throw Error('重放需要物理仿真实例');
-    this.record=record;this.sim=sim;this.recompute=recompute;this.onEvent=onEvent;this.step=0;this.runIndex=0;this.runRemaining=record.inputRuns[0]?.steps||0;this.eventIndex=0;this.finished=false;
-    sim.importState(clone(record.initialSnapshot.physical),{allowVersionMismatch:false});
+    this.record=record;this.sim=sim;this.recompute=recompute;this.onEvent=onEvent;this.step=0;this.runIndex=0;this.runRemaining=record.inputRuns[0]?.steps||0;this.eventIndex=0;this.finished=false;this.controllerOverride=controllerOverride;
+    const prepared=prepareRecordedStateForCurrentModel(record,sim,{recompute});this.compatibility=prepared.compatibility;sim.importState(prepared.physical,{allowVersionMismatch:false});
     if(controllerOverride){for(const [key,value]of Object.entries(controllerOverride)){if(!CONTROLLER_KEYS.includes(key)||!finite(value))throw Error('A/B 只允许声明过的控制器参数差异');if(record.events.some(e=>e.kind==='command'&&e.method==='setParam'&&e.args[0]===key))throw Error(`记录中途修改了 ${key}，不能把这条记录作为恒定参数公平 A/B`);sim.setParam(key,value);}}
+    this.check=new ExperimentReproductionCheck(record,{expectAgreement:!recompute&&!controllerOverride,compatibility:this.compatibility,controllerOverride});this.check.observe(measuredSample(sim.telemetry(),0,sim.simTime),0);
   }
   applyEvents(){while(this.eventIndex<this.record.events.length&&this.record.events[this.eventIndex].step===this.step){const e=this.record.events[this.eventIndex++];if(e.kind==='command'){let result,error;try{result=this.sim[e.method](...clone(e.args));}catch(caught){error=caught;}if(!this.recompute&&((!error&&result!==false)!==e.accepted))throw Error(`第 ${this.step} 步命令 ${e.method} 接受状态与原记录不同`);if(error&&e.accepted)throw error;}else this.onEvent(e);}}
   nextInput(){if(this.finished)return{};this.applyEvents();if(this.step>=this.record.stepCount){this.finished=true;return{};}return clone(this.record.inputRuns[this.runIndex]?.input||{});}
-  afterStep(){if(this.finished)return;this.step++;if(--this.runRemaining<=0){this.runIndex++;this.runRemaining=this.record.inputRuns[this.runIndex]?.steps||0;}if(this.step>=this.record.stepCount){this.applyEvents();this.finished=true;}}
-  getState(){return{replaying:!this.finished,step:this.step,totalSteps:this.record.stepCount,name:this.record.name,exactModel:!this.recompute};}
+  afterStep(t=this.sim.telemetry()){if(this.finished)return;this.step++;if(--this.runRemaining<=0){this.runIndex++;this.runRemaining=this.record.inputRuns[this.runIndex]?.steps||0;}if(this.step<this.record.stepCount||this.step%6===0)this.check.observe(measuredSample(t,this.step,this.record.initialSnapshot.initialSimTime),this.step);if(this.step>=this.record.stepCount){this.applyEvents();this.finished=true;}}
+  reproduction({status=this.finished?'completed':'cancelled',reason='',finalPhysical=this.sim.exportState()}={}){return this.check.finish({finalPhysical,finalSample:measuredSample(this.sim.telemetry(),this.step,this.record.initialSnapshot.initialSimTime),completedSteps:this.step,status,reason,semantics:this.controllerOverride?'fixed-driver-inputs-with-controller-redecision':this.recompute?'fixed-input-current-model-recompute':'fixed-input-replay'});}
+  getState(){return{replaying:!this.finished,step:this.step,totalSteps:this.record.stepCount,name:this.record.name,exactModel:this.compatibility.model==='exact',executionSemantics:this.controllerOverride?'fixed-driver-inputs-with-controller-redecision':this.recompute?'fixed-input-current-model-recompute':'fixed-input-replay'};}
 }
 
 /** Numerical replay is the same solver execution without a renderer. It is
@@ -147,10 +165,14 @@ export class ExperimentPlayback{
 export async function executeExperiment(record,{createSim,recompute=false,controllerOverride=null,signal,onProgress=()=>{},yieldEvery=600,yieldTask=()=>new Promise(resolve=>setTimeout(resolve,0))}={}){
   if(typeof createSim!=='function')throw Error('缺少数值求解器工厂');
   const sim=createSim(record.initialSnapshot.physical),playback=new ExperimentPlayback(record,{sim,recompute,controllerOverride}),snapshot=captureExperimentSnapshot(sim,record.context,record.initialSnapshot.sceneConfiguration),stats=emptyStats(),samples=[measuredSample(sim.telemetry(),0,sim.simTime)];let previousEnergy=sim.telemetry().energyUsedKWh||0,status='completed',reason='按记录输入执行完成';
-  try{while(!playback.finished){if(signal?.aborted){status='cancelled';reason='用户取消数值执行';break;}const input=playback.nextInput();if(playback.finished)break;const t=sim.advanceFixed(input,1/FIXED_HZ);playback.afterStep();accumulate(stats,t,1/FIXED_HZ,previousEnergy);previousEnergy=t.energyUsedKWh||0;if(playback.step%6===0)samples.push(measuredSample(t,playback.step,snapshot.initialSimTime));if(t.fault){status='failed';reason=String(t.fault);break;}if(yieldEvery>0&&playback.step%yieldEvery===0){onProgress({step:playback.step,totalSteps:record.stepCount});await yieldTask();}}
+  try{while(!playback.finished){if(signal?.aborted){status='cancelled';reason='用户取消数值执行';break;}const input=playback.nextInput();if(playback.finished)break;const t=sim.advanceFixed(input,1/FIXED_HZ),integratedStep=playback.step+1;
+      // The physical step already happened. Account its gas/energy and sample
+      // before afterStep applies terminal commands, which may fail separately.
+      accumulate(stats,t,1/FIXED_HZ,previousEnergy);previousEnergy=t.energyUsedKWh||0;if(integratedStep%6===0)samples.push(measuredSample(t,integratedStep,snapshot.initialSimTime));playback.afterStep(t);if(t.fault){status='failed';reason=String(t.fault);break;}if(yieldEvery>0&&playback.step%yieldEvery===0){onProgress({step:playback.step,totalSteps:record.stepCount});await yieldTask();}}
   }catch(error){status='failed';reason=safeText(error.message);}
   const t=sim.telemetry();if(samples.at(-1)?.step!==playback.step)samples.push(measuredSample(t,playback.step,snapshot.initialSimTime));
-  return{schema:'roadster.record-execution',version:1,identity:currentExperimentIdentity(),sourceIdentity:clone(record.identity),sourceId:record.id,sourceStateLabel:record.initialSnapshot.stateLabel,execution:recompute?'current-model-recompute':'original-conditions-replay',controllerOverride:controllerOverride?clone(controllerOverride):null,status,reason,completedSteps:playback.step,requestedSteps:record.stepCount,initialSnapshot:snapshot,finalSnapshot:captureExperimentSnapshot(sim,record.context),sceneConfigurationNote:'Initial presentation is retained as provenance. Numerical execution does not render or produce a final camera configuration.',summary:finishStats(stats,t),sampling:sampleDescription(samples),samples};
+  const finalSnapshot=captureExperimentSnapshot(sim,record.context),reproduction=playback.reproduction({status,reason,finalPhysical:finalSnapshot.physical});
+  return{schema:'roadster.record-execution',version:1,identity:currentExperimentIdentity(),sourceIdentity:clone(record.identity),sourceId:record.id,sourceStateLabel:record.initialSnapshot.stateLabel,execution:recompute?'current-model-recompute':'original-conditions-replay',inputSemantics:controllerOverride?'Recorded driver inputs and public command timing stay fixed. The current controller decides actuator commands again with declared gains; this is not a new autonomous pilot executing the original intent.':'Replays the recorded effective pre-solver input sequence and public command events; internal controller and interlock decisions are recalculated by the declared solver.',compatibility:playback.compatibility,reproduction,controllerOverride:controllerOverride?clone(controllerOverride):null,status,reason,completedSteps:playback.step,requestedSteps:record.stepCount,initialSnapshot:snapshot,finalSnapshot,sceneConfigurationNote:'Initial presentation is retained as provenance. Numerical execution does not render or produce a final camera configuration.',summary:finishStats(stats,t),sampling:sampleDescription(samples),samples};
 }
 export async function compareControllers(record,{createSim,controllerA={},controllerB={},signal,onProgress=()=>{},...options}={}){
   const changed=Object.keys({...controllerA,...controllerB}).filter(k=>(controllerA[k]??record.initialSnapshot.physical.params[k])!==(controllerB[k]??record.initialSnapshot.physical.params[k]));

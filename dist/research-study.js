@@ -14,17 +14,22 @@ export const PAIRS={
  tireMu:{label:'摩擦系数 0.65 / 1.25',key:'tireMu',values:[.65,1.25],labels:['μ = 0.65','μ = 1.25']},
 };
 export const PAIR_KEYS={steer:['steeringAssist','tractionAssist'],brake:['absEnabled','wingMode','tireMu'],launch:['tractionAssist','wingMode'],attitude:['stabilization','supplyMode'],rise:['supplyMode','gasModel','nozzleModel'],hover:['supplyMode','gasModel','nozzleModel'],roll:['supplyMode','gasModel','nozzleModel']};
+export function researchConditionLabel(request){
+ const p=request.params||{};if(!['steer','brake','launch'].includes(request.kind))return'';
+ return[({dry:'干地',wet:'湿地',split:'左右分离附着'})[p.roadSurface]||p.roadSurface,`ABS${p.absEnabled?'开启':'关闭'}`,`TCS${p.tractionAssist?'开启':'关闭'}`].join(' · ');
+}
+const namedJob=(label,request,extra={})=>({label:label+(researchConditionLabel(request)?' · '+researchConditionLabel(request):''),request,...extra});
 export function buildStudyRequests(base,{mode='single',pairKey,sweepKey,from,to,count=3}={}){
  const request=normalizeResearchRequest(base);
- if(mode==='single')return[{label:'单次实验',request}];
+ if(mode==='single')return[namedJob('单次实验',request)];
  if(mode==='pair'){
   if(!PAIR_KEYS[request.kind].includes(pairKey))throw Error('该对照因素不适用于本试验');
-  const p=PAIRS[pairKey];return p.values.map((value,i)=>{const next=structuredClone(request);if(p.input)next[p.key]=value;else next.params[p.key]=value;if(pairKey==='steeringAssist')next.steeringProtocol='driver';if(pairKey==='wingMode')next.params.wingDeployment=0;return{label:(i?'B / ':'A / ')+p.labels[i],request:normalizeResearchRequest(next)};});
+  const p=PAIRS[pairKey];return p.values.map((value,i)=>{const next=structuredClone(request);if(p.input)next[p.key]=value;else next.params[p.key]=value;if(pairKey==='steeringAssist')next.steeringProtocol='driver';if(pairKey==='wingMode')next.params.wingDeployment=0;return namedJob((i?'B / ':'A / ')+p.labels[i],normalizeResearchRequest(next));});
  }
  if(mode==='sweep'){
   if(!SWEEP_KEYS[request.kind].includes(sweepKey))throw Error('该扫描参数不适用于本试验');
   const p=RESEARCH_PARAMETERS[sweepKey];if(![3,5,7].includes(count)||!Number.isFinite(from)||!Number.isFinite(to)||from>=to||from<p.min||to>p.max)throw Error(`扫描需3/5/7点，起点小于终点，并在${p.min}–${p.max}${p.unit}范围内`);
-  return Array.from({length:count},(_,i)=>{const value=+(from+(to-from)*i/(count-1)).toPrecision(10),next=structuredClone(request);next.params[sweepKey]=value;return{label:p.label+' = '+value+' '+p.unit,request:normalizeResearchRequest(next),factor:{key:sweepKey,value}};});
+  return Array.from({length:count},(_,i)=>{const value=+(from+(to-from)*i/(count-1)).toPrecision(10),next=structuredClone(request);next.params[sweepKey]=value;return namedJob(p.label+' = '+value+' '+p.unit,normalizeResearchRequest(next),{factor:{key:sweepKey,value}});});
  }
  throw Error('未知运行方式');
 }

@@ -1,0 +1,138 @@
+{
+  "status": "passed",
+  "checks": 4,
+  "scope": "Public standard-study request/worker path with independent wheel dynamics. 80 km/h braking or stationary launch; finite source and default parameters. These selected deterministic fixtures do not establish universal ABS/TCS benefit, a calibrated tire model, pixel quality or FPS.",
+  "protocolVersion": "flat-lab-3",
+  "sourceHashes": {
+    "dist/research-protocol.js": "54ce8d586d267e0a1fd0b71d212f5b82c97b3d394d00538b1d6276e8038d62f7",
+    "dist/research-study.js": "e265c41d8429c0ddbdd662ef0b0e85590740a14a305572aec8afbea1f305dee7",
+    "dist/experiment-worker.js": "95418f9b0e1a0dc8891a3fb3f152aa548a9bcb5f4c2f660f4176c20664e5d0fd",
+    "dist/physics.js": "2124f9d40a0cfcc7b6cad1b019ba6959235a77edf8ff1b8b3f3d2283496cd8de",
+    "dist/tire-dynamics.js": "026425f3aedd162637bfa184cd279424f4a7604ee27db398bebd8834aca4dccd",
+    "tests/research-road-3.8.test.mjs": "18517b9530dbe11e4baad4a9d1c78f00fa5be4c0746fc49c2ad310b599f9f036"
+  },
+  "tests": [
+    {
+      "name": "Dry, wet and split-friction braking use consistent independent initial wheel speeds, and ABS modulates rather than imposing ideal force",
+      "status": "PASS"
+    },
+    {
+      "name": "Dry, wet and split-friction launches expose wheel spin with TCS off and feedback drive-torque modulation with TCS on",
+      "status": "PASS"
+    },
+    {
+      "name": "Fixed-retracted and active wing standard comparison drives real actuator deployment and dynamic-pressure forces",
+      "status": "PASS"
+    },
+    {
+      "name": "New road protocols preserve full-resolution statistic identity and deterministic rerun, with historical archives explicitly recomputed as requests",
+      "status": "PASS"
+    }
+  ],
+  "measurements": [
+    {
+      "kind": "brake",
+      "surface": "dry",
+      "baseline": {
+        "distanceM": 24.958696731603396,
+        "lockedS": 2.0249999999999955,
+        "headingDeg": 0
+      },
+      "assisted": {
+        "distanceM": 24.9614023949233,
+        "lockedS": 0,
+        "headingDeg": 0,
+        "modulationS": 1.9833333333333287
+      },
+      "note": "No universal shorter-distance or yaw-stability claim; this is per-wheel ABS without ESC."
+    },
+    {
+      "kind": "brake",
+      "surface": "wet",
+      "baseline": {
+        "distanceM": 47.660222531435814,
+        "lockedS": 3.933333333333322,
+        "headingDeg": 0
+      },
+      "assisted": {
+        "distanceM": 42.408379905152586,
+        "lockedS": 0,
+        "headingDeg": 0,
+        "modulationS": 3.4999999999999902
+      },
+      "note": "No universal shorter-distance or yaw-stability claim; this is per-wheel ABS without ESC."
+    },
+    {
+      "kind": "brake",
+      "surface": "split",
+      "baseline": {
+        "distanceM": 30.14178956968351,
+        "lockedS": 2.3333333333333277,
+        "headingDeg": 8.143133623368442
+      },
+      "assisted": {
+        "distanceM": 30.99134417273502,
+        "lockedS": 0,
+        "headingDeg": 15.025934660995743,
+        "modulationS": 2.3749999999999942
+      },
+      "note": "No universal shorter-distance or yaw-stability claim; this is per-wheel ABS without ESC."
+    },
+    {
+      "kind": "launch",
+      "surface": "dry",
+      "baseline": {
+        "spinS": 3.9499999999999886,
+        "distanceM": 189.78885719719122,
+        "finalSpeedKmh": 146.90400717863992
+      },
+      "assisted": {
+        "spinS": 0,
+        "distanceM": 245.87410545209022,
+        "finalSpeedKmh": 175.39595457576127,
+        "modulationS": 0.18333333333333332
+      }
+    },
+    {
+      "kind": "launch",
+      "surface": "wet",
+      "baseline": {
+        "spinS": 6.125000000000094,
+        "distanceM": 113.20257027420168,
+        "finalSpeedKmh": 85.10004425212614
+      },
+      "assisted": {
+        "spinS": 0.22499999999999998,
+        "distanceM": 138.08871492148026,
+        "finalSpeedKmh": 110.86947205545196,
+        "modulationS": 6.000000000000088
+      }
+    },
+    {
+      "kind": "launch",
+      "surface": "split",
+      "baseline": {
+        "spinS": 6.125000000000094,
+        "distanceM": 115.36219464755986,
+        "finalSpeedKmh": 85.23144898002924
+      },
+      "assisted": {
+        "spinS": 0.30833333333333346,
+        "distanceM": 171.02365596398315,
+        "finalSpeedKmh": 127.12836231628242,
+        "modulationS": 6.000000000000088
+      }
+    },
+    {
+      "kind": "wing",
+      "baseline": {
+        "peakDragN": 0,
+        "peakDownforceN": 0
+      },
+      "active": {
+        "peakDragN": 49.15903117503448,
+        "peakDownforceN": 72.09991239005058
+      }
+    }
+  ]
+}

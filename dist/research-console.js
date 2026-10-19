@@ -1,7 +1,8 @@
 import {createExperimentConsole} from './experiment-console.js';
+import {t as tr,onLanguageChange,localizeTree} from './i18n.js';
 import {
   FlightProgramRunner,CONTROLLER_FIELDS,PROGRAM_SHORTCUTS,PROGRAM_LIMITS,
-  defaultStage,validateProgram,validateProgramLibrary,
+  defaultStage,defaultProgramLibrary,validateProgram,validateProgramLibrary,
   validateController,validateWind,parseProgramLibrary,loadProgramLibrary,
   saveProgramLibrary,loadResults,saveResults,quaternionFromAttitude,
   quaternionErrorDeg,resultCSV,
@@ -13,6 +14,10 @@ const f=(v,d=2)=>typeof v==='number'&&Number.isFinite(v)?v.toFixed(d):'—';
 const select=(values,value)=>values.map(([v,label])=>`<option value="${esc(v)}"${v===value?' selected':''}>${esc(label)}</option>`).join('');
 const stageNames={pose:'位置 / 姿态参考',wait:'保持前一指令',rate:'连续角速度指令',roll:'自动翻转并返回',land:'自动着陆',wind:'改变风场'};
 const statusNames={completed:'流程完成',cancelled:'已接管 / 停止',failed:'未完成',timeout:'超时'};
+const builtinProgramNames=new Map(defaultProgramLibrary().programs.map(p=>[p.id,p.name]));
+// A translated preset title is presentation. A renamed/user procedure remains
+// byte-for-byte as entered, including when it happens to contain UI words.
+const programName=p=>builtinProgramNames.get(p.programId??p.id)===p.name?tr(p.name):p.name;
 const flowDefault={speedMps:0,directionDeg:90,gustMps:0,gustPeriodS:4};
 const input=(label,value,attrs='')=>`<label class="rc-field"><span>${label}</span><input type="number" value="${esc(value)}" ${attrs}></label>`;
 const button=(action,label,cls='')=>`<button type="button" data-rc-action="${action}" class="${cls}">${label}</button>`;
@@ -116,9 +121,12 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
     library=saveProgramLibrary(storage,candidate);selectedId=p.id;draft=copy(p);renderPrograms();notify('流程与快捷键已保存，可在城市或实验室中运行。');
   }
   function updateDraftHeader(){draft.name=$('program-name').value;draft.shortcut=$('program-shortcut').value||null;draft.supplyMode=$('program-supply').value;}
+  function renderProgramChoices(){
+    $('program-select').innerHTML=library.programs.map(p=>`<option data-no-i18n value="${esc(p.id)}"${p.id===selectedId?' selected':''}>${esc(programName(p))}${p.shortcut?` · ${p.shortcut.slice(5)}`:''}</option>`).join('');
+    if(!library.programs.some(p=>p.id===selectedId)){const option=doc.createElement('option');option.value=selectedId;option.dataset.noI18n='';option.textContent=`${draft.name} · ${tr('未保存')}`;option.selected=true;$('program-select').append(option);}
+  }
   function renderPrograms(){
-    $('program-select').innerHTML=select(library.programs.map(p=>[p.id,`${p.name}${p.shortcut?` · ${p.shortcut.slice(5)}`:''}`]),selectedId);
-    if(!library.programs.some(p=>p.id===selectedId)){const option=doc.createElement('option');option.value=selectedId;option.textContent=`${draft.name} · 未保存`;option.selected=true;$('program-select').append(option);}
+    renderProgramChoices();
     $('program-name').value=draft.name;$('program-shortcut').innerHTML=select([['','不绑定'],...PROGRAM_SHORTCUTS.map(code=>[code,code.slice(5)])],draft.shortcut||'');$('program-supply').value=draft.supplyMode;
     $('program-total').textContent=`${f(draft.stages.reduce((sum,s)=>sum+(s.durationS||0),0),1)} s`;
     $('stages').innerHTML=draft.stages.map((stage,index)=>stageHTML(stage,index)).join('');
@@ -136,19 +144,19 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
   }
   function renderResults(){
     $('result-count').textContent=`${results.length} / ${PROGRAM_LIMITS.results}`;
-    $('results').innerHTML=results.length?results.slice().reverse().map(r=>`<label class="rc-result"><input type="checkbox" data-rc-result="${esc(r.id)}"${selectedResults.includes(r.id)?' checked':''}><span><strong>${esc(r.name)}</strong><small>${esc(r.startedAt.replace('T',' ').slice(0,19))} UTC · ${f(r.durationS,1)} s</small></span><em data-status="${esc(r.status)}">${esc(statusNames[r.status])}</em></label>`).join(''):'<p class="rc-empty">运行一个自动流程后，查看误差、超调、稳定时间与气体消耗。可先使用“高度与姿态阶跃”。</p>';
+    $('results').innerHTML=results.length?results.slice().reverse().map(r=>`<label class="rc-result"><input type="checkbox" data-rc-result="${esc(r.id)}"${selectedResults.includes(r.id)?' checked':''}><span><strong data-no-i18n>${esc(programName(r))}</strong><small>${esc(r.startedAt.replace('T',' ').slice(0,19))} UTC · ${f(r.durationS,1)} s</small></span><em data-status="${esc(r.status)}">${esc(statusNames[r.status])}</em></label>`).join(''):'<p class="rc-empty">运行一个自动流程后，查看误差、超调、稳定时间与气体消耗。可先使用“高度与姿态阶跃”。</p>';
     const selected=selectedResults.map(id=>results.find(r=>r.id===id)).filter(Boolean).slice(-2);
     if(!selected.length){$('comparison').innerHTML='';return;}
     const rows=[['位置误差 RMS · m',r=>f(r.summary.rmsPositionErrorM)],['最大位置误差 · m',r=>f(r.summary.peakPositionErrorM)],['最大姿态误差 · °',r=>f(r.summary.peakAttitudeErrorDeg,1)],['目标方向最大超调 · m',r=>f(Math.max(0,...r.stages.map(s=>s.overshootM||0)))],['最后定姿段稳定时间 · s',r=>{const stage=r.stages.filter(s=>s.type==='pose').at(-1);return f(stage?.settlingTimeS);}],['推力受限采样比例',r=>r.summary.saturationFraction===null?'—':`${f(r.summary.saturationFraction*100,1)}%`],['喷口通过气量 · kg',r=>f(r.summary.gasThroughputKg)],['车载排出气量 · kg',r=>f(r.summary.onboardDischargedKg)],['外供气量 · kg',r=>f(r.summary.externalSupplyKg)],['供气模式',r=>r.supplyMode==='finite'?'有限储气':'外部持续'],['结束姿态可配平',r=>r.summary.finalFeasible===null?'未判定':r.summary.finalFeasible?'是':'否']];
-    $('comparison').innerHTML=`<table><thead><tr><th>测量指标</th>${selected.map(r=>`<th>${esc(r.name)}</th>`).join('')}</tr></thead><tbody>${rows.map(([label,value])=>`<tr><th>${label}</th>${selected.map(r=>`<td>${esc(value(r))}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="rc-help">超调沿各次位置阶跃的目标方向投影；喷出气体累计由 20 Hz 流量梯形积分得到。流程完成只表示阶段已执行，稳定与受限情况请看测量。</p>`;
+    $('comparison').innerHTML=`<table><thead><tr><th>测量指标</th>${selected.map(r=>`<th data-no-i18n>${esc(programName(r))}</th>`).join('')}</tr></thead><tbody>${rows.map(([label,value])=>`<tr><th>${label}</th>${selected.map(r=>`<td>${esc(value(r))}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="rc-help">超调沿各次位置阶跃的目标方向投影；喷出气体累计由 20 Hz 流量梯形积分得到。流程完成只表示阶段已执行，稳定与受限情况请看测量。</p>`;
   }
   function paintStatus(){
-    const s=runner.getState(),experiment=experiments?.getState();const line=experiment?.recording?`现场记录 · ${f(experiment.durationS,1)} / 300 s`:experiment?.replaying?`原条件重放 · ${experiment.step}/${experiment.totalSteps} 步`:experiment?.numericRunning?'后台数值执行中 · 可停止并保留记录':s.running?`${s.name} · ${s.stage}/${s.stageCount} ${s.stageLabel} · ${f(s.stageElapsedS,1)} / ${f(s.stageDurationS,1)} s`:'就绪 · 驾驶键可随时接管';
-    $('run-status').textContent=line;chip.querySelector('[data-rc="chip-status"]').textContent=line;chip.hidden=!(s.running||experiment?.recording||experiment?.replaying||experiment?.numericRunning)||opened;
+    const s=runner.getState(),experiment=experiments?.getState();const line=experiment?.recording?tr(`现场记录 · ${f(experiment.durationS,1)} / 300 s`):experiment?.replaying?tr(`原条件重放 · ${experiment.step}/${experiment.totalSteps} 步`):experiment?.numericRunning?tr('后台数值执行中 · 可停止并保留记录'):s.running?`${programName(s)} · ${s.stage}/${s.stageCount} ${tr(s.stageLabel)} · ${f(s.stageElapsedS,1)} / ${f(s.stageDurationS,1)} s`:tr('就绪 · 驾驶键可随时接管');
+    for(const el of [$('run-status'),chip.querySelector('[data-rc="chip-status"]')]){el.dataset.noI18n='';el.textContent=line;}chip.hidden=!(s.running||experiment?.recording||experiment?.replaying||experiment?.numericRunning)||opened;
     shell.dataset.running=String(s.running);const context=getContext()==='lab'?'lab':'city';shell.dataset.context=context;$('context').textContent=context==='lab'?'风场实验室 · 原位研究':'城市 · 现场试验';$('context-button').textContent=context==='lab'?'返回城市 ↗':'进入风场实验室 ↗';
   }
   function setTab(name){if(!['controls','programs','results','experiments'].includes(name))return;tab=name;for(const el of $$('[data-rc-panel]'))el.hidden=el.dataset.rcPanel!==tab;for(const el of $$('[data-rc-tab]'))el.setAttribute('aria-selected',String(el.dataset.rcTab===tab));if(tab==='results')drawPlot();}
-  function open(name=tab){opened=true;shell.hidden=false;doc.body.classList.add('research-open');setTab(name);paintStatus();if(getSim())update(getSim().telemetry(),0);}
+  function open(name=tab){opened=true;shell.hidden=false;localizeTree(shell);doc.body.classList.add('research-open');setTab(name);paintStatus();if(getSim())update(getSim().telemetry(),0);}
   function close(){opened=false;shell.hidden=true;doc.body.classList.remove('research-open');paintStatus();}
   function localControllerValues(){return fieldNumbers('[data-rc-param]','rcParam');}
   function uniqueId(){let id;do{id=`user-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;}while(library.programs.some(p=>p.id===id));return id;}
@@ -211,7 +219,7 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
     ctx.clearRect(0,0,w,h);ctx.fillStyle='#0b1821';ctx.fillRect(0,0,w,h);ctx.font='18px Consolas, monospace';
     const key=plotMetric==='height'?'heightM':plotMetric==='position'?'positionErrorM':'attitudeErrorDeg';const target=plotMetric==='height';
     const values=samples.flatMap(s=>[s[key],...(target?[s.targetHeightM]:[])]).filter(Number.isFinite);
-    if(!samples.length||!values.length){ctx.fillStyle='#87a6b5';ctx.fillText('运行试验后显示仿真时间曲线',62,143);return;}
+    if(!samples.length||!values.length){ctx.fillStyle='#87a6b5';ctx.fillText(tr('运行试验后显示仿真时间曲线'),62,143);return;}
     let min=Math.min(...values),max=Math.max(...values);const padding=Math.max(.1,(max-min)*.15);min-=padding;max+=padding;if(plotMetric!=='height')min=0;
     const t0=samples[0].timeS,t1=Math.max(t0+1,samples.at(-1).timeS),x=t=>l+(t-t0)/(t1-t0)*(r-l),y=v=>bottom-(v-min)/(max-min)*(bottom-top);
     ctx.lineWidth=1;ctx.strokeStyle='#24404d';ctx.fillStyle='#7796a5';
@@ -247,5 +255,6 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
   function beforeFixedStep(fixedDt,pilotInput={}){if(experiments.getState().replaying)return experiments.beforeStep(pilotInput);const input=runner.stepInput(fixedDt,pilotInput);return experiments.beforeStep(input);}
   renderPrograms();renderResults();readSettings();readCurrentPose();setLiveAvailable(liveAvailable);
   if(message){$('message').textContent=message;$('message').dataset.kind=messageKind;$('message').hidden=false;}
-  return{open,close,toggle:()=>opened?close():open(),stepInput:beforeFixedStep,beforeFixedStep,afterFixedStep:experiments.afterStep,recordEvent:experiments.recordEvent,startRecording:experiments.startRecording,stopRecording:experiments.stopRecording,startReplay:experiments.startReplay,setLiveAvailable,getExperimentState:experiments.getState,getExperimentRecords:experiments.getRecords,needsFixedStep:()=>{const state=experiments.getState();return state.recording||state.replaying;},captureSample,update,handleKey,onContextChange,cancel,getState:()=>({...runner.getState(),experiment:experiments.getState(),open:opened,tab,context:getContext(),savedPrograms:library.programs.map(p=>({id:p.id,name:p.name,shortcut:p.shortcut})),resultCount:results.length}),dispose(){experiments.dispose();cancel('控制台已关闭');close();disposed=true;shell.removeEventListener('click',click);shell.removeEventListener('change',change);chip.removeEventListener('click',click);$('import-programs').removeEventListener('change',importFile);shell.remove();chip.remove();}};
+  const stopLanguage=onLanguageChange(()=>{renderProgramChoices();renderResults();paintStatus();localizeTree(shell);localizeTree(chip);drawPlot();if(getSim())update(getSim().telemetry(),0);});
+  return{open,close,toggle:()=>opened?close():open(),stepInput:beforeFixedStep,beforeFixedStep,afterFixedStep:experiments.afterStep,recordEvent:experiments.recordEvent,startRecording:experiments.startRecording,stopRecording:experiments.stopRecording,startReplay:experiments.startReplay,setLiveAvailable,getExperimentState:experiments.getState,getExperimentRecords:experiments.getRecords,needsFixedStep:()=>{const state=experiments.getState();return state.recording||state.replaying;},captureSample,update,handleKey,onContextChange,cancel,getState:()=>({...runner.getState(),experiment:experiments.getState(),open:opened,tab,context:getContext(),savedPrograms:library.programs.map(p=>({id:p.id,name:p.name,shortcut:p.shortcut})),resultCount:results.length}),dispose(){stopLanguage();experiments.dispose();cancel('控制台已关闭');close();disposed=true;shell.removeEventListener('click',click);shell.removeEventListener('change',change);chip.removeEventListener('click',click);$('import-programs').removeEventListener('change',importFile);shell.remove();chip.remove();}};
 }

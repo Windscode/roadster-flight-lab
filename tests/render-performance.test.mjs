@@ -80,4 +80,4 @@ pass('GPU timing is nonblocking/disjoint-aware; 30-second performance capture ex
 }
 pass('Balanced exhaust limits particles and GPU uploads, amortizes visual raycasts, and never changes physical thrust');
 
-writeFileSync('qa/render-performance-3.8.json',JSON.stringify({status:'passed',scope:'Deterministic render-budget, shader-pass scheduling and runtime instrumentation regression tests; no browser or GPU FPS measurement.',checks,resolutionMatrix:matrices},null,2)+'\n');
+writeFileSync('qa/render-performance-3.9.json',JSON.stringify({status:'passed',scope:'Deterministic render-budget, shader-pass scheduling and runtime instrumentation regression tests; no browser or GPU FPS measurement.',checks,resolutionMatrix:matrices},null,2)+'\n');

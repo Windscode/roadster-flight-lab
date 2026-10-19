@@ -93,5 +93,5 @@ test('Disposal releases owned GPU resources once and leaves shared arrow geometr
 });
 
 const sourceFiles=['dist/wind-lab-data.js','dist/wind-laboratory.js','tests/wind-laboratory.test.mjs'],sourceHashes=Object.fromEntries(sourceFiles.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')]));
-writeFileSync(new URL('../qa/wind-laboratory-3.8.json',import.meta.url),JSON.stringify({version:'3.8',generatedAt:new Date().toISOString(),scope:'Node geometry, actual static physics raycasts, passive tracer math and render-state failure handling. No browser images, real GPU compilation, reflection success-path image validation or FPS measurement.',tests:results,sourceHashes,physicalSolids:WIND_LAB_GEOMETRY.length,profiles},null,2)+'\n');
+writeFileSync(new URL('../qa/wind-laboratory-3.9.json',import.meta.url),JSON.stringify({version:'3.9',generatedAt:new Date().toISOString(),scope:'Node geometry, actual static physics raycasts, passive tracer math and render-state failure handling. No browser images, real GPU compilation, reflection success-path image validation or FPS measurement.',tests:results,sourceHashes,physicalSolids:WIND_LAB_GEOMETRY.length,profiles},null,2)+'\n');
 console.log(`Wind laboratory: ${results.length} checks passed.`);

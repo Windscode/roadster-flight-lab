@@ -12,20 +12,21 @@ import {CSM} from '../dist/vendor/addons/csm/CSM.js';
 import {createIndirectLighting} from '../dist/indirect-lighting.js';
 import {CITY_RENDER_PRESETS} from '../dist/city-render-budget.js';
 import {attachRoadSurface} from '../dist/road-surface-material.js';
+import {attachPavementSurface} from '../dist/pavement-surface-material.js';
 import {createLocalProbeSun} from '../dist/local-probe-sun.js';
 import {createCityExteriorMaterials} from '../dist/city-exterior-materials.js';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const dist=new URL('../dist/',import.meta.url);
 let validator=process.env.GLSLANG_VALIDATOR||'glslangValidator';
-let reportPath=path.join(root,'qa/render-shaders-3.8.json');
+let reportPath=path.join(root,'qa/render-shaders-3.9.json');
 const args=process.argv.slice(2);
 for(let i=0;i<args.length;i++){
   if(args[i]==='--validatorPath')validator=args[++i];
   else if(args[i].startsWith('--validatorPath='))validator=args[i].slice(16);
   else if(args[i]==='--report')reportPath=path.resolve(args[++i]);
   else if(args[i]==='--help'){
-    console.log('Usage: node scripts/validate-city-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shaders-3.8.json]\nRequires an existing glslangValidator; no compiler is downloaded or installed.');
+    console.log('Usage: node scripts/validate-city-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shaders-3.9.json]\nRequires an existing glslangValidator; no compiler is downloaded or installed.');
     process.exit(0);
   }else throw Error('Unknown argument: '+args[i]);
 }
@@ -44,7 +45,7 @@ const temporary=await fs.mkdtemp(path.join(os.tmpdir(),'roadster-city-shaders-')
 const sourceFiles=['scripts/validate-city-shaders.mjs','dist/vendor/three.module.js','dist/vendor/three.core.js',
   'dist/vendor/addons/csm/CSM.js','dist/vendor/addons/csm/CSMShader.js','dist/indirect-lighting.js',
   'dist/irradiance-math.js','dist/city-render-budget.js','dist/city-environment.js',
-  'dist/local-probe-sun.js','dist/road-surface-material.js','dist/city-exterior-materials.js','dist/wind-laboratory.js',
+  'dist/local-probe-sun.js','dist/pavement-surface-material.js','dist/road-surface-material.js','dist/city-exterior-materials.js','dist/wind-laboratory.js',
   'dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/visual-presets.js'];
 
 try{
@@ -102,8 +103,8 @@ try{
   await gi.ready;
   const probeSun=createLocalProbeSun(new THREE.Scene(),{}),exterior=createCityExteriorMaterials(THREE);
   const dummyTextures={albedo:new THREE.Texture(),normal:new THREE.Texture(),roughness:new THREE.Texture()};
-  for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const night of [false,true])for(const kind of ['standard','physical','asphalt','exterior-concrete','exterior-glass','exterior-enamel']){
-    if(night&&!['standard','physical','asphalt'].includes(kind))continue;
+  for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const night of [false,true])for(const kind of ['standard','physical','asphalt','pavement','exterior-concrete','exterior-glass','exterior-enamel']){
+    if(night&&!['standard','physical','asphalt','pavement'].includes(kind))continue;
     const physical=kind==='physical',spots=night?({balanced:3,high:5,ultra:6}[quality]):0;
     gi.setEnabled(!night);
     const profile=CITY_RENDER_PRESETS[quality],count=profile.shadowCascades;
@@ -112,6 +113,7 @@ try{
     const material=physical?new THREE.MeshPhysicalMaterial():new THREE.MeshStandardMaterial();
     try{
       if(kind==='asphalt')attachRoadSurface(material,dummyTextures).setQuality(quality);
+      if(kind==='pavement')attachPavementSurface(material).setWetness(night?1:0);
       if(kind.startsWith('exterior-')){exterior.attach(material,kind.slice(9));exterior.setQuality(quality);}
       const surfaceCompile=material.onBeforeCompile;
       csm.fade=true;csm.setupMaterial(material);gi.setQuality(quality,profile);
@@ -158,7 +160,7 @@ try{
   const report={format:'roadster-offline-city-shader-validation-1',createdAt:new Date().toISOString(),status:failed?'failed':'passed',
     validator:{name:path.basename(validator),version:version.stdout.trim()},
     method:'Exact vendored Three.js WebGLProgram emitter captured through a fake GL sink, with the live CSM ShaderChunk mutations copied to the temporary emitter. External glslangValidator compiles and links each vertex/fragment pair; no GL context is created.',
-    scope:'Balanced vertex irradiance and high/ultra fragment irradiance, 1/2/3 fading CSM cascades, regular/instanced Standard/Physical materials, day/wet-night spotlight and scanned wet-reflection road and exterior concrete/glass/enamel shaders, dedicated local sun visibility branch, packed-depth capture and plain wind-lab PBR materials after city CSM globally changes ShaderChunk.',
+    scope:'Balanced vertex irradiance and high/ultra fragment irradiance, 1/2/3 fading CSM cascades, regular/instanced Standard/Physical materials, day/wet-night spotlight and scanned wet-reflection road, metric paving and exterior concrete/glass/enamel shaders, dedicated local sun visibility branch, packed-depth capture and plain wind-lab PBR materials after city CSM globally changes ShaderChunk.',
     limitations:['Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.',
       'Any compiler-only compatibility rename is recorded alongside the exact failure. Production vendor shaders remain unchanged.',
       'This finite matrix covers the new CSM/GI paths, not every possible material, skinning or morph-target permutation.'],

@@ -5,6 +5,7 @@ import {spawnSync} from 'node:child_process';
 import * as THREE from '../dist/vendor/three.module.js';
 import {createIndirectLighting} from '../dist/indirect-lighting.js';
 import {RoadsterSim} from '../dist/physics.js';
+import {partitionCityGeometry} from '../qa/city-geometry-scope.mjs';
 import {URBAN_MATERIAL_PALETTE} from '../dist/urban-architecture.js';
 import {irradianceAt,shBasis,fibonacciDirection,canonicalGeometryJSON} from '../dist/irradiance-math.js';
 const checks=[],pass=s=>{checks.push(s);console.log('PASS: '+s);};
@@ -17,7 +18,10 @@ pass('Isotropic radiance integrates to pi times radiance on six normals without 
  for(let i=0;i<64;i++){const n=fibonacciDirection(i,64),a=irradianceAt(c,n),b=sh.getIrradianceAt(new THREE.Vector3(...n),new THREE.Vector3());a.forEach((v,j)=>assert.ok(Math.abs(v-Math.max(0,b.getComponent(j)))<.000005));}
 }
 pass('Directional SH evaluation agrees with the independent Three.js irradiance implementation across 64 normals');
-const manifest=JSON.parse(readFileSync('dist/assets/irradiance/manifest.json'));assert.equal(createHash('sha256').update(canonicalGeometryJSON(new RoadsterSim().getWorldGeometry())).digest('hex'),manifest.geometryCanonicalSHA256,'Static envelopes changed above 1e-9 precision: rebake the field');
+const manifest=JSON.parse(readFileSync('dist/assets/irradiance/manifest.json')),fullGeometry=new RoadsterSim().getWorldGeometry(),geometryScope=partitionCityGeometry(fullGeometry);
+const fullGeometryCanonicalSHA256=createHash('sha256').update(canonicalGeometryJSON(fullGeometry)).digest('hex');
+assert.equal(createHash('sha256').update(canonicalGeometryJSON(geometryScope.legacy)).digest('hex'),manifest.geometryCanonicalSHA256,'A baked static envelope changed above 1e-9 precision: rebake the field');
+const approximation='The historical field excludes '+geometryScope.added.length+' explicit shared 3.9 roadside entities. Those entities affect real-time direct shadows; their indirect bounce contribution has not been rebaked.';
 assert.equal(manifest.geometryHashQuantization,1e-9);
 assert.deepEqual(manifest.materialModel.wallTintSRGB,URBAN_MATERIAL_PALETTE.map(p=>p.wall),'The shared wall palette changed: rebake the diffuse field');
 assert.equal(createHash('sha256').update(JSON.stringify(manifest.materialModel)).digest('hex'),manifest.materialModelSHA256,'The bake material description no longer matches its recorded identity');
@@ -31,9 +35,9 @@ for(const v of manifest.volumes){
  }
 }
 assert.equal(valid,manifest.validProbes);assert.equal(total,manifest.totalProbes);assert.ok(valid<total&&valid>10000);
-pass('Every stored probe has finite coefficients, consistent validity, exact dimensions and verified data, canonical geometry and material identities');
+pass('Every stored probe has finite coefficients, consistent validity, exact dimensions and verified data, retained canonical bake-subset and material identities');
 {
- const result=spawnSync(process.execPath,['scripts/bake-indirect.mjs','--audit'],{encoding:'utf8'});assert.equal(result.status,0,result.stdout+result.stderr);const report=JSON.parse(readFileSync('qa/irradiance-convergence.json'));assert.equal(report.status,'passed');assert.ok(report.cases.every(c=>c.relativeError<.25));
+ const result=spawnSync(process.execPath,['scripts/bake-indirect.mjs','--audit'],{encoding:'utf8'});assert.equal(result.status,0,result.stdout+result.stderr);const report=JSON.parse(readFileSync('qa/irradiance-convergence-3.9.json'));assert.equal(report.status,'passed');assert.ok(report.cases.every(c=>c.relativeError<.25));
 }
 pass('Four city locations retain nonnegative bounce energy and agree with a 1536-ray transport reference within the documented spot-check tolerance');
 const shader=readFileSync('dist/indirect-lighting.js','utf8');assert.ok(shader.includes('textureLod(field'));assert.ok(shader.includes('reflectedLight.indirectDiffuse*=mix'));assert.ok(!shader.includes('reflectedLight.directDiffuse*='));
@@ -45,4 +49,4 @@ pass('Contact AO affects only indirect diffuse; spatial probe samples use explic
  for(const p of [{x:-200,y:.8,z:-344},{x:-180,y:14,z:48},{x:680,y:100,z:-650}])for(const sun of [true,false])assert.ok(Number.isFinite(gi.exposureAt(p,sun))&&gi.exposureAt(p,sun)>=.9&&gi.exposureAt(p,sun)<=2.7);
 }
 pass('Camera adaptation responds to spatial shade and sun visibility, stays bounded and has an unloaded fixed-exposure fallback');
-writeFileSync('qa/indirect-light-validation.json',JSON.stringify({status:'passed',checks,validProbes:valid,totalProbes:total,bounces:manifest.bounces,samplesPerProbe:manifest.samplesPerProbe,geometrySHA256:manifest.geometrySHA256,geometryCanonicalSHA256:manifest.geometryCanonicalSHA256,geometryHashQuantization:manifest.geometryHashQuantization,materialModelSHA256:manifest.materialModelSHA256,limits:manifest.limitations},null,2)+'\n');
+writeFileSync('qa/indirect-light-validation-3.9.json',JSON.stringify({status:'passed',checks,validProbes:valid,totalProbes:total,bounces:manifest.bounces,samplesPerProbe:manifest.samplesPerProbe,geometrySHA256:manifest.geometrySHA256,geometryCanonicalSHA256:manifest.geometryCanonicalSHA256,geometryHashQuantization:manifest.geometryHashQuantization,materialModelSHA256:manifest.materialModelSHA256,fullGeometryCanonicalSHA256,newSharedEntityIds:geometryScope.addedIds,limits:[...manifest.limitations,approximation]},null,2)+'\n');

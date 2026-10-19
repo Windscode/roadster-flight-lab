@@ -1,13 +1,13 @@
 // Authored presentation data. Route coordinates use the canonical city street
 // plan in metres. A visual route never moves the vehicle or changes physics.
 export const CITY_WEATHER_PRESETS=Object.freeze({
-  'clear-day':Object.freeze({id:'clear-day',name:'晴天',night:false,wetness:0,exposure:.90,
-    backgroundIntensity:.75,environmentIntensity:.80,fog:0xa2b5bf,fogDensity:.00055,
+  'clear-day':Object.freeze({id:'clear-day',name:'晴天',night:false,wetness:0,exposure:.87,
+    backgroundIntensity:.72,environmentIntensity:.76,fog:0xa4b4b9,fogDensity:.00072,
     sunIntensity:2.7,sunColor:0xfff3e3,ambientIntensity:.18,bloomStrength:.16,
     description:'实测日间天空、太阳阴影与原有静态漫反射光场。'}),
-  'wet-night':Object.freeze({id:'wet-night',name:'湿夜',night:true,wetness:1,exposure:1.08,
-    backgroundIntensity:1,environmentIntensity:.42,fog:0x101b29,fogDensity:.0010,
-    sunIntensity:0,sunColor:0xaac6ef,ambientIntensity:.08,bloomStrength:.20,
+  'wet-night':Object.freeze({id:'wet-night',name:'湿夜',night:true,wetness:1,exposure:1.02,
+    backgroundIntensity:.88,environmentIntensity:.46,fog:0x14202c,fogDensity:.00125,
+    sunIntensity:0,sunColor:0xaac6ef,ambientIntensity:.09,bloomStrength:.14,
     description:'空间湿度与粗糙度、有限近灯阴影、车灯和局部反射；不复用白昼间接光。'})
 });
 
@@ -16,6 +16,7 @@ const routePoints=[[-200,0,-400],[-200,0,-320],[-200,0,-262],[-200,0,-225],[-200
 const routeLength=routePoints.slice(1).reduce((s,b,i)=>s+Math.hypot(...b.map((v,k)=>v-routePoints[i][k])),0);
 export const CITY_BENCHMARK_ROUTE=Object.freeze({
   id:'weave-canal-loop-38',name:'织桥 · 南岸环线',version:1,points:routePoints,
+  presentationRevision:'3.9 / continuous connector pavements, functional frontages and street-oriented surfaces',
   lengthMetres:routeLength,speedKmh:30,estimatedDurationS:routeLength/(30/3.6),
   suggestedDurationS:[136,180],spawn:{position:{x:-200,y:.74,z:-390},heading:0},
   streetIds:['weave-main','crosstown-link','foundry-main','canal-link'],
@@ -25,9 +26,22 @@ export const CITY_BENCHMARK_ROUTE=Object.freeze({
     {id:'exchange',name:'02 / 交换厅',position:[-202.4,2.05,-296],target:[-198.0,4.4,-254],fov:48},
     {id:'viaduct',name:'03 / 高架桥下',position:[-201.2,2.2,-244],target:[-198.3,4.2,-200],fov:48},
     {id:'junction',name:'04 / 横街路口',position:[-201.8,2.0,-146],target:[-176.0,4.0,-128.5],fov:48},
-    {id:'canal',name:'05 / 南岸归途',position:[-138,2.1,-398],target:[-204,5.0,-402],fov:48}
+    {id:'canal',name:'05 / 南岸归途',position:[-138,2.1,-398],target:[-204,5.0,-402],fov:48},
+    {id:'crosstown',name:'06 / 横街衔接',position:[-78,2.05,-135],target:[96,5.0,-129],fov:48},
+    {id:'foundry-south',name:'07 / 机造大道南段',position:[102.5,2.1,-286],target:[99,5.0,-390],fov:48}
   ],
   limits:'约 2–3 分钟是按 30 km/h 加路口减速估计；路线为驾驶导航与实机采集基准，不是自动驾驶或闭环操纵输入。'
+});
+
+export const CITY_VISUAL_CAPTURE_PROTOCOL=Object.freeze({
+  schema:'roadster.visual-comparison',version:1,baselineCommit:'a25b228a6d56f358cba24106ce897e1cb5c99bc1',baselineModelVersion:'3.8.0',
+  referenceResolution:[1600,900],pixelRatio:1,weather:['clear-day','wet-night'],quality:['balanced','high','ultra'],
+  cameraIds:['weave-entry','exchange','viaduct','junction','canal'],
+  addedViewIds:['crosstown','foundry-south'],routeId:CITY_BENCHMARK_ROUTE.id,
+  baselineScope:'Full untouched checkout at the baseline commit, including its original city plan/materials. New connector views can be set manually to these same coordinates in the old renderer.',
+  stillConditions:'Same camera position, target, 48 degree vertical FOV, paused physical state, 1600x900 drawing buffer, pixel ratio 1, quality and weather. Lock exposure to the matching baseline preset (day .90, night 1.08) for a material/geometry comparison; capture revised automatic exposure separately.',
+  timingConditions:'Record browser, GPU, resolution and quality; separate loading/5 s prewarm from 150 s driven steady capture. Actual route inputs/trajectory accompany p50/p95/p99 and long frames.',
+  acceptance:'Requires actual WebGL images and measured display/GPU timing. Scene graph, shader and DOM checks are separate structural evidence.'
 });
 
 // 50 mm on a 36 mm wide film gate, constant across all silhouette views. The
@@ -42,7 +56,9 @@ export const VEHICLE_INSPECTION_RIG=Object.freeze({
     {id:'side',name:'正侧',position:[8.8,.30,0],target:[0,.03,0]},
     {id:'front-quarter',name:'前四分之三',position:[5.6,1.22,6.8],target:[0,.03,0]},
     {id:'rear-quarter',name:'后四分之三',position:[-5.6,1.22,-6.8],target:[0,.03,0]},
-    {id:'top',name:'车顶与肩线',position:[0,8.5,.01],target:[0,0,0]}
+    {id:'top',name:'车顶与肩线',position:[0,8.5,.01],target:[0,0,0]},
+    {id:'front-lamp',name:'前灯与鼻部',position:[1.70,.68,4.45],target:[.48,.045,1.83]},
+    {id:'rear-wheel',name:'后轮与肩线',position:[3.35,.25,-3.15],target:[.87,-.045,-1.36]}
   ],
   sources:[
     {id:'official-product',url:'https://www.tesla.com/roadster',use:'当前官方外形与部件说明'},

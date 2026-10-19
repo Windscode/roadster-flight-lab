@@ -26,7 +26,9 @@ import {CITY_STREETS} from './city-plan.js';
 import {createWindLaboratory} from './wind-laboratory.js';
 import {WIND_LAB_GEOMETRY} from './wind-lab-data.js';
 import {MODEL_BUILD_ID} from './model-build.js';
-import {CITY_BENCHMARK_ROUTE,CITY_WEATHER_PRESETS} from './visual-presets.js';
+import {CITY_BENCHMARK_ROUTE,CITY_WEATHER_PRESETS,CITY_VISUAL_CAPTURE_PROTOCOL} from './visual-presets.js';
+import {t as tr,onLanguageChange} from './i18n.js';
+import {VERTICAL_RESPONSE,saveVerticalResponse} from './ui-preferences.js';
 
 const $=id=>document.getElementById(id);
 const $$=selector=>[...document.querySelectorAll(selector)];
@@ -284,7 +286,7 @@ export async function boot(shell){
   $('fullscreen-btn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('app').requestFullscreen();}catch{toast('当前浏览器不允许自动全屏，可使用 F11。');}};
   $('supply-mode').onchange=e=>{researchConsole?.cancel('修改供气模式');sim.setSupplyMode(e.target.value);logEvent('supply_mode',{mode:e.target.value});toast(e.target.value==='bench'?'已切换恒压试验台：假设外部持续供气。':'已切换有限储气：气量与压力将随喷射降低。');syncUi(sim.telemetry());};
   const params=[
-    ['cornerStiffnessFront','前轮标称角刚度',20000,150000,5000,'kN/rad',.001],['cornerStiffnessRear','后轮标称角刚度',20000,150000,5000,'kN/rad',.001],['steeringAccelG','辅助侧向加速度上限',.2,1.2,.05,'g',1],['climbRateMps','普通升降率上限',.3,3,.1,'m/s',1],
+    ['cornerStiffnessFront','前轮标称角刚度',20000,150000,5000,'kN/rad',.001],['cornerStiffnessRear','后轮标称角刚度',20000,150000,5000,'kN/rad',.001],['steeringAccelG','道路转向横向加速度参考',.2,1.2,.05,'g',1],
     ['dryMass','空车等效质量',1000,3500,50,'kg',1],['tireMu','轮胎摩擦系数',.3,2.2,.05,'',1],
     ['suctionPressurePa','满密封负压差',1000,15000,50,'kPa',.001],['liftNozzleMax','每个主升力喷口上限',5000,30000,500,'kN',.001],
     ['tankLitres','气罐总容积',200,1800,50,'L',1],['initialPressureBar','初始储气压力',100,600,10,'bar',1],
@@ -292,13 +294,27 @@ export async function boot(shell){
   ];
   $('parameter-fields').innerHTML=params.map(([key,label,min,max,step,unit,factor])=>`<label class="field-label" for="param-${key}">${label}<small>假设</small><b id="param-label-${key}">${format(sim.params[key]*factor,factor===1&&step>=1?0:2)} ${unit}</b></label><input id="param-${key}" data-param="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${sim.params[key]}">`).join('');
   for(const [key,label,min,max,step,unit,factor] of params){const element=$('param-'+key);element.addEventListener('input',()=>{$('param-label-'+key).textContent=format(+element.value*factor,factor===1&&step>=1?0:2)+' '+unit;});element.addEventListener('change',()=>{researchConsole?.cancel('修改物理参数');sim.setParam(key,+element.value);logEvent('parameter_change',{key,value:+element.value});sim.reset(scenario);t=sim.telemetry();resetTrace();setPaused(true);syncUi(t);toast('已修改'+label+'并重新初始化试验，按 P 继续。');});}
+  function setVerticalResponse(value){
+    const next=saveVerticalResponse(value);sim.setParam('climbRateMps',next);
+    logEvent('vertical_response_change',{targetSpeedMps:next,definition:'World vertical target speed, immediate key command; actuator limits unchanged'});
+    syncVerticalResponse(sim.telemetry());
+  }
+  function syncVerticalResponse(data){
+    if(document.activeElement!==$('vertical-speed-command'))$('vertical-speed-command').value=sim.params.climbRateMps;
+    $('vertical-speed-value').textContent=format(Number($('vertical-speed-command').value),1)+' m/s';
+    const command=data.verticalControl;
+    $('vertical-response-status').textContent=command&&data.mode==='hover'?'指令 '+format(command.commandMps,1)+' m/s · 实际垂速 '+format(data.verticalSpeed,1)+' m/s':'按键立即采用设定值；加速度受实际推力限制。';
+  }
+  $('vertical-speed-command').oninput=e=>{$('vertical-speed-value').textContent=format(Number(e.target.value),1)+' m/s';};
+  $('vertical-speed-command').onchange=e=>setVerticalResponse(Number(e.target.value));
+  $('vertical-speed-reset').onclick=()=>{setVerticalResponse(VERTICAL_RESPONSE.default);$('vertical-speed-command').value=VERTICAL_RESPONSE.default;syncVerticalResponse(sim.telemetry());toast('升降响应已恢复默认 3 m/s。');};
   $('radio-chip').onclick=()=>openPanel('radio');
   for(const [id,key]of [['steering-assist','steeringAssist'],['traction-assist','tractionAssist'],['abs-enabled','absEnabled']])$(id).onchange=e=>{sim.setParam(key,e.target.checked);logEvent('assistance_change',{key,enabled:e.target.checked});};
   $('nozzle-model').onchange=e=>{researchConsole?.cancel('修改喷口模型');sim.setParam('nozzleModel',e.target.value);logEvent('nozzle_model',{model:e.target.value});};
   $('gas-model').onchange=e=>{researchConsole?.cancel('修改气源模型');sim.setParam('gasModel',e.target.value);logEvent('gas_model',{model:e.target.value});toast(e.target.value==='adiabatic'?'气源模型：绝热放空 + 缓慢环境换热。':'气源模型：等温对照（恒定气温假设）。');};
   $('target-height').oninput=e=>{sim.setParam('hoverHeight',+e.target.value);$('target-height-label').textContent=format(+e.target.value,1)+' m';logEvent('height_target',{value:+e.target.value});};
   $('time-scale').oninput=e=>{scale=+e.target.value;$('time-scale-label').textContent=format(scale,2)+' ×';logEvent('time_scale',{value:scale});};
-  $('defaults-btn').onclick=()=>{for(const [key]of params){sim.setParam(key,DEFAULT_PARAMS[key]);$('param-'+key).value=DEFAULT_PARAMS[key];$('param-'+key).dispatchEvent(new Event('input'));}for(const key of ['steeringAssist','tractionAssist','absEnabled','roadSurface','wingMode','wingDeployment','nozzleModel'])sim.setParam(key,DEFAULT_PARAMS[key]);sim.setSupplyMode(DEFAULT_PARAMS.supplyMode);$('supply-mode').value=DEFAULT_PARAMS.supplyMode;sim.setParam('gasModel','adiabatic');$('gas-model').value='adiabatic';sim.setParam('hoverHeight',4);$('target-height').value=4;$('target-height-label').textContent='4.0 m';activateScenario(scenario);toast('默认参数已恢复。');};
+  $('defaults-btn').onclick=()=>{setVerticalResponse(VERTICAL_RESPONSE.default);for(const [key]of params){sim.setParam(key,DEFAULT_PARAMS[key]);$('param-'+key).value=DEFAULT_PARAMS[key];$('param-'+key).dispatchEvent(new Event('input'));}for(const key of ['steeringAssist','tractionAssist','absEnabled','roadSurface','wingMode','wingDeployment','nozzleModel'])sim.setParam(key,DEFAULT_PARAMS[key]);sim.setSupplyMode(DEFAULT_PARAMS.supplyMode);$('supply-mode').value=DEFAULT_PARAMS.supplyMode;sim.setParam('gasModel','adiabatic');$('gas-model').value='adiabatic';sim.setParam('hoverHeight',4);$('target-height').value=4;$('target-height-label').textContent='4.0 m';activateScenario(scenario);toast('默认参数已恢复。');};
   function setQuality(value){
     meter.markEvent('quality_change',{quality:value});quality=RENDER_PROFILES[value]?value:'balanced';renderProfile=RENDER_PROFILES[quality];governor.setQuality(quality);meter.reset();
     try{localStorage.setItem('roadster-quality',quality);}catch{}
@@ -313,7 +329,7 @@ export async function boot(shell){
   $('quality').onchange=e=>setQuality(e.target.value);
   function cameraConditions(){return {id:fixedCameraId,mode:cameraMode,position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),up:camera.up.toArray(),target:controls.target.toArray(),fov:camera.fov,near:camera.near,far:camera.far,aspect:camera.aspect,viewOffset:camera.view?.enabled?{...camera.view}:null};}
   function sceneConfiguration(){return {version:1,context:activeContext,weatherPreset:activeContext==='city'?weatherPreset:null,quality,routeId:activeContext==='city'?activeBenchmarkRoute:null,camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked};}
-  function visualConditions(){return {schema:'roadster-visual-conditions',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,context:activeContext,weatherPreset,route:activeContext==='city'?activeBenchmarkRoute:null,quality,profile:renderProfile,resolution:{...renderSize,cssWidth:innerWidth,cssHeight:innerHeight,devicePixelRatio:devicePixelRatio||1},camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked,simState:sim.exportState(),graphicsStartup:shell.graphics,device:meter.device};}
+  function visualConditions(){return {schema:'roadster-visual-conditions',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,context:activeContext,weatherPreset,route:activeContext==='city'?activeBenchmarkRoute:null,quality,profile:renderProfile,resolution:{...renderSize,cssWidth:innerWidth,cssHeight:innerHeight,devicePixelRatio:devicePixelRatio||1},camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked,simState:sim.exportState(),graphicsStartup:shell.graphics,device:meter.device,comparisonProtocol:CITY_VISUAL_CAPTURE_PROTOCOL};}
   function beginPerformanceCapture(durationMs){
     if(activeContext==='lab'&&durationMs>30000){toast('完整路线采样请先进入城市的织桥环线。');return;}
     closePanels();if(menuOpen)closeGameMenu();else if(paused)setPaused(false);
@@ -409,7 +425,7 @@ export async function boot(shell){
     try{const {GLTFExporter}=await import('./vendor/addons/exporters/GLTFExporter.js');const pose=car.group.position.clone(),q=car.group.quaternion.clone();const wasCutaway=cutaway;car.setQuality?.('ultra');car.setCutaway(false);car.group.position.set(0,0,0);car.group.quaternion.identity();const model=car.group.clone(true);model.visible=true;car.group.position.copy(pose);car.group.quaternion.copy(q);car.setQuality?.(quality);car.setCutaway(wasCutaway);model.traverse(o=>{if(o.isPoints||/plume|mist|exhaust particles|cold-gas particle|cold-gas condensation core/i.test(o.name))o.visible=false;if(o.isLine&&o.material?.isLineBasicMaterial)o.material=new THREE.MeshBasicMaterial({color:o.material.color,transparent:o.material.transparent,opacity:o.material.opacity,vertexColors:o.material.vertexColors});});const result=await new GLTFExporter().parseAsync(model,{binary:true,onlyVisible:true});download(result,'roadster-2026-study.glb','model/gltf-binary');toast('模型已导出。车辆外形是独立重建，非原厂 CAD。');}catch(err){toast('模型导出失败：'+err.message,6500);}finally{button.disabled=false;button.textContent='导出当前车辆模型 · GLB ↓';}
   };
 
-  const detailFields=[['质量','mass','kg',1],['车身纵向速度','forwardSpeedKmh','km/h',1],['俯仰','pitchDeg','°',1],['滚转','rollDeg','°',1],['非重力比力','gLoad','g',2],['密封效率','sealQuality','%',0],['离下表面高度','altitude','m',2],['剩余空气质量','gasMass','kg',1],['目标重心高度','targetAltitude','m',2],['气体温度','gasTemperatureK','K',1],['升力上限 / 重力','thrustMargin','倍',2],['分配残差（归一化）','allocationError','',3],['累计电能¹','energyUsedKWh','kWh',3],['质心侧偏','bodySlipDeg','°',2],['路轮转角','steeringCentreDeg','°',2],['瞬时耗气','massFlowKgS','kg/s',2],['有效排速','effectiveExhaustVelocity','m/s',1],['累计喷流冲量','deliveredImpulseNs','N·s',0],['本状态悬停估时','hoverSecondsEstimate','s',2],['保持位置误差','holdPositionError','m',3],['保持姿态误差','holdAttitudeErrorDeg','°',2],['保持实际速度','holdSpeed','m/s',3],['保持分配残差','holdWrenchResidual','',3]];
+  const detailFields=[['质量','mass','kg',1],['车身纵向速度','forwardSpeedKmh','km/h',1],['俯仰','pitchDeg','°',1],['滚转','rollDeg','°',1],['非重力比力','gLoad','g',2],['密封效率','sealQuality','%',0],['离下表面高度','altitude','m',2],['剩余空气质量','gasMass','kg',1],['目标重心高度','targetAltitude','m',2],['气体温度','gasTemperatureK','K',1],['升力上限 / 重力','thrustMargin','倍',2],['分配残差（归一化）','allocationError','',3],['累计电能¹','energyUsedKWh','kWh',3],['车载累计耗气','onboardGasConsumedKg','kg',2],['外部累计供气','externalGasSuppliedKg','kg',2],['实际轴功率','driveAccounting.mechanicalPowerW','kW',1,.001],['电驱输入功率','driveAccounting.electricalPowerW','kW',1,.001],['质心侧偏','bodySlipDeg','°',2],['路轮转角','steeringCentreDeg','°',2],['瞬时耗气','massFlowKgS','kg/s',2],['有效排速','effectiveExhaustVelocity','m/s',1],['累计喷流冲量','deliveredImpulseNs','N·s',0],['本状态悬停估时','hoverSecondsEstimate','s',2],['保持位置误差','holdPositionError','m',3],['保持姿态误差','holdAttitudeErrorDeg','°',2],['保持实际速度','holdSpeed','m/s',3],['保持分配残差','holdWrenchResidual','',3]];
   $('details-grid').innerHTML=detailFields.map(([label,key,unit,digits])=>`<div><span>${label}</span><b id="detail-${key}">—</b><small>${unit}</small></div>`).join('');
   $('nozzle-bars').innerHTML=t.nozzles.map((n,i)=>`<div class="nozzle-bar"><span>${n.id}</span><div class="bar-track"><div id="nozzle-bar-${i}" class="bar-fill"></div></div><b id="nozzle-label-${i}">0.0 kN</b></div>`).join('');
   const note=document.createElement('p');note.className='field-help';note.textContent='¹ 使用电能账本作供电截止判据，未模拟电压与热特性。喷口总推力是标量和；主轴指令与实际输出见曲线。';$('details-grid').after(note);
@@ -430,6 +446,7 @@ export async function boot(shell){
     fields.forEach(([field,color],j)=>{c.strokeStyle=color;c.lineWidth=2;c.setLineDash(j?[7,5]:[]);c.beginPath();series.forEach((sample,i)=>{const x=left+(sample.time-start)/20*(right-left),y=bottom-sample[field]/(Array.isArray(maximum)?maximum[j]:maximum)*(bottom-top);i?c.lineTo(x,y):c.moveTo(x,y);});c.stroke();});c.restore();c.setLineDash([]);c.fillStyle='#759781';c.textAlign='left';c.fillText(format(Math.max(0,start),1)+' s',left,h-6);c.textAlign='right';c.fillText(format(end,1)+' s',right,h-6);
   }
   function syncUi(data){
+    syncVerticalResponse(data);
     const groundSpeed=Math.hypot(data.velocity.x,data.velocity.z)*3.6;
     $('speed-value').textContent=format(groundSpeed,0);$('altitude-value').textContent=format(data.heightWorld,2);$('vertical-value').textContent=format(data.verticalSpeed,2);$('thrust-value').textContent=format(data.thrustN/1000,1);$('suction-value').textContent=format(data.suctionN/1000,1);$('pressure-value').textContent=format(data.pressureBar,0);$('contacts-value').textContent=data.contactCount+' / 4';
     $('gas-meter').style.width=clamp(data.gasFraction*100,0,100)+'%';$('gas-meter').style.background=data.gasFraction<.2?'#d9a576':'#bddda7';$('thrust-meter').style.width=clamp(data.thrustN/100000*100,0,100)+'%';
@@ -441,16 +458,21 @@ export async function boot(shell){
     $('wheel-feedback').innerHTML=data.wheelStates.map(w=>'<tr><td>'+escapeHtml(w.id)+'</td><td>'+format(w.angularVelocityRadS*60/(2*Math.PI),0)+'</td><td>'+(w.slipRatio===null?'离地':format(w.slipRatio*100,1)+'%')+'</td><td>'+([w.absActive?'ABS调压':'',w.tcsActive?'TCS限矩':''].filter(Boolean).join(' / ')||(w.contact?'滚动':'离地'))+'</td></tr>').join('');
     $('weather-preset').disabled=activeContext!=='city'||graphicsStopped;
 
+    const authority=data.controlAuthority;
+    if(authority&&activeDrawer==='about'){
+      const torque=authority.positiveTorqueUpperNm;
+      $('thrust-authority').textContent='质量 '+format(authority.massKg,0)+' kg · 重力 '+format(authority.weightN/1000,1)+' kN\n'+'主升力上限 '+format(authority.liftMaxN/1000,1)+' kN · 水平悬停推重比 '+format(authority.hoverThrustRatio,2)+'\n'+'当前姿态竖直力上界 '+format(authority.verticalForceUpperBoundN/1000,1)+' kN · 裕量 '+format(authority.verticalForceReserveUpperBoundN/1000,1)+' kN\n'+'单轴正向力矩上界 X/Y/Z '+[torque.x,torque.y,torque.z].map(v=>format(v/1000,1)).join(' / ')+' kN·m\n'+'当前姿态可配平：'+(authority.currentPoseTrimFeasible?'是':'否')+' · 水平目标可配平：'+(authority.levelTargetTrimFeasible?'是':'否');
+    }
     $('target-height-label').textContent=format(data.targetAltitude,1)+' m';if(document.activeElement!==$('target-height'))$('target-height').value=data.targetAltitude;
     if(activeDrawer==='engineering'){
-      for(const [label,key,unit,digits]of detailFields)$('detail-'+key).textContent=key==='hoverSecondsEstimate'&&data.supplyMode==='bench'?'∞':format(key==='sealQuality'?data[key]*100:data[key],digits);
+      for(const [label,key,unit,digits,factor=1]of detailFields){const value=key.split('.').reduce((object,part)=>object?.[part],data);$('detail-'+key).textContent=key==='hoverSecondsEstimate'&&data.supplyMode==='bench'?'∞':format(key==='sealQuality'?value*100:value*factor,digits);}
       data.nozzles.forEach((n,i)=>{$('nozzle-bar-'+i).style.width=clamp(n.force/Math.max(1,n.maxForce)*100,0,100)+'%';$('nozzle-label-'+i).textContent=format(n.force/1000,1)+' kN';});drawChart();drawSignals('force-chart',[['delivered','#c1e6b0'],['demand','#c4a675']]);drawSignals('gas-chart',[['pressure','#c1e6b0'],['temperature','#c4a675']],[sim.params.initialPressureBar,sim.params.gasTemperatureK]);
     }
     $('app').dataset.simState=JSON.stringify({time:+data.simTime.toFixed(3),context:activeContext,programRunning:researchConsole?.getState().running===true,scenario:data.scenario,mode:data.mode,paused,pressure:+data.pressureBar.toFixed(2),height:+data.heightWorld.toFixed(3),gas:+data.gasMass.toFixed(3),phase:data.maneuver?.phase||null,contacts:data.contactCount,recorded:researchConsole.getExperimentState?.().stepCount||0,plumes:exhaust.particles.length,x:+data.position.x.toFixed(2),z:+data.position.z.toFixed(2),menu:menuOpen,heading:+data.headingDeg.toFixed(3),pitch:+data.pitchDeg.toFixed(3),roll:+data.rollDeg.toFixed(3),angularSpeed:+Math.hypot(data.angularVelocity.x,data.angularVelocity.y,data.angularVelocity.z).toFixed(4),input:data.driverInput,stabilization:{mode:data.stabilizationMode,armed:data.airStabilization,active:data.stabilizationActive,holdActive:data.holdActive,holdFeasible:data.holdFeasible,positionError:data.holdPositionError,attitudeErrorDeg:data.holdAttitudeErrorDeg},dynamics:{beta:+data.bodySlipDeg.toFixed(3),steer:+data.steeringCentreDeg.toFixed(3),flow:+data.massFlowKgS.toFixed(3),exhaust:+data.effectiveExhaustVelocity.toFixed(1),hoverSeconds:+data.hoverSecondsEstimate.toFixed(2),nozzleModel:data.nozzleModel},jets:data.nozzles.slice(0,4).map(n=>Math.round(n.command)),audio:sound?{enabled:sound.enabled,volume:sound.volume,state:sound.context.state}:null});
-    const message=data.fault?data.fault:data.stabilizationMode==='hold'&&data.holdActive&&data.holdFeasible===false?'当前姿态超出喷口可持续配平能力 · 控制器已饱和，车辆仍按真实受力运动':data.pressureLimited&&(data.mode!=='drive'||data.stabilizationActive)?'储气压力不足 · 推力正在降低，按 T 进行试验补气':data.maneuver?data.status:data.supplyMode==='bench'&&(data.mode!=='drive'||data.stabilizationActive)?'外部持续供气 · 恒压试验工况':'';
+    const message=data.fault?data.fault:data.levelRecovery?.status==='limited'?'回正受限 · 可用推力或力矩不足，姿态仍按真实受力恢复':data.levelRecovery?.status==='recovering'?'正在恢复水平姿态 · 保持切换时航向，推力与力矩有界':data.stabilizationMode==='hold'&&data.holdActive&&data.holdFeasible===false?'当前姿态超出喷口可持续配平能力 · 控制器已饱和，车辆仍按真实受力运动':data.pressureLimited&&(data.mode!=='drive'||data.stabilizationActive)?'储气压力不足 · 推力正在降低，按 T 进行试验补气':data.maneuver?data.status:data.supplyMode==='bench'&&(data.mode!=='drive'||data.stabilizationActive)?'外部持续供气 · 恒压试验工况':'';
     $('status-banner').textContent=message;$('status-banner').classList.toggle('hidden',!message||!started);
     syncDrivingHud(data);
-    $('performance-label').textContent=displayFps+' FPS · '+renderProfile.label;syncPerformanceUi();const experiment=researchConsole.getExperimentState?.()||{};$('record-btn').textContent=experiment.recording?'■ 停止并保存实验':'● 记录这次驾驶 / 飞行';$('record-btn').classList.toggle('recording',!!experiment.recording);$('record-status').textContent=experiment.recording?'完整实验记录中 · '+format(experiment.durationS||0,1)+' s · 输入与干预事件按物理步保存。':'现场实验记录包含完整初态与身份。导出范围在研究控制台中选择：单记录 CSV 或完整 JSON 库。';
+    $('performance-label').textContent=graphicsStopped?'三维未运行 · 无帧率数据':displayFps+' FPS · '+renderProfile.label;syncPerformanceUi();const experiment=researchConsole.getExperimentState?.()||{};$('record-btn').textContent=experiment.recording?'■ 停止并保存实验':'● 记录这次驾驶 / 飞行';$('record-btn').classList.toggle('recording',!!experiment.recording);$('record-status').textContent=experiment.recording?'完整实验记录中 · '+format(experiment.durationS||0,1)+' s · 输入与干预事件按物理步保存。':'现场实验记录包含完整初态与身份。导出范围在研究控制台中选择：单记录 CSV 或完整 JSON 库。';
   }
   function updateForces(data){
     if(!showForces)return;const p=vec(data.position),q=new THREE.Quaternion(data.quaternion.x,data.quaternion.y,data.quaternion.z,data.quaternion.w);
@@ -484,7 +506,9 @@ export async function boot(shell){
     }
     if(cameraMode==='orbit')camera.up.set(0,1,0);lastPosition.copy(p);
   }
+  onLanguageChange(()=>{syncUi(sim.telemetry());syncPerformanceUi();cityMap.update(sim.telemetry());});
   function syncPerformanceUi(){
+    if(graphicsStopped){$('render-stat-chip').textContent='三维未运行 · 无帧率数据';return;}
     const report=meter.snapshot(),cpu=report.cpuSubmission,physics=cpu.physics?.medianMs,gpu=report.gpuMs;
     $('render-stat-chip').textContent=(report.medianFps?Math.round(report.medianFps):'—')+' FPS · '+renderProfile.label+' · '+renderSize.width+'×'+renderSize.height;
     if(activeDrawer!=='engineering'||$('engineering-render').classList.contains('hidden'))return;

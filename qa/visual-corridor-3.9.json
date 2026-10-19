@@ -1,0 +1,149 @@
+{
+  "format": "roadster-visual-corridor-3.9",
+  "createdAt": "2026-10-19T10:25:02.307Z",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "A 400 m reflection lens retains the main optical settings without inheriting its 2300 m far projection",
+      "status": "passed"
+    },
+    {
+      "name": "Ground-plane clipping remains finite at low clearance, changing heading, pitch and camera roll",
+      "status": "passed"
+    },
+    {
+      "name": "Dedicated radial culling removes far meshes and far instanced batches while preserving near and already-hidden objects",
+      "status": "passed"
+    },
+    {
+      "name": "A failed reflection pass restores dedicated visibility without reviving the generic hidden set",
+      "status": "passed"
+    },
+    {
+      "name": "Connector pavements and fixtures share physics records and stay outside the entire canonical carriageway width",
+      "status": "passed"
+    },
+    {
+      "name": "Functional frontage improvements cover every route family and real doorway lights point outside their solid buildings",
+      "status": "passed"
+    },
+    {
+      "name": "A near road fixture retains a slot when nearby door lights compete for the balanced budget",
+      "status": "passed"
+    }
+  ],
+  "evidence": {
+    "reflectionLens": {
+      "mainFarM": 2300,
+      "reflectionFarM": 400,
+      "nearM": 0.08,
+      "lensAndViewOffsetPreserved": true,
+      "sourceCameraUnchanged": true
+    },
+    "reflectionClip": {
+      "cameraConditions": 72,
+      "heightM": [
+        0.17,
+        12
+      ],
+      "pitchRad": [
+        -0.09,
+        0.12
+      ],
+      "rollRad": [
+        0,
+        0.22
+      ],
+      "aboveGroundRetained": true,
+      "belowGroundClipped": true
+    },
+    "reflectionCull": {
+      "knownNearM": 50,
+      "knownFarM": 600,
+      "farInstancedBatchHidden": true,
+      "boundaryCrossingBatchRetained": true,
+      "genericHiddenStatePreserved": true
+    },
+    "corridor": {
+      "sharedSolids": 150,
+      "pavements": 6,
+      "lightFixtures": 44,
+      "legs": [
+        "crosstown-link",
+        "foundry-main",
+        "canal-link"
+      ],
+      "completeRoadWidthsClear": true
+    },
+    "frontages": {
+      "families": {
+        "canal": 12,
+        "industrial": 2,
+        "market": 19,
+        "civic": 7
+      },
+      "routeFacingFrontages": 40,
+      "doorwayAnchors": 40,
+      "windowBacklights": 389,
+      "roomsOrCrowdsAdded": 0
+    },
+    "captureProtocol": {
+      "schema": "roadster.visual-comparison",
+      "version": 1,
+      "baselineCommit": "a25b228a6d56f358cba24106ce897e1cb5c99bc1",
+      "baselineModelVersion": "3.8.0",
+      "referenceResolution": [
+        1600,
+        900
+      ],
+      "pixelRatio": 1,
+      "weather": [
+        "clear-day",
+        "wet-night"
+      ],
+      "quality": [
+        "balanced",
+        "high",
+        "ultra"
+      ],
+      "cameraIds": [
+        "weave-entry",
+        "exchange",
+        "viaduct",
+        "junction",
+        "canal"
+      ],
+      "addedViewIds": [
+        "crosstown",
+        "foundry-south"
+      ],
+      "routeId": "weave-canal-loop-38",
+      "baselineScope": "Full untouched checkout at the baseline commit, including its original city plan/materials. New connector views can be set manually to these same coordinates in the old renderer.",
+      "stillConditions": "Same camera position, target, 48 degree vertical FOV, paused physical state, 1600x900 drawing buffer, pixel ratio 1, quality and weather. Lock exposure to the matching baseline preset (day .90, night 1.08) for a material/geometry comparison; capture revised automatic exposure separately.",
+      "timingConditions": "Record browser, GPU, resolution and quality; separate loading/5 s prewarm from 150 s driven steady capture. Actual route inputs/trajectory accompany p50/p95/p99 and long frames.",
+      "acceptance": "Requires actual WebGL images and measured display/GPU timing. Scene graph, shader and DOM checks are separate structural evidence.",
+      "actualScreenshots": null,
+      "actualFrameTimes": null,
+      "reason": "The available cloud browser reports GL_VENDOR/GL_RENDERER Disabled; no graphics driver or real frame was used by these Node checks."
+    }
+  },
+  "sourceHashes": {
+    "dist/city-corridor-plan.js": "640a9f8d3d6ca9403338b419f973c3856d2164edba6b4854f76a7a87e8a96428",
+    "dist/city-plan.js": "0258b8489058b9051458e0b1809dcce3018e8013c3ea5b9bec10080947e9fc2c",
+    "dist/city-environment.js": "554970187d6951095c0ff63415901e0bfde7e2c8ce6e5acf6945b569dbab556c",
+    "dist/urban-architecture.js": "8255abe727f2ccd620dd63e9a33808d92eea07bfb1c5943edb9a4e441e884727",
+    "dist/pavement-surface-material.js": "3cfc78c9596994becccfe9afb5656b97d4b7290540abe6e83a7bcc1664e80bbe",
+    "dist/road-surface-material.js": "ea87103bdd448a1868d9d7aed839505cbe47502965f926fa71c8f29ff7da172a",
+    "dist/city-practical-lights.js": "36ef52b1a1181c462c29a7dfef28807d73acd8e04018b9693cec1f4504e9cdae",
+    "dist/wet-road-reflection.js": "c5ee35789069abaa256a20cd3d8a88b738dc769b8b10b38f901b2b9433299764",
+    "dist/vehicle.js": "cb37f8d9ca5b502831f1ea0f4a3642c3c3a4436976a75e489d65a412a6f1d05a",
+    "dist/vehicle-inspection.js": "855d971400b1ae1887a49ea415a3426dd10ea7fc0881a704f8879b7f721a2b53",
+    "dist/visual-presets.js": "ec43ae9a980adc15a2266a4c8efe2bce6f460fee570ac7ab6bce64252abc1588",
+    "tests/visual-corridor-3.9.test.mjs": "7d5bf12e300d2990cf1feca0833f6de5f5140f3b74bc65c278a9204cba050268"
+  },
+  "limits": [
+    "CPU geometry, matrix, shared world and renderer-state contracts only. None establish real image quality, shadow leakage, frame times or steering feel.",
+    "Reflection distance culling is conservative per mesh/instanced batch. A sphere crossing 400 m is retained; the rebuilt bounded base projection then receives an oblique near plane.",
+    "The original city remains; new micro-materials and small roadside fixtures use the existing daytime diffuse bake as an approximation, with real-time direct shadowing."
+  ]
+}

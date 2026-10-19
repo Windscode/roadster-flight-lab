@@ -3,7 +3,7 @@ import {SEAL_OUTLINE,SKIRT_MAX_EXTENSION,SKIRT_BASE_Y} from './vehicle-layout.js
 import {vehicleProjectedPixels,chooseVehicleGeometryProfile,VEHICLE_INSPECTION_RIG} from './visual-presets.js';
 
 /*
- * Roadster exterior study, built from Tesla's October 2026 public photographs.
+ * Roadster exterior study, independently reconstructed from Tesla's current public photographs.
  * This is an independently authored, parametric visual reconstruction, not an
  * OEM CAD model. Dimensions and the cutaway equipment are simulation assumptions.
  * Coordinate convention: metres, +X left when looking forward, +Y up, +Z forward; origin at the CG.
@@ -48,8 +48,8 @@ function interpolate(keys, z) {
   return keys[keys.length - 1][1];
 }
 
-const WIDTH = [[-2.30,.950],[-2.06,.995],[-1.42,1.035],[-.68,.986],[-.12,.977],[.55,.976],[1.42,1.025],[1.96,.947],[2.30,.855]];
-const SHOULDER = [[-2.30,.225],[-2.02,.309],[-1.42,.345],[-.76,.323],[0,.296],[.73,.275],[1.42,.272],[1.95,.090],[2.30,-.026]];
+const WIDTH = [[-2.30,.950],[-2.06,.995],[-1.42,1.047],[-.68,.988],[-.12,.971],[.55,.977],[1.42,1.034],[1.96,.947],[2.30,.855]];
+const SHOULDER = [[-2.30,.225],[-2.02,.309],[-1.42,.350],[-.76,.330],[0,.307],[.73,.286],[1.42,.272],[1.95,.090],[2.30,-.026]];
 const DECK = [[-2.30,.237],[-1.90,.306],[-1.48,.311],[.55,.265],[1.09,.219],[1.54,.138],[2.30,-.010]];
 const widthAt = z => interpolate(WIDTH,z);
 const shoulderAt = z => interpolate(SHOULDER,z) - .019;
@@ -59,7 +59,7 @@ export const VEHICLE_GEOMETRY = Object.freeze({
   suspensionMinimum:.24,suspensionMaximum:.41,maxSteer:.49,
   archCentreY:-.22,archLongRadius:.452,archVerticalRadius:.435,
   linerInnerX:.54,linerOuterX:1.040,
-  model:'v6 / 3.8: reprofiled shoulder/canopy, recessed light ribbons, physical wing; independent official-photo reconstruction, not OEM CAD',
+  model:'v7 / 3.9: continuous wedge shoulder, concave lower door, satin silver clearcoat, smoked glass, sculpted five-sector wheels; independent official-photo reconstruction, not OEM CAD',
   referenceRig:VEHICLE_INSPECTION_RIG.id
 });
 const smoothstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
@@ -88,7 +88,7 @@ const fenderEdgeY=z=>Math.max(shoulderAt(z),bodySurfaceY(widthAt(z),z));
 const sideSurfaceX=(z,y)=>{
   const t=clamp((fenderEdgeY(z)-y)/(fenderEdgeY(z)+.315),0,1);
   const door=Math.exp(-(((z+.03)/.89)**4)),haunch=Math.max(Math.exp(-(((z-1.42)/.48)**2)),Math.exp(-(((z+1.42)/.51)**2)));
-  return widthAt(z)+.012*Math.sin(t*PI)+.009*haunch*Math.sin(t*PI)-.044*t*t-.026*door*Math.sin(t*PI)**2;
+  return widthAt(z)+.012*Math.sin(t*PI)+.009*haunch*Math.sin(t*PI)-.044*t*t-.044*door*Math.sin(t*PI)**2-.008*door*smoothstep(.50,.72,t);
 };
 // Read-only geometry specification lets the suspension acceptance test sample
 // the same surface as the renderer, instead of duplicating an optimistic box.
@@ -443,7 +443,10 @@ function buildWheel(parent,side,z,materials) {
     const a=face+side*.004;
     solidWheelFacet(root,[[.065,-.029],[.274,-.052],[.293,-.027],[.281,.029],[.09,.034]],.022,a-side*.020,side,materials.wheelDark,'forged main spoke');
     solidWheelFacet(root,[[.084,.008],[.224,.111],[.243,.135],[.276,.108],[.132,.002]],.018,a-side*.019,side,materials.wheelDark,'forked spoke');
-    solidWheelFacet(root,[[.085,.030],[.280,.052],[.158,.232],[.065,.101]],.010,a-side*.024,side,materials.wheelSilver,'machined aero facet');
+    // A stepped dish and a narrow return put silver sectors behind the five
+    // dark ribs. The previous flat co-planar facets read as a painted disk.
+    solidWheelFacet(root,[[.078,.030],[.279,.052],[.173,.223],[.071,.103]],.009,a-side*.031,side,materials.wheelSilver,'machined dished aero facet');
+    solidWheelFacet(root,[[.079,.030],[.278,.052],[.266,.063],[.084,.041]],.007,a-side*.023,side,materials.wheelDark,'aero sector folded return');
     curve(root,[[a+side*.002,.097,-.011],[a+side*.002,.268,-.025]],.0029,materials.wheelSilver,'machined spoke edge',false);
     cylinder(root,.011,.011,.014,materials.chrome,[a+side*.002,.047*Math.cos(.25),.047*Math.sin(.25)],'x',8,'wheel bolt');
   }
@@ -649,22 +652,22 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   const wheelsRoot=new THREE.Group();wheelsRoot.name='four suspension uprights';group.add(wheelsRoot);
   const transparentMaterials=[];
   const mats={
-    paint:new THREE.MeshPhysicalMaterial({color:0xe9ebeb,metalness:.02,roughness:.215,clearcoat:.92,clearcoatRoughness:.085,envMapIntensity:1.0,side:THREE.DoubleSide}),
-    glass:new THREE.MeshPhysicalMaterial({color:0x715442,metalness:0,roughness:.075,ior:1.52,clearcoat:.18,clearcoatRoughness:.055,specularColor:0xfff1dd,envMapIntensity:1.0,transparent:true,opacity:.78,depthWrite:false,side:THREE.DoubleSide}),
+    paint:new THREE.MeshPhysicalMaterial({color:0xc4ccd1,metalness:.43,roughness:.265,clearcoat:.88,clearcoatRoughness:.10,envMapIntensity:1.0,side:THREE.DoubleSide}),
+    glass:new THREE.MeshPhysicalMaterial({color:0x3e3732,metalness:0,roughness:.068,ior:1.52,clearcoat:.10,clearcoatRoughness:.065,specularColor:0xfff7ed,envMapIntensity:1.05,transparent:true,opacity:.86,depthWrite:false,side:THREE.DoubleSide}),
     carbon:material(0x4d555a,.08,.35,{map:carbonTexture(),side:THREE.DoubleSide}),
     black:material(0x11161a,.36,.25,{side:THREE.DoubleSide}),
     seam:material(0x060a0c,.05,.72),
-    rubber:material(0x101317,.01,.81),
-    sidewall:material(0x2a2d2f,.06,.73),
-    wheelDark:material(0x29323c,.8,.25,{side:THREE.DoubleSide}),
-    wheelSilver:material(0xc2c7cc,.78,.28,{side:THREE.DoubleSide}),
+    rubber:material(0x171a1c,0,.85),
+    sidewall:material(0x25292b,0,.78),
+    wheelDark:material(0x20272e,.78,.29,{side:THREE.DoubleSide}),
+    wheelSilver:material(0xb1bac0,.88,.25,{side:THREE.DoubleSide}),
     wheelBarrel:material(0x252a30,.7,.32),
     rotor:material(0x5f6267,.86,.42),
     chrome:material(0xa3b4bb,.93,.18),
     nozzle:material(0x998173,.82,.29,{side:THREE.DoubleSide}),
     caliper:material(0xb3583e,.52,.32),
-    whiteLight:material(0xecf6ff,.15,.16,{emissive:0xdaf0ff,emissiveIntensity:3.2,toneMapped:false,side:THREE.DoubleSide}),
-    tailLight:material(0xc90003,.05,.22,{emissive:0xff0003,emissiveIntensity:1.25,toneMapped:false,side:THREE.DoubleSide}),
+    whiteLight:material(0xecf6ff,.15,.16,{emissive:0xdaf0ff,emissiveIntensity:2.4,toneMapped:true,side:THREE.DoubleSide}),
+    tailLight:material(0xc90003,.05,.22,{emissive:0xff0003,emissiveIntensity:1.05,toneMapped:true,side:THREE.DoubleSide}),
     amberLight:material(0xa4541c,.1,.25,{emissive:0xb84b05,emissiveIntensity:.4}),
     interior:material(0x262829,.04,.79),
     interiorTrim:material(0x686d70,.02,.84),
@@ -683,10 +686,15 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     lens:new THREE.MeshPhysicalMaterial({color:0xe6f1f7,metalness:0,roughness:.12,ior:1.49,clearcoat:0,transparent:true,opacity:.24,depthWrite:false,side:THREE.DoubleSide}),
     frontPanel:new THREE.MeshPhysicalMaterial({color:0x242b33,metalness:.03,roughness:.22,clearcoat:.82,clearcoatRoughness:.08,envMapIntensity:1.1,side:THREE.DoubleSide}),
   };
-  mats.balancedPaint=material(mats.paint.color.clone(),mats.paint.metalness,.27,{envMapIntensity:1.05,side:THREE.DoubleSide});
-  mats.balancedGlass=material(mats.glass.color.clone(),0,.12,{envMapIntensity:1.0,transparent:true,opacity:.78,depthWrite:false,side:THREE.DoubleSide});
+  // The car occupies a small part of the driving frame. Balanced keeps the
+  // same coating response while reducing geometry, hidden parts and shadows;
+  // it no longer turns the flagship body into a different chalky material.
+  mats.balancedPaint=new THREE.MeshPhysicalMaterial({color:mats.paint.color.clone(),metalness:mats.paint.metalness,roughness:.275,clearcoat:.80,clearcoatRoughness:.12,envMapIntensity:1.0,side:THREE.DoubleSide});
+  mats.balancedGlass=material(mats.glass.color.clone(),0,.095,{envMapIntensity:1.05,transparent:true,opacity:.86,depthWrite:false,side:THREE.DoubleSide});
   transparentMaterials.push(mats.paint,mats.glass,mats.balancedPaint,mats.balancedGlass);
   for(const mat of Object.values(mats))mat.forceSinglePass=true;
+  mats.paint.userData.opticalAssumption='Satin silver metallic base + dielectric clearcoat; visual estimate, not Tesla measured reflectance.';
+  mats.glass.userData.opticalAssumption='Smoked dielectric glazing; alpha surface approximation, no optical refraction pass.';
   // The weave map modulates the carbon base colour around a light neutral.
   // Multiplying the previous near-black map by a dark base crushed its diffuse
   // response a second time. Mip filtering keeps the fine
@@ -762,8 +770,8 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   // the windscreen and backlight landing edges without a floating glass lip.
   // The official side study has a long nearly level crest and a clean windscreen
   // landing. Redistributed stations remove the former round bubble crown.
-  const canopyKeys=[[-1.57,.335],[-1.40,.408],[-1.15,.546],[-.85,.637],[-.58,.663],[-.22,.661],[.04,.625],[.29,.518],[.80,.268]];
-  const canopyW=[[-1.57,.775],[-1.12,.679],[-.65,.651],[-.02,.645],[.27,.668],[.80,.763]];
+  const canopyKeys=[[-1.57,.340],[-1.40,.414],[-1.15,.536],[-.85,.622],[-.58,.658],[-.22,.663],[.04,.628],[.29,.524],[.80,.280]];
+  const canopyW=[[-1.57,.775],[-1.12,.677],[-.65,.650],[-.02,.650],[.27,.678],[.80,.775]];
   const canopyEdge=z=>interpolate(canopyKeys,z)-.026*(1-smoothstep(.25,.80,z))*smoothstep(-1.57,-1.10,z);
   const canopySurface=(u,z)=>{
     const w=interpolate(canopyW,z),edge=canopyEdge(z),endBlend=(1-smoothstep(.30,.80,z))*smoothstep(-1.57,-1.15,z);
@@ -786,7 +794,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   // Flush lower black frit and a cowl / wiper pocket, rather than an exposed
   // bright tube around the whole screen perimeter.
   grid(shell,mats.black,(u,v)=>{const p=canopySurface(lerp(-1,1,u),.778),z=lerp(.778,.812,v);return[p[0],lerp(p[1]+.002,bodySurfaceY(p[0],.812)+.0015,v),z];},36,6,false,'windscreen black frit and cowl');
-  curve(shell,[[-.49,.277,.786],[-.20,.280,.788],[.12,.281,.788]],.003,mats.black,'concealed windscreen wiper',false).castShadow=false;
+  curve(shell,[[-.49,.286,.786],[-.20,.289,.788],[.12,.290,.788]],.003,mats.black,'concealed windscreen wiper',false).castShadow=false;
   for(const side of [-1,1]) {
     grid(shell,mats.glass,(u,v)=>sideGlassSurface(side,u,lerp(.8,-1.48,v)),14,72,side<0,'frameless side glazing');
     grid(shell,mats.black,(u,v)=>{
@@ -867,10 +875,13 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     const y=lerp(.219,-.423,v),w=lerp(.942,.827,smoothstep(.55,1,v)),x=lerp(-w,w,u),z=-2.309+.025*(Math.abs(x)/w)**4+.018*v;
     return[x,y,z];
   },48,24,false,'contoured rear carbon valance');
-  grid(shell,mats.paint,(u,v)=>{
-    const x=lerp(-.940,.940,u),edge=Math.abs(x)/.940,y=lerp(.215,.009-.065*edge**6,v),z=-2.322+.037*edge**4+.006*Math.sin(v*PI);
+  // Official rear imagery has a dark lower valance underneath the red
+  // optical strip. Painted corner returns, rather than a white full-width
+  // apron, preserve the floating deck and the width of the exposed diffuser.
+  for(const side of [-1,1])grid(shell,mats.paint,(u,v)=>{
+    const x=side*lerp(.790+.018*v,.940,u),edge=Math.abs(x)/.940,y=lerp(.215,-.056-.045*u,v),z=-2.322+.037*edge**4+.006*Math.sin(v*PI);
     return[x,y,z];
-  },48,14,false,'sculpted rear painted apron');
+  },12,14,side<0,'sculpted rear painted corner return');
   grid(shell,mats.black,(u,v)=>{const x=lerp(-.911,.911,u),edge=(Math.abs(x)/.911)**4;return[x,.222+lerp(-.016,.017,v),-2.321+.018*edge];},48,3,false,'recessed rear optical channel');
   grid(shell,mats.tailLight,(u,v)=>{const x=lerp(-.897,.897,u),edge=(Math.abs(x)/.897)**4;return[x,.222+lerp(-.008,.008,v),-2.324+.018*edge];},48,3,false,'full width rear light');
   curve(shell,[[-.884,.241,-2.306],[0,.244,-2.318],[.884,.241,-2.306]],.004,mats.paint,'rear trailing lip');
