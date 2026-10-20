@@ -468,7 +468,13 @@ export async function boot(shell){
     if(pendingProgramCapture)return Promise.reject(Error(tr('已有绘制诊断正在等待当前帧。')));
     if(graphicsStopped)return Promise.reject(Error(tr('当前没有可用的 WebGL 绘制。')));
     return new Promise((resolve,reject)=>{
-      const job={label,png,requiredCategories,imageFile,conditionsFile,captureId:label+'-'+Date.now(),inFlight:false,timer:null,resolve:value=>{if(pendingProgramCapture!==job)return;clearTimeout(job.timer);pendingProgramCapture=null;resolve(value);},reject:error=>{if(pendingProgramCapture!==job)return;clearTimeout(job.timer);pendingProgramCapture=null;reject(error);}};pendingProgramCapture=job;
+      const queuedAt=performance.now();
+      const job={label,png,requiredCategories,imageFile,conditionsFile,captureId:label+'-'+Date.now(),inFlight:false,timer:null,phase:'queued',phases:{queued:{at:new Date().toISOString(),elapsedMs:0}},report:null,
+        mark:phase=>{job.phase=phase;job.phases[phase]={at:new Date().toISOString(),elapsedMs:performance.now()-queuedAt};},
+        progress:()=>({captureId:job.captureId,label,png,phase:job.phase,inFlight:job.inFlight,deadlineMs:20000,elapsedMs:performance.now()-queuedAt,phases:JSON.parse(JSON.stringify(job.phases))}),
+        resolve:value=>{if(pendingProgramCapture!==job)return;clearTimeout(job.timer);const progress=job.progress();if(value.conditions)value.conditions.captureProgress=progress;pendingProgramCapture=null;resolve({...value,captureProgress:progress});},
+        reject:error=>{if(pendingProgramCapture!==job)return;clearTimeout(job.timer);error.captureProgress=job.progress();error.captureAudit=job.report;pendingProgramCapture=null;reject(error);}};
+      pendingProgramCapture=job;
       job.timer=setTimeout(()=>{if(pendingProgramCapture===job){job.reject(Error(tr('没有收到完整绘制与PNG编码结果；请保持页面可见并检查WebGL。')));}},20000);
     });
   }
@@ -514,7 +520,7 @@ export async function boot(shell){
         const requiredCategories=vantage==='viaduct'?['road','mineral-facade','instanced-building']:['vehicle'];
         const ordinary=await requestProgramFrame({label:label+'-paused',requiredCategories});
         try{const exported=await requestProgramFrame({label:label+'-export',png:true,requiredCategories,imageFile:label+'.png',conditionsFile:label+'.json'});return{ordinary,exported};}
-        catch(error){error.partialAudit=ordinary.report;throw error;}
+        catch(error){error.partialAudit=ordinary.report;error.partialAuditSource='ordinary-paused-frame';throw error;}
       }});
     }catch(error){result={files:[],report:{...getRuntimeIdentity(),schema:'roadster.gpu-switch-matrix-2',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:error.name==='AbortError'?'cancelled':'failed',executionStatus:error.name==='AbortError'?'cancelled':'failed',drawStatus:'incomplete',expectedFrames:14,completedFrames:0,cases:[],failure:{name:error.name,message:String(error.message)},createdAt:new Date().toISOString()}};}
     finally{
@@ -861,7 +867,12 @@ export async function boot(shell){
   window.roadsterLab={getControlCapture:()=>controlCapture.getState(),getState:()=>({...sim.telemetry(),paused,quality,cameraMode,context:activeContext,graphics:shell.graphics,research:researchConsole.getState()}),getParameters:()=>({...sim.params}),getInputTimeline:()=>inputSession.export(getRuntimeIdentity()),getExportState:()=>getExportState(),getLandingReserve:()=>operationHud.snapshot(),getCityNavigation:()=>cityMap.navigation,getCityFlight:()=>cityFlight.getState(),getCityFlightRecords:()=>cityFlight.getRecords(),getResourceHistory:()=>structuredClone(resourceHistory),getGeometry:()=>sim.getWorldGeometry(),getPerformance:()=>meter.export({version:MODEL_VERSION,quality,profile:renderProfile,resolution:renderSize,scene:environment.stats}),version:MODEL_VERSION};
   let lastRendered=0,captureNotice=false;
   function frame(now){
-    if(graphicsStopped)return;requestAnimationFrame(frame);if(document.hidden){lastTime=now;return;}if(paused&&now-lastRendered<1000/30)return;
+    if(graphicsStopped)return;requestAnimationFrame(frame);if(document.hidden){lastTime=now;return;}
+    // The paused frame is already frozen. Leave rAF and DOM cancellation live,
+    // but do not enqueue another city render while its PNG readback is pending.
+    // Active-driving exports still advance the original simulation and view.
+    if(paused&&pendingProgramCapture?.inFlight){lastTime=now;return;}
+    if(paused&&now-lastRendered<1000/30)return;
     const wallDelta=Math.max(0,(now-lastTime)/1000),dt=Math.min(wallDelta,.08);lastTime=now;lastRendered=now;
     try{
       if(now>=nextResourceSample){resourceHistory.push({at:new Date().toISOString(),quality,weatherPreset,context:activeContext,diagnostic:programMatrixBusy,memory:{...renderer.info.memory},programs:renderer.info.programs?.length??null});if(resourceHistory.length>120)resourceHistory.shift();nextResourceSample=now+2000;}
@@ -886,6 +897,7 @@ export async function boot(shell){
         targetGroup.visible=showForces&&(t.mode==='hover'||t.stabilizationMode==='hold');const target=t.holdPositionTarget;if(t.stabilizationMode==='hold'&&target)targetGroup.position.set(target.x,target.y,target.z);else targetGroup.position.set(t.position.x,t.targetAltitude,t.position.z);
       });
       const programCapture=pendingProgramCapture&&!pendingProgramCapture.inFlight?pendingProgramCapture:null,checkPrograms=!!programCapture||captureImageRequested||captureBundleRequested;
+      if(programCapture)programCapture.mark('draw-start');
       if(checkPrograms)renderPrograms.beginFrame(programConditions(programCapture?.label||'ordinary-image-export'));
       const diagnosticFrame=checkPrograms||programMatrixBusy||previousFrameWasDiagnostic||inputSession.tracing;
       if(!diagnosticFrame)meter.beginGpu();
@@ -894,9 +906,13 @@ export async function boot(shell){
       if(paused)sound?.silence();else sound?.update(t);composer.render();
       if(checkPrograms){
         const report=renderPrograms.endFrame({requiredCategories:programCapture?.requiredCategories||[]});programStatus(report);
-        if(programCapture){programCapture.inFlight=true;const conditions=JSON.parse(JSON.stringify({...visualConditions(),capture:{captureId:programCapture.captureId,imageFile:programCapture.imageFile,conditionsFile:programCapture.conditionsFile,source:'actual-webgl-composer-frame',capturedAt:new Date().toISOString(),frameNumber:meter.frameNumber,renderTimeS:now/1000,pixelsEdited:false},programAudit:report}));
-          if(programCapture.png)renderer.domElement.toBlob(blob=>blob?programCapture.resolve({report,conditions,blob}):programCapture.reject(Error(tr('当前浏览器未能导出画面。'))),'image/png');
-          else programCapture.resolve({report,conditions});
+        if(programCapture){programCapture.report=report;programCapture.mark('draw-end');programCapture.inFlight=true;const conditions=JSON.parse(JSON.stringify({...visualConditions(),capture:{captureId:programCapture.captureId,imageFile:programCapture.imageFile,conditionsFile:programCapture.conditionsFile,source:'actual-webgl-composer-frame',capturedAt:new Date().toISOString(),frameNumber:meter.frameNumber,renderTimeS:now/1000,pixelsEdited:false},programAudit:report}));
+          programCapture.mark('conditions-frozen');
+          if(programCapture.png){
+            programCapture.mark('toBlob-call');
+            renderer.domElement.toBlob(blob=>{programCapture.mark('callback');blob?programCapture.resolve({report,conditions,blob}):programCapture.reject(Error(tr('当前浏览器未能导出画面。')));},'image/png');
+            programCapture.mark('toBlob-return');
+          }else programCapture.resolve({report,conditions});
         }
       }
       if(captureImageRequested||captureBundleRequested){
@@ -921,7 +937,7 @@ export async function boot(shell){
       if(meter.capture?.complete&&!captureNotice){toast('性能采样完成。预热、稳态、长帧和 GPU 计时可用性已分别记录，可导出报告。');captureNotice=true;}if(meter.capture&&!meter.capture.complete)captureNotice=false;
       uiTimer+=dt;frames++;fpsTime+=wallDelta;if(fpsTime>.7){displayFps=Math.round(frames/fpsTime);fpsTime=0;frames=0;}
       if(uiTimer>.14){syncUi(t);$('performance-label').dataset.renderState=JSON.stringify({fps:displayFps,calls:sample.calls,triangles:sample.triangles,resolution:renderSize,programs:renderer.info.programs.length,exposure:+renderer.toneMappingExposure.toFixed(3),scene:environment.stats});uiTimer=0;}
-    }catch(error){if(renderPrograms.active)renderPrograms.endFrame({aborted:error.message});if(pendingProgramCapture){clearTimeout(pendingProgramCapture.timer);pendingProgramCapture.reject(error);pendingProgramCapture=null;}meter.endGpu();shell.graphicsUnavailable('三维运行已暂停：'+error.message);console.error(error);}
+    }catch(error){if(renderPrograms.active){const abortedReport=renderPrograms.endFrame({aborted:error.message});if(pendingProgramCapture)pendingProgramCapture.report=abortedReport;}if(pendingProgramCapture){clearTimeout(pendingProgramCapture.timer);pendingProgramCapture.reject(error);pendingProgramCapture=null;}meter.endGpu();shell.graphicsUnavailable('三维运行已暂停：'+error.message);console.error(error);}
   }
   if(new URLSearchParams(location.search).get('view')==='lab')switchContext('lab');
   lastTime=performance.now();requestAnimationFrame(frame);

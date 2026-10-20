@@ -17,7 +17,7 @@ export async function collectProgramMatrix({captureCase,signal,onProgress=()=>{}
       files.push({name:item.label+'.json',data:JSON.stringify(exported.conditions,null,2)},{name:item.label+'.png',data:exported.blob});
       onProgress({completed:frames.length,total:cases.length,label:item.label,phase:'captured'});
     }
-  }catch(error){executionStatus=error.name==='AbortError'?'cancelled':'failed';failure={name:String(error.name||'Error'),message:String(error.message||error),completedFrames:frames.length,nextCase:cases[frames.length]?.label??null,partialAudit:error.partialAudit??null};}
+  }catch(error){executionStatus=error.name==='AbortError'?'cancelled':'failed';failure={name:String(error.name||'Error'),message:String(error.message||error),completedFrames:frames.length,nextCase:cases[frames.length]?.label??null,partialAudit:error.partialAudit??null,partialAuditSource:error.partialAuditSource??null,captureProgress:error.captureProgress??null,captureAudit:error.captureAudit??null};}
   const drawStatus=frames.some(f=>f.paused.status!=='passed'||f.export.status!=='passed')?'failed':frames.length===cases.length?'passed':'incomplete';
   const report={schema:'roadster.gpu-switch-matrix-2',...metadata,startedAt,finishedAt:new Date().toISOString(),status:executionStatus==='completed'?drawStatus:executionStatus,executionStatus,drawStatus,expectedFrames:cases.length,completedFrames:frames.length,cases:frames,failure,scope:'Original actual rendered frames plus per-draw program/framebuffer evidence. Completed collection is separate from a clean draw verdict. Cancel/failure exports only the captured prefix and explicitly lists missing frames. No pixel-quality or performance verdict.'};
   return {report,files};
