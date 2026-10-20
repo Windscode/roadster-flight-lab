@@ -1,4 +1,6 @@
 import {restorePayloads} from './repository-payloads.mjs';
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
+import {MODEL_BUILD_ID} from '../dist/model-build.js';
 restorePayloads();
 import http from 'node:http';
 import path from 'node:path';
@@ -16,7 +18,7 @@ const server=http.createServer((req,res)=>{
   if(req.method!=='GET'&&req.method!=='HEAD'){res.writeHead(405,{'Allow':'GET, HEAD'});res.end();return;}
   if(req.url==='/health'){
     res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});
-    res.end(req.method==='HEAD'?undefined:JSON.stringify({application,version:'3.11.0',pid:process.pid}));return;
+    res.end(req.method==='HEAD'?undefined:JSON.stringify({application,version:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,pid:process.pid}));return;
   }
   let pathname;try{pathname=decodeURIComponent(new URL(req.url,url).pathname);}catch{res.writeHead(400);res.end('Bad path');return;}
   const target=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname)),relative=path.relative(root,target);
@@ -40,7 +42,7 @@ server.on('error',async err=>{
 });
 server.listen(port,host,()=>{
   fs.mkdirSync(runtime,{recursive:true});fs.writeFileSync(path.join(runtime,'server.json'),JSON.stringify({pid:process.pid,script,url,application}));
-  console.log(`ROADSTER FLIGHT LAB 3.11\n${url}\nKeep this window open. Ctrl+C stops this local server.`);
+  console.log(`ROADSTER FLIGHT LAB ${MODEL_VERSION}\n${url}\nKeep this window open. Ctrl+C stops this local server.`);
   if(process.argv.includes('--open'))openBrowser();
 });
 

@@ -1,14 +1,16 @@
 // Exact historical partition. Only explicitly listed additions and the three
-// frozen 3.14 anchor profiles can differ; every other original entity retains
-// its 1e-9 canonical identity. No kind/prefix-wide geometry exclusions.
+// frozen 3.14 anchor profiles and one explicitly frozen 3.15 vehicle-mouth
+// paving split can differ. Every other original entity retains its 1e-9
+// canonical identity. No kind/prefix-wide geometry exclusions.
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {CITY_ROUTE_CORRIDOR} from '../dist/city-plan.js';
+import {CITY_ROUTE_CORRIDOR,CITY_STREETS} from '../dist/city-plan.js';
 import {SOUTH_QUAY_ENTRY_SOLIDS} from '../dist/city-landmarks.js';
 import {CITY_BUILDINGS,CITY_CONTINUITY} from '../dist/city-data.js';
 import {canonicalGeometryJSON as canonical} from '../dist/irradiance-math.js';
 export const CITY_GEOMETRY_CONTRACT=JSON.parse(readFileSync(new URL('./fixtures/city-geometry-scope-3.14.json',import.meta.url)));
+export const CITY_ENTRY_GEOMETRY_CONTRACT=JSON.parse(readFileSync(new URL('./fixtures/city-entry-geometry-scope-3.15.json',import.meta.url)));
 const hash=value=>createHash('sha256').update(canonical(value)).digest('hex');
 const eulerQuaternion=([x,y,z])=>{const sx=Math.sin(x/2),cx=Math.cos(x/2),sy=Math.sin(y/2),cy=Math.cos(y/2),sz=Math.sin(z/2),cz=Math.cos(z/2);return[sx*cy*cz+cx*sy*sz,cx*sy*cz-sx*cy*sz,cx*cy*sz+sx*sy*cz,cx*cy*cz-sx*sy*sz];};
 function bounds(boxes){
@@ -18,7 +20,39 @@ function bounds(boxes){
   }
   return{min,max};
 }
-export function partitionCityGeometry(geometry){
+function restoreApprovedEntryForHistoricalComparison(current){
+  const f=CITY_ENTRY_GEOMETRY_CONTRACT,map=new Map(current.map(g=>[g.id,g]));
+  assert.equal(map.size,current.length,'Duplicate physical geometry identities');
+  const authoringBytes=readFileSync(new URL('../'+f.sourceAuthoringFixture,import.meta.url));
+  assert.equal(createHash('sha256').update(authoringBytes).digest('hex'),f.sourceAuthoringFixtureSHA256,'The original pre-cut authoring fixture changed');
+  const originalAuthoring=JSON.parse(authoringBytes),old=originalAuthoring.solids.find(g=>g.id===f.before.id);
+  assert.equal(originalAuthoring.sourceSha256,f.sourceCityPlanSHA256);
+  assert.ok(old,'The independently retained original paving is missing');
+  assert.deepEqual({id:old.id,type:'box',kind:old.kind,size:old.size,position:old.position,quaternion:eulerQuaternion(old.rotation)},f.before,'The frozen historical paving differs from its original authoring data');
+  assert.ok(!map.has(f.before.id),'The superseded paving must not remain across the vehicle mouth');
+  const actual=f.expectedCurrent.map(expected=>{
+    assert.ok(map.has(expected.id),'Missing explicitly approved vehicle-mouth paving '+expected.id);
+    const found=map.get(expected.id);assert.equal(canonical(found),canonical(expected),'Unapproved vehicle-mouth paving change: '+expected.id);return found;
+  });
+  const [south,north]=actual,opening=f.opening;
+  assert.equal(current.indexOf(north),current.indexOf(south)+1,'The two approved paving pieces must retain the original ordered slot');
+  assert.deepEqual(bounds(actual),f.unchangedOuterBounds,'Paving outer bounds changed beyond the one vehicle mouth');
+  assert.equal(south.position[2]+south.size[2]/2,opening.zMin);
+  assert.equal(north.position[2]-north.size[2]/2,opening.zMax);
+  assert.equal(opening.zMax-opening.zMin,opening.widthM);
+  assert.equal((opening.zMin+opening.zMax)/2,opening.centreZ);
+  const road=CITY_STREETS.find(r=>r.id===opening.roadId),oldRoad=originalAuthoring.streets.find(r=>r.id===opening.roadId);
+  assert.deepEqual(road,oldRoad,'The original carriageway must not be moved or widened to justify the split');
+  assert.equal(road.width,opening.widthM);assert.equal(road.points[0][2],opening.centreZ);assert.equal(road.points[1][2],opening.centreZ);
+  assert.equal(south.position[0]-south.size[0]/2,opening.xMin);assert.equal(south.position[0]+south.size[0]/2,opening.xMax);
+  // Replace only the verified southern slot, and remove only its verified
+  // northern partner. The immutable historical counts/hashes below still
+  // certify every other box, including all old planning/corridor/entry solids.
+  const comparison=current.flatMap(g=>g.id===south.id?[structuredClone(f.before)]:g.id===north.id?[]:[g]);
+  return{comparison,change:{changeId:f.changeId,sourceCommit:f.sourceCommit,sourceCityPlanSHA256:f.sourceCityPlanSHA256,before:f.before,current:actual,opening,unchangedOuterBounds:f.unchangedOuterBounds,originalFailure:f.originalFailure,scope:f.scope}};
+}
+export function partitionCityGeometry(currentGeometry){
+  const entry=restoreApprovedEntryForHistoricalComparison(currentGeometry),geometry=entry.comparison;
   const f=CITY_GEOMETRY_CONTRACT,source=[...CITY_ROUTE_CORRIDOR.solids,...SOUTH_QUAY_ENTRY_SOLIDS,...CITY_CONTINUITY.solids],plan=new Map(source.map(s=>[s.id,s]));
   assert.equal(new Set(geometry.map(g=>g.id)).size,geometry.length,'Duplicate physical geometry identities');
   assert.equal(plan.size,source.length,'Duplicate authored addition identities');
@@ -53,6 +87,6 @@ export function partitionCityGeometry(geometry){
   const reconstructedLegacy=restore(legacy),reconstructedSource313=restore(geometry.filter(g=>!added314.has(g.id)));
   assert.equal(reconstructedLegacy.length,f.baselineHistoricalCount);assert.equal(hash(reconstructedLegacy),f.baselineHistoricalCanonicalSHA256,'Reconstructed historical city must retain the original 77b01ed identity');
   assert.equal(reconstructedSource313.length,f.baselineFullCount);assert.equal(hash(reconstructedSource313),f.baselineFullCanonicalSHA256,'Reconstructed full 3.13 city differs from the independently frozen solver');
-  const contract={sourceCommit:f.sourceCommit,sourcePhysicsSHA256:f.sourcePhysicsSHA256,sourceCitySHA256:f.sourceCitySHA256,quantization:f.quantization,unchangedHistoricalCount:unchangedLegacy.length,unchangedHistoricalCanonicalSHA256:hash(unchangedLegacy),unchangedSource313Count:unchangedSource313.length,unchangedSource313CanonicalSHA256:hash(unchangedSource313),reconstructedHistoricalCount:reconstructedLegacy.length,reconstructedHistoricalCanonicalSHA256:hash(reconstructedLegacy),reconstructedSource313Count:reconstructedSource313.length,reconstructedSource313CanonicalSHA256:hash(reconstructedSource313),explicit314AdditionCount:currentAdditions.length,explicit314AdditionIds:f.continuityAdditionIds,approvedTowerChanges:towerRows,originalFailure:f.firstFailure,scope:'Exact geometry identity and explicit shared-profile changes only; not GPU, aesthetics, driving or performance acceptance.'};
+  const contract={currentPhysicalCount:currentGeometry.length,currentPhysicalCanonicalSHA256:hash(currentGeometry),approved315GeometryChanges:[entry.change],historicalComparisonNormalization:'Only the two explicitly checked 3.15 paving pieces are restored to the frozen original box before the inherited historical counts/hashes. These comparison hashes are not the full-current geometry identity; all other entities remain unchanged.',sourceCommit:f.sourceCommit,sourcePhysicsSHA256:f.sourcePhysicsSHA256,sourceCitySHA256:f.sourceCitySHA256,quantization:f.quantization,unchangedHistoricalCount:unchangedLegacy.length,unchangedHistoricalCanonicalSHA256:hash(unchangedLegacy),unchangedSource313Count:unchangedSource313.length,unchangedSource313CanonicalSHA256:hash(unchangedSource313),reconstructedHistoricalCount:reconstructedLegacy.length,reconstructedHistoricalCanonicalSHA256:hash(reconstructedLegacy),reconstructedSource313Count:reconstructedSource313.length,reconstructedSource313CanonicalSHA256:hash(reconstructedSource313),explicit314AdditionCount:currentAdditions.length,explicit314AdditionIds:f.continuityAdditionIds,approvedTowerChanges:towerRows,originalFailure:f.firstFailure,scope:'Exact geometry identity, three explicit tower profiles and one explicit vehicle-mouth paving split only; not GPU, aesthetics, driving or performance acceptance.'};
   return{legacy,added,addedIds:added.map(g=>g.id),unchangedLegacy,unchangedSource313,reconstructedLegacy,contract};
 }

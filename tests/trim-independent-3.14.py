@@ -13,7 +13,8 @@ import scipy
 from scipy.optimize import linprog
 
 root = Path(__file__).resolve().parents[1]
-path = root / "qa/physics-controls-deepening-3.14.json"
+report_version = ".".join(json.loads((root / "package.json").read_text())["version"].split(".")[:2])
+path = root / f"qa/physics-controls-deepening-{report_version}.json"
 source = json.loads(path.read_text())
 matrix = source["evidence"]["trimMatrix"]
 geometry = matrix["nozzleGeometry"]
@@ -48,5 +49,5 @@ report = {"schema": "roadster-independent-trim-crosscheck", "version": 1,
           "matrixConstruction": "independent Python position cross direction; JS allocator column is not read",
           "scope": "Static bounded equality feasibility only; no dynamic recovery assertion",
           "status": "passed", "cases": results}
-(root / "qa/trim-independent-3.14.json").write_text(json.dumps(report, indent=2) + "\n")
+(root / f"qa/trim-independent-{report_version}.json").write_text(json.dumps(report, indent=2) + "\n")
 print(f"PASS: independent HiGHS feasibility and wrench verification agreed in {len(results)} cases.")

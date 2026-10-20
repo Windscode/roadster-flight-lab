@@ -1,0 +1,73 @@
+{
+  "capturedAt": "2026-10-20T12:23:50.625490+00:00",
+  "scope": "Isolated copy of same-page DOM integration with output redirected to /tmp. Repo implementation and QA reports were not written. No WebGL pixels.",
+  "sourceHashes": {
+    "dist/main.js": "60d2bf1ac7485a2e4bd53535059645a57744de426f346d03e84422eab3bcb13a",
+    "dist/input-session.js": "accf733324dcfd3cb4551eeba5cbe7935793cda85644ad52cdd2f1367fdf282a",
+    "dist/operation-hud.js": "5eaea0440e8441344b16dacfefb239c380990135872795302679f8a9d287f2cc",
+    "dist/physics.js": "8c4892c9123ad146d793d5144c54b12eb7c14eee0d701778706009abcc9148ed"
+  },
+  "firstFailure": {
+    "error": "TypeError: car.setLampMode is not a function",
+    "location": "main.js updateEnvironment, actual boot",
+    "cause": "Existing QA mockCar lacks newly added real vehicle API",
+    "localFixtureChange": "Added mockCar.setLampMode(value) retaining value; production files unchanged"
+  },
+  "secondFailure": {
+    "test": "checkProgramMatrix paused fixed camera with custom exposure lock",
+    "assertion": "matrix.physicsUnchanged === true",
+    "actual": false,
+    "exportStateSamples": 31,
+    "differences": [
+      {
+        "path": ".state._lastInput.throttle",
+        "before": 0,
+        "after": "missing"
+      },
+      {
+        "path": ".state._lastInput.steer",
+        "before": 0,
+        "after": "missing"
+      },
+      {
+        "path": ".state._lastInput.brake",
+        "before": 0,
+        "after": "missing"
+      },
+      {
+        "path": ".state._lastInput.lift",
+        "before": 0,
+        "after": "missing"
+      },
+      {
+        "path": ".state._lastInput.roll",
+        "before": 0,
+        "after": "missing"
+      },
+      {
+        "path": ".state._lastInput.pitch",
+        "before": 0,
+        "after": "missing"
+      },
+      {
+        "path": ".state._lastInput.boost",
+        "before": false,
+        "after": "missing"
+      },
+      {
+        "path": ".state._lastInput.frontJets",
+        "before": 0,
+        "after": "missing"
+      },
+      {
+        "path": ".state._lastInput.rearJets",
+        "before": 0,
+        "after": "missing"
+      }
+    ],
+    "cause": "setPaused now invokes releasePilotInput, whose _lastInput={} discards existing neutral keys; body/pose/parameters unchanged in this case"
+  },
+  "passedBeforeMatrixFailure": 15,
+  "noGraphicsGroupsPassed": 4,
+  "tdzFinding": "InputSession constructor and OperationHUD constructor do not call onRelease; reverseHold initialized before release callbacks. Actual boot passed after fixing isolated lamp mock."
+}

@@ -21,6 +21,7 @@ export function createApplicationShell({initialSim}) {
     getLiveAvailable:available,
     onEnterLab:()=>live?.switchContext?.('lab'),onReturnCity:()=>live?.switchContext?.('city'),
     onOpenStudy:()=>openStudy(),onEvent:(type,detail)=>live?.logEvent?.(type,detail),onToast:toast,
+    onBeforeRun:program=>live?.beforeResearchRun?.(program),
     onStart:()=>live?.onStart?.(),onCancel:reason=>live?.onCancel?.(reason),
     onRestoreExperiment:request=>{
       if(!available()||!live?.restoreExperiment)throw new Error('三维操作当前不可用；仍可查看记录或运行数值研究。');

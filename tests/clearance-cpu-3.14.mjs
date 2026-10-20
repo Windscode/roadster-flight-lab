@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync,readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -17,5 +18,5 @@ for(const scenario of ['city','harbor','skyway','waterfront']){
 }
 const sources=['dist/physics.js','dist/vehicle-clearance.js','dist/city-data.js','dist/city-plan.js','dist/city-landmarks.js'];
 const report={schema:'roadster-clearance-cpu-sampling',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'Node CPU, shared validation machine; 16 warm calls then 60 measurements per static declared city location. No browser frame-time, GPU timing or driving-route claim.',environment:{node:process.version,platform:process.platform,cpuModel:os.cpus()[0]?.model??null},directions:6,envelopePoints:56,raysPerCall:342,warmCalls,sourceHashes:Object.fromEntries(sources.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')])),results};
-writeFileSync(new URL('../qa/clearance-cpu-3.14.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL(`../qa/clearance-cpu-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({scope:report.scope,results:results.map(({scenario,p50Ms,p95Ms,p99Ms})=>({scenario,p50Ms,p95Ms,p99Ms}))}));

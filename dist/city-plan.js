@@ -92,7 +92,16 @@ for(const z of [-282,-270,-258,-246])box('exchange-ridge-tie-'+z,[2.0,.12,.16],[
 for(const x of [-209,-191])for(const z of [-282,-270,-258,-246])box('exchange-column-'+x+'-'+z,[.28,6.3,.28],[x,3.15,z],'steel');
 
 // Industrial frontage and clear, uninterrupted working pavements.
-for(const x of [89.5,110.5])box('foundry-paving-'+x,[3,.12,352],[x,.06,314],'basalt',[0,0,0],'plan-walkway');
+for(const x of [89.5,110.5]){
+  if(x===89.5)box('foundry-paving-'+x,[3,.12,352],[x,.06,314],'basalt',[0,0,0],'plan-walkway');
+  else{
+    // The inherited 8 m terrace-link crosses this eastern footway at
+    // z=302.5. Shared visual/collision solids leave its exact vehicle mouth
+    // level with the existing road; both remaining pedestrian strips stay.
+    for(const [side,a,b]of [['south',138,298.5],['north',306.5,490]])
+      box('foundry-paving-'+x+'-'+side,[3,.12,b-a],[x,.06,(a+b)/2],'basalt',[0,0,0],'plan-walkway');
+  }
+}
 for(const x of [88.4,111.6]){
   box('foundry-gate-post-'+x,[.75,9.0,.9],[x,4.5,315],'oxide');
   box('foundry-gate-foot-'+x,[1.5,.35,1.7],[x,.175,315],'basalt');

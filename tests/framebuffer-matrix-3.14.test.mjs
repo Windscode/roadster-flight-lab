@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -155,4 +156,4 @@ await check('A missing PNG fails immediately and never substitutes a successful 
   assert.equal(result.report.status,'failed');assert.equal(result.files.length,0);assert.equal(result.report.completedFrames,0);return result.report.failure;
 });
 const sourceFiles=['dist/cube-probe-target.js','dist/framebuffer-diagnostics.js','dist/render-program-diagnostics.js','dist/render-capture-matrix.js','dist/capture-archive.js'];
-writeFileSync(new URL('../qa/framebuffer-matrix-3.14.json',import.meta.url),JSON.stringify({status:'passed',createdAt:new Date().toISOString(),modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,checks,sourceHashes:Object.fromEntries(sourceFiles.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),scope:'Real Three.js CPU resource lifecycle + explicit GL-interface and ZIP fixtures. No current-release target GPU draw, full 14-frame real-image matrix, image quality or performance pass.'},null,2)+'\n');
+writeFileSync(new URL(`../qa/framebuffer-matrix-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',createdAt:new Date().toISOString(),modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,checks,sourceHashes:Object.fromEntries(sourceFiles.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),scope:'Real Three.js CPU resource lifecycle + explicit GL-interface and ZIP fixtures. No current-release target GPU draw, full 14-frame real-image matrix, image quality or performance pass.'},null,2)+'\n');

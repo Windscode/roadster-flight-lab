@@ -1,0 +1,57 @@
+PASS scripts/repository-payloads.mjs
+PASS scripts/model-build.mjs
+PASS tests/physics.test.mjs
+PASS tests/braking.test.mjs
+PASS tests/vehicle-geometry.test.mjs
+PASS tests/city-seal.test.mjs
+PASS tests/handling-controls.test.mjs
+PASS tests/air-stabilization.test.mjs
+PASS tests/pose-hold.test.mjs
+PASS tests/flight-controls-3.7.test.mjs
+PASS tests/flight-programs.test.mjs
+PASS tests/wind-laboratory.test.mjs
+PASS tests/physics-research-3.8.test.mjs
+PASS tests/experiment-records.test.mjs
+PASS tests/research-road-3.8.test.mjs
+PASS tests/performance-meter.test.mjs
+PASS tests/physics-controls-3.9.test.mjs
+PASS tests/reproduction-verdict-3.9.test.mjs
+PASS tests/visual-corridor-3.9.test.mjs
+PASS tests/city-lighting-3.10.test.mjs
+PASS tests/vehicle-surface-3.10.test.mjs
+PASS tests/inspection-capture-3.10.test.mjs
+PASS tests/history-compatibility-3.10.test.mjs
+PASS tests/control-capture-3.10.test.mjs
+PASS: The reproduced 3 m/s lateral-force jump becomes a continuous contact law, including both blend boundaries
+PASS: Wheel rays, contact velocities and forces use a consistent world-space contact basis and the real moment arm
+PASS: Contact forces, regeneration and combined-drive budget are measured on low-speed turns, light inputs, circles, taps and lane changes
+PASS: 8 m/s E/Q commands and release braking become faster in both G modes without increasing available force
+PASS: Manual full rotation, X and G recovery use bounded actual nozzles; the new default and maneuver preset have explicit different costs
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: With G enabled Z/B are translation, not the off-G roll mapping
+    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/vehicle-dynamics-3.11.test.mjs:175:10
+    at check (file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/vehicle-dynamics-3.11.test.mjs:16:39)
+    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/vehicle-dynamics-3.11.test.mjs:165:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/scripts/validate.mjs:17
+    if(result.error||result.status!==0){process.stdout.write(stdout);process.stderr.write(stderr);throw new Error(path+' failed',{cause:result.error});}
+                                                                                                        ^
+
+Error: tests/vehicle-dynamics-3.11.test.mjs failed
+    at run (file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/scripts/validate.mjs:17:105)
+    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/scripts/validate.mjs:50:19 {
+  [cause]: undefined
+}
+
+Node.js v24.19.0

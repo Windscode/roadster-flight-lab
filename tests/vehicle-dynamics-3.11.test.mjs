@@ -171,8 +171,21 @@ check('Finite gas, overhead clearance, low altitude and G key semantics remain p
   const low=rotationRun(RoadsterSim,{height:5});assert.ok(low.metrics.firstContact,'A full manual roll without prelaunch cannot be guaranteed from 5 m');
   const roof=new RoadsterSim({}, {world:'windlab'});roof.body.position.y=22;roof.setMode('hover');const roofBefore=physical(roof);assert.equal(roof.startManeuver('roll'),false);assert.equal(physical(roof),roofBefore);assert.match(roof.status,/净空/);
   const level=flatDynamics(RoadsterSim,{height:40});level.setAirStabilization(true);let maxTilt=0;
-  for(let k=0;k<120;k++){const t=level.advanceFixed({roll:1,pitch:1},DT);maxTilt=Math.max(maxTilt,Math.abs(t.rollDeg),Math.abs(t.pitchDeg));}
+  // Original 3.11 combined {roll:1,pitch:1} expected G to discard pitch.
+  // 3.15 deliberately accepts 1/2; retain the Z/B translation criterion with
+  // its actual isolated input and separately assert the requested combination.
+  for(let k=0;k<120;k++){const t=level.advanceFixed({roll:1},DT);maxTilt=Math.max(maxTilt,Math.abs(t.rollDeg),Math.abs(t.pitchDeg));}
   assert.ok(maxTilt<5,'With G enabled Z/B are translation, not the off-G roll mapping');assert.ok(Math.abs(level.body.position.x)>1);
+  const combined=flatDynamics(RoadsterSim,{height:40});combined.setAirStabilization(true);let combinedPitch=0,combinedRollReference=0;
+  for(let k=0;k<120;k++){
+    const t=combined.advanceFixed({roll:1,pitch:1},DT);combinedPitch=Math.max(combinedPitch,Math.abs(t.pitchDeg));
+    combinedRollReference=Math.max(combinedRollReference,Math.abs(combined.getReference().manualRate.z));
+    assert.equal(t.pilotIntent.pitch.accepted,true);assert.equal(t.pilotIntent.roll.meaning,'lateral-translation');
+  }
+  assert.ok(combinedPitch>20,'Explicit 1/2 pitch remains active alongside G lateral translation');
+  assert.ok(Math.abs(combined.body.position.x)>1,'G Z/B lateral request still moves the vehicle while pitch is held');
+  assert.equal(combinedRollReference,0,'G lateral input never becomes a commanded roll rate');
+  evidence.gSemantics315={originalCombinedTiltLimitDeg:5,originalCombinedInput:{roll:1,pitch:1},retainedFailureLog:'qa/validation-3.15-first-g-semantics-failure.txt',reason:'Explicit pilot pitch is intentionally accepted in 3.15; Z/B translation retains its original isolated tilt and displacement gates.',isolatedLateral:{peakTiltDeg:maxTilt,translationM:level.body.position.x},combined:{peakPitchDeg:combinedPitch,translationM:combined.body.position.x,maxRollReferenceRadS:combinedRollReference}};
   const source=flatDynamics(RoadsterSim,{height:40});assert.equal(source.startManeuver('roll'),true);for(let k=0;k<100;k++)source.advanceFixed({},DT);assert.equal(source._maneuver.phase,'rotate');
   const snapshot=source.exportState(),replay=flatDynamics(RoadsterSim,{height:40});replay.importState(snapshot);
   for(let k=0;k<240;k++){source.advanceFixed({},DT);replay.advanceFixed({},DT);}assert.deepEqual(replay.exportState(),source.exportState());

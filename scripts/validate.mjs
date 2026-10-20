@@ -71,11 +71,22 @@ const vehicleCapture314=run('tests/vehicle-study-capture-3.14.test.mjs');
 const city314=run('tests/city-continuity-3.14.test.mjs');
 const research314=run('tests/research-platform-3.14.test.mjs');
 run('tests/clearance-cpu-3.14.mjs');
+const pilot315=run('tests/pilot-input-recovery-3.15.test.mjs');
+const contact315=run('tests/contact-steering-3.15.test.mjs');
+const input315=run('tests/input-session-3.15.test.mjs');
+const reserve315=run('tests/landing-reserve-3.15.test.mjs');
+const nav315=run('tests/city-navigation-3.15.test.mjs');
+const task315=run('tests/city-flight-3.15.test.mjs');
+const entry315=run('tests/city-vehicle-entry-3.15.test.mjs');
+const history315=run('tests/history-task-3.15.test.mjs');
+const research315=run('tests/research-value-3.15.test.mjs');
+const visual315=run('tests/visual-lifecycle-3.15.test.mjs');
 if(process.env.TRIM_ORACLE_PYTHON)run('tests/trim-independent-3.14.py',[],[],process.env.TRIM_ORACLE_PYTHON);
 
 const visualStructure=run('qa/visual-upgrade-check.mjs');
 const render=run('tests/render-performance.test.mjs');
 const probeSun=run('tests/local-probe-sun.test.mjs');
+run('tests/city-geometry-scope-3.14.test.mjs');
 const exterior=run('qa/exterior-materials-check.mjs');
 const physicsCpu=run('tests/physics-cpu.test.mjs');
 run('qa/render-budget-check.mjs');
@@ -87,8 +98,11 @@ const payloads311=run('tests/repository-payloads.test.mjs');
 run('scripts/check-static.mjs',[],['--experimental-vm-modules']);
 // Optional tools are explicitly supplied by the caller; validation never installs
 // dependencies or substitutes these DOM/GLSL checks for actual WebGL acceptance.
-let boundaries314=null;
+let boundaries314=null,cityUI315=null,pilotSequences315=null,cityHandoff315=null;
 if(process.env.JSDOM_MODULE_PATH){
+  pilotSequences315=run('tests/pilot-sequences-3.15.test.mjs',[process.env.JSDOM_MODULE_PATH]);
+  cityHandoff315=run('tests/city-flight-handoff-3.15.test.mjs',[process.env.JSDOM_MODULE_PATH]);
+  cityUI315=run('tests/city-flight-ui-3.15.test.mjs',[process.env.JSDOM_MODULE_PATH]);
   boundaries314=run('tests/research-boundaries-3.14.test.mjs',[process.env.JSDOM_MODULE_PATH]);
   run('qa/same-page-ui-check.mjs',[],['--experimental-vm-modules']);
   run('qa/same-page-ui-check.mjs',['--graphics-unavailable'],['--experimental-vm-modules']);
@@ -102,15 +116,29 @@ const report=read('dist/validation.json'),vehicle=read(`qa/vehicle-geometry-${RE
 const passChecks=text=>[...text.matchAll(/PASS: (.+)/g)].map(m=>m[1]);
 report.regressions={flightControls:{status:'passed',checks:passChecks(flight)},flightPrograms:{status:'passed',checks:passChecks(programs)},windLaboratory:{status:'passed',checks:passChecks(windlab)},localReflectionSun:{status:'passed',checks:[...probeSun.matchAll(/PASS: (.+)/g)].map(m=>m[1])},exteriorMaterials:{status:'passed',checks:[...exterior.matchAll(/PASS: (.+)/g)].map(m=>m[1])},physicsCpu:{status:'passed',checks:[...physicsCpu.matchAll(/PASS: (.+)/g)].map(m=>m[1])},cityRenderBudget:{status:'passed',checks:read(`qa/render-budget-${REPORT_VERSION}.json`).checks},poseHold:{status:'passed',checks:[...hold.matchAll(/PASS: (.+)/g)].map(m=>m[1])},renderPerformance:{status:'passed',checks:[...render.matchAll(/PASS: (.+)/g)].map(m=>m[1])},researchStudy:{status:'passed',checks:[...study.matchAll(/PASS: (.+)/g)].map(m=>m[1])},researchDynamics:{status:'passed',checks:[...research.matchAll(/PASS: (.+)/g)].map(m=>m[1])},cityArchitecture:{status:'passed',checks:read(`qa/city-architecture-${REPORT_VERSION}.json`).checks},airStabilization:{status:'passed',checks:[...air.matchAll(/PASS: (.+)/g)].map(m=>m[1])},indirectLighting:{status:'passed',checks:[...indirect.matchAll(/PASS: (.+)/g)].map(m=>m[1])},handlingControlsAudioAndBroadphase:{status:'passed',checks:[...handling.matchAll(/PASS: (.+)/g)].map(m=>m[1])},braking:{status:'passed',checks:[...brakes.matchAll(/PASS: (.+)/g)].map(m=>m[1])},vehicleGeometry:{status:vehicle.status,checks:vehicle.tests,sweep:vehicle.sweep},cityAndSeal:{status:'passed',checks:[...city.matchAll(/PASS: (.+)/g)].map(m=>m[1])}};
 Object.assign(report.regressions,{
-  framebufferAndMatrix314:{status:'passed',checks:read('qa/framebuffer-matrix-3.14.json').checks.map(x=>typeof x==='string'?x:x.name),report:'qa/framebuffer-matrix-3.14.json',scope:'Actual Three target construction, GL-interface and archive/PNG fixtures. Target-GPU framebuffer and color draws remain required.'},
-  trimAndFailure314:{status:'passed',checks:passChecks(controls314),report:'qa/physics-controls-deepening-3.14.json',independentOracle:'qa/trim-independent-3.14.json',scope:'Bounded static wrench and preserved solver-failure states. Static feasibility is not dynamic recovery.'},
-  cameraAndClearance314:{status:'passed',checks:passChecks(camera314),report:'qa/camera-clearance-3.14.json',scope:'Actual OrbitControls and independent OBB/ray geometry. No native camera feel, visibility or recovery-height acceptance.'},
-  contactFixtures314:{status:'passed',checks:['120 Hz contact fixtures complete with bounded energy and penetration diagnostics; adverse physical outcomes retained'],fixtureOutcomeStatus:read('qa/contact-regressions-3.14.json').status,report:'qa/contact-regressions-3.14.json',scope:'Actual 120 Hz solver contact and steering fixtures with retained upsets and precondition failures; not realistic-speed obstacle certification.'},
-  vehicleDisplay314:{status:'passed',checks:read('qa/vehicle-display-3.14.json').checks.map(x=>typeof x==='string'?x:x.name),report:'qa/vehicle-display-3.14.json',scope:'Actual new geometry, material roles, display-only identity and independent nozzle-hole rays. Artistic result remains unaccepted.'},
-  vehicleCapture314:{status:'passed',checks:read('qa/vehicle-study-capture-3.14.json').checks.map(x=>typeof x==='string'?x:x.name),report:'qa/vehicle-study-capture-3.14.json',scope:'Same-condition still/video transaction and failure fixtures; synthetic capture bytes, not native images.'},
-  cityContinuity314:{status:'passed',checks:read('qa/city-continuity-3.14.json').checks.map(x=>x.name),report:'qa/city-continuity-3.14.json',scope:'Twelve-street and 113-route geometry preservation, independent SAT/rays, real instance transforms and low-detail primary masses. Native driving, pixels and performance remain pending.'},
-  boundedResearchInterface314:{status:boundaries314?'passed':'not_performed',checks:boundaries314?passChecks(boundaries314):[],report:'qa/research-boundaries-3.14.json',scope:'Data-only AST/state contracts, actual Node Worker generation/cancellation, isolated DOM error paths; not native browser/GPU execution.'},
-  researchPlatform314:{status:'passed',checks:passChecks(research314),report:'qa/research-platform-3.14.json',scope:'Isolated storage failure/quarantine transactions, bounded height AST, actual-solver same-task decisions and landing success/failure; no GPU play acceptance.'},
+  cityGeometryScope315:{status:'passed',checks:read(`qa/city-geometry-scope-${REPORT_VERSION}.json`).checks.map(c=>c.name),report:`qa/city-geometry-scope-${REPORT_VERSION}.json`,scope:'Exact approved vehicle-mouth paving split, rejected mutations and reconstructed unchanged historical hashes; no rendered-route acceptance.'},
+  cityHandoff315:{status:cityHandoff315?'passed':'not_performed',checks:cityHandoff315?read('qa/city-flight-handoff-3.15.json').checks.map(c=>c.name):[],report:'qa/city-flight-handoff-3.15.json',scope:'Actual application-shell/research/city ownership handoff under DOM events; refused starts leave full physical/control state unchanged. Native key/focus timing remains open.'},
+  pilotSequences315:{status:pilotSequences315?'passed':'not_performed',checks:pilotSequences315?read('qa/pilot-sequences-3.15.json').checks.map(c=>c.name):[],report:'qa/pilot-sequences-3.15.json',scope:'18 paired received-DOM-event sequences through InputSession, driverAxes and actual 120 Hz solver. Not hardware keyboard or native main-page/GPU acceptance.'},
+  pilotInput315:{status:'passed',checks:read('qa/pilot-input-recovery-3.15.json').checks.map(c=>c.name),report:'qa/pilot-input-recovery-3.15.json',scope:'Recorded DOM-shaped events, pressed sets and matched actual 120 Hz physics; native keyboard hardware and rendered flight remain unaccepted.'},
+  contactSteering315:{status:'passed',checks:read('qa/contact-steering-3.15.json').checks.map(c=>c.name),report:'qa/contact-steering-3.15.json',scope:'Collision-wheel steering synchronization, production regeneration and retained physical upsets; not arbitrary obstacle recovery.'},
+  inputSession315:{status:'passed',checks:passChecks(input315),report:'qa/input-session-3.15.json',scope:'Input lifecycle and bounded trace contracts; actual focus/context-loss behavior remains a native-browser gate.'},
+  landingReserve315:{status:'passed',checks:passChecks(reserve315),report:'qa/landing-reserve-3.15.json',scope:'Read-only vertical near-level gas forecast using current trim, pressure and thermal model; not six-axis recovery or real-car safety.'},
+  cityNavigation315:{status:'passed',checks:read('qa/city-navigation-3.15.json').assertions,report:'qa/city-navigation-3.15.json',scope:'Layer-aware authored-road paths, entrances and rejoin geometry; selected destinations only, no native route certificate.'},
+  cityFlightUI315:{status:cityUI315?'passed':'not_performed',checks:cityUI315?Object.keys(read('qa/city-flight-ui-3.15.json').assertions):[],report:'qa/city-flight-ui-3.15.json',scope:'Isolated DOM/storage plus actual solver; no native play, GPU or frame-time acceptance.'},
+  cityFlight315:{status:'passed',checks:read('qa/city-flight-3.15.json').checks??read('qa/city-flight-3.15.json').assertions??['Actual solver complete route, failures, recorded input replay, cancellation and protected storage'],report:'qa/city-flight-3.15.json',scope:'One actual-solver drive/takeoff/swept-gate/platform task with retained failures and complete input replay; no native play or finite success claim.'},
+  cityVehicleEntry315:{status:'passed',checks:['Default-regeneration matched entry passage meets the original 2 cm continuity criterion; original 12 cm failure retained'],report:'qa/city-entry-3.15-comparison.json',scope:'Same low-speed initial state and controls, only the evidenced shared paving opening changes; not a full-city driving acceptance.'},
+  historicalTask315:{status:'passed',checks:passChecks(history315),report:'qa/history-task-3.15.json',scope:'Original 3.14 complete task records/algorithms remain readable/exportable; unavailable old solver is explicitly rejected before reexecution.'},
+  heightResearch315:{status:'passed',checks:passChecks(research315),report:'qa/research-value-3.15.json',scope:'Frozen conditions, bounded scan, non-dominated tradeoffs, independent validation wind and non-refilling task exit; actual solver evidence.'},
+  visualLifecycle315:{status:'passed',checks:passChecks(visual315),report:'qa/visual-lifecycle-3.15.json',scope:'Actual Three object lifecycle, lighting mode and regeneration brake signals; no rendered pixels, GPU memory or FPS acceptance.'},
+  framebufferAndMatrix314:{status:'passed',checks:read(`qa/framebuffer-matrix-${REPORT_VERSION}.json`).checks.map(x=>typeof x==='string'?x:x.name),report:`qa/framebuffer-matrix-${REPORT_VERSION}.json`,scope:'Actual Three target construction, GL-interface and archive/PNG fixtures. Target-GPU framebuffer and color draws remain required.'},
+  trimAndFailure314:{status:'passed',checks:passChecks(controls314),report:`qa/physics-controls-deepening-${REPORT_VERSION}.json`,independentOracle:`qa/trim-independent-${REPORT_VERSION}.json`,scope:'Bounded static wrench and preserved solver-failure states. Static feasibility is not dynamic recovery.'},
+  cameraAndClearance314:{status:'passed',checks:passChecks(camera314),report:`qa/camera-clearance-${REPORT_VERSION}.json`,scope:'Actual OrbitControls and independent OBB/ray geometry. No native camera feel, visibility or recovery-height acceptance.'},
+  contactFixtures314:{status:'passed',checks:['120 Hz contact fixtures complete with bounded energy and penetration diagnostics; adverse physical outcomes retained'],fixtureOutcomeStatus:read(`qa/contact-regressions-${REPORT_VERSION}.json`).status,report:`qa/contact-regressions-${REPORT_VERSION}.json`,scope:'Actual 120 Hz solver contact and steering fixtures with retained upsets and precondition failures; not realistic-speed obstacle certification.'},
+  vehicleDisplay314:{status:'passed',checks:read(`qa/vehicle-display-${REPORT_VERSION}.json`).checks.map(x=>typeof x==='string'?x:x.name),report:`qa/vehicle-display-${REPORT_VERSION}.json`,scope:'Actual new geometry, material roles, display-only identity and independent nozzle-hole rays. Artistic result remains unaccepted.'},
+  vehicleCapture314:{status:'passed',checks:read(`qa/vehicle-study-capture-${REPORT_VERSION}.json`).checks.map(x=>typeof x==='string'?x:x.name),report:`qa/vehicle-study-capture-${REPORT_VERSION}.json`,scope:'Same-condition still/video transaction and failure fixtures; synthetic capture bytes, not native images.'},
+  cityContinuity314:{status:'passed',checks:read(`qa/city-continuity-${REPORT_VERSION}.json`).checks.map(x=>x.name),report:`qa/city-continuity-${REPORT_VERSION}.json`,scope:'Twelve-street and 113-route geometry preservation, independent SAT/rays, real instance transforms and low-detail primary masses. Native driving, pixels and performance remain pending.'},
+  boundedResearchInterface314:{status:boundaries314?'passed':'not_performed',checks:boundaries314?passChecks(boundaries314):[],report:`qa/research-boundaries-${REPORT_VERSION}.json`,scope:'Data-only AST/state contracts, actual Node Worker generation/cancellation, isolated DOM error paths; not native browser/GPU execution.'},
+  researchPlatform314:{status:'passed',checks:passChecks(research314),report:`qa/research-platform-${REPORT_VERSION}.json`,scope:'Isolated storage failure/quarantine transactions, bounded height AST, actual-solver same-task decisions and landing success/failure; no GPU play acceptance.'},
 
   samplerBudget313:{status:'passed',checks:passChecks(sampler313),report:`qa/sampler-budget-${REPORT_VERSION}.json`,scope:'Exact final source and offline active sampler reflection, never target-GPU acceptance.'},
   actualProgramCapture313:{status:'passed',checks:passChecks(renderPrograms313),report:`qa/render-program-diagnostics-${REPORT_VERSION}.json`,scope:'GL-interface contract tests, not a real GPU run.'},
@@ -144,4 +172,4 @@ Object.assign(report.regressions,{
 });
 report.totalAcceptanceChecks=report.physics.total+Object.values(report.regressions).reduce((sum,group)=>sum+group.checks.length,0);
 writeFileSync(new URL('dist/validation.json',root),JSON.stringify(enrichValidationReport(report),null,2)+'\n');
-console.log(report.totalAcceptanceChecks+' numerical / geometric acceptance checks passed; DOM, offline shaders, actual WebGL and real-vehicle validation are reported separately.');
+console.log(report.totalAcceptanceChecks+' declared regression assertions passed across numerical, geometry, interface and optional DOM checks; these counts are not independent experiments. Offline shaders, actual WebGL and real-vehicle validation are reported separately.');

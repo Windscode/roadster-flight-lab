@@ -1,0 +1,374 @@
+{
+  "schema": "roadster-residual-outcome-analysis",
+  "version": 1,
+  "createdAtUTC": "2026-10-20T13:25:17.038948+00:00",
+  "modelVersion": "3.15.0",
+  "modelBuildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+  "method": "Derived from the final actual-solver results; no new run, input, threshold or state modification. Evidence and interpretation are separate.",
+  "normalVehicleEntrance": {
+    "classification": "confirmed-authored-road-continuity-defect-corrected",
+    "before": {
+      "geometryIdentity": "49754231",
+      "sourceHashes": {
+        "dist/city-plan.js": "0258b8489058b9051458e0b1809dcce3018e8013c3ea5b9bec10080947e9fc2c",
+        "dist/physics.js": "16660d5ee847db8a910cee5df013cf8206216d293b0d6590376cf62385aa5089",
+        "dist/vehicle-models.js": "532a00d33f5561f1e7c9414196a95b571ef7a139c15f326417c1fe84e5ddd67f"
+      },
+      "summary": {
+        "reachedAtS": 6.833333333333333,
+        "finalPosition": {
+          "x": 119.66320355363828,
+          "y": 0.5969381071240975,
+          "z": 302.5000078482647
+        },
+        "peakVerticalSpeedMps": 0.6985921820353693,
+        "peakPitchDeg": 3.3611482677468363,
+        "peakWheelLoadN": 7673.080610595677,
+        "minimumContacts": 2,
+        "maximumWheelSupportY": 0.12,
+        "minimumWheelSupportY": 0,
+        "encountered": [
+          "ground",
+          "plan-foundry-paving-110.5"
+        ],
+        "hullContactSteps": 0,
+        "driveRegeneration": {
+          "regenForceN": 2600,
+          "regenPowerW": 60000
+        },
+        "surfaceStepCriterion": {
+          "maximumM": 0.02,
+          "measuredM": 0.12,
+          "passed": false
+        }
+      }
+    },
+    "after": {
+      "geometryIdentity": "d8f529e2",
+      "sourceHashes": {
+        "dist/city-plan.js": "6b370c9f951354de5a00263cb524e1a2df7cfc00e8b6cf6d2df020b82cf71ab4",
+        "dist/physics.js": "e4ade915e0d01dc7a697034cf3307b07cbfe2d408ec44f37861a2f7cfa8cabd1",
+        "dist/vehicle-models.js": "532a00d33f5561f1e7c9414196a95b571ef7a139c15f326417c1fe84e5ddd67f"
+      },
+      "summary": {
+        "reachedAtS": 6.758333333333334,
+        "finalPosition": {
+          "x": 119.64712689554746,
+          "y": 0.5969383258630465,
+          "z": 302.5
+        },
+        "peakVerticalSpeedMps": 9.44347299770753e-08,
+        "peakPitchDeg": 0.002169237314493036,
+        "peakWheelLoadN": 5398.270976285736,
+        "minimumContacts": 4,
+        "maximumWheelSupportY": 0,
+        "minimumWheelSupportY": 0,
+        "encountered": [
+          "ground"
+        ],
+        "hullContactSteps": 0,
+        "driveRegeneration": {
+          "regenForceN": 2600,
+          "regenPowerW": 60000
+        },
+        "surfaceStepCriterion": {
+          "maximumM": 0.02,
+          "measuredM": 0,
+          "passed": true
+        }
+      }
+    },
+    "sameInitialContract": true,
+    "explanation": "One 12 cm shared paving strip crossed an existing 8 m carriageway. The exact two-piece opening meets the unchanged 2 cm surface criterion with production regeneration. The correction does not alter thrust, grip, speed request or initial state.",
+    "limits": "Numerical matched passage only; native driving and all other city curbs remain separately unaccepted."
+  },
+  "finite100BarLanding": {
+    "classification": "retained-model-gas-pressure-capacity-failure-with-hard-contact",
+    "status": "failed",
+    "reason": "hard_or_tilted_touchdown",
+    "durationS": 2.1166666666666667,
+    "initialGasMassKg": 71.30234293854127,
+    "dischargedKg": 68.53375692624196,
+    "remainingGasKg": 2.7685860122993384,
+    "gasTemperatureK": 81.39550399246626,
+    "pressureBar": 1.078114129472354,
+    "pressureLimited": true,
+    "solverFault": null,
+    "nozzleFault": null,
+    "sustainedLimitationEvent": {
+      "step": 96,
+      "timeS": 0.8,
+      "type": "actuator_saturation_begin",
+      "detail": {
+        "allocationError": 0.00015335828400944975,
+        "pressureBar": 48.49431056858151
+      }
+    },
+    "touchdown": {
+      "timeS": 2.1166666666666667,
+      "step": 254,
+      "preContactVerticalMps": 4.209523016185775,
+      "postContactVerticalMps": -3.8913667087460464,
+      "tiltDeg": 0.00010058397520066941,
+      "position": {
+        "x": 4.928912017907064e-05,
+        "y": 0.6635818712536357,
+        "z": -8.111294587086701e-10
+      },
+      "errorM": 4.928912018574484e-05,
+      "contacts": 4
+    },
+    "touchdownFieldMeaning": "preContactVerticalMps is the nonnegative downward speed magnitude before the contact step; postContactVerticalMps is signed world vertical velocity.",
+    "firstWindChangeS": 2,
+    "scheduledNozzleFaultScale": 1,
+    "limits": "Within the declared tank/thermal/nozzle model. Gas drawdown and pressure limitation precede the first wind change; no nozzle failure was active. No real-car safety threshold, calibrated thermal fidelity or arbitrary recovery guarantee follows."
+  },
+  "highSpeedStepContact": {
+    "classification": "retained-upset-with-unresolved-high-speed-contact-fidelity",
+    "cases": [
+      {
+        "id": "full-width-10cm-90",
+        "initialSpeedKmh": 90,
+        "firstFixtureContact": {
+          "step": 51,
+          "timeS": 0.425,
+          "preIntegrationSpeedKmh": 89.68496148419382,
+          "postIntegrationSpeedKmh": 82.4735278896216,
+          "contacts": [
+            {
+              "objectId": "fixture-step",
+              "kind": "step",
+              "vehicleShape": 4,
+              "pointWorld": {
+                "x": -0.7575000000000003,
+                "y": 0.14164426002369146,
+                "z": 0.18626989325525312
+              },
+              "normal": {
+                "x": 0,
+                "y": 0.8909550803093231,
+                "z": -0.4540914498985944
+              },
+              "normalFromBody": false,
+              "penetrationM": 0.047480400866903937,
+              "normalForceN": 646152.4061976231
+            },
+            {
+              "objectId": "fixture-step",
+              "kind": "step",
+              "vehicleShape": 4,
+              "pointWorld": {
+                "x": -1.0225000000000004,
+                "y": 0.14164426002369146,
+                "z": 0.18626989325525312
+              },
+              "normal": {
+                "x": 0,
+                "y": 0.8909550803093231,
+                "z": -0.4540914498985944
+              },
+              "normalFromBody": false,
+              "penetrationM": 0.047480400866903937,
+              "normalForceN": 164144.30120454452
+            },
+            {
+              "objectId": "fixture-step",
+              "kind": "step",
+              "vehicleShape": 5,
+              "pointWorld": {
+                "x": 1.0225000000000002,
+                "y": 0.14164426002369146,
+                "z": 0.18626989325525312
+              },
+              "normal": {
+                "x": 1.231230151469906e-16,
+                "y": 0.8909550803093229,
+                "z": -0.45409144989859507
+              },
+              "normalFromBody": false,
+              "penetrationM": 0.047480400866904075,
+              "normalForceN": 543776.3399076108
+            },
+            {
+              "objectId": "fixture-step",
+              "kind": "step",
+              "vehicleShape": 5,
+              "pointWorld": {
+                "x": 0.7575000000000001,
+                "y": 0.14164426002369146,
+                "z": 0.18626989325525312
+              },
+              "normal": {
+                "x": 1.231230151469906e-16,
+                "y": 0.8909550803093229,
+                "z": -0.45409144989859507
+              },
+              "normalFromBody": false,
+              "penetrationM": 0.047480400866904075,
+              "normalForceN": 133097.02556066005
+            }
+          ],
+          "wheelRayContacts": [
+            "ground",
+            "ground",
+            "ground",
+            "ground"
+          ],
+          "colliderErrorDeg": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "maxTiltDeg": 179.6358191120599,
+        "maxPenetrationM": 0.049065507335889345,
+        "maxWheelLoadN": 11359.550424990042,
+        "hullContactSteps": 14,
+        "finalSpeedKmh": 15.727127894139523,
+        "solverFault": null,
+        "trajectorySha256": "9f2e01c5a1bc6bdf28bc2b98bf1f426a324c912dda636d116361996c9ecde333",
+        "physicalOutcome": "vehicle-upset",
+        "trajectoryIdenticalToRetainedBefore": true
+      },
+      {
+        "id": "single-wheel-10cm-90",
+        "initialSpeedKmh": 90,
+        "firstFixtureContact": {
+          "step": 51,
+          "timeS": 0.425,
+          "preIntegrationSpeedKmh": 89.68496148419382,
+          "postIntegrationSpeedKmh": 84.71985829023816,
+          "contacts": [
+            {
+              "objectId": "fixture-step",
+              "kind": "step",
+              "vehicleShape": 4,
+              "pointWorld": {
+                "x": -0.7575000000000003,
+                "y": 0.12570669341979446,
+                "z": 0.1943927637421763
+              },
+              "normal": {
+                "x": 0,
+                "y": 0.8909550803093231,
+                "z": -0.4540914498985944
+              },
+              "normalFromBody": false,
+              "penetrationM": 0.06536858283715963,
+              "normalForceN": 920567.3468459491
+            },
+            {
+              "objectId": "fixture-step",
+              "kind": "step",
+              "vehicleShape": 4,
+              "pointWorld": {
+                "x": -1.0225000000000004,
+                "y": 0.12570669341979446,
+                "z": 0.1943927637421763
+              },
+              "normal": {
+                "x": 0,
+                "y": 0.8909550803093231,
+                "z": -0.4540914498985944
+              },
+              "normalFromBody": false,
+              "penetrationM": 0.06536858283715963,
+              "normalForceN": 0
+            }
+          ],
+          "wheelRayContacts": [
+            "ground",
+            "ground",
+            "ground",
+            "ground"
+          ],
+          "colliderErrorDeg": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "maxTiltDeg": 126.0771070134261,
+        "maxPenetrationM": 0.06536858283715963,
+        "maxWheelLoadN": 47290.595958612976,
+        "hullContactSteps": 6,
+        "finalSpeedKmh": 33.462495095476385,
+        "solverFault": null,
+        "trajectorySha256": "c7fb36cde839a6e5b248a5086a76c2cc9f8feb375ec34597cc6001857451c332",
+        "physicalOutcome": "vehicle-upset",
+        "trajectoryIdenticalToRetainedBefore": true
+      }
+    ],
+    "stepDistanceAt90KmhM": 0.20833333333333334,
+    "explanation": "The adverse outcomes remain exactly reproduced and are not counted as normal passage. A null solver fault means no detected nonfinite/state guard failure. It does not establish convergence or realistic collision response. Penetrations around 4.9/6.5 cm and large discrete impulses leave a numerical contact-fidelity question. The current contact-offset penetration estimate has not been independently verified as geometric overlap; the inherited 0.30 m guard is a coarse fault screen, not a fidelity tolerance.",
+    "nextDiscriminatingCheck": "Independent swept-wheel/step contact timing and isolated contact-substep convergence with identical 120 Hz control, gas and initial conditions. Compare impulse, penetration, wheel/hull contact ordering and energy before choosing a local contact change; no global frequency increase or acceptance relaxation is claimed."
+  },
+  "defaultRegeneration": {
+    "classification": "different-contact-preconditions-not-a-contact-fix",
+    "default": {
+      "initialSpeedKmh": 20,
+      "firstFixtureContact": {
+        "step": 319,
+        "timeS": 2.658333333333333,
+        "preIntegrationSpeedKmh": 8.81206946603549,
+        "postIntegrationSpeedKmh": 8.777047291515489,
+        "contacts": [],
+        "wheelRayContacts": [
+          "fixture-step",
+          "fixture-step",
+          "ground",
+          "ground"
+        ],
+        "colliderErrorDeg": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "finalSpeedKmh": 0.000580028992505702,
+      "solverFault": null
+    },
+    "isolatedRegenOff": {
+      "initialSpeedKmh": 20,
+      "firstFixtureContact": {
+        "step": 231,
+        "timeS": 1.925,
+        "preIntegrationSpeedKmh": 19.816365754039296,
+        "postIntegrationSpeedKmh": 19.815607793997515,
+        "contacts": [],
+        "wheelRayContacts": [
+          "fixture-step",
+          "fixture-step",
+          "ground",
+          "ground"
+        ],
+        "colliderErrorDeg": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "finalSpeedKmh": 19.470872569245813,
+      "solverFault": null
+    },
+    "meaning": "Both start at 20 km/h, but default lift-off regeneration changes actual impact speed. The two results are kept separately and do not constitute a same-speed comparison."
+  },
+  "sources": [
+    {
+      "path": "qa/landing-task-fixtures-3.15.json",
+      "sha256": "75b67492393819a9488eb3f76ed1bde4f95bc3ba47ee8fb125cfef85af8bf70d"
+    },
+    {
+      "path": "qa/contact-steering-3.15.json",
+      "sha256": "acbdaa89049cd11aa9dd8744af8a59f83235ba0a438296fc8b69fe8bbf0a6614"
+    },
+    {
+      "path": "qa/city-entry-3.15-comparison.json",
+      "sha256": "0437d4c36f334a669aff9fe71171382f7402fba6483ff4ef22e2f79478675e43"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "roadster-city-geometry-contract-affected-regression",
+  "startedAt": "2026-10-20T13:11:21.540559+00:00",
+  "endedAt": "2026-10-20T13:11:24.134482+00:00",
+  "status": "passed",
+  "modelBuildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "tests/city-geometry-scope-3.14.test.mjs"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.414,
+      "stdout": "{\n  \"status\": \"passed\",\n  \"checks\": 17,\n  \"unchangedSource313\": 2105,\n  \"reconstructedHistoricalCanonicalSHA256\": \"77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "tests/indirect-lighting.test.mjs"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.763,
+      "stdout": "PASS: Isotropic radiance integrates to pi times radiance on six normals without double cosine convolution\nPASS: Directional SH evaluation agrees with the independent Three.js irradiance implementation across 64 normals\nPASS: Every stored probe has finite coefficients, consistent validity, exact dimensions and verified data, full current canonical geometry and material identities\nPASS: Four city locations retain nonnegative bounce energy and agree with a 1536-ray transport reference within the documented spot-check tolerance\nPASS: Contact AO affects only indirect diffuse; spatial probe samples use explicit LOD in divergent geometry branches\nPASS: Camera adaptation responds to spatial shade and sun visibility, stays bounded and has an unloaded fixed-exposure fallback\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "qa/exterior-materials-check.mjs"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 2.575,
+      "stdout": "PASS: Unrelated original city geometry, 108 street proxies and shared wall palette retain their identities; three approved tower profiles and all new shared entities are explicit\nPASS: Every exterior instance carries finite metre dimensions that match its actual transform\nPASS: Metre UV edge lengths stay physical through yaw, 45-degree crossings and tilted anisotropic boxes\nPASS: All new plinths, portal frames, awnings, drip edges and floor belts fit inside existing physical building envelopes\nPASS: Periodic seam filtering matches physical covered area and distant glass/paint seams converge to their mean\nPASS: Six opaque exterior responses, texture colour spaces and quality-switch upload invalidation are correct\nPASS: No crowds or character requests are constructed; 480 updates and three quality levels leave all street matrices untouched\nPASS: Authored exterior upgrades reduce allocated geometry and all 15 matched-view draw counts remain within the 3.5 budget\n{\n  \"status\": \"passed\",\n  \"checks\": 8,\n  \"allocatedTrianglesBefore\": 1816606,\n  \"allocatedTrianglesAfter\": 1760124,\n  \"balanced\": [\n    {\n      \"view\": \"weave-street\",\n      \"drawCalls\": 212,\n      \"triangles\": 434550,\n      \"instances\": 34569,\n      \"shadowDrawCalls\": 28,\n      \"shadowTriangles\": 131136\n    },\n    {\n      \"view\": \"foundry-avenue\",\n      \"drawCalls\": 55,\n      \"triangles\": 60784,\n      \"instances\": 5091,\n      \"shadowDrawCalls\": 19,\n      \"shadowTriangles\": 7140\n    },\n    {\n      \"view\": \"civic-terrace\",\n      \"drawCalls\": 55,\n      \"triangles\": 105424,\n      \"instances\": 8813,\n      \"shadowDrawCalls\": 21,\n      \"shadowTriangles\": 30156\n    },\n    {\n      \"view\": \"aerial\",\n      \"drawCalls\": 84,\n      \"triangles\": 302928,\n      \"instances\": 25627,\n      \"shadowDrawCalls\": 21,\n      \"shadowTriangles\": 53856\n    },\n    {\n      \"view\": \"botanical\",\n      \"drawCalls\": 23,\n      \"triangles\": 33568,\n      \"instances\": 2814,\n      \"shadowDrawCalls\": 12,\n      \"shadowTriangles\": 3972\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "qa/render-budget-check.mjs"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 2.588,
+      "stdout": "{\n  \"status\": \"passed\",\n  \"checks\": [\n    \"Repeated quality round trip replaces 1 / 2 / 3 cascade systems and invalidates disposed CSM uniform caches\",\n    \"Balanced allocates no cube camera and evaluates daytime SH at vertices; mutually exclusive weather programs retain contact AO and one atlas each for night bounce/direct, with unchanged 3-read / 6-transition-read budgets\",\n    \"Five authored city views halve baseline triangles with fewer than 400 beauty submissions\",\n    \"Balanced shadow cadence caps at 30 Hz and refreshes immediately after a teleport\",\n    \"Tessellated ground remains visible at 500 m and exactly matches the existing physical floor top\",\n    \"All unrelated original geometry retains exact identity; three explicitly approved tower profiles preserve original parcels, and the daylight bake matches the entire current city\"\n  ],\n  \"balanced\": [\n    {\n      \"view\": \"weave-street\",\n      \"drawCalls\": 303,\n      \"triangles\": 461514,\n      \"instances\": 35606,\n      \"shadowDrawCalls\": 49,\n      \"shadowTriangles\": 132108\n    },\n    {\n      \"view\": \"foundry-avenue\",\n      \"drawCalls\": 92,\n      \"triangles\": 78530,\n      \"instances\": 5659,\n      \"shadowDrawCalls\": 31,\n      \"shadowTriangles\": 7800\n    },\n    {\n      \"view\": \"civic-terrace\",\n      \"drawCalls\": 108,\n      \"triangles\": 185528,\n      \"instances\": 15467,\n      \"shadowDrawCalls\": 46,\n      \"shadowTriangles\": 60828\n    },\n    {\n      \"view\": \"aerial\",\n      \"drawCalls\": 132,\n      \"triangles\": 323808,\n      \"instances\": 26157,\n      \"shadowDrawCalls\": 37,\n      \"shadowTriangles\": 59316\n    },\n    {\n      \"view\": \"botanical\",\n      \"drawCalls\": 128,\n      \"triangles\": 266682,\n      \"instances\": 25088,\n      \"shadowDrawCalls\": 77,\n      \"shadowTriangles\": 103164\n    }\n  ]\n}\n",
+      "stderr": ""
+    }
+  ],
+  "sourceSHA256": {
+    "qa/city-geometry-scope.mjs": "0b458594de93a72ac71e315c54d81c21cc4973cdcda14cecca83dc974755b6b1",
+    "qa/fixtures/city-geometry-scope-3.14.json": "7c54dfeacc46550d89800cd34ec469ee2b9549cc9d292cf073dd345a7df32ea9",
+    "qa/fixtures/city-entry-geometry-scope-3.15.json": "d82343320c0b50940733ff5d7ab23bd74054a078d89f4162fc50d1043a6616d9",
+    "tests/city-geometry-scope-3.14.test.mjs": "87158d7ebe4d6c98ce14cbae599b9f0d2636aa37d74518320b1500d47f1fa1db",
+    "dist/model-build.js": "e28eac5c8b3c08a278a18246cbd587f889120eca9881e1c5806ae6afb477eb18"
+  },
+  "scope": "Affected QA helper callers only. No production runtime changes, no GPU or user-driving acceptance, no full aggregate acceptance."
+}

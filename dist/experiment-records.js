@@ -12,7 +12,7 @@ export const EXPERIMENT_SCHEMA='roadster.live-experiment';
 export const EXPERIMENT_LIBRARY_KEY='roadster-live-experiments-v1';
 export const EXPERIMENT_LIMITS=Object.freeze({durationS:300,steps:36000,records:32,importRecords:128,storageBytes:4*1024*1024,importBytes:12*1024*1024,events:10000});
 export const FIXED_HZ=120;
-export const COMMAND_METHODS=Object.freeze(['reset','setMode','setSuction','setStabilizationMode','setAirStabilization','setPoseTarget','setWind','clearWind','setSupplyMode','refillGas','setParam','startManeuver','setRoadSurface','setWing','setObservation','setNozzleFault','clearNozzleFault']);
+export const COMMAND_METHODS=Object.freeze(['reset','setMode','setSuction','setStabilizationMode','setAirStabilization','setPoseTarget','setWind','clearWind','setSupplyMode','refillGas','setParam','startManeuver','setRoadSurface','setWing','setObservation','setNozzleFault','clearNozzleFault','releasePilotInput']);
 const INPUT_KEYS=['throttle','steer','lift','roll','pitch','brake','frontJets','rearJets','boost'];
 const CONTROLLER_KEYS=['positionGain','velocityGain','altitudeGain','verticalDamping','attitudeResponse','rollRateDegS','pitchRateDegS','yawRateDegS','angularAccelerationDegS2','verticalAccelerationMps2'];
 const finite=v=>typeof v==='number'&&Number.isFinite(v);

@@ -1,0 +1,23 @@
+{
+  "recordedAt": "2026-10-20T12:16:10.120234+00:00",
+  "test": "Integral/filter template failure to improve this task is retained and inspectable",
+  "originalAssertion": "pi.summary.gasThroughputKg > baseline.summary.gasThroughputKg",
+  "outcome": "failed",
+  "baselineGasKg": 404.7650505174985,
+  "defaultFilteredPIGasKg": 403.8807705708996,
+  "baselineHeightRmseM": 0.48676151815220997,
+  "defaultFilteredPIHeightRmseM": 0.5508265831825593,
+  "cause": "The task specifically referenced the 3.14 edited PI with proportional gain 1.8. The initial new test inadvertently selected the unedited PI template with gain 2.6. That template has higher error but slightly lower whole-task gas due to its different completion time.",
+  "correction": "Reproduce the exact historical edited law (P=1.8), retain original assertion and criteria; do not infer that every PI law consumes more gas.",
+  "additionalFailures": [
+    {
+      "test": "Task exit restores settings and pilot authority without teleporting or refilling",
+      "originalAssertion": "Deep equality of full body state and exact gas mass across task exit",
+      "outcome": "failed",
+      "observedMassBeforeKg": 2010.0952292918503,
+      "observedMassAfterKg": 2199.5582002848946,
+      "cause": "The standard setParam API explicitly refills on dryMass, tankLitres or initialPressureBar changes, including same-value assignment. Iterating task-return parameters invoked that side effect.",
+      "fixRequired": "Use a validated parameter-restoration path with explicit refillGas:false; retain original gas mass and temperature while restoring settings. Keep original test assertions."
+    }
+  ]
+}

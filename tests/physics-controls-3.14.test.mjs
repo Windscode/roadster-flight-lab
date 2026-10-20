@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -71,4 +72,4 @@ check('Research height outer loop obeys layer, expiry, slew, authority and conti
 
 const sources=['dist/physics.js','dist/trim-feasibility.js','dist/simulation-safety.js','dist/vehicle-clearance.js','dist/simulation-snapshot.js'];
 mkdirSync(new URL('../qa/',import.meta.url),{recursive:true});
-writeFileSync(new URL('../qa/physics-controls-deepening-3.14.json',import.meta.url),JSON.stringify({schema:'roadster-physics-controls-evidence',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',scope:'Node fixed-step numerical and independent wrench evidence. No GPU, real keyboard, camera image or driving-feel acceptance is claimed.',checks,sourceHashes:Object.fromEntries(sources.map(p=>[p,hash(p)])),evidence},null,2)+'\n');
+writeFileSync(new URL(`../qa/physics-controls-deepening-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({schema:'roadster-physics-controls-evidence',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',scope:'Node fixed-step numerical and independent wrench evidence. No GPU, real keyboard, camera image or driving-feel acceptance is claimed.',checks,sourceHashes:Object.fromEntries(sources.map(p=>[p,hash(p)])),evidence},null,2)+'\n');

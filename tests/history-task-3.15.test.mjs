@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
+import {MODEL_BUILD_ID} from '../dist/model-build.js';
+import {parseLandingArchive,loadLandingLibrary,LANDING_LIBRARY_KEY,reexecuteLandingTask} from '../dist/landing-challenge.js';
+const path=new URL('../qa/landing-task-fixtures-3.14.json',import.meta.url),raw=readFileSync(path,'utf8'),original=parseLandingArchive(raw),checks=[];
+assert.equal(MODEL_VERSION,'3.15.0');assert.equal(original.records.length,3);assert(original.records.every(r=>r.identity.modelVersion==='3.14.0'));
+let writes=0;const storage={getItem:key=>key===LANDING_LIBRARY_KEY?raw:null,setItem(){writes++;throw Error('Historical read must not write');}};
+const loaded=loadLandingLibrary(storage);assert.equal(loaded.warning,null);assert.deepEqual(loaded.value.records,original.records);assert.deepEqual(parseLandingArchive(JSON.stringify(loaded.value)).records,original.records);assert.deepEqual(loaded.value.algorithms,original.algorithms);assert.equal(writes,0);assert.equal(storage.getItem(LANDING_LIBRARY_KEY),raw);
+checks.push('Original 3.14 task outcomes, algorithms, physical endpoints and full controller I/O survive read and export without storage writes.');
+for(const result of original.records)await assert.rejects(reexecuteLandingTask(result,{yieldEvery:0}),/Original task model\/build is not installed/);
+assert.equal(readFileSync(path,'utf8'),raw);checks.push('Reexecution refuses the unavailable 3.14 model/build explicitly; historical identities and bytes are never relabelled as current.');
+writeFileSync(new URL('../qa/history-task-3.15.json',import.meta.url),JSON.stringify({schema:'roadster-historical-task-readability',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',checks,source:{path:'qa/landing-task-fixtures-3.14.json',sha256:createHash('sha256').update(raw).digest('hex'),records:original.records.map(r=>({id:r.id,status:r.status,identity:r.identity,taskId:r.taskId,algorithmHash:r.algorithm.hash}))},storageWrites:writes,execution:'explicitly refused for unavailable original solver; view/export retained'},null,2)+'\n');for(const check of checks)console.log('PASS: '+check);

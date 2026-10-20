@@ -1,0 +1,167 @@
+{
+  "schema": "roadster-retained-development-failures",
+  "events": [
+    {
+      "case": "landing-reserve low-pressure fixture",
+      "original": "12 kg gas was expected to make static hover infeasible. Assertion returned true.",
+      "cause": "At 293.15 K and 600 L, 12 kg means about 16.8 bar; pressure-derated lift can still exceed weight. The original expectation was wrong.",
+      "correction": "Use 5 kg for explicitly insufficient pressure and set fixture rigid-body mass consistently. Same 249.56 kg low/high/descent counterexample is unchanged. No physical model or landing threshold was relaxed."
+    },
+    {
+      "case": "input release assertion",
+      "original": "Expected released driverInput.throttle===0; interface returned omitted axis.",
+      "cause": "Empty input object is the established zero-axis representation.",
+      "correction": "Check omitted-or-zero semantic and exact physical body/forces preserved; no implementation limit changed."
+    },
+    {
+      "case": "matrix complete physics snapshot",
+      "original": "After ordinary pause release, physicsUnchanged was false even though body pose/mode fingerprint matched.",
+      "cause": "The _lastInput shape changed from explicit zero/false axes to an empty object; a manual leading attitude reference could also be recaptured by the normal release path.",
+      "correction": "Input release is idempotent with preserved key shape; diagnostic matrix uses a separate DOM-input freeze without mutating physical control references. Full-state equality assertions retained and repeated for airborne E/1, focus, blur and hidden events.",
+      "retainedEvidence": "qa/matrix-integration-development-failure-3.15.json"
+    },
+    {
+      "case": "city carriageway entrance at terrace-link",
+      "original": "Independent road support differed by 0.1200000000000001 m; actual default-regen passage crossed a 12 cm raised paving band.",
+      "correction": "Only split the east footway at the existing 8 m vehicle mouth; preserve the original <0.12 m navigation check and independently require <=0.02 m vehicle-mouth continuity. Unrelated authored solids stay exactly equal.",
+      "retainedEvidence": "qa/city-entry-3.15-before.json"
+    },
+    {
+      "case": "history no-migrator version gate",
+      "original": "The inherited helper explicitly accepted only MODEL_VERSION 3.14.0.",
+      "correction": "Reviewed and retained the same no-migrator policy for 3.15: history is readable/exportable; unavailable solver execution is rejected. Added actual archived 3.14 task read/export and rejection test instead of relabelling old snapshots."
+    },
+    {
+      "case": "input release representation after matrix repair",
+      "original": "The earlier new pilot test required _lastInput to become exactly {}, which conflicts with idempotent diagnostic freeze when the pre-release object contains explicit zero/false keys.",
+      "correction": "Keep all axes cleared, preserve original key shape and require a second release to leave the full exported physical snapshot unchanged. The existing body, forces and automated references checks are retained."
+    },
+    {
+      "case": "Inherited G combined pitch/translation expectation",
+      "original": "tests/vehicle-dynamics-3.11.test.mjs sent {roll:1,pitch:1} and required peak tilt <5 degrees. This failed on the actual 3.15 solver.",
+      "cause": "The historical assertion expected G to silently discard explicit pitch; accepting that received pitch is an intentional 3.15 behavior change requested by the user.",
+      "correction": "Preserve the original Z/B lateral-translation <5 degree and >1 m gates with roll-only input. Add a separate combined request requiring accepted pitch, >20 degree physical pitch, >1 m lateral travel and exactly zero commanded roll rate. No actuator limits or physical success criteria changed.",
+      "retainedEvidence": "qa/validation-3.15-first-g-semantics-failure.txt"
+    },
+    {
+      "case": "Aggregate rerun intentionally interrupted for independently found control-ownership defect",
+      "atUTC": "2026-10-20T12:47:08.578742+00:00",
+      "reason": "Read-only review found research hotkeys could start a second recorder while a city challenge retained control. Stop only the current assistant-owned validation session through its supported session handle before repairing runtime; this log is not a passed final aggregate.",
+      "exitCode": 130,
+      "retainedEvidence": "qa/validation-3.15-pre-handoff-fix-interrupted.txt"
+    },
+    {
+      "case": "Final aggregate process ended without completion trailer",
+      "atUTC": "2026-10-20T13:00:59.446019+00:00",
+      "observedExitCode": 1,
+      "observedLog": "41 completed commands; last PASS is physics-controls-3.14; no assertion or stack trace captured after it. Camera report was written but no aggregate PASS for that command exists.",
+      "cause": "Unresolved process/collection termination; no claim of an application or physical defect.",
+      "correction": "Retain incomplete log and rerun the identical source with a PTY and explicit outer-process exit receipt; poll the supported session handle. No incomplete run counted as final acceptance.",
+      "retainedEvidence": "qa/validation-3.15-incomplete-host-exit.txt"
+    },
+    {
+      "case": "Inherited exact city geometry contract omitted the 3.15 vehicle-mouth paving split",
+      "atUTC": "2026-10-20T13:06:31.754991+00:00",
+      "original": "Final aggregate failed at qa/city-geometry-scope.mjs:50 through qa/exterior-materials-check.mjs: 1948 !== 1947.",
+      "cause": "One original 12 cm paving box plan-foundry-paving-110.5 was intentionally replaced by two exact south/north pieces, leaving the existing 8 m vehicle mouth open; the old helper counted both as unchanged historical entities.",
+      "correction": "Freeze the original failure and process receipt. Validate only these two explicit replacement shapes and the 8 m gap; reconstruct the exact original single box before existing historical counts and canonical hashes. Preserve every other geometry/tower/addition assertion and add rejection fixtures for unauthorized split changes. No production runtime change.",
+      "retainedEvidence": [
+        {
+          "source": "qa/validation-final-run-3.15.txt",
+          "retainedAs": "qa/validation-3.15-first-geometry-contract-failure.txt",
+          "bytes": 3633,
+          "sha256": "7e3092383f06317f013e59ab566190f4c106d3f03f528df7b8d8570b951e37ef"
+        },
+        {
+          "source": "qa/validation-final-process-3.15.json",
+          "retainedAs": "qa/validation-3.15-first-geometry-contract-failure-process.json",
+          "bytes": 281,
+          "sha256": "a043594e6b9f2ceb13e8e09aad94e3f6f8bce70a3bfa0fa6cd01b9e0f6170ea0"
+        }
+      ],
+      "originalExitCode": 1,
+      "status": "affected-regressions-passed; final-aggregate-rerun-required",
+      "originalModelBuildId": "2b2c08b5e14b69846c940d663efb6b28b6423ba495eb4f721699fbc77f53f2d6",
+      "repairFindings": [
+        {
+          "finding": "First draft used deep object equality against a JSON fixture; the runtime object includes an optional color: undefined property omitted by JSON, so the exact geometry passed values but failed property representation.",
+          "correction": "Compare the two explicit paving objects with the same existing 1e-9 canonical geometry representation used by immutable tower and city hashes. Defined extra fields, numeric changes, missing or duplicate pieces remain rejected."
+        }
+      ],
+      "verification": {
+        "atUTC": "2026-10-20T13:12:01.729936+00:00",
+        "modelBuildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+        "report": "qa/city-geometry-scope-3.15-affected-run.json",
+        "reportSHA256": "31bc45a88f0b91dbe28044db02488a9140c8c706c809f04fff6cf59011b5a005",
+        "realExitCodes": [
+          {
+            "command": [
+              "node",
+              "tests/city-geometry-scope-3.14.test.mjs"
+            ],
+            "exitCode": 0
+          },
+          {
+            "command": [
+              "node",
+              "tests/indirect-lighting.test.mjs"
+            ],
+            "exitCode": 0
+          },
+          {
+            "command": [
+              "node",
+              "qa/exterior-materials-check.mjs"
+            ],
+            "exitCode": 0
+          },
+          {
+            "command": [
+              "node",
+              "qa/render-budget-check.mjs"
+            ],
+            "exitCode": 0
+          }
+        ],
+        "checks": {
+          "cityGeometryScope": 17,
+          "exteriorMaterials": 8,
+          "renderBudget": 6,
+          "indirectLighting": 6
+        },
+        "historicalHashesRetained": [
+          "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+          "ad28b4192e8367ac32491a5c3d0e08667b9946d667aa2c2405c375c0a15e8e4b"
+        ],
+        "fullCurrentCanonicalSHA256": "d6aaed2a0c5393b9e6689d8b3b1c06719e0ca75e11eaf1bacb15ecdc8d824284",
+        "scope": "Only affected helper regression callers; no production changes or GPU acceptance. Parent will rerun full aggregate on the same current build."
+      },
+      "subsequentFinalAggregate": {
+        "status": "passed",
+        "buildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+        "processReceipt": "qa/validation-final-process-3.15.json",
+        "endedAtUTC": "2026-10-20T13:24:46.331382+00:00",
+        "exitCode": 0
+      }
+    },
+    {
+      "case": "Final aggregate JSDOM entry-file metadata resolution",
+      "original": "All 12 pilot-sequence assertions ran successfully, but report serialization failed with MODULE_NOT_FOUND for an api.js/package.json path. Aggregate exited 1; not reported as complete.",
+      "buildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+      "cause": "The test accepted an entry-file path for loading JSDOM but incorrectly appended /package.json when recording its version.",
+      "correction": "Resolve jsdom/package.json from the actual loaded module entry directory. No event, physics condition, assertion or model source changed.",
+      "retainedEvidence": [
+        "qa/validation-3.15-jsdom-metadata-failure.txt",
+        "qa/validation-3.15-jsdom-metadata-failure-process.json"
+      ],
+      "status": "metadata-corrected; exact test and aggregate rerun required",
+      "subsequentFinalAggregate": {
+        "status": "passed",
+        "buildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+        "processReceipt": "qa/validation-final-process-3.15.json",
+        "endedAtUTC": "2026-10-20T13:24:46.331382+00:00",
+        "exitCode": 0
+      }
+    }
+  ]
+}

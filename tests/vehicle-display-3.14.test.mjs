@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -82,4 +83,4 @@ check('All new geometry has finite unit normals and explicit LOD costs against 3
 });
 const sourcePaths=['dist/vehicle.js','dist/vehicle-inspection.js','dist/vehicle-display-study.js','dist/vehicle-study-capture.js','dist/vehicle-reference-3.13.js','dist/vehicle-reference-layout-3.13.js','dist/i18n-vehicle-314-en.js','tests/vehicle-display-3.14.test.mjs'];
 const report={schema:'roadster-vehicle-display-3.14',status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,asOf:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(sourcePaths.map(p=>[p,sha(readFileSync(new URL('../'+p,import.meta.url)))])),limitations:['Geometry/material parameters, camera projection and identity isolation are tested. No real GPU pixel or perceived-detail acceptance is implied.','Current official original photographs and supplied actual 3.13 images were viewed; no 3.14 after-images or actual video have been acquired in this test.','Same-camera studio/daylight plus actual city wet-night frames, full optical orbit and steering/suspension/wing motion remain target-device checks.']};
-writeFileSync(new URL('../qa/vehicle-display-3.14.json',import.meta.url),JSON.stringify(report,null,2)+'\n');car.dispose();driver.dispose();baseline.dispose();console.log(JSON.stringify(report,null,2));
+writeFileSync(new URL(`../qa/vehicle-display-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');car.dispose();driver.dispose();baseline.dispose();console.log(JSON.stringify(report,null,2));

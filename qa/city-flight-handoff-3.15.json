@@ -1,0 +1,770 @@
+{
+  "schema": "roadster-city-flight-handoff-regression",
+  "version": 1,
+  "createdAt": "2026-10-20T13:22:22.441Z",
+  "identity": {
+    "modelVersion": "3.15.0",
+    "modelBuildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+    "sourceCommit": null,
+    "sourceTree": null,
+    "sourceIdentityStatus": "not-available",
+    "protocolVersion": "live-fixed-inputs-1",
+    "fixedHz": 120
+  },
+  "status": "passed",
+  "environment": "Production application shell and research/city UI, synthetic JSDOM KeyboardEvents, actual RoadsterSim. No WebGL or native hardware events.",
+  "priorEvidence": {
+    "file": "city-flight-handoff-3.15-before.json",
+    "sha256": "7c6e699e7350989286ab1fe9b5b870ed68f48b999fd174b439873ca787114819",
+    "retainedUnchanged": true
+  },
+  "assertionClarification": {
+    "originalFailureLog": "city-flight-handoff-3.15-initial-assertion.txt",
+    "originalAssertion": "Complete body export equality was used for the no-motion rule.",
+    "observedMassKg": {
+      "cachedBefore": 2188.3306815160886,
+      "refreshedAfter": 2188.1330270565372
+    },
+    "reason": "The existing no-refill parameter restore refreshes cached mass/inertia after finite discharge. Position, velocity, quaternion, angular velocity, time and gas are the exit invariants; refreshed body mass is checked separately against dryMass + actual gasMass. No runtime physics or tolerance change."
+  },
+  "checks": [
+    {
+      "name": "The immutable pre-fix evidence reproduces default Digit3 dual ownership and rejected-start G loss",
+      "passed": true
+    },
+    {
+      "name": "Default bound shortcuts 3/4/5/6, numpad 3 and Run button end/save the city task before opening a new recorder",
+      "passed": true
+    },
+    {
+      "name": "Unbound default keys 7/8/9 and repeat events do not cancel the current city attempt",
+      "passed": true
+    },
+    {
+      "name": "Rejected city start preserves the exact original G, hold/land references, physical state and gas without entering ownership",
+      "passed": true
+    },
+    {
+      "name": "Context change, pilot takeover and disposal restore scoped settings exactly once after retaining the terminal",
+      "passed": true
+    },
+    {
+      "name": "Main adapter cancels city ownership before releasing the old inputs",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "trigger": "Digit3",
+      "bound": true,
+      "received": [
+        {
+          "code": "Digit3",
+          "repeat": true,
+          "isTrusted": false,
+          "handled": false
+        },
+        {
+          "code": "Digit3",
+          "repeat": false,
+          "isTrusted": false,
+          "handled": true
+        }
+      ],
+      "timeline": [
+        {
+          "event": "before-research",
+          "programId": "pose-step",
+          "cityRunning": true,
+          "researchRecording": false,
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "city-finished",
+          "status": "cancelled",
+          "reason": "research_control",
+          "step": 2,
+          "researchRecording": false
+        },
+        {
+          "event": "city-terminal-before-new-recorder",
+          "cityRunning": false,
+          "recordCount": 1,
+          "researchRecording": false,
+          "supplyMode": "bench",
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        }
+      ],
+      "researchRunningAtTrigger": true,
+      "cityResult": {
+        "id": "city-mvgpq83y-4f1c2e8f",
+        "status": "cancelled",
+        "reason": "research_control",
+        "stepCount": 2,
+        "supplyMode": "finite",
+        "exitContract": {
+          "reason": "research_control",
+          "restored": [
+            "model parameter settings including gas supply mode",
+            "wind configuration",
+            "nozzle fault configuration",
+            "observation configuration"
+          ],
+          "retained": [
+            "terminal physical pose and velocity",
+            "simulation time",
+            "actual remaining gas mass; no refill"
+          ],
+          "authority": "pilot",
+          "supplyMode": "bench",
+          "gasRemainingKg": 238.13302705653717,
+          "wind": {
+            "speedMps": 2,
+            "directionDeg": 90,
+            "gustMps": 0,
+            "gustPeriodS": 5
+          },
+          "nozzleFault": {
+            "id": "lift-FL",
+            "scale": 0.75
+          },
+          "physicalStateUnchanged": true
+        }
+      },
+      "newResearchRecord": {
+        "id": "live-20261020132215344-1",
+        "initialSupply": "bench",
+        "status": "cancelled"
+      },
+      "mutualExclusion": true,
+      "noRefill": true,
+      "wrappersReleased": true
+    },
+    {
+      "trigger": "Digit4",
+      "bound": true,
+      "received": [
+        {
+          "code": "Digit4",
+          "repeat": true,
+          "isTrusted": false,
+          "handled": false
+        },
+        {
+          "code": "Digit4",
+          "repeat": false,
+          "isTrusted": false,
+          "handled": true
+        }
+      ],
+      "timeline": [
+        {
+          "event": "before-research",
+          "programId": "gust-rejection",
+          "cityRunning": true,
+          "researchRecording": false,
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "city-finished",
+          "status": "cancelled",
+          "reason": "research_control",
+          "step": 2,
+          "researchRecording": false
+        },
+        {
+          "event": "city-terminal-before-new-recorder",
+          "cityRunning": false,
+          "recordCount": 1,
+          "researchRecording": false,
+          "supplyMode": "bench",
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        }
+      ],
+      "researchRunningAtTrigger": true,
+      "cityResult": {
+        "id": "city-mvgpq8rx-4f1c2e8f",
+        "status": "cancelled",
+        "reason": "research_control",
+        "stepCount": 2,
+        "supplyMode": "finite",
+        "exitContract": {
+          "reason": "research_control",
+          "restored": [
+            "model parameter settings including gas supply mode",
+            "wind configuration",
+            "nozzle fault configuration",
+            "observation configuration"
+          ],
+          "retained": [
+            "terminal physical pose and velocity",
+            "simulation time",
+            "actual remaining gas mass; no refill"
+          ],
+          "authority": "pilot",
+          "supplyMode": "bench",
+          "gasRemainingKg": 238.13302705653717,
+          "wind": {
+            "speedMps": 2,
+            "directionDeg": 90,
+            "gustMps": 0,
+            "gustPeriodS": 5
+          },
+          "nozzleFault": {
+            "id": "lift-FL",
+            "scale": 0.75
+          },
+          "physicalStateUnchanged": true
+        }
+      },
+      "newResearchRecord": {
+        "id": "live-20261020132216206-1",
+        "initialSupply": "bench",
+        "status": "cancelled"
+      },
+      "mutualExclusion": true,
+      "noRefill": true,
+      "wrappersReleased": true
+    },
+    {
+      "trigger": "Digit5",
+      "bound": true,
+      "received": [
+        {
+          "code": "Digit5",
+          "repeat": true,
+          "isTrusted": false,
+          "handled": false
+        },
+        {
+          "code": "Digit5",
+          "repeat": false,
+          "isTrusted": false,
+          "handled": true
+        }
+      ],
+      "timeline": [
+        {
+          "event": "before-research",
+          "programId": "roll-return",
+          "cityRunning": true,
+          "researchRecording": false,
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "city-finished",
+          "status": "cancelled",
+          "reason": "research_control",
+          "step": 2,
+          "researchRecording": false
+        },
+        {
+          "event": "city-terminal-before-new-recorder",
+          "cityRunning": false,
+          "recordCount": 1,
+          "researchRecording": false,
+          "supplyMode": "bench",
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        }
+      ],
+      "researchRunningAtTrigger": true,
+      "cityResult": {
+        "id": "city-mvgpq9a8-4f1c2e8f",
+        "status": "cancelled",
+        "reason": "research_control",
+        "stepCount": 2,
+        "supplyMode": "finite",
+        "exitContract": {
+          "reason": "research_control",
+          "restored": [
+            "model parameter settings including gas supply mode",
+            "wind configuration",
+            "nozzle fault configuration",
+            "observation configuration"
+          ],
+          "retained": [
+            "terminal physical pose and velocity",
+            "simulation time",
+            "actual remaining gas mass; no refill"
+          ],
+          "authority": "pilot",
+          "supplyMode": "bench",
+          "gasRemainingKg": 238.13302705653717,
+          "wind": {
+            "speedMps": 2,
+            "directionDeg": 90,
+            "gustMps": 0,
+            "gustPeriodS": 5
+          },
+          "nozzleFault": {
+            "id": "lift-FL",
+            "scale": 0.75
+          },
+          "physicalStateUnchanged": true
+        }
+      },
+      "newResearchRecord": {
+        "id": "live-20261020132216857-1",
+        "initialSupply": "bench",
+        "status": "cancelled"
+      },
+      "mutualExclusion": true,
+      "noRefill": true,
+      "wrappersReleased": true
+    },
+    {
+      "trigger": "Digit6",
+      "bound": true,
+      "received": [
+        {
+          "code": "Digit6",
+          "repeat": true,
+          "isTrusted": false,
+          "handled": false
+        },
+        {
+          "code": "Digit6",
+          "repeat": false,
+          "isTrusted": false,
+          "handled": true
+        }
+      ],
+      "timeline": [
+        {
+          "event": "before-research",
+          "programId": "finite-budget",
+          "cityRunning": true,
+          "researchRecording": false,
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "city-finished",
+          "status": "cancelled",
+          "reason": "research_control",
+          "step": 2,
+          "researchRecording": false
+        },
+        {
+          "event": "city-terminal-before-new-recorder",
+          "cityRunning": false,
+          "recordCount": 1,
+          "researchRecording": false,
+          "supplyMode": "bench",
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        }
+      ],
+      "researchRunningAtTrigger": true,
+      "cityResult": {
+        "id": "city-mvgpq9rj-4f1c2e8f",
+        "status": "cancelled",
+        "reason": "research_control",
+        "stepCount": 2,
+        "supplyMode": "finite",
+        "exitContract": {
+          "reason": "research_control",
+          "restored": [
+            "model parameter settings including gas supply mode",
+            "wind configuration",
+            "nozzle fault configuration",
+            "observation configuration"
+          ],
+          "retained": [
+            "terminal physical pose and velocity",
+            "simulation time",
+            "actual remaining gas mass; no refill"
+          ],
+          "authority": "pilot",
+          "supplyMode": "bench",
+          "gasRemainingKg": 238.13302705653717,
+          "wind": {
+            "speedMps": 2,
+            "directionDeg": 90,
+            "gustMps": 0,
+            "gustPeriodS": 5
+          },
+          "nozzleFault": {
+            "id": "lift-FL",
+            "scale": 0.75
+          },
+          "physicalStateUnchanged": true
+        }
+      },
+      "newResearchRecord": {
+        "id": "live-20261020132217481-1",
+        "initialSupply": "bench",
+        "status": "cancelled"
+      },
+      "mutualExclusion": true,
+      "noRefill": true,
+      "wrappersReleased": true
+    },
+    {
+      "trigger": "Digit7",
+      "bound": false,
+      "received": [
+        {
+          "code": "Digit7",
+          "repeat": true,
+          "isTrusted": false,
+          "handled": false
+        },
+        {
+          "code": "Digit7",
+          "repeat": false,
+          "isTrusted": false,
+          "handled": false
+        }
+      ],
+      "noSideEffects": true
+    },
+    {
+      "trigger": "Digit8",
+      "bound": false,
+      "received": [
+        {
+          "code": "Digit8",
+          "repeat": true,
+          "isTrusted": false,
+          "handled": false
+        },
+        {
+          "code": "Digit8",
+          "repeat": false,
+          "isTrusted": false,
+          "handled": false
+        }
+      ],
+      "noSideEffects": true
+    },
+    {
+      "trigger": "Digit9",
+      "bound": false,
+      "received": [
+        {
+          "code": "Digit9",
+          "repeat": true,
+          "isTrusted": false,
+          "handled": false
+        },
+        {
+          "code": "Digit9",
+          "repeat": false,
+          "isTrusted": false,
+          "handled": false
+        }
+      ],
+      "noSideEffects": true
+    },
+    {
+      "trigger": "Numpad3",
+      "bound": true,
+      "received": [
+        {
+          "code": "Numpad3",
+          "repeat": true,
+          "isTrusted": false,
+          "handled": false
+        },
+        {
+          "code": "Numpad3",
+          "repeat": false,
+          "isTrusted": false,
+          "handled": true
+        }
+      ],
+      "timeline": [
+        {
+          "event": "before-research",
+          "programId": "pose-step",
+          "cityRunning": true,
+          "researchRecording": false,
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "city-finished",
+          "status": "cancelled",
+          "reason": "research_control",
+          "step": 2,
+          "researchRecording": false
+        },
+        {
+          "event": "city-terminal-before-new-recorder",
+          "cityRunning": false,
+          "recordCount": 1,
+          "researchRecording": false,
+          "supplyMode": "bench",
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        }
+      ],
+      "researchRunningAtTrigger": true,
+      "cityResult": {
+        "id": "city-mvgpqb6r-4f1c2e8f",
+        "status": "cancelled",
+        "reason": "research_control",
+        "stepCount": 2,
+        "supplyMode": "finite",
+        "exitContract": {
+          "reason": "research_control",
+          "restored": [
+            "model parameter settings including gas supply mode",
+            "wind configuration",
+            "nozzle fault configuration",
+            "observation configuration"
+          ],
+          "retained": [
+            "terminal physical pose and velocity",
+            "simulation time",
+            "actual remaining gas mass; no refill"
+          ],
+          "authority": "pilot",
+          "supplyMode": "bench",
+          "gasRemainingKg": 238.13302705653717,
+          "wind": {
+            "speedMps": 2,
+            "directionDeg": 90,
+            "gustMps": 0,
+            "gustPeriodS": 5
+          },
+          "nozzleFault": {
+            "id": "lift-FL",
+            "scale": 0.75
+          },
+          "physicalStateUnchanged": true
+        }
+      },
+      "newResearchRecord": {
+        "id": "live-20261020132219316-1",
+        "initialSupply": "bench",
+        "status": "cancelled"
+      },
+      "mutualExclusion": true,
+      "noRefill": true,
+      "wrappersReleased": true
+    },
+    {
+      "trigger": "run-button",
+      "bound": true,
+      "received": [],
+      "timeline": [
+        {
+          "event": "before-research",
+          "programId": "pose-step",
+          "cityRunning": true,
+          "researchRecording": false,
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "city-finished",
+          "status": "cancelled",
+          "reason": "research_control",
+          "step": 2,
+          "researchRecording": false
+        },
+        {
+          "event": "city-terminal-before-new-recorder",
+          "cityRunning": false,
+          "recordCount": 1,
+          "researchRecording": false,
+          "supplyMode": "bench",
+          "gasKg": 238.13302705653717
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        },
+        {
+          "event": "research-started",
+          "cityRunning": false,
+          "researchRecording": true
+        }
+      ],
+      "researchRunningAtTrigger": true,
+      "cityResult": {
+        "id": "city-mvgpqbkd-4f1c2e8f",
+        "status": "cancelled",
+        "reason": "research_control",
+        "stepCount": 2,
+        "supplyMode": "finite",
+        "exitContract": {
+          "reason": "research_control",
+          "restored": [
+            "model parameter settings including gas supply mode",
+            "wind configuration",
+            "nozzle fault configuration",
+            "observation configuration"
+          ],
+          "retained": [
+            "terminal physical pose and velocity",
+            "simulation time",
+            "actual remaining gas mass; no refill"
+          ],
+          "authority": "pilot",
+          "supplyMode": "bench",
+          "gasRemainingKg": 238.13302705653717,
+          "wind": {
+            "speedMps": 2,
+            "directionDeg": 90,
+            "gustMps": 0,
+            "gustPeriodS": 5
+          },
+          "nozzleFault": {
+            "id": "lift-FL",
+            "scale": 0.75
+          },
+          "physicalStateUnchanged": true
+        }
+      },
+      "newResearchRecord": {
+        "id": "live-20261020132219812-1",
+        "initialSupply": "bench",
+        "status": "cancelled"
+      },
+      "mutualExclusion": true,
+      "noRefill": true,
+      "wrappersReleased": true
+    }
+  ],
+  "rejectedStarts": [
+    {
+      "mode": "ground-level",
+      "message": "请先沿道路驶到起点中心 2.5 m 内。 起点须至少三轮接触上城台地。",
+      "originalMode": "drive",
+      "originalStabilization": "level",
+      "originalManeuver": null,
+      "fullStateUnchanged": true,
+      "referenceUnchanged": true,
+      "noOwnershipCallback": true,
+      "noTaskRecord": true
+    },
+    {
+      "mode": "air-level",
+      "message": "请先沿道路驶到起点中心 2.5 m 内。 起点须至少三轮接触上城台地。 切回 DRIVE 并保持接地水平。",
+      "originalMode": "hover",
+      "originalStabilization": "level",
+      "originalManeuver": null,
+      "fullStateUnchanged": true,
+      "referenceUnchanged": true,
+      "noOwnershipCallback": true,
+      "noTaskRecord": true
+    },
+    {
+      "mode": "air-hold",
+      "message": "请先沿道路驶到起点中心 2.5 m 内。 起点须至少三轮接触上城台地。 切回 DRIVE 并保持接地水平。",
+      "originalMode": "hover",
+      "originalStabilization": "hold",
+      "originalManeuver": null,
+      "fullStateUnchanged": true,
+      "referenceUnchanged": true,
+      "noOwnershipCallback": true,
+      "noTaskRecord": true
+    },
+    {
+      "mode": "air-land",
+      "message": "请先沿道路驶到起点中心 2.5 m 内。 起点须至少三轮接触上城台地。 切回 DRIVE 并保持接地水平。",
+      "originalMode": "hover",
+      "originalStabilization": "level",
+      "originalManeuver": {
+        "name": "land",
+        "phase": "descent",
+        "time": 0
+      },
+      "fullStateUnchanged": true,
+      "referenceUnchanged": true,
+      "noOwnershipCallback": true,
+      "noTaskRecord": true
+    }
+  ],
+  "exitPaths": [
+    {
+      "cause": "context_change",
+      "reason": "context_change",
+      "recordCount": 1,
+      "settingsRestored": true,
+      "bodyAndGasRetained": true,
+      "wrappersReleased": true,
+      "idempotent": true
+    },
+    {
+      "cause": "pilot_takeover",
+      "reason": "pilot_takeover",
+      "recordCount": 1,
+      "settingsRestored": true,
+      "bodyAndGasRetained": true,
+      "wrappersReleased": true,
+      "idempotent": true
+    },
+    {
+      "cause": "dispose",
+      "reason": "pilot_cancel",
+      "recordCount": 1,
+      "settingsRestored": true,
+      "bodyAndGasRetained": true,
+      "wrappersReleased": true,
+      "idempotent": true
+    }
+  ],
+  "sourceHashes": {
+    "dist/main.js": "d953817d192f4dbf2657ef3ae0dfe0cfaf393e24d0fbb28046871512664d2039",
+    "dist/app-shell.js": "9631522c21495bdce2d057f5180da70603e12bcb4aad89d94d625d6903107238",
+    "dist/research-console.js": "5bea4bf9611d19800f00f1b2cdacbe216deb94c2f885b517032f50b969335236",
+    "dist/city-flight-ui.js": "cbb207773a6ee26c2533486a84bafd274f3923fb8f76bd3a3f8fddb5a58f365a",
+    "dist/task-setting-scope.js": "476afdecaf8510218dafb979f7613c2883beadd3ddc67997b18b37e90928608f",
+    "tests/city-flight-handoff-3.15.test.mjs": "28f416f92b26403d13cbaffe64276e93f3e1339747edd910620526e79b4aef1a"
+  },
+  "scope": "Ownership transition and side-effect-free refusal. Actual terminal state is retained; normal task completion still hands control back to the pilot. No physical state is restored on exit.",
+  "pending": [
+    "Native browser shortcut/focus and GPU acceptance.",
+    "The complete graphics main module is not run here; its exact adapter wiring is source-checked, and production shell forwarding executes."
+  ]
+}

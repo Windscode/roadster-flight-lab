@@ -29,7 +29,7 @@ const button=(action,label,cls='')=>`<button type="button" data-rc-action="${act
 
 /** Same DOM, same viewport, two physical scene contexts supplied by main.js.
  * Only public simulation control APIs are called by this research surface. */
-export function createResearchConsole({mount=document.body,getSim,getContext=()=> 'city',getSceneConfiguration=()=>null,onEnterLab=()=>{},onReturnCity=()=>{},onOpenStudy=()=>{},onEvent=()=>{},onToast=()=>{},onStart=()=>{},onCancel=()=>{},getLiveAvailable=()=>true,onRestoreExperiment}={}){
+export function createResearchConsole({mount=document.body,getSim,getContext=()=> 'city',getSceneConfiguration=()=>null,onEnterLab=()=>{},onReturnCity=()=>{},onOpenStudy=()=>{},onEvent=()=>{},onToast=()=>{},onBeforeRun=()=>{},onStart=()=>{},onCancel=()=>{},getLiveAvailable=()=>true,onRestoreExperiment}={}){
   const doc=mount.ownerDocument||document;let liveAvailable=getLiveAvailable(),liveReason='';
   let storage;try{storage=doc.defaultView?.localStorage;}catch{storage=null;}
   const loaded=loadProgramLibrary(storage),loadedResults=loadResultArchive(storage);let library=loaded.library,results=loadedResults.results;const programPersistence=new PersistenceState(loaded.warning||'',loaded.protectedRaw),resultPersistence=new PersistenceState(loadedResults.warning||'',loadedResults.protectedRaw);let pendingImport=null;
@@ -123,7 +123,7 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
   }
   function applyController(values){validateController(values);for(const[key,value]of Object.entries(values))getSim().setParam(key,value);onEvent('research_controller_change',{values});}
   function cancel(reason='研究流程已停止',status='cancelled'){const challenge=landing?.cancel(reason)||false,replayed=experiments?.stopReplay(reason,status)||false,did=runner.cancel(reason);if(did)onCancel(reason);return did||replayed||challenge;}
-  function run(program){requireLive();cancel('启动新的研究流程');const owned=experiments.startProgramRecording(program);try{runner.start(program);}catch(error){if(owned)experiments.stopRecording(error.message,'failed');throw error;}paintStatus();}
+  function run(program){requireLive();const validated=validateProgram(program);onBeforeRun(validated);cancel('启动新的研究流程');const owned=experiments.startProgramRecording(validated);try{runner.start(validated);}catch(error){if(owned)experiments.stopRecording(error.message,'failed');throw error;}paintStatus();}
   function saveDraft(){
     const p=validateProgram(draft),exists=library.programs.some(x=>x.id===p.id);const candidate=validateProgramLibrary({...library,programs:exists?library.programs.map(x=>x.id===p.id?p:x):[...library.programs,p]});
     persist(candidate);selectedId=p.id;draft=copy(p);renderPrograms();notify('流程与快捷键已保存，可在城市或实验室中运行。');

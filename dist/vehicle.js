@@ -1,3 +1,4 @@
+import {vehicleBrakeSignal} from './vehicle-light-state.js';
 import * as THREE from './vendor/three.module.js';
 import {SEAL_OUTLINE,SKIRT_MAX_EXTENSION,SKIRT_BASE_Y} from './vehicle-layout.js';
 import {vehicleProjectedPixels,chooseVehicleGeometryProfile,VEHICLE_INSPECTION_RIG} from './visual-presets.js';
@@ -1201,6 +1202,7 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     jet.level=clamp(Math.abs(force)/(maxForce||1),0,1);jet.root.userData.actualForce=force;
   }
 
+  let brakeSignal=false;
   function update(telemetry={},dt=1/60) {
     dt=clamp(Number.isFinite(dt)?dt:1/60,0,.1);time+=dt;
     const ws=telemetry.wheelStates||telemetry.wheels||[];
@@ -1256,7 +1258,9 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     else{wing.position.set(0,.325+wingExtension*.30,-2.065);wing.rotation.x=-wingExtension*.25;}
     wing.userData.deployment=wingExtension;wing.userData.source=hasPhysicalPose?'telemetry.wing.position/incidenceRad':'telemetry.wing.deployment';
     for(const strut of wingStruts){strut.scale.y=1+wingExtension*2.5;strut.position.y=.30+wingExtension*.15;}
-    mats.tailLight.emissiveIntensity=brake>.02?2.4:lampMode==='off'?0:1.25;
+    brakeSignal=vehicleBrakeSignal(telemetry,brakeSignal);
+    mats.tailLight.emissiveIntensity=brakeSignal?2.4:lampMode==='off'?0:1.25;
+    group.userData.brakeSignal={active:brakeSignal,source:'service-brake or actual regen deceleration; .9/.6 m/s2 hysteresis',presentationOnly:true};
   }
 
   function setColor(color) {mats.paint.color.set(color);mats.balancedPaint.color.copy(mats.paint.color);}

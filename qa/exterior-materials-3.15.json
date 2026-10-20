@@ -1,0 +1,1375 @@
+{
+  "status": "passed",
+  "version": "3.15",
+  "createdAt": "2026-10-20T13:21:45.513Z",
+  "method": "Real Three geometry, matrices, frusta, material callbacks and independently checked seam coverage; no browser/GPU context.",
+  "sourceSHA256": {
+    "qa/exterior-materials-check.mjs": "42ef93f55da190b3e55be8bc04980e009730d54264018ae28fa741dfb4e82fbf",
+    "qa/exterior-baseline-3.5.json": "9b01779d7794598a80abd44a5424ab4ec47456766358e5ccff3b25f9e0131c38",
+    "dist/city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
+    "dist/urban-architecture.js": "7fd38b4d03ee9e4c4c5e4199eb0efccb08649700eadceb1f514beeed8c17b835",
+    "dist/street-life.js": "936961b9665c1ed14da655f189974e702a7437b7c7f06e0040bee88ebc5f0818",
+    "dist/city-data.js": "b05f0346d544afb92e728db27a79b5730b02f88a6fcd9c7b7ac8a3e73f779e69",
+    "dist/city-plan.js": "6b370c9f951354de5a00263cb524e1a2df7cfc00e8b6cf6d2df020b82cf71ab4",
+    "dist/city-render-budget.js": "c7cb69daf59a80af4ff4009badb3b819c2429a75c88036b7ce84e576e40ccb3f"
+  },
+  "baselineSourceCommit": "b88b49b",
+  "checks": [
+    {
+      "name": "Unrelated original city geometry, 108 street proxies and shared wall palette retain their identities; three approved tower profiles and all new shared entities are explicit",
+      "status": "passed",
+      "canonicalSHA256": "d6aaed2a0c5393b9e6689d8b3b1c06719e0ca75e11eaf1bacb15ecdc8d824284",
+      "retainedGeometryCanonicalSHA256": "96d05d9e509be1dbae4a93885b4cdcfe3cae65867d44600017b6c03999159c91",
+      "geometryContract": {
+        "currentPhysicalCount": 2220,
+        "currentPhysicalCanonicalSHA256": "d6aaed2a0c5393b9e6689d8b3b1c06719e0ca75e11eaf1bacb15ecdc8d824284",
+        "approved315GeometryChanges": [
+          {
+            "changeId": "foundry-terrace-vehicle-mouth-3.15",
+            "sourceCommit": "f4b96c5caa9652d812e0f2df1e3e3dfe1074abb3",
+            "sourceCityPlanSHA256": "0258b8489058b9051458e0b1809dcce3018e8013c3ea5b9bec10080947e9fc2c",
+            "before": {
+              "id": "plan-foundry-paving-110.5",
+              "type": "box",
+              "kind": "plan-walkway",
+              "size": [
+                3,
+                0.12,
+                352
+              ],
+              "position": [
+                110.5,
+                0.06,
+                314
+              ],
+              "quaternion": [
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            "current": [
+              {
+                "id": "plan-foundry-paving-110.5-south",
+                "type": "box",
+                "kind": "plan-walkway",
+                "size": [
+                  3,
+                  0.12,
+                  160.5
+                ],
+                "position": [
+                  110.5,
+                  0.06,
+                  218.25
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "plan-foundry-paving-110.5-north",
+                "type": "box",
+                "kind": "plan-walkway",
+                "size": [
+                  3,
+                  0.12,
+                  183.5
+                ],
+                "position": [
+                  110.5,
+                  0.06,
+                  398.25
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            ],
+            "opening": {
+              "roadId": "terrace-link",
+              "centreZ": 302.5,
+              "widthM": 8,
+              "zMin": 298.5,
+              "zMax": 306.5,
+              "xMin": 109,
+              "xMax": 112
+            },
+            "unchangedOuterBounds": {
+              "min": [
+                109,
+                0,
+                138
+              ],
+              "max": [
+                112,
+                0.12,
+                490
+              ]
+            },
+            "originalFailure": {
+              "aggregateLog": "qa/validation-3.15-first-geometry-contract-failure.txt",
+              "processReceipt": "qa/validation-3.15-first-geometry-contract-failure-process.json",
+              "actualHistoricalCount": 1948,
+              "expectedHistoricalCount": 1947,
+              "entryBeforeEvidence": "qa/city-entry-3.15-before.json",
+              "entryAfterEvidence": "qa/city-entry-3.15-after.json",
+              "modelBuildId": "2b2c08b5e14b69846c940d663efb6b28b6423ba495eb4f721699fbc77f53f2d6"
+            },
+            "scope": "Exactly one evidenced 12 cm footway crossing is split at the existing 8 m carriageway mouth. Original physical geometry is reconstructed only for immutable historical identity comparisons; the actual full-current geometry remains required for collision/render/bake checks."
+          }
+        ],
+        "historicalComparisonNormalization": "Only the two explicitly checked 3.15 paving pieces are restored to the frozen original box before the inherited historical counts/hashes. These comparison hashes are not the full-current geometry identity; all other entities remain unchanged.",
+        "sourceCommit": "1dde9a3df081297978d7cc98409be86bcc6daa23",
+        "sourcePhysicsSHA256": "d6fbfe7e3ed5c3503c91334d40672cd855ab5169437371a5bdda47f644ca27d8",
+        "sourceCitySHA256": "ba228d0e2b51ce357062346c6452e63514b93ba39c2ffa52eb38359ffec1f9b9",
+        "quantization": 1e-9,
+        "unchangedHistoricalCount": 1947,
+        "unchangedHistoricalCanonicalSHA256": "96d05d9e509be1dbae4a93885b4cdcfe3cae65867d44600017b6c03999159c91",
+        "unchangedSource313Count": 2105,
+        "unchangedSource313CanonicalSHA256": "954ae6a556cd1064f361d2573661b90ed01d43679bb4eeb08a05d170786f78e8",
+        "reconstructedHistoricalCount": 1962,
+        "reconstructedHistoricalCanonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+        "reconstructedSource313Count": 2120,
+        "reconstructedSource313CanonicalSHA256": "ad28b4192e8367ac32491a5c3d0e08667b9946d667aa2c2405c375c0a15e8e4b",
+        "explicit314AdditionCount": 105,
+        "explicit314AdditionIds": [
+          "continuity-foundry-yard-kerb-1--1-2",
+          "continuity-foundry-yard-kerb-1--1-164",
+          "continuity-foundry-yard-kerb-1-1-2",
+          "continuity-foundry-yard-kerb-1-1-164",
+          "continuity-terrace-link-kerb-1--1-12",
+          "continuity-terrace-link-kerb-1--1-62",
+          "continuity-terrace-link-kerb-1-1-12",
+          "continuity-terrace-link-kerb-1-1-62",
+          "continuity-forum-west-link-kerb-1--1-6",
+          "continuity-forum-west-link-kerb-1-1-6",
+          "continuity-forum-west-link-kerb-2--1-2",
+          "continuity-forum-west-link-kerb-2-1-2",
+          "continuity-forum-main-kerb-1--1-2",
+          "continuity-forum-main-kerb-1--1-102",
+          "continuity-forum-main-kerb-1--1-184",
+          "continuity-forum-main-kerb-1-1-2",
+          "continuity-forum-main-kerb-1-1-102",
+          "continuity-forum-main-kerb-1-1-184",
+          "continuity-forum-cross-240-kerb-1--1-2",
+          "continuity-forum-cross-240-kerb-1--1-124",
+          "continuity-forum-cross-240-kerb-1-1-2",
+          "continuity-forum-cross-240-kerb-1-1-124",
+          "continuity-forum-cross-322-kerb-1--1-2",
+          "continuity-forum-cross-322-kerb-1--1-124",
+          "continuity-forum-cross-322-kerb-1--1-208",
+          "continuity-forum-cross-322-kerb-1-1-124",
+          "continuity-forum-cross-322-kerb-1-1-204",
+          "continuity-forum-cross-410-kerb-1--1-2",
+          "continuity-forum-cross-410-kerb-1--1-120",
+          "continuity-forum-cross-410-kerb-1--1-204",
+          "continuity-forum-cross-410-kerb-1-1-2",
+          "continuity-forum-cross-410-kerb-1-1-124",
+          "continuity-forum-cross-410-kerb-1-1-208",
+          "continuity-forum-court-kerb-1--1-12",
+          "continuity-forum-court-kerb-1-1-12",
+          "continuity-south-arrival-edge--1",
+          "continuity-south-arrival-stone--1",
+          "continuity-south-arrival-edge-1",
+          "continuity-south-arrival-stone-1",
+          "continuity-south-parking-post",
+          "continuity-south-guidance-post",
+          "continuity-foundry-bay-back",
+          "continuity-foundry-bay-post-240.55",
+          "continuity-foundry-bay-post-250.45",
+          "continuity-foundry-bay-roof",
+          "continuity-foundry-bay-rail",
+          "continuity-foundry-power-base",
+          "continuity-foundry-power-cabinet",
+          "continuity-cross-portal-foot-69",
+          "continuity-cross-portal-pier-69",
+          "continuity-cross-portal-canopy-69",
+          "continuity-cross-portal-foot-132",
+          "continuity-cross-portal-pier-132",
+          "continuity-cross-portal-canopy-132",
+          "continuity-forum-side-bench-335.5",
+          "continuity-forum-side-bench-394.5",
+          "continuity-forum-tree-kerb-x-337--1",
+          "continuity-forum-tree-kerb-z-337--1",
+          "continuity-forum-tree-kerb-x-337-1",
+          "continuity-forum-tree-kerb-z-337-1",
+          "continuity-forum-tree-kerb-x-393--1",
+          "continuity-forum-tree-kerb-z-393--1",
+          "continuity-forum-tree-kerb-x-393-1",
+          "continuity-forum-tree-kerb-z-393-1",
+          "continuity-ramp-abutment--1-0",
+          "continuity-ramp-abutment--1-1",
+          "continuity-ramp-abutment--1-2",
+          "continuity-ramp-abutment--1-3",
+          "continuity-ramp-abutment--1-4",
+          "continuity-ramp-abutment-1-0",
+          "continuity-ramp-abutment-1-1",
+          "continuity-ramp-abutment-1-2",
+          "continuity-ramp-abutment-1-3",
+          "continuity-ramp-abutment-1-4",
+          "continuity-pendant-backing--279",
+          "continuity-pendant-hanger--279--0.3",
+          "continuity-pendant-hanger--279-0.3",
+          "continuity-pendant-backing--255",
+          "continuity-pendant-hanger--255--0.3",
+          "continuity-pendant-hanger--255-0.3",
+          "continuity-pendant-backing--230",
+          "continuity-pendant-hanger--230--0.3",
+          "continuity-pendant-hanger--230-0.3",
+          "continuity-pendant-backing--218",
+          "continuity-pendant-hanger--218--0.3",
+          "continuity-pendant-hanger--218-0.3",
+          "continuity-industrial-1-2-service-core",
+          "continuity-industrial-1-2-exhaust-stack",
+          "continuity-industrial-1-2-stack-collar-23",
+          "continuity-industrial-1-2-stack-collar-29",
+          "continuity-industrial--1-5-service-core",
+          "continuity-industrial--1-5-exhaust-stack",
+          "continuity-industrial--1-5-stack-collar-23",
+          "continuity-industrial--1-5-stack-collar-29",
+          "continuity-arcology-west-crown",
+          "continuity-arcology-east-crown",
+          "continuity-arcology-spire-crown",
+          "continuity-perimeter-bank-east",
+          "continuity-perimeter-bank-west",
+          "continuity-perimeter-bank-north",
+          "continuity-perimeter-bank-south",
+          "continuity-boundary-sign-east",
+          "continuity-boundary-sign-west",
+          "continuity-boundary-sign-north",
+          "continuity-boundary-sign-south"
+        ],
+        "approvedTowerChanges": [
+          {
+            "id": "arcology-west",
+            "before": [
+              {
+                "id": "arcology-west",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  45,
+                  4.4,
+                  64
+                ],
+                "position": [
+                  -284,
+                  2.2,
+                  -450
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-west-tier-1",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  45,
+                  26.55483870967742,
+                  64
+                ],
+                "position": [
+                  -284,
+                  17.677419354838708,
+                  -450
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-west-tier-2",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  30.150000000000002,
+                  37.935483870967744,
+                  49.92
+                ],
+                "position": [
+                  -289.4,
+                  49.92258064516129,
+                  -445.52
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-west-tier-3",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  37.8,
+                  26.554838709677426,
+                  55.04
+                ],
+                "position": [
+                  -285.8,
+                  82.16774193548387,
+                  -448.08
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-west-tier-4",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  25.200000000000003,
+                  26.554838709677412,
+                  39.68
+                ],
+                "position": [
+                  -276.8,
+                  108.72258064516129,
+                  -455.76
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            ],
+            "current": [
+              {
+                "id": "arcology-west",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  45,
+                  30.954838709677418,
+                  64
+                ],
+                "position": [
+                  -284,
+                  15.477419354838709,
+                  -450
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-west-tier-1",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  35,
+                  60.69677419354839,
+                  43
+                ],
+                "position": [
+                  -287,
+                  61.303225806451614,
+                  -446
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-west-tier-2",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  20,
+                  30.34838709677419,
+                  43
+                ],
+                "position": [
+                  -292,
+                  106.8258064516129,
+                  -446
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            ],
+            "removedIds": [
+              "arcology-west-tier-3",
+              "arcology-west-tier-4"
+            ],
+            "oldBounds": {
+              "min": [
+                -306.5,
+                0,
+                -482
+              ],
+              "max": [
+                -261.5,
+                122,
+                -418
+              ]
+            },
+            "newBounds": {
+              "min": [
+                -306.5,
+                0,
+                -482
+              ],
+              "max": [
+                -261.5,
+                122,
+                -418
+              ]
+            },
+            "parcelUnchanged": true
+          },
+          {
+            "id": "arcology-east",
+            "before": [
+              {
+                "id": "arcology-east",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  47,
+                  4.4,
+                  58
+                ],
+                "position": [
+                  -75,
+                  2.2,
+                  -300
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-east-tier-1",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  47,
+                  23.089655172413792,
+                  58
+                ],
+                "position": [
+                  -75,
+                  15.944827586206895,
+                  -300
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-east-tier-2",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  42.77,
+                  38.48275862068965,
+                  41.18
+                ],
+                "position": [
+                  -74.06,
+                  46.731034482758616,
+                  -306.38
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-east-tier-3",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  33.839999999999996,
+                  26.93793103448276,
+                  36.54
+                ],
+                "position": [
+                  -69.83,
+                  79.44137931034481,
+                  -309.28
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-east-tier-4",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  25.380000000000003,
+                  23.0896551724138,
+                  27.84
+                ],
+                "position": [
+                  -66.07,
+                  104.4551724137931,
+                  -311.6
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            ],
+            "current": [
+              {
+                "id": "arcology-east",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  47,
+                  23.641379310344824,
+                  58
+                ],
+                "position": [
+                  -75,
+                  11.820689655172412,
+                  -300
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-east-tier-1",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  40,
+                  73.11724137931034,
+                  26
+                ],
+                "position": [
+                  -75,
+                  60.2,
+                  -290
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-east-tier-2",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  19,
+                  19.241379310344826,
+                  26
+                ],
+                "position": [
+                  -65,
+                  106.37931034482759,
+                  -290
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            ],
+            "removedIds": [
+              "arcology-east-tier-3",
+              "arcology-east-tier-4"
+            ],
+            "oldBounds": {
+              "min": [
+                -98.5,
+                0,
+                -329
+              ],
+              "max": [
+                -51.5,
+                116,
+                -271
+              ]
+            },
+            "newBounds": {
+              "min": [
+                -98.5,
+                0,
+                -329
+              ],
+              "max": [
+                -51.5,
+                116,
+                -271
+              ]
+            },
+            "parcelUnchanged": true
+          },
+          {
+            "id": "arcology-spire",
+            "before": [
+              {
+                "id": "arcology-spire",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  39,
+                  4.4,
+                  44
+                ],
+                "position": [
+                  -65,
+                  2.2,
+                  -195
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-spire-tier-1",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  39,
+                  30.577777777777776,
+                  44
+                ],
+                "position": [
+                  -65,
+                  19.688888888888886,
+                  -195
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-spire-tier-2",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  28.08,
+                  45.866666666666674,
+                  30.799999999999997
+                ],
+                "position": [
+                  -65,
+                  57.91111111111111,
+                  -195
+                ],
+                "quaternion": [
+                  0,
+                  0.0799146939691727,
+                  0,
+                  0.9968017063026194
+                ]
+              },
+              {
+                "id": "arcology-spire-tier-3",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  24.96,
+                  30.57777777777777,
+                  26.84
+                ],
+                "position": [
+                  -63.44,
+                  96.13333333333333,
+                  -196.76
+                ],
+                "quaternion": [
+                  0,
+                  0.0799146939691727,
+                  0,
+                  0.9968017063026194
+                ]
+              },
+              {
+                "id": "arcology-spire-tier-4",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  18.72,
+                  30.577777777777783,
+                  23.76
+                ],
+                "position": [
+                  -61.1,
+                  126.71111111111111,
+                  -197.64
+                ],
+                "quaternion": [
+                  0,
+                  0.0799146939691727,
+                  0,
+                  0.9968017063026194
+                ]
+              }
+            ],
+            "current": [
+              {
+                "id": "arcology-spire",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  39,
+                  34.977777777777774,
+                  44
+                ],
+                "position": [
+                  -65,
+                  17.488888888888887,
+                  -195
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-spire-tier-1",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  18,
+                  95.55555555555556,
+                  40
+                ],
+                "position": [
+                  -72,
+                  82.75555555555556,
+                  -195
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              {
+                "id": "arcology-spire-tier-2",
+                "type": "box",
+                "kind": "building",
+                "size": [
+                  18,
+                  11.466666666666669,
+                  27
+                ],
+                "position": [
+                  -72,
+                  136.26666666666665,
+                  -190
+                ],
+                "quaternion": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            ],
+            "removedIds": [
+              "arcology-spire-tier-3",
+              "arcology-spire-tier-4"
+            ],
+            "oldBounds": {
+              "min": [
+                -84.5,
+                0,
+                -217
+              ],
+              "max": [
+                -45.5,
+                142,
+                -173
+              ]
+            },
+            "newBounds": {
+              "min": [
+                -84.5,
+                0,
+                -217
+              ],
+              "max": [
+                -45.5,
+                142,
+                -173
+              ]
+            },
+            "parcelUnchanged": true
+          }
+        ],
+        "originalFailure": {
+          "gate": "qa/render-budget-check.mjs:95",
+          "actual": "b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b",
+          "expected": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+          "reason": "The historical exclusion list did not include 105 explicit 3.14 additions, and the old unconditional geometry identity could not represent three intentionally redesigned anchor towers (9 changed and 6 replaced original tier IDs). All other original physical geometry is unchanged.",
+          "rawLog": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b'\n- '77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146'\n\n    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/qa/render-budget-check.mjs:95:8 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b',\n  expected: '77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n"
+        },
+        "scope": "Exact geometry identity, three explicit tower profiles and one explicit vehicle-mouth paving split only; not GPU, aesthetics, driving or performance acceptance."
+      },
+      "newSharedEntities": 263,
+      "streetColliderSHA256": "af19849ce02e365a14437f4c410f7894db790a6a7c95afe9ce72b641656f48be",
+      "paletteSHA256": "59d75d6043157e63757657a7c23c6c9aabf20a8fc235235f5a24c775448cc296",
+      "quantization": 1e-9
+    },
+    {
+      "name": "Every exterior instance carries finite metre dimensions that match its actual transform",
+      "status": "passed",
+      "metricInstances": 130123,
+      "finiteInstances": 150604,
+      "metricMaxErrorM": 0.0000033998318684780315
+    },
+    {
+      "name": "Metre UV edge lengths stay physical through yaw, 45-degree crossings and tilted anisotropic boxes",
+      "status": "passed",
+      "rotations": 6,
+      "edgeComparisons": 72,
+      "scope": "Single-sided opaque city box faces with positive instance scale; not a general mirrored/DoubleSide proof."
+    },
+    {
+      "name": "All new plinths, portal frames, awnings, drip edges and floor belts fit inside existing physical building envelopes",
+      "status": "passed",
+      "components": {
+        "plinth": 380,
+        "portalJamb": 64,
+        "portalLintel": 32,
+        "awning": 562,
+        "dripEdge": 562,
+        "floorBelt": 5923
+      },
+      "toleranceM": 0.00005,
+      "scope": "Solid facade collision envelopes stay conservative; shallow reveals are visual surfaces, not enterable rooms."
+    },
+    {
+      "name": "Periodic seam filtering matches physical covered area and distant glass/paint seams converge to their mean",
+      "status": "passed",
+      "seamSamples": 1184,
+      "seamMaxError": 5.960509863456309e-15,
+      "numericScope": "Production scalar GLSL expressions evaluated in JS double precision; no claim of GPU execution."
+    },
+    {
+      "name": "Six opaque exterior responses, texture colour spaces and quality-switch upload invalidation are correct",
+      "status": "passed",
+      "materialKinds": [
+        "concrete",
+        "glass",
+        "frame",
+        "metal",
+        "shutter",
+        "enamel"
+      ],
+      "mineralScanMean": {
+        "linearRGB": [
+          0.20091006904210976,
+          0.169245237992863,
+          0.11505865403087426
+        ],
+        "roughness": 0.5171397340038038
+      },
+      "interiorTextures": 0,
+      "loaderContract": "Stub file delivery with real Three Texture version events; no image or GPU upload asserted."
+    },
+    {
+      "name": "No crowds or character requests are constructed; 480 updates and three quality levels leave all street matrices untouched",
+      "status": "passed",
+      "frames": 480,
+      "matrixSHA256": "7542726b416c45f19f831d66a24f2da1f66cc6da9cfb1e7f2df5e7aab87cd0ac",
+      "instanceMatrixUploadVersionBefore": 0,
+      "instanceMatrixUploadVersionAfter": 0,
+      "people": 0,
+      "animals": 0,
+      "characterRequests": 0
+    },
+    {
+      "name": "Authored exterior upgrades reduce allocated geometry and all 15 matched-view draw counts remain within the 3.5 budget",
+      "status": "passed",
+      "allocatedTrianglesBefore": 1816606,
+      "allocatedTrianglesAfter": 1760124,
+      "allocatedBatchesBefore": 1225,
+      "allocatedBatchesAfter": 1172,
+      "comparison": "Last balanced pass after balanced/high/ultra/balanced, five views in the original order; cold start preserved separately."
+    }
+  ],
+  "architecture": {
+    "buildings": 114,
+    "heroBuildings": 39,
+    "shopfronts": 2131,
+    "recessedWindows": 10697,
+    "balconies": 424,
+    "mechanicalUnits": 559,
+    "instances": 131520,
+    "drawBatches": 1003,
+    "triangles": 1576016,
+    "textureCount": 0,
+    "sectorSizeM": 160,
+    "sectorCount": 196,
+    "lightAnchors": 208,
+    "massingTiers": 528,
+    "setbackTerraces": 309,
+    "structuralBraces": 144,
+    "rotatedTowers": 25,
+    "industrialHalls": 9,
+    "sawtoothRoofs": 45,
+    "civicBuildings": 6,
+    "entrancePortals": 32,
+    "continuousPlinths": 380,
+    "shutterPanels": 404,
+    "curatedWeaveFrontages": 8,
+    "routeFacingFrontages": 40,
+    "facadePortals": 16,
+    "backlitWindowPanels": 180,
+    "serviceBays": 8,
+    "interiorAtlases": 0,
+    "surfaces": {
+      "quality": "balanced",
+      "materialKinds": [
+        "concrete",
+        "enamel",
+        "metal",
+        "frame",
+        "glass",
+        "shutter"
+      ],
+      "textureCount": 0,
+      "scanLoaded": false,
+      "scanTileMetres": 2.5,
+      "uvContract": "Local face UV multiplied by each instance metre dimensions; independent of world yaw.",
+      "normalContract": "Cotangent frame with UV determinant, tangent length and normal length guards.",
+      "fineDetail": "Derivative-filtered, with an additional distance fade; no displacement.",
+      "interiorTextures": 0,
+      "transparentMaterials": 0
+    },
+    "renderBudget": {
+      "quality": "balanced",
+      "allocatedBatches": 1003,
+      "allocatedTriangles": 1576016,
+      "activeBatches": 201,
+      "activeTriangles": 206550,
+      "shadowBatches": 37,
+      "shadowTriangles": 17724,
+      "culledBatches": 802,
+      "updates": 20,
+      "updateMs": 0.13627599999995255
+    },
+    "designedGroundOrders": {
+      "southbank": 12,
+      "service": 2,
+      "gallery": 3,
+      "market": 4,
+      "exchange": 4,
+      "crosstown": 7,
+      "residential": 6,
+      "workshop": 2
+    },
+    "geometryMiB": 11.54
+  },
+  "street": {
+    "marketSections": 7,
+    "stalls": 14,
+    "cafes": 5,
+    "repairShops": 1,
+    "flowerStalls": 3,
+    "produceStalls": 2,
+    "bookStalls": 1,
+    "foodStalls": 2,
+    "pedestrians": 0,
+    "bicycles": 2,
+    "benches": 8,
+    "goods": 234,
+    "trees": 8,
+    "instances": 19084,
+    "drawBatches": 169,
+    "triangles": 184108,
+    "collisionProxies": 108,
+    "originalAtlases": 0,
+    "sectorSizeM": 80,
+    "animals": 0,
+    "animalTriangles": 0,
+    "animatedAnimals": 0,
+    "animalAssetErrors": [],
+    "activeAnimations": 0,
+    "animationHz": 0,
+    "crowdsEnabled": false,
+    "externalCharacterLoads": 0,
+    "renderBudget": {
+      "quality": "balanced",
+      "allocatedBatches": 169,
+      "allocatedTriangles": 184108,
+      "activeBatches": 0,
+      "activeTriangles": 0,
+      "shadowBatches": 0,
+      "shadowTriangles": 0,
+      "culledBatches": 169,
+      "updates": 20,
+      "updateMs": 0.04831300000000738
+    }
+  },
+  "views": {
+    "balanced": [
+      {
+        "view": "weave-street",
+        "drawCalls": 212,
+        "triangles": 434550,
+        "instances": 34569,
+        "shadowDrawCalls": 28,
+        "shadowTriangles": 131136
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 55,
+        "triangles": 60784,
+        "instances": 5091,
+        "shadowDrawCalls": 19,
+        "shadowTriangles": 7140
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 55,
+        "triangles": 105424,
+        "instances": 8813,
+        "shadowDrawCalls": 21,
+        "shadowTriangles": 30156
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 84,
+        "triangles": 302928,
+        "instances": 25627,
+        "shadowDrawCalls": 21,
+        "shadowTriangles": 53856
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 23,
+        "triangles": 33568,
+        "instances": 2814,
+        "shadowDrawCalls": 12,
+        "shadowTriangles": 3972
+      }
+    ],
+    "high": [
+      {
+        "view": "weave-street",
+        "drawCalls": 271,
+        "triangles": 620882,
+        "instances": 49275,
+        "shadowDrawCalls": 65,
+        "shadowTriangles": 217076
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 71,
+        "triangles": 93672,
+        "instances": 7821,
+        "shadowDrawCalls": 24,
+        "shadowTriangles": 37152
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 133,
+        "triangles": 265974,
+        "instances": 30336,
+        "shadowDrawCalls": 24,
+        "shadowTriangles": 47520
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 123,
+        "triangles": 413448,
+        "instances": 34804,
+        "shadowDrawCalls": 32,
+        "shadowTriangles": 155592
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 43,
+        "triangles": 65656,
+        "instances": 5528,
+        "shadowDrawCalls": 13,
+        "shadowTriangles": 12372
+      }
+    ],
+    "ultra": [
+      {
+        "view": "weave-street",
+        "drawCalls": 324,
+        "triangles": 756908,
+        "instances": 60662,
+        "shadowDrawCalls": 82,
+        "shadowTriangles": 256928
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 80,
+        "triangles": 97980,
+        "instances": 8180,
+        "shadowDrawCalls": 26,
+        "shadowTriangles": 38568
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 160,
+        "triangles": 296792,
+        "instances": 32854,
+        "shadowDrawCalls": 28,
+        "shadowTriangles": 73848
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 201,
+        "triangles": 588578,
+        "instances": 48096,
+        "shadowDrawCalls": 40,
+        "shadowTriangles": 195732
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 47,
+        "triangles": 79328,
+        "instances": 6667,
+        "shadowDrawCalls": 13,
+        "shadowTriangles": 12372
+      }
+    ]
+  },
+  "coldStart": [
+    {
+      "view": "weave-street",
+      "drawCalls": 218,
+      "triangles": 474302,
+      "instances": 37852,
+      "shadowDrawCalls": 28,
+      "shadowTriangles": 131136
+    },
+    {
+      "view": "foundry-avenue",
+      "drawCalls": 55,
+      "triangles": 60784,
+      "instances": 5091,
+      "shadowDrawCalls": 19,
+      "shadowTriangles": 7140
+    },
+    {
+      "view": "civic-terrace",
+      "drawCalls": 55,
+      "triangles": 105424,
+      "instances": 8813,
+      "shadowDrawCalls": 21,
+      "shadowTriangles": 30156
+    },
+    {
+      "view": "aerial",
+      "drawCalls": 84,
+      "triangles": 302928,
+      "instances": 25627,
+      "shadowDrawCalls": 21,
+      "shadowTriangles": 53856
+    },
+    {
+      "view": "botanical",
+      "drawCalls": 23,
+      "triangles": 33568,
+      "instances": 2814,
+      "shadowDrawCalls": 12,
+      "shadowTriangles": 3972
+    }
+  ],
+  "baselineViews": {
+    "balanced": [
+      {
+        "view": "weave-street",
+        "drawCalls": 225,
+        "triangles": 455554,
+        "instances": 34668,
+        "shadowDrawCalls": 34,
+        "shadowTriangles": 140556
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 69,
+        "triangles": 90222,
+        "instances": 5491,
+        "shadowDrawCalls": 23,
+        "shadowTriangles": 7440
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 72,
+        "triangles": 131542,
+        "instances": 9148,
+        "shadowDrawCalls": 27,
+        "shadowTriangles": 30660
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 87,
+        "triangles": 289340,
+        "instances": 24807,
+        "shadowDrawCalls": 29,
+        "shadowTriangles": 54756
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 27,
+        "triangles": 31150,
+        "instances": 2650,
+        "shadowDrawCalls": 18,
+        "shadowTriangles": 4380
+      }
+    ],
+    "high": [
+      {
+        "view": "weave-street",
+        "drawCalls": 281,
+        "triangles": 636110,
+        "instances": 49352,
+        "shadowDrawCalls": 73,
+        "shadowTriangles": 230600
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 88,
+        "triangles": 122968,
+        "instances": 8250,
+        "shadowDrawCalls": 34,
+        "shadowTriangles": 50148
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 151,
+        "triangles": 315826,
+        "instances": 31093,
+        "shadowDrawCalls": 37,
+        "shadowTriangles": 59568
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 137,
+        "triangles": 438842,
+        "instances": 36000,
+        "shadowDrawCalls": 39,
+        "shadowTriangles": 160956
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 47,
+        "triangles": 62856,
+        "instances": 5433,
+        "shadowDrawCalls": 19,
+        "shadowTriangles": 12684
+      }
+    ],
+    "ultra": [
+      {
+        "view": "weave-street",
+        "drawCalls": 345,
+        "triangles": 777488,
+        "instances": 61338,
+        "shadowDrawCalls": 95,
+        "shadowTriangles": 269660
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 97,
+        "triangles": 127276,
+        "instances": 8609,
+        "shadowDrawCalls": 36,
+        "shadowTriangles": 52140
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 176,
+        "triangles": 349372,
+        "instances": 33860,
+        "shadowDrawCalls": 41,
+        "shadowTriangles": 85860
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 210,
+        "triangles": 595552,
+        "instances": 47786,
+        "shadowDrawCalls": 50,
+        "shadowTriangles": 204492
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 63,
+        "triangles": 105936,
+        "instances": 6902,
+        "shadowDrawCalls": 19,
+        "shadowTriangles": 12684
+      }
+    ]
+  },
+  "limits": [
+    "Counts cover architecture and static street furnishings only, excluding vehicle, environment extras and canvas text.",
+    "Some views may submit modestly more triangles after facade changes; the existing per-view 10% triangle ceiling and draw-count limits remain unchanged.",
+    "Solid building envelopes still block shallow visual shop recesses; the simulation does not model enterable interiors.",
+    "Daylight was rebaked for the full current static city; fine facade details and texture averages still use representative envelope albedos, not detailed per-facade lightmaps.",
+    "This audit does not establish actual target-device frame rate, rendered appearance, GPU numeric precision or arbitrary mirrored/DoubleSide normal-map behavior."
+  ]
+}

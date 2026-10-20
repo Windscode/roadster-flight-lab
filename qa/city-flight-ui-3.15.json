@@ -1,0 +1,103 @@
+{
+  "schema": "roadster-city-flight-ui-qa",
+  "version": 1,
+  "identity": {
+    "modelVersion": "3.15.0",
+    "modelBuildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+    "sourceCommit": null,
+    "sourceTree": null,
+    "sourceIdentityStatus": "not-available",
+    "protocolVersion": "live-fixed-inputs-1",
+    "fixedHz": 120
+  },
+  "environment": "JSDOM UI plus actual RoadsterSim; no GPU/native-browser claim",
+  "assertions": {
+    "selectionIsPreview": true,
+    "gasPhysicallyUsedBeforeAttempt": true,
+    "startDoesNotRefill": true,
+    "terminalKeepsTaskSupply": true,
+    "exitRestoresOriginalSupplyWindFaultObservation": true,
+    "exitPreservesActualGasAndPose": true,
+    "startFailureRestoresSettings": true,
+    "startFailurePreservesControlAndReferences": true,
+    "quotaKeepsOldBytes": true,
+    "completeNewResultRemainsInSession": true,
+    "warningPersistsAfterFinishAndLocaleChange": true,
+    "eventReviewDoesNotMoveVehicle": true,
+    "supportedReloadReadsOldRecord": true,
+    "unsupportedRawPreserved": true,
+    "protectedRawExportAvailable": true,
+    "localeDoesNotAlterResults": true
+  },
+  "gasBefore": 215.18456563628638,
+  "recordsTested": [
+    {
+      "id": "city-mvgpqhlv-cb7a6509",
+      "status": "cancelled",
+      "reason": "pilot_takeover",
+      "supplyMode": "finite",
+      "exitContract": {
+        "reason": "pilot_takeover",
+        "restored": [
+          "model parameter settings including gas supply mode",
+          "wind configuration",
+          "nozzle fault configuration",
+          "observation configuration"
+        ],
+        "retained": [
+          "terminal physical pose and velocity",
+          "simulation time",
+          "actual remaining gas mass; no refill"
+        ],
+        "authority": "pilot",
+        "supplyMode": "bench",
+        "gasRemainingKg": 215.18456563628638,
+        "wind": {
+          "speedMps": 2,
+          "directionDeg": 90,
+          "gustMps": 0,
+          "gustPeriodS": 5
+        },
+        "nozzleFault": {
+          "id": "lift-FL",
+          "scale": 0.75
+        },
+        "physicalStateUnchanged": true
+      }
+    },
+    {
+      "id": "city-mvgpqhn5-76588761",
+      "status": "cancelled",
+      "reason": "graphics_context_lost",
+      "supplyMode": "finite",
+      "exitContract": {
+        "reason": "graphics_context_lost",
+        "restored": [
+          "model parameter settings including gas supply mode",
+          "wind configuration",
+          "nozzle fault configuration",
+          "observation configuration"
+        ],
+        "retained": [
+          "terminal physical pose and velocity",
+          "simulation time",
+          "actual remaining gas mass; no refill"
+        ],
+        "authority": "pilot",
+        "supplyMode": "bench",
+        "gasRemainingKg": 215.18456563628638,
+        "wind": {
+          "speedMps": 2,
+          "directionDeg": 90,
+          "gustMps": 0,
+          "gustPeriodS": 5
+        },
+        "nozzleFault": {
+          "id": "lift-FL",
+          "scale": 0.75
+        },
+        "physicalStateUnchanged": true
+      }
+    }
+  ]
+}

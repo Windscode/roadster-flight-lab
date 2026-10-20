@@ -84,7 +84,7 @@ class MockExhaust{
   reset(){this.particles.length=0;}setQuality(){}setDepth(){}setLighting(){}update(){}
 }
 function mockCar({quality}){
-  const car={group:new NativeThree.Group(),quality,setQuality(value){this.quality=value;},setCutaway(value){this.cutaway=value;},setColor(value){this.color=value;},setViewBudget(camera,height,options){this.viewBudget={height,options};},update(){},getRenderCost(){return{scope:'graphics mock; no GPU or geometry budget measured'};}};
+  const car={group:new NativeThree.Group(),quality,setQuality(value){this.quality=value;},setLampMode(value){this.lampMode=value;},setCutaway(value){this.cutaway=value;},setColor(value){this.color=value;},setViewBudget(camera,height,options){this.viewBudget={height,options};},update(){},getRenderCost(){return{scope:'graphics mock; no GPU or geometry budget measured'};}};
   graphics.cars.push(car);return car;
 }
 function mockEnvironment(kind,scene){
@@ -312,6 +312,9 @@ async function checkProgramMatrix(label){
     for(const id of ['pause-btn','reset-btn','roll-btn','refill-btn','suction-btn','context-switch']){const event=new window.MouseEvent('click',{bubbles:true,cancelable:true});$(id).dispatchEvent(event);assert.equal(event.defaultPrevented,true,'Capture-phase guard did not intercept '+id);attempts++;}
     for(const [id,type] of [['quality','change'],['vertical-speed-command','input']]){const event=new window.Event(type,{bubbles:true,cancelable:true});$(id).dispatchEvent(event);assert.equal(event.defaultPrevented,true);attempts++;}
     const pointer=new window.Event('pointerdown',{bubbles:true,cancelable:true});$('viewport').querySelector('canvas').dispatchEvent(pointer);assert.equal(pointer.defaultPrevented,true);attempts++;
+    $('exposure-lock-value').dispatchEvent(new window.FocusEvent('focusin',{bubbles:true}));window.dispatchEvent(new window.Event('blur'));attempts+=2;
+    const hiddenDescriptor=Object.getOwnPropertyDescriptor(document,'hidden');Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new window.Event('visibilitychange'));
+    if(hiddenDescriptor)Object.defineProperty(document,'hidden',hiddenDescriptor);else delete document.hidden;document.dispatchEvent(new window.Event('visibilitychange'));attempts++;
     assert.equal(mutationFingerprint(),beforeFingerprint,'An input or click mutated the physical/controller state during a matrix');assert.equal(state().paused,true);
   };
   attemptMutations();
@@ -340,10 +343,21 @@ async function checkProgramMatrix(label){
 }
 $('exposure-lock-value').value='1.17';$('exposure-lock-value').dispatchEvent(new window.Event('change',{bubbles:true}));
 const fixedMatrix=await checkProgramMatrix('paused fixed camera with a custom exposure lock');
+click('#pause-btn');assert.equal(state().paused,false);if(state().stabilizationMode!=='off')tap('KeyG');
+key('KeyE');tick(60);key('Digit1');tick(8);key('KeyE',{type:'keyup'});key('Digit1',{type:'keyup'});
+const airborneInputSnapshot=await readVisualConditions();
+assert.equal(state().mode,'hover');assert.equal(state().stabilizationMode,'off');assert.ok(state().position.y>1,'E/1 fixture must actually be airborne');
+assert.equal(airborneInputSnapshot.simState.state._lastInput.lift,1);assert.equal(airborneInputSnapshot.simState.state._lastInput.pitch,1);
+assert.notDeepEqual(airborneInputSnapshot.simState.state._manualQuaternionTarget,airborneInputSnapshot.simState.body.quaternion,'Accepted pitch must leave a real leading reference to protect');
+const airborneMatrix=await checkProgramMatrix('airborne manual E/1 reference and nonzero last physical input');
+values.airborneMatrix={...airborneMatrix,inputBefore:airborneInputSnapshot.simState.state._lastInput,referenceBefore:airborneInputSnapshot.simState.state._manualQuaternionTarget};
+pass('Matrix preserves the complete airborne E/1 snapshot through focus, blur and hidden events, including accepted input and leading attitude reference');
+click('#pause-btn');assert.equal(state().paused,true);
+
 click('#pause-btn');assert.equal(state().paused,false);click('#camera-btn');assert.equal(state().cameraMode,'orbit');click('[data-research-console]');tick(2);
 const beforeOffsetMatrix=await readVisualConditions();assert.ok(beforeOffsetMatrix.camera.viewOffset?.enabled,'The actual open research sidebar must create the offset fixture');
 const offsetMatrix=await checkProgramMatrix('running orbit camera with the research sidebar offset');
-values.programMatrix={scope:'DOM state and negative gate semantics only; no WebGL implementation',runs:[fixedMatrix,offsetMatrix],mockDrawsNeverPass:true,originalPhysicalStatePreserved:true,keyboardAndCapturePhaseClickGuards:true};
+values.programMatrix={scope:'DOM state and negative gate semantics only; no WebGL implementation',runs:[fixedMatrix,airborneMatrix,offsetMatrix],mockDrawsNeverPass:true,originalPhysicalStatePreserved:true,keyboardAndCapturePhaseClickGuards:true};
 pass('Actual GPU-matrix UI freezes real physics against P/H/X/R, driving and synthetic click events, restores fixed/offset cameras and presentation, and reports failed for no draws');
 
 // A resource request can remain pending. Its wait must time out before the

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdtempSync,rmSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -54,4 +55,4 @@ await check('Orbit duration, cancellation, errors and track cleanup are explicit
 });
 const files=['dist/vehicle-study-capture.js','dist/vehicle-display-study.js','tests/vehicle-study-capture-3.14.test.mjs'];
 const report={status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,asOf:new Date().toISOString(),scope:'Synthetic canvas, ZIP and recorder failure lifecycle tests. No WebGL pixels, actual video, transparency or performance result.',checks,sourceHashes:Object.fromEntries(files.map(file=>[file,createHash('sha256').update(readFileSync(new URL('../'+file,import.meta.url))).digest('hex')]))};
-writeFileSync(new URL('../qa/vehicle-study-capture-3.14.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+writeFileSync(new URL(`../qa/vehicle-study-capture-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

@@ -1,0 +1,2657 @@
+{
+  "status": "passed",
+  "modelVersion": "3.15.0",
+  "modelBuildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+  "generatedAt": "2026-10-20T13:20:46.582Z",
+  "sourceSha256": {
+    "dist/physics.js": "e4ade915e0d01dc7a697034cf3307b07cbfe2d408ec44f37861a2f7cfa8cabd1",
+    "dist/vehicle-models.js": "532a00d33f5561f1e7c9414196a95b571ef7a139c15f326417c1fe84e5ddd67f",
+    "dist/simulation-snapshot.js": "96fef72782db79451b3d322e37350e3fe5c729233ea1a88b17aea02d815b2117",
+    "dist/flight-programs.js": "dbb04c43f29e73b1459c05b223969a74078eba6d2a3bd1ad2ebf6d5245e95cca",
+    "tests/x-flip-3.13.test.mjs": "62e2f31f7ba5e693a3e9af4230c8f0a26f7fbf110798c0ae235d40fe9587839b",
+    "qa/fixtures/baseline-3.9-x/manifest.json": "1d599921a6d7ada389f97ce47ddf8e7e1445708c1cb2b83722ab6493ba240593",
+    "qa/fixtures/baseline-3.12-x/manifest.json": "1f9388c496e865bd3962ed6dc230257a55fa6ce4fc236fd75e73246b6f367970"
+  },
+  "scope": "Actual numerical solver, matched flat-world initial conditions; original 3.9/3.12 physics source frozen, current scene reduced to common ground before integration. No WebGL or human flight acceptance, no OEM calibration.",
+  "heightScope": "heightM is CG world height above the common y=0 floor. rigidEnvelopeClearanceM is the lowest transformed rigid collision AABB point, including wheel bump stops; it excludes suspension ray/visual-tire extension. Contact gates independently check both rigid and ray contacts.",
+  "metricsScope": "Automatic: all 120 Hz steps through final telemetry at completion + 119/120 s (0.991667 s) of ordinary control settling; completion gas/impulse separated from the approximately one-second post-completion totals. The last stored 20 Hz row can precede final telemetry; rejected rows are not executed. Manual: real input sequence through a continuous 0.5 s recovery window; 20 Hz curves plus the terminal recovery sample. G preserves the existing flight-height reference rather than automatically returning to the origin.",
+  "checks": [
+    {
+      "name": "Frozen baseline sources retain their original bytes except relocated imports, with unchanged shared physical dependencies",
+      "status": "PASS"
+    },
+    {
+      "name": "Matched complete 3.9 / 3.12 / current X runs retain actual force, trajectory, gas and contact outcomes",
+      "status": "PASS"
+    },
+    {
+      "name": "Fast reference is independent of comfort sliders; nozzle torque and short-takeoff authority remain physical",
+      "status": "PASS"
+    },
+    {
+      "name": "Quick-roll practice uses E, then Z, then G through real input APIs, with a sustained recovery window and complete curves",
+      "status": "PASS"
+    },
+    {
+      "name": "Low pressure, torque loss, ceiling, descent and unstable initial conditions reject without physical mutation",
+      "status": "PASS"
+    },
+    {
+      "name": "Repeated X cannot restart a running roll; G cancels to a level heading reference without changing body state",
+      "status": "PASS"
+    },
+    {
+      "name": "A real main-nozzle fault during rotation is a failed program and retains its physical recovery controller",
+      "status": "PASS"
+    },
+    {
+      "name": "Current fast-roll snapshots continue exactly and legacy 3.12 profile is preserved during explicit current-model mapping",
+      "status": "PASS"
+    }
+  ],
+  "summaries": [
+    {
+      "id": "3.9-bench-600-h0.62",
+      "version": "3.9",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 2,
+        "origin": {
+          "x": 0,
+          "y": 0.5970093908740407,
+          "z": -240
+        },
+        "originGrounded": true,
+        "returnHeight": 0.5970093908740407,
+        "launchVelocity": 11.21,
+        "launchTime": 0.7520483916941422,
+        "requiredImpulseNs": 144423.70852254512,
+        "plannedPeakHeight": 15.697074688486635,
+        "autoLand": true
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "滚转：地面起步，完成后着陆",
+        "rotationStart": {
+          "timeS": 0.6083333333333333,
+          "heightM": 4.542115610464886,
+          "rigidEnvelopeClearanceM": 3.9921156103739923,
+          "verticalMps": 10.997116037193589
+        },
+        "rotationEnd": {
+          "timeS": 2.6166666666666667,
+          "heightM": 12.930959482084774,
+          "verticalMps": -2.8037613538598825,
+          "integratedRollDeg": 361.3175679498835,
+          "rollDeg": 1.251126069875155,
+          "rollRateDegS": -8.335518920934486
+        },
+        "completionTimeS": 7.175,
+        "groundedStart": true,
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 13.58404844486799,
+        "minHeightM": 0.5807777713550308,
+        "minHeightDuringRotateM": 4.542115610464886,
+        "minRigidClearanceDuringRotateM": 3.9921156103739923,
+        "maximumIntegratedRollDeg": 363.7159271961947,
+        "finalIntegratedRollDeg": 360.0975390000023,
+        "peakRollRateDegS": 342.3731979293678,
+        "peakThrustN": 79958.3739429769,
+        "peakRollTorqueNm": 9568.634884285804,
+        "commandSaturationS": 0.35000000000000026,
+        "peakNozzleForceFraction": 0.9994887766528389,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999668875041392,
+        "impulseAtCompletionNs": 162072.2130102338,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 286.0181611411023,
+        "riseM": 12.98703905399395,
+        "dropBelowStartM": 0.016231619519009866,
+        "dropFromPeakM": 13.00327067351296,
+        "gasThroughputIncludingPostSecondKg": 286.59065942085687,
+        "final": {
+          "heightM": 0.5965841153595124,
+          "verticalMps": 0.0012352481962943263,
+          "rollDeg": -0.0033043820194034613,
+          "pitchDeg": 0.00001962655872621522,
+          "headingDeg": 359.9992794703914,
+          "angularRateRadS": 0.00012212802557783005,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.9-bench-600-h4",
+      "version": "3.9",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 2,
+        "origin": {
+          "x": 0,
+          "y": 4,
+          "z": -240
+        },
+        "originGrounded": false,
+        "returnHeight": 4,
+        "launchVelocity": 11.21,
+        "launchTime": 0.7520483112142424,
+        "requiredImpulseNs": 156938.74730199142,
+        "plannedPeakHeight": 19.100065650320282,
+        "autoLand": false
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "滚转：空中起步，完成后返回原高度",
+        "rotationStart": {
+          "timeS": 0.6166666666666667,
+          "heightM": 7.8805650800406415,
+          "rigidEnvelopeClearanceM": 7.330565080040642,
+          "verticalMps": 10.985968362193061
+        },
+        "rotationEnd": {
+          "timeS": 2.625,
+          "heightM": 16.25261378592728,
+          "verticalMps": -2.812039455479348,
+          "integratedRollDeg": 361.31756794801043,
+          "rollDeg": 1.2511260678972898,
+          "rollRateDegS": -8.335518895658437
+        },
+        "completionTimeS": 6.341666666666667,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 16.910263388335014,
+        "minHeightM": 3.972285619663906,
+        "minHeightDuringRotateM": 7.8805650800406415,
+        "minRigidClearanceDuringRotateM": 7.330565080040642,
+        "maximumIntegratedRollDeg": 363.1480707056605,
+        "finalIntegratedRollDeg": 360.10205497145995,
+        "peakRollRateDegS": 342.37320276324164,
+        "peakThrustN": 79970.85791113572,
+        "peakRollTorqueNm": 9568.665788077866,
+        "commandSaturationS": 0.3583333333333336,
+        "peakNozzleForceFraction": 0.9996448276520585,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999668879732176,
+        "impulseAtCompletionNs": 144835.9477859972,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 255.60033199684727,
+        "riseM": 12.910263388335014,
+        "dropBelowStartM": 0.02771438033609419,
+        "dropFromPeakM": 12.937977768671109,
+        "gasThroughputIncludingPostSecondKg": 295.12936649348444,
+        "final": {
+          "heightM": 3.981701063358996,
+          "verticalMps": 0.03511527078005229,
+          "rollDeg": 0.001190223195189544,
+          "pitchDeg": -0.0009110029841900571,
+          "headingDeg": 0.000002523342516269622,
+          "angularRateRadS": 0.00020578448378797795,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.9-finite-600-h0.62",
+      "version": "3.9",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 600
+        }
+      },
+      "plan": null,
+      "metrics": {
+        "accepted": false,
+        "reason": "滚转预检：剩余冲量不足以完成旋转并返回起点状态",
+        "rotationStart": null,
+        "rotationEnd": null,
+        "completionTimeS": null,
+        "groundedStart": true,
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 0.5970093908740407,
+        "minHeightM": 0.5970093908740407,
+        "minHeightDuringRotateM": null,
+        "minRigidClearanceDuringRotateM": null,
+        "maximumIntegratedRollDeg": 0,
+        "finalIntegratedRollDeg": 0,
+        "peakRollRateDegS": 0,
+        "peakThrustN": 0,
+        "peakRollTorqueNm": 0,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": 1,
+        "impulseAtCompletionNs": null,
+        "gasAtCompletionKg": null,
+        "gasThroughputAtCompletionKg": null,
+        "riseM": 0,
+        "dropBelowStartM": 0,
+        "dropFromPeakM": 0,
+        "gasThroughputIncludingPostSecondKg": 0,
+        "final": {
+          "heightM": 0.5970093908740407,
+          "verticalMps": -0.00000213762181478917,
+          "rollDeg": 0,
+          "pitchDeg": 0,
+          "headingDeg": 0,
+          "angularRateRadS": 0,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.9-finite-600-h4",
+      "version": "3.9",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 600
+        }
+      },
+      "plan": null,
+      "metrics": {
+        "accepted": false,
+        "reason": "滚转预检：剩余冲量不足以完成旋转并返回起点状态",
+        "rotationStart": null,
+        "rotationEnd": null,
+        "completionTimeS": null,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 4,
+        "minHeightM": 4,
+        "minHeightDuringRotateM": null,
+        "minRigidClearanceDuringRotateM": null,
+        "maximumIntegratedRollDeg": 0,
+        "finalIntegratedRollDeg": 0,
+        "peakRollRateDegS": 0,
+        "peakThrustN": 0,
+        "peakRollTorqueNm": 0,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": 1,
+        "impulseAtCompletionNs": null,
+        "gasAtCompletionKg": null,
+        "gasThroughputAtCompletionKg": null,
+        "riseM": 0,
+        "dropBelowStartM": 0,
+        "dropFromPeakM": 0,
+        "gasThroughputIncludingPostSecondKg": 0,
+        "final": {
+          "heightM": 4,
+          "verticalMps": 0,
+          "rollDeg": 0,
+          "pitchDeg": 0,
+          "headingDeg": 0,
+          "angularRateRadS": 0,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.9-finite-900-h0.62",
+      "version": "3.9",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 900
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 2,
+        "origin": {
+          "x": 0,
+          "y": 0.5923018217781622,
+          "z": -240
+        },
+        "originGrounded": true,
+        "returnHeight": 0.5923018217781622,
+        "launchVelocity": 11.21,
+        "launchTime": 0.7855353146721819,
+        "requiredImpulseNs": 153502.4717444932,
+        "plannedPeakHeight": 15.880061760144889,
+        "autoLand": true
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "滚转：地面起步，完成后着陆",
+        "rotationStart": {
+          "timeS": 0.625,
+          "heightM": 4.582901024306222,
+          "rigidEnvelopeClearanceM": 4.03290102386233,
+          "verticalMps": 10.99161338582091
+        },
+        "rotationEnd": {
+          "timeS": 2.6333333333333333,
+          "heightM": 12.966085844165848,
+          "verticalMps": -2.806063323215961,
+          "integratedRollDeg": 361.3148782301348,
+          "rollDeg": 1.248401886697934,
+          "rollRateDegS": -8.32706224092606
+        },
+        "completionTimeS": 7.2,
+        "groundedStart": true,
+        "initialHeightM": 0.5923018217781622,
+        "initialRigidClearanceM": 0.04230182177816216,
+        "initialGasKg": 374.3373004273417,
+        "initialMassKg": 2324.3373004273417,
+        "initialRollInertiaKgm2": 999.4650391837569,
+        "maxHeightM": 13.620262948634744,
+        "minHeightM": 0.5911115171027344,
+        "minHeightDuringRotateM": 4.582901024306222,
+        "minRigidClearanceDuringRotateM": 4.03290102386233,
+        "maximumIntegratedRollDeg": 363.7006441741372,
+        "finalIntegratedRollDeg": 360.0986401345293,
+        "peakRollRateDegS": 342.3808032322607,
+        "peakThrustN": 79975.56580070285,
+        "peakRollTorqueNm": 9767.447675340361,
+        "commandSaturationS": 0.37500000000000033,
+        "peakNozzleForceFraction": 0.999703676878083,
+        "minPressureBar": 22.377771350227146,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999644358567433,
+        "impulseAtCompletionNs": 160255.08611902967,
+        "gasAtCompletionKg": 52.322631770660195,
+        "gasThroughputAtCompletionKg": 322.0146686566817,
+        "riseM": 13.027961126856582,
+        "dropBelowStartM": 0.0011903046754278002,
+        "dropFromPeakM": 13.02915143153201,
+        "gasThroughputIncludingPostSecondKg": 322.8311022213475,
+        "final": {
+          "heightM": 0.6042447524970574,
+          "verticalMps": 0.001486990337740053,
+          "rollDeg": -0.002206879771700627,
+          "pitchDeg": 0.00000960595734176736,
+          "headingDeg": 359.99961129885736,
+          "angularRateRadS": 0.0001370540725706362,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 51.50619820599418
+        }
+      }
+    },
+    {
+      "id": "3.9-finite-900-h4",
+      "version": "3.9",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 900
+        }
+      },
+      "plan": null,
+      "metrics": {
+        "accepted": false,
+        "reason": "滚转预检：剩余冲量不足以完成旋转并返回起点状态",
+        "rotationStart": null,
+        "rotationEnd": null,
+        "completionTimeS": null,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 374.3373004273417,
+        "initialMassKg": 2324.3373004273417,
+        "initialRollInertiaKgm2": 999.4650391837569,
+        "maxHeightM": 4,
+        "minHeightM": 4,
+        "minHeightDuringRotateM": null,
+        "minRigidClearanceDuringRotateM": null,
+        "maximumIntegratedRollDeg": 0,
+        "finalIntegratedRollDeg": 0,
+        "peakRollRateDegS": 0,
+        "peakThrustN": 0,
+        "peakRollTorqueNm": 0,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": 1,
+        "impulseAtCompletionNs": null,
+        "gasAtCompletionKg": null,
+        "gasThroughputAtCompletionKg": null,
+        "riseM": 0,
+        "dropBelowStartM": 0,
+        "dropFromPeakM": 0,
+        "gasThroughputIncludingPostSecondKg": 0,
+        "final": {
+          "heightM": 4,
+          "verticalMps": 0,
+          "rollDeg": 0,
+          "pitchDeg": 0,
+          "headingDeg": 0,
+          "angularRateRadS": 0,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 374.3373004273417
+        }
+      }
+    },
+    {
+      "id": "3.9-bench-600-h80",
+      "version": "3.9",
+      "configuration": {
+        "height": 80,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 2,
+        "origin": {
+          "x": 0,
+          "y": 80,
+          "z": -240
+        },
+        "originGrounded": false,
+        "returnHeight": 80,
+        "launchVelocity": 11.21,
+        "launchTime": 0.7520483112142424,
+        "requiredImpulseNs": 156938.74730199142,
+        "plannedPeakHeight": 95.10006565032029,
+        "autoLand": false
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "滚转：空中起步，完成后返回原高度",
+        "rotationStart": {
+          "timeS": 0.6166666666666667,
+          "heightM": 83.88056508004067,
+          "rigidEnvelopeClearanceM": 83.33056508004066,
+          "verticalMps": 10.985968362193061
+        },
+        "rotationEnd": {
+          "timeS": 2.625,
+          "heightM": 92.2526137859273,
+          "verticalMps": -2.812039455479348,
+          "integratedRollDeg": 361.31756794801043,
+          "rollDeg": 1.2511260678972898,
+          "rollRateDegS": -8.335518895658437
+        },
+        "completionTimeS": 6.341666666666667,
+        "groundedStart": false,
+        "initialHeightM": 80,
+        "initialRigidClearanceM": 79.44999999999999,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 92.91026338833503,
+        "minHeightM": 79.97228561966392,
+        "minHeightDuringRotateM": 83.88056508004067,
+        "minRigidClearanceDuringRotateM": 83.33056508004066,
+        "maximumIntegratedRollDeg": 363.1480707056605,
+        "finalIntegratedRollDeg": 360.10205497145995,
+        "peakRollRateDegS": 342.37320276324164,
+        "peakThrustN": 79970.85791113572,
+        "peakRollTorqueNm": 9568.665788077866,
+        "commandSaturationS": 0.3583333333333336,
+        "peakNozzleForceFraction": 0.9996448276520585,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999668879732176,
+        "impulseAtCompletionNs": 144835.94778599724,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 255.60033199684713,
+        "riseM": 12.910263388335025,
+        "dropBelowStartM": 0.027714380336078648,
+        "dropFromPeakM": 12.937977768671104,
+        "gasThroughputIncludingPostSecondKg": 295.12936649348416,
+        "final": {
+          "heightM": 79.98170106335903,
+          "verticalMps": 0.0351152707800208,
+          "rollDeg": 0.0011902231951889997,
+          "pitchDeg": -0.000911002984190005,
+          "headingDeg": 0.000002523342516269622,
+          "angularRateRadS": 0.00020578448378799573,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.12-bench-600-h0.62",
+      "version": "3.12",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 2.5,
+        "origin": {
+          "x": 0,
+          "y": 0.5970093908740407,
+          "z": -240
+        },
+        "originGrounded": true,
+        "returnHeight": 0.5970093908740407,
+        "launchVelocity": 13.662500000000001,
+        "launchTime": 3.0625004275243635,
+        "launchAccelerationMps2": 5,
+        "profile": {
+          "kind": "pilot-rate-envelope",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 3.141592653589793,
+          "accelerationRadS2": 6.283185307179586,
+          "rampS": 0.5,
+          "cruiseS": 1.5,
+          "durationS": 2.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 204546.12504601173,
+        "plannedPeakHeight": 35.46478096045026,
+        "autoLand": true
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "滚转：地面起步，完成后着陆",
+        "rotationStart": {
+          "timeS": 2.75,
+          "heightM": 19.43380744463968,
+          "rigidEnvelopeClearanceM": 18.88380744463932,
+          "verticalMps": 13.434665325969082
+        },
+        "rotationEnd": {
+          "timeS": 5.258333333333333,
+          "heightM": 28.036052946357415,
+          "verticalMps": -6.730375290909863,
+          "integratedRollDeg": 363.1905716782138,
+          "rollDeg": 3.1027804251409994,
+          "rollRateDegS": -3.334716349310161
+        },
+        "completionTimeS": 11.891666666666666,
+        "groundedStart": true,
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 31.592960663382915,
+        "minHeightM": 0.5799805415599212,
+        "minHeightDuringRotateM": 19.43380744463968,
+        "minRigidClearanceDuringRotateM": 18.88380744463932,
+        "maximumIntegratedRollDeg": 363.22636575757303,
+        "finalIntegratedRollDeg": 360.100400149768,
+        "peakRollRateDegS": 187.0032674496291,
+        "peakThrustN": 32574.16401692636,
+        "peakRollTorqueNm": 6650.678329373079,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.40717705021257405,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999800928983963,
+        "impulseAtCompletionNs": 257399.15353689255,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 454.2470989104684,
+        "riseM": 30.995951272508872,
+        "dropBelowStartM": 0.01702884931411952,
+        "dropFromPeakM": 31.012980121822995,
+        "gasThroughputIncludingPostSecondKg": 454.8217716997228,
+        "final": {
+          "heightM": 0.5965643313598035,
+          "verticalMps": 0.0013232710446376911,
+          "rollDeg": -0.00041522196600244775,
+          "pitchDeg": 0.0000037828901252801327,
+          "headingDeg": 359.99951088823553,
+          "angularRateRadS": 0.000010180699118205765,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.12-bench-600-h4",
+      "version": "3.12",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 2.5,
+        "origin": {
+          "x": 0,
+          "y": 4,
+          "z": -240
+        },
+        "originGrounded": false,
+        "returnHeight": 4,
+        "launchVelocity": 13.662500000000001,
+        "launchTime": 3.0625000000000004,
+        "launchAccelerationMps2": 5,
+        "profile": {
+          "kind": "pilot-rate-envelope",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 3.141592653589793,
+          "accelerationRadS2": 6.283185307179586,
+          "rampS": 0.5,
+          "cruiseS": 1.5,
+          "durationS": 2.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 217061.15513890306,
+        "plannedPeakHeight": 38.86777192228428,
+        "autoLand": false
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "滚转：空中起步，完成后返回原高度",
+        "rotationStart": {
+          "timeS": 2.875,
+          "heightM": 22.845767687309554,
+          "rigidEnvelopeClearanceM": 22.295767687309553,
+          "verticalMps": 13.438307084104949
+        },
+        "rotationEnd": {
+          "timeS": 5.383333333333333,
+          "heightM": 31.455044153918262,
+          "verticalMps": -6.727607719747209,
+          "integratedRollDeg": 363.1905716785511,
+          "rollDeg": 3.1027804254709097,
+          "rollRateDegS": -3.3347163476008315
+        },
+        "completionTimeS": 12.7,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 35.00942600674174,
+        "minHeightM": 3.972519890927198,
+        "minHeightDuringRotateM": 22.845767687309554,
+        "minRigidClearanceDuringRotateM": 22.295767687309553,
+        "maximumIntegratedRollDeg": 363.2263657578799,
+        "finalIntegratedRollDeg": 360.1153969387228,
+        "peakRollRateDegS": 187.00405091347818,
+        "peakThrustN": 42229.12853325962,
+        "peakRollTorqueNm": 6650.6783325838205,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.5764801903461846,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999800932655355,
+        "impulseAtCompletionNs": 276356.21165974194,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 487.70171031014263,
+        "riseM": 31.00942600674174,
+        "dropBelowStartM": 0.027480109072802072,
+        "dropFromPeakM": 31.036906115814542,
+        "gasThroughputIncludingPostSecondKg": 526.7254962314021,
+        "final": {
+          "heightM": 3.9820068316087047,
+          "verticalMps": 0.034854438314585894,
+          "rollDeg": 0.014580616504222944,
+          "pitchDeg": -0.000018728735355815578,
+          "headingDeg": 359.99988558231706,
+          "angularRateRadS": 0.000004701966847565549,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.12-finite-600-h0.62",
+      "version": "3.12",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 600
+        }
+      },
+      "plan": null,
+      "metrics": {
+        "accepted": false,
+        "reason": "滚转预检：剩余冲量不足以完成旋转并返回起点状态",
+        "rotationStart": null,
+        "rotationEnd": null,
+        "completionTimeS": null,
+        "groundedStart": true,
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 0.5970093908740407,
+        "minHeightM": 0.5970093908740407,
+        "minHeightDuringRotateM": null,
+        "minRigidClearanceDuringRotateM": null,
+        "maximumIntegratedRollDeg": 0,
+        "finalIntegratedRollDeg": 0,
+        "peakRollRateDegS": 0,
+        "peakThrustN": 0,
+        "peakRollTorqueNm": 0,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": 1,
+        "impulseAtCompletionNs": null,
+        "gasAtCompletionKg": null,
+        "gasThroughputAtCompletionKg": null,
+        "riseM": 0,
+        "dropBelowStartM": 0,
+        "dropFromPeakM": 0,
+        "gasThroughputIncludingPostSecondKg": 0,
+        "final": {
+          "heightM": 0.5970093908740407,
+          "verticalMps": -0.00000213762181478917,
+          "rollDeg": 0,
+          "pitchDeg": 0,
+          "headingDeg": 0,
+          "angularRateRadS": 0,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.12-finite-600-h4",
+      "version": "3.12",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 600
+        }
+      },
+      "plan": null,
+      "metrics": {
+        "accepted": false,
+        "reason": "滚转预检：剩余冲量不足以完成旋转并返回起点状态",
+        "rotationStart": null,
+        "rotationEnd": null,
+        "completionTimeS": null,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 4,
+        "minHeightM": 4,
+        "minHeightDuringRotateM": null,
+        "minRigidClearanceDuringRotateM": null,
+        "maximumIntegratedRollDeg": 0,
+        "finalIntegratedRollDeg": 0,
+        "peakRollRateDegS": 0,
+        "peakThrustN": 0,
+        "peakRollTorqueNm": 0,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": 1,
+        "impulseAtCompletionNs": null,
+        "gasAtCompletionKg": null,
+        "gasThroughputAtCompletionKg": null,
+        "riseM": 0,
+        "dropBelowStartM": 0,
+        "dropFromPeakM": 0,
+        "gasThroughputIncludingPostSecondKg": 0,
+        "final": {
+          "heightM": 4,
+          "verticalMps": 0,
+          "rollDeg": 0,
+          "pitchDeg": 0,
+          "headingDeg": 0,
+          "angularRateRadS": 0,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.12-finite-900-h0.62",
+      "version": "3.12",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 900
+        }
+      },
+      "plan": null,
+      "metrics": {
+        "accepted": false,
+        "reason": "滚转预检：剩余冲量不足以完成旋转并返回起点状态",
+        "rotationStart": null,
+        "rotationEnd": null,
+        "completionTimeS": null,
+        "groundedStart": true,
+        "initialHeightM": 0.5923018217781622,
+        "initialRigidClearanceM": 0.04230182177816216,
+        "initialGasKg": 374.3373004273417,
+        "initialMassKg": 2324.3373004273417,
+        "initialRollInertiaKgm2": 999.4650391837569,
+        "maxHeightM": 0.5923018217781622,
+        "minHeightM": 0.5923018217781622,
+        "minHeightDuringRotateM": null,
+        "minRigidClearanceDuringRotateM": null,
+        "maximumIntegratedRollDeg": 0,
+        "finalIntegratedRollDeg": 0,
+        "peakRollRateDegS": 0,
+        "peakThrustN": 0,
+        "peakRollTorqueNm": 0,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": 1,
+        "impulseAtCompletionNs": null,
+        "gasAtCompletionKg": null,
+        "gasThroughputAtCompletionKg": null,
+        "riseM": 0,
+        "dropBelowStartM": 0,
+        "dropFromPeakM": 0,
+        "gasThroughputIncludingPostSecondKg": 0,
+        "final": {
+          "heightM": 0.5923018217781622,
+          "verticalMps": -9.327023233058687e-7,
+          "rollDeg": 0,
+          "pitchDeg": 0,
+          "headingDeg": 0,
+          "angularRateRadS": 0,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 374.3373004273417
+        }
+      }
+    },
+    {
+      "id": "3.12-finite-900-h4",
+      "version": "3.12",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 900
+        }
+      },
+      "plan": null,
+      "metrics": {
+        "accepted": false,
+        "reason": "滚转预检：剩余冲量不足以完成旋转并返回起点状态",
+        "rotationStart": null,
+        "rotationEnd": null,
+        "completionTimeS": null,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 374.3373004273417,
+        "initialMassKg": 2324.3373004273417,
+        "initialRollInertiaKgm2": 999.4650391837569,
+        "maxHeightM": 4,
+        "minHeightM": 4,
+        "minHeightDuringRotateM": null,
+        "minRigidClearanceDuringRotateM": null,
+        "maximumIntegratedRollDeg": 0,
+        "finalIntegratedRollDeg": 0,
+        "peakRollRateDegS": 0,
+        "peakThrustN": 0,
+        "peakRollTorqueNm": 0,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": 1,
+        "impulseAtCompletionNs": null,
+        "gasAtCompletionKg": null,
+        "gasThroughputAtCompletionKg": null,
+        "riseM": 0,
+        "dropBelowStartM": 0,
+        "dropFromPeakM": 0,
+        "gasThroughputIncludingPostSecondKg": 0,
+        "final": {
+          "heightM": 4,
+          "verticalMps": 0,
+          "rollDeg": 0,
+          "pitchDeg": 0,
+          "headingDeg": 0,
+          "angularRateRadS": 0,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 374.3373004273417
+        }
+      }
+    },
+    {
+      "id": "3.12-bench-600-h80",
+      "version": "3.12",
+      "configuration": {
+        "height": 80,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 2.5,
+        "origin": {
+          "x": 0,
+          "y": 80,
+          "z": -240
+        },
+        "originGrounded": false,
+        "returnHeight": 80,
+        "launchVelocity": 13.662500000000001,
+        "launchTime": 3.0625000000000004,
+        "launchAccelerationMps2": 5,
+        "profile": {
+          "kind": "pilot-rate-envelope",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 3.141592653589793,
+          "accelerationRadS2": 6.283185307179586,
+          "rampS": 0.5,
+          "cruiseS": 1.5,
+          "durationS": 2.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 217061.15513890306,
+        "plannedPeakHeight": 114.86777192228428,
+        "autoLand": false
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "滚转：空中起步，完成后返回原高度",
+        "rotationStart": {
+          "timeS": 2.875,
+          "heightM": 98.84576768730945,
+          "rigidEnvelopeClearanceM": 98.29576768730944,
+          "verticalMps": 13.438307084104949
+        },
+        "rotationEnd": {
+          "timeS": 5.383333333333333,
+          "heightM": 107.45504415391807,
+          "verticalMps": -6.727607719747209,
+          "integratedRollDeg": 363.1905716785511,
+          "rollDeg": 3.1027804254709097,
+          "rollRateDegS": -3.3347163476008315
+        },
+        "completionTimeS": 12.7,
+        "groundedStart": false,
+        "initialHeightM": 80,
+        "initialRigidClearanceM": 79.44999999999999,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 111.00942600674162,
+        "minHeightM": 79.97251989092717,
+        "minHeightDuringRotateM": 98.84576768730945,
+        "minRigidClearanceDuringRotateM": 98.29576768730944,
+        "maximumIntegratedRollDeg": 363.2263657578799,
+        "finalIntegratedRollDeg": 360.1153969387228,
+        "peakRollRateDegS": 187.00405091347818,
+        "peakThrustN": 42229.12853325962,
+        "peakRollTorqueNm": 6650.6783325838205,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.5764801903461846,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999800932655355,
+        "impulseAtCompletionNs": 276356.2116597419,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 487.70171031014223,
+        "riseM": 31.00942600674162,
+        "dropBelowStartM": 0.027480109072826053,
+        "dropFromPeakM": 31.036906115814446,
+        "gasThroughputIncludingPostSecondKg": 526.7254962314017,
+        "final": {
+          "heightM": 79.9820068316087,
+          "verticalMps": 0.034854438314616265,
+          "rollDeg": 0.014580616504222198,
+          "pitchDeg": -0.000018728735356159595,
+          "headingDeg": 359.99988558231706,
+          "angularRateRadS": 0.00000470196684756828,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.15-bench-600-h0.62",
+      "version": "3.15",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 1.5,
+        "origin": {
+          "x": 0,
+          "y": 0.5970093908740407,
+          "z": -240
+        },
+        "originGrounded": true,
+        "returnHeight": 0.5970093908740407,
+        "launchVelocity": 4.0025,
+        "launchTime": 0.5012400928366193,
+        "launchAccelerationMps2": 23.37362746842595,
+        "minimumRotationClearanceM": 1.55,
+        "profile": {
+          "kind": "quick-roll-1",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 6.283185307179586,
+          "accelerationRadS2": 12.566370614359172,
+          "rampS": 0.5,
+          "cruiseS": 0.5,
+          "durationS": 1.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 104862.8553541588,
+        "plannedPeakHeight": 5.579979543774599,
+        "autoLand": true,
+        "preflight": {
+          "policy": "quick-roll-1",
+          "referenceTorqueNm": 11885.399319032125,
+          "rollTorqueUpperNm": 26020,
+          "torqueMargin": 2.1892407063121637,
+          "availableAccelMps2": 26.56094030502949,
+          "launchImpulseNs": 19619.327679830396,
+          "rotationImpulseNs": 20144.74460852903,
+          "arrestImpulseNs": 18268.442030792157,
+          "settlingImpulseNs": 32366.498917192228,
+          "impulseMargin": 1.16,
+          "predictedRotationEndVerticalMps": -3.569903259449826,
+          "predictedRotationDisplacementM": 0.2960510431896943,
+          "availableImpulseNs": null
+        }
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "快翻：短起跳，完成一周后着陆",
+        "rotationStart": {
+          "timeS": 0.39166666666666666,
+          "heightM": 1.6026556889427936,
+          "rigidEnvelopeClearanceM": 1.0526556887592222,
+          "verticalMps": 3.88228359277976
+        },
+        "rotationEnd": {
+          "timeS": 1.9,
+          "heightM": 2.194858045263617,
+          "verticalMps": -3.2167052025538068,
+          "integratedRollDeg": 365.7477352981473,
+          "rollDeg": 5.663978303708826,
+          "rollRateDegS": -4.475392755183908
+        },
+        "completionTimeS": 3.6916666666666664,
+        "groundedStart": true,
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 3.9048295943544136,
+        "minHeightM": 0.5814605311116686,
+        "minHeightDuringRotateM": 1.6026556889427936,
+        "minRigidClearanceDuringRotateM": 1.0526556887592222,
+        "maximumIntegratedRollDeg": 365.7850302377738,
+        "finalIntegratedRollDeg": 360.0837965558171,
+        "peakRollRateDegS": 372.6292151937168,
+        "peakThrustN": 64383.33340571455,
+        "peakRollTorqueNm": 13494.288404058916,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.8047916677785903,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999193601637326,
+        "impulseAtCompletionNs": 85099.35583961563,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 150.17973050076284,
+        "riseM": 3.307820203480373,
+        "dropBelowStartM": 0.01554885976237208,
+        "dropFromPeakM": 3.323369063242745,
+        "gasThroughputIncludingPostSecondKg": 150.72611417679545,
+        "final": {
+          "heightM": 0.5965985068337571,
+          "verticalMps": 0.0010844499842786095,
+          "rollDeg": -0.01721625112930188,
+          "pitchDeg": -0.000018975338582069307,
+          "headingDeg": 0.05626422102847073,
+          "angularRateRadS": 0.0006217843593799552,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.15-bench-600-h4",
+      "version": "3.15",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 1.5,
+        "origin": {
+          "x": 0,
+          "y": 4,
+          "z": -240
+        },
+        "originGrounded": false,
+        "returnHeight": 4,
+        "launchVelocity": 4.0025,
+        "launchTime": 0.5012400013821877,
+        "launchAccelerationMps2": 23.37362746842595,
+        "minimumRotationClearanceM": 1.55,
+        "profile": {
+          "kind": "quick-roll-1",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 6.283185307179586,
+          "accelerationRadS2": 12.566370614359172,
+          "rampS": 0.5,
+          "cruiseS": 0.5,
+          "durationS": 1.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 104862.84761093056,
+        "plannedPeakHeight": 8.982970505608256,
+        "autoLand": false,
+        "preflight": {
+          "policy": "quick-roll-1",
+          "referenceTorqueNm": 11885.399319032125,
+          "rollTorqueUpperNm": 26020,
+          "torqueMargin": 2.1892407063121637,
+          "availableAccelMps2": 26.56094030502949,
+          "launchImpulseNs": 19619.32100463363,
+          "rotationImpulseNs": 20144.74460852903,
+          "arrestImpulseNs": 18268.442030792157,
+          "settlingImpulseNs": 32366.498917192228,
+          "impulseMargin": 1.16,
+          "predictedRotationEndVerticalMps": -3.569903259449826,
+          "predictedRotationDisplacementM": 0.2960510431896943,
+          "availableImpulseNs": null
+        }
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "快翻：完成一周并返回起始高度",
+        "rotationStart": {
+          "timeS": 0.35,
+          "heightM": 4.774239096707089,
+          "rigidEnvelopeClearanceM": 4.224239096707089,
+          "verticalMps": 3.7778851968132754
+        },
+        "rotationEnd": {
+          "timeS": 1.8583333333333334,
+          "heightM": 5.243099639865887,
+          "verticalMps": -3.300243435676621,
+          "integratedRollDeg": 365.7476497699129,
+          "rollDeg": 5.663894378604013,
+          "rollRateDegS": -4.475771971996645
+        },
+        "completionTimeS": 3.2666666666666666,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 7.012785289236195,
+        "minHeightM": 3.9620559191474296,
+        "minHeightDuringRotateM": 4.774239096707089,
+        "minRigidClearanceDuringRotateM": 4.224239096707089,
+        "maximumIntegratedRollDeg": 365.78494786967957,
+        "finalIntegratedRollDeg": 360.13355247207153,
+        "peakRollRateDegS": 372.4687080416707,
+        "peakThrustN": 66780.96452713598,
+        "peakRollTorqueNm": 13426.921544103712,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.8347620565891999,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999156529776435,
+        "impulseAtCompletionNs": 77646.00839053212,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 137.02637933625476,
+        "riseM": 3.012785289236195,
+        "dropBelowStartM": 0.037944080852570394,
+        "dropFromPeakM": 3.0507293700887654,
+        "gasThroughputIncludingPostSecondKg": 176.15780157472014,
+        "final": {
+          "heightM": 3.9973634699887395,
+          "verticalMps": 0.018386295898060293,
+          "rollDeg": 0.03339061441786431,
+          "pitchDeg": -0.014921569327460195,
+          "headingDeg": 0.0013627713897790272,
+          "angularRateRadS": 0.0028272250998028787,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    },
+    {
+      "id": "3.15-finite-600-h0.62",
+      "version": "3.15",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 1.5,
+        "origin": {
+          "x": 0,
+          "y": 0.5970093908740407,
+          "z": -240
+        },
+        "originGrounded": true,
+        "returnHeight": 0.5970093908740407,
+        "launchVelocity": 4.0025,
+        "launchTime": 0.5012400928366193,
+        "launchAccelerationMps2": 23.37362746842595,
+        "minimumRotationClearanceM": 1.55,
+        "profile": {
+          "kind": "quick-roll-1",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 6.283185307179586,
+          "accelerationRadS2": 12.566370614359172,
+          "rampS": 0.5,
+          "cruiseS": 0.5,
+          "durationS": 1.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 104862.8553541588,
+        "plannedPeakHeight": 5.579979543774599,
+        "autoLand": true,
+        "preflight": {
+          "policy": "quick-roll-1",
+          "referenceTorqueNm": 11885.399319032125,
+          "rollTorqueUpperNm": 26020,
+          "torqueMargin": 2.1892407063121637,
+          "availableAccelMps2": 26.56094030502949,
+          "launchImpulseNs": 19619.327679830396,
+          "rotationImpulseNs": 20144.74460852903,
+          "arrestImpulseNs": 18268.442030792157,
+          "settlingImpulseNs": 32366.498917192228,
+          "impulseMargin": 1.16,
+          "predictedRotationEndVerticalMps": -3.569903259449826,
+          "predictedRotationDisplacementM": 0.2960510431896943,
+          "availableImpulseNs": 110604.98148228783
+        }
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "快翻：短起跳，完成一周后着陆",
+        "rotationStart": {
+          "timeS": 0.39166666666666666,
+          "heightM": 1.6036610611636088,
+          "rigidEnvelopeClearanceM": 1.0536610609825918,
+          "verticalMps": 3.8840214217780087
+        },
+        "rotationEnd": {
+          "timeS": 1.9,
+          "heightM": 2.193796992489123,
+          "verticalMps": -3.2247498258202625,
+          "integratedRollDeg": 365.7030744112388,
+          "rollDeg": 5.618958867337694,
+          "rollRateDegS": -4.386290232202285
+        },
+        "completionTimeS": 3.6916666666666664,
+        "groundedStart": true,
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 3.9073976862253983,
+        "minHeightM": 0.5896213083315099,
+        "minHeightDuringRotateM": 1.6036610611636088,
+        "minRigidClearanceDuringRotateM": 1.0536610609825918,
+        "maximumIntegratedRollDeg": 365.73962682984046,
+        "finalIntegratedRollDeg": 360.08835745638703,
+        "peakRollRateDegS": 372.499297904172,
+        "peakThrustN": 64222.164487212925,
+        "peakRollTorqueNm": 13266.078611915846,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.8027770562931591,
+        "minPressureBar": 87.12378632063886,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999245106650164,
+        "impulseAtCompletionNs": 82144.50138487105,
+        "gasAtCompletionKg": 92.49324531984806,
+        "gasThroughputAtCompletionKg": 157.0649549650465,
+        "riseM": 3.3103882953513577,
+        "dropBelowStartM": 0.007388082542530761,
+        "dropFromPeakM": 3.3177763778938885,
+        "gasThroughputIncludingPostSecondKg": 157.68183500570012,
+        "final": {
+          "heightM": 0.6026943619577683,
+          "verticalMps": 0.0013986003022367047,
+          "rollDeg": -0.012687672799551637,
+          "pitchDeg": 0.000011640496746778064,
+          "headingDeg": 0.05749464433353069,
+          "angularRateRadS": 0.0007462303876460943,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 91.87636527919429
+        }
+      }
+    },
+    {
+      "id": "3.15-finite-600-h4",
+      "version": "3.15",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 1.5,
+        "origin": {
+          "x": 0,
+          "y": 4,
+          "z": -240
+        },
+        "originGrounded": false,
+        "returnHeight": 4,
+        "launchVelocity": 4.0025,
+        "launchTime": 0.5012400013821877,
+        "launchAccelerationMps2": 23.37362746842595,
+        "minimumRotationClearanceM": 1.55,
+        "profile": {
+          "kind": "quick-roll-1",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 6.283185307179586,
+          "accelerationRadS2": 12.566370614359172,
+          "rampS": 0.5,
+          "cruiseS": 0.5,
+          "durationS": 1.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 104862.84761093056,
+        "plannedPeakHeight": 8.982970505608256,
+        "autoLand": false,
+        "preflight": {
+          "policy": "quick-roll-1",
+          "referenceTorqueNm": 11885.399319032125,
+          "rollTorqueUpperNm": 26020,
+          "torqueMargin": 2.1892407063121637,
+          "availableAccelMps2": 26.56094030502949,
+          "launchImpulseNs": 19619.32100463363,
+          "rotationImpulseNs": 20144.74460852903,
+          "arrestImpulseNs": 18268.442030792157,
+          "settlingImpulseNs": 32366.498917192228,
+          "impulseMargin": 1.16,
+          "predictedRotationEndVerticalMps": -3.569903259449826,
+          "predictedRotationDisplacementM": 0.2960510431896943,
+          "availableImpulseNs": 110604.98148228783
+        }
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "快翻：完成一周并返回起始高度",
+        "rotationStart": {
+          "timeS": 0.35,
+          "heightM": 4.775269333246246,
+          "rigidEnvelopeClearanceM": 4.2252693332462465,
+          "verticalMps": 3.780373873206257
+        },
+        "rotationEnd": {
+          "timeS": 1.8583333333333334,
+          "heightM": 5.2431527819806405,
+          "verticalMps": -3.30749621649688,
+          "integratedRollDeg": 365.70324857745607,
+          "rollDeg": 5.6191386857711345,
+          "rollRateDegS": -4.387659232852833
+        },
+        "completionTimeS": 3.2666666666666666,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 7.015922618918588,
+        "minHeightM": 3.9630522437808566,
+        "minHeightDuringRotateM": 4.775269333246246,
+        "minRigidClearanceDuringRotateM": 4.2252693332462465,
+        "maximumIntegratedRollDeg": 365.7398124043965,
+        "finalIntegratedRollDeg": 360.133037916386,
+        "peakRollRateDegS": 372.34053231657026,
+        "peakThrustN": 66591.09279328867,
+        "peakRollTorqueNm": 13201.893416479495,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.8323886599161086,
+        "minPressureBar": 50.82096218890803,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999208164357357,
+        "impulseAtCompletionNs": 75195.71235449212,
+        "gasAtCompletionKg": 107.16843165085643,
+        "gasThroughputAtCompletionKg": 142.38976863403803,
+        "riseM": 3.015922618918588,
+        "dropBelowStartM": 0.03694775621914337,
+        "dropFromPeakM": 3.0528703751377315,
+        "gasThroughputIncludingPostSecondKg": 187.1911393671419,
+        "final": {
+          "heightM": 3.9984864519822514,
+          "verticalMps": 0.018350790556719357,
+          "rollDeg": 0.03290559739102747,
+          "pitchDeg": -0.014750532874664815,
+          "headingDeg": 0.0013768798272622007,
+          "angularRateRadS": 0.0029727757572235673,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 62.36706091775262
+        }
+      }
+    },
+    {
+      "id": "3.15-finite-900-h0.62",
+      "version": "3.15",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 900
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 1.5,
+        "origin": {
+          "x": 0,
+          "y": 0.5923018217781622,
+          "z": -240
+        },
+        "originGrounded": true,
+        "returnHeight": 0.5923018217781622,
+        "launchVelocity": 4.0025,
+        "launchTime": 0.5148268966580565,
+        "launchAccelerationMps2": 21.655403001800373,
+        "minimumRotationClearanceM": 1.55,
+        "profile": {
+          "kind": "quick-roll-1",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 6.283185307179586,
+          "accelerationRadS2": 12.566370614359172,
+          "rampS": 0.5,
+          "cruiseS": 0.5,
+          "durationS": 1.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 111491.53673431657,
+        "plannedPeakHeight": 5.602462861467129,
+        "autoLand": true,
+        "preflight": {
+          "policy": "quick-roll-1",
+          "referenceTorqueNm": 12559.648098478101,
+          "rollTorqueUpperNm": 26020,
+          "torqueMargin": 2.071714095489104,
+          "availableAccelMps2": 24.60841250204588,
+          "launchImpulseNs": 21042.11584628951,
+          "rotationImpulseNs": 21287.539149962886,
+          "arrestImpulseNs": 19581.115364439076,
+          "settlingImpulseNs": 34202.62337578834,
+          "impulseMargin": 1.16,
+          "predictedRotationEndVerticalMps": -3.569903259449826,
+          "predictedRotationDisplacementM": 0.2960510431896943,
+          "availableImpulseNs": 165907.4722234317
+        }
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "快翻：短起跳，完成一周后着陆",
+        "rotationStart": {
+          "timeS": 0.39166666666666666,
+          "heightM": 1.5826045726308187,
+          "rigidEnvelopeClearanceM": 1.032604572628772,
+          "verticalMps": 3.876323734080329
+        },
+        "rotationEnd": {
+          "timeS": 1.9,
+          "heightM": 2.1746547356650456,
+          "verticalMps": -3.209444823540306,
+          "integratedRollDeg": 365.7642605459521,
+          "rollDeg": 5.681110680806316,
+          "rollRateDegS": -4.622296369377729
+        },
+        "completionTimeS": 3.683333333333333,
+        "groundedStart": true,
+        "initialHeightM": 0.5923018217781622,
+        "initialRigidClearanceM": 0.04230182177816216,
+        "initialGasKg": 374.3373004273417,
+        "initialMassKg": 2324.3373004273417,
+        "initialRollInertiaKgm2": 999.4650391837569,
+        "maxHeightM": 3.881463718765345,
+        "minHeightM": 0.5833726833225128,
+        "minHeightDuringRotateM": 1.5826045726308187,
+        "minRigidClearanceDuringRotateM": 1.032604572628772,
+        "maximumIntegratedRollDeg": 365.80277968236356,
+        "finalIntegratedRollDeg": 360.0848175460007,
+        "peakRollRateDegS": 372.74266105900057,
+        "peakThrustN": 66337.57658870201,
+        "peakRollTorqueNm": 14013.074229610253,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.8292197073850052,
+        "minPressureBar": 159.97725346084837,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999036212669805,
+        "impulseAtCompletionNs": 86553.21878062082,
+        "gasAtCompletionKg": 213.85330197414757,
+        "gasThroughputAtCompletionKg": 160.4839984531941,
+        "riseM": 3.289161896987183,
+        "dropBelowStartM": 0.008929138455649355,
+        "dropFromPeakM": 3.298091035442832,
+        "gasThroughputIncludingPostSecondKg": 161.08413152878796,
+        "final": {
+          "heightM": 0.5980017304082675,
+          "verticalMps": 0.0012149041728293556,
+          "rollDeg": -0.016209413931604248,
+          "pitchDeg": -0.000016257483205448233,
+          "headingDeg": 0.056534859346697885,
+          "angularRateRadS": 0.0006803583032021573,
+          "contacts": 4,
+          "mode": "drive",
+          "phase": null,
+          "gasMassKg": 213.2531688985537
+        }
+      }
+    },
+    {
+      "id": "3.15-finite-900-h4",
+      "version": "3.15",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "supplyMode": "finite",
+          "tankLitres": 900
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 1.5,
+        "origin": {
+          "x": 0,
+          "y": 4,
+          "z": -240
+        },
+        "originGrounded": false,
+        "returnHeight": 4,
+        "launchVelocity": 4.0025,
+        "launchTime": 0.5148268535878664,
+        "launchAccelerationMps2": 21.655403001800373,
+        "minimumRotationClearanceM": 1.55,
+        "profile": {
+          "kind": "quick-roll-1",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 6.283185307179586,
+          "accelerationRadS2": 12.566370614359172,
+          "rampS": 0.5,
+          "cruiseS": 0.5,
+          "durationS": 1.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 111491.53308032763,
+        "plannedPeakHeight": 9.01016119358487,
+        "autoLand": false,
+        "preflight": {
+          "policy": "quick-roll-1",
+          "referenceTorqueNm": 12559.648098478101,
+          "rollTorqueUpperNm": 26020,
+          "torqueMargin": 2.071714095489104,
+          "availableAccelMps2": 24.60841250204588,
+          "launchImpulseNs": 21042.11269629905,
+          "rotationImpulseNs": 21287.539149962886,
+          "arrestImpulseNs": 19581.115364439076,
+          "settlingImpulseNs": 34202.62337578834,
+          "impulseMargin": 1.16,
+          "predictedRotationEndVerticalMps": -3.569903259449826,
+          "predictedRotationDisplacementM": 0.2960510431896943,
+          "availableImpulseNs": 165907.4722234317
+        }
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "快翻：完成一周并返回起始高度",
+        "rotationStart": {
+          "timeS": 0.35833333333333334,
+          "heightM": 4.781986539035029,
+          "rigidEnvelopeClearanceM": 4.231986539035029,
+          "verticalMps": 3.7807411049860367
+        },
+        "rotationEnd": {
+          "timeS": 1.8666666666666667,
+          "heightM": 5.261208102237551,
+          "verticalMps": -3.285872157994926,
+          "integratedRollDeg": 365.7642000235288,
+          "rollDeg": 5.681052039871098,
+          "rollRateDegS": -4.6227441106986165
+        },
+        "completionTimeS": 3.275,
+        "groundedStart": false,
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 374.3373004273417,
+        "initialMassKg": 2324.3373004273417,
+        "initialRollInertiaKgm2": 999.4650391837569,
+        "maxHeightM": 7.022638317587304,
+        "minHeightM": 3.965545367063882,
+        "minHeightDuringRotateM": 4.781986539035029,
+        "minRigidClearanceDuringRotateM": 4.231986539035029,
+        "maximumIntegratedRollDeg": 365.802722891118,
+        "finalIntegratedRollDeg": 360.13305342787953,
+        "peakRollRateDegS": 372.5951312829088,
+        "peakThrustN": 68385.33070099284,
+        "peakRollTorqueNm": 13947.687788007695,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.8548166337624107,
+        "minPressureBar": 130.6831095548927,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9998998437757876,
+        "impulseAtCompletionNs": 79585.73847096827,
+        "gasAtCompletionKg": 227.48987820110932,
+        "gasThroughputAtCompletionKg": 146.84742222623237,
+        "riseM": 3.0226383175873037,
+        "dropBelowStartM": 0.034454632936117946,
+        "dropFromPeakM": 3.0570929505234217,
+        "gasThroughputIncludingPostSecondKg": 189.98485438270032,
+        "final": {
+          "heightM": 3.998122699386422,
+          "verticalMps": 0.018497522446938575,
+          "rollDeg": 0.03292015180941941,
+          "pitchDeg": -0.014753958412288075,
+          "headingDeg": 0.0013770163029676041,
+          "angularRateRadS": 0.002968230956912344,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 184.35244604464137
+        }
+      }
+    },
+    {
+      "id": "3.15-bench-600-h80",
+      "version": "3.15",
+      "configuration": {
+        "height": 80,
+        "params": {
+          "supplyMode": "bench",
+          "tankLitres": 600
+        }
+      },
+      "plan": {
+        "name": "roll",
+        "phase": "climb",
+        "time": 0,
+        "angle": 0,
+        "duration": 1.5,
+        "origin": {
+          "x": 0,
+          "y": 80,
+          "z": -240
+        },
+        "originGrounded": false,
+        "returnHeight": 80,
+        "launchVelocity": 4.0025,
+        "launchTime": 0.5012400013821877,
+        "launchAccelerationMps2": 23.37362746842595,
+        "minimumRotationClearanceM": 1.55,
+        "profile": {
+          "kind": "quick-roll-1",
+          "angleRad": 6.283185307179586,
+          "rateRadS": 6.283185307179586,
+          "accelerationRadS2": 12.566370614359172,
+          "rampS": 0.5,
+          "cruiseS": 0.5,
+          "durationS": 1.5
+        },
+        "actualRollRad": 0,
+        "requiredImpulseNs": 104862.84761093056,
+        "plannedPeakHeight": 84.98297050560825,
+        "autoLand": false,
+        "preflight": {
+          "policy": "quick-roll-1",
+          "referenceTorqueNm": 11885.399319032125,
+          "rollTorqueUpperNm": 26020,
+          "torqueMargin": 2.1892407063121637,
+          "availableAccelMps2": 26.56094030502949,
+          "launchImpulseNs": 19619.32100463363,
+          "rotationImpulseNs": 20144.74460852903,
+          "arrestImpulseNs": 18268.442030792157,
+          "settlingImpulseNs": 32366.498917192228,
+          "impulseMargin": 1.16,
+          "predictedRotationEndVerticalMps": -3.569903259449826,
+          "predictedRotationDisplacementM": 0.2960510431896943,
+          "availableImpulseNs": null
+        }
+      },
+      "metrics": {
+        "accepted": true,
+        "reason": "快翻：完成一周并返回起始高度",
+        "rotationStart": {
+          "timeS": 0.35,
+          "heightM": 80.7742390967071,
+          "rigidEnvelopeClearanceM": 80.2242390967071,
+          "verticalMps": 3.7778851968132754
+        },
+        "rotationEnd": {
+          "timeS": 1.8583333333333334,
+          "heightM": 81.24309963986589,
+          "verticalMps": -3.300243435676621,
+          "integratedRollDeg": 365.7476497699129,
+          "rollDeg": 5.663894378604013,
+          "rollRateDegS": -4.475771971996645
+        },
+        "completionTimeS": 3.2666666666666666,
+        "groundedStart": false,
+        "initialHeightM": 80,
+        "initialRigidClearanceM": 79.44999999999999,
+        "initialGasKg": 249.55820028489444,
+        "initialMassKg": 2199.5582002848946,
+        "initialRollInertiaKgm2": 945.8100261225047,
+        "maxHeightM": 83.01278528923623,
+        "minHeightM": 79.96205591914739,
+        "minHeightDuringRotateM": 80.7742390967071,
+        "minRigidClearanceDuringRotateM": 80.2242390967071,
+        "maximumIntegratedRollDeg": 365.78494786967957,
+        "finalIntegratedRollDeg": 360.13355247207153,
+        "peakRollRateDegS": 372.4687080416707,
+        "peakThrustN": 66780.96452713598,
+        "peakRollTorqueNm": 13426.921544103712,
+        "commandSaturationS": 0,
+        "peakNozzleForceFraction": 0.8347620565891999,
+        "minPressureBar": 350,
+        "rotateContact": false,
+        "hullContactAfterTakeoff": false,
+        "minimumUpDot": -0.9999156529776435,
+        "impulseAtCompletionNs": 77646.00839053214,
+        "gasAtCompletionKg": 249.55820028489444,
+        "gasThroughputAtCompletionKg": 137.0263793362548,
+        "riseM": 3.012785289236234,
+        "dropBelowStartM": 0.03794408085261125,
+        "dropFromPeakM": 3.0507293700888454,
+        "gasThroughputIncludingPostSecondKg": 176.15780157472037,
+        "final": {
+          "heightM": 79.99736346998873,
+          "verticalMps": 0.01838629589812686,
+          "rollDeg": 0.033390614417859836,
+          "pitchDeg": -0.01492156932745338,
+          "headingDeg": 0.0013627713897790272,
+          "angularRateRadS": 0.0028272250998038757,
+          "contacts": 0,
+          "mode": "hover",
+          "phase": null,
+          "gasMassKg": 249.55820028489444
+        }
+      }
+    }
+  ],
+  "manual": [
+    {
+      "id": "manual-bench-600-h0.62",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "climbRateMps": 4,
+          "verticalAccelerationMps2": 10,
+          "rollRateDegS": 360,
+          "pitchRateDegS": 90,
+          "angularAccelerationDegS2": 720,
+          "supplyMode": "bench",
+          "tankLitres": 600
+        },
+        "releaseDeg": 270
+      },
+      "inputEvents": [
+        {
+          "timeS": 0,
+          "action": "G off; E held",
+          "input": {
+            "lift": 1,
+            "roll": 0,
+            "pitch": 0
+          }
+        },
+        {
+          "timeS": 0.7916666666666666,
+          "action": "Release E; hold Z",
+          "input": {
+            "lift": 0,
+            "roll": -1,
+            "pitch": 0
+          },
+          "condition": "Measured vertical speed >= 3.76 m/s and CG-to-surface distance >= 1.65 m"
+        },
+        {
+          "timeS": 1.8,
+          "action": "Release Z; enable G level recovery",
+          "input": {
+            "lift": 0,
+            "roll": 0,
+            "pitch": 0
+          },
+          "condition": "Measured integrated body roll >= 270 degrees",
+          "referenceHeightM": 4.850412859193532
+        }
+      ],
+      "metrics": {
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "maxHeightM": 4.85045789063606,
+        "minHeightM": 0.5970093908740407,
+        "minRigidClearanceAfterRollStartM": 2.08035863319654,
+        "peakRollRateDegS": 371.1751193137354,
+        "maximumIntegratedRollDeg": 360.11671975039167,
+        "peakThrustN": 56028.650224287085,
+        "peakNozzleForceFraction": 0.9983368635791675,
+        "minUpDot": -0.9999954910519522,
+        "rollStart": {
+          "timeS": 0.7916666666666666,
+          "heightM": 2.5991354536368223,
+          "verticalMps": 3.7602670865195993,
+          "rigidEnvelopeClearanceM": 2.0491354535491424
+        },
+        "rollRelease": {
+          "timeS": 1.8,
+          "heightM": 4.650267645416322,
+          "verticalMps": -1.6549362975156519,
+          "integratedRollDeg": 270.00463021690064,
+          "rollRateDegS": 358.92054220397944
+        },
+        "firstStableCrossingS": 3.7083333333333335,
+        "stableWindowStartS": 3.7083333333333335,
+        "confirmedRecoveryS": 4.2,
+        "contactDuringRollOrRecovery": false,
+        "riseM": 4.253448499762019,
+        "finalIntegratedRollDeg": 360.11651064710765,
+        "gasThroughputKg": 190.1884538514861,
+        "remainingGasKg": 249.55820028489444,
+        "finalPressureBar": 350,
+        "final": {
+          "heightM": 4.795439166998408,
+          "verticalMps": 0.09589852259151685,
+          "rollDeg": 0.01570830221767941,
+          "pitchDeg": -0.009632465625776982,
+          "angularRateRadS": 0.00032307640321169314,
+          "mode": "hover"
+        }
+      }
+    },
+    {
+      "id": "manual-bench-600-h4",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "climbRateMps": 4,
+          "verticalAccelerationMps2": 10,
+          "rollRateDegS": 360,
+          "pitchRateDegS": 90,
+          "angularAccelerationDegS2": 720,
+          "supplyMode": "bench",
+          "tankLitres": 600
+        },
+        "releaseDeg": 270
+      },
+      "inputEvents": [
+        {
+          "timeS": 0,
+          "action": "G off; E held",
+          "input": {
+            "lift": 1,
+            "roll": 0,
+            "pitch": 0
+          }
+        },
+        {
+          "timeS": 0.85,
+          "action": "Release E; hold Z",
+          "input": {
+            "lift": 0,
+            "roll": -1,
+            "pitch": 0
+          },
+          "condition": "Measured vertical speed >= 3.76 m/s and CG-to-surface distance >= 1.65 m"
+        },
+        {
+          "timeS": 1.8583333333333334,
+          "action": "Release Z; enable G level recovery",
+          "input": {
+            "lift": 0,
+            "roll": 0,
+            "pitch": 0
+          },
+          "condition": "Measured integrated body roll >= 270 degrees",
+          "referenceHeightM": 8.271453161090575
+        }
+      ],
+      "metrics": {
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 249.55820028489444,
+        "maxHeightM": 8.271469589776572,
+        "minHeightM": 3.9962560694663347,
+        "minRigidClearanceAfterRollStartM": 5.497369921367533,
+        "peakRollRateDegS": 371.17933821338846,
+        "maximumIntegratedRollDeg": 360.1167046412582,
+        "peakThrustN": 56005.080218976655,
+        "peakNozzleForceFraction": 0.9983390489782905,
+        "minUpDot": -0.9999955599729939,
+        "rollStart": {
+          "timeS": 0.85,
+          "heightM": 6.016097436401487,
+          "verticalMps": 3.766330375366772,
+          "rigidEnvelopeClearanceM": 5.466097436401487
+        },
+        "rollRelease": {
+          "timeS": 1.8583333333333334,
+          "heightM": 8.072034173987657,
+          "verticalMps": -1.6513658279124739,
+          "integratedRollDeg": 270.01027276181935,
+          "rollRateDegS": 358.926445325565
+        },
+        "firstStableCrossingS": 3.7666666666666666,
+        "stableWindowStartS": 3.7666666666666666,
+        "confirmedRecoveryS": 4.258333333333333,
+        "contactDuringRollOrRecovery": false,
+        "riseM": 4.271469589776572,
+        "finalIntegratedRollDeg": 360.1164955373874,
+        "gasThroughputKg": 194.39632930695743,
+        "remainingGasKg": 249.55820028489444,
+        "finalPressureBar": 350,
+        "final": {
+          "heightM": 8.2166345516218,
+          "verticalMps": 0.09562983723162616,
+          "rollDeg": 0.015693205431816033,
+          "pitchDeg": -0.009645412374124184,
+          "angularRateRadS": 0.00032316846229448333,
+          "mode": "hover"
+        }
+      }
+    },
+    {
+      "id": "manual-finite-600-h0.62",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "climbRateMps": 4,
+          "verticalAccelerationMps2": 10,
+          "rollRateDegS": 360,
+          "pitchRateDegS": 90,
+          "angularAccelerationDegS2": 720,
+          "supplyMode": "finite",
+          "tankLitres": 600
+        },
+        "releaseDeg": 270
+      },
+      "inputEvents": [
+        {
+          "timeS": 0,
+          "action": "G off; E held",
+          "input": {
+            "lift": 1,
+            "roll": 0,
+            "pitch": 0
+          }
+        },
+        {
+          "timeS": 0.7916666666666666,
+          "action": "Release E; hold Z",
+          "input": {
+            "lift": 0,
+            "roll": -1,
+            "pitch": 0
+          },
+          "condition": "Measured vertical speed >= 3.76 m/s and CG-to-surface distance >= 1.65 m"
+        },
+        {
+          "timeS": 1.8083333333333333,
+          "action": "Release Z; enable G level recovery",
+          "input": {
+            "lift": 0,
+            "roll": 0,
+            "pitch": 0
+          },
+          "condition": "Measured integrated body roll >= 270 degrees",
+          "referenceHeightM": 4.854554718812676
+        }
+      ],
+      "metrics": {
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "maxHeightM": 4.854617415264883,
+        "minHeightM": 0.5970093908740407,
+        "minRigidClearanceAfterRollStartM": 2.0825015706771106,
+        "peakRollRateDegS": 371.02694582658734,
+        "maximumIntegratedRollDeg": 360.1118654022642,
+        "peakThrustN": 54121.97986839747,
+        "peakNozzleForceFraction": 0.998521313419864,
+        "minUpDot": -0.9999933647365696,
+        "rollStart": {
+          "timeS": 0.7916666666666666,
+          "heightM": 2.6012583808001457,
+          "verticalMps": 3.7626747285364144,
+          "rigidEnvelopeClearanceM": 2.0512583807134024
+        },
+        "rollRelease": {
+          "timeS": 1.8083333333333333,
+          "heightM": 4.640674600526997,
+          "verticalMps": -1.6829715555899527,
+          "integratedRollDeg": 272.914007791106,
+          "rollRateDegS": 359.585359051171
+        },
+        "firstStableCrossingS": 3.6999999999999997,
+        "stableWindowStartS": 3.6999999999999997,
+        "confirmedRecoveryS": 4.191666666666666,
+        "contactDuringRollOrRecovery": false,
+        "riseM": 4.2576080243908425,
+        "finalIntegratedRollDeg": 360.1113527183419,
+        "gasThroughputKg": 203.8408329139255,
+        "remainingGasKg": 45.71736737096865,
+        "finalPressureBar": 32.975442903834,
+        "final": {
+          "heightM": 4.801771934915588,
+          "verticalMps": 0.09690434810331112,
+          "rollDeg": 0.010567058330344239,
+          "pitchDeg": -0.01335985018312405,
+          "angularRateRadS": 0.0002854284600675822,
+          "mode": "hover"
+        }
+      }
+    },
+    {
+      "id": "manual-finite-600-h4",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "climbRateMps": 4,
+          "verticalAccelerationMps2": 10,
+          "rollRateDegS": 360,
+          "pitchRateDegS": 90,
+          "angularAccelerationDegS2": 720,
+          "supplyMode": "finite",
+          "tankLitres": 600
+        },
+        "releaseDeg": 270
+      },
+      "inputEvents": [
+        {
+          "timeS": 0,
+          "action": "G off; E held",
+          "input": {
+            "lift": 1,
+            "roll": 0,
+            "pitch": 0
+          }
+        },
+        {
+          "timeS": 0.8416666666666667,
+          "action": "Release E; hold Z",
+          "input": {
+            "lift": 0,
+            "roll": -1,
+            "pitch": 0
+          },
+          "condition": "Measured vertical speed >= 3.76 m/s and CG-to-surface distance >= 1.65 m"
+        },
+        {
+          "timeS": 1.8583333333333334,
+          "action": "Release Z; enable G level recovery",
+          "input": {
+            "lift": 0,
+            "roll": 0,
+            "pitch": 0
+          },
+          "condition": "Measured integrated body roll >= 270 degrees",
+          "referenceHeightM": 8.239832613506733
+        }
+      ],
+      "metrics": {
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 249.55820028489444,
+        "maxHeightM": 8.23990292282273,
+        "minHeightM": 3.9962602084265235,
+        "minRigidClearanceAfterRollStartM": 5.468588918334028,
+        "peakRollRateDegS": 371.01721582440314,
+        "maximumIntegratedRollDeg": 360.1117879584512,
+        "peakThrustN": 54093.29124511218,
+        "peakNozzleForceFraction": 0.9985150235652993,
+        "minUpDot": -0.9999931421984356,
+        "rollStart": {
+          "timeS": 0.8416666666666667,
+          "heightM": 5.987355721775292,
+          "verticalMps": 3.7614457117306435,
+          "rigidEnvelopeClearanceM": 5.437355721775292
+        },
+        "rollRelease": {
+          "timeS": 1.8583333333333334,
+          "heightM": 8.025799871258483,
+          "verticalMps": -1.6830603377554012,
+          "integratedRollDeg": 272.90701096506496,
+          "rollRateDegS": 359.5699232644696
+        },
+        "firstStableCrossingS": 3.75,
+        "stableWindowStartS": 3.75,
+        "confirmedRecoveryS": 4.241666666666666,
+        "contactDuringRollOrRecovery": false,
+        "riseM": 4.239902922822729,
+        "finalIntegratedRollDeg": 360.11123483371335,
+        "gasThroughputKg": 209.0332936900969,
+        "remainingGasKg": 40.524906594797606,
+        "finalPressureBar": 27.8821045913288,
+        "final": {
+          "heightM": 8.18720628043554,
+          "verticalMps": 0.09674904521063185,
+          "rollDeg": 0.01045077831826785,
+          "pitchDeg": -0.013411215901023859,
+          "angularRateRadS": 0.0002910152209608743,
+          "mode": "hover"
+        }
+      }
+    },
+    {
+      "id": "manual-finite-900-h0.62",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "climbRateMps": 4,
+          "verticalAccelerationMps2": 10,
+          "rollRateDegS": 360,
+          "pitchRateDegS": 90,
+          "angularAccelerationDegS2": 720,
+          "supplyMode": "finite",
+          "tankLitres": 900
+        },
+        "releaseDeg": 270
+      },
+      "inputEvents": [
+        {
+          "timeS": 0,
+          "action": "G off; E held",
+          "input": {
+            "lift": 1,
+            "roll": 0,
+            "pitch": 0
+          }
+        },
+        {
+          "timeS": 0.7916666666666666,
+          "action": "Release E; hold Z",
+          "input": {
+            "lift": 0,
+            "roll": -1,
+            "pitch": 0
+          },
+          "condition": "Measured vertical speed >= 3.76 m/s and CG-to-surface distance >= 1.65 m"
+        },
+        {
+          "timeS": 1.8,
+          "action": "Release Z; enable G level recovery",
+          "input": {
+            "lift": 0,
+            "roll": 0,
+            "pitch": 0
+          },
+          "condition": "Measured integrated body roll >= 270 degrees",
+          "referenceHeightM": 4.855323236930186
+        }
+      ],
+      "metrics": {
+        "initialHeightM": 0.5923018217781622,
+        "initialRigidClearanceM": 0.04230182177816216,
+        "initialGasKg": 374.3373004273417,
+        "maxHeightM": 4.855323831790883,
+        "minHeightM": 0.5923018217781622,
+        "minRigidClearanceAfterRollStartM": 2.0824687278335285,
+        "peakRollRateDegS": 371.2844284140016,
+        "maximumIntegratedRollDeg": 360.11227011899825,
+        "peakThrustN": 56317.933975265485,
+        "peakNozzleForceFraction": 0.9984121287184793,
+        "minUpDot": -0.9999980081598174,
+        "rollStart": {
+          "timeS": 0.7916666666666666,
+          "heightM": 2.601214837180933,
+          "verticalMps": 3.763986073261826,
+          "rigidEnvelopeClearanceM": 2.0512148371162113
+        },
+        "rollRelease": {
+          "timeS": 1.8,
+          "heightM": 4.655854147461384,
+          "verticalMps": -1.6579878098861556,
+          "integratedRollDeg": 270.08672108221384,
+          "rollRateDegS": 359.0616528734514
+        },
+        "firstStableCrossingS": 3.725,
+        "stableWindowStartS": 3.725,
+        "confirmedRecoveryS": 4.216666666666667,
+        "contactDuringRollOrRecovery": false,
+        "riseM": 4.263022010012721,
+        "finalIntegratedRollDeg": 360.11196153730685,
+        "gasThroughputKg": 205.71056801458533,
+        "remainingGasKg": 168.626732412756,
+        "finalPressureBar": 115.44129225552446,
+        "final": {
+          "heightM": 4.803132964799665,
+          "verticalMps": 0.09574822813920177,
+          "rollDeg": 0.011161432577732803,
+          "pitchDeg": -0.012396254795754572,
+          "angularRateRadS": 0.00025164843277867183,
+          "mode": "hover"
+        }
+      }
+    },
+    {
+      "id": "manual-finite-900-h4",
+      "configuration": {
+        "height": 4,
+        "params": {
+          "climbRateMps": 4,
+          "verticalAccelerationMps2": 10,
+          "rollRateDegS": 360,
+          "pitchRateDegS": 90,
+          "angularAccelerationDegS2": 720,
+          "supplyMode": "finite",
+          "tankLitres": 900
+        },
+        "releaseDeg": 270
+      },
+      "inputEvents": [
+        {
+          "timeS": 0,
+          "action": "G off; E held",
+          "input": {
+            "lift": 1,
+            "roll": 0,
+            "pitch": 0
+          }
+        },
+        {
+          "timeS": 0.8416666666666667,
+          "action": "Release E; hold Z",
+          "input": {
+            "lift": 0,
+            "roll": -1,
+            "pitch": 0
+          },
+          "condition": "Measured vertical speed >= 3.76 m/s and CG-to-surface distance >= 1.65 m"
+        },
+        {
+          "timeS": 1.8499999999999999,
+          "action": "Release Z; enable G level recovery",
+          "input": {
+            "lift": 0,
+            "roll": 0,
+            "pitch": 0
+          },
+          "condition": "Measured integrated body roll >= 270 degrees",
+          "referenceHeightM": 8.239857511465496
+        }
+      ],
+      "metrics": {
+        "initialHeightM": 4,
+        "initialRigidClearanceM": 3.4499999999999997,
+        "initialGasKg": 374.3373004273417,
+        "maxHeightM": 8.239871484152868,
+        "minHeightM": 3.9962602319167777,
+        "minRigidClearanceAfterRollStartM": 5.4686201107329415,
+        "peakRollRateDegS": 371.2743959834805,
+        "maximumIntegratedRollDeg": 360.1122693192862,
+        "peakThrustN": 56296.72413201871,
+        "peakNozzleForceFraction": 0.9984055524991775,
+        "minUpDot": -0.9999978817212044,
+        "rollStart": {
+          "timeS": 0.8416666666666667,
+          "heightM": 5.987386045523625,
+          "verticalMps": 3.7615479780574477,
+          "rigidEnvelopeClearanceM": 5.437386045523625
+        },
+        "rollRelease": {
+          "timeS": 1.8499999999999999,
+          "heightM": 8.040088342830126,
+          "verticalMps": -1.6589180176116656,
+          "integratedRollDeg": 270.0789185810336,
+          "rollRateDegS": 359.0456490736315
+        },
+        "firstStableCrossingS": 3.7666666666666666,
+        "stableWindowStartS": 3.7666666666666666,
+        "confirmedRecoveryS": 4.258333333333333,
+        "contactDuringRollOrRecovery": false,
+        "riseM": 4.239871484152868,
+        "finalIntegratedRollDeg": 360.1120027812903,
+        "gasThroughputKg": 209.81426611496278,
+        "remainingGasKg": 164.52303431237902,
+        "finalPressureBar": 111.5645226594139,
+        "final": {
+          "heightM": 8.186973533179883,
+          "verticalMps": 0.09686803051194137,
+          "rollDeg": 0.011201566393943653,
+          "pitchDeg": -0.012552254672585708,
+          "angularRateRadS": 0.0002519861444433235,
+          "mode": "hover"
+        }
+      }
+    },
+    {
+      "id": "manual-late-release-bench-600-h0.62",
+      "configuration": {
+        "height": 0.62,
+        "params": {
+          "climbRateMps": 4,
+          "verticalAccelerationMps2": 10,
+          "rollRateDegS": 360,
+          "pitchRateDegS": 90,
+          "angularAccelerationDegS2": 720,
+          "supplyMode": "bench",
+          "tankLitres": 600
+        },
+        "releaseDeg": 355
+      },
+      "inputEvents": [
+        {
+          "timeS": 0,
+          "action": "G off; E held",
+          "input": {
+            "lift": 1,
+            "roll": 0,
+            "pitch": 0
+          }
+        },
+        {
+          "timeS": 0.7916666666666666,
+          "action": "Release E; hold Z",
+          "input": {
+            "lift": 0,
+            "roll": -1,
+            "pitch": 0
+          },
+          "condition": "Measured vertical speed >= 3.76 m/s and CG-to-surface distance >= 1.65 m"
+        },
+        {
+          "timeS": 2.033333333333333,
+          "action": "Release Z; enable G level recovery",
+          "input": {
+            "lift": 0,
+            "roll": 0,
+            "pitch": 0
+          },
+          "condition": "Measured integrated body roll >= 355 degrees",
+          "referenceHeightM": 4.850412859193532
+        }
+      ],
+      "metrics": {
+        "initialHeightM": 0.5970093908740407,
+        "initialRigidClearanceM": 0.04700939087404071,
+        "initialGasKg": 249.55820028489444,
+        "maxHeightM": 4.856257106362384,
+        "minHeightM": 0.5970093908740407,
+        "minRigidClearanceAfterRollStartM": 2.08035863319654,
+        "peakRollRateDegS": 376.82765239962555,
+        "maximumIntegratedRollDeg": 410.7181968721821,
+        "peakThrustN": 49714.71757145425,
+        "peakNozzleForceFraction": 0.9999837704950456,
+        "minUpDot": -0.9999954910519522,
+        "rollStart": {
+          "timeS": 0.7916666666666666,
+          "heightM": 2.5991354536368223,
+          "verticalMps": 3.7602670865195993,
+          "rigidEnvelopeClearanceM": 2.0491354535491424
+        },
+        "rollRelease": {
+          "timeS": 2.033333333333333,
+          "heightM": 4.2225436079031695,
+          "verticalMps": -1.429787926293437,
+          "integratedRollDeg": 356.7047183754694,
+          "rollRateDegS": 376.4027808697304
+        },
+        "firstStableCrossingS": 3.725,
+        "stableWindowStartS": 3.725,
+        "confirmedRecoveryS": 4.216666666666667,
+        "contactDuringRollOrRecovery": false,
+        "riseM": 4.2592477154883435,
+        "finalIntegratedRollDeg": 360.13832709421007,
+        "gasThroughputKg": 209.30028841933705,
+        "remainingGasKg": 249.55820028489444,
+        "finalPressureBar": 350,
+        "final": {
+          "heightM": 4.856257106362384,
+          "verticalMps": 0.03580663152947508,
+          "rollDeg": 0.03913287484565705,
+          "pitchDeg": -0.03181673158242617,
+          "angularRateRadS": 0.006971129254845346,
+          "mode": "hover"
+        }
+      }
+    }
+  ],
+  "bounds": [
+    {
+      "id": "low-pressure",
+      "result": "refused",
+      "reason": "滚转预检：当前压力 / 供电下的起跳与制动推力不足"
+    },
+    {
+      "id": "low-gas-budget",
+      "result": "refused",
+      "reason": "滚转预检：剩余冲量不足：可用 27.7 kN·s，快翻 / 回稳预算 95.1 kN·s"
+    },
+    {
+      "id": "failed-front-right",
+      "result": "refused",
+      "reason": "滚转预检：快翻的双向滚转 / 制动力矩余量不足，请检查压力、喷口或惯量"
+    },
+    {
+      "id": "ceiling",
+      "result": "refused",
+      "reason": "滚转预检：快翻旋转 / 制动包络上方净空不足"
+    },
+    {
+      "id": "tilted-start",
+      "result": "refused",
+      "reason": "滚转预检：快翻要求初始倾角不超过 10°，请先回正车身（G）"
+    },
+    {
+      "id": "spinning-start",
+      "result": "refused",
+      "reason": "滚转预检：初始角速度过大，请先松键制动或用 G 回正"
+    },
+    {
+      "id": "low-fast-descent",
+      "result": "refused",
+      "reason": "滚转预检：当前下降速度下没有足够起跳制动净空"
+    },
+    {
+      "id": "G-during-roll",
+      "result": "recovered",
+      "heightM": 42.523670896056345,
+      "rollDeg": -0.000600900597257918,
+      "headingDeg": 25.783100764260837
+    },
+    {
+      "id": "mid-rotation-main-nozzle-failure",
+      "fault": {
+        "id": "lift-FL",
+        "scale": 0,
+        "timeS": 0.6666666666666666
+      },
+      "result": "failed",
+      "reason": "自动翻转中止：旋转窗口结束：实际累计 334.4°，未满足完整一周 / 回正判据",
+      "atFailure": {
+        "timeS": 2.399999999999994,
+        "heightM": 36.21215875257795,
+        "phase": "recover",
+        "integratedRollDeg": 334.4313453424951
+      },
+      "recoveryPreserved": true,
+      "scope": "Confirms failure detection and continuing physical dynamics, not guaranteed recovery under the persistent failure."
+    },
+    {
+      "id": "legacy-profile",
+      "sourceModel": "3.12.0",
+      "executionModel": "3.15.0",
+      "durationS": 2.5,
+      "launchAccelerationMps2": 5,
+      "addedStateDefaults": {
+        "_researchHeightControl": {
+          "enabled": false,
+          "active": false,
+          "requestedAccelerationMps2": null,
+          "appliedAccelerationMps2": null,
+          "commandStep": null,
+          "expiresAtStep": null,
+          "controllerHash": null,
+          "reason": "control-mode-changed",
+          "lastFault": null
+        }
+      },
+      "scope": "Explicit numerical fixture mapping adds only the declared inactive research-height state and modelVersion; the original 3.12 maneuver is preserved. This is not permission for public historical-record migration or a claim of exact cross-model reproduction. Historical source fixture and reports are not rewritten."
+    }
+  ]
+}

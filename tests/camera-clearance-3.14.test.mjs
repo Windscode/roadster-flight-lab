@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -79,4 +80,4 @@ check('World CG altitude, CG down-ray and estimated physical-envelope distances 
 });
 
 const sources=['dist/chase-camera.js','dist/vehicle-clearance.js','dist/physics.js','dist/main.js','dist/vendor/addons/controls/OrbitControls.js'];
-writeFileSync(new URL('../qa/camera-clearance-3.14.json',import.meta.url),JSON.stringify({schema:'roadster-camera-clearance-evidence',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',checks,scope:'Read-only numerical geometry and camera kinematics. Real chase/orbit images, keyboard/focus operation and city-route camera acceptance remain target-browser gates.',sourceHashes:Object.fromEntries(sources.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')])),evidence},null,2)+'\n');
+writeFileSync(new URL(`../qa/camera-clearance-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({schema:'roadster-camera-clearance-evidence',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',checks,scope:'Read-only numerical geometry and camera kinematics. Real chase/orbit images, keyboard/focus operation and city-route camera acceptance remain target-browser gates.',sourceHashes:Object.fromEntries(sources.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')])),evidence},null,2)+'\n');

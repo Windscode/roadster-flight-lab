@@ -1,0 +1,5956 @@
+{
+  "schema": "roadster-camera-clearance-evidence",
+  "version": 1,
+  "modelVersion": "3.15.0",
+  "modelBuildId": "0ca13961ae8e9db6061a0e6ca63f9e56ada83ead5848b1724b48a05ee778978b",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "Shared collision boxes retract both camera uses before the near plane intersects a wall",
+      "status": "passed"
+    },
+    {
+      "name": "Thin-post release uses time hysteresis without skipping the post or repeatedly snapping out",
+      "status": "passed"
+    },
+    {
+      "name": "Narrow corridor, overhead deck, reverse approach and turning fixtures preserve physical inputs",
+      "status": "passed"
+    },
+    {
+      "name": "Actual vendor OrbitControls rotate an independent desired camera without inventing zoom at an obstruction",
+      "status": "passed"
+    },
+    {
+      "name": "World CG altitude, CG down-ray and estimated physical-envelope distances remain distinct on ground/roof/bridge/tilt",
+      "status": "passed"
+    }
+  ],
+  "scope": "Read-only numerical geometry and camera kinematics. Real chase/orbit images, keyboard/focus operation and city-route camera acceptance remain target-browser gates.",
+  "sourceHashes": {
+    "dist/chase-camera.js": "083c515420ea4342487e8b6bd74a6443e2ba856c91506f8951024989c79ef76c",
+    "dist/vehicle-clearance.js": "2cd62f637d74a8186b8712afb4942450e61a8d9f689b90f1fea94ba2073a6d87",
+    "dist/physics.js": "e4ade915e0d01dc7a697034cf3307b07cbfe2d408ec44f37861a2f7cfa8cabd1",
+    "dist/main.js": "d953817d192f4dbf2657ef3ae0dfe0cfaf393e24d0fbb28046871512664d2039",
+    "dist/vendor/addons/controls/OrbitControls.js": "d3b6283dcec39e541db397bdd868fec380e118f3053ec26e9873252a14b7b5d6"
+  },
+  "evidence": {
+    "wall": {
+      "position": {
+        "x": 0,
+        "y": 1,
+        "z": -4.5914050156171005
+      },
+      "distanceM": 4.5914050156171005,
+      "desiredDistanceM": 8,
+      "nearPlaneRadiusM": 0.183594984382899,
+      "obstructed": true,
+      "hit": {
+        "objectId": "wall",
+        "kind": "fixture",
+        "distanceM": 4.616405015617101,
+        "anchorInsideSolid": false
+      },
+      "state": {
+        "distanceM": 4.5914050156171005,
+        "holdRemainingS": 0.18
+      },
+      "method": "shared collision OBBs inflated by near-plane corner radius",
+      "centreLineMissNearPlaneHit": {
+        "position": {
+          "x": 0,
+          "y": 1,
+          "z": -3.6806483151636775
+        },
+        "distanceM": 3.6806483151636775,
+        "desiredDistanceM": 8,
+        "nearPlaneRadiusM": 0.23435168483632268,
+        "obstructed": true,
+        "hit": {
+          "objectId": "narrow-post",
+          "kind": "fixture",
+          "distanceM": 3.7056483151636774,
+          "anchorInsideSolid": false
+        },
+        "state": {
+          "distanceM": 3.6806483151636775,
+          "holdRemainingS": 0.18
+        },
+        "method": "shared collision OBBs inflated by near-plane corner radius"
+      },
+      "offAxisNearPlaneRadiusM": 0.23429476947592737
+    },
+    "thinPost": {
+      "rows": [
+        {
+          "frame": 0,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 1,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 2,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 3,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 4,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 5,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 6,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 7,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 8,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 9,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 10,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 11,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 12,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 13,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 14,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 15,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 16,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 17,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 18,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 19,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 20,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 21,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 22,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 23,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 24,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 25,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 26,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 27,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 28,
+          "postPresent": true,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 29,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 30,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 31,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 32,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 33,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 34,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 35,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 36,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 37,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 38,
+          "postPresent": false,
+          "distanceM": 2.731405015617101
+        },
+        {
+          "frame": 39,
+          "postPresent": false,
+          "distanceM": 3.0299475802059335
+        },
+        {
+          "frame": 40,
+          "postPresent": false,
+          "distanceM": 3.311573364678726
+        },
+        {
+          "frame": 41,
+          "postPresent": false,
+          "distanceM": 3.5772409507703427
+        },
+        {
+          "frame": 42,
+          "postPresent": false,
+          "distanceM": 3.8278546026128826
+        },
+        {
+          "frame": 43,
+          "postPresent": false,
+          "distanceM": 4.064267344618204
+        },
+        {
+          "frame": 44,
+          "postPresent": false,
+          "distanceM": 4.28728386495362
+        },
+        {
+          "frame": 45,
+          "postPresent": false,
+          "distanceM": 4.4976632544934505
+        },
+        {
+          "frame": 46,
+          "postPresent": false,
+          "distanceM": 4.696121590569117
+        },
+        {
+          "frame": 47,
+          "postPresent": false,
+          "distanceM": 4.8833343743122
+        },
+        {
+          "frame": 48,
+          "postPresent": false,
+          "distanceM": 5.05993882988655
+        },
+        {
+          "frame": 49,
+          "postPresent": false,
+          "distanceM": 5.226536073435443
+        },
+        {
+          "frame": 50,
+          "postPresent": false,
+          "distanceM": 5.383693159126322
+        },
+        {
+          "frame": 51,
+          "postPresent": false,
+          "distanceM": 5.531945009257334
+        },
+        {
+          "frame": 52,
+          "postPresent": false,
+          "distanceM": 5.6717962349952495
+        },
+        {
+          "frame": 53,
+          "postPresent": false,
+          "distanceM": 5.8037228539420855
+        },
+        {
+          "frame": 54,
+          "postPresent": false,
+          "distanceM": 5.928173910376588
+        },
+        {
+          "frame": 55,
+          "postPresent": false,
+          "distanceM": 6.04557300368546
+        },
+        {
+          "frame": 56,
+          "postPresent": false,
+          "distanceM": 6.156319730186725
+        },
+        {
+          "frame": 57,
+          "postPresent": false,
+          "distanceM": 6.260791043252813
+        },
+        {
+          "frame": 58,
+          "postPresent": false,
+          "distanceM": 6.3593425363628855
+        },
+        {
+          "frame": 59,
+          "postPresent": false,
+          "distanceM": 6.45230965345158
+        },
+        {
+          "frame": 60,
+          "postPresent": false,
+          "distanceM": 6.540008830673885
+        },
+        {
+          "frame": 61,
+          "postPresent": false,
+          "distanceM": 6.622738573472423
+        },
+        {
+          "frame": 62,
+          "postPresent": false,
+          "distanceM": 6.700780472613201
+        },
+        {
+          "frame": 63,
+          "postPresent": false,
+          "distanceM": 6.774400162648148
+        },
+        {
+          "frame": 64,
+          "postPresent": false,
+          "distanceM": 6.843848226066812
+        },
+        {
+          "frame": 65,
+          "postPresent": false,
+          "distanceM": 6.9093610462147
+        },
+        {
+          "frame": 66,
+          "postPresent": false,
+          "distanceM": 6.9711616118813895
+        },
+        {
+          "frame": 67,
+          "postPresent": false,
+          "distanceM": 7.029460276297012
+        },
+        {
+          "frame": 68,
+          "postPresent": false,
+          "distanceM": 7.084455473120547
+        },
+        {
+          "frame": 69,
+          "postPresent": false,
+          "distanceM": 7.136334391856958
+        },
+        {
+          "frame": 70,
+          "postPresent": false,
+          "distanceM": 7.185273615002121
+        },
+        {
+          "frame": 71,
+          "postPresent": false,
+          "distanceM": 7.2314397190842215
+        },
+        {
+          "frame": 72,
+          "postPresent": false,
+          "distanceM": 7.274989841647416
+        },
+        {
+          "frame": 73,
+          "postPresent": false,
+          "distanceM": 7.316072216107614
+        },
+        {
+          "frame": 74,
+          "postPresent": false,
+          "distanceM": 7.354826676300895
+        },
+        {
+          "frame": 75,
+          "postPresent": false,
+          "distanceM": 7.391385132441929
+        },
+        {
+          "frame": 76,
+          "postPresent": false,
+          "distanceM": 7.425872020112411
+        },
+        {
+          "frame": 77,
+          "postPresent": false,
+          "distanceM": 7.458404723807782
+        },
+        {
+          "frame": 78,
+          "postPresent": false,
+          "distanceM": 7.489093976483856
+        },
+        {
+          "frame": 79,
+          "postPresent": false,
+          "distanceM": 7.5180442364633215
+        },
+        {
+          "frame": 80,
+          "postPresent": false,
+          "distanceM": 7.5453540429850054
+        },
+        {
+          "frame": 81,
+          "postPresent": false,
+          "distanceM": 7.571116351606095
+        },
+        {
+          "frame": 82,
+          "postPresent": false,
+          "distanceM": 7.595418850598952
+        },
+        {
+          "frame": 83,
+          "postPresent": false,
+          "distanceM": 7.618344259419428
+        },
+        {
+          "frame": 84,
+          "postPresent": false,
+          "distanceM": 7.639970610262625
+        },
+        {
+          "frame": 85,
+          "postPresent": false,
+          "distanceM": 7.660371513664415
+        },
+        {
+          "frame": 86,
+          "postPresent": false,
+          "distanceM": 7.679616409052767
+        },
+        {
+          "frame": 87,
+          "postPresent": false,
+          "distanceM": 7.697770801101707
+        },
+        {
+          "frame": 88,
+          "postPresent": false,
+          "distanceM": 7.714896482692374
+        },
+        {
+          "frame": 89,
+          "postPresent": false,
+          "distanceM": 7.731051745240095
+        },
+        {
+          "frame": 90,
+          "postPresent": false,
+          "distanceM": 7.746291577103375
+        },
+        {
+          "frame": 91,
+          "postPresent": false,
+          "distanceM": 7.760667850750118
+        },
+        {
+          "frame": 92,
+          "postPresent": false,
+          "distanceM": 7.774229499318173
+        },
+        {
+          "frame": 93,
+          "postPresent": false,
+          "distanceM": 7.787022683171145
+        },
+        {
+          "frame": 94,
+          "postPresent": false,
+          "distanceM": 7.799090947016403
+        },
+        {
+          "frame": 95,
+          "postPresent": false,
+          "distanceM": 7.810475368120061
+        },
+        {
+          "frame": 96,
+          "postPresent": false,
+          "distanceM": 7.8212146961234295
+        },
+        {
+          "frame": 97,
+          "postPresent": false,
+          "distanceM": 7.8313454849368265
+        },
+        {
+          "frame": 98,
+          "postPresent": false,
+          "distanceM": 7.840902217159686
+        },
+        {
+          "frame": 99,
+          "postPresent": false,
+          "distanceM": 7.849917421450457
+        },
+        {
+          "frame": 100,
+          "postPresent": false,
+          "distanceM": 7.858421783245793
+        },
+        {
+          "frame": 101,
+          "postPresent": false,
+          "distanceM": 7.866444249205884
+        },
+        {
+          "frame": 102,
+          "postPresent": false,
+          "distanceM": 7.874012125741441
+        },
+        {
+          "frame": 103,
+          "postPresent": false,
+          "distanceM": 7.881151171957697
+        },
+        {
+          "frame": 104,
+          "postPresent": false,
+          "distanceM": 7.887885687331777
+        },
+        {
+          "frame": 105,
+          "postPresent": false,
+          "distanceM": 7.894238594421864
+        },
+        {
+          "frame": 106,
+          "postPresent": false,
+          "distanceM": 7.900231516889696
+        },
+        {
+          "frame": 107,
+          "postPresent": false,
+          "distanceM": 7.905884853101946
+        },
+        {
+          "frame": 108,
+          "postPresent": false,
+          "distanceM": 7.911217845561015
+        },
+        {
+          "frame": 109,
+          "postPresent": false,
+          "distanceM": 7.916248646401562
+        },
+        {
+          "frame": 110,
+          "postPresent": false,
+          "distanceM": 7.920994379175704
+        },
+        {
+          "frame": 111,
+          "postPresent": false,
+          "distanceM": 7.925471197137178
+        },
+        {
+          "frame": 112,
+          "postPresent": false,
+          "distanceM": 7.929694338222867
+        },
+        {
+          "frame": 113,
+          "postPresent": false,
+          "distanceM": 7.933678176918815
+        },
+        {
+          "frame": 114,
+          "postPresent": false,
+          "distanceM": 7.937436273187281
+        },
+        {
+          "frame": 115,
+          "postPresent": false,
+          "distanceM": 7.940981418621361
+        },
+        {
+          "frame": 116,
+          "postPresent": false,
+          "distanceM": 7.944325679984287
+        },
+        {
+          "frame": 117,
+          "postPresent": false,
+          "distanceM": 7.947480440281576
+        },
+        {
+          "frame": 118,
+          "postPresent": false,
+          "distanceM": 7.950456437505863
+        },
+        {
+          "frame": 119,
+          "postPresent": false,
+          "distanceM": 7.9532638011862575
+        },
+        {
+          "frame": 120,
+          "postPresent": false,
+          "distanceM": 7.955912086866661
+        },
+        {
+          "frame": 121,
+          "postPresent": false,
+          "distanceM": 7.958410308630378
+        },
+        {
+          "frame": 122,
+          "postPresent": false,
+          "distanceM": 7.960766969781738
+        },
+        {
+          "frame": 123,
+          "postPresent": false,
+          "distanceM": 7.962990091789155
+        },
+        {
+          "frame": 124,
+          "postPresent": false,
+          "distanceM": 7.965087241588146
+        },
+        {
+          "frame": 125,
+          "postPresent": false,
+          "distanceM": 7.9670655573372295
+        },
+        {
+          "frame": 126,
+          "postPresent": false,
+          "distanceM": 7.968931772714383
+        },
+        {
+          "frame": 127,
+          "postPresent": false,
+          "distanceM": 7.97069223983675
+        },
+        {
+          "frame": 128,
+          "postPresent": false,
+          "distanceM": 7.972352950881616
+        },
+        {
+          "frame": 129,
+          "postPresent": false,
+          "distanceM": 7.973919558482235
+        },
+        {
+          "frame": 130,
+          "postPresent": false,
+          "distanceM": 7.97539739496794
+        },
+        {
+          "frame": 131,
+          "postPresent": false,
+          "distanceM": 7.976791490514022
+        },
+        {
+          "frame": 132,
+          "postPresent": false,
+          "distanceM": 7.978106590263152
+        },
+        {
+          "frame": 133,
+          "postPresent": false,
+          "distanceM": 7.9793471704766255
+        },
+        {
+          "frame": 134,
+          "postPresent": false,
+          "distanceM": 7.980517453770407
+        },
+        {
+          "frame": 135,
+          "postPresent": false,
+          "distanceM": 7.981621423487826
+        },
+        {
+          "frame": 136,
+          "postPresent": false,
+          "distanceM": 7.982662837257854
+        },
+        {
+          "frame": 137,
+          "postPresent": false,
+          "distanceM": 7.983645239785107
+        },
+        {
+          "frame": 138,
+          "postPresent": false,
+          "distanceM": 7.984571974915111
+        },
+        {
+          "frame": 139,
+          "postPresent": false,
+          "distanceM": 7.985446197015887
+        },
+        {
+          "frame": 140,
+          "postPresent": false,
+          "distanceM": 7.986270881714612
+        },
+        {
+          "frame": 141,
+          "postPresent": false,
+          "distanceM": 7.9870488360258864
+        },
+        {
+          "frame": 142,
+          "postPresent": false,
+          "distanceM": 7.987782707906094
+        },
+        {
+          "frame": 143,
+          "postPresent": false,
+          "distanceM": 7.988474995266359
+        },
+        {
+          "frame": 144,
+          "postPresent": false,
+          "distanceM": 7.989128054474797
+        },
+        {
+          "frame": 145,
+          "postPresent": false,
+          "distanceM": 7.989744108376983
+        },
+        {
+          "frame": 146,
+          "postPresent": false,
+          "distanceM": 7.990325253861948
+        },
+        {
+          "frame": 147,
+          "postPresent": false,
+          "distanceM": 7.990873468999449
+        },
+        {
+          "frame": 148,
+          "postPresent": false,
+          "distanceM": 7.991390619772811
+        },
+        {
+          "frame": 149,
+          "postPresent": false,
+          "distanceM": 7.9918784664302525
+        },
+        {
+          "frame": 150,
+          "postPresent": false,
+          "distanceM": 7.99233866947632
+        },
+        {
+          "frame": 151,
+          "postPresent": false,
+          "distanceM": 7.992772795323814
+        },
+        {
+          "frame": 152,
+          "postPresent": false,
+          "distanceM": 7.993182321625462
+        },
+        {
+          "frame": 153,
+          "postPresent": false,
+          "distanceM": 7.993568642303463
+        },
+        {
+          "frame": 154,
+          "postPresent": false,
+          "distanceM": 7.993933072294039
+        },
+        {
+          "frame": 155,
+          "postPresent": false,
+          "distanceM": 7.994276852023147
+        },
+        {
+          "frame": 156,
+          "postPresent": false,
+          "distanceM": 7.994601151628563
+        },
+        {
+          "frame": 157,
+          "postPresent": false,
+          "distanceM": 7.9949070749427325
+        },
+        {
+          "frame": 158,
+          "postPresent": false,
+          "distanceM": 7.99519566324993
+        },
+        {
+          "frame": 159,
+          "postPresent": false,
+          "distanceM": 7.99546789883053
+        },
+        {
+          "frame": 160,
+          "postPresent": false,
+          "distanceM": 7.995724708304426
+        },
+        {
+          "frame": 161,
+          "postPresent": false,
+          "distanceM": 7.995966965785015
+        },
+        {
+          "frame": 162,
+          "postPresent": false,
+          "distanceM": 7.996195495854452
+        },
+        {
+          "frame": 163,
+          "postPresent": false,
+          "distanceM": 7.996411076370314
+        },
+        {
+          "frame": 164,
+          "postPresent": false,
+          "distanceM": 7.996614441113229
+        },
+        {
+          "frame": 165,
+          "postPresent": false,
+          "distanceM": 7.996806282284474
+        },
+        {
+          "frame": 166,
+          "postPresent": false,
+          "distanceM": 7.996987252862056
+        },
+        {
+          "frame": 167,
+          "postPresent": false,
+          "distanceM": 7.997157968823272
+        },
+        {
+          "frame": 168,
+          "postPresent": false,
+          "distanceM": 7.997319011241347
+        },
+        {
+          "frame": 169,
+          "postPresent": false,
+          "distanceM": 7.99747092826325
+        },
+        {
+          "frame": 170,
+          "postPresent": false,
+          "distanceM": 7.99761423697545
+        },
+        {
+          "frame": 171,
+          "postPresent": false,
+          "distanceM": 7.997749425163945
+        },
+        {
+          "frame": 172,
+          "postPresent": false,
+          "distanceM": 7.997876952974556
+        },
+        {
+          "frame": 173,
+          "postPresent": false,
+          "distanceM": 7.99799725447915
+        },
+        {
+          "frame": 174,
+          "postPresent": false,
+          "distanceM": 7.998110739153107
+        },
+        {
+          "frame": 175,
+          "postPresent": false,
+          "distanceM": 7.998217793269068
+        },
+        {
+          "frame": 176,
+          "postPresent": false,
+          "distanceM": 7.998318781211708
+        },
+        {
+          "frame": 177,
+          "postPresent": false,
+          "distanceM": 7.998414046718011
+        },
+        {
+          "frame": 178,
+          "postPresent": false,
+          "distanceM": 7.998503914047257
+        },
+        {
+          "frame": 179,
+          "postPresent": false,
+          "distanceM": 7.99858868908472
+        }
+      ],
+      "releaseHoldS": 0.18,
+      "releaseRatePerS": 3.5,
+      "implementationCounterexample": {
+        "initialHoldOnlyOnRetraction": true,
+        "alternatingPost30FramesMaximumJumpM": 0.29854256458883244,
+        "fix": "Refresh the release hold while the same nearest blocker still constrains distance; original <0.02 m frame-jump assertion retained"
+      }
+    },
+    "paths": {
+      "paddingExit": {
+        "position": {
+          "x": -5,
+          "y": 2,
+          "z": 0
+        },
+        "distanceM": 5.099019513592785,
+        "desiredDistanceM": 5.099019513592785,
+        "nearPlaneRadiusM": 0.183594984382899,
+        "obstructed": false,
+        "hit": null,
+        "state": {
+          "distanceM": 5.099019513592785,
+          "holdRemainingS": 0
+        },
+        "method": "shared collision OBBs inflated by near-plane corner radius"
+      },
+      "paddingCrossing": {
+        "position": {
+          "x": 0,
+          "y": 1,
+          "z": 0
+        },
+        "distanceM": 0,
+        "desiredDistanceM": 5.099019513592785,
+        "nearPlaneRadiusM": 0.183594984382899,
+        "obstructed": true,
+        "hit": {
+          "objectId": "near-side-wall",
+          "kind": "fixture",
+          "distanceM": 0,
+          "anchorInsideSolid": false
+        },
+        "state": {
+          "distanceM": 0,
+          "holdRemainingS": 0.18
+        },
+        "method": "shared collision OBBs inflated by near-plane corner radius"
+      },
+      "paddingCounterexample": {
+        "beforeCrossingWasIncorrectlyAllowed": true,
+        "afterSolidCrossingIsBlocked": true
+      },
+      "scope": "Numerical camera target/desired positions only; no human city driving or rendered-wall acceptance",
+      "rows": [
+        {
+          "step": 0,
+          "target": {
+            "x": 0,
+            "y": 1,
+            "z": 1
+          },
+          "camera": {
+            "x": 0,
+            "y": 2.8,
+            "z": -5.7
+          },
+          "obstacle": null,
+          "distanceM": 6.937578828380979
+        },
+        {
+          "step": 1,
+          "target": {
+            "x": 0.008377427292996635,
+            "y": 1.0115189625278704,
+            "z": 0.9433333333333334
+          },
+          "camera": {
+            "x": 0.0038528666508744263,
+            "y": 2.80074289262273,
+            "z": -5.756642977638027
+          },
+          "obstacle": null,
+          "distanceM": 6.93476930483275
+        },
+        {
+          "step": 2,
+          "target": {
+            "x": 0.016753935906685568,
+            "y": 1.0230366618716926,
+            "z": 0.8866666666666667
+          },
+          "camera": {
+            "x": 0.0034745368570498307,
+            "y": 2.802180685016605,
+            "z": -5.813216460120349
+          },
+          "obstacle": null,
+          "distanceM": 6.932096631621398
+        },
+        {
+          "step": 3,
+          "target": {
+            "x": 0.025128607262502635,
+            "y": 1.0345518349859413,
+            "z": 0.83
+          },
+          "camera": {
+            "x": -0.0008581270522063436,
+            "y": 2.8042683980761214,
+            "z": -5.86967772785921
+          },
+          "obstacle": null,
+          "distanceM": 6.929520451027531
+        },
+        {
+          "step": 4,
+          "target": {
+            "x": 0.033500522983359704,
+            "y": 1.0460632191021197,
+            "z": 0.7733333333333333
+          },
+          "camera": {
+            "x": -0.008883706440306373,
+            "y": 2.806963872094152,
+            "z": -5.925987036669135
+          },
+          "obstacle": null,
+          "distanceM": 6.927009524502015
+        },
+        {
+          "step": 5,
+          "target": {
+            "x": 0.041868764994355066,
+            "y": 1.0575695518672381,
+            "z": 0.7166666666666667
+          },
+          "camera": {
+            "x": -0.020355239495122066,
+            "y": 2.810227584957243,
+            "z": -5.982107513319272
+          },
+          "obstacle": null,
+          "distanceM": 6.924540239043739
+        },
+        {
+          "step": 6,
+          "target": {
+            "x": 0.0502324156234507,
+            "y": 1.0690695714822447,
+            "z": 0.6599999999999999
+          },
+          "camera": {
+            "x": -0.03503930103971182,
+            "y": 2.8140224820749693,
+            "z": -6.038005057154467
+          },
+          "obstacle": null,
+          "distanceM": 6.922095323781343
+        },
+        {
+          "step": 7,
+          "target": {
+            "x": 0.058590557702105354,
+            "y": 1.0805620168403949,
+            "z": 0.6033333333333333
+          },
+          "camera": {
+            "x": -0.052715144682554456,
+            "y": 2.818313817286585,
+            "z": -6.0936482472066675
+          },
+          "obstacle": null,
+          "distanceM": 6.919662749688699
+        },
+        {
+          "step": 8,
+          "target": {
+            "x": 0.0669422746658524,
+            "y": 1.092045627665547,
+            "z": 0.5466666666666666
+          },
+          "camera": {
+            "x": -0.07317390323826356,
+            "y": 2.8230690040370012,
+            "z": -6.149008254258101
+          },
+          "obstacle": null,
+          "distanceM": 6.9172347885232135
+        },
+        {
+          "step": 9,
+          "target": {
+            "x": 0.07528665065481145,
+            "y": 1.1035191446503658,
+            "z": 0.49
+          },
+          "camera": {
+            "x": -0.09621784360294981,
+            "y": 2.8282574761597874,
+            "z": -6.204058757355753
+          },
+          "obstacle": null,
+          "distanceM": 6.914807209941558
+        },
+        {
+          "step": 10,
+          "target": {
+            "x": 0.08362277061412277,
+            "y": 1.1149813095944188,
+            "z": 0.43333333333333335
+          },
+          "camera": {
+            "x": -0.1216596725055212,
+            "y": 2.8338505576476027,
+            "z": -6.258775864312689
+          },
+          "obstacle": null,
+          "distanceM": 6.9123785983245005
+        },
+        {
+          "step": 11,
+          "target": {
+            "x": 0.09194972039429328,
+            "y": 1.126430865542153,
+            "z": 0.3766666666666667
+          },
+          "camera": {
+            "x": -0.14932188977834138,
+            "y": 2.8398213408304236,
+            "z": -6.313138035766053
+          },
+          "obstacle": null,
+          "distanceM": 6.909949773144143
+        },
+        {
+          "step": 12,
+          "target": {
+            "x": 0.1002665868514434,
+            "y": 1.1378665569207347,
+            "z": 0.31999999999999995
+          },
+          "camera": {
+            "x": -0.17903618599880694,
+            "y": 2.8461445724193144,
+            "z": -6.367126012394164
+          },
+          "obstacle": null,
+          "distanceM": 6.907523298751607
+        },
+        {
+          "step": 13,
+          "target": {
+            "x": 0.10857245794744351,
+            "y": 1.149287129677735,
+            "z": 0.2633333333333333
+          },
+          "camera": {
+            "x": -0.2106428815484936,
+            "y": 2.8527965469084586,
+            "z": -6.420722744926081
+          },
+          "obstacle": null,
+          "distanceM": 6.905103071271268
+        },
+        {
+          "step": 14,
+          "target": {
+            "x": 0.1168664228499293,
+            "y": 1.1606913314186529,
+            "z": 0.20666666666666667
+          },
+          "camera": {
+            "x": -0.24399040431943575,
+            "y": 2.859755006860886,
+            "z": -6.4739133266064375
+          },
+          "obstacle": null,
+          "distanceM": 6.902693971881042
+        },
+        {
+          "step": 15,
+          "target": {
+            "x": 0.1251475720321847,
+            "y": 1.1720779115442541,
+            "z": 0.1499999999999999
+          },
+          "camera": {
+            "x": -0.2789348034686606,
+            "y": 2.866999049633922,
+            "z": -6.526684927806299
+          },
+          "obstacle": null,
+          "distanceM": 6.900301577158014
+        },
+        {
+          "step": 16,
+          "target": {
+            "x": 0.13341499737288184,
+            "y": 1.1834456213877127,
+            "z": 0.09333333333333327
+          },
+          "camera": {
+            "x": -0.3153392967830547,
+            "y": 2.8745090401290563,
+            "z": -6.5790267324973595
+          },
+          "obstacle": null,
+          "distanceM": 6.897931918395594
+        },
+        {
+          "step": 17,
+          "target": {
+            "x": 0.14166779225566664,
+            "y": 1.1947932143515416,
+            "z": 0.036666666666666736
+          },
+          "camera": {
+            "x": -0.35307384936771746,
+            "y": 2.882266529177647,
+            "z": -6.630929876332028
+          },
+          "obstacle": null,
+          "distanceM": 6.895591282871583
+        },
+        {
+          "step": 18,
+          "target": {
+            "x": 0.14990505166857968,
+            "y": 1.2061194460442972,
+            "z": -0.020000000000000018
+          },
+          "camera": {
+            "x": -0.39201478151279867,
+            "y": 2.8902541771990053,
+            "z": -6.682387386095792
+          },
+          "obstacle": null,
+          "distanceM": 6.893286050983609
+        },
+        {
+          "step": 19,
+          "target": {
+            "x": 0.15812587230330094,
+            "y": 1.217423074417039,
+            "z": -0.07666666666666666
+          },
+          "camera": {
+            "x": -0.43204440372705794,
+            "y": 2.8984556827908006,
+            "z": -6.733394120321048
+          },
+          "obstacle": null,
+          "distanceM": 6.891022563985812
+        },
+        {
+          "step": 20,
+          "target": {
+            "x": 0.16632935265420745,
+            "y": 1.2287028598995353,
+            "z": -0.1333333333333333
+          },
+          "camera": {
+            "x": -0.47305067705158865,
+            "y": 2.9068557159336637,
+            "z": -6.783946710872966
+          },
+          "obstacle": null,
+          "distanceM": 6.888807017772469
+        },
+        {
+          "step": 21,
+          "target": {
+            "x": 0.17451459311723405,
+            "y": 1.239957565536197,
+            "z": -0.19000000000000017
+          },
+          "camera": {
+            "x": -0.5149268968848479,
+            "y": 2.9154398555123993,
+            "z": -6.834043505338351
+          },
+          "obstacle": null,
+          "distanceM": 6.886645378773973
+        },
+        {
+          "step": 22,
+          "target": {
+            "x": 0.18268069608852458,
+            "y": 1.2511859571217214,
+            "z": -0.2466666666666666
+          },
+          "camera": {
+            "x": -0.5575713986608318,
+            "y": 2.924194530875389,
+            "z": -6.88368451006761
+          },
+          "obstacle": null,
+          "distanceM": 6.884543318569257
+        },
+        {
+          "step": 23,
+          "target": {
+            "x": 0.1908267660628647,
+            "y": 1.262386803336439,
+            "z": -0.30333333333333323
+          },
+          "camera": {
+            "x": -0.6008872838263852,
+            "y": 2.9331069671717342,
+            "z": -6.9328713337381185
+          },
+          "obstacle": null,
+          "distanceM": 6.8825061642870295
+        },
+        {
+          "step": 24,
+          "target": {
+            "x": 0.19895190973188384,
+            "y": 1.2735588758813403,
+            "z": -0.3600000000000001
+          },
+          "camera": {
+            "x": -0.644782164661677,
+            "y": 2.942165134222481,
+            "z": -6.981607131324309
+          },
+          "obstacle": null,
+          "distanceM": 6.880538862274735
+        },
+        {
+          "step": 25,
+          "target": {
+            "x": 0.2070552360820166,
+            "y": 1.2847009496127728,
+            "z": -0.4166666666666665
+          },
+          "camera": {
+            "x": -0.6891679265801872,
+            "y": 2.9513576986979775,
+            "z": -7.02989654837585
+          },
+          "obstacle": null,
+          "distanceM": 6.878645952867089
+        },
+        {
+          "step": 26,
+          "target": {
+            "x": 0.21513585649221256,
+            "y": 1.2958118026767922,
+            "z": -0.4733333333333334
+          },
+          "camera": {
+            "x": -0.7339605066315207,
+            "y": 2.9606739793881274,
+            "z": -7.077745665520427
+          },
+          "obstacle": null,
+          "distanceM": 6.876831554392158
+        },
+        {
+          "step": 27,
+          "target": {
+            "x": 0.22319288483138344,
+            "y": 1.3068902166431524,
+            "z": -0.53
+          },
+          "camera": {
+            "x": -0.7790796870123348,
+            "y": 2.9701039053660363,
+            "z": -7.125161943121575
+          },
+          "obstacle": null,
+          "distanceM": 6.8750993548184125
+        },
+        {
+          "step": 28,
+          "target": {
+            "x": 0.2312254375555773,
+            "y": 1.3179349766389188,
+            "z": -0.5866666666666667
+          },
+          "camera": {
+            "x": -0.824448902467942,
+            "y": 2.9796379768584305,
+            "z": -7.172154166035358
+          },
+          "obstacle": null,
+          "distanceM": 6.873452609676153
+        },
+        {
+          "step": 29,
+          "target": {
+            "x": 0.23923263380486934,
+            "y": 1.3289448714816952,
+            "z": -0.6433333333333333
+          },
+          "camera": {
+            "x": -0.8699950605400284,
+            "y": 2.9892672286482513,
+            "z": -7.21873238842181
+          },
+          "obstacle": null,
+          "distanceM": 6.871894145085999
+        },
+        {
+          "step": 30,
+          "target": {
+            "x": 0.24721359549995792,
+            "y": 1.339918693812442,
+            "z": -0.7000000000000002
+          },
+          "camera": {
+            "x": -0.9156483736847021,
+            "y": 2.9989831958460944,
+            "z": -7.264907878578468
+          },
+          "obstacle": null,
+          "distanceM": 6.870426364899475
+        },
+        {
+          "step": 31,
+          "target": {
+            "x": 0.255167447438456,
+            "y": 1.3508552402278768,
+            "z": -0.7566666666666666
+          },
+          "camera": {
+            "x": -0.9613422023499689,
+            "y": 3.0087778818776876,
+            "z": -7.310693063773839
+          },
+          "obstacle": null,
+          "distanceM": 6.8690512611059376
+        },
+        {
+          "step": 32,
+          "target": {
+            "x": 0.2630933173908666,
+            "y": 1.3617533114124416,
+            "z": -0.8133333333333335
+          },
+          "camera": {
+            "x": -1.0070129081630066,
+            "y": 3.0186437285444674,
+            "z": -7.356101475068327
+          },
+          "obstacle": null,
+          "distanceM": 6.867770426788961
+        },
+        {
+          "step": 33,
+          "target": {
+            "x": 0.2709903361962331,
+            "y": 1.3726117122698205,
+            "z": -0.8700000000000001
+          },
+          "camera": {
+            "x": -1.0525997164354408,
+            "y": 3.028573588023518,
+            "z": -7.401147692118963
+          },
+          "obstacle": null,
+          "distanceM": 6.866585071026651
+        },
+        {
+          "step": 34,
+          "target": {
+            "x": 0.27885763785745216,
+            "y": 1.3834292520539968,
+            "z": -0.9266666666666665
+          },
+          "camera": {
+            "x": -1.098044587249464,
+            "y": 3.0385606966817744,
+            "z": -7.44584728797247
+          },
+          "obstacle": null,
+          "distanceM": 6.865496035226379
+        },
+        {
+          "step": 35,
+          "target": {
+            "x": 0.28669435963624024,
+            "y": 1.3942047444998305,
+            "z": -0.9833333333333334
+          },
+          "camera": {
+            "x": -1.1432920944392202,
+            "y": 3.048598650587444,
+            "z": -7.490216773858411
+          },
+          "obstacle": null,
+          "distanceM": 6.864503810467194
+        },
+        {
+          "step": 36,
+          "target": {
+            "x": 0.2944996421477423,
+            "y": 1.4049370079531456,
+            "z": -1.04
+          },
+          "camera": {
+            "x": -1.1882893118306375,
+            "y": 3.0586813826091626,
+            "z": -7.534273544000868
+          },
+          "obstacle": null,
+          "distanceM": 6.8636085554944275
+        },
+        {
+          "step": 37,
+          "target": {
+            "x": 0.30227262945477373,
+            "y": 1.4156248655003139,
+            "z": -1.0966666666666667
+          },
+          "camera": {
+            "x": -1.225165963402447,
+            "y": 3.0603827803818966,
+            "z": -7.545023370221313
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.8278548190330905
+        },
+        {
+          "step": 38,
+          "target": {
+            "x": 0.3100124691616824,
+            "y": 1.4262671450973134,
+            "z": -1.1533333333333333
+          },
+          "camera": {
+            "x": -1.2594929239881654,
+            "y": 3.0603839382928464,
+            "z": -7.548826880072397
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.784985083204761
+        },
+        {
+          "step": 39,
+          "target": {
+            "x": 0.3177183125078245,
+            "y": 1.4368626796982586,
+            "z": -1.21
+          },
+          "camera": {
+            "x": -1.2927590379088403,
+            "y": 3.0603849065901843,
+            "z": -7.552411117101187
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.742079834572261
+        },
+        {
+          "step": 40,
+          "target": {
+            "x": 0.3253893144606401,
+            "y": 1.4474103073833802,
+            "z": -1.2666666666666666
+          },
+          "camera": {
+            "x": -1.3249325942495276,
+            "y": 3.0603856980133095,
+            "z": -7.555825730794382
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.699162167543516
+        },
+        {
+          "step": 41,
+          "target": {
+            "x": 0.3330246338083209,
+            "y": 1.4579088714864414,
+            "z": -1.3233333333333333
+          },
+          "camera": {
+            "x": -1.355985434001848,
+            "y": 3.0603863242438916,
+            "z": -7.559119044155902
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.656253633017529
+        },
+        {
+          "step": 42,
+          "target": {
+            "x": 0.3406234332520582,
+            "y": 1.4683572207215798,
+            "z": -1.3800000000000003
+          },
+          "camera": {
+            "x": -1.3858927691959266,
+            "y": 3.0603867959751585,
+            "z": -7.562338057607413
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.613374344790902
+        },
+        {
+          "step": 43,
+          "target": {
+            "x": 0.34818487949786203,
+            "y": 1.4787542093095603,
+            "z": -1.436666666666667
+          },
+          "camera": {
+            "x": -1.4146330092598087,
+            "y": 3.06038712297726,
+            "z": -7.565528452134648
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.570543080133544
+        },
+        {
+          "step": 44,
+          "target": {
+            "x": 0.355708143347942,
+            "y": 1.4890986971034201,
+            "z": -1.4933333333333332
+          },
+          "camera": {
+            "x": -1.4421875943121205,
+            "y": 3.0603873141588958,
+            "z": -7.568734591823392
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.5277773746694905
+        },
+        {
+          "step": 45,
+          "target": {
+            "x": 0.3631923997916374,
+            "y": 1.4993895497135012,
+            "z": -1.5499999999999998
+          },
+          "camera": {
+            "x": -1.4685408350975346,
+            "y": 3.0603873776253785,
+            "z": -7.571999525929964
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.485093611725576
+        },
+        {
+          "step": 46,
+          "target": {
+            "x": 0.3706368280958894,
+            "y": 1.5096256386318476,
+            "z": -1.6066666666666665
+          },
+          "camera": {
+            "x": -1.493679759281192,
+            "y": 3.060387320733313,
+            "z": -7.575364990630091
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.442507106331144
+        },
+        {
+          "step": 47,
+          "target": {
+            "x": 0.37804061189524324,
+            "y": 1.5198058413559594,
+            "z": -1.6633333333333336
+          },
+          "camera": {
+            "x": -1.5175939638270497,
+            "y": 3.060387150142059,
+            "z": -7.578871410587102
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.400032184067057
+        },
+        {
+          "step": 48,
+          "target": {
+            "x": 0.38540293928137226,
+            "y": 1.529929041511887,
+            "z": -1.7200000000000002
+          },
+          "camera": {
+            "x": -1.540275473195653,
+            "y": 3.0603868718621454,
+            "z": -7.582557900476187
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.357682254972815
+        },
+        {
+          "step": 49,
+          "target": {
+            "x": 0.39272300289211265,
+            "y": 1.5399941289766548,
+            "z": -1.7766666666666664
+          },
+          "camera": {
+            "x": -1.5617186031084982,
+            "y": 3.060386491300793,
+            "z": -7.586462266595778
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.315469882727293
+        },
+        {
+          "step": 50,
+          "target": {
+            "x": 0.39999999999999997,
+            "y": 1.5499999999999998,
+            "z": -1.833333333333333
+          },
+          "camera": {
+            "x": -1.5819198296386994,
+            "y": 3.060386013304713,
+            "z": -7.590621008690563
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.273406849322133
+        },
+        {
+          "step": 51,
+          "target": {
+            "x": 0.4072331326002971,
+            "y": 1.5599455573254084,
+            "z": -1.8900000000000001
+          },
+          "camera": {
+            "x": -1.6008776634006288,
+            "y": 3.060385442200319,
+            "z": -7.595069322103267
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.231504215447724
+        },
+        {
+          "step": 52,
+          "target": {
+            "x": 0.41442160749850415,
+            "y": 1.5698297103104433,
+            "z": -1.9466666666666668
+          },
+          "camera": {
+            "x": -1.6185925286244103,
+            "y": 3.0603847818315044,
+            "z": -7.599841100364124
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.189772376810259
+        },
+        {
+          "step": 53,
+          "target": {
+            "x": 0.4215646363973421,
+            "y": 1.5796513750463452,
+            "z": -2.0033333333333334
+          },
+          "camera": {
+            "x": -1.6350666469142427,
+            "y": 3.0603840355951237,
+            "z": -7.604968938318567
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.148221116595433
+        },
+        {
+          "step": 54,
+          "target": {
+            "x": 0.42866143598319734,
+            "y": 1.5894094744768963,
+            "z": -2.06
+          },
+          "camera": {
+            "x": -1.6503039255024892,
+            "y": 3.0603832064743113,
+            "z": -7.610484135884617
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.106859654289634
+        },
+        {
+          "step": 55,
+          "target": {
+            "x": 0.4357112280120216,
+            "y": 1.5991029385165296,
+            "z": -2.1166666666666663
+          },
+          "camera": {
+            "x": -1.6643098498239608,
+            "y": 3.0603822970697574,
+            "z": -7.616416702522426
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.065696691063983
+        },
+        {
+          "step": 56,
+          "target": {
+            "x": 0.44271323939467533,
+            "y": 1.6087307041676784,
+            "z": -2.1733333333333333
+          },
+          "camera": {
+            "x": -1.677091380246867,
+            "y": 3.0603813096290744,
+            "z": -7.622795362489166
+          },
+          "obstacle": "bridge",
+          "distanceM": 6.024740451920005
+        },
+        {
+          "step": 57,
+          "target": {
+            "x": 0.44966670228170447,
+            "y": 1.6182917156373438,
+            "z": -2.23
+          },
+          "camera": {
+            "x": -1.6886568528083439,
+            "y": 3.0603802460743568,
+            "z": -7.6296475609431855
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.983998724788519
+        },
+        {
+          "step": 58,
+          "target": {
+            "x": 0.4565708541475453,
+            "y": 1.6277849244528748,
+            "z": -2.2866666666666666
+          },
+          "camera": {
+            "x": -1.6990158838132423,
+            "y": 3.060379108028051,
+            "z": -7.636999470952304
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.943478896765838
+        },
+        {
+          "step": 59,
+          "target": {
+            "x": 0.4634249378741431,
+            "y": 1.6372092895769468,
+            "z": -2.3433333333333333
+          },
+          "camera": {
+            "x": -1.7081792781649252,
+            "y": 3.060377896837238,
+            "z": -7.644876001451969
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.903187987663303
+        },
+        {
+          "step": 60,
+          "target": {
+            "x": 0.4702282018339785,
+            "y": 1.6465637775217203,
+            "z": -2.4000000000000004
+          },
+          "camera": {
+            "x": -1.7161589413061695,
+            "y": 3.060376613596424,
+            "z": -7.6533008061903445
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.863132681038206
+        },
+        {
+          "step": 61,
+          "target": {
+            "x": 0.4769798999724927,
+            "y": 1.6558473624621772,
+            "z": -2.4566666666666666
+          },
+          "camera": {
+            "x": -1.722967794656833,
+            "y": 3.0603752591689357,
+            "z": -7.662296293688776
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.823319352865918
+        },
+        {
+          "step": 62,
+          "target": {
+            "x": 0.4836792918898999,
+            "y": 1.6650590263486125,
+            "z": -2.513333333333333
+          },
+          "camera": {
+            "x": -1.7286196944428065,
+            "y": 3.060373834207004,
+            "z": -7.67188363823799
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.783754098004993
+        },
+        {
+          "step": 63,
+          "target": {
+            "x": 0.4903256429223811,
+            "y": 1.674197759018274,
+            "z": -2.57
+          },
+          "camera": {
+            "x": -1.7331293538178416,
+            "y": 3.0603723391706232,
+            "z": -7.682082791942429
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.744442754598875
+        },
+        {
+          "step": 64,
+          "target": {
+            "x": 0.49691822422264836,
+            "y": 1.6832625583061414,
+            "z": -2.626666666666667
+          },
+          "camera": {
+            "x": -1.7365122681862188,
+            "y": 3.0603707743452597,
+            "z": -7.692912497817756
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.705390926550076
+        },
+        {
+          "step": 65,
+          "target": {
+            "x": 0.50345631283987,
+            "y": 1.6922524301548214,
+            "z": -2.6833333333333336
+          },
+          "camera": {
+            "x": -1.738784643639915,
+            "y": 3.060369139858486,
+            "z": -7.704390303939458
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.666604004194938
+        },
+        {
+          "step": 66,
+          "target": {
+            "x": 0.5099391917989518,
+            "y": 1.7011663887235584,
+            "z": -2.74
+          },
+          "camera": {
+            "x": -1.739963328428905,
+            "y": 3.0603674356956083,
+            "z": -7.71653257863394
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.6280871832997175
+        },
+        {
+          "step": 67,
+          "target": {
+            "x": 0.5163661501791604,
+            "y": 1.7100034564963456,
+            "z": -2.7966666666666664
+          },
+          "camera": {
+            "x": -1.7400657473876309,
+            "y": 3.0603656617143518,
+            "z": -7.729354526697215
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.58984548249152
+        },
+        {
+          "step": 68,
+          "target": {
+            "x": 0.5227364831920843,
+            "y": 1.718762664389116,
+            "z": -2.853333333333333
+          },
+          "camera": {
+            "x": -1.7391098392444468,
+            "y": 3.060363817658665,
+            "z": -7.742870206620697
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.551883759230791
+        },
+        {
+          "step": 69,
+          "target": {
+            "x": 0.5290494922589215,
+            "y": 1.7274430518560169,
+            "z": -2.91
+          },
+          "camera": {
+            "x": -1.7371139967440776,
+            "y": 3.060361903171699,
+            "z": -7.757092548798276
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.51420672442544
+        },
+        {
+          "step": 70,
+          "target": {
+            "x": 0.5353044850870866,
+            "y": 1.7360436669947439,
+            "z": -2.966666666666667
+          },
+          "camera": {
+            "x": -1.7340970095158585,
+            "y": 3.060359917808018,
+            "z": -7.772033374684042
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.476818955780441
+        },
+        {
+          "step": 71,
+          "target": {
+            "x": 0.5415007757461286,
+            "y": 1.744563566650927,
+            "z": -3.0233333333333334
+          },
+          "camera": {
+            "x": -1.7300780096227668,
+            "y": 3.060357861045082,
+            "z": -7.787703416865723
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.439724909970785
+        },
+        {
+          "step": 72,
+          "target": {
+            "x": 0.5476376847429509,
+            "y": 1.7530018165215573,
+            "z": -3.08
+          },
+          "camera": {
+            "x": -1.725076419728125,
+            "y": 3.060355732294063,
+            "z": -7.804112340014972
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.402928933720043
+        },
+        {
+          "step": 73,
+          "target": {
+            "x": 0.5537145390963255,
+            "y": 1.7613574912574474,
+            "z": -3.1366666666666667
+          },
+          "camera": {
+            "x": -1.7191119038182552,
+            "y": 3.060353530910019,
+            "z": -7.821268762672164
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.366435273861404
+        },
+        {
+          "step": 74,
+          "target": {
+            "x": 0.5597306724106924,
+            "y": 1.769629674564702,
+            "z": -3.1933333333333334
+          },
+          "camera": {
+            "x": -1.7122043204205437,
+            "y": 3.0603512562014874,
+            "z": -7.839180279820361
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.330248086453095
+        },
+        {
+          "step": 75,
+          "target": {
+            "x": 0.565685424949238,
+            "y": 1.777817459305202,
+            "z": -3.25
+          },
+          "camera": {
+            "x": -1.7043736782571541,
+            "y": 3.0603489074395105,
+            "z": -7.857853486200471
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.2943714450153125
+        },
+        {
+          "step": 76,
+          "target": {
+            "x": 0.5715781437062427,
+            "y": 1.7859199475960836,
+            "z": -3.3066666666666666
+          },
+          "camera": {
+            "x": -1.6956400942752259,
+            "y": 3.0603464838661516,
+            "z": -7.877294000317427
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.258809347951357
+        },
+        {
+          "step": 77,
+          "target": {
+            "x": 0.5774081824786897,
+            "y": 1.7939362509081982,
+            "z": -3.3633333333333333
+          },
+          "camera": {
+            "x": -1.6860237539947258,
+            "y": 3.0603439847025187,
+            "z": -7.897506489085377
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.223565725211497
+        },
+        {
+          "step": 78,
+          "target": {
+            "x": 0.5831749019371293,
+            "y": 1.8018654901635527,
+            "z": -3.42
+          },
+          "camera": {
+            "x": -1.67554487411531,
+            "y": 3.060341409156331,
+            "z": -7.918494693058422
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.188644444254191
+        },
+        {
+          "step": 79,
+          "target": {
+            "x": 0.5888776696957875,
+            "y": 1.809706795831708,
+            "z": -3.4766666666666666
+          },
+          "camera": {
+            "x": -1.6642236673235584,
+            "y": 3.060338756429052,
+            "z": -7.940261452192333
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.15404931535563
+        },
+        {
+          "step": 80,
+          "target": {
+            "x": 0.5945158603819154,
+            "y": 1.8174593080251338,
+            "z": -3.533333333333333
+          },
+          "camera": {
+            "x": -1.6520803092418808,
+            "y": 3.0603360257226244,
+            "z": -7.962808732081933
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.119784096315183
+        },
+        {
+          "step": 81,
+          "target": {
+            "x": 0.6000888557043678,
+            "y": 1.8251221765935055,
+            "z": -3.59
+          },
+          "camera": {
+            "x": -1.6391349074601909,
+            "y": 3.0603332162458163,
+            "z": -7.986137650618322
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.085852496601112
+        },
+        {
+          "step": 82,
+          "target": {
+            "x": 0.6055960445214051,
+            "y": 1.832694561216932,
+            "z": -3.6466666666666665
+          },
+          "camera": {
+            "x": -1.6254074725912453,
+            "y": 3.0603303272202105,
+            "z": -8.010248505010031
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.05225818097804
+        },
+        {
+          "step": 83,
+          "target": {
+            "x": 0.6110368229077138,
+            "y": 1.8401756314981061,
+            "z": -3.703333333333333
+          },
+          "camera": {
+            "x": -1.6109178912902533,
+            "y": 3.0603273578858534,
+            "z": -8.035140799112233
+          },
+          "obstacle": "bridge",
+          "distanceM": 5.019004772654772
+        },
+        {
+          "step": 84,
+          "target": {
+            "x": 0.6164105942206315,
+            "y": 1.847564567053368,
+            "z": -3.7600000000000007
+          },
+          "camera": {
+            "x": -1.5956859011791353,
+            "y": 3.060324307506583,
+            "z": -8.060813271008579
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.986095855988689
+        },
+        {
+          "step": 85,
+          "target": {
+            "x": 0.6217167691655767,
+            "y": 1.854860557602668,
+            "z": -3.8166666666666664
+          },
+          "camera": {
+            "x": -1.5797310676155076,
+            "y": 3.0603211753750506,
+            "z": -8.087263920790793
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.953534978780388
+        },
+        {
+          "step": 86,
+          "target": {
+            "x": 0.6269547658606719,
+            "y": 1.8620628030584236,
+            "z": -3.873333333333334
+          },
+          "camera": {
+            "x": -1.5630727622462892,
+            "y": 3.0603179608174518,
+            "z": -8.114490038481982
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.921325654190111
+        },
+        {
+          "step": 87,
+          "target": {
+            "x": 0.6321240099005523,
+            "y": 1.8691705136132595,
+            "z": -3.9299999999999997
+          },
+          "camera": {
+            "x": -1.5457301432856319,
+            "y": 3.0603146631979845,
+            "z": -8.142488232050695
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.889471362305522
+        },
+        {
+          "step": 88,
+          "target": {
+            "x": 0.6372239344193571,
+            "y": 1.8761829098266158,
+            "z": -3.9866666666666664
+          },
+          "camera": {
+            "x": -1.527722137456771,
+            "y": 3.060311281923042,
+            "z": -8.171254455463897
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.857975551388305
+        },
+        {
+          "step": 89,
+          "target": {
+            "x": 0.6422539801528917,
+            "y": 1.883099222710226,
+            "z": -4.043333333333334
+          },
+          "camera": {
+            "x": -1.5090674235373542,
+            "y": 3.0603078164451523,
+            "z": -8.200784036728471
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.826841638825521
+        },
+        {
+          "step": 90,
+          "target": {
+            "x": 0.647213595499958,
+            "y": 1.8899186938124424,
+            "z": -4.1
+          },
+          "camera": {
+            "x": -1.4897844174478698,
+            "y": 3.060304266266683,
+            "z": -8.231071705872296
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.796073011809834
+        },
+        {
+          "step": 91,
+          "target": {
+            "x": 0.6521022365828434,
+            "y": 1.8966405753014097,
+            "z": -4.156666666666667
+          },
+          "camera": {
+            "x": -1.4698912588229236,
+            "y": 3.0603006309433054,
+            "z": -8.26211162281773
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.765673027771323
+        },
+        {
+          "step": 92,
+          "target": {
+            "x": 0.6569193673069632,
+            "y": 1.9032641300470745,
+            "z": -4.213333333333333
+          },
+          "camera": {
+            "x": -1.4494057990053708,
+            "y": 3.060296910087245,
+            "z": -8.29389740510188
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.735645014582119
+        },
+        {
+          "step": 93,
+          "target": {
+            "x": 0.6616644594196495,
+            "y": 1.909788631702018,
+            "z": -4.27
+          },
+          "camera": {
+            "x": -1.4283455904036555,
+            "y": 3.060293103370309,
+            "z": -8.32642215540017
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.7059922705538435
+        },
+        {
+          "step": 94,
+          "target": {
+            "x": 0.6663369925680797,
+            "y": 1.9162133647811097,
+            "z": -4.326666666666667
+          },
+          "camera": {
+            "x": -1.4067278771531675,
+            "y": 3.0602892105267108,
+            "z": -8.3596784888114
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.676718064246558
+        },
+        {
+          "step": 95,
+          "target": {
+            "x": 0.6709364543563392,
+            "y": 1.9225376247399661,
+            "z": -4.383333333333333
+          },
+          "camera": {
+            "x": -1.3845695870230077,
+            "y": 3.060285231355689,
+            "z": -8.39365855986474
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.6478256341068755
+        },
+        {
+          "step": 96,
+          "target": {
+            "x": 0.6754623404016121,
+            "y": 1.9287607180522164,
+            "z": -4.44
+          },
+          "camera": {
+            "x": -1.3618873245102168,
+            "y": 3.060281165723934,
+            "z": -8.428354089211041
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.619318187951764
+        },
+        {
+          "step": 97,
+          "target": {
+            "x": 0.6799141543894911,
+            "y": 1.9348819622855502,
+            "z": -4.496666666666666
+          },
+          "camera": {
+            "x": -1.338697365064324,
+            "y": 3.060277013567815,
+            "z": -8.463756389963017
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.591198902313617
+        },
+        {
+          "step": 98,
+          "target": {
+            "x": 0.6842914081284053,
+            "y": 1.9409006861765574,
+            "z": -4.553333333333333
+          },
+          "camera": {
+            "x": -1.3150156503859656,
+            "y": 3.06027277489543,
+            "z": -8.499856393651067
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.563470921661262
+        },
+        {
+          "step": 99,
+          "target": {
+            "x": 0.688593621603155,
+            "y": 1.9468162297043379,
+            "z": -4.61
+          },
+          "camera": {
+            "x": -1.290857784744333,
+            "y": 3.060268449788464,
+            "z": -8.536644675763648
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.536137357510719
+        },
+        {
+          "step": 100,
+          "target": {
+            "x": 0.6928203230275509,
+            "y": 1.9526279441628827,
+            "z": -4.666666666666666
+          },
+          "camera": {
+            "x": -1.266239032259294,
+            "y": 3.0602640384038717,
+            "z": -8.57411148084335
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.509201287438674
+        },
+        {
+          "step": 101,
+          "target": {
+            "x": 0.6969710488961516,
+            "y": 1.9583351922322083,
+            "z": -4.723333333333334
+          },
+          "camera": {
+            "x": -1.2411743150952506,
+            "y": 3.060259540975381,
+            "z": -8.612246747112067
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.482665754010954
+        },
+        {
+          "step": 102,
+          "target": {
+            "x": 0.701045344035091,
+            "y": 1.9639373480482503,
+            "z": -4.78
+          },
+          "camera": {
+            "x": -1.2156782125150545,
+            "y": 3.0602549578148253,
+            "z": -8.651040130600865
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.456533763637487
+        },
+        {
+          "step": 103,
+          "target": {
+            "x": 0.7050427616519938,
+            "y": 1.9694337972714915,
+            "z": -4.836666666666667
+          },
+          "camera": {
+            "x": -1.1897649607436995,
+            "y": 3.060250289313297,
+            "z": -8.690481028762399
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.430808285364656
+        },
+        {
+          "step": 104,
+          "target": {
+            "x": 0.7089628633849718,
+            "y": 1.9748239371543361,
+            "z": -4.8933333333333335
+          },
+          "camera": {
+            "x": -1.1634484535929153,
+            "y": 3.0602455359421414,
+            "z": -8.730558603545923
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.405492249615249
+        },
+        {
+          "step": 105,
+          "target": {
+            "x": 0.7128052193506943,
+            "y": 1.9801071766072047,
+            "z": -4.949999999999999
+          },
+          "camera": {
+            "x": -1.136742243799326,
+            "y": 3.0602406982537724,
+            "z": -8.771261803917143
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.380588546885614
+        },
+        {
+          "step": 106,
+          "target": {
+            "x": 0.7165694081915304,
+            "y": 1.9852829362633542,
+            "z": -5.006666666666667
+          },
+          "camera": {
+            "x": -1.1096595450303857,
+            "y": 3.0602357768823265,
+            "z": -8.812579387807366
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.356100026409106
+        },
+        {
+          "step": 107,
+          "target": {
+            "x": 0.7202550171217549,
+            "y": 1.990350648542413,
+            "z": -5.0633333333333335
+          },
+          "camera": {
+            "x": -1.0822132345139184,
+            "y": 3.060230772544152,
+            "z": -8.854499943478455
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.3320294947943045
+        },
+        {
+          "step": 108,
+          "target": {
+            "x": 0.7238616419728157,
+            "y": 1.9953097577126218,
+            "z": -5.12
+          },
+          "camera": {
+            "x": -1.0544158562487465,
+            "y": 3.060225686038133,
+            "z": -8.897011910292356
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.308379714645964
+        },
+        {
+          "step": 109,
+          "target": {
+            "x": 0.7273888872376548,
+            "y": 2.0001597199517755,
+            "z": -5.176666666666667
+          },
+          "camera": {
+            "x": -1.0262796247556003,
+            "y": 3.06022051824585,
+            "z": -8.94010359887588
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.285153403176228
+        },
+        {
+          "step": 110,
+          "target": {
+            "x": 0.7308363661140808,
+            "y": 2.004900003406861,
+            "z": -5.2333333333333325
+          },
+          "camera": {
+            "x": -0.9978164293291675,
+            "y": 3.0602152701315806,
+            "z": -8.983763210673569
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.262353230813036
+        },
+        {
+          "step": 111,
+          "target": {
+            "x": 0.734203700547185,
+            "y": 2.0095300882523794,
+            "z": -5.29
+          },
+          "camera": {
+            "x": -0.9690378387539126,
+            "y": 3.0602099427421408,
+            "z": -9.027978856883411
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.239981819812299
+        },
+        {
+          "step": 112,
+          "target": {
+            "x": 0.7374905212708005,
+            "y": 2.0140494667473505,
+            "z": -5.346666666666667
+          },
+          "camera": {
+            "x": -0.9399551064480025,
+            "y": 3.0602045372065616,
+            "z": -9.072738576772123
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.218041742879907
+        },
+        {
+          "step": 113,
+          "target": {
+            "x": 0.7406964678479958,
+            "y": 2.018457643290994,
+            "z": -5.403333333333333
+          },
+          "camera": {
+            "x": -0.9105791760013918,
+            "y": 3.0601990547356146,
+            "z": -9.118030355368578
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.196535521809194
+        },
+        {
+          "step": 114,
+          "target": {
+            "x": 0.7438211887106011,
+            "y": 2.0227541344770765,
+            "z": -5.46
+          },
+          "camera": {
+            "x": -0.8809206870758596,
+            "y": 3.0601934966211743,
+            "z": -9.163842140535849
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.175465626139106
+        },
+        {
+          "step": 115,
+          "target": {
+            "x": 0.7468643411977615,
+            "y": 2.026938469146922,
+            "z": -5.5166666666666675
+          },
+          "camera": {
+            "x": -0.8509899816364598,
+            "y": 3.060187864235427,
+            "z": -9.210161859423994
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.1548344718378685
+        },
+        {
+          "step": 116,
+          "target": {
+            "x": 0.7498255915935133,
+            "y": 2.0310101884410807,
+            "z": -5.573333333333333
+          },
+          "camera": {
+            "x": -0.8207971104855187,
+            "y": 3.060182159029927,
+            "z": -9.256977434307592
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.134644420016577
+        },
+        {
+          "step": 117,
+          "target": {
+            "x": 0.7527046151633804,
+            "y": 2.0349688458496478,
+            "z": -5.63
+          },
+          "camera": {
+            "x": -0.7903518400719379,
+            "y": 3.060176382534495,
+            "z": -9.304276797813452
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.114897775676703
+        },
+        {
+          "step": 118,
+          "target": {
+            "x": 0.7555010961899848,
+            "y": 2.038814007261229,
+            "z": -5.6866666666666665
+          },
+          "camera": {
+            "x": -0.7596636595501487,
+            "y": 3.0601705363559675,
+            "z": -9.352047907545751
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.095596786495201
+        },
+        {
+          "step": 119,
+          "target": {
+            "x": 0.7582147280076685,
+            "y": 2.0425452510105444,
+            "z": -5.743333333333333
+          },
+          "camera": {
+            "x": -0.728741788064599,
+            "y": 3.060164622176797,
+            "z": -9.400278760117118
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.076743641650456
+        },
+        {
+          "step": 120,
+          "target": {
+            "x": 0.7608452130361228,
+            "y": 2.0461621679246687,
+            "z": -5.800000000000001
+          },
+          "camera": {
+            "x": -0.6975951822371146,
+            "y": 3.060158641753501,
+            "z": -9.448957404595825
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.058340470692024
+        },
+        {
+          "step": 121,
+          "target": {
+            "x": 0.7633922628130215,
+            "y": 2.0496643613679044,
+            "z": -5.8566666666666665
+          },
+          "camera": {
+            "x": -0.6662325438359217,
+            "y": 3.0601525969149677,
+            "z": -9.498071955380425
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.040389342456686
+        },
+        {
+          "step": 122,
+          "target": {
+            "x": 0.7658555980256538,
+            "y": 2.053051447285274,
+            "z": -5.913333333333333
+          },
+          "camera": {
+            "x": -0.6346623276064447,
+            "y": 3.0601464895606156,
+            "z": -9.547610604514619
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.022892264033092
+        },
+        {
+          "step": 123,
+          "target": {
+            "x": 0.7682349485415544,
+            "y": 2.056323054244637,
+            "z": -5.97
+          },
+          "camera": {
+            "x": -0.6028927492452895,
+            "y": 3.0601403216584147,
+            "z": -9.597561633456188
+          },
+          "obstacle": "bridge",
+          "distanceM": 4.005851179776858
+        },
+        {
+          "step": 124,
+          "target": {
+            "x": 0.7705300534381266,
+            "y": 2.059478823477424,
+            "z": -6.026666666666666
+          },
+          "camera": {
+            "x": -0.570931793500009,
+            "y": 3.0601340952427636,
+            "z": -9.647913424315037
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.9892679703776834
+        },
+        {
+          "step": 125,
+          "target": {
+            "x": 0.7727406610312547,
+            "y": 2.0625184089179753,
+            "z": -6.083333333333334
+          },
+          "camera": {
+            "x": -0.538787222378415,
+            "y": 3.0601278124122366,
+            "z": -9.69865447057641
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.97314445197979
+        },
+        {
+          "step": 126,
+          "target": {
+            "x": 0.7748665289029049,
+            "y": 2.065441477241494,
+            "z": -6.14
+          },
+          "camera": {
+            "x": -0.5064665834522071,
+            "y": 3.060121475327196,
+            "z": -9.749773387326218
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.9574823753565873
+        },
+        {
+          "step": 127,
+          "target": {
+            "x": 0.776907423927709,
+            "y": 2.0682477079006,
+            "z": -6.196666666666667
+          },
+          "camera": {
+            "x": -0.4739772182407005,
+            "y": 3.060115086207273,
+            "z": -9.801258920996393
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.9422834251402565
+        },
+        {
+          "step": 128,
+          "target": {
+            "x": 0.7788631222985283,
+            "y": 2.070936793160476,
+            "z": -6.253333333333334
+          },
+          "camera": {
+            "x": -0.4413262706613139,
+            "y": 3.060108647328728,
+            "z": -9.853099958648766
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.9275492191066457
+        },
+        {
+          "step": 129,
+          "target": {
+            "x": 0.7807334095509979,
+            "y": 2.073508438132622,
+            "z": -6.31
+          },
+          "camera": {
+            "x": -0.40852069553427106,
+            "y": 3.060102161021686,
+            "z": -9.905285536816837
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.9132813075155486
+        },
+        {
+          "step": 130,
+          "target": {
+            "x": 0.7825180805870446,
+            "y": 2.0759623608071864,
+            "z": -6.366666666666667
+          },
+          "camera": {
+            "x": -0.37556726712974875,
+            "y": 3.060095629667255,
+            "z": -9.957804849925175
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.8994811725062526
+        },
+        {
+          "step": 131,
+          "target": {
+            "x": 0.7842169396973775,
+            "y": 2.078298292083894,
+            "z": -6.423333333333333
+          },
+          "camera": {
+            "x": -0.3424725877463104,
+            "y": 3.0600890556945344,
+            "z": -10.010647258306777
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.88615022754793
+        },
+        {
+          "step": 132,
+          "target": {
+            "x": 0.7858298005829509,
+            "y": 2.0805159758015574,
+            "z": -6.48
+          },
+          "camera": {
+            "x": -0.3092430963100745,
+            "y": 3.0600824415775163,
+            "z": -10.063802295839093
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.873289816944251
+        },
+        {
+          "step": 133,
+          "target": {
+            "x": 0.7873564863753936,
+            "y": 2.082615168766166,
+            "z": -6.536666666666667
+          },
+          "camera": {
+            "x": -0.2758850769845652,
+            "y": 3.0600757898318807,
+            "z": -10.117259677219518
+          },
+          "obstacle": "bridge",
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 134,
+          "target": {
+            "x": 0.788796829656404,
+            "y": 2.084595640777555,
+            "z": -6.593333333333333
+          },
+          "camera": {
+            "x": -0.24559703407617273,
+            "y": 3.0630889479302654,
+            "z": -10.18208497945486
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 135,
+          "target": {
+            "x": 0.7901506724761103,
+            "y": 2.0864571746546514,
+            "z": -6.65
+          },
+          "camera": {
+            "x": -0.2148879821167642,
+            "y": 3.065988184823413,
+            "z": -10.246800591901383
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 136,
+          "target": {
+            "x": 0.7914178663703907,
+            "y": 2.088199566259287,
+            "z": -6.706666666666666
+          },
+          "camera": {
+            "x": -0.1837699326440989,
+            "y": 3.068772891659119,
+            "z": -10.311391747054603
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 137,
+          "target": {
+            "x": 0.792598272377155,
+            "y": 2.089822624518588,
+            "z": -6.763333333333334
+          },
+          "camera": {
+            "x": -0.152255335687578,
+            "y": 3.0714424683308654,
+            "z": -10.375843864331307
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 138,
+          "target": {
+            "x": 0.7936917610515823,
+            "y": 2.0913261714459255,
+            "z": -6.82
+          },
+          "camera": {
+            "x": -0.12035707802889506,
+            "y": 3.0739963240587707,
+            "z": -10.440142578124474
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 139,
+          "target": {
+            "x": 0.7946982124803172,
+            "y": 2.092710042160436,
+            "z": -6.876666666666666
+          },
+          "camera": {
+            "x": -0.08808848033215455,
+            "y": 3.076433877979208,
+            "z": -10.50427376568462
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 140,
+          "target": {
+            "x": 0.7956175162946186,
+            "y": 2.0939740849051005,
+            "z": -6.933333333333334
+          },
+          "camera": {
+            "x": -0.05546329312784104,
+            "y": 3.0787545597419905,
+            "z": -10.568223574760587
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 141,
+          "target": {
+            "x": 0.796449571682464,
+            "y": 2.0951181610633878,
+            "z": -6.989999999999999
+          },
+          "camera": {
+            "x": -0.022495691639530913,
+            "y": 3.0809578101140147,
+            "z": -10.631978450931914
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 142,
+          "target": {
+            "x": 0.7971942873996035,
+            "y": 2.0961421451744546,
+            "z": -7.046666666666667
+          },
+          "camera": {
+            "x": 0.010799730553162523,
+            "y": 3.0830430815882015,
+            "z": -10.695525164564083
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 143,
+          "target": {
+            "x": 0.7978515817795665,
+            "y": 2.097045924946904,
+            "z": -7.1033333333333335
+          },
+          "camera": {
+            "x": 0.04440796901721955,
+            "y": 3.0850098389965526,
+            "z": -10.758850837317354
+          },
+          "obstacle": null,
+          "distanceM": 3.860901215391328
+        },
+        {
+          "step": 144,
+          "target": {
+            "x": 0.7984213827426173,
+            "y": 2.0978294012710985,
+            "z": -7.16
+          },
+          "camera": {
+            "x": 0.04633222710033247,
+            "y": 3.1307822291973766,
+            "z": -10.984576995890384
+          },
+          "obstacle": null,
+          "distanceM": 4.032371366857167
+        },
+        {
+          "step": 145,
+          "target": {
+            "x": 0.7989036278036591,
+            "y": 2.0984924882300313,
+            "z": -7.216666666666667
+          },
+          "camera": {
+            "x": 0.05326759449113394,
+            "y": 3.1740260581165405,
+            "z": -11.201330948354553
+          },
+          "obstacle": null,
+          "distanceM": 4.194078562912966
+        },
+        {
+          "step": 146,
+          "target": {
+            "x": 0.7992982640790868,
+            "y": 2.0990351131087444,
+            "z": -7.273333333333333
+          },
+          "camera": {
+            "x": 0.06489296121742683,
+            "y": 3.2148750215840796,
+            "z": -11.409548984821622
+          },
+          "obstacle": null,
+          "distanceM": 4.346576787062925
+        },
+        {
+          "step": 147,
+          "target": {
+            "x": 0.7996052482925853,
+            "y": 2.0994572164023046,
+            "z": -7.33
+          },
+          "camera": {
+            "x": 0.08090355515064696,
+            "y": 3.2534553309235004,
+            "z": -11.60964337051929
+          },
+          "obstacle": null,
+          "distanceM": 4.49038875275552
+        },
+        {
+          "step": 148,
+          "target": {
+            "x": 0.7998245467798765,
+            "y": 2.09975875182233,
+            "z": -7.386666666666667
+          },
+          "camera": {
+            "x": 0.10101008606675121,
+            "y": 3.2898861363647636,
+            "z": -11.802003817545657
+          },
+          "obstacle": null,
+          "distanceM": 4.626007673780037
+        },
+        {
+          "step": 149,
+          "target": {
+            "x": 0.7999561354924097,
+            "y": 2.099939686302063,
+            "z": -7.443333333333333
+          },
+          "camera": {
+            "x": 0.12493793236183315,
+            "y": 3.324279926452469,
+            "z": -11.986998866537515
+          },
+          "obstacle": null,
+          "distanceM": 4.753898934121005
+        },
+        {
+          "step": 150,
+          "target": {
+            "x": 0.8,
+            "y": 2.1,
+            "z": -7.5
+          },
+          "camera": {
+            "x": 0.15242636874296223,
+            "y": 3.3567429048129194,
+            "z": -12.16497718382599
+          },
+          "obstacle": null,
+          "distanceM": 4.874501662971724
+        },
+        {
+          "step": 151,
+          "target": {
+            "x": 0.7999561354924097,
+            "y": 2.099939686302063,
+            "z": -7.556666666666667
+          },
+          "camera": {
+            "x": 0.18322783324453884,
+            "y": 3.3873753455660944,
+            "z": -12.336268779293832
+          },
+          "obstacle": null,
+          "distanceM": 4.9882302202853674
+        },
+        {
+          "step": 152,
+          "target": {
+            "x": 0.7998245467798765,
+            "y": 2.09975875182233,
+            "z": -7.613333333333333
+          },
+          "camera": {
+            "x": 0.21710723195282466,
+            "y": 3.4162719285954015,
+            "z": -12.501186149812508
+          },
+          "obstacle": null,
+          "distanceM": 5.09547559793782
+        },
+        {
+          "step": 153,
+          "target": {
+            "x": 0.7996052482925853,
+            "y": 2.0994572164023046,
+            "z": -7.67
+          },
+          "camera": {
+            "x": 0.25384127985580507,
+            "y": 3.4435220558190145,
+            "z": -12.660025352822636
+          },
+          "obstacle": null,
+          "distanceM": 5.196606741289243
+        },
+        {
+          "step": 154,
+          "target": {
+            "x": 0.7992982640790868,
+            "y": 2.0990351131087444,
+            "z": -7.726666666666667
+          },
+          "camera": {
+            "x": 0.2932178762718166,
+            "y": 3.469210149541513,
+            "z": -12.813067014327014
+          },
+          "obstacle": null,
+          "distanceM": 5.29197179566048
+        },
+        {
+          "step": 155,
+          "target": {
+            "x": 0.7989036278036591,
+            "y": 2.0984924882300313,
+            "z": -7.783333333333335
+          },
+          "camera": {
+            "x": 0.3350355133480463,
+            "y": 3.493415933903134,
+            "z": -12.960577275290477
+          },
+          "obstacle": null,
+          "distanceM": 5.381899281984852
+        },
+        {
+          "step": 156,
+          "target": {
+            "x": 0.7984213827426173,
+            "y": 2.0978294012710985,
+            "z": -7.84
+          },
+          "camera": {
+            "x": 0.37910271615883034,
+            "y": 3.5162147003860134,
+            "z": -13.10280868018364
+          },
+          "obstacle": null,
+          "distanceM": 5.466699205654834
+        },
+        {
+          "step": 157,
+          "target": {
+            "x": 0.7978515817795665,
+            "y": 2.097045924946904,
+            "z": -7.8966666666666665
+          },
+          "camera": {
+            "x": 0.4252375129733354,
+            "y": 3.5376775582822173,
+            "z": -13.240001011167472
+          },
+          "obstacle": null,
+          "distanceM": 5.546664102355626
+        },
+        {
+          "step": 158,
+          "target": {
+            "x": 0.7971942873996035,
+            "y": 2.0961421451744546,
+            "z": -7.953333333333333
+          },
+          "camera": {
+            "x": 0.4732669343025248,
+            "y": 3.5578716709768243,
+            "z": -13.37238207119126
+          },
+          "obstacle": null,
+          "distanceM": 5.622070024463097
+        },
+        {
+          "step": 159,
+          "target": {
+            "x": 0.796449571682464,
+            "y": 2.0951181610633878,
+            "z": -8.01
+          },
+          "camera": {
+            "x": 0.5230265393760135,
+            "y": 3.5768604788507696,
+            "z": -13.5001684190673
+          },
+          "obstacle": null,
+          "distanceM": 5.693177471381118
+        },
+        {
+          "step": 160,
+          "target": {
+            "x": 0.7956175162946187,
+            "y": 2.0939740849051005,
+            "z": -8.066666666666666
+          },
+          "camera": {
+            "x": 0.5743599687404181,
+            "y": 3.5947039095623703,
+            "z": -13.62356605939004
+          },
+          "obstacle": null,
+          "distanceM": 5.7602322670023405
+        },
+        {
+          "step": 161,
+          "target": {
+            "x": 0.7946982124803172,
+            "y": 2.092710042160436,
+            "z": -8.123333333333333
+          },
+          "camera": {
+            "x": 0.6271185217118705,
+            "y": 3.611458576423213,
+            "z": -13.74277108998538
+          },
+          "obstacle": null,
+          "distanceM": 5.823466387296314
+        },
+        {
+          "step": 162,
+          "target": {
+            "x": 0.7936917610515822,
+            "y": 2.0913261714459255,
+            "z": -8.18
+          },
+          "camera": {
+            "x": 0.6811607574564107,
+            "y": 3.6271779655434377,
+            "z": -13.857970309405626
+          },
+          "obstacle": null,
+          "distanceM": 5.88309874085881
+        },
+        {
+          "step": 163,
+          "target": {
+            "x": 0.792598272377155,
+            "y": 2.089822624518588,
+            "z": -8.236666666666666
+          },
+          "camera": {
+            "x": 0.7363521185128717,
+            "y": 3.6419126123829493,
+            "z": -13.969341786827247
+          },
+          "obstacle": null,
+          "distanceM": 5.939335905095909
+        },
+        {
+          "step": 164,
+          "target": {
+            "x": 0.7914178663703907,
+            "y": 2.088199566259287,
+            "z": -8.293333333333333
+          },
+          "camera": {
+            "x": 0.7925645756135145,
+            "y": 3.65571026830897,
+            "z": -14.07705539656081
+          },
+          "obstacle": null,
+          "distanceM": 5.992372820565047
+        },
+        {
+          "step": 165,
+          "target": {
+            "x": 0.7901506724761101,
+            "y": 2.0864571746546514,
+            "z": -8.350000000000001
+          },
+          "camera": {
+            "x": 0.849676292697993,
+            "y": 3.668616057726121,
+            "z": -14.181273319244834
+          },
+          "obstacle": null,
+          "distanceM": 6.042393445852513
+        },
+        {
+          "step": 166,
+          "target": {
+            "x": 0.7887968296564041,
+            "y": 2.0845956407775557,
+            "z": -8.406666666666666
+          },
+          "camera": {
+            "x": 0.9075713110561431,
+            "y": 3.680672626313071,
+            "z": -14.282150511666956
+          },
+          "obstacle": null,
+          "distanceM": 6.089571375232191
+        },
+        {
+          "step": 167,
+          "target": {
+            "x": 0.7873564863753937,
+            "y": 2.082615168766166,
+            "z": -8.463333333333333
+          },
+          "camera": {
+            "x": 0.9661392515745364,
+            "y": 3.6919202808694136,
+            "z": -14.37983514703646
+          },
+          "obstacle": null,
+          "distanceM": 6.134070421223274
+        },
+        {
+          "step": 168,
+          "target": {
+            "x": 0.7858298005829509,
+            "y": 2.0805159758015574,
+            "z": -8.520000000000001
+          },
+          "camera": {
+            "x": 1.0252750341006927,
+            "y": 3.7023971212478024,
+            "z": -14.474469027420728
+          },
+          "obstacle": null,
+          "distanceM": 6.176045164044797
+        },
+        {
+          "step": 169,
+          "target": {
+            "x": 0.7842169396973775,
+            "y": 2.078298292083894,
+            "z": -8.576666666666666
+          },
+          "camera": {
+            "x": 1.0848786129772008,
+            "y": 3.712139164819387,
+            "z": -14.566187969954605
+          },
+          "obstacle": null,
+          "distanceM": 6.215641469851728
+        },
+        {
+          "step": 170,
+          "target": {
+            "x": 0.7825180805870446,
+            "y": 2.0759623608071864,
+            "z": -8.633333333333333
+          },
+          "camera": {
+            "x": 1.1448547278357966,
+            "y": 3.721180463895149,
+            "z": -14.655122168335065
+          },
+          "obstacle": null,
+          "distanceM": 6.252996979530644
+        },
+        {
+          "step": 171,
+          "target": {
+            "x": 0.780733409550998,
+            "y": 2.073508438132622,
+            "z": -8.69
+          },
+          "camera": {
+            "x": 1.2051126687785894,
+            "y": 3.7295532165017145,
+            "z": -14.741396531023494
+          },
+          "obstacle": null,
+          "distanceM": 6.288241569732296
+        },
+        {
+          "step": 172,
+          "target": {
+            "x": 0.7788631222985283,
+            "y": 2.070936793160476,
+            "z": -8.746666666666668
+          },
+          "camera": {
+            "x": 1.265566055110134,
+            "y": 3.737287870887627,
+            "z": -14.825130997494163
+          },
+          "obstacle": null,
+          "distanceM": 6.321497787723413
+        },
+        {
+          "step": 173,
+          "target": {
+            "x": 0.776907423927709,
+            "y": 2.0682477079006,
+            "z": -8.803333333333333
+          },
+          "camera": {
+            "x": 1.3261326268198605,
+            "y": 3.7444132241146906,
+            "z": -14.906440833789244
+          },
+          "obstacle": null,
+          "distanceM": 6.352881261550413
+        },
+        {
+          "step": 174,
+          "target": {
+            "x": 0.774866528902905,
+            "y": 2.065441477241494,
+            "z": -8.86
+          },
+          "camera": {
+            "x": 1.3867340480495012,
+            "y": 3.750956515068909,
+            "z": -14.985436908567937
+          },
+          "obstacle": null,
+          "distanceM": 6.382501086923157
+        },
+        {
+          "step": 175,
+          "target": {
+            "x": 0.7727406610312547,
+            "y": 2.0625184089179753,
+            "z": -8.916666666666668
+          },
+          "camera": {
+            "x": 1.4472957218145708,
+            "y": 3.756943512206549,
+            "z": -15.06222595076921
+          },
+          "obstacle": null,
+          "distanceM": 6.410460192147038
+        },
+        {
+          "step": 176,
+          "target": {
+            "x": 0.7705300534381266,
+            "y": 2.059478823477424,
+            "z": -8.973333333333333
+          },
+          "camera": {
+            "x": 1.5077466152826364,
+            "y": 3.762398596332999,
+            "z": -15.136910789944409
+          },
+          "obstacle": null,
+          "distanceM": 6.436855682356454
+        },
+        {
+          "step": 177,
+          "target": {
+            "x": 0.7682349485415545,
+            "y": 2.056323054244637,
+            "z": -9.03
+          },
+          "camera": {
+            "x": 1.568019094944062,
+            "y": 3.7673448386951898,
+            "z": -15.209590580256656
+          },
+          "obstacle": null,
+          "distanceM": 6.461779164231622
+        },
+        {
+          "step": 178,
+          "target": {
+            "x": 0.7658555980256538,
+            "y": 2.053051447285274,
+            "z": -9.086666666666668
+          },
+          "camera": {
+            "x": 1.6280487710431117,
+            "y": 3.771804074652475,
+            "z": -15.280361009088764
+          },
+          "obstacle": null,
+          "distanceM": 6.485317052313715
+        },
+        {
+          "step": 179,
+          "target": {
+            "x": 0.7633922628130216,
+            "y": 2.0496643613679044,
+            "z": -9.143333333333334
+          },
+          "camera": {
+            "x": 1.6877743506687275,
+            "y": 3.775796973175861,
+            "z": -15.349314491149602
+          },
+          "obstacle": null,
+          "distanceM": 6.507550857969992
+        },
+        {
+          "step": 180,
+          "target": {
+            "x": 0.760845213036123,
+            "y": 2.046162167924669,
+            "z": -9.2
+          },
+          "camera": {
+            "x": 1.7471374989349737,
+            "y": 3.7793431024113184,
+            "z": -15.416540348920538
+          },
+          "obstacle": null,
+          "distanceM": 6.528557462000981
+        },
+        {
+          "step": 181,
+          "target": {
+            "x": 0.7582147280076685,
+            "y": 2.0425452510105444,
+            "z": -9.256666666666668
+          },
+          "camera": {
+            "x": 1.8060827077110342,
+            "y": 3.7824609915295957,
+            "z": -15.482124980238238
+          },
+          "obstacle": null,
+          "distanceM": 6.548409371825416
+        },
+        {
+          "step": 182,
+          "target": {
+            "x": 0.755501096189985,
+            "y": 2.0388140072612293,
+            "z": -9.313333333333334
+          },
+          "camera": {
+            "x": 1.8645571713897495,
+            "y": 3.7851681890723583,
+            "z": -15.54615201376761
+          },
+          "obstacle": null,
+          "distanceM": 6.567174964125533
+        },
+        {
+          "step": 183,
+          "target": {
+            "x": 0.7527046151633804,
+            "y": 2.0349688458496478,
+            "z": -9.37
+          },
+          "camera": {
+            "x": 1.9225106692120142,
+            "y": 3.787481317992632,
+            "z": -15.608702453078894
+          },
+          "obstacle": null,
+          "distanceM": 6.584918713785172
+        },
+        {
+          "step": 184,
+          "target": {
+            "x": 0.7498255915935133,
+            "y": 2.0310101884410807,
+            "z": -9.426666666666666
+          },
+          "camera": {
+            "x": 1.9798954536918836,
+            "y": 3.789416127576337,
+            "z": -15.669854810005301
+          },
+          "obstacle": null,
+          "distanceM": 6.601701409905856
+        },
+        {
+          "step": 185,
+          "target": {
+            "x": 0.7468643411977615,
+            "y": 2.026938469146922,
+            "z": -9.483333333333334
+          },
+          "camera": {
+            "x": 2.0366661447139527,
+            "y": 3.790987542421143,
+            "z": -15.72968522792252
+          },
+          "obstacle": null,
+          "distanceM": 6.617580359641366
+        },
+        {
+          "step": 186,
+          "target": {
+            "x": 0.7438211887106012,
+            "y": 2.0227541344770765,
+            "z": -9.54
+          },
+          "camera": {
+            "x": 2.0927796289005096,
+            "y": 3.79220970863895,
+            "z": -15.788267595558093
+          },
+          "obstacle": null,
+          "distanceM": 6.632609580549231
+        },
+        {
+          "step": 187,
+          "target": {
+            "x": 0.7406964678479959,
+            "y": 2.0184576432909944,
+            "z": -9.596666666666666
+          },
+          "camera": {
+            "x": 2.1481949638710707,
+            "y": 3.793096037438887,
+            "z": -15.84567365190751
+          },
+          "obstacle": null,
+          "distanceM": 6.646839982117812
+        },
+        {
+          "step": 188,
+          "target": {
+            "x": 0.7374905212708005,
+            "y": 2.0140494667473505,
+            "z": -9.653333333333334
+          },
+          "camera": {
+            "x": 2.202873287041203,
+            "y": 3.7936592462388905,
+            "z": -15.901973082804098
+          },
+          "obstacle": null,
+          "distanceM": 6.66031953709016
+        },
+        {
+          "step": 189,
+          "target": {
+            "x": 0.7342037005471851,
+            "y": 2.0095300882523794,
+            "z": -9.71
+          },
+          "camera": {
+            "x": 2.2567777286310395,
+            "y": 3.793911397445572,
+            "z": -15.957233609662053
+          },
+          "obstacle": null,
+          "distanceM": 6.673093443170465
+        },
+        {
+          "step": 190,
+          "target": {
+            "x": 0.7308363661140809,
+            "y": 2.004900003406861,
+            "z": -9.766666666666666
+          },
+          "camera": {
+            "x": 2.3098733285765465,
+            "y": 3.7938639350342083,
+            "z": -16.01152107088541
+          },
+          "obstacle": null,
+          "distanceM": 6.685204275665518
+        },
+        {
+          "step": 191,
+          "target": {
+            "x": 0.7273888872376549,
+            "y": 2.0001597199517755,
+            "z": -9.823333333333334
+          },
+          "camera": {
+            "x": 2.362126957058464,
+            "y": 3.7935277190532544,
+            "z": -16.064899496410607
+          },
+          "obstacle": null,
+          "distanceM": 6.696692131582118
+        },
+        {
+          "step": 192,
+          "target": {
+            "x": 0.7238616419728157,
+            "y": 1.9953097577126213,
+            "z": -9.88
+          },
+          "camera": {
+            "x": 2.4135072383848675,
+            "y": 3.7929130581707913,
+            "z": -16.117431175826546
+          },
+          "obstacle": null,
+          "distanceM": 6.707594765671646
+        },
+        {
+          "step": 193,
+          "target": {
+            "x": 0.7202550171217549,
+            "y": 1.990350648542413,
+            "z": -9.936666666666666
+          },
+          "camera": {
+            "x": 2.4639844779835114,
+            "y": 3.792029740373689,
+            "z": -16.1691767204935
+          },
+          "obstacle": null,
+          "distanceM": 6.717947718884969
+        },
+        {
+          "step": 194,
+          "target": {
+            "x": 0.7165694081915305,
+            "y": 1.9852829362633542,
+            "z": -9.993333333333332
+          },
+          "camera": {
+            "x": 2.5135305922795133,
+            "y": 3.790887061924045,
+            "z": -16.2201951200605
+          },
+          "obstacle": null,
+          "distanceM": 6.727784439674389
+        },
+        {
+          "step": 195,
+          "target": {
+            "x": 0.7128052193506944,
+            "y": 1.9801071766072047,
+            "z": -10.05
+          },
+          "camera": {
+            "x": 2.559542627383806,
+            "y": 3.7869730662169543,
+            "z": -16.261877500829986
+          },
+          "obstacle": "right-wall",
+          "distanceM": 6.727750402815332
+        },
+        {
+          "step": 196,
+          "target": {
+            "x": 0.7089628633849719,
+            "y": 1.9748239371543366,
+            "z": -10.106666666666666
+          },
+          "camera": {
+            "x": 2.559361017148712,
+            "y": 3.7398192421870773,
+            "z": -16.15563898519472
+          },
+          "obstacle": "right-wall",
+          "distanceM": 6.567286187197765
+        },
+        {
+          "step": 197,
+          "target": {
+            "x": 0.7050427616519939,
+            "y": 1.9694337972714915,
+            "z": -10.163333333333332
+          },
+          "camera": {
+            "x": 2.559182865266787,
+            "y": 3.6955548772406157,
+            "z": -16.060492818155975
+          },
+          "obstacle": "right-wall",
+          "distanceM": 6.418241152837756
+        },
+        {
+          "step": 198,
+          "target": {
+            "x": 0.7010453440350908,
+            "y": 1.9639373480482498,
+            "z": -10.22
+          },
+          "camera": {
+            "x": 2.5590082375791594,
+            "y": 3.6539245438506414,
+            "z": -15.975496783792678
+          },
+          "obstacle": "right-wall",
+          "distanceM": 6.2796358225625255
+        },
+        {
+          "step": 199,
+          "target": {
+            "x": 0.6969710488961516,
+            "y": 1.9583351922322083,
+            "z": -10.276666666666667
+          },
+          "camera": {
+            "x": 2.5588371970602024,
+            "y": 3.614702418483476,
+            "z": -15.899817862797637
+          },
+          "obstacle": "right-wall",
+          "distanceM": 6.150603817222152
+        },
+        {
+          "step": 200,
+          "target": {
+            "x": 0.692820323027551,
+            "y": 1.9526279441628827,
+            "z": -10.333333333333332
+          },
+          "camera": {
+            "x": 2.5586698038451976,
+            "y": 3.5776881883100886,
+            "z": -15.83271712681928
+          },
+          "obstacle": "right-wall",
+          "distanceM": 6.03037620635986
+        },
+        {
+          "step": 201,
+          "target": {
+            "x": 0.688593621603155,
+            "y": 1.9468162297043379,
+            "z": -10.39
+          },
+          "camera": {
+            "x": 2.558506115264032,
+            "y": 3.54270362220978,
+            "z": -15.77353708371703
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.918268398379997
+        },
+        {
+          "step": 202,
+          "target": {
+            "x": 0.6842914081284054,
+            "y": 1.9409006861765574,
+            "z": -10.446666666666667
+          },
+          "camera": {
+            "x": 2.5583461858806578,
+            "y": 3.509589683811804,
+            "z": -15.721691022629011
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.813669102839777
+        },
+        {
+          "step": 203,
+          "target": {
+            "x": 0.6799141543894911,
+            "y": 1.9348819622855502,
+            "z": -10.503333333333332
+          },
+          "camera": {
+            "x": 2.558190067537999,
+            "y": 3.4782040893891164,
+            "z": -15.676654000249776
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.716030993326236
+        },
+        {
+          "step": 204,
+          "target": {
+            "x": 0.675462340401612,
+            "y": 1.9287607180522164,
+            "z": -10.56
+          },
+          "camera": {
+            "x": 2.558037809407996,
+            "y": 3.4484192328496173,
+            "z": -15.637955181413535
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.624862773663499
+        },
+        {
+          "step": 205,
+          "target": {
+            "x": 0.6709364543563393,
+            "y": 1.9225376247399666,
+            "z": -10.616666666666667
+          },
+          "camera": {
+            "x": 2.557889458046458,
+            "y": 3.4201204152384417,
+            "z": -15.605171303046383
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.539722408182047
+        },
+        {
+          "step": 206,
+          "target": {
+            "x": 0.6663369925680797,
+            "y": 1.9162133647811097,
+            "z": -10.673333333333334
+          },
+          "camera": {
+            "x": 2.5577450574523755,
+            "y": 3.3932043280844812,
+            "z": -15.577921074532771
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.460211322349436
+        },
+        {
+          "step": 207,
+          "target": {
+            "x": 0.6616644594196497,
+            "y": 1.909788631702018,
+            "z": -10.729999999999999
+          },
+          "camera": {
+            "x": 2.557604649131333,
+            "y": 3.3675777493506653,
+            "z": -15.55586036232291
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.385969416097552
+        },
+        {
+          "step": 208,
+          "target": {
+            "x": 0.6569193673069633,
+            "y": 1.9032641300470745,
+            "z": -10.786666666666667
+          },
+          "camera": {
+            "x": 2.557468272162671,
+            "y": 3.34315641824697,
+            "z": -15.538678034279712
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.316670760851134
+        },
+        {
+          "step": 209,
+          "target": {
+            "x": 0.6521022365828436,
+            "y": 1.8966405753014097,
+            "z": -10.843333333333334
+          },
+          "camera": {
+            "x": 2.5573359632699937,
+            "y": 3.319864061165695,
+            "z": -15.526092361404835
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.252019874201452
+        },
+        {
+          "step": 210,
+          "target": {
+            "x": 0.647213595499958,
+            "y": 1.8899186938124424,
+            "z": -10.899999999999999
+          },
+          "camera": {
+            "x": 2.5572077568946714,
+            "y": 3.2976315458260275,
+            "z": -15.517847892396063
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.191748484623737
+        },
+        {
+          "step": 211,
+          "target": {
+            "x": 0.6422539801528916,
+            "y": 1.883099222710226,
+            "z": -10.956666666666667
+          },
+          "camera": {
+            "x": 2.5570836852719263,
+            "y": 3.2763961446187864,
+            "z": -15.513712730892767
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.135612713560545
+        },
+        {
+          "step": 212,
+          "target": {
+            "x": 0.6372239344193571,
+            "y": 1.8761829098266158,
+            "z": -11.013333333333334
+          },
+          "camera": {
+            "x": 2.5569637785091297,
+            "y": 3.2561008913149454,
+            "z": -15.513476156972807
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.083390614321753
+        },
+        {
+          "step": 213,
+          "target": {
+            "x": 0.6321240099005525,
+            "y": 1.8691705136132595,
+            "z": -11.07
+          },
+          "camera": {
+            "x": 2.5568480646658998,
+            "y": 3.236694017892183,
+            "z": -15.516946544023218
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.034880017155097
+        },
+        {
+          "step": 214,
+          "target": {
+            "x": 0.6269547658606719,
+            "y": 1.8620628030584236,
+            "z": -11.126666666666667
+          },
+          "camera": {
+            "x": 2.5567365698356164,
+            "y": 3.218128460358848,
+            "z": -15.523949529948052
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.9898966379646135
+        },
+        {
+          "step": 215,
+          "target": {
+            "x": 0.6217167691655768,
+            "y": 1.854860557602668,
+            "z": -11.183333333333334
+          },
+          "camera": {
+            "x": 2.5566293182279636,
+            "y": 3.200361424205532,
+            "z": -15.534326408136621
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.948272414846856
+        },
+        {
+          "step": 216,
+          "target": {
+            "x": 0.6164105942206315,
+            "y": 1.847564567053368,
+            "z": -11.24
+          },
+          "camera": {
+            "x": 2.5565263322520995,
+            "y": 3.1833540015630017,
+            "z": -15.54793270896004
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.909854042151635
+        },
+        {
+          "step": 217,
+          "target": {
+            "x": 0.6110368229077137,
+            "y": 1.8401756314981061,
+            "z": -11.296666666666667
+          },
+          "camera": {
+            "x": 2.5564276326000757,
+            "y": 3.1670708333486104,
+            "z": -15.564636947003471
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.8745016763734546
+        },
+        {
+          "step": 218,
+          "target": {
+            "x": 0.6055960445214051,
+            "y": 1.832694561216932,
+            "z": -11.353333333333333
+          },
+          "camera": {
+            "x": 2.5563332383301147,
+            "y": 3.1514798106869573,
+            "z": -15.584319512944344
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.842087792015729
+        },
+        {
+          "step": 219,
+          "target": {
+            "x": 0.6000888557043678,
+            "y": 1.8251221765935055,
+            "z": -11.41
+          },
+          "camera": {
+            "x": 2.5562431669493826,
+            "y": 3.13655181073086,
+            "z": -15.60687169208645
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.81249616878109
+        },
+        {
+          "step": 220,
+          "target": {
+            "x": 0.5945158603819156,
+            "y": 1.8174593080251338,
+            "z": -11.466666666666665
+          },
+          "camera": {
+            "x": 2.556157434495883,
+            "y": 3.1222604627148804,
+            "z": -15.632194794164802
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.785620994139648
+        },
+        {
+          "step": 221,
+          "target": {
+            "x": 0.5888776696957876,
+            "y": 1.809706795831708,
+            "z": -11.523333333333333
+          },
+          "camera": {
+            "x": 2.556076055619106,
+            "y": 3.108581940669379,
+            "z": -15.660199381233088
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.76136606760309
+        },
+        {
+          "step": 222,
+          "target": {
+            "x": 0.5831749019371292,
+            "y": 1.8018654901635527,
+            "z": -11.58
+          },
+          "camera": {
+            "x": 2.5559990436591007,
+            "y": 3.095494779727436,
+            "z": -15.690804582305494
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.739644094959287
+        },
+        {
+          "step": 223,
+          "target": {
+            "x": 0.5774081824786899,
+            "y": 1.7939362509081986,
+            "z": -11.636666666666667
+          },
+          "camera": {
+            "x": 2.5559264107236155,
+            "y": 3.0829797133855976,
+            "z": -15.723937485004843
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.720376062359013
+        },
+        {
+          "step": 224,
+          "target": {
+            "x": 0.5715781437062427,
+            "y": 1.7859199475960836,
+            "z": -11.693333333333333
+          },
+          "camera": {
+            "x": 2.5558581677629983,
+            "y": 3.0710195294450493,
+            "z": -15.759532595816504
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.703490681542565
+        },
+        {
+          "step": 225,
+          "target": {
+            "x": 0.5656854249492381,
+            "y": 1.7778174593052025,
+            "z": -11.75
+          },
+          "camera": {
+            "x": 2.5557943246425165,
+            "y": 3.0595989426729133,
+            "z": -15.797531361701122
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6889238986890005
+        },
+        {
+          "step": 226,
+          "target": {
+            "x": 0.5597306724106925,
+            "y": 1.7696296745647024,
+            "z": -11.806666666666667
+          },
+          "camera": {
+            "x": 2.5557348902118346,
+            "y": 3.0487044824925684,
+            "z": -15.837881746810417
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.676618460397859
+        },
+        {
+          "step": 227,
+          "target": {
+            "x": 0.5537145390963255,
+            "y": 1.7613574912574474,
+            "z": -11.863333333333333
+          },
+          "camera": {
+            "x": 2.55567987237133,
+            "y": 3.0383243942443237,
+            "z": -15.880537858905718
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.666523531199435
+        },
+        {
+          "step": 228,
+          "target": {
+            "x": 0.547637684742951,
+            "y": 1.7530018165215577,
+            "z": -11.92
+          },
+          "camera": {
+            "x": 2.5556292781349987,
+            "y": 3.028448552759393,
+            "z": -15.925459620820181
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.658594357757909
+        },
+        {
+          "step": 229,
+          "target": {
+            "x": 0.5415007757461286,
+            "y": 1.744563566650927,
+            "z": -11.976666666666667
+          },
+          "camera": {
+            "x": 2.555583113689691,
+            "y": 3.0190683871658393,
+            "z": -15.972612482951227
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.652791975600676
+        },
+        {
+          "step": 230,
+          "target": {
+            "x": 0.5353044850870864,
+            "y": 1.7360436669947439,
+            "z": -12.033333333333335
+          },
+          "camera": {
+            "x": 2.5555413844504393,
+            "y": 3.0101768159992,
+            "z": -16.0219671733348
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.649082954792925
+        },
+        {
+          "step": 231,
+          "target": {
+            "x": 0.5290494922589215,
+            "y": 1.7274430518560169,
+            "z": -12.09
+          },
+          "camera": {
+            "x": 2.5555040951116608,
+            "y": 3.0017681918263106,
+            "z": -16.073499482350464
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 232,
+          "target": {
+            "x": 0.5227364831920845,
+            "y": 1.718762664389116,
+            "z": -12.146666666666667
+          },
+          "camera": {
+            "x": 2.5552969692774243,
+            "y": 2.993728933658448,
+            "z": -16.126848801732816
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 233,
+          "target": {
+            "x": 0.5163661501791607,
+            "y": 1.710003456496346,
+            "z": -12.203333333333333
+          },
+          "camera": {
+            "x": 2.5542057753021234,
+            "y": 2.9856097335778937,
+            "z": -16.180609943504997
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 234,
+          "target": {
+            "x": 0.5099391917989519,
+            "y": 1.7011663887235589,
+            "z": -12.26
+          },
+          "camera": {
+            "x": 2.5522306920645517,
+            "y": 2.9774117770965267,
+            "z": -16.234787300255118
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 235,
+          "target": {
+            "x": 0.5034563128398699,
+            "y": 1.692252430154821,
+            "z": -12.316666666666666
+          },
+          "camera": {
+            "x": 2.549372008906113,
+            "y": 2.9691362480678514,
+            "z": -16.289384580867395
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 236,
+          "target": {
+            "x": 0.4969182242226484,
+            "y": 1.6832625583061414,
+            "z": -12.373333333333333
+          },
+          "camera": {
+            "x": 2.545630120362114,
+            "y": 2.960784328061287,
+            "z": -16.34440480588178
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 237,
+          "target": {
+            "x": 0.4903256429223811,
+            "y": 1.674197759018274,
+            "z": -12.43
+          },
+          "camera": {
+            "x": 2.5410055218315235,
+            "y": 2.9523571957532164,
+            "z": -16.399850303751055
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 238,
+          "target": {
+            "x": 0.4836792918899,
+            "y": 1.6650590263486125,
+            "z": -12.486666666666666
+          },
+          "camera": {
+            "x": 2.5354988062012316,
+            "y": 2.9438560263355855,
+            "z": -16.455722707992525
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 239,
+          "target": {
+            "x": 0.47697989997249285,
+            "y": 1.6558473624621777,
+            "z": -12.543333333333333
+          },
+          "camera": {
+            "x": 2.5291106614371026,
+            "y": 2.9352819909428676,
+            "z": -16.512022955231842
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 240,
+          "target": {
+            "x": 0.4702282018339786,
+            "y": 1.6465637775217208,
+            "z": -12.600000000000001
+          },
+          "camera": {
+            "x": 2.521841869150366,
+            "y": 2.9266362560981705,
+            "z": -16.568751284137306
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 241,
+          "target": {
+            "x": 0.463424937874143,
+            "y": 1.6372092895769468,
+            "z": -12.656666666666666
+          },
+          "camera": {
+            "x": 2.5136933041441054,
+            "y": 2.9179199831792593,
+            "z": -16.625907235243375
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 242,
+          "target": {
+            "x": 0.4565708541475454,
+            "y": 1.6277849244528748,
+            "z": -12.713333333333333
+          },
+          "camera": {
+            "x": 2.504665934940784,
+            "y": 2.9091343279052335,
+            "z": -16.68348965166295
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 243,
+          "target": {
+            "x": 0.4496667022817044,
+            "y": 1.6182917156373433,
+            "z": -12.770000000000001
+          },
+          "camera": {
+            "x": 2.494760825287994,
+            "y": 2.9002804398445967,
+            "z": -16.741496680688574
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 244,
+          "target": {
+            "x": 0.44271323939467533,
+            "y": 1.6087307041676784,
+            "z": -12.826666666666666
+          },
+          "camera": {
+            "x": 2.483979136635792,
+            "y": 2.891359461945429,
+            "z": -16.799925776283317
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 245,
+          "target": {
+            "x": 0.4357112280120219,
+            "y": 1.59910293851653,
+            "z": -12.883333333333333
+          },
+          "camera": {
+            "x": 2.472322131575236,
+            "y": 2.8823725300883356,
+            "z": -16.85877370246281
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.6474391814922935
+        },
+        {
+          "step": 246,
+          "target": {
+            "x": 0.4286614359831976,
+            "y": 1.5894094744768967,
+            "z": -12.94
+          },
+          "camera": {
+            "x": 2.4652132825435134,
+            "y": 2.8767481760684754,
+            "z": -16.928655912908642
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.659845528332973
+        },
+        {
+          "step": 247,
+          "target": {
+            "x": 0.4215646363973422,
+            "y": 1.5796513750463457,
+            "z": -12.996666666666668
+          },
+          "camera": {
+            "x": 2.457670262791418,
+            "y": 2.8713629670267555,
+            "z": -16.999892430242543
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.673335155202099
+        },
+        {
+          "step": 248,
+          "target": {
+            "x": 0.41442160749850415,
+            "y": 1.5698297103104433,
+            "z": -13.053333333333333
+          },
+          "camera": {
+            "x": 2.449713710011594,
+            "y": 2.8662379848872863,
+            "z": -17.072544099047114
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.687978619423623
+        },
+        {
+          "step": 249,
+          "target": {
+            "x": 0.40723313260029714,
+            "y": 1.5599455573254084,
+            "z": -13.11
+          },
+          "camera": {
+            "x": 2.441362559108066,
+            "y": 2.8613942146243634,
+            "z": -17.14667142190766
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.703846011490606
+        },
+        {
+          "step": 250,
+          "target": {
+            "x": 0.39999999999999997,
+            "y": 1.5499999999999998,
+            "z": -13.166666666666668
+          },
+          "camera": {
+            "x": 2.4326341025426848,
+            "y": 2.8568526520425905,
+            "z": -17.222334937162593
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.721007346878173
+        },
+        {
+          "step": 251,
+          "target": {
+            "x": 0.3927230028921128,
+            "y": 1.5399941289766552,
+            "z": -13.223333333333333
+          },
+          "camera": {
+            "x": 2.423544048242718,
+            "y": 2.85263441144512,
+            "z": -17.29959559371306
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.739532956399171
+        },
+        {
+          "step": 252,
+          "target": {
+            "x": 0.3854029392813725,
+            "y": 1.5299290415118874,
+            "z": -13.28
+          },
+          "camera": {
+            "x": 2.414106574869197,
+            "y": 2.848760833916552,
+            "z": -17.378515125586723
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.759493877752939
+        },
+        {
+          "step": 253,
+          "target": {
+            "x": 0.3780406118952433,
+            "y": 1.5198058413559594,
+            "z": -13.336666666666668
+          },
+          "camera": {
+            "x": 2.40433438425947,
+            "y": 2.845253596977691,
+            "z": -17.459156429037215
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.780962251017541
+        },
+        {
+          "step": 254,
+          "target": {
+            "x": 0.3706368280958893,
+            "y": 1.5096256386318476,
+            "z": -13.393333333333334
+          },
+          "camera": {
+            "x": 2.394238750867649,
+            "y": 2.8421348264088175,
+            "z": -17.54158394507788
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.804011720967654
+        },
+        {
+          "step": 255,
+          "target": {
+            "x": 0.36319239979163753,
+            "y": 1.4993895497135017,
+            "z": -13.45
+          },
+          "camera": {
+            "x": 2.3838295680334705,
+            "y": 2.8394272110875507,
+            "z": -17.625864050499217
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.828717849267332
+        },
+        {
+          "step": 256,
+          "target": {
+            "x": 0.3557081433479419,
+            "y": 1.4890986971034201,
+            "z": -13.506666666666668
+          },
+          "camera": {
+            "x": 2.3731153909132643,
+            "y": 2.8371541217476826,
+            "z": -17.71206546060865
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.855158539793586
+        },
+        {
+          "step": 257,
+          "target": {
+            "x": 0.3481848794978621,
+            "y": 1.4787542093095603,
+            "z": -13.563333333333334
+          },
+          "camera": {
+            "x": 2.3621034759064936,
+            "y": 2.8353397346384175,
+            "z": -17.800259647163024
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.88341448059805
+        },
+        {
+          "step": 258,
+          "target": {
+            "x": 0.34062343325205835,
+            "y": 1.4683572207215803,
+            "z": -13.62
+          },
+          "camera": {
+            "x": 2.3507998164073403,
+            "y": 2.8340091611506857,
+            "z": -17.890521275245337
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.913569606316381
+        },
+        {
+          "step": 259,
+          "target": {
+            "x": 0.333024633808321,
+            "y": 1.4579088714864414,
+            "z": -13.676666666666666
+          },
+          "camera": {
+            "x": 2.3392091747030497,
+            "y": 2.8331885845809635,
+            "z": -17.982928663174278
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.945711585195812
+        },
+        {
+          "step": 260,
+          "target": {
+            "x": 0.32538931446064007,
+            "y": 1.4474103073833802,
+            "z": -13.733333333333334
+          },
+          "camera": {
+            "x": 2.327335109829029,
+            "y": 2.8329054053258753,
+            "z": -18.07756426993707
+          },
+          "obstacle": "right-wall",
+          "distanceM": 4.979932335339591
+        },
+        {
+          "step": 261,
+          "target": {
+            "x": 0.3177183125078245,
+            "y": 1.4368626796982586,
+            "z": -13.79
+          },
+          "camera": {
+            "x": 2.315180001174552,
+            "y": 2.833188395945771,
+            "z": -18.174515215113473
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.016328575273656
+        },
+        {
+          "step": 262,
+          "target": {
+            "x": 0.31001246916168257,
+            "y": 1.4262671450973134,
+            "z": -13.846666666666666
+          },
+          "camera": {
+            "x": 2.3027450676122405,
+            "y": 2.8340678677063424,
+            "z": -18.273873836823686
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.055002414539063
+        },
+        {
+          "step": 263,
+          "target": {
+            "x": 0.30227262945477373,
+            "y": 1.4156248655003139,
+            "z": -13.903333333333334
+          },
+          "camera": {
+            "x": 2.2900303818985366,
+            "y": 2.835575850408553,
+            "z": -18.37573829390093
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.09606199071909
+        },
+        {
+          "step": 264,
+          "target": {
+            "x": 0.29449964214774255,
+            "y": 1.404937007953146,
+            "z": -13.96
+          },
+          "camera": {
+            "x": 2.2770348800607265,
+            "y": 2.8377462875542063,
+            "z": -18.480213219278937
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.139622160141897
+        },
+        {
+          "step": 265,
+          "target": {
+            "x": 0.2866943596362405,
+            "y": 1.394204744499831,
+            "z": -14.016666666666666
+          },
+          "camera": {
+            "x": 2.2637563654479096,
+            "y": 2.8406152491739904,
+            "z": -18.58741043251736
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.1858052504812395
+        },
+        {
+          "step": 266,
+          "target": {
+            "x": 0.27885763785745227,
+            "y": 1.3834292520539968,
+            "z": -14.073333333333334
+          },
+          "camera": {
+            "x": 2.250191507077791,
+            "y": 2.844221164974835,
+            "z": -18.69744972049175
+          },
+          "obstacle": "right-wall",
+          "distanceM": 5.234741884637404
+        },
+        {
+          "step": 267,
+          "target": {
+            "x": 0.2709903361962331,
+            "y": 1.3726117122698205,
+            "z": -14.13
+          },
+          "camera": {
+            "x": 2.235619340448056,
+            "y": 2.8480669889147934,
+            "z": -18.80875337615645
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.284644600408088
+        },
+        {
+          "step": 268,
+          "target": {
+            "x": 0.2630933173908667,
+            "y": 1.3617533114124418,
+            "z": -14.186666666666666
+          },
+          "camera": {
+            "x": 2.21699677841563,
+            "y": 2.8498605369553593,
+            "z": -18.914029252437675
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.327303151413965
+        },
+        {
+          "step": 269,
+          "target": {
+            "x": 0.2551674474384562,
+            "y": 1.3508552402278773,
+            "z": -14.243333333333332
+          },
+          "camera": {
+            "x": 2.1945697305294987,
+            "y": 2.849716322173445,
+            "z": -19.01359049766748
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.363135199909756
+        },
+        {
+          "step": 270,
+          "target": {
+            "x": 0.24721359549995803,
+            "y": 1.339918693812442,
+            "z": -14.3
+          },
+          "camera": {
+            "x": 2.168575226597258,
+            "y": 2.847742972943591,
+            "z": -19.107731883973795
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.392536549933478
+        },
+        {
+          "step": 271,
+          "target": {
+            "x": 0.2392326338048696,
+            "y": 1.3289448714816956,
+            "z": -14.356666666666666
+          },
+          "camera": {
+            "x": 2.1392416869708075,
+            "y": 2.8440435479185644,
+            "z": -19.196731014256226
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.4158823187234075
+        },
+        {
+          "step": 272,
+          "target": {
+            "x": 0.23122543755557734,
+            "y": 1.3179349766389188,
+            "z": -14.413333333333332
+          },
+          "camera": {
+            "x": 2.1067891848209803,
+            "y": 2.8387158325178925,
+            "z": -19.280849452063777
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.433528038739185
+        },
+        {
+          "step": 273,
+          "target": {
+            "x": 0.2231928848313833,
+            "y": 1.306890216643152,
+            "z": -14.47
+          },
+          "camera": {
+            "x": 2.071429700364211,
+            "y": 2.8318526180413595,
+            "z": -19.360333778897203
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.445810694560739
+        },
+        {
+          "step": 274,
+          "target": {
+            "x": 0.21513585649221262,
+            "y": 1.2958118026767922,
+            "z": -14.526666666666667
+          },
+          "camera": {
+            "x": 2.0333673670704497,
+            "y": 2.8235419644615867,
+            "z": -19.435416583205186
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.453049698691872
+        },
+        {
+          "step": 275,
+          "target": {
+            "x": 0.2070552360820168,
+            "y": 1.2847009496127733,
+            "z": -14.583333333333332
+          },
+          "camera": {
+            "x": 1.9927987099380675,
+            "y": 2.8138674478899315,
+            "z": -19.506317385103795
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.455547810060784
+        },
+        {
+          "step": 276,
+          "target": {
+            "x": 0.19895190973188387,
+            "y": 1.2735588758813403,
+            "z": -14.64
+          },
+          "camera": {
+            "x": 1.9394590449414124,
+            "y": 2.7937776581601406,
+            "z": -19.543790363192972
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.421032204281098
+        },
+        {
+          "step": 277,
+          "target": {
+            "x": 0.1908267660628649,
+            "y": 1.2623868033364394,
+            "z": -14.696666666666667
+          },
+          "camera": {
+            "x": 1.8727406864943883,
+            "y": 2.762072370473139,
+            "z": -19.543735141093524
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.345274925745369
+        },
+        {
+          "step": 278,
+          "target": {
+            "x": 0.1826806960885246,
+            "y": 1.2511859571217214,
+            "z": -14.753333333333332
+          },
+          "camera": {
+            "x": 1.8063026527055042,
+            "y": 2.7304155910428376,
+            "z": -19.543679915860512
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.269885098235916
+        },
+        {
+          "step": 279,
+          "target": {
+            "x": 0.17451459311723386,
+            "y": 1.2399575655361965,
+            "z": -14.81
+          },
+          "camera": {
+            "x": 1.7401897753853222,
+            "y": 2.6988140509719605,
+            "z": -19.543624785521956
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.194882542615951
+        },
+        {
+          "step": 280,
+          "target": {
+            "x": 0.16632935265420745,
+            "y": 1.2287028598995353,
+            "z": -14.866666666666667
+          },
+          "camera": {
+            "x": 1.674445483967642,
+            "y": 2.6672740993641426,
+            "z": -19.543569848171224
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.120285621497102
+        },
+        {
+          "step": 281,
+          "target": {
+            "x": 0.15812587230330108,
+            "y": 1.217423074417039,
+            "z": -14.923333333333334
+          },
+          "camera": {
+            "x": 1.6091118018796873,
+            "y": 2.6358017018782953,
+            "z": -19.543515201791827
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 5.046111235030413
+        },
+        {
+          "step": 282,
+          "target": {
+            "x": 0.14990505166858,
+            "y": 1.2061194460442977,
+            "z": -14.979999999999999
+          },
+          "camera": {
+            "x": 1.5442293471966224,
+            "y": 2.604402440466573,
+            "z": -19.543460944080625
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.972374821123156
+        },
+        {
+          "step": 283,
+          "target": {
+            "x": 0.14166779225566675,
+            "y": 1.1947932143515416,
+            "z": -15.036666666666669
+          },
+          "camera": {
+            "x": 1.4798373373184972,
+            "y": 2.573081514230051,
+            "z": -19.543407172269703
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.899090359827907
+        },
+        {
+          "step": 284,
+          "target": {
+            "x": 0.1334149973728821,
+            "y": 1.183445621387713,
+            "z": -15.093333333333334
+          },
+          "camera": {
+            "x": 1.415973597401202,
+            "y": 2.541843741324914,
+            "z": -19.54335398294735
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.826270381645302
+        },
+        {
+          "step": 285,
+          "target": {
+            "x": 0.1251475720321848,
+            "y": 1.1720779115442541,
+            "z": -15.149999999999999
+          },
+          "camera": {
+            "x": 1.352674572268572,
+            "y": 2.510693561850991,
+            "z": -19.5433014718785
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.753925979478991
+        },
+        {
+          "step": 286,
+          "target": {
+            "x": 0.11686642284992921,
+            "y": 1.1606913314186527,
+            "z": -15.206666666666667
+          },
+          "camera": {
+            "x": 1.2899753415305932,
+            "y": 2.479635041654383,
+            "z": -19.54324973382495
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.682066823980885
+        },
+        {
+          "step": 287,
+          "target": {
+            "x": 0.10857245794744359,
+            "y": 1.149287129677735,
+            "z": -15.263333333333332
+          },
+          "camera": {
+            "x": 1.2279096376322451,
+            "y": 2.4486718769761087,
+            "z": -19.543198862365852
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.610701182026135
+        },
+        {
+          "step": 288,
+          "target": {
+            "x": 0.10026658685144363,
+            "y": 1.1378665569207351,
+            "z": -15.32
+          },
+          "camera": {
+            "x": 1.16650986655894,
+            "y": 2.4178073998795337,
+            "z": -19.54314894971881
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.539835938060598
+        },
+        {
+          "step": 289,
+          "target": {
+            "x": 0.09194972039429333,
+            "y": 1.1264308655421533,
+            "z": -15.376666666666669
+          },
+          "camera": {
+            "x": 1.1058071309275663,
+            "y": 2.3870445843906243,
+            "z": -19.54310008656203
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.4694766180687395
+        },
+        {
+          "step": 290,
+          "target": {
+            "x": 0.08362277061412299,
+            "y": 1.1149813095944192,
+            "z": -15.433333333333334
+          },
+          "camera": {
+            "x": 1.0458312551964999,
+            "y": 2.3563860532866365,
+            "z": -19.54305236185796
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.399627415916176
+        },
+        {
+          "step": 291,
+          "target": {
+            "x": 0.0752866506548115,
+            "y": 1.1035191446503658,
+            "z": -15.489999999999998
+          },
+          "camera": {
+            "x": 0.9866108127336601,
+            "y": 2.325834085470907,
+            "z": -19.543005862678797
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.330291221829146
+        },
+        {
+          "step": 292,
+          "target": {
+            "x": 0.06694227466585223,
+            "y": 1.0920456276655468,
+            "z": -15.546666666666667
+          },
+          "camera": {
+            "x": 0.928173154488424,
+            "y": 2.2953906238736654,
+            "z": -19.542960674034386
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.261469652782033
+        },
+        {
+          "step": 293,
+          "target": {
+            "x": 0.058590557702105354,
+            "y": 1.0805620168403949,
+            "z": -15.603333333333335
+          },
+          "camera": {
+            "x": 0.8705444390208861,
+            "y": 2.2650572838213803,
+            "z": -19.542916878702854
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.193163084574134
+        },
+        {
+          "step": 294,
+          "target": {
+            "x": 0.05023241562345087,
+            "y": 1.069069571482245,
+            "z": -15.66
+          },
+          "camera": {
+            "x": 0.8137496636504028,
+            "y": 2.2348353618198864,
+            "z": -19.542874557064504
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.125370685387564
+        },
+        {
+          "step": 295,
+          "target": {
+            "x": 0.041868764994355406,
+            "y": 1.0575695518672386,
+            "z": -15.716666666666665
+          },
+          "camera": {
+            "x": 0.7578126964944386,
+            "y": 2.2047258446995315,
+            "z": -19.542833786939344
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 4.058090450629735
+        },
+        {
+          "step": 296,
+          "target": {
+            "x": 0.03350052298335985,
+            "y": 1.0460632191021197,
+            "z": -15.773333333333333
+          },
+          "camera": {
+            "x": 0.7027563091783043,
+            "y": 2.1747294190736555,
+            "z": -19.54279464342875
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 3.9913192388757692
+        },
+        {
+          "step": 297,
+          "target": {
+            "x": 0.02512860726250259,
+            "y": 1.034551834985941,
+            "z": -15.829999999999998
+          },
+          "camera": {
+            "x": 0.6486022100063015,
+            "y": 2.144846481064893,
+            "z": -19.542757198761645
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 3.9250528087385455
+        },
+        {
+          "step": 298,
+          "target": {
+            "x": 0.01675393590668569,
+            "y": 1.0230366618716928,
+            "z": -15.886666666666667
+          },
+          "camera": {
+            "x": 0.5953710773949782,
+            "y": 2.115077146257052,
+            "z": -19.542721522145666
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 3.85928585650665
+        },
+        {
+          "step": 299,
+          "target": {
+            "x": 0.008377427292996568,
+            "y": 1.0115189625278704,
+            "z": -15.943333333333335
+          },
+          "camera": {
+            "x": 0.5430825933795493,
+            "y": 2.0854212598336384,
+            "z": -19.54268767962371
+          },
+          "obstacle": "rear-wall",
+          "distanceM": 3.794012054403315
+        }
+      ]
+    },
+    "orbitProxy": {
+      "scope": "Actual vendored OrbitControls in Node without DOM input; pointer/keyboard handling still needs browser acceptance",
+      "initialRenderedDistanceM": 1.5,
+      "initialDesiredDistanceM": 8,
+      "afterRotationDesiredDistanceM": 8,
+      "afterExplicitZoomDesiredDistanceM": 6.4,
+      "afterConstraintRenderedDistanceM": 1.5915734931167027,
+      "regressionBefore": {
+        "method": "rendered-radius ratio interpreted as user zoom",
+        "rendered1_5mClampedTo3_6mByControls": true,
+        "desired8mIncorrectlyBecame19_2m": true
+      }
+    },
+    "clearance": {
+      "ground": {
+        "schema": "roadster-clearance-estimate",
+        "version": 1,
+        "simTime": 1.4999999999999971,
+        "step": 180,
+        "worldCgHeightM": 0.5970097961232198,
+        "centreDownDistanceM": 0.5970097961232198,
+        "centreDownObjectId": "ground",
+        "rangeM": 12,
+        "distances": {
+          "down": {
+            "distanceM": 0,
+            "objectId": "ground",
+            "part": "tyre-contact-FR",
+            "point": null,
+            "surfacePoint": {
+              "x": -0.89,
+              "y": 0,
+              "z": -26.58
+            },
+            "sampleCount": 56,
+            "hitCount": 52,
+            "estimated": true,
+            "availability": "sampled"
+          },
+          "up": {
+            "distanceM": null,
+            "objectId": null,
+            "part": null,
+            "sampleCount": 56,
+            "hitCount": 0,
+            "estimated": true,
+            "availability": "no-surface-in-range"
+          }
+        },
+        "hullDistances": {
+          "down": {
+            "distanceM": 0.3470097961232198,
+            "objectId": "ground",
+            "part": "hull-0",
+            "point": {
+              "x": -0.93,
+              "y": 0.3470097961232198,
+              "z": -29.62
+            },
+            "surfacePoint": {
+              "x": -0.93,
+              "y": 0,
+              "z": -29.62
+            },
+            "sampleCount": 32,
+            "hitCount": 32,
+            "estimated": true,
+            "availability": "sampled"
+          },
+          "up": {
+            "distanceM": null,
+            "objectId": null,
+            "part": null,
+            "sampleCount": 32,
+            "hitCount": 0,
+            "estimated": true,
+            "availability": "no-surface-in-range"
+          }
+        },
+        "hullDatum": "four physical hull collision boxes; tyres excluded, visual-only details excluded",
+        "quickRollHeadroom": null,
+        "estimate": true,
+        "method": "rays from physical hull box corners and current tyre extrema",
+        "contactSamplePhase": "wheel/contact state from the most recent fixed step",
+        "notCovered": "continuous swept volume, obstacles between samples, non-collision visual details",
+        "recoveryHeightM": null
+      },
+      "elevated": {
+        "schema": "roadster-clearance-estimate",
+        "version": 1,
+        "simTime": 1.4999999999999971,
+        "step": 180,
+        "worldCgHeightM": 8.597009796123222,
+        "centreDownDistanceM": 0.5970097961232224,
+        "centreDownObjectId": "raised-deck",
+        "rangeM": 12,
+        "distances": {
+          "down": {
+            "distanceM": 0,
+            "objectId": "raised-deck",
+            "part": "tyre-contact-FR",
+            "point": null,
+            "surfacePoint": {
+              "x": -0.89,
+              "y": 8,
+              "z": -26.58
+            },
+            "sampleCount": 56,
+            "hitCount": 56,
+            "estimated": true,
+            "availability": "sampled"
+          }
+        },
+        "hullDistances": {
+          "down": {
+            "distanceM": 0.34700979612322236,
+            "objectId": "raised-deck",
+            "part": "hull-0",
+            "point": {
+              "x": -0.93,
+              "y": 8.347009796123222,
+              "z": -29.62
+            },
+            "surfacePoint": {
+              "x": -0.93,
+              "y": 8,
+              "z": -29.62
+            },
+            "sampleCount": 32,
+            "hitCount": 32,
+            "estimated": true,
+            "availability": "sampled"
+          }
+        },
+        "hullDatum": "four physical hull collision boxes; tyres excluded, visual-only details excluded",
+        "quickRollHeadroom": null,
+        "estimate": true,
+        "method": "rays from physical hull box corners and current tyre extrema",
+        "contactSamplePhase": "wheel/contact state from the most recent fixed step",
+        "notCovered": "continuous swept volume, obstacles between samples, non-collision visual details",
+        "recoveryHeightM": null
+      },
+      "roof": {
+        "schema": "roadster-clearance-estimate",
+        "version": 1,
+        "simTime": 1.4999999999999971,
+        "step": 180,
+        "worldCgHeightM": 20.59700979612322,
+        "centreDownDistanceM": 0.5970097961232206,
+        "centreDownObjectId": "roof",
+        "rangeM": 12,
+        "distances": {
+          "down": {
+            "distanceM": 0,
+            "objectId": "roof",
+            "part": "tyre-contact-FR",
+            "point": null,
+            "surfacePoint": {
+              "x": -0.89,
+              "y": 20,
+              "z": -26.58
+            },
+            "sampleCount": 56,
+            "hitCount": 52,
+            "estimated": true,
+            "availability": "sampled"
+          }
+        },
+        "hullDistances": {
+          "down": {
+            "distanceM": 0.3470097961232206,
+            "objectId": "roof",
+            "part": "hull-0",
+            "point": {
+              "x": -0.93,
+              "y": 20.34700979612322,
+              "z": -29.62
+            },
+            "surfacePoint": {
+              "x": -0.93,
+              "y": 20,
+              "z": -29.62
+            },
+            "sampleCount": 32,
+            "hitCount": 32,
+            "estimated": true,
+            "availability": "sampled"
+          }
+        },
+        "hullDatum": "four physical hull collision boxes; tyres excluded, visual-only details excluded",
+        "quickRollHeadroom": null,
+        "estimate": true,
+        "method": "rays from physical hull box corners and current tyre extrema",
+        "contactSamplePhase": "wheel/contact state from the most recent fixed step",
+        "notCovered": "continuous swept volume, obstacles between samples, non-collision visual details",
+        "recoveryHeightM": null
+      },
+      "tiltedUnderBridge": {
+        "schema": "roadster-clearance-estimate",
+        "version": 1,
+        "simTime": 0,
+        "step": 0,
+        "worldCgHeightM": 2.5,
+        "centreDownDistanceM": 2.5,
+        "centreDownObjectId": "ground",
+        "rangeM": 12,
+        "distances": {
+          "down": {
+            "distanceM": 1.4774999999999998,
+            "objectId": "ground",
+            "part": "tyre-FR",
+            "point": {
+              "x": 0.23999999999999988,
+              "y": 1.4774999999999998,
+              "z": -26.58
+            },
+            "surfacePoint": {
+              "x": 0.23999999999999988,
+              "y": 0,
+              "z": -26.58
+            },
+            "sampleCount": 56,
+            "hitCount": 56,
+            "estimated": true,
+            "availability": "sampled"
+          },
+          "up": {
+            "distanceM": 0.22750000000000004,
+            "objectId": "bridge",
+            "part": "tyre-FL",
+            "point": {
+              "x": 0.2400000000000002,
+              "y": 3.5225,
+              "z": -26.58
+            },
+            "surfacePoint": {
+              "x": 0.2400000000000002,
+              "y": 3.75,
+              "z": -26.58
+            },
+            "sampleCount": 56,
+            "hitCount": 56,
+            "estimated": true,
+            "availability": "sampled"
+          }
+        },
+        "hullDistances": {
+          "down": {
+            "distanceM": 1.57,
+            "objectId": "ground",
+            "part": "hull-0",
+            "point": {
+              "x": 0.24999999999999978,
+              "y": 1.57,
+              "z": -29.62
+            },
+            "surfacePoint": {
+              "x": 0.24999999999999978,
+              "y": 0,
+              "z": -29.62
+            },
+            "sampleCount": 32,
+            "hitCount": 32,
+            "estimated": true,
+            "availability": "sampled"
+          },
+          "up": {
+            "distanceM": 0.3200000000000003,
+            "objectId": "bridge",
+            "part": "hull-0",
+            "point": {
+              "x": 0.2500000000000001,
+              "y": 3.4299999999999997,
+              "z": -29.62
+            },
+            "surfacePoint": {
+              "x": 0.2500000000000001,
+              "y": 3.75,
+              "z": -29.62
+            },
+            "sampleCount": 32,
+            "hitCount": 32,
+            "estimated": true,
+            "availability": "sampled"
+          }
+        },
+        "hullDatum": "four physical hull collision boxes; tyres excluded, visual-only details excluded",
+        "quickRollHeadroom": {
+          "distanceM": 1.25,
+          "objectId": "bridge",
+          "samples": [
+            {
+              "origin": {
+                "x": 0,
+                "y": 2.5,
+                "z": -28
+              },
+              "hit": {
+                "point": {
+                  "x": 0,
+                  "y": 3.75,
+                  "z": -28
+                },
+                "normal": {
+                  "x": 0,
+                  "y": -1,
+                  "z": 0
+                },
+                "distance": 1.25,
+                "objectId": "bridge",
+                "kind": "fixture"
+              }
+            },
+            {
+              "origin": {
+                "x": -1.2,
+                "y": 2.5,
+                "z": -30.2
+              },
+              "hit": {
+                "point": {
+                  "x": -1.2,
+                  "y": 3.75,
+                  "z": -30.2
+                },
+                "normal": {
+                  "x": 0,
+                  "y": -1,
+                  "z": 0
+                },
+                "distance": 1.25,
+                "objectId": "bridge",
+                "kind": "fixture"
+              }
+            },
+            {
+              "origin": {
+                "x": 1.2,
+                "y": 2.5,
+                "z": -30.2
+              },
+              "hit": {
+                "point": {
+                  "x": 1.2,
+                  "y": 3.75,
+                  "z": -30.2
+                },
+                "normal": {
+                  "x": 0,
+                  "y": -1,
+                  "z": 0
+                },
+                "distance": 1.25,
+                "objectId": "bridge",
+                "kind": "fixture"
+              }
+            },
+            {
+              "origin": {
+                "x": -1.2,
+                "y": 2.5,
+                "z": -25.8
+              },
+              "hit": {
+                "point": {
+                  "x": -1.2,
+                  "y": 3.75,
+                  "z": -25.8
+                },
+                "normal": {
+                  "x": 0,
+                  "y": -1,
+                  "z": 0
+                },
+                "distance": 1.25,
+                "objectId": "bridge",
+                "kind": "fixture"
+              }
+            },
+            {
+              "origin": {
+                "x": 1.2,
+                "y": 2.5,
+                "z": -25.8
+              },
+              "hit": {
+                "point": {
+                  "x": 1.2,
+                  "y": 3.75,
+                  "z": -25.8
+                },
+                "normal": {
+                  "x": 0,
+                  "y": -1,
+                  "z": 0
+                },
+                "distance": 1.25,
+                "objectId": "bridge",
+                "kind": "fixture"
+              }
+            }
+          ],
+          "rangeM": 12,
+          "datum": "CG plane, same five world-axis rays used by quick-roll-1 preflight",
+          "estimated": true
+        },
+        "estimate": true,
+        "method": "rays from physical hull box corners and current tyre extrema",
+        "contactSamplePhase": "wheel/contact state from the most recent fixed step",
+        "notCovered": "continuous swept volume, obstacles between samples, non-collision visual details",
+        "recoveryHeightM": null
+      }
+    }
+  }
+}

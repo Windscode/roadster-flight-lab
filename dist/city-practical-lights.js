@@ -87,7 +87,7 @@ export function createCityPracticalLights(scene,anchors){
       vehicle.updateWorldMatrix(true,false);
       if(!vehicleMatrixReady||vehicle.matrixWorld.elements.some((v,i)=>Math.abs(v-lastVehicleMatrix.elements[i])>.0002)){shadowDirty=true;lastVehicleMatrix.copy(vehicle.matrixWorld);vehicleMatrixReady=true;}
       heads.forEach((entry,i)=>{
-        entry.light.visible=i<profile.heads;if(!entry.light.visible)return;
+        entry.light.visible=i<profile.heads&&(!vehicle.userData.lampMode||vehicle.userData.lampMode==='low-beam');if(!entry.light.visible)return;
         const side=profile.heads===1?0:(i===0?-1:1);
         position.set(side*.56,-.018,2.327).applyMatrix4(vehicle.matrixWorld);
         point.set(side*.92,-.50,24).applyMatrix4(vehicle.matrixWorld);

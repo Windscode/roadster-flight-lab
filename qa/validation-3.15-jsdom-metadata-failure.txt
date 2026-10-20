@@ -1,0 +1,119 @@
+PASS scripts/repository-payloads.mjs
+PASS scripts/model-build.mjs
+PASS tests/physics.test.mjs
+PASS tests/braking.test.mjs
+PASS tests/vehicle-geometry.test.mjs
+PASS tests/city-seal.test.mjs
+PASS tests/handling-controls.test.mjs
+PASS tests/air-stabilization.test.mjs
+PASS tests/pose-hold.test.mjs
+PASS tests/flight-controls-3.7.test.mjs
+PASS tests/flight-programs.test.mjs
+PASS tests/wind-laboratory.test.mjs
+PASS tests/physics-research-3.8.test.mjs
+PASS tests/experiment-records.test.mjs
+PASS tests/research-road-3.8.test.mjs
+PASS tests/performance-meter.test.mjs
+PASS tests/physics-controls-3.9.test.mjs
+PASS tests/reproduction-verdict-3.9.test.mjs
+PASS tests/visual-corridor-3.9.test.mjs
+PASS tests/city-lighting-3.10.test.mjs
+PASS tests/vehicle-surface-3.10.test.mjs
+PASS tests/inspection-capture-3.10.test.mjs
+PASS tests/history-compatibility-3.10.test.mjs
+PASS tests/control-capture-3.10.test.mjs
+PASS tests/vehicle-dynamics-3.11.test.mjs
+PASS tests/ui-response-3.11.test.mjs
+PASS tests/capture-detail-3.11.test.mjs
+PASS tests/research-robustness-3.11.test.mjs
+PASS tests/history-compatibility-3.11.test.mjs
+PASS tests/visual-regressions-3.11.test.mjs
+PASS tests/braking-corner-3.12.test.mjs
+PASS tests/chase-camera-3.12.test.mjs
+PASS tests/reflection-stability-3.12.test.mjs
+PASS tests/research-recovery-grid-3.12.test.mjs
+PASS tests/sampler-budget-3.13.test.mjs
+PASS tests/render-program-diagnostics-3.13.test.mjs
+PASS tests/x-flip-3.13.test.mjs
+PASS tests/visual-quality-3.13.test.mjs
+PASS tests/history-compatibility-3.13.test.mjs
+PASS tests/framebuffer-matrix-3.14.test.mjs
+PASS tests/physics-controls-3.14.test.mjs
+PASS tests/camera-clearance-3.14.test.mjs
+PASS tests/contact-regressions-3.14.test.mjs
+PASS tests/vehicle-display-3.14.test.mjs
+PASS tests/vehicle-study-capture-3.14.test.mjs
+PASS tests/city-continuity-3.14.test.mjs
+PASS tests/research-platform-3.14.test.mjs
+PASS tests/clearance-cpu-3.14.mjs
+PASS tests/pilot-input-recovery-3.15.test.mjs
+PASS tests/contact-steering-3.15.test.mjs
+PASS tests/input-session-3.15.test.mjs
+PASS tests/landing-reserve-3.15.test.mjs
+PASS tests/city-navigation-3.15.test.mjs
+PASS tests/city-flight-3.15.test.mjs
+PASS tests/city-vehicle-entry-3.15.test.mjs
+PASS tests/history-task-3.15.test.mjs
+PASS tests/research-value-3.15.test.mjs
+PASS tests/visual-lifecycle-3.15.test.mjs
+PASS tests/trim-independent-3.14.py
+PASS qa/visual-upgrade-check.mjs
+PASS tests/render-performance.test.mjs
+PASS tests/local-probe-sun.test.mjs
+PASS tests/city-geometry-scope-3.14.test.mjs
+PASS qa/exterior-materials-check.mjs
+PASS tests/physics-cpu.test.mjs
+PASS qa/render-budget-check.mjs
+PASS tests/indirect-lighting.test.mjs
+PASS tests/research-dynamics.test.mjs
+PASS tests/research-study.test.mjs
+PASS qa/city-3.4-geometry-check.mjs
+PASS tests/repository-payloads.test.mjs
+PASS scripts/check-static.mjs
+PASS 18 pairwise selections cover every ground/air x initial G x 0/20/50 km/h combination
+PASS Before and after start with exactly matching declared physical conditions and fixture geometry
+PASS All initial translational speeds and all four wheel speeds match the prescribed rolling initial condition
+PASS All keydown/keyup/repeat receipts are dispatched JSDOM KeyboardEvents, explicitly synthetic
+PASS InputSession records every one of the actual 120 Hz steps without journal eviction
+PASS Production driverAxes and applied solver inputs retain held W, E and 1 without repeat amplification or axis loss
+PASS Every received 1 request in legal hover mode reaches the bounded pitch-rate path for all candidate sequences
+PASS Ground-supported pitch before E or without E reports takeoff-required; the request is retained
+PASS Forward and reverse release orders stop only the released axes, without a leftover manual pitch rate
+PASS G changes while 1 remains held affect the next physical step; repeated G does not toggle twice
+PASS Historical G pitch suppression remains in Before traces and the same sequence physically pitches in the candidate
+PASS All sequence integrations remain finite and commands/forces stay within actual nozzle capacities
+node:internal/modules/cjs/loader:1517
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module '/tmp/roadster-dom-314/node_modules/jsdom/lib/api.js/package.json'
+Require stack:
+- /workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/pilot-sequences-3.15.test.mjs
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)
+    at Module._load (node:internal/modules/cjs/loader:1294:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1617:12)
+    at require (node:internal/modules/helpers:153:16)
+    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/pilot-sequences-3.15.test.mjs:164:129
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/pilot-sequences-3.15.test.mjs'
+  ]
+}
+
+Node.js v24.19.0
+file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/scripts/validate.mjs:17
+    if(result.error||result.status!==0){process.stdout.write(stdout);process.stderr.write(stderr);throw new Error(path+' failed',{cause:result.error});}
+                                                                                                        ^
+
+Error: tests/pilot-sequences-3.15.test.mjs failed
+    at run (file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/scripts/validate.mjs:17:105)
+    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/scripts/validate.mjs:103:21 {
+  [cause]: undefined
+}
+
+Node.js v24.19.0
