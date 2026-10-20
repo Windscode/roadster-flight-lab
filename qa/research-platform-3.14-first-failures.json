@@ -1,0 +1,29 @@
+{
+  "schema": "roadster.research-first-failures",
+  "version": 1,
+  "modelVersion": "3.14.0",
+  "scope": "Failures observed while developing the 3.14 research fixtures; retained after fixes. These are isolated synthetic fixtures, not user archives or target-GPU evidence.",
+  "failures": [
+    {
+      "fixture": "qa/research-safety-3.14-dom-check.mjs / maximum rate request save and reload",
+      "observation": "Reloaded rate inputs were [] instead of [360,-120].",
+      "rootCause": "saveDraft removed the edited program and appended it at the end. Reload selected the first other program, making a valid saved edit appear absent.",
+      "change": "Replace an existing program at its original list index; append only a genuinely new program.",
+      "assertionPreserved": "Maximum roll/pitch requests survive editor, save and reload; actual values remain 360 and -120."
+    },
+    {
+      "fixture": "tests/research-platform-3.14.test.mjs / invalid body state before controller decision",
+      "observation": "Error: 快照不可恢复：包含非有限数; captureExperimentSnapshot threw during LandingTaskRunner.finish after the bounded controller had disabled itself.",
+      "rootCause": "The controller detected a non-finite observation before the next physics sanity pass. There was no physics failure report yet, and result finalization still attempted a complete finite snapshot.",
+      "change": "captureTerminalState catches unavailable full continuation, retains serializable invalid-field descriptions and last finite telemetry, marks diagnostic-only terminalReplayable=false, and releases the research command.",
+      "acceptanceClarification": "Two separate injection points remain covered: corruption after control decision reaches the physics safety path and yields solver_fault; corruption before decision yields controller_fault plus explicit terminal_capture_failed event. No reset state is used as the terminal and no exact continuation is claimed."
+    },
+    {
+      "fixture": "Independent AST/state/Worker boundary review",
+      "evidenceLevel": "Source-confirmed development-candidate gaps; the added boundary suite exercises each corrected branch. No target-browser exploit or remote code execution is claimed.",
+      "observation": "The previous state importer accepted extra fields, sparse states and arbitrary fault payloads; duplicate tick at the same decision step could integrate again. The previous Worker onerror callback had no job generation check.",
+      "change": "Exact data/descriptor/state contracts, node-specific state limits, bounded fault payloads, same-step idempotence and ordered declared decision steps; old Worker callbacks ignored, concurrent requests refused, malformed result/cancel failures close the current job with a persisted attempt.",
+      "acceptance": "tests/research-boundaries-3.14.test.mjs retains prototype/accessor, overflow, exact-state continuation, real Node Worker cancel/concurrency and isolated DOM stale-callback/protectedRaw fixtures."
+    }
+  ]
+}

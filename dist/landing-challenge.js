@@ -1,0 +1,118 @@
+/* Fixed-field autonomous task, shared by live rendering and background study.
+ * References, winds and faults enter public control APIs; no flight state is
+ * assigned here. Only creation/import of the declared initial fixture resets. */
+import {RoadsterSim,PHYSICS_HZ} from './physics.js';
+import {WIND_LAB_DIMENSIONS} from './wind-lab-data.js';
+import {currentExperimentIdentity,captureExperimentSnapshot,captureTerminalState,failurePhysicalTelemetry,contentLabel,canonicalJSON} from './experiment-records.js';
+import {BoundedHeightController,HEIGHT_TEMPLATES,validateHeightAlgorithm,validateHeightState} from './bounded-height-controller.js';
+import {compareConditions} from './research-comparison.js';
+import {readProtectedArchive,writeArchiveCandidate} from './research-storage.js';
+export const LANDING_PROTOCOL='windlab-disturbance-landing-1';
+export const LANDING_LIBRARY_KEY='roadster-landing-research-v1';
+const copy=v=>JSON.parse(JSON.stringify(v)),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),dt=1/120;
+const finite=n=>typeof n==='number'&&Number.isFinite(n),norm=v=>Math.hypot(v.x,v.y,v.z);
+const identity=()=>({...currentExperimentIdentity(),taskProtocol:LANDING_PROTOCOL});
+export const DEFAULT_LANDING_TASK=Object.freeze({schema:'roadster.landing-task',version:1,name:'Crosswind landing / VECTOR 07',seed:31415,supplyMode:'bench',initialPressureBar:350,targetHeightM:2.5,timeoutS:16,nozzleScale:1,landingRadiusM:1.5,disturbances:Object.freeze([{timeS:2,speedMps:3,directionDeg:90,gustMps:1,gustPeriodS:2.8},{timeS:4,speedMps:4,directionDeg:270,gustMps:1.5,gustPeriodS:3.1},{timeS:7.5,speedMps:0,directionDeg:0,gustMps:0,gustPeriodS:4}]),faultTimeS:4.5,nozzleId:'lift-FL'});
+export function validateLandingTask(value){
+  const task=copy(value);if(task?.schema!=='roadster.landing-task'||task.version!==1)throw Error('Unsupported landing task version');
+  const allowed=Object.keys(DEFAULT_LANDING_TASK);if(Object.keys(task).some(k=>!allowed.includes(k)))throw Error('Unknown task field');
+  if(typeof task.name!=='string'||!task.name.trim()||task.name.length>80)throw Error('Task name must have 1–80 characters');
+  if(!['bench','finite'].includes(task.supplyMode))throw Error('Declare finite or bench gas supply');
+  for(const [key,min,max]of [['seed',0,4294967295],['initialPressureBar',100,350],['targetHeightM',.8,80],['timeoutS',12,30],['nozzleScale',0,1],['landingRadiusM',.5,3],['faultTimeS',0,16]])if(!finite(task[key])||task[key]<min||task[key]>max)throw Error('Invalid task '+key);
+  if(!Number.isInteger(task.seed)||task.nozzleId!=='lift-FL'||!Array.isArray(task.disturbances)||task.disturbances.length>8)throw Error('Invalid task seed / nozzle / disturbances');
+  let previous=-1;for(const w of task.disturbances){if(Object.keys(w).some(k=>!['timeS','speedMps','directionDeg','gustMps','gustPeriodS'].includes(k)))throw Error('Unknown disturbance field');for(const [key,min,max]of [['timeS',0,30],['speedMps',0,20],['directionDeg',0,360],['gustMps',0,10],['gustPeriodS',.5,30]])if(!finite(w[key])||w[key]<min||w[key]>max)throw Error('Invalid disturbance '+key);if(w.timeS<previous)throw Error('Disturbances must be ordered');previous=w.timeS;}
+  return task;
+}
+export function landingPreview(task){const t=validateLandingTask(task);return{taskId:contentLabel(t),field:'VECTOR 07 / actual windlab collision geometry',seed:t.seed,seedMeaning:'Reserved observer RNG seed retained in the initial snapshot. V1 uses ideal measurements and prescribed deterministic gusts, no stochastic disturbance.',workingBounds:WIND_LAB_DIMENSIONS.workingBounds,clearHeightM:WIND_LAB_DIMENSIONS.clearHeight,targetHeightM:t.targetHeightM,warnings:t.targetHeightM+1.1>=WIND_LAB_DIMENSIONS.clearHeight?['Requested target plus vehicle envelope intersects the laboratory clear-height limit; request is preserved, not clamped.']:[],timeline:[{timeS:0,event:'takeoff',targetWorldHeightM:t.targetHeightM},...t.disturbances.map(x=>({event:'wind',...x})),{timeS:t.faultTimeS,event:'single nozzle derating',id:t.nozzleId,scale:t.nozzleScale},{timeS:6,event:'descent begins; target reaches 0.45 m at 10 s'}],criteria:{takeoffHeightM:Math.min(t.targetHeightM-.2,1.6),radiusM:t.landingRadiusM,touchdownVerticalMps:1.4,touchdownTiltDeg:8,stableSeconds:.5,stableContacts:3,stableHorizontalMps:.4,stableVerticalMps:.35,stableAngularRadS:.15,timeoutS:t.timeoutS},authority:'Height outer-loop AST → bounded acceleration → existing position/attitude control, allocation, valves and gas. Pilot input cancels.'};}
+export function createLandingFixture(task=DEFAULT_LANDING_TASK){
+  const t=validateLandingTask(task),sim=new RoadsterSim({supplyMode:t.supplyMode,initialPressureBar:t.initialPressureBar},{world:'windlab'});
+  for(let k=0;k<240;k++)sim.advanceFixed({});
+  sim.setObservation({enabled:false,seed:t.seed,delayMs:0,positionNoiseM:0,velocityNoiseMps:0,attitudeNoiseDeg:0,angularRateNoiseRadS:0});sim.clearWind();sim.clearNozzleFault();return sim;
+}
+function contactObjects(sim){return sim.world.contacts.filter(c=>c.bi===sim.body||c.bj===sim.body).map(c=>({id:(c.bi===sim.body?c.bj:c.bi).userData?.id??'unnamed',wheelStop:(c.bi===sim.body?c.si:c.sj)?.material===sim._wheelStopMaterial}));}
+function sample(t,step,target){return{step,timeS:step/120,heightM:t.position.y,targetHeightM:target,verticalSpeedMps:t.velocity.y,x:t.position.x,z:t.position.z,rollDeg:t.rollDeg,pitchDeg:t.pitchDeg,pressureBar:t.pressureBar,gasMassKg:t.gasMass,massFlowKgS:t.massFlowKgS,allocationError:t.allocationError,contactCount:t.contactCount,nozzleThrustN:(t.nozzles||[]).map(n=>({id:n.id,actualN:n.thrust??n.actualForce??n.actualN??n.force??0})),heightControl:t.researchHeightControl??null};}
+export class LandingTaskRunner{
+  constructor(sim,{task=DEFAULT_LANDING_TASK,algorithm=HEIGHT_TEMPLATES.pd,onFinish=()=>{},onEvent=()=>{},initialControllerState=null}={}){this.sim=sim;this.task=validateLandingTask(task);this.preview=landingPreview(this.task);this.controller=new BoundedHeightController(algorithm,{state:initialControllerState});this.onFinish=onFinish;this.onEvent=onEvent;this.started=false;this.finished=false;this.step=0;this.events=[];this.io=[];this.samples=[];this.stableTime=0;this.airborne=false;this.touchdown=null;this.takeoffAt=null;this.recoveryAt=null;this.lastDisturbance=0;this.faultInjected=false;this.saturated=false;this.currentPhase='ready';this.stats={source:'all 120 Hz post-integration physical states; display curves do not define statistics',statisticsHz:120,count:0,heightErrorSquared:0,peakHeightErrorM:0,maxHeightM:null,minHeightM:null,minEnvelopeClearanceM:null,saturationSeconds:0,controllerLimitedSeconds:0,gasThroughputKg:0,onboardDischargedKg:0,externalSupplyKg:0,peakLateralErrorM:0};}
+  event(type,detail={}){const event={step:this.step,timeS:this.step/120,type,detail:copy(detail)};this.events.push(event);try{this.onEvent(event);}catch(error){this.events.push({step:this.step,timeS:this.step/120,type:'event_observer_error',detail:{sourceEvent:type,reason:String(error.message).slice(0,512)}});}}
+  start(){if(this.started)throw Error('Task has already started');if(this.sim.worldType!=='windlab')throw Error('Landing task requires the declared wind laboratory geometry');if(typeof this.sim.setResearchHeightControl!=='function')throw Error('Installed model lacks the bounded height-control interface');
+    this.initialSnapshot=captureExperimentSnapshot(this.sim,'lab');this.initialControllerState=this.controller.exportState();this.startSimTime=this.sim.simTime;this.previous=this.sim.telemetry();this.startHeight=this.previous.position.y;this.started=true;
+    this.sim.setPoseTarget({position:{x:0,y:this.task.targetHeightM,z:0},quaternion:{x:0,y:0,z:0,w:1}});this.event('task_start',{taskId:contentLabel(this.task),algorithmHash:this.controller.definition.hash,preview:this.preview});this.samples.push(sample(this.previous,0,this.startHeight));return this;
+  }
+  target(time){return time<1?this.startHeight+(this.task.targetHeightM-this.startHeight)*clamp(time,0,1):time<6?this.task.targetHeightM:this.task.targetHeightM+(.45-this.task.targetHeightM)*clamp((time-6)/4,0,1);}
+  beforeStep(pilotInput={}){
+    if(this.finished)return pilotInput;if(!this.started)this.start();
+    if(Object.values(pilotInput).some(v=>typeof v==='number'?Math.abs(v)>.01:v===true)){this.finish('cancelled','pilot_takeover');return pilotInput;}
+    const time=this.step/120,phase=time<1?'takeoff':time<6?'disturbance_hold':'landing';
+    if(phase!==this.currentPhase){this.currentPhase=phase;if(phase==='landing')this.sim.setPoseTarget({position:{x:0,y:.45,z:0},quaternion:{x:0,y:0,z:0,w:1}});this.event('phase',{phase});}
+    while(this.lastDisturbance<this.task.disturbances.length&&this.task.disturbances[this.lastDisturbance].timeS<=time+1e-9){const {timeS,...wind}=this.task.disturbances[this.lastDisturbance++];this.sim.setWind(wind);this.event('wind_change',{scheduledTimeS:timeS,wind});}
+    if(!this.faultInjected&&time>=this.task.faultTimeS){this.faultInjected=true;if(this.task.nozzleScale<1){this.sim.setNozzleFault({id:this.task.nozzleId,scale:this.task.nozzleScale});this.event('nozzle_derating',{id:this.task.nozzleId,scale:this.task.nozzleScale});}}
+    const t=this.sim.telemetry(),target=this.target(time),decision=this.controller.tick({error:target-t.position.y,height:t.position.y,targetHeight:target,verticalSpeed:t.velocity.y,time},this.step);
+    this.currentTarget=target;
+    if(!decision.active){this.sim.clearResearchHeightControl('controller_fault');this.event('controller_fault',decision.fault);this.finish('failed','controller_fault');return{};}
+    if(decision.updated){
+      const accepted=this.sim.setResearchHeightControl({accelerationMps2:decision.output,step:this.sim._stepCount,controllerHash:this.controller.definition.hash,expiresAfterSteps:Math.min(12,this.controller.definition.divisor+1)});
+      if(accepted===false){this.event('controller_command_rejected',{step:this.step});this.finish('failed','controller_command_rejected');return{};}
+      this.io.push({step:this.step,timeS:time,inputs:{...decision.inputs},raw:decision.raw,limited:decision.limited,output:decision.output,states:[...decision.stateAfter.states],operations:decision.operations,saturated:decision.saturated});
+    }
+    return{};
+  }
+  afterStep(t){
+    if(this.finished)return;this.step++;if(t.fault&&this.sim.getFailureReport?.()){this.event('solver_fault',{fault:t.fault});this.finish('failed','solver_fault');return;}const time=this.step/120,stats=this.stats,tilt=Math.max(Math.abs(t.rollDeg),Math.abs(t.pitchDeg)),lateral=Math.hypot(t.position.x,t.position.z),heightError=t.position.y-this.currentTarget;
+    stats.count++;stats.heightErrorSquared+=heightError*heightError;stats.peakHeightErrorM=Math.max(stats.peakHeightErrorM,Math.abs(heightError));stats.maxHeightM=Math.max(stats.maxHeightM??-Infinity,t.position.y);stats.minHeightM=Math.min(stats.minHeightM??Infinity,t.position.y);stats.peakLateralErrorM=Math.max(stats.peakLateralErrorM,lateral);
+    // Floor gap below the full collision shape AABB is explicitly an estimate;
+    // it is valid only in this declared flat central task field, not city AGL.
+    this.sim.body.updateAABB();const envelopeGap=this.sim.body.aabb.lowerBound.y;stats.minEnvelopeClearanceM=Math.min(stats.minEnvelopeClearanceM??Infinity,envelopeGap);
+    const flow=Math.max(0,t.massFlowKgS||0)*dt;stats.gasThroughputKg+=flow;if(t.supplyMode==='bench')stats.externalSupplyKg+=flow;else stats.onboardDischargedKg+=flow;
+    const saturated=t.holdFeasible===false||t.allocationError>.2||t.pressureLimited;if(saturated)stats.saturationSeconds+=dt;if(this.io.at(-1)?.saturated)stats.controllerLimitedSeconds+=dt;
+    if(saturated!==this.saturated){this.saturated=saturated;this.event(saturated?'actuator_saturation_begin':'actuator_saturation_end',{allocationError:t.allocationError,pressureBar:t.pressureBar});}
+    const actual=t.researchHeightControl;if(this.io.at(-1)?.step===this.step-1)this.io.at(-1).actuatorRequest=actual?{active:actual.active,requested:actual.requested??actual.requestedAccelerationMps2,applied:actual.applied??actual.appliedAccelerationMps2,reason:actual.reason}:null;
+    if(t.contactCount===0&&t.position.y>1.05)this.airborne=true;
+    if(this.takeoffAt===null&&t.contactCount===0&&t.position.y>=this.preview.criteria.takeoffHeightM){this.takeoffAt=time;this.event('takeoff_confirmed',{heightM:t.position.y});}
+    const objects=contactObjects(this.sim),hull=objects.filter(c=>!c.wheelStop);
+    if(this.airborne&&t.contactCount>0&&!this.touchdown){this.touchdown={timeS:time,step:this.step,preContactVerticalMps:Math.max(0,-this.previous.velocity.y),postContactVerticalMps:t.velocity.y,tiltDeg:tilt,position:{...t.position},errorM:lateral,contacts:t.contactCount};this.event('first_contact',this.touchdown);}
+    if(this.step%6===0)this.samples.push(sample(t,this.step,this.currentTarget));
+    if(t.fault){this.finish('failed','solver_fault');return;}
+    if(hull.length){this.event('hull_collision',{objects:hull});this.finish('failed','hull_collision');return;}
+    if(Math.abs(t.position.x)>24||Math.abs(t.position.z)>42){this.finish('failed','outside_working_area');return;}
+    if(this.touchdown&&(this.touchdown.preContactVerticalMps>this.preview.criteria.touchdownVerticalMps||this.touchdown.tiltDeg>this.preview.criteria.touchdownTiltDeg)){this.finish('failed','hard_or_tilted_touchdown');return;}
+    if(this.touchdown&&this.touchdown.timeS<6){this.finish('failed','premature_contact');return;}
+    if(time>=6&&this.takeoffAt===null){this.finish('failed','takeoff_target_not_reached');return;}
+    const stable=this.touchdown&&time>=6&&t.contactCount>=3&&tilt<8&&lateral<=this.task.landingRadiusM&&Math.hypot(t.velocity.x,t.velocity.z)<.4&&Math.abs(t.velocity.y)<.35&&norm(t.angularVelocity)<.15;
+    this.stableTime=stable?this.stableTime+dt:0;
+    if(this.stableTime>=.5-1e-10){this.recoveryAt=time;this.finish('completed','stable_landing');return;}
+    if(time>=this.task.timeoutS){this.finish('timeout',this.touchdown?'landing_not_stable_or_outside_target':'landing_not_reached');return;}
+    this.previous=t;
+  }
+  finish(status='cancelled',reason='user_cancel'){
+    if(this.finished)return this.result;this.finished=true;const sim=this.sim,terminal=captureTerminalState(sim,'lab',{lastValidTelemetry:this.previous,step:this.step}),failure=terminal.failureEvidence,t=failurePhysicalTelemetry(sim.telemetry(),failure);
+    if(terminal.captureFailed){status='failed';this.event('terminal_capture_failed',{reason:failure.reason,triggerStep:failure.triggerStep});if(reason!=='controller_fault')reason='terminal_capture_failed';}
+    if(!failure&&this.samples.at(-1)?.step!==this.step)this.samples.push(sample(t,this.step,this.currentTarget??this.startHeight));this.event('task_finish',{status,reason});
+    const finalSnapshot=terminal.finalSnapshot;
+    const stats=this.stats,summary={...stats,heightRmseM:stats.count?Math.sqrt(stats.heightErrorSquared/stats.count):null,takeoffAtS:this.takeoffAt,firstContact:this.touchdown,stableLandingAtS:this.recoveryAt,landingErrorM:Math.hypot(t.position.x,t.position.z),gasRemainingKg:t.gasMass,landingSucceeded:status==='completed',recoveryFromLastDisturbanceS:this.recoveryAt!==null&&this.lastDisturbance?Math.max(0,this.recoveryAt-this.task.disturbances[this.lastDisturbance-1].timeS):null,recoveryMeaning:'Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.',clearanceMeaning:'Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height.'};
+    this.result={schema:'roadster.landing-result',version:1,id:'landing-'+Date.now().toString(36)+'-'+contentLabel({task:this.task,algorithm:this.controller.definition.hash,initial:this.initialSnapshot?.stateLabel,steps:this.step}).slice(-8),identity:identity(),context:'lab',task:this.task,taskId:contentLabel(this.task),algorithm:this.controller.definition,initialControllerState:this.initialControllerState,finalControllerState:this.controller.exportState(),initialSnapshot:this.initialSnapshot,finalSnapshot,failureEvidence:failure,collisionIdentity:this.initialSnapshot?.physical?.geometrySignature,status,reason,durationS:this.step/120,stepCount:this.step,supplyMode:this.task.supplyMode,summary,events:this.events,controllerIO:this.io,sampling:{statisticsHz:120,statisticsCount:stats.count,curveHz:20,storedCount:this.samples.length,decimated:false,note:'All controller decisions are retained at declared controlHz. Primary statistics use every 120 Hz state.'},samples:this.samples};
+    sim.clearResearchHeightControl(reason);if(status!=='completed')sim.setStabilizationMode('off');else sim.setMode('drive');this.onFinish(this.result);return this.result;
+  }
+  getState(){return{running:this.started&&!this.finished,phase:this.currentPhase,step:this.step,timeS:this.step/120,authority:this.finished?'pilot':'bounded-height-controller',taskId:contentLabel(this.task),algorithmHash:this.controller.definition.hash,result:this.result??null};}
+}
+export async function executeLandingTask({task=DEFAULT_LANDING_TASK,algorithm=HEIGHT_TEMPLATES.pd,initialSnapshot=null,initialControllerState=null,signal,onProgress=()=>{},yieldEvery=120,yieldTask=()=>new Promise(resolve=>setTimeout(resolve,0))}={}){
+  const valid=validateLandingTask(task);validateHeightAlgorithm(algorithm);const sim=createLandingFixture(valid);
+  if(initialSnapshot){const current=identity();if(initialSnapshot.identity?.modelVersion!==current.modelVersion||initialSnapshot.identity?.modelBuildId!==current.modelBuildId)throw Error('Original task model/build is not installed; old results remain viewable/exportable. Create a new current-model task explicitly.');sim.importState(copy(initialSnapshot.physical),{allowVersionMismatch:false});}
+  const runner=new LandingTaskRunner(sim,{task:valid,algorithm,initialControllerState});runner.start();
+  while(!runner.finished){if(signal?.aborted){runner.finish('cancelled','user_cancel');break;}const input=runner.beforeStep();if(runner.finished)break;const t=sim.advanceFixed(input,dt);runner.afterStep(t);if(yieldEvery>0&&runner.step%yieldEvery===0){onProgress(runner.getState());await yieldTask();}}
+  return runner.result;
+}
+export async function reexecuteLandingTask(source,{algorithm=source.algorithm.algorithm,...options}={}){validateLandingResult(source);if(source.finalSnapshot.terminalReplayable===false)throw Error('Failure terminal is diagnostic-only; exact task reproduction is unavailable. Inspect/export the trigger and create an explicit new task.');return executeLandingTask({...options,task:source.task,algorithm,initialSnapshot:source.initialSnapshot,initialControllerState:contentLabel(algorithm)===source.algorithm.hash?source.initialControllerState:null});}
+export async function compareLandingAlgorithms(source,algorithm,options={}){const baseline=await reexecuteLandingTask(source,options);if(options.signal?.aborted)return{status:'cancelled',baseline,candidate:null};const candidate=await reexecuteLandingTask(source,{...options,algorithm});return{status:baseline.status==='cancelled'||candidate.status==='cancelled'?'cancelled':'completed',comparison:compareConditions(baseline,candidate),baseline,candidate};}
+export function validateLandingResult(result){
+  if(result?.schema!=='roadster.landing-result'||result.version!==1||typeof result.id!=='string'||!result.identity||!['completed','failed','cancelled','timeout'].includes(result.status)||!Number.isInteger(result.stepCount)||result.stepCount<0||result.stepCount>3600||!result.summary||!Array.isArray(result.samples)||result.samples.length>602||!Array.isArray(result.controllerIO)||result.controllerIO.length>3601||!Array.isArray(result.events)||result.events.length>4000)throw Error('Invalid landing result');
+  validateLandingTask(result.task);const algorithm=validateHeightAlgorithm(result.algorithm?.algorithm);if(canonicalJSON(algorithm)!==canonicalJSON(result.algorithm))throw Error('Algorithm definition does not match retained control graph');validateHeightState(result.initialControllerState,algorithm);validateHeightState(result.finalControllerState,algorithm);
+  if(!result.initialSnapshot?.physical||result.initialSnapshot.stateLabel!==contentLabel(result.initialSnapshot.physical)||(!result.finalSnapshot?.physical&&!(result.status==='failed'&&result.failureEvidence&&result.finalSnapshot?.terminalReplayable===false))||(result.finalSnapshot.physical?result.finalSnapshot.stateLabel!==contentLabel(result.finalSnapshot.physical):result.finalSnapshot.stateLabel!==null))throw Error('Task snapshot content label mismatch');
+  if(result.taskId!==contentLabel(result.task))throw Error('Task identity mismatch');
+  // JSON numbers cannot carry NaN/Infinity: reject them before serialization,
+  // while descriptive trigger strings in failureEvidence stay exportable.
+  function check(v,depth=0){if(depth>48)throw Error('Result nesting too deep');if(typeof v==='number'&&!Number.isFinite(v))throw Error('Non-finite result value');if(v&&typeof v==='object')for(const [key,child]of Object.entries(v)){if(['__proto__','prototype','constructor'].includes(key))throw Error('Illegal result field');check(child,depth+1);}}check(result);return result;
+}
+export function parseLandingArchive(raw){if(typeof raw!=='string'||raw.length>12*1024*1024||new TextEncoder().encode(raw).length>12*1024*1024)throw Error('Task archive exceeds 12 MiB');let value=JSON.parse(raw);if(value?.schema==='roadster.landing-result')value={schema:'roadster.landing-library',version:1,records:[value],algorithms:[value.algorithm?.algorithm]};if(value.schema!=='roadster.landing-library'||value.version!==1||!Array.isArray(value.records)||value.records.length>128||!Array.isArray(value.algorithms)||value.algorithms.length>128)throw Error('Unsupported task archive');const ids=new Set();for(const r of value.records){validateLandingResult(r);if(ids.has(r.id))throw Error('Duplicate task record ID');ids.add(r.id);}for(const a of value.algorithms)validateHeightAlgorithm(a);if(value.attempts!==undefined){if(!Array.isArray(value.attempts)||value.attempts.length>256)throw Error('Task attempt archive limit exceeded');for(const a of value.attempts)if(!a||typeof a.id!=='string'||!['completed','failed','cancelled'].includes(a.status)||typeof a.reason!=='string')throw Error('Invalid task execution attempt');}return value;}
+export function loadLandingLibrary(storage){return readProtectedArchive(storage,LANDING_LIBRARY_KEY,{parse:parseLandingArchive,empty:()=>({schema:'roadster.landing-library',version:1,records:[],algorithms:[]}),maxBytes:4*1024*1024});}
+export function saveLandingLibrary(storage,value,{protectedRaw=null,expectedRaw}={}){if(value.records.length>32||value.algorithms.length>32)throw Error('32 stored task/algorithm limit; old archive unchanged, full new work remains in this session/export');parseLandingArchive(JSON.stringify(value));return writeArchiveCandidate(storage,LANDING_LIBRARY_KEY,value,{parse:parseLandingArchive,maxBytes:4*1024*1024,protectedRaw,expectedRaw}).value;}
+export function bestLanding(records,task,algorithmHash){const key=contentLabel(task);return records.filter(r=>r.status==='completed'&&r.summary.landingSucceeded&&r.taskId===key&&r.algorithm.hash===algorithmHash&&r.identity.modelVersion===identity().modelVersion&&r.identity.modelBuildId===identity().modelBuildId).sort((a,b)=>a.durationS-b.durationS||a.summary.gasThroughputKg-b.summary.gasThroughputKg)[0]??null;}

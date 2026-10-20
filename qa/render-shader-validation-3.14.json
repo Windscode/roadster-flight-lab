@@ -1,0 +1,253 @@
+{
+  "format": "roadster-offline-render-shader-validation-1",
+  "createdAt": "2026-10-20T10:42:11.995Z",
+  "validator": {
+    "name": "glslang",
+    "version": "Glslang Version: 11:15.1.0\nESSL Version: OpenGL ES GLSL 3.20 glslang Khronos. 15.1.0\nGLSL Version: 4.60 glslang Khronos. 15.1.0\nSPIR-V Version 0x00010600, Revision 1\nGLSL.std.450 Version 100, Revision 1\nKhronos Tool ID 8\nSPIR-V Generator Version 11\nGL_KHR_vulkan_glsl version 100\nARB_GL_gl_spirv version 100"
+  },
+  "method": "Exact vendored Three.js WebGLProgram emitter captured through a fake GL sink; external glslangValidator compiles and links vertex/fragment pairs. No WebGL context is created.",
+  "scope": "Cold-gas mist quality defines, ContactAO SSAO kernels and depth/normal bilateral blur, FXAA, SMAA, ACES/sRGB OutputPass and UnrealBloom passes. City CSM/GI and surface shaders are validated separately.",
+  "limitations": [
+    "Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.",
+    "Five bloom blur pairs may require a reported compiler-only identifier normalization for the unchanged Three.js common average(vec3) function. Such results are compatibility-pass, not exact-pass.",
+    "Built-in beauty/normal/depth material permutations are not exhaustively compiled by this script."
+  ],
+  "summary": {
+    "programPairs": 18,
+    "stages": 36,
+    "exactPass": 13,
+    "compatibilityPass": 5,
+    "failed": 0
+  },
+  "sourceHashes": {
+    "dist/vendor/three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
+    "dist/vendor/three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
+    "dist/exhaust.js": "375429cd7095567bd9d8602c92825643defcd5525ec9b062b5e3ad9276c8dd10",
+    "dist/contact-ao-pass.js": "b9b95f465bdab91bb1bbe91920b32ea60d12095088ad4cb617e3f1da934f238c",
+    "dist/vendor/addons/postprocessing/SSAOPass.js": "1fb1bac8e55de7c0cdd8cf975e6b55921476a18e061ac79bcdcf15d1109ab927",
+    "dist/vendor/addons/postprocessing/UnrealBloomPass.js": "62f410581c96130cb054399ec7743398c682db4185327fad70ae920f66c3d29e",
+    "dist/vendor/addons/postprocessing/OutputPass.js": "68861f1a93c6d33c02affa49592bba46242d237281c8031ee010d926cc5bb2c0",
+    "dist/vendor/addons/shaders/OutputShader.js": "353479f77a8d7e2629d49ccac9fc2f5dbfdda5442e0adf867b00377a2fcb0cb2",
+    "dist/vendor/addons/shaders/SSAOShader.js": "24424c1e61e31d969362b96e603ed90439e73865f694a8f68288d23195d7ccfc",
+    "dist/vendor/addons/shaders/FXAAShader.js": "65542fe09ff45114289acacff7de0086f844d267647f9474442f4ab3da002c6d",
+    "dist/vendor/addons/shaders/SMAAShader.js": "fe3c777685feede7a0cfae9561b343b9f92b50c4ccfb790fe5b8e678a56247a7",
+    "dist/stable-fxaa-shader.js": "07109f48c213c693c19e7903449b23c59d9de5d494890ff073953fa27e837574"
+  },
+  "results": [
+    {
+      "name": "mist-balanced",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "8ef851645c40560bf2c324741b29b304b077cc774997f040a50a14aad47bfe6a",
+        "frag": "be8c6bb1708eeade39da5c982d7f76871085d752faba61d22bf91087a3769c7c"
+      },
+      "diagnostics": "mist-balanced.vert\nmist-balanced.frag\n"
+    },
+    {
+      "name": "mist-high",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "6a2cb284dea06828d15d766fbc79f14121e3ba5b3b4835e845a83b3c5e0847b1",
+        "frag": "86de799e2ba1a3d454f01d4107448154d58ae68c419f54a97cd440ccb30b13af"
+      },
+      "diagnostics": "mist-high.vert\nmist-high.frag\n"
+    },
+    {
+      "name": "ssao-12",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "5899ad4e46f8d4f20745e4c45a509f0b9800987a402a4141d8cd0d79f9b3863d",
+        "frag": "45ddd459670cc1f6013db9a592fc93c683c38ecb348c8eae97375c15d0edce9a"
+      },
+      "diagnostics": "ssao-12.vert\nssao-12.frag\n"
+    },
+    {
+      "name": "ssao-blur-12",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "30ab6553abbac257f532a36ff956ea7a7ca31f5a46aa08ecc4467cd61912c6db",
+        "frag": "1d1e2678a4e7990507db1027b9cd1e48d75b4c0b6066413689fbe7f8f97c80c5"
+      },
+      "diagnostics": "ssao-blur-12.vert\nssao-blur-12.frag\n"
+    },
+    {
+      "name": "ssao-20",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "692cba995a9a21a9efa09dec3feb424a8c5b65394aaf3c90df6129b23019c0be",
+        "frag": "842b42b6e192d6c6d35834da55d744280b7abbdb436bd58f6a7c2cc29f874aa4"
+      },
+      "diagnostics": "ssao-20.vert\nssao-20.frag\n"
+    },
+    {
+      "name": "ssao-blur-20",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "30ab6553abbac257f532a36ff956ea7a7ca31f5a46aa08ecc4467cd61912c6db",
+        "frag": "1d1e2678a4e7990507db1027b9cd1e48d75b4c0b6066413689fbe7f8f97c80c5"
+      },
+      "diagnostics": "ssao-blur-20.vert\nssao-blur-20.frag\n"
+    },
+    {
+      "name": "fxaa",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "0b11408ffbcca470934a800eefeb7987fcb932069b000568d5b1077e0fbcd209",
+        "frag": "899d82d94d631739216aa0a090042d4cf82732f174d4f3bdad7dabef6611b8bd"
+      },
+      "diagnostics": "fxaa.vert\nfxaa.frag\n"
+    },
+    {
+      "name": "smaa-SMAABlendShader",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "0e45b31dbf6d10abfab760cb46b3aa7c714a50ed48feeefe726125507a0c8b02",
+        "frag": "90b9ebdcb63a3dc4fd57fc30b11f282a7ff506abba1dd0673d67dd55a3896f0b"
+      },
+      "diagnostics": "smaa-SMAABlendShader.vert\nsmaa-SMAABlendShader.frag\n"
+    },
+    {
+      "name": "smaa-SMAAEdgesShader",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "9acdfdd394ad05a23c44325a9105e0847117c2376e815eb8cc587d583927f334",
+        "frag": "86439b32eeeb5cc35d6922616a545db6d7b430943a910810471fd87d9681998f"
+      },
+      "diagnostics": "smaa-SMAAEdgesShader.vert\nsmaa-SMAAEdgesShader.frag\n"
+    },
+    {
+      "name": "smaa-SMAAWeightsShader",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "1ff41a4b96a02b483d87435c16081999aaa950466b363547eeaa538d60d796ba",
+        "frag": "89971492dbeb78dad77f6c488262abc8cbcabcf88ba6e1f39c9b67664e7e0d65"
+      },
+      "diagnostics": "smaa-SMAAWeightsShader.vert\nsmaa-SMAAWeightsShader.frag\n"
+    },
+    {
+      "name": "output-aces-srgb",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "7543c636425dcd30e7323929995a4a9e504df69fa933d8a8bc83c4240125d22c",
+        "frag": "b2ac8f3ac9ae35022629ddae2b4216249eca801bdd7c66312dd6444caaad272d"
+      },
+      "diagnostics": "output-aces-srgb.vert\noutput-aces-srgb.frag\n"
+    },
+    {
+      "name": "bloom-highpass",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "910621ddc211ec7dd955abc2aac73a7d875499c118f96a0934f9753ffb5cdb47",
+        "frag": "b50dd2394ee2574d27fa574c1ee13d4c057d5148e1625c80edf6e4220fdf21ca"
+      },
+      "diagnostics": "bloom-highpass.vert\nbloom-highpass.frag\n"
+    },
+    {
+      "name": "bloom-blur-0",
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "e8988f95e738d97b5f8d2b2fea6fc729389a3c4348bae2d006aa78a2208a3b96",
+        "frag": "2d31f6b9ea9a0f7fcd8db5e656f45bca73e257b42b9e611db6599f8ba80aebcc"
+      },
+      "diagnostics": "bloom-blur-0.vert\nbloom-blur-0.frag\nERROR: bloom-blur-0.frag:72: 'average' : function name is redeclaration of existing name \nERROR: bloom-blur-0.frag:72: 'average' : can't find function \nERROR: bloom-blur-0.frag:72: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unmodified stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-bloom-blur-0.vert\ncompiler-normalized-bloom-blur-0.frag\n"
+      }
+    },
+    {
+      "name": "bloom-blur-1",
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "7dadc0a8d5658bf28304b32ade70709fc10a07810d130e4dd7cd7820b66c44aa",
+        "frag": "c9ff11f0e879320fc7cb25d54d3b6e5833c6359c0ad0121016edd7411d36ad13"
+      },
+      "diagnostics": "bloom-blur-1.vert\nbloom-blur-1.frag\nERROR: bloom-blur-1.frag:72: 'average' : function name is redeclaration of existing name \nERROR: bloom-blur-1.frag:72: 'average' : can't find function \nERROR: bloom-blur-1.frag:72: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unmodified stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-bloom-blur-1.vert\ncompiler-normalized-bloom-blur-1.frag\n"
+      }
+    },
+    {
+      "name": "bloom-blur-2",
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "a9731e3991feaa86bfd60670b4fad651c1d9711d777f03b59ed1af914057c119",
+        "frag": "658fd14338dba57b70488f5b8c810768a76bd3949c6442ceb9f2283da0871513"
+      },
+      "diagnostics": "bloom-blur-2.vert\nbloom-blur-2.frag\nERROR: bloom-blur-2.frag:72: 'average' : function name is redeclaration of existing name \nERROR: bloom-blur-2.frag:72: 'average' : can't find function \nERROR: bloom-blur-2.frag:72: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unmodified stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-bloom-blur-2.vert\ncompiler-normalized-bloom-blur-2.frag\n"
+      }
+    },
+    {
+      "name": "bloom-blur-3",
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "1b110d4412dc25998e2721e6f4d28c03dd9b0e208b5c8fcdb47f79a170d6ef05",
+        "frag": "0730b70329f70d657df2b622cf8852688508184eb2d1d75249dbf556e21989ce"
+      },
+      "diagnostics": "bloom-blur-3.vert\nbloom-blur-3.frag\nERROR: bloom-blur-3.frag:72: 'average' : function name is redeclaration of existing name \nERROR: bloom-blur-3.frag:72: 'average' : can't find function \nERROR: bloom-blur-3.frag:72: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unmodified stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-bloom-blur-3.vert\ncompiler-normalized-bloom-blur-3.frag\n"
+      }
+    },
+    {
+      "name": "bloom-blur-4",
+      "status": "compatibility-pass",
+      "exitCode": 2,
+      "sourceHashes": {
+        "vert": "bcaed7e7b7fdeb589d50ba4a2e090c903875fa44612dbcd6ebc7da98e5c4f102",
+        "frag": "78d13393de571058606017d6fc6272bca80b873c0445f0ec1016dad1fdae0324"
+      },
+      "diagnostics": "bloom-blur-4.vert\nbloom-blur-4.frag\nERROR: bloom-blur-4.frag:72: 'average' : function name is redeclaration of existing name \nERROR: bloom-blur-4.frag:72: 'average' : can't find function \nERROR: bloom-blur-4.frag:72: '' : compilation terminated \nERROR: 3 compilation errors.  No code generated.\n\n\nERROR: Linking fragment stage: Missing entry point: Each stage requires one entry point\n\n",
+      "compilerOnlyCompatibility": {
+        "replacement": "average → roadsterReviewAverage",
+        "scope": "Temporary assembled GLSL input only; unmodified stock Three.js common function identifier.",
+        "passed": true,
+        "exitCode": 0,
+        "diagnostics": "compiler-normalized-bloom-blur-4.vert\ncompiler-normalized-bloom-blur-4.frag\n"
+      }
+    },
+    {
+      "name": "bloom-composite",
+      "status": "exact-pass",
+      "exitCode": 0,
+      "sourceHashes": {
+        "vert": "9d315446487a84e9ea38323ff04627c0f152fcd34f09cd1cc7040d1f895e2ecc",
+        "frag": "97513e8402795ba9ea95b41f8121eefbbd964df311fa09aa1d9e6f3187c73652"
+      },
+      "diagnostics": "bloom-composite.vert\nbloom-composite.frag\n"
+    }
+  ]
+}

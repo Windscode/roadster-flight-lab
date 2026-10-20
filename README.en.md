@@ -8,79 +8,95 @@
 
 Roadster Flight Lab is an independent, playable vehicle and flight research project. Its original body reconstruction follows [Tesla’s current public Roadster imagery](https://www.tesla.com/roadster). Explore road driving, cold-gas propulsion, attitude control and near-surface suction in the original Vesper city. Tires, suspension, gas, nozzles, wing and controllers act on one six-degree-of-freedom rigid body.
 
-Drive connected streets, leave the road for an attitude maneuver, then turn those inputs into an exportable, replayable experiment. Wind, measurement delay, nozzle derating and finite gas change the actual response. Successful and failed attempts remain part of the record.
+Drive connected streets, leave the road for a maneuver, then turn the inputs and response into an exportable experiment. Wind, measurement delay, nozzle derating and finite gas change the actual result. Success, failure and cancellation retain their own identities.
 
 ## The proving ground
 
-![Actual 3.9 WebGL historical frame: Weavebridge commercial street by day](qa/screenshots/3.9-evidence/city-day-01-weave-fixed.jpg)
+![Actual 3.13 WebGL baseline: driving through Weavebridge by day](qa/screenshots/3.13-accepted-baseline/weave-day.png)
 
-![Actual 3.9 WebGL historical frame: Roadster front three-quarter inspection](qa/screenshots/3.9-evidence/39-studio-front-three-quarter.jpg)
+![Actual 3.13 WebGL baseline: Roadster front three-quarter studio view](qa/screenshots/3.13-accepted-baseline/vehicle-studio.png)
 
-*These are actual **3.9 historical frames**, showing the project's city and vehicle foundation. They are not matched-condition acceptance images of the current 3.13 release. [Image provenance and comparison conditions](docs/visual-evidence-3.10.md).*
+*These are actual **released 3.13 baseline frames**: a 1280×720 city frame and a 900×720 vehicle canvas. They are not 3.14 after-images or concept art. See the [vehicle study](docs/visual-quality-3.14.md) and [city continuity notes](docs/city-continuity-3.14.md) for current changes and outstanding matched-condition captures.*
 
-## Quick roll, with real momentum
+## 3.14: streets, vehicle, controls and experiments
 
-X now uses a short launch and an independent quick-roll trajectory. Start from level ground or level flight: it returns to the ground or the original airborne height through actual thrust and braking. Low pressure, insufficient gas, excess initial angular speed or obstructed clearance produce a specific refusal.
+| Area | What this version adds |
+| --- | --- |
+| **Driving and flight** | Chase / orbit obstruction handling; separate world centre-of-mass height and estimated envelope distances; bounded trim feasibility under nozzle faults, distinct from dynamic reserve and actual recovery; failure state, inputs and contacts retained before a safety reset. |
+| **Vehicle studio** | Public-reference two-seat display and experimental single-seat configurations; an upper-edge headlamp signature with off / DRL / low-beam modes; clearer wheel materials, cabin layers and experimental rear recesses; photographic references, technical cameras, six-view comparison ZIP and a 12-second orbit video. |
+| **Complete city** | A first curb, drainage and guidance pass across 12 planned streets; cross-street gateways, an industrial work bay, upper-city arrival and Southbank parking / walking transitions; tower crowns, industrial silhouettes and four outer transitions. All 114 buildings and 113 elevated / ramp segments remain. |
+| **Research and play** | An editable bounded height-control graph, task re-execution and a disturbed-landing challenge; physical landing criteria, takeover / retry / event review; persistent save status separate from task results, with session exports when storage fails. |
 
-For manual practice, choose **Quick-roll practice**, enable assisted flight with H and turn G off. Climb with E, then roll with Z / B; release after roughly three-quarters of a turn and enable G to brake and level. G uses the current height reference; it does not automatically return you to the launch height. [Measured X and manual comparisons](docs/x-flip-3.13.md).
+The city continues to be refined street by street. This release provides a first continuity pass across the road network and selected connecting spaces. Art quality, native controls and target-device performance have separate acceptance requirements; see the [3.14 release notes](docs/release-3.14.md).
 
 ## Your first drive and flight
 
-1. **Drive a street.** W / S accelerates and brakes, A / D steers, and Space applies the wheel brakes. The Weavebridge–Southbank loop in the graphics panel connects approximately 1.1 km of streets, junctions and underpass space.
-2. **Leave the ground.** H enables assisted flight; E / Q climbs and descends. Visible sliders set vertical speed and acceleration. Actual thrust, pressure and attitude limit the response; holding a key longer never increases its command indefinitely.
-3. **Explore attitude maneuvers.** G restores level roll and pitch while retaining the heading at the switch. With G off, Z / B rolls and 1 / 2 pitches. Manual rates and angular acceleration are adjustable. X provides a complete roll after clearance and air-reserve checks.
-4. **Record and compare.** Choose Record this drive / flight in the engineering panel. Inspect the resulting curves, export the record, replay original conditions, or explicitly recompute with the current model.
+1. **Drive a street.** W / S accelerates and brakes, A / D steers, and Space applies wheel brakes. Follow Weavebridge, the cross-street link, Foundry service bridge and connecting ramp toward the upper city, then return down the original ramp toward Southbank. Use the map to orient yourself; camera obstruction handling does not reroute the vehicle.
+2. **Leave the ground.** H enables assisted flight; E / Q climbs and descends. Sliders directly set the vertical target from 0.5–14 m/s, default 5 m/s, with four response presets. Actual thrust, pressure, gas and attitude constrain the response. World height and nearby-surface distances have different meanings; envelope distances are labelled estimates.
+3. **Explore attitude control.** G restores level roll and pitch while retaining the heading at the switch; Z / B then commands lateral motion. With G off, Z / B rolls and 1 / 2 pitches. Releasing a key still requires actual torque and time to brake.
+4. **Record, then return.** Choose Record this drive / flight, stop, and inspect trajectories, curves and input events in the research console. Export full JSON. After a confirmed successful save, reload to reopen the record. R resets and pauses; P resumes.
 
-Continuous external air is the practice default. Finite supply adds tank depletion and cooling; pressure, valve response and installed nozzle thrust limits constrain maneuvers in both modes. Use the top-right **中文 / English** selector.
+Constant-pressure external supply is the practice default. Finite onboard gas depletes and cools; both modes retain valve response and installed nozzle limits. The interface supports **中文 / English**. Driving and procedure shortcuts pause while you edit forms.
 
-## Three entrances, one physical model
+### Quick roll, with real momentum
 
-| Entrance | What to explore |
-|---|---|
-| **Vesper city** | Driving, flight, rolls and suction; clear day / wet night; map navigation, connected routes and live recording. |
-| **Wind laboratory** | Position and attitude targets, control gains, wind and measurement disturbances. Save physically executed procedures and bind them to keys 3–9. City and laboratory retain separate vehicle states. |
-| **Vehicle studio** | Locked lens and cameras for body surfaces, glass, lights, wheels, steering and suspension travel. Compare frozen historical models and export actual rendered frames. |
+X retains the independent `quick-roll-1`: a short launch, fast roll, then thrust-driven braking and return. Unsuitable supply, initial attitude / angular speed or overhead clearance produce a specific refusal. An actual 3.13 constant-pressure run completed the roll and eventually returned to DRIVE, with recorded overshoot. This does not guarantee an exact 360°, the original landing position or success from every initial state.
 
-Advanced research inside the city and laboratory uses the same solver to run standard initial-condition experiments in the background, preserving the live vehicle. History, JSON / CSV export and numerical studies also work on devices without a 3D renderer.
+For manual practice, choose **Quick-roll practice**, enable assisted flight with H and turn G off. Climb with E, then roll with Z / B; release at roughly three-quarters of a turn and enable G to attempt braking and levelling. G uses the current height reference, not an automatic return to launch height. See the [quick-roll comparison](docs/x-flip-3.13.md) and [current physics notes](docs/physics-controls-3.14.md) for timing, failures and supply conditions.
 
-## Experiments worth trying
+## Change a control law through one landing task
 
-**Explore the sampled recovery boundary of ordinary G levelling.** Choose Attitude recovery → G recovery height grid. With the same installed nozzles and gas supply, run 30° / 60° / 90° / 120° initial roll × 3 / 6 / 12 / 24 m initial centre-of-mass height: 16 actual trials. Add crosswind or derate the front-right main nozzle, then inspect sustained recovery, ground contact and cases that fail to recover within 12 seconds. Click a cell for the actual attitude, height, thrust and gas curves. The result is the lowest successful **sampled** height, without an interpolated safety guarantee.
+Enter the [wind laboratory](https://windscode.github.io/roadster-flight-lab/?view=lab), then open **Research console → Control laws / landing**.
 
-**Compare controllers under noise and delay.** Choose Attitude recovery → Five-seed controller comparison. Compare A / B attitude responses under matched initial conditions, wind and gas supply: five explicit seeds × two observation delays × two controllers, 20 cases of 12 seconds each. Optionally derate the front-right lift nozzle. Inspect per-seed successes and failures, attitude / height errors, maximum height loss, saturation and actual gas throughput. Click a row for its paired curves. This mode uses the laboratory's pose controller; the ordinary G levelling experiment remains separate.
+1. **Try the default task.** Review height, wind timing, supply and landing criteria, then choose **Live challenge / retry**. The default task takes off from rest to 2.5 m world centre-of-mass height, encounters two crosswind stages and descends into a 1.5 m radius target. First contact is not completion: the vehicle must settle. Pilot input takes over; Cancel / hand over also releases control.
+2. **Change the controller structure.** Start from the PD or integral + filter template. Edit the JSON graph to combine error, proportional response, integration, filtering and limits. This interface controls the height outer loop only; output passes through existing constrained control, nozzle allocation, valves and gas. It cannot run arbitrary JavaScript or write rigid-body position, velocity or attitude.
+3. **Let the new law make its own decisions.** Save the graph and use **Compare original and edited laws** from the same initial state and task. Check differences in initial state, model, wind, supply and task before reading the curves. Unmatched results are descriptive comparisons. The existing fixed-input A/B mode remains available.
+4. **Inspect both success and failure.** Review landing error, pre-contact descent speed / attitude, saturation, gas and key events. Personal bests compare successful settled landings under matching conditions; no combined score hides a collision. Finite gas and constant-pressure external supply remain separate. External throughput is not onboard tank consumption.
 
-**Compare braking on dry, wet and split-friction roads.** Compare ABS on / off with matched initial states, measuring stopping distance, locking time and heading deviation, or observe wheel speed and TCS during launch. The response exposes tradeoffs between braking and directional stability.
+Run task numerically executes the same task without moving the live vehicle. Main task statistics use every 120 Hz physical state; display curves use 20 Hz, with any historical decimation identified separately. Full JSON retains the algorithm, task, inputs / outputs, versions and failure events. The default wind is mild and V1 uses prescribed deterministic disturbances; it is not a universal recovery guarantee. [Interface scope and experimental results](docs/research-platform-3.14.md).
 
-**Explore the limits of finite gas supply.** Compare finite and external supply, observing loss of hover, gas use, saturation and confirmed landing. The active wing and wheel loads share the same physical state. New sessions use the constant-pressure bench; finite supply retains real impulse-shortfall rejections. Roll studies use a 20-second observation window by default, with an explicit historical 8-second option saved in each request.
+Existing studies remain available: **G recovery height grid, five-seed controller comparisons, dry / wet / split-friction braking, finite-supply boundaries, live recording and reproduction checks**. The city and laboratory retain separate vehicle states; saved procedures can use keys 3–9.
 
-**Verify historical trajectory reproduction.** Original-condition replay reports execution, model compatibility and numerical agreement separately. History retains its model and build identity. Current-model recomputation explicitly records differences and parameter mappings.
+## Two identities in the vehicle studio
+
+The [vehicle studio](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) offers a **public-reference two-seat display** and an **experimental single-seat configuration**. The first reconstructs visible seats, centre area, door panels and headlining from public images. The second retains tanks, pipes, a four-point harness and experimental hardware.
+
+**These are inspection display configurations only. Switching does not rebuild mass, inertia or collisions, and does not change the driven vehicle or its history.** Undisclosed internal construction and nozzle installation remain engineering interpretations. Camera intrinsics are unknown; normalized landmark errors support design comparison, not a CAD-accuracy claim.
+
+Independent technical cameras remain separate from estimated photographic matches. Switch lamp modes, sweep steering and suspension, inspect the wing, or compare frozen 3.13 / 3.9 / 3.8 models in the same studio. The six-view studio / daylight export contains actual frames and their capture conditions; city wet-night images must be captured in the city. The new two-seat identity is not presented as a configuration that existed in an older baseline.
+
+## Keep your research
+
+Results distinguish **execution status, physical outcome and persistence status**. If **Session only / unsaved** appears, computation may have finished, but export the full current result or library JSON before refreshing. A later completion message does not clear the warning.
+
+Browser capacity remains finite. A failed append preserves the previous stored archive and keeps new work exportable in the session. Deletion, clearing and control-parameter saves verify the candidate write before changing saved state. Corrupt, unsupported or partly invalid archives retain their original text in read-only quarantine for export; upgrades do not automatically clear history to make space. Language switching preserves names, algorithms and experiment values.
+
+Old records remain readable and exportable. Exact re-execution requires compatible model, protocol and collision identities. Unsupported full snapshots from another version are explicitly rejected; create a new task under the current model to generate a new record. [Storage behavior and compatibility](docs/research-platform-3.14.md).
 
 ## Common controls
 
 | Action | Key |
-|---|---|
+| --- | --- |
 | Accelerate / brake; keep reverse input after stopping to reverse | W / S |
 | Ground steering / flight yaw | A / D |
 | Mechanical brakes / rear cold-gas boost | Space / Shift |
 | Assisted-flight toggle; climb / descend | H; E / Q |
 | Auto-level on / off | G |
 | Roll; lateral motion with G enabled | Z / B |
-| Pitch up / down (hover, G off) | 1 / 2 |
+| Pitch up / down while hovering with G off | 1 / 2 |
 | Suction / automatic roll / automatic landing | F / X / L |
 | Saved research procedures | 3–9 |
 | Camera / force vectors / map or research panel / hide instruments | C / V / M / F9 |
-| Menu / pause / reset / explicit refill | ESC / P / R / T |
+| Menu / pause or resume / reset and pause / explicit refill | ESC / P / R / T |
 | Music play / next track | J / K |
 
-Driving and procedure shortcuts are suspended while editing forms. Holding Q through reliable ground contact closes the nozzles. Large-tilt or low-altitude recovery can fail; rotation and braking use physical forces and torques.
+## Model and graphics boundaries
 
-## Model and data boundaries
+This unofficial simulation combines public imagery with engineering assumptions. It has no Tesla CAD, tire database or real-vehicle calibration. **700 kW** mechanical power, dry-road **μ = 1.25** and **20 kN** per main nozzle are model assumptions. Physics includes wheel rotation, combined grip, suspension contact, finite-response valves, gas supply and constrained allocation. It has no industrial CFD, flexible body or full multibody suspension. Lift-off motor retardation is modeled as mechanical dissipation, without battery recharge.
 
-This unofficial simulation combines public imagery with engineering assumptions. It has no Tesla CAD, tire database or vehicle calibration. The **700 kW** mechanical power rating, dry-road **μ = 1.25**, and **20 kN** per main nozzle are model assumptions. Experimental nozzles, suction hardware and internal construction include original research designs and should not be read as official vehicle specifications.
+The restoration of buildings and roads at a specified 3.13 high-quality wet-night viewpoint has actual GPU draw and pixel evidence; the former dense shadow stripes also have isolation evidence. 3.14 continues with ultra-quality offscreen-target and capture fixes, but successful linking or numerical checks do not prove successful drawing. The final build still needs target-device ultra matrix, full-route imagery, motion stability, driving feel and CPU / GPU frame-time checks. It is an evolving complete city, not a finished AAA production. [Rendering conditions and remaining coverage](docs/rendering-3.14.md).
 
-The model includes independent wheel rotation, combined tire grip, suspension contact, finite-response valves, gas supply and constrained control allocation. It has no industrial CFD, flexible body or full multibody suspension. The complete browser city remains in active production, with quality-dependent lighting, shadow and reflection budgets. Graphics, real driving frame times and numerical correctness have separate acceptance criteria. Matched-condition WebGL acceptance for current body stripes, night lighting, materials and moving reflections is still pending; see the [visual validation record](docs/visual-3.13.md). Lift-off motor retardation is modeled as mechanical dissipation, without battery recharge.
-
-Records stay in the current browser. At the storage limit, existing history is preserved and new results are explicitly marked as session-only; use full JSON exports to retain them. Language switching does not rewrite experiment fields, custom names or history. Five selected seeds explain only the declared conditions; they do not establish real-vehicle reliability.
+Tesla’s official [The Kickflip | Roadster](https://www.youtube.com/watch?v=r5vsHHPVhJg) is a visual movement reference. Official provenance does not supply calibrated mass, pressure, exact height or engineering telemetry.
 
 ## Run locally
 
@@ -94,6 +110,6 @@ npm start
 
 Open `http://127.0.0.1:8080/`. Windows users can also run `启动试验场.cmd`. 3D requires WebGL 2 and graphics acceleration; numerical research requires no GPU.
 
-[Release evidence](docs/release-3.13.md) · [Braking in corners](docs/braking-controls-3.12.md) · [Driving and flight foundation](docs/vehicle-dynamics-3.11.md) · [Development and validation](docs/DEVELOPMENT.md) · [G recovery grid](docs/g-recovery-grid-3.12.md) · [Robustness protocol](docs/research-robustness-3.11.md) · [Physical assumptions](dist/physics-3.9-notes.md) · [Historical release](3.9-UPDATE-NOTES.md) · [Deployment identity](https://windscode.github.io/roadster-flight-lab/deployment.json)
+[3.14 release notes](docs/release-3.14.md) · [Physics and controls](docs/physics-controls-3.14.md) · [Vehicle and references](docs/visual-quality-3.14.md) · [City continuity](docs/city-continuity-3.14.md) · [Rendering and capture](docs/rendering-3.14.md) · [Research platform](docs/research-platform-3.14.md) · [Development and validation](docs/DEVELOPMENT.md) · [Deployment identity](https://windscode.github.io/roadster-flight-lab/deployment.json)
 
 Three.js · cannon-es · Poly Haven CC0 environment assets. Third-party licenses remain with the repository. Tesla branding identifies the research subject; this is an unofficial project, not a tool for vehicle design, safety assessment or performance certification.

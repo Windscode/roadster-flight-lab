@@ -1,8 +1,9 @@
+import {createFramebufferInspector} from './framebuffer-diagnostics.js';
 // Explicit, on-device render acceptance. No WebGL context is emulated here.
 // getActiveUniform reports linked uniforms across both shader stages. Counting
 // ALL active sampler elements is a conservative fragment-stage upper bound;
 // the source-declaration split is diagnostic only, never a driver stage query.
-export const RENDER_AUDIT_SCHEMA='roadster.gpu-program-audit-1';
+export const RENDER_AUDIT_SCHEMA='roadster.gpu-program-audit-2';
 export const TARGET_FRAGMENT_SAMPLERS=16;
 const samplerTypes=new Set([0x8b5e,0x8b60,0x8b5f,0x8b62,0x8dc1,0x8dc4,0x8dc5,0x8dca,0x8dcb,0x8dcc,0x8dcf,0x8dd2,0x8dd3,0x8dd4,0x8dd7]);
 const copy=value=>JSON.parse(JSON.stringify(value));
@@ -38,7 +39,15 @@ export function inspectLinkedSamplers(gl,program){
 }
 
 export function createRenderProgramDiagnostics(renderer,{targetFragmentSamplers=TARGET_FRAGMENT_SAMPLERS,primaryCamera=null}={}){
-  const gl=renderer.getContext(),originalDraw=renderer.renderBufferDirect,originalError=renderer.debug.onShaderError;
+  const gl=renderer.getContext(),originalDraw=renderer.renderBufferDirect,originalTarget=renderer.setRenderTarget,originalError=renderer.debug.onShaderError,inspectFramebuffer=createFramebufferInspector(gl,renderer);
+  const passes=[];
+  const passName=()=>passes.at(-1)||'unlabelled-render-pass';
+  function framebufferRecord(){const value=inspectFramebuffer(),key=JSON.stringify(value);let index=active.framebufferKeys.get(key);if(index===undefined){index=active.framebuffers.length;active.framebufferKeys.set(key,index);active.framebuffers.push({...value,id:index,pass:passName()});}return index;}
+  if(typeof originalTarget==='function')renderer.setRenderTarget=function(...args){
+    if(!active)return originalTarget.apply(this,args);
+    const beforeErrors=readErrors(gl),value=originalTarget.apply(this,args),bindErrors=readErrors(gl),framebuffer=framebufferRecord(),diagnosticErrors=readErrors(gl);
+    active.targetBindings.push({index:active.targetBindings.length,pass:passName(),framebuffer,beforeErrors,bindErrors,diagnosticErrors});return value;
+  };
   let currentMaterial=null,currentObject=null,active=null,lastReport=null,errorCount=0;
   const errors=[],maxErrors=64;
   const limits={fragmentTextureImageUnits:gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS),vertexTextureImageUnits:gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS),combinedTextureImageUnits:gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS),max3DTextureSize:gl.MAX_3D_TEXTURE_SIZE?gl.getParameter(gl.MAX_3D_TEXTURE_SIZE):null,targetFragmentSamplers};
@@ -55,18 +64,30 @@ export function createRenderProgramDiagnostics(renderer,{targetFragmentSamplers=
   renderer.renderBufferDirect=function(camera,scene,geometry,material,object,group){
     const previousMaterial=currentMaterial,previousObject=currentObject;currentMaterial=material;currentObject=object;
     const before=active?(renderer.info.render.calls||0):0;
+    const preDrawErrors=active?readErrors(gl):[],framebuffer=active?framebufferRecord():null,inspectionErrors=active?readErrors(gl):[],pass=passName();
     try{
       const value=originalDraw.call(this,camera,scene,geometry,material,object,group);
       if(active){
-        const count=(renderer.info.render.calls||0)-before,webglProgram=renderer.properties.get(material)?.currentProgram,program=webglProgram?.program;
-        if(!program){if(count>0)active.unattributedDrawCalls+=count;return value;}
+        const drawErrors=readErrors(gl),count=(renderer.info.render.calls||0)-before,webglProgram=renderer.properties.get(material)?.currentProgram,program=webglProgram?.program;
+        active.drawCalls+=Math.max(0,count);
+        if(!program){
+          // An attempted draw can fail before Three stores currentProgram.
+          // Its GL errors have already been drained, so retain them here even
+          // when renderer.info did not count a submitted draw. Otherwise a
+          // later clean program could turn this frame into a false pass.
+          const diagnosticErrors=[...inspectionErrors,...readErrors(gl)],event={index:active.drawEvents++,pass,framebuffer,material:nameOf(material),materialType:material?.type??null,object:ancestry(object).join(' / '),objectKind:objectKind(object),cameraId:camera?.id??null,programId:null,drawCalls:Math.max(0,count),preDrawErrors,drawErrors,diagnosticErrors};
+          active.unattributedDrawCalls+=Math.max(0,count);
+          if(preDrawErrors.length||drawErrors.length||diagnosticErrors.length)active.unattributedErrorDraws++;
+          if(active.drawEvents<=12000)active.unattributedDraws.push(event);else active.omittedDrawEvents++;
+          return value;
+        }
         let record=active.programs.get(program);
         if(!record){
           const linked=inspectLinkedSamplers(gl,program),bound=gl.getParameter(gl.CURRENT_PROGRAM)===program;
           // Validation occurs with this draw's real texture bindings in place.
           // A failed link is not queried for uniforms or interpreted as zero.
           if(linked.linked&&bound)gl.validateProgram(program);
-          record={programId:webglProgram.id??null,cacheKeyFNV1a:digest(webglProgram.cacheKey||''),...linked,validated:linked.linked&&bound?Boolean(gl.getProgramParameter(program,gl.VALIDATE_STATUS)):false,boundProgramMatches:bound,validationLog:linked.linked?gl.getProgramInfoLog(program)||'':null,materials:[],materialTypes:[],objects:[],objectKinds:[],categories:[],mainColorCategories:[],mainColorDrawCalls:0,cameraIds:[],renderTargets:[],drawCalls:0,glErrors:[],lightingVariants:[]};
+          record={programId:webglProgram.id??null,cacheKeyFNV1a:digest(webglProgram.cacheKey||''),...linked,validated:linked.linked&&bound?Boolean(gl.getProgramParameter(program,gl.VALIDATE_STATUS)):false,boundProgramMatches:bound,validationLog:linked.linked?gl.getProgramInfoLog(program)||'':null,materials:[],materialTypes:[],objects:[],objectKinds:[],categories:[],mainColorCategories:[],mainColorDrawCalls:0,successfulMainColorDrawCalls:0,successfulMainColorCategories:[],cameraIds:[],renderTargets:[],drawCalls:0,glErrors:[],preDrawErrors:[],diagnosticErrors:[],draws:[],lightingVariants:[]};
           active.programs.set(program,record);
         }
         const name=nameOf(material),kind=objectKind(object),path=ancestry(object).join(' / '),variant=material?.userData?.cityLightingVariant??material?.userData?.roadsterCityLighting??null;
@@ -79,18 +100,23 @@ export function createRenderProgramDiagnostics(renderer,{targetFragmentSamplers=
         const mainColor=(!primaryCamera||camera===primaryCamera)&&(material.isMeshStandardMaterial||material.isMeshPhysicalMaterial||['MeshStandardMaterial','MeshPhysicalMaterial'].includes(material.type));
         if(mainColor&&count>0){record.mainColorDrawCalls+=count;for(const category of categories)if(!record.mainColorCategories.includes(category))record.mainColorCategories.push(category);}
         if(!record.cameraIds.includes(camera?.id??null))record.cameraIds.push(camera?.id??null);
-        const target=renderer.getRenderTarget?.(),targetLabel=target?`${target.texture?.name||'offscreen'}:${target.width}x${target.height}`:'default-framebuffer';
+        const fbo=active.framebuffers[framebuffer],target=fbo.target,targetLabel=target.kind==='default'?'default-framebuffer':`${target.name}:${target.width??'invalid'}x${target.height??'invalid'}`;
         if(!record.renderTargets.includes(targetLabel))record.renderTargets.push(targetLabel);
         if(variant&&!record.lightingVariants.some(v=>JSON.stringify(v)===JSON.stringify(variant)))record.lightingVariants.push(copy(variant));
-        record.drawCalls+=Math.max(0,count);active.drawCalls+=Math.max(0,count);record.glErrors.push(...readErrors(gl));
+        const diagnosticErrors=[...inspectionErrors,...readErrors(gl)],cleanDraw=drawErrors.length===0&&preDrawErrors.length===0&&diagnosticErrors.length===0&&fbo.available&&fbo.complete&&fbo.target.validDimensions;
+        if(mainColor&&count>0&&cleanDraw&&record.linked&&record.validated&&record.boundProgramMatches){record.successfulMainColorDrawCalls+=count;for(const category of categories)if(!record.successfulMainColorCategories.includes(category))record.successfulMainColorCategories.push(category);}
+        const event={index:active.drawEvents++,pass,framebuffer,material:name,object:path,cameraId:camera?.id??null,mainColor,drawCalls:Math.max(0,count),preDrawErrors,drawErrors,diagnosticErrors};
+        if(active.drawEvents<=12000)record.draws.push(event);else active.omittedDrawEvents++;
+        record.drawCalls+=Math.max(0,count);record.glErrors.push(...drawErrors);record.preDrawErrors.push(...preDrawErrors);record.diagnosticErrors.push(...diagnosticErrors);
       }
       return value;
     }finally{currentMaterial=previousMaterial;currentObject=previousObject;}
   };
   return {
+    withPass(name,callback){passes.push(String(name));try{return callback();}finally{passes.pop();}},
     beginFrame(conditions={}){
       if(active)throw Error('A render-program capture is already in progress.');
-      active={conditions:copy(conditions),startedAt:new Date().toISOString(),programs:new Map(),shaderErrors:[],drawCalls:0,unattributedDrawCalls:0,priorGlErrors:readErrors(gl)};
+      active={conditions:copy(conditions),startedAt:new Date().toISOString(),programs:new Map(),framebuffers:[],framebufferKeys:new Map(),targetBindings:[],drawEvents:0,omittedDrawEvents:0,shaderErrors:[],drawCalls:0,unattributedDrawCalls:0,unattributedErrorDraws:0,unattributedDraws:[],priorGlErrors:readErrors(gl)};
     },
     endFrame(extra={}){
       if(!active)throw Error('No render-program capture is in progress.');
@@ -99,23 +125,30 @@ export function createRenderProgramDiagnostics(renderer,{targetFragmentSamplers=
       if(extra.aborted)failures.push('capture-aborted');
       if(frame.drawCalls===0)failures.push('no-observed-draw-calls');
       if(frame.unattributedDrawCalls)failures.push('draw-without-program-attribution');
+      if(frame.unattributedErrorDraws)failures.push('unattributed-draw-gl-error');
       if(frame.shaderErrors.length)failures.push('shader-link-error');
+      if(frame.priorGlErrors.length)failures.push('carry-in-gl-errors');
+      if(frame.omittedDrawEvents)failures.push('draw-diagnostic-budget-exceeded');
+      for(const f of frame.framebuffers){if(!f.available)failures.push('framebuffer-query-unavailable');else if(!f.complete||!f.target.validDimensions)failures.push('framebuffer-'+f.id+'-incomplete');}
+      for(const binding of frame.targetBindings)if(binding.beforeErrors.length||binding.bindErrors.length||binding.diagnosticErrors.length)failures.push('target-binding-'+binding.index+'-gl-error');
       if(remainingGlErrors.length)failures.push('frame-gl-error');
-      const observedCategories=[...new Set(programs.filter(p=>p.mainColorDrawCalls>0&&p.linked&&p.validated&&p.boundProgramMatches&&!p.glErrors.length).flatMap(p=>p.mainColorCategories))];
+      const observedCategories=[...new Set(programs.filter(p=>p.successfulMainColorDrawCalls>0).flatMap(p=>p.successfulMainColorCategories))];
       for(const required of extra.requiredCategories||[])if(!observedCategories.includes(required))failures.push('required-category-not-drawn:'+required);
       for(const p of programs){
         if(!p.linked||!p.validated||!p.boundProgramMatches)failures.push(`program-${p.programId}-not-runnable`);
         if(p.linked&&p.activeSamplerElements>Math.min(limits.fragmentTextureImageUnits,targetFragmentSamplers))failures.push(`program-${p.programId}-sampler-budget`);
         if(p.glErrors.length)failures.push(`program-${p.programId}-draw-gl-error`);
+        if(p.preDrawErrors.length)failures.push(`program-${p.programId}-pre-draw-gl-error`);
+        if(p.diagnosticErrors.length)failures.push(`program-${p.programId}-diagnostic-gl-error`);
       }
-      lastReport={schema:RENDER_AUDIT_SCHEMA,status:failures.length?'failed':'passed',startedAt:frame.startedAt,finishedAt:new Date().toISOString(),conditions:frame.conditions,...copy(extra),limits,drawCalls:frame.drawCalls,unattributedDrawCalls:frame.unattributedDrawCalls,programCount:programs.length,programs,observedCategories,failures:[...new Set(failures)],priorGlErrors:frame.priorGlErrors,remainingGlErrors,shaderErrors:frame.shaderErrors,
-        scope:'Actual WebGL link/validation, active sampler arrays and observed draw submissions on this device. Required categories count only Standard/Physical material color draws through the configured main camera, excluding shadow, normal and reflection-camera passes. All active sampler elements form a conservative fragment budget bound. Successful draws do not establish visual quality, complete city coverage or route performance.'};
+      lastReport={schema:RENDER_AUDIT_SCHEMA,status:failures.length?'failed':'passed',startedAt:frame.startedAt,finishedAt:new Date().toISOString(),conditions:frame.conditions,...copy(extra),limits,drawCalls:frame.drawCalls,unattributedDrawCalls:frame.unattributedDrawCalls,unattributedErrorDraws:frame.unattributedErrorDraws,unattributedDraws:frame.unattributedDraws,programCount:programs.length,programs,framebuffers:frame.framebuffers,targetBindings:frame.targetBindings,drawEvents:frame.drawEvents,omittedDrawEvents:frame.omittedDrawEvents,observedCategories,failures:[...new Set(failures)],priorGlErrors:frame.priorGlErrors,remainingGlErrors,shaderErrors:frame.shaderErrors,
+        scope:'Actual WebGL link/validation, active sampler arrays, bound framebuffer completeness/attachments and per-draw pass/target/error association on this device. Carry-in, pre-draw, bind, draw and diagnostic errors remain separate and none yields a clean pass. Required categories count only Standard/Physical material color draws through the configured main camera, excluding shadow, normal and reflection-camera passes. All active sampler elements form a conservative fragment budget bound. Successful draws do not establish visual quality, complete city coverage or route performance.'};
       return copy(lastReport);
     },
     snapshot(){return lastReport?copy(lastReport):null;},
     failures(){return {total:errorCount,retained:copy(errors),omitted:Math.max(0,errorCount-errors.length)};},
     get active(){return active!==null;},
     get errorCount(){return errorCount;},
-    dispose(){renderer.renderBufferDirect=originalDraw;renderer.debug.onShaderError=originalError;active=null;}
+    dispose(){renderer.renderBufferDirect=originalDraw;if(originalTarget)renderer.setRenderTarget=originalTarget;renderer.debug.onShaderError=originalError;active=null;}
   };
 }

@@ -13,7 +13,7 @@ function fixture({samplers=13,linked=true,valid=true,draws=true}={}){
     getAttachedShaders:p=>p.shaders,getShaderParameter:(s,k)=>s.type,getShaderSource:s=>s.source,getShaderInfoLog:()=>'',getProgramInfoLog:p=>p.linked?'':'FRAGMENT shader texture image units count exceeds MAX_TEXTURE_IMAGE_UNITS(16)',
     getActiveUniform(p,i){return [{name:'spotShadowMap[0]',size:6,type:0x8b5e},{name:'nightAtlas',size:1,type:0x8b5f},{name:'surfaceMaps[0]',size:p.samplers-7,type:0x8b5e}][i];},
     getUniformLocation:(p,name)=>name,getUniform:(p,name)=>name==='nightAtlas'?6:name==='spotShadowMap[0]'?new Int32Array([0,1,2,3,4,5]):new Int32Array(Array.from({length:p.samplers-7},(_,i)=>i+7)),
-    getError:()=>queue.shift()||0,isContextLost:()=>false,validateProgram(p){assert.equal(current,p,'validate the actual bound draw program');validated++;},
+    FRAMEBUFFER:36160,FRAMEBUFFER_BINDING:36006,FRAMEBUFFER_COMPLETE:36053,checkFramebufferStatus:()=>36053,getError:()=>queue.shift()||0,isContextLost:()=>false,validateProgram(p){assert.equal(current,p,'validate the actual bound draw program');validated++;},
   };
   const renderer={getContext:()=>gl,debug:{onShaderError:null,checkShaderErrors:true},info:{render:{calls:0}},properties:{get:m=>props.get(m)},renderBufferDirect(camera,scene,geometry,material){props.set(material,{currentProgram:{id:1,cacheKey:'actual-test-variant',program}});current=program;if(draws)this.info.render.calls++;}};
   const material={id:1,type:'MeshStandardMaterial',name:'City / scanned asphalt + local puddles',userData:{cityLightingVariant:{key:'wet-night/high'}}};
@@ -36,7 +36,7 @@ function fixture({samplers=13,linked=true,valid=true,draws=true}={}){
   const f=fixture({valid:false}),audit=createRenderProgramDiagnostics(f.renderer);audit.beginFrame();f.draw();const r=audit.endFrame();assert.equal(r.status,'failed');assert.equal(r.programs[0].validated,false);pass('A linked program still fails when validation with actual draw bindings fails');
 }
 {
-  const f=fixture(),audit=createRenderProgramDiagnostics(f.renderer);audit.beginFrame();f.queue.push(1282);f.draw();const r=audit.endFrame();assert.equal(r.status,'failed');assert.deepEqual(r.programs[0].glErrors,[1282]);audit.beginFrame();f.draw();assert.equal(audit.endFrame().status,'passed');pass('Draw-time GL errors are attributed to the material and a later clean frame does not rewrite the failed record');
+  const f=fixture(),audit=createRenderProgramDiagnostics(f.renderer);audit.beginFrame();f.queue.push(1282);f.draw();const r=audit.endFrame();assert.equal(r.status,'failed');assert.deepEqual(r.programs[0].glErrors,[]);assert.deepEqual(r.programs[0].preDrawErrors,[1282]);audit.beginFrame();f.draw();assert.equal(audit.endFrame().status,'passed');pass('Pre-draw GL errors remain separate from the following draw and a later clean frame does not rewrite the failed record');
 }
 {
   const f=fixture({draws:false}),audit=createRenderProgramDiagnostics(f.renderer);audit.beginFrame();f.draw();const r=audit.endFrame({requiredCategories:['vehicle','instanced-building']});assert.equal(r.status,'failed');assert.ok(r.failures.includes('no-observed-draw-calls'));assert.ok(r.failures.includes('required-category-not-drawn:vehicle'));pass('No draw or missing required vehicle/building categories cannot be accepted as coverage');

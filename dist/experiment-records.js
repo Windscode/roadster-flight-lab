@@ -3,11 +3,14 @@
 import {MODEL_VERSION} from './vehicle-models.js';
 import {MODEL_BUILD_ID} from './model-build.js';
 import {ExperimentReproductionCheck} from './experiment-reproduction.js';
+import {writeArchiveCandidate} from './research-storage.js';
+import {getRuntimeIdentity} from './runtime-identity.js';
+import {physicalDiagnosticSnapshot,serializableDiagnostic} from './simulation-safety.js';
 
 export const LIVE_PROTOCOL_VERSION='live-fixed-inputs-1';
 export const EXPERIMENT_SCHEMA='roadster.live-experiment';
 export const EXPERIMENT_LIBRARY_KEY='roadster-live-experiments-v1';
-export const EXPERIMENT_LIMITS=Object.freeze({durationS:300,steps:36000,records:32,storageBytes:4*1024*1024,importBytes:12*1024*1024,events:10000});
+export const EXPERIMENT_LIMITS=Object.freeze({durationS:300,steps:36000,records:32,importRecords:128,storageBytes:4*1024*1024,importBytes:12*1024*1024,events:10000});
 export const FIXED_HZ=120;
 export const COMMAND_METHODS=Object.freeze(['reset','setMode','setSuction','setStabilizationMode','setAirStabilization','setPoseTarget','setWind','clearWind','setSupplyMode','refillGas','setParam','startManeuver','setRoadSurface','setWing','setObservation','setNozzleFault','clearNozzleFault']);
 const INPUT_KEYS=['throttle','steer','lift','roll','pitch','brake','frontJets','rearJets','boost'];
@@ -18,7 +21,14 @@ const norm=v=>v?Math.hypot(v.x||0,v.y||0,v.z||0):0;
 const numeric=v=>finite(v)?v:null;
 const byteLength=v=>new TextEncoder().encode(v).byteLength;
 const safeText=(v,max=200)=>String(v??'').replace(/[\u0000-\u001f]/g,' ').slice(0,max);
-export function currentExperimentIdentity(){return{modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,protocolVersion:LIVE_PROTOCOL_VERSION,fixedHz:FIXED_HZ};}
+export function currentExperimentIdentity(){return{...getRuntimeIdentity(),protocolVersion:LIVE_PROTOCOL_VERSION,fixedHz:FIXED_HZ};}
+/** Attach a verified published source identity only to newly created results.
+ * Imported historical identities and physical content labels are not rewritten. */
+export function attachRuntimeProvenance(result){
+  const runtime=getRuntimeIdentity();if(runtime.sourceIdentityStatus!=='matched-current-build')return result;
+  for(const identity of [result?.identity,result?.initialSnapshot?.identity,result?.finalSnapshot?.identity])if(identity?.modelVersion===runtime.modelVersion&&identity?.modelBuildId===runtime.modelBuildId)Object.assign(identity,{sourceCommit:runtime.sourceCommit,sourceTree:runtime.sourceTree,sourceIdentityStatus:runtime.sourceIdentityStatus});
+  return result;
+}
 export function canonicalJSON(value){
   if(value===null||typeof value!=='object')return JSON.stringify(value);
   if(Array.isArray(value))return'['+value.map(canonicalJSON).join(',')+']';
@@ -43,7 +53,33 @@ export function captureExperimentSnapshot(sim,context='city',sceneConfiguration=
   const physical=sim.exportState();assertJSON(physical,'仿真快照');const presentation=clone(sceneConfiguration??null);assertJSON(presentation,'视景配置');
   return{identity:currentExperimentIdentity(),context:context==='lab'?'lab':'city',physical,sceneConfiguration:presentation,sceneConfigurationScope:'Presentation preset and camera at capture time only; camera motion during the recorded run is not replayed. Physical stateLabel excludes presentation.',initialSimTime:sim.simTime,disturbancePhase:'absolute simulation time and observer RNG state are in physical snapshot',stateLabel:contentLabel(physical)};
 }
+/** A diagnostic pose is not a full Cannon continuation snapshot. Non-finite
+ * failures keep exact diagnostic descriptions and explicitly lack a restorable
+ * terminal snapshot; the safety reset pose is never substituted. */
+export function capturedFailureTerminal(sim,context='lab',sceneConfiguration=null){
+  const report=sim.getFailureReport?.()??null;if(!report||!sim._fault)return null;
+  const physical=report.triggerContinuationSnapshot??null;
+  return{failureEvidence:report,finalSnapshot:{identity:currentExperimentIdentity(),context,physical:physical?clone(physical):null,stateLabel:physical?contentLabel(physical):null,sceneConfiguration:clone(sceneConfiguration),initialSimTime:report.triggerSimTime,terminalReplayable:!!physical,terminalKind:physical?'failure-trigger-continuation':'diagnostic-only',terminalDiagnostic:{lastValid:report.lastValidPhysical,trigger:report.triggerPhysical},unavailableReason:physical?null:report.continuationUnavailable??'A complete finite terminal continuation is unavailable',terminalMeaning:'Pre-reset failure trigger. Diagnostic last-valid/trigger states are not full simulation continuation snapshots.'}};
+}
+/** Terminal capture can fail before the next physical step detects corrupt state.
+ * Preserve serializable diagnostics and the last finite measured state, never a
+ * reset origin or an invented full continuation. */
+export function captureTerminalState(sim,context='lab',{lastValidTelemetry=null,step=null,sceneConfiguration=null}={}){
+  const actual=capturedFailureTerminal(sim,context,sceneConfiguration);if(actual)return actual;
+  try{return{finalSnapshot:captureExperimentSnapshot(sim,context,sceneConfiguration),failureEvidence:null,captureFailed:false};}
+  catch(error){
+    const t=lastValidTelemetry,last=t?serializableDiagnostic({schema:'roadster-physical-diagnostic',version:1,scope:'last finite telemetry retained by the research recorder; not a full Cannon continuation',simTime:t.simTime,step:null,position:t.position,velocity:t.velocity,quaternion:t.quaternion,angularVelocity:t.angularVelocity,gas:{massKg:t.gasMass,temperatureK:t.gasTemperatureK,pressureBar:t.pressureBar,supplyMode:t.supplyMode},energy:{electricUsedKWh:t.energyUsedKWh},mode:t.mode,stabilizationMode:t.stabilizationMode,wheels:t.wheelStates??[]}):null;
+    const failureEvidence=serializableDiagnostic({schema:'roadster-research-terminal-failure',version:1,kind:'terminal-capture-unavailable',reason:String(error.message),phase:'research-finalization-before-physical-safety',triggerStep:sim._stepCount,recordStep:step,triggerSimTime:sim.simTime,lastValidPhysical:last,triggerPhysical:physicalDiagnosticSnapshot(sim),triggerContinuationSnapshot:null,continuationUnavailable:String(error.message),history:null,safetyAction:'Research authority released. Physical solver safety remains responsible for any reset; no final physical state is synthesized.'});
+    return{captureFailed:true,failureEvidence,finalSnapshot:{identity:currentExperimentIdentity(),context,physical:null,stateLabel:null,sceneConfiguration:clone(sceneConfiguration),initialSimTime:numeric(sim.simTime),terminalReplayable:false,terminalKind:'diagnostic-only',terminalDiagnostic:{lastValid:last,trigger:failureEvidence.triggerPhysical},unavailableReason:String(error.message),terminalMeaning:'Full terminal capture failed before the physical safety pass. Last finite telemetry and invalid-field descriptions remain exportable; no exact continuation is claimed.'}};
+  }
+}
+export function failurePhysicalTelemetry(current,report){
+  if(!report)return current;const valid=v=>v&&['x','y','z'].every(k=>Number.isFinite(v[k])),trigger=report.triggerPhysical,d=valid(trigger?.position)&&valid(trigger?.velocity)&&valid(trigger?.angularVelocity)&&valid(trigger?.quaternion)&&Number.isFinite(trigger?.quaternion?.w)?trigger:report.lastValidPhysical;if(!d)return current;
+  const q=d.quaternion,forwardY=2*(q.y*q.z-q.w*q.x),rightY=2*(q.x*q.y+q.w*q.z),upY=1-2*(q.x*q.x+q.z*q.z);
+  return{...current,position:clone(d.position),velocity:clone(d.velocity),quaternion:clone(q),angularVelocity:clone(d.angularVelocity),simTime:d.simTime,gasMass:d.gas?.massKg,gasTemperatureK:d.gas?.temperatureK,pressureBar:d.gas?.pressureBar,supplyMode:d.gas?.supplyMode,energyUsedKWh:d.energy?.electricUsedKWh,mode:d.mode,stabilizationMode:d.stabilizationMode,rollDeg:Math.atan2(rightY,upY)*180/Math.PI,pitchDeg:Math.asin(Math.max(-1,Math.min(1,forwardY)))*180/Math.PI,contactCount:d.wheels?.filter(w=>w.contact).length??0,massFlowKgS:null,allocationError:null};
+}
 export function replayEligibility(record){
+  if(record?.finalSnapshot?.terminalReplayable===false)return{exact:false,recompute:false,reason:'失败末态仅有诊断快照，没有可恢复的完整终态；可查看 / 导出触发步骤、最后有效状态和输入，不冒称精确重放'};
   if(!record?.initialSnapshot?.physical)return{exact:false,recompute:false,reason:'这是旧曲线记录，没有完整初态与固定步输入；只能查看，不能按原条件重放'};
   if(record.schema!==EXPERIMENT_SCHEMA||record.version!==1||record.identity?.protocolVersion!==LIVE_PROTOCOL_VERSION)return{exact:false,recompute:false,reason:'此记录协议没有安装执行器；历史数据可以查看与导出'};
   if(record.identity.modelVersion==='3.8.0'&&['3.9.0','3.10.0','3.11.0','3.12.0','3.13.0'].includes(MODEL_VERSION)&&record.initialSnapshot.physical.worldType==='city')return{exact:false,recompute:false,migrationRequired:false,reason:'3.8 城市记录的道路与碰撞几何已经改变，不能安全迁移完整现场状态；仍可查看与导出历史。请在当前城市重新建立实验。3.8 实验室 / 标准平地记录仍可选择明确的当前模型重算。'};
@@ -78,12 +114,12 @@ export function validateExperimentRecord(value){
   if(typeof value.id!=='string'||value.id.length>120||typeof value.name!=='string'||value.name.length>100)throw Error('实验 ID / 名称无效');
   if(!['completed','cancelled','failed','timeout','limit'].includes(value.status))throw Error('实验结束状态无效');
   if(!value.identity||typeof value.identity.modelVersion!=='string'||typeof value.identity.modelBuildId!=='string'||value.identity.fixedHz!==FIXED_HZ)throw Error('实验身份 / 固定物理频率无效');
-  if(!value.initialSnapshot?.physical||!value.finalSnapshot?.physical||!Array.isArray(value.inputRuns)||!Array.isArray(value.events)||!Array.isArray(value.samples)||!value.summary||!value.sampling)throw Error('缺少快照、输入、事件、采样说明或统计');
+  if(!value.initialSnapshot?.physical||(!value.finalSnapshot?.physical&&!(value.status==='failed'&&value.failureEvidence&&value.finalSnapshot?.terminalReplayable===false))||!Array.isArray(value.inputRuns)||!Array.isArray(value.events)||!Array.isArray(value.samples)||!value.summary||!value.sampling)throw Error('缺少快照、输入、事件、采样说明或统计');
   if(!Number.isInteger(value.stepCount)||value.stepCount<0||value.stepCount>EXPERIMENT_LIMITS.steps||value.inputRuns.length>value.stepCount||value.events.length>EXPERIMENT_LIMITS.events||value.samples.length>6002)throw Error('实验规模超出支持范围');
   let count=0;for(const run of value.inputRuns){if(!Number.isInteger(run.steps)||run.steps<1||!run.input||typeof run.input!=='object'||Array.isArray(run.input))throw Error('固定步输入损坏');for(const [k,v]of Object.entries(run.input))if(!INPUT_KEYS.includes(k)||k==='boost'&&typeof v!=='boolean'||k!=='boost'&&(!finite(v)||Math.abs(v)>1))throw Error('记录含不受支持的输入');count+=run.steps;}
   if(count!==value.stepCount)throw Error('输入数量和物理步数不一致');
   if(value.appliedInputRuns&&(!Array.isArray(value.appliedInputRuns)||value.appliedInputRuns.reduce((n,r)=>n+(Number.isInteger(r.steps)&&r.steps>0?r.steps:NaN),0)!==value.stepCount))throw Error('实际应用输入证据的步数不一致');
-  if(value.initialSnapshot.stateLabel!==contentLabel(value.initialSnapshot.physical)||value.finalSnapshot.stateLabel!==contentLabel(value.finalSnapshot.physical))throw Error('完整状态内容与记录标签不一致；不能将改写后的文件静默视为原实验');
+  if(value.initialSnapshot.stateLabel!==contentLabel(value.initialSnapshot.physical)||(value.finalSnapshot.physical?value.finalSnapshot.stateLabel!==contentLabel(value.finalSnapshot.physical):value.finalSnapshot.stateLabel!==null))throw Error('完整状态内容与记录标签不一致；不能将改写后的文件静默视为原实验');
   let lastStep=-1;for(const event of value.events){if(!Number.isInteger(event.step)||event.step<lastStep||event.step>value.stepCount)throw Error('事件步序不一致');lastStep=event.step;if(event.kind==='command'&&(!COMMAND_METHODS.includes(event.method)||!Array.isArray(event.args)))throw Error('事件含未允许的控制 API');}
   if(value.initialSnapshot.identity?.modelVersion!==value.identity.modelVersion||value.initialSnapshot.identity?.modelBuildId!==value.identity.modelBuildId)throw Error('初态与实验身份不一致');
   if(value.initialSnapshot.physical.modelVersion!==value.identity.modelVersion)throw Error('物理快照与模型身份不一致');
@@ -117,7 +153,7 @@ export class ExperimentRecorder{
   start({name='现场驾驶 / 飞行',kind='manual',program=null,lineage=null}={}){
     if(this.active)throw Error('请先结束当前现场记录');
     const sim=this.getSim(),initialSnapshot=captureExperimentSnapshot(sim,this.getContext(),this.getSceneConfiguration()),t=sim.telemetry();
-    const a={sim,name:safeText(name,100),kind,program:program?clone(program):null,lineage:lineage?clone(lineage):null,initialSnapshot,startedAt:this.now(),stepCount:0,inputRuns:[],appliedInputRuns:[],events:[],samples:[measuredSample(t,0,t.simTime)],stats:emptyStats(),previousEnergy:t.energyUsedKWh||0,pendingInput:null};this.active=a;this.inPhysics=false;
+    const a={sim,name:safeText(name,100),kind,program:program?clone(program):null,lineage:lineage?clone(lineage):null,initialSnapshot,startedAt:this.now(),stepCount:0,inputRuns:[],appliedInputRuns:[],events:[],samples:[measuredSample(t,0,t.simTime)],stats:emptyStats(),previousEnergy:t.energyUsedKWh||0,lastValidTelemetry:t,pendingInput:null};this.active=a;this.inPhysics=false;
     for(const method of COMMAND_METHODS){if(typeof sim[method]!=='function')continue;const original=sim[method],own=Object.prototype.hasOwnProperty.call(sim,method),self=this;function wrapped(...args){const capture=self.active?.sim===this&&!self.inPhysics&&self.commandDepth===0;self.commandDepth++;let result,error;try{result=original.apply(this,args);return result;}catch(e){error=e;throw e;}finally{self.commandDepth--;if(capture&&self.active){self._event({kind:'command',method,args:clone(args),accepted:!error&&result!==false,error:error?safeText(error.message):null});}}}Object.defineProperty(sim,method,{value:wrapped,writable:true,configurable:true,enumerable:own?Object.getOwnPropertyDescriptor(sim,method).enumerable:false});this._restorers.push(()=>{if(sim[method]===wrapped){if(own)sim[method]=original;else delete sim[method];}});}
     this.event('record_start',{kind,context:initialSnapshot.context});this.onStatus(this.getState());return initialSnapshot;
   }
@@ -132,7 +168,7 @@ export class ExperimentRecorder{
     this.inPhysics=false;const a=this.active;if(!a||a.pendingInput===null)return;a.pendingInput=null;
     if(!Number.isFinite(dt)||Math.abs(dt-1/FIXED_HZ)>1e-10){this.finish('failed','记录器只接受已声明的 120 Hz 固定步长');return;}
     const applied=normalizeRecordedInput(input||t.driverInput||{}),lastApplied=a.appliedInputRuns.at(-1);if(lastApplied&&canonicalJSON(lastApplied.input)===canonicalJSON(applied))lastApplied.steps++;else a.appliedInputRuns.push({steps:1,input:applied});
-    a.stepCount++;accumulate(a.stats,t,dt,a.previousEnergy);a.previousEnergy=t.energyUsedKWh||0;
+    a.stepCount++;if(t.fault&&a.sim.getFailureReport?.()){this.event('solver_fault',{fault:t.fault});this.finish('failed',String(t.fault));return;}accumulate(a.stats,t,dt,a.previousEnergy);a.previousEnergy=t.energyUsedKWh||0;a.lastValidTelemetry=t;
     if(a.stepCount%6===0)a.samples.push(measuredSample(t,a.stepCount,a.initialSnapshot.initialSimTime));
     if(t.fault){this.event('solver_fault',{fault:t.fault});this.finish('failed',String(t.fault));}else if(a.stepCount>=EXPERIMENT_LIMITS.steps)this.finish('limit','已达到 300 s 记录上限');
   }
@@ -141,13 +177,13 @@ export class ExperimentRecorder{
     // A provider may be interrupted before integration. Do not claim this input
     // was applied unless afterStep acknowledged it.
     if(a.pendingInput!==null){const last=a.inputRuns.at(-1);if(last&&--last.steps===0)a.inputRuns.pop();a.pendingInput=null;}
-    const t=a.sim.telemetry();if(a.samples.at(-1)?.step!==a.stepCount)a.samples.push(measuredSample(t,a.stepCount,a.initialSnapshot.initialSimTime));
+    const currentScene=a.sim===this.getSim()&&a.initialSnapshot.context===this.getContext(),terminal=captureTerminalState(a.sim,a.initialSnapshot.context,{lastValidTelemetry:a.lastValidTelemetry,step:a.stepCount,sceneConfiguration:currentScene?this.getSceneConfiguration():a.initialSnapshot.sceneConfiguration}),failureEvidence=terminal.failureEvidence,t=failurePhysicalTelemetry(a.sim.telemetry(),failureEvidence);if(terminal.captureFailed){status='failed';reason='terminal_capture_failed: '+failureEvidence.reason;}else if(failureEvidence&&status==='completed'){status='failed';reason=failureEvidence.reason;}
+    if(!failureEvidence&&a.samples.at(-1)?.step!==a.stepCount)a.samples.push(measuredSample(t,a.stepCount,a.initialSnapshot.initialSimTime));
     this.event('record_finish',{status,reason:safeText(reason)});
-    const currentScene=a.sim===this.getSim()&&a.initialSnapshot.context===this.getContext();
-    const finalSnapshot=captureExperimentSnapshot(a.sim,a.initialSnapshot.context,currentScene?this.getSceneConfiguration():a.initialSnapshot.sceneConfiguration);
+    const finalSnapshot=terminal.finalSnapshot;
     if(!currentScene)finalSnapshot.sceneConfigurationScope='The host already changed scenes; this is the saved initial presentation, not a claimed final camera measurement.';
-    const result={schema:EXPERIMENT_SCHEMA,version:1,id:`live-${a.startedAt.replace(/[^0-9]/g,'')}-${++this.serial}`,name:a.name,kind:a.kind,identity:{...a.initialSnapshot.identity},context:a.initialSnapshot.context,startedAt:a.startedAt,status,reason:safeText(reason),durationS:a.stepCount/FIXED_HZ,stepCount:a.stepCount,initialSnapshot:a.initialSnapshot,finalSnapshot,program:a.program,lineage:a.lineage,inputRuns:a.inputRuns,appliedInputRuns:a.appliedInputRuns,inputDefinition:'inputRuns are effective pre-solver driver commands; appliedInputRuns are solver-applied commands after deterministic internal interlocks; playback feeds only inputRuns',events:a.events,summary:finishStats(a.stats,t),sampling:sampleDescription(a.samples),samples:a.samples};
-    this.active=null;for(const restore of this._restorers.splice(0))restore();this.onFinish(result);this.onStatus(this.getState());return result;
+    const result={schema:EXPERIMENT_SCHEMA,version:1,id:`live-${a.startedAt.replace(/[^0-9]/g,'')}-${++this.serial}`,name:a.name,kind:a.kind,identity:{...a.initialSnapshot.identity},context:a.initialSnapshot.context,startedAt:a.startedAt,status,reason:safeText(reason),durationS:a.stepCount/FIXED_HZ,stepCount:a.stepCount,initialSnapshot:a.initialSnapshot,finalSnapshot,failureEvidence,program:a.program,lineage:a.lineage,inputRuns:a.inputRuns,appliedInputRuns:a.appliedInputRuns,inputDefinition:'inputRuns are effective pre-solver driver commands; appliedInputRuns are solver-applied commands after deterministic internal interlocks; playback feeds only inputRuns',events:a.events,summary:finishStats(a.stats,t),sampling:sampleDescription(a.samples),samples:a.samples};
+    attachRuntimeProvenance(result);this.active=null;for(const restore of this._restorers.splice(0))restore();this.onFinish(result);this.onStatus(this.getState());return result;
   }
   getState(){const a=this.active;return a?{recording:true,name:a.name,kind:a.kind,stepCount:a.stepCount,durationS:a.stepCount/FIXED_HZ,eventCount:a.events.length}:{recording:false};}
 }
@@ -174,13 +210,14 @@ export async function executeExperiment(record,{createSim,recompute=false,contro
   if(typeof createSim!=='function')throw Error('缺少数值求解器工厂');
   const sim=createSim(record.initialSnapshot.physical),playback=new ExperimentPlayback(record,{sim,recompute,controllerOverride}),snapshot=captureExperimentSnapshot(sim,record.context,record.initialSnapshot.sceneConfiguration),stats=emptyStats(),samples=[measuredSample(sim.telemetry(),0,sim.simTime)];let previousEnergy=sim.telemetry().energyUsedKWh||0,status='completed',reason='按记录输入执行完成';
   try{while(!playback.finished){if(signal?.aborted){status='cancelled';reason='用户取消数值执行';break;}const input=playback.nextInput();if(playback.finished)break;const t=sim.advanceFixed(input,1/FIXED_HZ),integratedStep=playback.step+1;
+      if(t.fault&&sim.getFailureReport?.()){playback.step=integratedStep;status='failed';reason=String(t.fault);break;}
       // The physical step already happened. Account its gas/energy and sample
       // before afterStep applies terminal commands, which may fail separately.
       accumulate(stats,t,1/FIXED_HZ,previousEnergy);previousEnergy=t.energyUsedKWh||0;if(integratedStep%6===0)samples.push(measuredSample(t,integratedStep,snapshot.initialSimTime));playback.afterStep(t);if(t.fault){status='failed';reason=String(t.fault);break;}if(yieldEvery>0&&playback.step%yieldEvery===0){onProgress({step:playback.step,totalSteps:record.stepCount});await yieldTask();}}
   }catch(error){status='failed';reason=safeText(error.message);}
-  const t=sim.telemetry();if(samples.at(-1)?.step!==playback.step)samples.push(measuredSample(t,playback.step,snapshot.initialSimTime));
-  const finalSnapshot=captureExperimentSnapshot(sim,record.context),reproduction=playback.reproduction({status,reason,finalPhysical:finalSnapshot.physical});
-  return{schema:'roadster.record-execution',version:1,identity:currentExperimentIdentity(),sourceIdentity:clone(record.identity),sourceId:record.id,sourceStateLabel:record.initialSnapshot.stateLabel,execution:recompute?'current-model-recompute':'original-conditions-replay',inputSemantics:controllerOverride?'Recorded driver inputs and public command timing stay fixed. The current controller decides actuator commands again with declared gains; this is not a new autonomous pilot executing the original intent.':'Replays the recorded effective pre-solver input sequence and public command events; internal controller and interlock decisions are recalculated by the declared solver.',compatibility:playback.compatibility,reproduction,controllerOverride:controllerOverride?clone(controllerOverride):null,status,reason,completedSteps:playback.step,requestedSteps:record.stepCount,initialSnapshot:snapshot,finalSnapshot,sceneConfigurationNote:'Initial presentation is retained as provenance. Numerical execution does not render or produce a final camera configuration.',summary:finishStats(stats,t),sampling:sampleDescription(samples),samples};
+  const failureTerminal=status==='failed'?capturedFailureTerminal(sim,record.context):null,t=failurePhysicalTelemetry(sim.telemetry(),failureTerminal?.failureEvidence);if(!failureTerminal&&samples.at(-1)?.step!==playback.step)samples.push(measuredSample(t,playback.step,snapshot.initialSimTime));
+  const finalSnapshot=failureTerminal?.finalSnapshot??captureExperimentSnapshot(sim,record.context),failureEvidence=failureTerminal?.failureEvidence??null,reproduction=failureTerminal?{schema:'roadster.reproduction-verdict',version:1,status:'incomplete',executionStatus:'failed',reason:'Solver failure; pre-reset terminal diagnostics are retained separately. A reset state is never a reproduction target.',completedSteps:playback.step,requestedSteps:record.stepCount}:playback.reproduction({status,reason,finalPhysical:finalSnapshot.physical});
+  return{schema:'roadster.record-execution',version:1,identity:currentExperimentIdentity(),sourceIdentity:clone(record.identity),sourceId:record.id,sourceStateLabel:record.initialSnapshot.stateLabel,execution:recompute?'current-model-recompute':'original-conditions-replay',inputSemantics:controllerOverride?'Recorded driver inputs and public command timing stay fixed. The current controller decides actuator commands again with declared gains; this is not a new autonomous pilot executing the original intent.':'Replays the recorded effective pre-solver input sequence and public command events; internal controller and interlock decisions are recalculated by the declared solver.',compatibility:playback.compatibility,reproduction,controllerOverride:controllerOverride?clone(controllerOverride):null,status,reason,completedSteps:playback.step,requestedSteps:record.stepCount,initialSnapshot:snapshot,finalSnapshot,failureEvidence,sceneConfigurationNote:'Initial presentation is retained as provenance. Numerical execution does not render or produce a final camera configuration.',summary:finishStats(stats,t),sampling:sampleDescription(samples),samples};
 }
 export async function compareControllers(record,{createSim,controllerA={},controllerB={},signal,onProgress=()=>{},...options}={}){
   const changed=Object.keys({...controllerA,...controllerB}).filter(k=>(controllerA[k]??record.initialSnapshot.physical.params[k])!==(controllerB[k]??record.initialSnapshot.physical.params[k]));
@@ -199,19 +236,19 @@ export function compactExperiment(record,maxSamples=301){
   // Full inputs, commands, initial/final solver state and raw statistics stay.
   return out;
 }
-export function parseExperimentArchive(text){
+export function parseExperimentArchive(text,{maxRecords=EXPERIMENT_LIMITS.importRecords}={}){
   if(typeof text!=='string'||byteLength(text)>EXPERIMENT_LIMITS.importBytes)throw Error('现场实验归档需小于 12 MiB');let archive;try{archive=JSON.parse(text);}catch{throw Error('现场实验归档不是有效 JSON');}
   const records=archive?.schema===EXPERIMENT_SCHEMA?[archive]:archive?.schema==='roadster.live-experiment-library'&&archive.version===1?archive.records:null;
-  if(!Array.isArray(records)||records.length>EXPERIMENT_LIMITS.records)throw Error('实验归档结构错误或超过 32 条');const ids=new Set();for(const r of records){validateExperimentRecord(r);if(ids.has(r.id))throw Error('归档含重复实验 ID');ids.add(r.id);}return records;
+  if(!Array.isArray(records)||records.length>maxRecords)throw Error('实验归档结构错误或超过 '+maxRecords+' 条');const ids=new Set();for(const r of records){validateExperimentRecord(r);if(ids.has(r.id))throw Error('归档含重复实验 ID');ids.add(r.id);}return records;
 }
 export function exportExperimentArchive(records){return{schema:'roadster.live-experiment-library',version:1,exportedAt:new Date().toISOString(),scope:'all live records in this browser/session; each record retains its own model/build/protocol, exact inputs/state and immutable raw statistics',records};}
 export function loadExperimentArchive(storage){
-  let raw;try{raw=storage?.getItem(EXPERIMENT_LIBRARY_KEY)||'';if(!raw)return{records:[],warning:null,protectedRaw:null};if(byteLength(raw)>EXPERIMENT_LIMITS.storageBytes)throw Error('存档超过 4 MiB，暂不覆盖');return{records:parseExperimentArchive(raw),warning:null,protectedRaw:null};}catch(error){return{records:[],warning:'旧现场存档已保护：'+error.message,protectedRaw:raw||null};}
+  let raw;try{raw=storage?.getItem(EXPERIMENT_LIBRARY_KEY)||'';if(!raw)return{records:[],warning:null,protectedRaw:null,raw:raw||null};if(byteLength(raw)>EXPERIMENT_LIMITS.storageBytes)throw Error('存档超过 4 MiB，暂不覆盖');return{records:parseExperimentArchive(raw,{maxRecords:EXPERIMENT_LIMITS.records}),warning:null,protectedRaw:null,raw};}catch(error){return{records:[],warning:'旧现场存档已保护：'+error.message,protectedRaw:raw||null,raw:raw||null};}
 }
-export function saveExperimentArchive(storage,records,{protectedRaw=null}={}){
+export function saveExperimentArchive(storage,records,{protectedRaw=null,replace=false,expectedRaw}={}){
   if(!storage)throw Error('浏览器存储不可用，请导出整库 JSON');if(protectedRaw)throw Error('旧存档受保护，新记录只留在当前会话；请先导出原存档');
-  const existing=loadExperimentArchive(storage);if(existing.protectedRaw)throw Error(existing.warning);const all=new Map(existing.records.map(r=>[r.id,r]));for(const r of records)all.set(r.id,r);if(all.size>EXPERIMENT_LIMITS.records)throw Error('达到 32 条记录上限；旧记录未删除，新结果只保留在本次会话，请导出整库');
-  const compact=[...all.values()].map(r=>compactExperiment(validateExperimentRecord(r))),text=JSON.stringify(exportExperimentArchive(compact));if(byteLength(text)>EXPERIMENT_LIMITS.storageBytes)throw Error('达到 4 MiB 存储上限；旧记录未覆盖，新结果只保留在本次会话，请导出整库');storage.setItem(EXPERIMENT_LIBRARY_KEY,text);return compact;
+  const existing=loadExperimentArchive(storage);if(existing.protectedRaw)throw Error(existing.warning);const all=new Map((replace?[]:existing.records).map(r=>[r.id,r]));for(const r of records)all.set(r.id,r);if(all.size>EXPERIMENT_LIMITS.records)throw Error('达到 32 条记录上限；旧记录未删除，新结果只保留在本次会话，请导出整库');
+  const compact=[...all.values()].map(r=>compactExperiment(validateExperimentRecord(r))),text=JSON.stringify(exportExperimentArchive(compact));if(byteLength(text)>EXPERIMENT_LIMITS.storageBytes)throw Error('达到 4 MiB 存储上限；旧记录未覆盖，新结果只保留在本次会话，请导出整库');writeArchiveCandidate(storage,EXPERIMENT_LIBRARY_KEY,exportExperimentArchive(compact),{parse:parseExperimentArchive,maxBytes:EXPERIMENT_LIMITS.storageBytes,protectedRaw,expectedRaw});return compact;
 }
 export function experimentCSV(record){
   const identity=record.identity||{},fields=['timeS','simTime','step','heightM','targetHeightM','positionErrorM','attitudeErrorDeg','speedMps','rollDeg','pitchDeg','pressureBar','gasMassKg','tankTemperatureK','massFlowKgS','supplyMode','allocationError','feasible','contactCount','wingDeployment'];

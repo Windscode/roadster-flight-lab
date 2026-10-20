@@ -142,7 +142,7 @@ entrySolid('wayfinding-fin',[1.20,8.60,.65],[-443,4.30,-433],'limestone');
 box('quay-entry-fin-inlay',[.24,7.1,.025],[-443,4.5,-432.66],'copper');
 box('quay-entry-drain-west',[.12,.10,6.2],[-440.10,6.35,-438],'steel');
 box('quay-entry-drain-east',[.12,.10,6.2],[-419.90,6.35,-438],'steel');
-label('南 岸 水 庭    /    SOUTH QUAY',-430,6.12,-434.489,17.8,.42,0);
+label('SOUTH QUAY / 到达入口',-430,6.12,-434.489,17.8,.42,0);
 label('03',-443,6.85,-432.669,.85,1.05,0);
 // Two visible, directed fixtures share the existing global light pool. Their
 // actual anchors also enter the static direct/bounce bake outside the live pool.

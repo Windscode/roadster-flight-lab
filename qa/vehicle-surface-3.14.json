@@ -1,0 +1,158 @@
+{
+  "status": "passed",
+  "modelVersion": "3.14.0",
+  "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+  "asOf": "2026-10-20T10:38:18.858Z",
+  "geometry": {
+    "tyreRadius": 0.372,
+    "frontTyreWidth": 0.265,
+    "rearTyreWidth": 0.284,
+    "wheelTrackHalf": 0.89,
+    "wheelbaseHalf": 1.42,
+    "suspensionMountY": 0.06,
+    "suspensionMinimum": 0.24,
+    "suspensionMaximum": 0.41,
+    "maxSteer": 0.49,
+    "archCentreY": -0.22,
+    "archLongRadius": 0.452,
+    "archVerticalRadius": 0.435,
+    "linerInnerX": 0.54,
+    "linerOuterX": 1.04,
+    "model": "v10 / 3.14: photo-referenced upper-edge lamp signatures, differentiated wheel finishes, two inspection identities and integrated experimental tail; independent reconstruction, not OEM CAD",
+    "surfaceConstruction": "Shape-preserving longitudinal stations; feature-aligned transverse strips; no per-vertex wheel-arch uplift; analytic derivative normals",
+    "referenceRig": "roadster-studio-50mm-v2"
+  },
+  "checks": [
+    {
+      "name": "Frozen 3.9 geometry and layout retain the exact published source except the isolated layout import",
+      "status": "passed",
+      "detail": {
+        "baselineCommit": "6083bbf0e01f4eef5447f2c1b951d8b41e691f46",
+        "restoredSourceSHA256": "cb37f8d9ca5b502831f1ea0f4a3642c3c3a4436976a75e489d65a412a6f1d05a",
+        "layoutSHA256": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec"
+      }
+    },
+    {
+      "name": "Front-fender diagnostic sections remove the local reverse-slope blister while preserving the wedge",
+      "status": "passed",
+      "detail": {
+        "sections": [
+          {
+            "xM": 0.7,
+            "zRangeM": [
+              1.02,
+              1.93
+            ],
+            "baseline": {
+              "minimumLongitudinalNormalAngleDeg": -18.253905847365417,
+              "maximumLongitudinalNormalAngleDeg": -3.176543856299675,
+              "totalNormalTurningDeg": 41.044405326263515
+            },
+            "current": {
+              "minimumLongitudinalNormalAngleDeg": -14.787330304418182,
+              "maximumLongitudinalNormalAngleDeg": -5.244201109485826,
+              "totalNormalTurningDeg": 10.467334394916321
+            }
+          },
+          {
+            "xM": 0.72,
+            "zRangeM": [
+              1.02,
+              1.93
+            ],
+            "baseline": {
+              "minimumLongitudinalNormalAngleDeg": -24.829249759528018,
+              "maximumLongitudinalNormalAngleDeg": 3.644950862370758,
+              "totalNormalTurningDeg": 66.84515998279592
+            },
+            "current": {
+              "minimumLongitudinalNormalAngleDeg": -16.7524225869864,
+              "maximumLongitudinalNormalAngleDeg": -3.509982138638289,
+              "totalNormalTurningDeg": 14.393548849072705
+            }
+          },
+          {
+            "xM": 0.78,
+            "zRangeM": [
+              1.02,
+              1.93
+            ],
+            "baseline": {
+              "minimumLongitudinalNormalAngleDeg": -29.997787596042873,
+              "maximumLongitudinalNormalAngleDeg": 8.993022981944572,
+              "totalNormalTurningDeg": 89.74848211309089
+            },
+            "current": {
+              "minimumLongitudinalNormalAngleDeg": -24.625376815993498,
+              "maximumLongitudinalNormalAngleDeg": -1.0953754408776872,
+              "totalNormalTurningDeg": 28.5882039087901
+            }
+          }
+        ],
+        "scope": "Longitudinal geometric cross-sections only. Real specular reflections under strip lights and natural light still require new rendered frames."
+      }
+    },
+    {
+      "name": "Feature-aligned hood strips meet with coincident positions and derivative normals at each LOD",
+      "status": "passed",
+      "detail": {
+        "balanced": {
+          "coincidentPairs": 286,
+          "maximumNormalAngleDeg": 0.0000017075472925031877
+        },
+        "high": {
+          "coincidentPairs": 632,
+          "maximumNormalAngleDeg": 0.0000017075472925031877
+        },
+        "ultra": {
+          "coincidentPairs": 834,
+          "maximumNormalAngleDeg": 0.0000017075472925031877
+        }
+      }
+    },
+    {
+      "name": "Cutaway and capture preparation restore authored glass opacity without drift or a wheel/wing pose change",
+      "status": "passed",
+      "detail": {
+        "currentExteriorOpacity": {
+          "paint": 1,
+          "glass": 0.94,
+          "balancedPaint": 1,
+          "balancedGlass": 0.94
+        },
+        "legacyGlassBeforeCapturePreparation": 0.86,
+        "legacyGlassAfterCapturePreparation": 0.78,
+        "cycles": 15,
+        "wingSource": "telemetry.wing.position/incidenceRad"
+      }
+    },
+    {
+      "name": "The interior mirror remains below the actual glazing mesh instead of breaking the windscreen silhouette",
+      "status": "passed",
+      "detail": {
+        "baseline": {
+          "samples": 166,
+          "maximumProtrusionAboveGlassM": 0.06271899119370983
+        },
+        "current": {
+          "samples": 166,
+          "maximumProtrusionAboveGlassM": -0.025247156620025857
+        }
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/vehicle.js": "7a6d423b75e432bf9149f3fa9d6f9c06fba35107c55edea798845b62b14c9a11",
+    "dist/vehicle-inspection.js": "bb9068ce714061ca249262b79d88ce759a1d9aea4abdf09afd8503ac035a9416",
+    "dist/vehicle-inspection.html": "2f60cfb11074ff3c40750f54540bdd4ea3c26c008bf936350ae0d7d06536bc19",
+    "dist/i18n-vehicle-310-en.js": "2f33aa6393043244ff73a9f3a2fa0e654bed7a2427c99b9c150e89203e55e4d6",
+    "dist/vehicle-reference-3.9.js": "d49b3d5bfc7e234877dfeacdbe5615e948a47b8609fead19859664eeb40a83d7",
+    "dist/vehicle-reference-layout-3.9.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "tests/vehicle-surface-3.10.test.mjs": "9422480430fabf36d63c793176605075b166729271fd78a071e6b45607746cba"
+  },
+  "limitations": [
+    "No GPU was used in these tests. Original WebGL images supplied by the user established the visible defects; this report verifies source, surface continuity and state handling only.",
+    "Rendered after-images under the unchanged studio and broad daylight rigs remain necessary for visual acceptance.",
+    "Official camera focal length, CAD surfaces and optical properties are not available; the source image is a proportion/landmark reference, not a metric calibration."
+  ]
+}

@@ -1,3 +1,4 @@
+import {createCityContinuity} from './city-continuity.js';
 import {CITY_PLAN_SOLIDS,CITY_STREETS,buildingExtras,plannedDistrictAt} from './city-plan.js';
 import {LANDMARK_RESERVATIONS,LANDMARK_LOCATIONS,LANDMARK_COLLIDERS} from './city-landmarks.js';
 // Metres. Visible decks and tire contacts use the same authored surfaces.
@@ -61,6 +62,19 @@ export function buildingStoreys(b){
   return{shopH,floorCount,floorH:(b.height-shopH)/floorCount};
 }
 export function buildingMassing(b){
+  // Three existing anchor parcels now have different large-scale profiles.
+  // These volumes are shared by facade construction, physics and light bakes.
+  const profiles={
+    'arcology-west':[{bottom:0,top:31,w:45,d:64,x:0,z:0,yaw:0},{bottom:31,top:92,w:35,d:43,x:-3,z:4,yaw:0},{bottom:92,top:122,w:20,d:43,x:-8,z:4,yaw:0}],
+    'arcology-east':[{bottom:0,top:24,w:47,d:58,x:0,z:0,yaw:0},{bottom:24,top:98,w:40,d:26,x:0,z:10,yaw:0},{bottom:98,top:116,w:19,d:26,x:10,z:10,yaw:0}],
+    'arcology-spire':[{bottom:0,top:34,w:39,d:44,x:0,z:0,yaw:0},{bottom:34,top:130,w:18,d:40,x:-7,z:0,yaw:0},{bottom:130,top:142,w:18,d:27,x:-7,z:5,yaw:0}],
+  };
+  if(profiles[b.id]){
+    const {shopH,floorH}=buildingStoreys(b);
+    const align=height=>height===0||height===b.height?height:shopH+Math.round((height-shopH)/floorH)*floorH;
+    return profiles[b.id].map(v=>({...v,bottom:align(v.bottom),top:align(v.top)}));
+  }
+
   if(b.archetype==='foundry')return[{bottom:0,top:b.height,w:b.w,d:b.d,x:0,z:0,yaw:0}];
   const {shopH,floorCount,floorH}=buildingStoreys(b),style=Math.abs(b.style||0)%5;
   const low=Math.max(1,Math.floor(floorCount*.24)),middle=Math.max(low+1,Math.floor(floorCount*.57)),high=Math.max(middle+1,Math.floor(floorCount*.80));
@@ -86,7 +100,8 @@ export function buildingMassing(b){
   }
   return result;
 }
-export const CITY_COLLIDERS=[...LANDMARK_COLLIDERS,...CITY_PLAN_SOLIDS];
+export const CITY_CONTINUITY=createCityContinuity(CITY_STREETS,CITY_ROUTES,CITY_BUILDINGS);
+export const CITY_COLLIDERS=[...LANDMARK_COLLIDERS,...CITY_PLAN_SOLIDS,...CITY_CONTINUITY.solids];
 for(const b of CITY_BUILDINGS){
   const lower=/^market-(front|gate)-/.test(b.id)||b.archetype==='foundry'||b.archetype==='civic',side=Math.sign(b.x-(b.archetype==='foundry'?100:b.archetype==='civic'?400:-200));
   // The 5 m street-life paving strip starts at the shop face. Remove the

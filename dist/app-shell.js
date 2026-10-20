@@ -1,9 +1,11 @@
 import {createResearchConsole} from './research-console.js';
 import {MODEL_VERSION} from './vehicle-models.js';
+import {loadRuntimeIdentity} from './runtime-identity.js';
 
 // This shell is created before graphics modules are imported. The numerical
 // research panel and local records do not depend on a WebGL context.
 export function createApplicationShell({initialSim}) {
+  void loadRuntimeIdentity();
   const $=id=>document.getElementById(id);
   let live=null,study=null,studyPromise=null,studyOpen=false,studyGeneration=0,toastTimer;
   const graphics={status:'initializing',reason:'',startedAt:performance.now(),readyAfterMs:null};

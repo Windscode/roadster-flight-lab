@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-20T07:08:40.491Z",
-  "model": "Roadster Flight Lab 3.13.0",
+  "generatedAt": "2026-10-20T10:37:29.245Z",
+  "model": "Roadster Flight Lab 3.14.0",
   "scope": "软件内部动力学验收，不代表Tesla真实车辆标定",
   "physics": {
     "status": "passed",
@@ -10,132 +10,132 @@
       {
         "test": "Asymmetric torque-free rotation conserves world angular momentum and rotational energy",
         "status": "PASS",
-        "ms": 309
+        "ms": 338
       },
       {
         "test": "Rotational midpoint integration shows second-order step-size convergence",
         "status": "PASS",
-        "ms": 342
+        "ms": 395
       },
       {
         "test": "10 s ground rest: four contacts, no translation or rotational drift",
         "status": "PASS",
-        "ms": 340
+        "ms": 562
       },
       {
         "test": "1 s free fall follows gravity without hidden altitude or attitude forces",
         "status": "PASS",
-        "ms": 46
+        "ms": 71
       },
       {
         "test": "Motor acceleration, friction-limited braking and steering turn the actual body",
         "status": "PASS",
-        "ms": 291
+        "ms": 441
       },
       {
         "test": "Bench-fed hover tracks height, translates and returns to a low-speed hold",
         "status": "PASS",
-        "ms": 489
+        "ms": 670
       },
       {
         "test": "Ceiling pressure holds for 10 s, permits tire-driven movement, then releases",
         "status": "PASS",
-        "ms": 402
+        "ms": 546
       },
       {
         "test": "Suction requires a nearby supporting surface: no magnetic capture in free air",
         "status": "PASS",
-        "ms": 23
+        "ms": 26
       },
       {
         "test": "Finite gas consumption equals summed nozzle impulse divided by effective exhaust velocity",
         "status": "PASS",
-        "ms": 118
+        "ms": 139
       },
       {
         "test": "Exhausted gas removes all thrust; prolonged finite hover loses support",
         "status": "PASS",
-        "ms": 356
+        "ms": 640
       },
       {
         "test": "A full roll is a six-DOF actuator maneuver with inversion, ballistic descent and recovery",
         "status": "PASS",
-        "ms": 364
+        "ms": 678
       },
       {
         "test": "180° arch traversal continuously climbs from ground and stops upside down",
         "status": "PASS",
-        "ms": 941
+        "ms": 1723
       },
       {
         "test": "Mode takeover, non-finite input guards and scenario resets remain finite",
         "status": "PASS",
-        "ms": 551
+        "ms": 1101
       },
       {
         "test": "Normal test runs reject a hidden recovery instead of accepting a shortened simulation",
         "status": "PASS",
-        "ms": 94
+        "ms": 148
       },
       {
         "test": "Collision geometry exposes every static collider, including arch and boundaries",
         "status": "PASS",
-        "ms": 32
+        "ms": 16
       },
       {
         "test": "Released accelerator coasts with mild regeneration instead of hidden hard braking",
         "status": "PASS",
-        "ms": 160
+        "ms": 203
       },
       {
         "test": "Valve output has finite rise and decay, and consumed gas follows delivered force",
         "status": "PASS",
-        "ms": 35
+        "ms": 54
       },
       {
         "test": "Adiabatic blowdown cools the tank and has lower pressure than the equal-mass isothermal case",
         "status": "PASS",
-        "ms": 99
+        "ms": 161
       },
       {
         "test": "After a roll, hover does not retain opposing side jets in the allocator null space",
         "status": "PASS",
-        "ms": 404
+        "ms": 622
       },
       {
         "test": "A ground-origin automatic roll with adequate finite impulse returns to a gentle landing before fuel loses support",
         "status": "PASS",
-        "ms": 277
+        "ms": 482
       },
       {
         "test": "Twenty-Hz telemetry is uniform at 30, 60 and 144 display frames per second",
         "status": "PASS",
-        "ms": 227
+        "ms": 367
       },
       {
         "test": "Power exhaustion removes motor, fan and jet authority even with an external gas supply",
         "status": "PASS",
-        "ms": 56
+        "ms": 46
       },
       {
         "test": "A slow altitude integral rejects a constant unmodelled vertical load without pose correction",
         "status": "PASS",
-        "ms": 971
+        "ms": 1327
       },
       {
         "test": "CSV schema contains quaternion, gas temperature and both nozzle command and delivered force",
         "status": "PASS",
-        "ms": 20
+        "ms": 21
       },
       {
         "test": "World-space exhaust preserves force sign and does not attach old gas to a moving vehicle",
         "status": "PASS",
-        "ms": 54
+        "ms": 48
       },
       {
         "test": "Mist emission count is frame-rate independent and rear outlets share one actuator force",
         "status": "PASS",
-        "ms": 94
+        "ms": 154
       }
     ]
   },
@@ -153,18 +153,19 @@
   },
   "browserVisualQA": {
     "status": "current_release_after_capture_pending",
-    "modelVersion": "3.13.0",
-    "reason": "User-supplied 3.12 high/balanced/high same-camera PNG pixels and console prove missing mineral facade/road drawing; the named mineral shader exceeds 16 fragment samplers. Original road program attribution was incomplete; exact frozen offline reflection reproduces its overflow and 3.13 adds named on-device diagnostics. Seven 3.11 isolation PNGs establish the receiver-plane stripe fix at one camera, distinct from broad environment highlights. No current 3.13 after-pixels or target-GPU timing has been collected. The cloud browser reports GL_VENDOR / GL_RENDERER Disabled, which is not a verdict on the user device.",
-    "baselineEvidence": "qa/visual-evidence-3.13.json",
-    "captureInstructions": "docs/visual-3.13.md",
+    "modelVersion": "3.14.0",
+    "reason": "User-supplied 3.13 high / balanced / high 1280x720 wet-night exposure-1.02 pixels show recovered observed roads and facades. The named road/mineral programs used 13/12 active fragment sampler elements and linked, validated and drew without listed errors in that condition; requiredCategories was empty, so this is not all-scene acceptance. Ultra08 had 25 GL1286 draw errors despite 14/13 samplers and successful link/validate, and the 14-frame matrix did not complete. The 3.14 cube-target construction and frame-bound diagnostics have CPU/GL-interface/DOM checks, but no target-GPU after-pixels or warmed route timings. The fresh cloud browser reports GL_VENDOR / GL_RENDERER Disabled, a separate environment.",
+    "baselineEvidence": "qa/visual-evidence-3.14.json",
+    "captureInstructions": "docs/rendering-3.14.md",
     "bodyStripeSource": "qa/body-stripe-source-3.11.json",
     "historicalReports": [
+      "qa/visual-evidence-3.13.json",
       "qa/browser-live-3.12.json",
       "qa/browser-release-3.9.json",
       "qa/browser.json",
       "qa/city-3.4-browser-assets.json"
     ],
-    "historyScope": "3.12 missing drawing and the scoped 3.11 receiver-plane correction have real pixel evidence. The 54/90 km/h records use physical dry mu=1.25 and different input protocols; they are not wet-road or single-factor A/B acceptance. Paused preview/HUD figures are not route frame-time data; the user GPU identity remains unverified."
+    "historyScope": "The user's 3.13 full specified continuous route is traversable, not a 3.14 drive or all-street/collision/performance certificate. The actual X bench trace CG 0.597009→3.904830 m and roll peak 365.510947 degrees is preserved, not exact landing or finite-gas acceptance. The scoped 3.11 receiver-plane correction is retained. Previous 54/90 km/h records used physical dry mu=1.25, not wet-road or matched A/B. Paused/HUD figures are not route frame-time data."
   },
   "realVehicleValidation": {
     "status": "not_performed",
@@ -175,10 +176,10 @@
     "syntaxParser": "Node/V8 SourceTextModule (parse only)",
     "researchPanelIds": 100,
     "samePageLab": true,
-    "fixedUiElements": 217,
-    "modulesChecked": 116,
-    "meshCount": 187,
-    "vertices": 161342,
+    "fixedUiElements": 229,
+    "modulesChecked": 139,
+    "meshCount": 191,
+    "vertices": 165008,
     "externalRuntimeModules": 0,
     "carPhysicsIntegrationFrames": 120
   },
@@ -253,7 +254,7 @@
     "exteriorMaterials": {
       "status": "passed",
       "checks": [
-        "Original city subset, 108 street proxies and shared average wall palette retain their 3.5 identities; new shared roadside entities are explicit",
+        "Unrelated original city geometry, 108 street proxies and shared wall palette retain their identities; three approved tower profiles and all new shared entities are explicit",
         "Every exterior instance carries finite metre dimensions that match its actual transform",
         "Metre UV edge lengths stay physical through yaw, 45-degree crossings and tilted anisotropic boxes",
         "All new plinths, portal frames, awnings, drip edges and floor belts fit inside existing physical building envelopes",
@@ -280,7 +281,7 @@
         {
           "name": "Repeated quality round trip replaces 1 / 2 / 3 cascade systems and invalidates disposed CSM uniform caches",
           "status": "passed",
-          "disposedMaterialProgramStates": 744
+          "disposedMaterialProgramStates": 840
         },
         {
           "name": "Balanced allocates no cube camera and evaluates daytime SH at vertices; mutually exclusive weather programs retain contact AO and one atlas each for night bounce/direct, with unchanged 3-read / 6-transition-read budgets",
@@ -289,84 +290,84 @@
             {
               "quality": "balanced",
               "weather": "clear-day",
-              "materialCount": 62,
+              "materialCount": 70,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "wet-night",
-              "materialCount": 62,
-              "staticNightMaterials": 62,
+              "materialCount": 70,
+              "staticNightMaterials": 70,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "clear-day",
-              "materialCount": 62,
+              "materialCount": 70,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "high",
               "weather": "clear-day",
-              "materialCount": 62,
+              "materialCount": 70,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "high",
               "weather": "wet-night",
-              "materialCount": 62,
-              "staticNightMaterials": 62,
+              "materialCount": 70,
+              "staticNightMaterials": 70,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "high",
               "weather": "clear-day",
-              "materialCount": 62,
+              "materialCount": 70,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "ultra",
               "weather": "clear-day",
-              "materialCount": 62,
+              "materialCount": 70,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "ultra",
               "weather": "wet-night",
-              "materialCount": 62,
-              "staticNightMaterials": 62,
+              "materialCount": 70,
+              "staticNightMaterials": 70,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "ultra",
               "weather": "clear-day",
-              "materialCount": 62,
+              "materialCount": 70,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "clear-day",
-              "materialCount": 62,
+              "materialCount": 70,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "wet-night",
-              "materialCount": 62,
-              "staticNightMaterials": 62,
+              "materialCount": 70,
+              "staticNightMaterials": 70,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "clear-day",
-              "materialCount": 62,
+              "materialCount": 70,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             }
@@ -380,43 +381,43 @@
           "views": [
             {
               "view": "weave-street",
-              "drawCalls": 290,
-              "triangles": 462052,
-              "instances": 36033,
-              "shadowDrawCalls": 47,
-              "shadowTriangles": 133800
+              "drawCalls": 303,
+              "triangles": 461514,
+              "instances": 35606,
+              "shadowDrawCalls": 49,
+              "shadowTriangles": 132108
             },
             {
               "view": "foundry-avenue",
-              "drawCalls": 80,
-              "triangles": 71196,
-              "instances": 5430,
-              "shadowDrawCalls": 28,
-              "shadowTriangles": 7764
+              "drawCalls": 92,
+              "triangles": 78518,
+              "instances": 5658,
+              "shadowDrawCalls": 31,
+              "shadowTriangles": 7800
             },
             {
               "view": "civic-terrace",
-              "drawCalls": 97,
-              "triangles": 177942,
-              "instances": 15217,
-              "shadowDrawCalls": 45,
-              "shadowTriangles": 60816
+              "drawCalls": 108,
+              "triangles": 185528,
+              "instances": 15467,
+              "shadowDrawCalls": 46,
+              "shadowTriangles": 60828
             },
             {
               "view": "aerial",
-              "drawCalls": 120,
-              "triangles": 323230,
-              "instances": 26491,
-              "shadowDrawCalls": 35,
-              "shadowTriangles": 58392
+              "drawCalls": 132,
+              "triangles": 323808,
+              "instances": 26157,
+              "shadowDrawCalls": 37,
+              "shadowTriangles": 59316
             },
             {
               "view": "botanical",
-              "drawCalls": 122,
-              "triangles": 262024,
-              "instances": 25082,
-              "shadowDrawCalls": 76,
-              "shadowTriangles": 103152
+              "drawCalls": 128,
+              "triangles": 266682,
+              "instances": 25088,
+              "shadowDrawCalls": 77,
+              "shadowTriangles": 103164
             }
           ]
         },
@@ -429,12 +430,756 @@
           "status": "passed"
         },
         {
-          "name": "Original physical city retains its exact canonical identity and the new daylight bake matches the complete current city including retained roadside fixtures",
+          "name": "All unrelated original geometry retains exact identity; three explicitly approved tower profiles preserve original parcels, and the daylight bake matches the entire current city",
           "status": "passed",
-          "geometrySHA256": "2dba61c7784a22bcf1f29ce9dfe2af28607ed600a4d5a5e2d8c1fa03fd382c67",
-          "canonicalSHA256": "ad28b4192e8367ac32491a5c3d0e08667b9946d667aa2c2405c375c0a15e8e4b",
-          "retainedGeometryCanonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
-          "newSharedEntities": 158,
+          "geometrySHA256": "a432aa3945e3ebc311d71d515e89d3ca64b5f95cb04faa1941c8e2b15d4cae4a",
+          "canonicalSHA256": "125babef182e8071ff69a2c947d4aeaf8aee5d989a0354a9541235a087da5310",
+          "retainedGeometryCanonicalSHA256": "96d05d9e509be1dbae4a93885b4cdcfe3cae65867d44600017b6c03999159c91",
+          "geometryContract": {
+            "sourceCommit": "1dde9a3df081297978d7cc98409be86bcc6daa23",
+            "sourcePhysicsSHA256": "d6fbfe7e3ed5c3503c91334d40672cd855ab5169437371a5bdda47f644ca27d8",
+            "sourceCitySHA256": "ba228d0e2b51ce357062346c6452e63514b93ba39c2ffa52eb38359ffec1f9b9",
+            "quantization": 1e-9,
+            "unchangedHistoricalCount": 1947,
+            "unchangedHistoricalCanonicalSHA256": "96d05d9e509be1dbae4a93885b4cdcfe3cae65867d44600017b6c03999159c91",
+            "unchangedSource313Count": 2105,
+            "unchangedSource313CanonicalSHA256": "954ae6a556cd1064f361d2573661b90ed01d43679bb4eeb08a05d170786f78e8",
+            "reconstructedHistoricalCount": 1962,
+            "reconstructedHistoricalCanonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+            "reconstructedSource313Count": 2120,
+            "reconstructedSource313CanonicalSHA256": "ad28b4192e8367ac32491a5c3d0e08667b9946d667aa2c2405c375c0a15e8e4b",
+            "explicit314AdditionCount": 105,
+            "explicit314AdditionIds": [
+              "continuity-foundry-yard-kerb-1--1-2",
+              "continuity-foundry-yard-kerb-1--1-164",
+              "continuity-foundry-yard-kerb-1-1-2",
+              "continuity-foundry-yard-kerb-1-1-164",
+              "continuity-terrace-link-kerb-1--1-12",
+              "continuity-terrace-link-kerb-1--1-62",
+              "continuity-terrace-link-kerb-1-1-12",
+              "continuity-terrace-link-kerb-1-1-62",
+              "continuity-forum-west-link-kerb-1--1-6",
+              "continuity-forum-west-link-kerb-1-1-6",
+              "continuity-forum-west-link-kerb-2--1-2",
+              "continuity-forum-west-link-kerb-2-1-2",
+              "continuity-forum-main-kerb-1--1-2",
+              "continuity-forum-main-kerb-1--1-102",
+              "continuity-forum-main-kerb-1--1-184",
+              "continuity-forum-main-kerb-1-1-2",
+              "continuity-forum-main-kerb-1-1-102",
+              "continuity-forum-main-kerb-1-1-184",
+              "continuity-forum-cross-240-kerb-1--1-2",
+              "continuity-forum-cross-240-kerb-1--1-124",
+              "continuity-forum-cross-240-kerb-1-1-2",
+              "continuity-forum-cross-240-kerb-1-1-124",
+              "continuity-forum-cross-322-kerb-1--1-2",
+              "continuity-forum-cross-322-kerb-1--1-124",
+              "continuity-forum-cross-322-kerb-1--1-208",
+              "continuity-forum-cross-322-kerb-1-1-124",
+              "continuity-forum-cross-322-kerb-1-1-204",
+              "continuity-forum-cross-410-kerb-1--1-2",
+              "continuity-forum-cross-410-kerb-1--1-120",
+              "continuity-forum-cross-410-kerb-1--1-204",
+              "continuity-forum-cross-410-kerb-1-1-2",
+              "continuity-forum-cross-410-kerb-1-1-124",
+              "continuity-forum-cross-410-kerb-1-1-208",
+              "continuity-forum-court-kerb-1--1-12",
+              "continuity-forum-court-kerb-1-1-12",
+              "continuity-south-arrival-edge--1",
+              "continuity-south-arrival-stone--1",
+              "continuity-south-arrival-edge-1",
+              "continuity-south-arrival-stone-1",
+              "continuity-south-parking-post",
+              "continuity-south-guidance-post",
+              "continuity-foundry-bay-back",
+              "continuity-foundry-bay-post-240.55",
+              "continuity-foundry-bay-post-250.45",
+              "continuity-foundry-bay-roof",
+              "continuity-foundry-bay-rail",
+              "continuity-foundry-power-base",
+              "continuity-foundry-power-cabinet",
+              "continuity-cross-portal-foot-69",
+              "continuity-cross-portal-pier-69",
+              "continuity-cross-portal-canopy-69",
+              "continuity-cross-portal-foot-132",
+              "continuity-cross-portal-pier-132",
+              "continuity-cross-portal-canopy-132",
+              "continuity-forum-side-bench-335.5",
+              "continuity-forum-side-bench-394.5",
+              "continuity-forum-tree-kerb-x-337--1",
+              "continuity-forum-tree-kerb-z-337--1",
+              "continuity-forum-tree-kerb-x-337-1",
+              "continuity-forum-tree-kerb-z-337-1",
+              "continuity-forum-tree-kerb-x-393--1",
+              "continuity-forum-tree-kerb-z-393--1",
+              "continuity-forum-tree-kerb-x-393-1",
+              "continuity-forum-tree-kerb-z-393-1",
+              "continuity-ramp-abutment--1-0",
+              "continuity-ramp-abutment--1-1",
+              "continuity-ramp-abutment--1-2",
+              "continuity-ramp-abutment--1-3",
+              "continuity-ramp-abutment--1-4",
+              "continuity-ramp-abutment-1-0",
+              "continuity-ramp-abutment-1-1",
+              "continuity-ramp-abutment-1-2",
+              "continuity-ramp-abutment-1-3",
+              "continuity-ramp-abutment-1-4",
+              "continuity-pendant-backing--279",
+              "continuity-pendant-hanger--279--0.3",
+              "continuity-pendant-hanger--279-0.3",
+              "continuity-pendant-backing--255",
+              "continuity-pendant-hanger--255--0.3",
+              "continuity-pendant-hanger--255-0.3",
+              "continuity-pendant-backing--230",
+              "continuity-pendant-hanger--230--0.3",
+              "continuity-pendant-hanger--230-0.3",
+              "continuity-pendant-backing--218",
+              "continuity-pendant-hanger--218--0.3",
+              "continuity-pendant-hanger--218-0.3",
+              "continuity-industrial-1-2-service-core",
+              "continuity-industrial-1-2-exhaust-stack",
+              "continuity-industrial-1-2-stack-collar-23",
+              "continuity-industrial-1-2-stack-collar-29",
+              "continuity-industrial--1-5-service-core",
+              "continuity-industrial--1-5-exhaust-stack",
+              "continuity-industrial--1-5-stack-collar-23",
+              "continuity-industrial--1-5-stack-collar-29",
+              "continuity-arcology-west-crown",
+              "continuity-arcology-east-crown",
+              "continuity-arcology-spire-crown",
+              "continuity-perimeter-bank-east",
+              "continuity-perimeter-bank-west",
+              "continuity-perimeter-bank-north",
+              "continuity-perimeter-bank-south",
+              "continuity-boundary-sign-east",
+              "continuity-boundary-sign-west",
+              "continuity-boundary-sign-north",
+              "continuity-boundary-sign-south"
+            ],
+            "approvedTowerChanges": [
+              {
+                "id": "arcology-west",
+                "before": [
+                  {
+                    "id": "arcology-west",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      45,
+                      4.4,
+                      64
+                    ],
+                    "position": [
+                      -284,
+                      2.2,
+                      -450
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-west-tier-1",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      45,
+                      26.55483870967742,
+                      64
+                    ],
+                    "position": [
+                      -284,
+                      17.677419354838708,
+                      -450
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-west-tier-2",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      30.150000000000002,
+                      37.935483870967744,
+                      49.92
+                    ],
+                    "position": [
+                      -289.4,
+                      49.92258064516129,
+                      -445.52
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-west-tier-3",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      37.8,
+                      26.554838709677426,
+                      55.04
+                    ],
+                    "position": [
+                      -285.8,
+                      82.16774193548387,
+                      -448.08
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-west-tier-4",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      25.200000000000003,
+                      26.554838709677412,
+                      39.68
+                    ],
+                    "position": [
+                      -276.8,
+                      108.72258064516129,
+                      -455.76
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  }
+                ],
+                "current": [
+                  {
+                    "id": "arcology-west",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      45,
+                      30.954838709677418,
+                      64
+                    ],
+                    "position": [
+                      -284,
+                      15.477419354838709,
+                      -450
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-west-tier-1",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      35,
+                      60.69677419354839,
+                      43
+                    ],
+                    "position": [
+                      -287,
+                      61.303225806451614,
+                      -446
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-west-tier-2",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      20,
+                      30.34838709677419,
+                      43
+                    ],
+                    "position": [
+                      -292,
+                      106.8258064516129,
+                      -446
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  }
+                ],
+                "removedIds": [
+                  "arcology-west-tier-3",
+                  "arcology-west-tier-4"
+                ],
+                "oldBounds": {
+                  "min": [
+                    -306.5,
+                    0,
+                    -482
+                  ],
+                  "max": [
+                    -261.5,
+                    122,
+                    -418
+                  ]
+                },
+                "newBounds": {
+                  "min": [
+                    -306.5,
+                    0,
+                    -482
+                  ],
+                  "max": [
+                    -261.5,
+                    122,
+                    -418
+                  ]
+                },
+                "parcelUnchanged": true
+              },
+              {
+                "id": "arcology-east",
+                "before": [
+                  {
+                    "id": "arcology-east",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      47,
+                      4.4,
+                      58
+                    ],
+                    "position": [
+                      -75,
+                      2.2,
+                      -300
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-east-tier-1",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      47,
+                      23.089655172413792,
+                      58
+                    ],
+                    "position": [
+                      -75,
+                      15.944827586206895,
+                      -300
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-east-tier-2",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      42.77,
+                      38.48275862068965,
+                      41.18
+                    ],
+                    "position": [
+                      -74.06,
+                      46.731034482758616,
+                      -306.38
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-east-tier-3",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      33.839999999999996,
+                      26.93793103448276,
+                      36.54
+                    ],
+                    "position": [
+                      -69.83,
+                      79.44137931034481,
+                      -309.28
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-east-tier-4",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      25.380000000000003,
+                      23.0896551724138,
+                      27.84
+                    ],
+                    "position": [
+                      -66.07,
+                      104.4551724137931,
+                      -311.6
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  }
+                ],
+                "current": [
+                  {
+                    "id": "arcology-east",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      47,
+                      23.641379310344824,
+                      58
+                    ],
+                    "position": [
+                      -75,
+                      11.820689655172412,
+                      -300
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-east-tier-1",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      40,
+                      73.11724137931034,
+                      26
+                    ],
+                    "position": [
+                      -75,
+                      60.2,
+                      -290
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-east-tier-2",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      19,
+                      19.241379310344826,
+                      26
+                    ],
+                    "position": [
+                      -65,
+                      106.37931034482759,
+                      -290
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  }
+                ],
+                "removedIds": [
+                  "arcology-east-tier-3",
+                  "arcology-east-tier-4"
+                ],
+                "oldBounds": {
+                  "min": [
+                    -98.5,
+                    0,
+                    -329
+                  ],
+                  "max": [
+                    -51.5,
+                    116,
+                    -271
+                  ]
+                },
+                "newBounds": {
+                  "min": [
+                    -98.5,
+                    0,
+                    -329
+                  ],
+                  "max": [
+                    -51.5,
+                    116,
+                    -271
+                  ]
+                },
+                "parcelUnchanged": true
+              },
+              {
+                "id": "arcology-spire",
+                "before": [
+                  {
+                    "id": "arcology-spire",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      39,
+                      4.4,
+                      44
+                    ],
+                    "position": [
+                      -65,
+                      2.2,
+                      -195
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-spire-tier-1",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      39,
+                      30.577777777777776,
+                      44
+                    ],
+                    "position": [
+                      -65,
+                      19.688888888888886,
+                      -195
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-spire-tier-2",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      28.08,
+                      45.866666666666674,
+                      30.799999999999997
+                    ],
+                    "position": [
+                      -65,
+                      57.91111111111111,
+                      -195
+                    ],
+                    "quaternion": [
+                      0,
+                      0.0799146939691727,
+                      0,
+                      0.9968017063026194
+                    ]
+                  },
+                  {
+                    "id": "arcology-spire-tier-3",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      24.96,
+                      30.57777777777777,
+                      26.84
+                    ],
+                    "position": [
+                      -63.44,
+                      96.13333333333333,
+                      -196.76
+                    ],
+                    "quaternion": [
+                      0,
+                      0.0799146939691727,
+                      0,
+                      0.9968017063026194
+                    ]
+                  },
+                  {
+                    "id": "arcology-spire-tier-4",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      18.72,
+                      30.577777777777783,
+                      23.76
+                    ],
+                    "position": [
+                      -61.1,
+                      126.71111111111111,
+                      -197.64
+                    ],
+                    "quaternion": [
+                      0,
+                      0.0799146939691727,
+                      0,
+                      0.9968017063026194
+                    ]
+                  }
+                ],
+                "current": [
+                  {
+                    "id": "arcology-spire",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      39,
+                      34.977777777777774,
+                      44
+                    ],
+                    "position": [
+                      -65,
+                      17.488888888888887,
+                      -195
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-spire-tier-1",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      18,
+                      95.55555555555556,
+                      40
+                    ],
+                    "position": [
+                      -72,
+                      82.75555555555556,
+                      -195
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  },
+                  {
+                    "id": "arcology-spire-tier-2",
+                    "type": "box",
+                    "kind": "building",
+                    "size": [
+                      18,
+                      11.466666666666669,
+                      27
+                    ],
+                    "position": [
+                      -72,
+                      136.26666666666665,
+                      -190
+                    ],
+                    "quaternion": [
+                      0,
+                      0,
+                      0,
+                      1
+                    ]
+                  }
+                ],
+                "removedIds": [
+                  "arcology-spire-tier-3",
+                  "arcology-spire-tier-4"
+                ],
+                "oldBounds": {
+                  "min": [
+                    -84.5,
+                    0,
+                    -217
+                  ],
+                  "max": [
+                    -45.5,
+                    142,
+                    -173
+                  ]
+                },
+                "newBounds": {
+                  "min": [
+                    -84.5,
+                    0,
+                    -217
+                  ],
+                  "max": [
+                    -45.5,
+                    142,
+                    -173
+                  ]
+                },
+                "parcelUnchanged": true
+              }
+            ],
+            "originalFailure": {
+              "gate": "qa/render-budget-check.mjs:95",
+              "actual": "b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b",
+              "expected": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+              "reason": "The historical exclusion list did not include 105 explicit 3.14 additions, and the old unconditional geometry identity could not represent three intentionally redesigned anchor towers (9 changed and 6 replaced original tier IDs). All other original physical geometry is unchanged.",
+              "rawLog": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b'\n- '77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146'\n\n    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/qa/render-budget-check.mjs:95:8 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b',\n  expected: '77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n"
+            },
+            "scope": "Exact geometry identity and explicit shared-profile changes only; not GPU, aesthetics, driving or performance acceptance."
+          },
+          "newSharedEntities": 263,
           "newSharedEntityIds": [
             "landmark-quay-entry-pier--1",
             "landmark-quay-entry-seat-plinth--1",
@@ -593,7 +1338,112 @@
             "corridor-canal-link-cabinet-1",
             "corridor-canal-seat-1--139",
             "corridor-canal-seat-1--27",
-            "corridor-canal-seat-1-59"
+            "corridor-canal-seat-1-59",
+            "continuity-foundry-yard-kerb-1--1-2",
+            "continuity-foundry-yard-kerb-1--1-164",
+            "continuity-foundry-yard-kerb-1-1-2",
+            "continuity-foundry-yard-kerb-1-1-164",
+            "continuity-terrace-link-kerb-1--1-12",
+            "continuity-terrace-link-kerb-1--1-62",
+            "continuity-terrace-link-kerb-1-1-12",
+            "continuity-terrace-link-kerb-1-1-62",
+            "continuity-forum-west-link-kerb-1--1-6",
+            "continuity-forum-west-link-kerb-1-1-6",
+            "continuity-forum-west-link-kerb-2--1-2",
+            "continuity-forum-west-link-kerb-2-1-2",
+            "continuity-forum-main-kerb-1--1-2",
+            "continuity-forum-main-kerb-1--1-102",
+            "continuity-forum-main-kerb-1--1-184",
+            "continuity-forum-main-kerb-1-1-2",
+            "continuity-forum-main-kerb-1-1-102",
+            "continuity-forum-main-kerb-1-1-184",
+            "continuity-forum-cross-240-kerb-1--1-2",
+            "continuity-forum-cross-240-kerb-1--1-124",
+            "continuity-forum-cross-240-kerb-1-1-2",
+            "continuity-forum-cross-240-kerb-1-1-124",
+            "continuity-forum-cross-322-kerb-1--1-2",
+            "continuity-forum-cross-322-kerb-1--1-124",
+            "continuity-forum-cross-322-kerb-1--1-208",
+            "continuity-forum-cross-322-kerb-1-1-124",
+            "continuity-forum-cross-322-kerb-1-1-204",
+            "continuity-forum-cross-410-kerb-1--1-2",
+            "continuity-forum-cross-410-kerb-1--1-120",
+            "continuity-forum-cross-410-kerb-1--1-204",
+            "continuity-forum-cross-410-kerb-1-1-2",
+            "continuity-forum-cross-410-kerb-1-1-124",
+            "continuity-forum-cross-410-kerb-1-1-208",
+            "continuity-forum-court-kerb-1--1-12",
+            "continuity-forum-court-kerb-1-1-12",
+            "continuity-south-arrival-edge--1",
+            "continuity-south-arrival-stone--1",
+            "continuity-south-arrival-edge-1",
+            "continuity-south-arrival-stone-1",
+            "continuity-south-parking-post",
+            "continuity-south-guidance-post",
+            "continuity-foundry-bay-back",
+            "continuity-foundry-bay-post-240.55",
+            "continuity-foundry-bay-post-250.45",
+            "continuity-foundry-bay-roof",
+            "continuity-foundry-bay-rail",
+            "continuity-foundry-power-base",
+            "continuity-foundry-power-cabinet",
+            "continuity-cross-portal-foot-69",
+            "continuity-cross-portal-pier-69",
+            "continuity-cross-portal-canopy-69",
+            "continuity-cross-portal-foot-132",
+            "continuity-cross-portal-pier-132",
+            "continuity-cross-portal-canopy-132",
+            "continuity-forum-side-bench-335.5",
+            "continuity-forum-side-bench-394.5",
+            "continuity-forum-tree-kerb-x-337--1",
+            "continuity-forum-tree-kerb-z-337--1",
+            "continuity-forum-tree-kerb-x-337-1",
+            "continuity-forum-tree-kerb-z-337-1",
+            "continuity-forum-tree-kerb-x-393--1",
+            "continuity-forum-tree-kerb-z-393--1",
+            "continuity-forum-tree-kerb-x-393-1",
+            "continuity-forum-tree-kerb-z-393-1",
+            "continuity-ramp-abutment--1-0",
+            "continuity-ramp-abutment--1-1",
+            "continuity-ramp-abutment--1-2",
+            "continuity-ramp-abutment--1-3",
+            "continuity-ramp-abutment--1-4",
+            "continuity-ramp-abutment-1-0",
+            "continuity-ramp-abutment-1-1",
+            "continuity-ramp-abutment-1-2",
+            "continuity-ramp-abutment-1-3",
+            "continuity-ramp-abutment-1-4",
+            "continuity-pendant-backing--279",
+            "continuity-pendant-hanger--279--0.3",
+            "continuity-pendant-hanger--279-0.3",
+            "continuity-pendant-backing--255",
+            "continuity-pendant-hanger--255--0.3",
+            "continuity-pendant-hanger--255-0.3",
+            "continuity-pendant-backing--230",
+            "continuity-pendant-hanger--230--0.3",
+            "continuity-pendant-hanger--230-0.3",
+            "continuity-pendant-backing--218",
+            "continuity-pendant-hanger--218--0.3",
+            "continuity-pendant-hanger--218-0.3",
+            "continuity-industrial-1-2-service-core",
+            "continuity-industrial-1-2-exhaust-stack",
+            "continuity-industrial-1-2-stack-collar-23",
+            "continuity-industrial-1-2-stack-collar-29",
+            "continuity-industrial--1-5-service-core",
+            "continuity-industrial--1-5-exhaust-stack",
+            "continuity-industrial--1-5-stack-collar-23",
+            "continuity-industrial--1-5-stack-collar-29",
+            "continuity-arcology-west-crown",
+            "continuity-arcology-east-crown",
+            "continuity-arcology-spire-crown",
+            "continuity-perimeter-bank-east",
+            "continuity-perimeter-bank-west",
+            "continuity-perimeter-bank-north",
+            "continuity-perimeter-bank-south",
+            "continuity-boundary-sign-east",
+            "continuity-boundary-sign-west",
+            "continuity-boundary-sign-north",
+            "continuity-boundary-sign-south"
           ]
         }
       ]
@@ -696,7 +1546,7 @@
         },
         {
           "name": "geometry remains finite; The current release uses a visible draw/triangle budget rather than a global allocated batch limit",
-          "count": 151418,
+          "count": 150604,
           "status": "passed"
         }
       ]
@@ -750,7 +1600,7 @@
         {
           "test": "Every authored position and normal is finite; nonzero normals are unit length",
           "status": "PASS",
-          "ms": 14
+          "ms": 15
         },
         {
           "test": "Full suspension travel is represented directly, without shrinking or visually clamping tyres",
@@ -760,7 +1610,7 @@
         {
           "test": "Whole tyre sweep clears arch, roof, inner wheelhouse and isolated thrust duct",
           "status": "PASS",
-          "ms": 801
+          "ms": 765
         },
         {
           "test": "Continuous pressure chamber has an airtight roof, isolated wheel/jet cutouts and surface-following seal",
@@ -785,7 +1635,7 @@
         {
           "test": "Render profiles reduce actual geometry and preserve articulated object identities and state",
           "status": "PASS",
-          "ms": 382
+          "ms": 406
         },
         {
           "test": "Separate glazing panels share continuous derivative normals at every quality",
@@ -831,6 +1681,136 @@
         "the market street is physically traversable beneath its raised footbridge"
       ]
     },
+    "framebufferAndMatrix314": {
+      "status": "passed",
+      "checks": [
+        "Frozen one-argument cube resize reproduces undefined height and invalid viewport in bundled Three.js",
+        "Repeated 128/256/0 quality changes keep six coherent faces, dispose replaced targets and retain same-size probes",
+        "Framebuffer inspection queries the actual attachment and restores renderbuffer binding",
+        "Linked, validated, under-16 programs fail the actual draw gate on GL1286 and incomplete framebuffer",
+        "Carry-in, pre-draw and draw faults stay separate; a later clean frame cannot rewrite a failed frame",
+        "An attempted draw without a stored program retains its named pass/FBO and all error classes before a later clean draw",
+        "A clean zero-draw unattributed attempt is retained without false failure; an actual unattributed draw still fails",
+        "Malformed target dimensions fail even if a facade claims framebuffer completeness",
+        "Fourteen completed matrix cases produce an openable STORE ZIP with 14 PNGs, 14 conditions and exact CRCs",
+        "Completed collection with a failing actual-draw verdict remains failed, not success",
+        "Failure during case 4 retains all three preceding original frames and the failed ordinary audit",
+        "Cancel preserves the exact prefix, leaves missing frames explicit, and still creates an archive",
+        "A missing PNG fails immediately and never substitutes a successful frame or a blank image"
+      ],
+      "report": "qa/framebuffer-matrix-3.14.json",
+      "scope": "Actual Three target construction, GL-interface and archive/PNG fixtures. Target-GPU framebuffer and color draws remain required."
+    },
+    "trimAndFailure314": {
+      "status": "passed",
+      "checks": [
+        "Published equal-candidate false negative has an independent zero-wrench-residual counterexample",
+        "All four lift faults, four health values, pressure and tilted poses receive independent wrench checks",
+        "Safety-domain and nonfinite failures preserve terminal evidence before reset, and old inputs/valves clear",
+        "Low finite gas and hard landing remain physical outcomes, not fabricated solver failures",
+        "Research height outer loop obeys layer, expiry, slew, authority and continuation contracts"
+      ],
+      "report": "qa/physics-controls-deepening-3.14.json",
+      "independentOracle": "qa/trim-independent-3.14.json",
+      "scope": "Bounded static wrench and preserved solver-failure states. Static feasibility is not dynamic recovery."
+    },
+    "cameraAndClearance314": {
+      "status": "passed",
+      "checks": [
+        "Shared collision boxes retract both camera uses before the near plane intersects a wall",
+        "Thin-post release uses time hysteresis without skipping the post or repeatedly snapping out",
+        "Narrow corridor, overhead deck, reverse approach and turning fixtures preserve physical inputs",
+        "Actual vendor OrbitControls rotate an independent desired camera without inventing zoom at an obstruction",
+        "World CG altitude, CG down-ray and estimated physical-envelope distances remain distinct on ground/roof/bridge/tilt"
+      ],
+      "report": "qa/camera-clearance-3.14.json",
+      "scope": "Actual OrbitControls and independent OBB/ray geometry. No native camera feel, visibility or recovery-height acceptance."
+    },
+    "contactFixtures314": {
+      "status": "passed",
+      "checks": [
+        "120 Hz contact fixtures complete with bounded energy and penetration diagnostics; adverse physical outcomes retained"
+      ],
+      "fixtureOutcomeStatus": "completed-with-adverse-physical-outcomes",
+      "report": "qa/contact-regressions-3.14.json",
+      "scope": "Actual 120 Hz solver contact and steering fixtures with retained upsets and precondition failures; not realistic-speed obstacle certification."
+    },
+    "vehicleDisplay314": {
+      "status": "passed",
+      "checks": [
+        "Frozen 3.13 exterior restores the published bytes and independent layout",
+        "Two-seat display is inspection-only and swaps complete visible cabin identities",
+        "Lamp off, DRL and low-beam affect bounded emissive roles while retaining wells and optical covers",
+        "Rubber, coated dark alloy, machined silver, rotor and cabin finishes remain distinct without added texture samplers",
+        "Tail installation surrounds unchanged nozzle positions and nozzle geometry",
+        "Identity, LOD, lamps and cutaway cycling preserve wheel, wing and glass geometry state",
+        "Photographic cameras reproduce the declared normalized landmark residuals and keep a separate technical rig",
+        "All new geometry has finite unit normals and explicit LOD costs against 3.13"
+      ],
+      "report": "qa/vehicle-display-3.14.json",
+      "scope": "Actual new geometry, material roles, display-only identity and independent nozzle-hole rays. Artistic result remains unaccepted."
+    },
+    "vehicleCapture314": {
+      "status": "passed",
+      "checks": [
+        "Exactly 24 immediate copy/frame-condition associations survive asynchronous PNG and ZIP encoding",
+        "Cancellation and prepare/PNG/draw failures keep exact partial outcomes instead of success",
+        "Archive failure returns a readable failure JSON without claiming image export",
+        "Orbit duration, cancellation, errors and track cleanup are explicit"
+      ],
+      "report": "qa/vehicle-study-capture-3.14.json",
+      "scope": "Same-condition still/video transaction and failure fixtures; synthetic capture bytes, not native images."
+    },
+    "cityContinuity314": {
+      "status": "passed",
+      "checks": [
+        "The inherited 114 parcels, 12 streets and 113 route segments retain their exact 3.13 authoring data",
+        "All streets and every elevated connection have explicit coverage; new solids leave the full declared lanes and inherited slabs open",
+        "Background lamps no longer occupy authored ramps; retained lights keep their actual physical-height visual bounds clear",
+        "Maintenance access, South Quay ramp/entry, civic threshold and perimeter banks preserve usable shared space",
+        "Four formerly isolated pendant lenses connect through backing and eight hangers to actual roof or viaduct undersides",
+        "Every new raised element has a matching actual rendered instance with the physics transform, and remains visible nearby in balanced",
+        "The three redesigned anchor towers share exact storey transition heights with physical tiers and preserve low-quality primary masses",
+        "Authored industrial exhaust stacks retain their primary silhouette at 120 m in balanced without promoting all thin details",
+        "Distant geography starts outside the reachable workspace, preserves four perimeter walls and remains a low-detail whole"
+      ],
+      "report": "qa/city-continuity-3.14.json",
+      "scope": "Twelve-street and 113-route geometry preservation, independent SAT/rays, real instance transforms and low-detail primary masses. Native driving, pixels and performance remain pending."
+    },
+    "boundedResearchInterface314": {
+      "status": "passed",
+      "checks": [
+        "JSON AST rejects prototype/extra/accessor/sparse fields before they can become executable data",
+        "Imported state has exact keys, four dense slots, per-node bounds and a bounded non-recursive fault payload",
+        "Repeated same-step calls do not integrate twice; subrate and snapshot continuation remain deterministic",
+        "Static 80-node and per-decision operation budgets are bounded; arithmetic overflow never commits partial integration",
+        "Cancel and observer failure release the actual height command without teleporting; snapshot redecision includes initial controller state",
+        "Actual Worker scheduling rejects concurrent/duplicate jobs and cooperatively returns a cancelled partial physical result",
+        "UI ignores stale Worker callbacks, closes malformed/cancel-post failures and keeps protected bytes untouched"
+      ],
+      "report": "qa/research-boundaries-3.14.json",
+      "scope": "Data-only AST/state contracts, actual Node Worker generation/cancellation, isolated DOM error paths; not native browser/GPU execution."
+    },
+    "researchPlatform314": {
+      "status": "passed",
+      "checks": [
+        "Data-only AST accepts composition, bounded states and exact integer subrates; no arbitrary nodes or coercion",
+        "NaN observations and division by zero disable the control law at the exact step, retaining last valid internal state",
+        "The default challenge uses actual 120 Hz physics, takes off, experiences timed wind, and confirms sustained landing",
+        "An edited user law truly re-decides the identical task; re-execution is deterministic and comparison declares its only changed factor",
+        "Finite low-pressure failure is a physical hard landing, retained separately from solver errors and external gas throughput",
+        "Derating, controller faults, cancellation and pilot takeover have explicit events and no body-state shortcut",
+        "Out-of-room targets are previewed without silent clamping and unavailable model identities cannot pretend exact replay",
+        "Live and procedure source records are generated by real physics; program primary metrics use all 120 Hz states",
+        "Real solver faults preserve pre-reset terminals, serializable non-finite descriptions and last valid metrics without importing a safety reset",
+        "All three archive types protect corrupt/unsupported/partial-invalid raw bytes and refuse overwrite by a new result",
+        "Quota / denied writes leave old disk and destructive candidates unchanged; append results stay exportable in the session",
+        "Capacity boundary never evicts history, and maximum legal rate requests survive save/import/reload",
+        "Full task graph/results export, reload and deterministic re-execution preserve statistics and control decisions without display decimation"
+      ],
+      "report": "qa/research-platform-3.14.json",
+      "scope": "Isolated storage failure/quarantine transactions, bounded height AST, actual-solver same-task decisions and landing success/failure; no GPU play acceptance."
+    },
     "samplerBudget313": {
       "status": "passed",
       "checks": [
@@ -838,7 +1818,7 @@
         "Atlas dimensions respect the supplied 3D texture limit; malformed depth layouts fail explicitly",
         "Real city bindMaterial chain selects mutually exclusive weather transport, preserves static/dynamic distinction and retires stale tables through high/balanced/high and day/night cycles"
       ],
-      "report": "qa/sampler-budget-3.13.json",
+      "report": "qa/sampler-budget-3.14.json",
       "scope": "Exact final source and offline active sampler reflection, never target-GPU acceptance."
     },
     "actualProgramCapture313": {
@@ -849,35 +1829,35 @@
         "An 18-element linked facade/road resource set cannot pass the target-16 gate",
         "Failed links retain unavailable active arrays instead of interpreting a zero count as success",
         "A linked program still fails when validation with actual draw bindings fails",
-        "Draw-time GL errors are attributed to the material and a later clean frame does not rewrite the failed record",
+        "Pre-draw GL errors remain separate from the following draw and a later clean frame does not rewrite the failed record",
         "No draw or missing required vehicle/building categories cannot be accepted as coverage",
         "Capture state rejects overlap and exported records cannot mutate retained evidence",
         "Vehicle coverage requires the main camera and actual PBR color material, never reflection, depth or normal passes",
         "An interrupted capture never retains a passed verdict"
       ],
-      "report": "qa/render-program-diagnostics-3.13.json",
+      "report": "qa/render-program-diagnostics-3.14.json",
       "scope": "GL-interface contract tests, not a real GPU run."
     },
     "quickRoll313": {
       "status": "passed",
       "checks": [],
-      "report": "qa/x-flip-3.13.json",
-      "curves": "qa/x-flip-curves-3.13.json",
+      "report": "qa/x-flip-3.14.json",
+      "curves": "qa/x-flip-curves-3.14.json",
       "scope": "Frozen 3.9/3.12 and current actual-solver traces, finite/bench, real manual input and failure boundaries."
     },
     "opticalSurfacesAndQuay313": {
       "status": "passed",
       "checks": [],
-      "report": "qa/visual-quality-3.13.json",
+      "report": "qa/visual-quality-3.14.json",
       "scope": "Actual geometry, material sorting and shared collision/bake identities; after-pixels still pending."
     },
     "historicalRecompute313": {
       "status": "passed",
       "checks": [
-        "Original 3.12 complete rolling/gas histories explicitly recompute with all source state and journals preserved; original file/archive bytes are unchanged.",
-        "Public record migration preserves the in-progress legacy X profile and refuses the changed full-city collision identity before integration."
+        "Original 3.12 rolling/gas, mid-roll and city histories stay readable/exportable with original bytes and journals; undeclared 3.14 migration is explicitly refused.",
+        "Retained legacy X profile is unchanged; a genuine current-model city state independently refuses the old geometry signature before integration."
       ],
-      "report": "qa/history-compatibility-3.12-to-3.13.json"
+      "report": "qa/history-compatibility-3.12-to-3.14.json"
     },
     "cornerBraking312": {
       "status": "passed",
@@ -890,8 +1870,8 @@
         "Gamepad centre/edge/full-scale continuity and keyboard priority are exercised through the real input mapper",
         "Blended braking snapshots replay exactly and reset clears the new brake diagnostics"
       ],
-      "report": "qa/braking-controls-3.13.json",
-      "curves": "qa/braking-controls-curves-3.13.json",
+      "report": "qa/braking-controls-3.14.json",
+      "curves": "qa/braking-controls-curves-3.14.json",
       "scope": "Three matched actual-solver stages, per-wheel loads/slip/force demand and passive work. No human driving acceptance."
     },
     "chaseCamera312": {
@@ -899,13 +1879,13 @@
       "checks": [
         "chase framing preserves its specified distance across speed and update rate; horizontal transport is invariant, vertical filtering and physical state are retained."
       ],
-      "report": "qa/chase-camera-3.13.json",
+      "report": "qa/chase-camera-3.14.json",
       "scope": "Deterministic camera kinematics, not rendered driving feel or measured FPS."
     },
     "reflectionStability312": {
       "status": "passed",
       "checks": [],
-      "report": "qa/reflection-stability-3.13.json",
+      "report": "qa/reflection-stability-3.14.json",
       "scope": "CPU pass submission, shader weighting and state restoration. Matched WebGL motion and GPU cost remain open."
     },
     "gRecoveryGrid312": {
@@ -916,7 +1896,7 @@
         "Schema/range validation is grid-specific; missing, cancelled, failed, duplicate and foreign-identity results cannot become successful cells",
         "Saved wheel/slip column names match physical driver-relative wheel IDs under actual split-road response"
       ],
-      "report": "qa/research-recovery-grid-3.13.json",
+      "report": "qa/research-recovery-grid-3.14.json",
       "scope": "Ordinary G levelling under actual wind/nozzle conditions at sixteen sampled initial attitudes/heights. No interpolated safety boundary."
     },
     "repositoryPayloads311": {
@@ -928,7 +1908,7 @@
         "Existing and dangling symbolic links are refused without writing outside the checkout",
         "Corrupt segments fail even when an already restored file exists"
       ],
-      "report": "qa/repository-payloads-3.13.json",
+      "report": "qa/repository-payloads-3.14.json",
       "scope": "Byte-identical source/archive restoration, not physical or graphical acceptance."
     },
     "vehicleDynamics311": {
@@ -941,8 +1921,8 @@
         "Manual full rotation, X and G recovery use bounded actual nozzles; the new default and maneuver preset have explicit different costs",
         "Finite gas, overhead clearance, low altitude and G key semantics remain physical; mid-roll snapshots continue exactly"
       ],
-      "report": "qa/vehicle-dynamics-3.13.json",
-      "curves": "qa/vehicle-dynamics-curves-3.13.json",
+      "report": "qa/vehicle-dynamics-3.14.json",
+      "curves": "qa/vehicle-dynamics-curves-3.14.json",
       "scope": "120 Hz actual solver, matched baseline source, causal ablations, per-wheel and flight traces. Real keyboard/camera experience remains open."
     },
     "controlPreferences311": {
@@ -971,16 +1951,16 @@
         "Physical failure, cancellation and unmatched conditions remain distinct from successful execution",
         "Twenty results fit the existing history budget without deleting earlier records"
       ],
-      "report": "qa/research-robustness-3.13.json",
+      "report": "qa/research-robustness-3.14.json",
       "scope": "Twenty paired seeded numerical experiments, bounded success and preserved failures; not a population reliability estimate."
     },
     "historicalRecompute311": {
       "status": "passed",
       "checks": [
         "Actual 3.9, 3.10 and 3.11 histories retain their source identity and all existing state/parameters",
-        "Explicit 3.13.0 recomputation maps missing legacy vertical acceleration to 3 m/s², preserves explicit 3.11 values, and never claims old-solver replay"
+        "3.14.0 explicitly refuses unavailable old-model exact replay and undeclared complete-state migration; retained legacy values are never silently mapped."
       ],
-      "report": "qa/history-compatibility-3.13.json"
+      "report": "qa/history-compatibility-3.14.json"
     },
     "visualMechanisms311": {
       "status": "passed",
@@ -991,7 +1971,7 @@
         "Seven diagnostic frames are synchronously copied, immutable and bound to the correct original bytes before PNG encoding",
         "Static direct night field has source/geometry identities, independent inverse-square/cone/occlusion checks and nonzero far fixture illumination"
       ],
-      "report": "qa/visual-regressions-3.13.json",
+      "report": "qa/visual-regressions-3.14.json",
       "scope": "Shadow-plane and light-transport oracles plus capture-state fixtures; matched rendered after-images remain pending."
     },
     "cityLighting310": {
@@ -1002,7 +1982,7 @@
         "Balanced uses the coarser field, 3D sampling uses three explicit-LOD reads per field, and day mode contributes no night bounce or direct-light multiplier",
         "Fixed-camera pool is vehicle-independent, responds to view direction, keeps overlapping light during handoff and does not refresh static paused shadows"
       ],
-      "report": "qa/city-lighting-3.13.json",
+      "report": "qa/city-lighting-3.14.json",
       "scope": "Light selection, transitions, baked-field sampling and shared authored collision identity; actual after-pixels and GPU timing pending"
     },
     "vehicleSurface310": {
@@ -1014,7 +1994,7 @@
         "Cutaway and capture preparation restore authored glass opacity without drift or a wheel/wing pose change",
         "The interior mirror remains below the actual glazing mesh instead of breaking the windscreen silhouette"
       ],
-      "report": "qa/vehicle-surface-3.13.json",
+      "report": "qa/vehicle-surface-3.14.json",
       "scope": "Frozen reference identity, surface normals, material state and physical motion envelope; not a rendered-image verdict"
     },
     "inspectionCapture310": {
@@ -1027,17 +2007,17 @@
         "Five-file ZIP binds original/comparison bytes and JSON by one captureId",
         "Standalone comparison PNG remains available; unavailable canvas and missing PNG reject without a success bundle"
       ],
-      "report": "qa/inspection-capture-3.13.json",
+      "report": "qa/inspection-capture-3.14.json",
       "scope": "Canvas and ZIP transaction fixture; no actual WebGL pixels"
     },
     "history310": {
       "status": "passed",
       "checks": [
-        "Actual 3.9 history is immutable; explicit 3.13.0 recomputation preserves its complete initial state and legacy 3 m/s² acceleration.",
-        "Unknown 3.13.0 build requires explicit recomputation and retains source identity and physical state.",
+        "Actual 3.9 history is immutable and exportable; both exact replay and undeclared current-model migration are refused before import.",
+        "Unknown 3.14.0 build requires explicit recomputation and retains source identity and physical state.",
         "Historical compatibility checks fail closed before advancing physics."
       ],
-      "report": "qa/history-original-3.9-to-3.13.json"
+      "report": "qa/history-original-3.9-to-3.14.json"
     },
     "controlCapture310": {
       "status": "passed",
@@ -1051,7 +2031,7 @@
         "Pilot takeover, an unmet speed gate and obstacle preflight keep failed/cancelled evidence without initializing a faster car or deleting city colliders",
         "Operator vertical-setting changes survive cancellation, and an externally ended recorder links its exact prefix instead of showing the previous run"
       ],
-      "report": "qa/control-capture-3.13.json",
+      "report": "qa/control-capture-3.14.json",
       "scope": "Continuous actual fixed-step solver inputs, including complete city collision world; not human driving or real browser performance"
     },
     "boundedDriveAndFlightControls": {
@@ -1064,7 +2044,7 @@
         "G recovers level after manual pose changes and unsealed F arming, while real adhesion and finite thrust retain authority",
         "New wheel, release-braking and recovery states preserve complete snapshot replay across display rates with seeded sensing and nozzle derating"
       ],
-      "report": "qa/physics-controls-3.13.json",
+      "report": "qa/physics-controls-3.14.json",
       "scope": "Actual fixed-step physics, original 3.8 fixture comparison and authored city bend; no human driving or GPU acceptance"
     },
     "reproductionConsistency": {
@@ -1081,10 +2061,11 @@
         "Cancellation and solver failures retain partial evidence without comparing an early state to a future terminal state",
         "Controller A/B is explicitly fixed driver inputs with controller redecision, not a demand to reproduce the historical trajectory",
         "Previous contact support and every required retained kinematic channel participate in the reproduction judgment",
-        "The actual archived 3.8 record stays historical, refuses exact execution and only migrates explicitly to current-model recomputation",
+        "A current-model snapshot with a different collision signature is rejected before import or integration",
+        "The original 3.8 archive remains readable and exportable; 3.14 refuses an undeclared full-state migration",
         "Road study names include the actual road condition and both driver aids without changing recorded numeric requests"
       ],
-      "report": "qa/reproduction-verdict-3.13.json"
+      "report": "qa/reproduction-verdict-3.14.json"
     },
     "corridorAndReflection": {
       "status": "passed",
@@ -1097,7 +2078,7 @@
         "Authored frontage orders cover every route family and every facade retains outward-facing doorway fixtures",
         "A near road fixture retains a slot when nearby door lights compete for the balanced budget"
       ],
-      "report": "qa/visual-corridor-3.13.json",
+      "report": "qa/visual-corridor-3.14.json",
       "scope": "Canonical route geometry, exact projection and pass culling; not pixels or FPS"
     },
     "physicalResearch": {
@@ -1111,7 +2092,7 @@
         "The finite-rate wing actuator generates no zero-q force and fixed/active choices change drag and rear wheel load in the physical state",
         "Seeded delay/noise changes the actual feedback solution, nozzle derating changes allocation, and onboard/external gas accounting stays distinct"
       ],
-      "report": "qa/physics-research-3.13.json"
+      "report": "qa/physics-research-3.14.json"
     },
     "liveExperimentReplay": {
       "status": "passed",
@@ -1131,7 +2112,7 @@
         "Imported replay validates finite state, command allowlist and exact step totals without executing content",
         "Program compressed CSV and standard historical CSV identify the stored report and truthful sample interval"
       ],
-      "report": "qa/experiment-records-3.13.json"
+      "report": "qa/experiment-records-3.14.json"
     },
     "publicRoadStudies": {
       "status": "passed",
@@ -1141,7 +2122,7 @@
         "Fixed-retracted and active wing standard comparison drives real actuator deployment and dynamic-pressure forces",
         "New road protocols preserve full-resolution statistic identity and deterministic rerun, with historical archives explicitly recomputed as requests"
       ],
-      "report": "qa/research-road-3.13.json"
+      "report": "qa/research-road-3.14.json"
     },
     "performanceBookkeeping": {
       "status": "passed",
@@ -1152,7 +2133,7 @@
         "Asynchronous GPU queries are attributed to their original frame once, and disjoint queries are discarded with evidence",
         "Explicit diagnostic frames are excluded from paused and driving statistics and cannot advance a performance capture"
       ],
-      "report": "qa/performance-meter-3.13.json",
+      "report": "qa/performance-meter-3.14.json",
       "scope": "Measurement bookkeeping with a GL query facade, not actual GPU or FPS"
     },
     "visualStructure": {
@@ -1166,108 +2147,131 @@
         "Weather preset switches actual GI, physical lights and water without changing city geometry",
         "Inspection retains six calibrated views, adds two close-ups and freezes the actual 3.8 model source"
       ],
-      "report": "qa/visual-upgrade-3.13.json",
+      "report": "qa/visual-upgrade-3.14.json",
       "scope": "Geometry, light/reflection state and budget tests; no pixel acceptance"
     }
   },
-  "totalAcceptanceChecks": 319,
+  "totalAcceptanceChecks": 385,
   "sourceIdentity": {
-    "modelBuildId": "461466391bff8e9907d95c157ba2f8ce52b76eae0a202aaed6aac31a768fe2d0",
+    "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
     "sourceHashes": {
-      "app-shell.js": "edc539c9f72ef8e26e667aaa1718d29f39f6ffac725757f63043fa0bc6c06a02",
+      "app-shell.js": "9fd8d2ee57a37cccc429cb276475601ad502336ca6cc430c6feb3e2cb7684674",
       "app.js": "05a02808e030921721d0c658620b9d9726efe6ae188574d79da4865dbf860546",
       "audio.js": "80b39ba94e8b7ff56dc526229188b7927e8b53b68894e52ad32818257d689141",
+      "bounded-height-controller.js": "e310531ade879e91d6921c785b8cc73aa029839cafa37c46a321ff0c8b9697e0",
       "capture-archive.js": "ff0bcf04e26dbc506eabb4569edd8be1b3e167e6e567d84a38c7ca61db1160c2",
       "car-radio.js": "c8ac1e1a4aa8ed52e6b2b67eb7d627c85464930bcd0bc91ed6e6587c86389f78",
-      "chase-camera.js": "f441bc157dfb545c474aaead4f71acd2696e3520c9c01a7760d730de9b7093d6",
+      "chase-camera.js": "083c515420ea4342487e8b6bd74a6443e2ba856c91506f8951024989c79ef76c",
+      "city-continuity.js": "a9b85cb298104c8a5a948fc9661e3344628e6b85d182b5b810447f57ec94a541",
       "city-corridor-plan.js": "640a9f8d3d6ca9403338b419f973c3856d2164edba6b4854f76a7a87e8a96428",
-      "city-data.js": "ba228d0e2b51ce357062346c6452e63514b93ba39c2ffa52eb38359ffec1f9b9",
-      "city-environment.js": "eb32fcf83d85f6413ae4120d39b7b434c3b74641d71fb1c123077ba2c06c1a9d",
+      "city-data.js": "b05f0346d544afb92e728db27a79b5730b02f88a6fcd9c7b7ac8a3e73f779e69",
+      "city-environment.js": "eb0e3db79584d6bdd9962b34382069becc56785d20179d627b238da1e52715fd",
       "city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
       "city-frontage-design.js": "53856b8c6f447ba455ecc30c16533783dea891eee8664f10b280f39544a77739",
-      "city-landmarks.js": "0a94d4c70531d4d15c530e2c41469e4dbad86764f81d8a2163a3e6c17498bfb3",
+      "city-horizon.js": "e938e870dd63c88688d36bfefee0db3faa8cb8d9ebb35dd19bb86b506b52a98b",
+      "city-landmarks.js": "c59b9c67908e6e4c90d8f14356cb4c937a58e4a868c63e35eb9594b133aeb884",
       "city-map.js": "2cfb23a2a01095aecc052ef0db36bfbddb0e6ce02267123a60ca468d538ecb01",
       "city-material-lighting.js": "4b6f64b660311a84e58ee5f76cb4ae87eb7c9fbff4812e393262a02f7a014ff6",
       "city-night-transport.js": "fff2703b2a8a26f4f059043a3cff09598389d29c3216be9946a5105e92022cb9",
       "city-plan.js": "0258b8489058b9051458e0b1809dcce3018e8013c3ea5b9bec10080947e9fc2c",
       "city-practical-lights.js": "77381ce63ce8976b40a65025de829deb4aeb5b289e196da91a8756ee20860e17",
       "city-render-budget.js": "c7cb69daf59a80af4ff4009badb3b819c2429a75c88036b7ce84e576e40ccb3f",
+      "city-review.js": "473086fa0694cb94d8be50b276b3cb5834cb6696863b8792ef35af60e9f5e02a",
       "contact-ao-pass.js": "b9b95f465bdab91bb1bbe91920b32ea60d12095088ad4cb617e3f1da934f238c",
       "control-observation.js": "8920e824d32dbece63aade3f0ab4da5c294225aa46419d6e556e603f2ed75cc8",
       "controls.js": "eb14d7f191cddd3d6ccd608a1d2b9df52b2466a1a2d43fdc953de04fc8f135e1",
+      "cube-probe-target.js": "17c87dfc424dc1e50e5622c115da3852724be97d7f71cb1a387a753ecd6cbc81",
       "driving-capture.js": "53f78df5e38078dfb0010c7e82bf8313d8a0829032720f60530e8e4938f321e2",
       "environment.js": "f5f90b08d2f9aa0ad4addcc9a09e11d772b970da329a1cdd909c7a8d846c12a5",
       "exhaust.js": "375429cd7095567bd9d8602c92825643defcd5525ec9b062b5e3ad9276c8dd10",
-      "experiment-console.js": "75c883e65c7b0c531557f970d487ddfc043ad7754692bd137cb97880f2b8e4f8",
-      "experiment-records.js": "637ec079d02e7093db6044f9ddac0eedeae8eb76a13c9f284ac148809f68b2f3",
+      "experiment-console.js": "53caf3c08cc52c6efe909045f2b435ae3f53ccb6adf9c8d585b144b117863002",
+      "experiment-records.js": "fde55d6fdecea9f03feabaed0b0b09fe3628aa67a7792cac1a89ddb825c54c4c",
       "experiment-replay-worker.js": "8bed7be5c1a0ea4fefab0a9c0c967af0ffde054314a01702857b59064e395262",
-      "experiment-reproduction.js": "f757b9c59066904a0df3ef804e10f01a2fb935d0a92f80a0b52b95f0d5db1cb9",
+      "experiment-reproduction.js": "4165dd4b5699f39487acecdae456b1cf43729ee9b82f89a542d49ae675306fd9",
       "experiment-worker.js": "190f7dab3c6edd5df37b525273e582ed15af058c22fb7d1610d7581464ea8154",
-      "flight-programs.js": "2f222465a1d5c0af203c0c8df7f80ddea8c649ca850aa0ead29ac3dccb35eb10",
+      "flight-programs.js": "dbb04c43f29e73b1459c05b223969a74078eba6d2a3bd1ad2ebf6d5245e95cca",
+      "framebuffer-diagnostics.js": "f0fe9e7daea93ed99617f2c2dd601aa56f3a32e2c0e15a9f3920273ea6a88079",
       "game.css": "40dd2db1196b881f4f7e5c9e23e51e36ec46b5bf06cadba7391861c0a59670cc",
       "i18n-capture-en.js": "6fb36fdb6e13160a85159bd63f4c7d6549312fa42933a4abb7a6ecd8ad14f825",
       "i18n-controls-311-en.js": "0e82a3bac391a40d463eb4bbd1d78e24362e2fb20d7d283d944c0337572a4e7b",
       "i18n-flight-313-en.js": "825bbc5a2490d041c7b20ba9c729f1b2693db0cf59e06444b818a74d3f22f7b6",
       "i18n-main-en.js": "42227d3b11e8cbf53f67413efb254b06081c90a1f23627bdfb55da9859161468",
+      "i18n-release-314-en.js": "1944b2adb818290f90b9e043cb61438e771043276ee756183642922ca37fe2e7",
       "i18n-render-313-en.js": "68f1219d1b228f681978dc0432e08439607505b2d07a08b292fd82cc5b087405",
       "i18n-research-en.js": "b50b1ce81f16b85b48e78c6402540c1a8040590902c20730f856275093e5304c",
       "i18n-vehicle-310-en.js": "2f33aa6393043244ff73a9f3a2fa0e654bed7a2427c99b9c150e89203e55e4d6",
+      "i18n-vehicle-314-en.js": "c4898e4c7b92842d8028dbe83e8520206074c99e7a14a9ddc24328b9dcd44f9f",
       "i18n-visual-311-en.js": "511d5dbc6c59c1d0e53618b6d8426cad218954cc7cab54be9f90b64ca2fd9154",
       "i18n-visual-en.js": "da4952997fd47df297b8ccbfcebc394bd7c7bdb5caba127e53830f2a9b14ee73",
       "i18n.js": "6735cf85a82021768a89d1dec541c7b2f16eeb426decab129c53257f9135ef4b",
-      "index.html": "bca7dcca4f420b33939615c9f447e0378b4cfc02bdf70658bc5a86d9d5dbf6a0",
+      "index.html": "f576094895f436e5db7eed83a86ca44152a791f099ab40253b4773bcb8ecdafa",
       "indirect-lighting.js": "87ea771788d4d9b177fd475b053a8537a5254176791c24d733b7407966efb885",
       "inspection-capture.js": "eb9c412e11b81c54bbcafd62e8de29930d003790e410bbd9194778138db5168e",
       "inspection-diagnostics-capture.js": "f9bb86d2bc10544ddfb09e4546690a58fd7200a45db0dcb6df733cff59a20baa",
       "irradiance-math.js": "f4c9de47c61ebf8a661d9cfddfbcf0a47c77266438f43909090cd1032b1637f9",
+      "landing-challenge.js": "0bf41621ea07071d3c74086bbe3f3186cc9d2a24f214c070a23f954340bfc696",
+      "landing-research-ui.js": "9e72526dc25640cf94076bb1964c2f5cc2fe647e9f6a04149c488003e6df5d17",
+      "landing-research-worker.js": "f72458ce4e3905e315b8b709b503974b07d2c98b10d25ff0542fa7714fce8850",
       "local-probe-sun.js": "518069c383e4815dcaf796576d969a568356ddfc202e922055d17bbd871a1f1a",
       "locale-bootstrap.js": "2bfa0300dbed844c2e80616e79ed7fdef4f06210adaa7aa6c66f6f4b66c1d7c1",
-      "main.js": "bbfe804cf998fac815265d57e5a80e8397342e3b25b29b2f708a4932d5c314ec",
+      "main.js": "b693b17760c60cdf17edf9de993f1891b8ea1e4fae74436ead5de5096a236ff5",
       "night-city-lighting.js": "00c3d8dd0cca95eeb398af6459379431aa7b2b8fe2683c5ff241c62ae2ad845f",
       "night-direct-lighting.js": "ccc6b213f2f44e97035ff064939ae498be4295ebe6655576488989a6fb70e234",
       "night-direct-transport.js": "964f62fab051aecd75c5d3d65acf6d31c1a51ff84a037fda3c2ad7f593a74938",
       "night-field-atlas.js": "afe38d53e75b49f3609fb1156dc4961bb20e73d04939227ee987b54790239ba7",
-      "pavement-surface-material.js": "3cfc78c9596994becccfe9afb5656b97d4b7290540abe6e83a7bcc1664e80bbe",
+      "pavement-surface-material.js": "7ea84275c50ec3a22b8af4d55f2f41d6708972f27f9d76ef215ca95cf0ce77b5",
       "performance-meter.js": "0febb4a02352075265ab0c83e9eb2f9afec351b289974dc0918d744c6dc6f7d7",
-      "physics.js": "d6fbfe7e3ed5c3503c91334d40672cd855ab5169437371a5bdda47f644ca27d8",
+      "physics.js": "f65430d3e12bc936e3c81d3fc02263b0bdeb88df69ed5245f08aa58df1e13247",
       "receiver-plane-shadows.js": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741",
+      "render-capture-matrix.js": "02e453a7b9b03a9e43ea0935ba5b064d6a86cf152405c8f47fbae3c1786c19d2",
       "render-profiles.js": "4442bc45eab81e0a98c66551afba46b2049f916e66abaa7274f3a9c4b30f9719",
-      "render-program-diagnostics.js": "1a9f80d7f6a33481cf160d304aaf276c7c0f5578297a994de5a4db3f13c607b7",
-      "research-console.css": "a183831a7d13a1998b4d18195fcfe8fd1f200e90578eb39e3a0f16c48c36f046",
-      "research-console.js": "ff976e05a8d4d9cc08d1029329327ec40ceb34c8e8ffa697b810cda204103cf1",
+      "render-program-diagnostics.js": "8c961ee03fcbff9b862df1c0f8aae931468f8405bc4b660523321242892adc70",
+      "research-comparison.js": "0c58e5785b457ecfec8d6f05e18bece610a72de0a4010a5a29637190fa78ac77",
+      "research-console.css": "d7c63e961a1ac799ed97d102970846d3561be89b8129465a45aa8a69bc02427e",
+      "research-console.js": "50723929ef70785e5cea56b50bb22730bfadd64d261fb11366e276fbc132baec",
       "research-entry.js": "dd4c073e1c659c847e13718d24c0880d9befd162273b630c03aa06618fef3987",
-      "research-lab.js": "bccd5d21c7254b9db35d95041e517f4651d5c62c6f1639980ff6f118f1445058",
+      "research-i18n-3.14.js": "c3b8718531309130155ca55ddd8933af91fc0540ad39b4067225498254158064",
+      "research-lab.js": "7e185abe048af450401ddfa26c9ab600fbc060a7d5ffce7ef632a9a563176b84",
       "research-panel.html": "8122431c7b5a2d5d33a4d835618bebe016bc767ee7fd57994d8e4cb86f2acc1e",
       "research-protocol.js": "934ecf255b0431177bc3c5b8574a38887c285bf64814fc009d7f9f2a52f26c8b",
       "research-recovery-grid.js": "6d7d04c79a40c700abe6f08ed313bc7ac7a443ba61d1d60659ebd368643a30a8",
       "research-robustness.js": "1068dd22eda5d3364847e40e40105ada9ed90dd2a5057af36f60b06c5839fcfe",
+      "research-storage.js": "c7ff58556f1d52566046ca75e3e7cc89c3f1a5c619b95519d6276b48804113f3",
       "research-study.js": "149b1e530c386b2614aacd299857e209848a7f9d037899b7feccd544d58b03cb",
       "research-workbench.js": "850163f60c802083162621b5677a9276cacec13b09bf5c910aae0be88430f723",
       "research.css": "87091394e00fa0acc14c499142192468398f925fae26b8f8d5bef3c4a94cec17",
       "research.html": "a088f6e56ef218bf546961026a500587a0f23f7b4987f6fae61f31d9f9c6bce9",
       "road-surface-material.js": "c73da629769b4bbe1cbcce06006ede15564daa779d20e9e3b1a8afce90bbf833",
-      "simulation-snapshot.js": "0e07d3b80662fa883f279465cafb67154910c542a06791732c937aae7485b846",
+      "runtime-identity.js": "147c924df8e30f61228fe5b97cecbeba2d0eb0d14a5a91227295bd51578d12bc",
+      "simulation-safety.js": "28bb61c95a2f06b620b13eacf1dd4fa27da532f58a2698145d989005c37d9115",
+      "simulation-snapshot.js": "96fef72782db79451b3d322e37350e3fe5c729233ea1a88b17aea02d815b2117",
       "stable-fxaa-shader.js": "07109f48c213c693c19e7903449b23c59d9de5d494890ff073953fa27e837574",
       "static-city-broadphase.js": "02e290e83ffd4d341211b75a70f2408010006001fb600a2d0a279fb8d8c45a14",
       "street-life.js": "936961b9665c1ed14da655f189974e702a7437b7c7f06e0040bee88ebc5f0818",
-      "style.css": "047f058f1ec95099570e4376d95b8b3a17c8ce0654ebe0b8fb4a056deb9de5e5",
+      "style.css": "122d2d0cfc27d01d65f57e574f0b0f91f7dcc1d1c1b083452a1c2260d82453f1",
       "telemetry.js": "d698282add7fd8a81a91e9183c823525183f3e83f67147a84aae0ac993f22fcf",
       "tire-dynamics.js": "de2336ef6ff88d276a414a2e90a2a6a7c29e8b18bed5767a6031bb14782c388d",
+      "trim-feasibility.js": "5ebfbc9057b1555c1f32f57e70b4c5e43ff0cffddbbddebed4fd1623acf2f0ac",
       "ui-preferences.js": "0ec10f97794ae9a420b850251092f131b0ee7d38deffa1671da8379b56968a32",
       "urban-architecture.js": "7fd38b4d03ee9e4c4c5e4199eb0efccb08649700eadceb1f514beeed8c17b835",
-      "vehicle-inspection.css": "4164d0fbd138b2b4c319675a206119a1a30dbda6a0f6e4e925554ffef28d59a5",
-      "vehicle-inspection.html": "c899e1f3eb3ea3b038ea9423c591afee1e35b0f7f549f151412bbc50220b9964",
-      "vehicle-inspection.js": "996342f8cbb19a9d2333158bee006d573fa07b434a9421a10f956da35ae9e5f5",
+      "vehicle-clearance.js": "2cd62f637d74a8186b8712afb4942450e61a8d9f689b90f1fea94ba2073a6d87",
+      "vehicle-display-study.js": "3eb0019219cea0a95d3f1860eb06f7c10f99e980d8600725524450c4dabe6749",
+      "vehicle-inspection.css": "669fe86a7a031b4da6f4370844c66d1d543b6d44f12d1a596ecbbb713db8cc5b",
+      "vehicle-inspection.html": "2f60cfb11074ff3c40750f54540bdd4ea3c26c008bf936350ae0d7d06536bc19",
+      "vehicle-inspection.js": "bb9068ce714061ca249262b79d88ce759a1d9aea4abdf09afd8503ac035a9416",
       "vehicle-layout.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
-      "vehicle-models.js": "44147032c3b9c2f510f73b63712a1ea7116ad81d6a7c4070fcf654cec5cf1eaa",
+      "vehicle-models.js": "d24dab6c58a8eb6c5122880f59d1b92cdffe1efeb49f9eeab36b7e9226d7798a",
+      "vehicle-reference-3.13.js": "31257f22ae30c1df7392c8a7dcafea1a91017e0b000299b10716ef01ebbb99a3",
       "vehicle-reference-3.7.js": "c15443cf9c69af3a2d0c6867a1000645deff12e2db2cc4eab1916134da54cd07",
       "vehicle-reference-3.8.js": "9152de502fb086ca2027db690226d9ba88881915d6a54b4269e97ab08ffd885b",
       "vehicle-reference-3.9.js": "d49b3d5bfc7e234877dfeacdbe5615e948a47b8609fead19859664eeb40a83d7",
+      "vehicle-reference-layout-3.13.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
       "vehicle-reference-layout-3.7.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
       "vehicle-reference-layout-3.8.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
       "vehicle-reference-layout-3.9.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+      "vehicle-study-capture.js": "2757a519875dd848c7c5f1d2c4edd1128f9aa7ca2b9b86eadcbed1661303b477",
       "vehicle-surface-diagnostics.js": "d612c5f281ac80332a634e16631d124cc23ce1713f51caee62b4f78909515ff3",
-      "vehicle.js": "70515d7eec676d7a36f121701d0a7be17be6b19c0b4a826bfc794c279ccbb5b2",
+      "vehicle.js": "7a6d423b75e432bf9149f3fa9d6f9c06fba35107c55edea798845b62b14c9a11",
       "vendor/addons/controls/OrbitControls.js": "d3b6283dcec39e541db397bdd868fec380e118f3053ec26e9873252a14b7b5d6",
       "vendor/addons/csm/CSM.js": "6876eaa29c95daeb82e846788e84bde03126e066165c34286ee2ee18ea58c018",
       "vendor/addons/csm/CSMFrustum.js": "632b096b39c503ebe1c3f83e63dca25c51af2103ff0ca467ebf5dc1855196989",
@@ -1297,7 +2301,7 @@
       "vendor/cannon-es.js": "f0700cbd3a482954949b9d58c1b0f76dcc74767750297647a39d8c40dd63d37c",
       "vendor/three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
       "vendor/three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
-      "visual-presets.js": "0476d3ab39adb6d38bc8a6904f4c630f87109f38bd7cf426c14355cd2bb24a06",
+      "visual-presets.js": "e04bf7f7b38fea0a8256415873af6820a3bbee3dcd5dc44ee65bd15de561e20e",
       "wet-road-reflection.js": "237baf4e5bc76ad1969f1e04a51d22777d429c0f3a89e295dff80a18f5a27061",
       "wind-lab-data.js": "27ce72f8053b99037462be6c4b62d37d371021d6e02fca96d4392587d9f2ab41",
       "wind-laboratory.js": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d"
@@ -1306,8 +2310,8 @@
   "offlineShaderValidation": {
     "scope": "Offline final source syntax, stage-interface and active sampler array reflection; not WebGL driver, framebuffer, rendered-pixel or FPS validation.",
     "postProcessing": {
-      "report": "qa/render-shader-validation-3.13.json",
-      "createdAt": "2026-10-20T07:11:46.791Z",
+      "report": "qa/render-shader-validation-3.14.json",
+      "createdAt": "2026-10-20T10:42:11.995Z",
       "sourceHashesCurrent": true,
       "status": "passed_with_documented_compiler_normalization",
       "programPairs": 18,
@@ -1322,14 +2326,14 @@
       ]
     },
     "cityLighting": {
-      "report": "qa/city-shaders-3.13.json",
-      "createdAt": "2026-10-20T07:11:46.256Z",
+      "report": "qa/city-shaders-3.14.json",
+      "createdAt": "2026-10-20T10:42:11.487Z",
       "sourceHashesCurrent": true,
       "status": "passed_with_documented_compiler_normalization",
-      "programPairs": 98,
-      "stages": 196,
+      "programPairs": 146,
+      "stages": 292,
       "exactPass": 0,
-      "compatibilityPass": 98,
+      "compatibilityPass": 146,
       "failed": 0,
       "currentMaximumFragmentSamplers": 14,
       "currentSamplerBudgetFailures": 0,
@@ -1345,9 +2349,9 @@
   "domInteractionQA": {
     "status": "passed",
     "scope": "DOM events with actual application/controller code and explicit graphics/Worker facades. No actual browser layout, WebGL execution or FPS validation.",
-    "acceptanceGroups": 70,
+    "acceptanceGroups": 85,
     "mainPage": {
-      "report": "qa/same-page-ui-3.13.json",
+      "report": "qa/same-page-ui-3.14.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.",
@@ -1356,6 +2360,8 @@
         "Visible E/Q response changes the active target-speed parameter and persists without resetting physical state; reset restores 5 m/s",
         "All four manual-response sliders save on input and presets alter bounded reference limits without resetting, advancing or replacing physical state",
         "Actual G event routing has only off/level states, and keyboard/numpad 1/2 deliver normalized pitch without opening raw valves",
+        "Actual R resets and pauses with a visible P hint; P resumes without resurrecting old held input or valve commands",
+        "Static trim inspect/export preserves physics, reports residuals and limited claims, while HUD separates world CG height from estimated hull and tyre clearance",
         "City/lab switching keeps one document and renderer, uses isolated real physics worlds, preserves the city vehicle state and routes drawing to the active scene",
         "All three quality changes and context round trips update the active car/environment and restore city AO to the right scene while keeping it disabled in the lab",
         "Actual form-focus events suppress driving, stabilization and saved-program shortcuts, and clear a previously held throttle",
@@ -1366,16 +2372,19 @@
         "Road adhesion, actual ABS and wing controls route to physics; weather, screen-size LOD and fixed route camera metadata route to the active presentation",
         "Image archive pairs the rendered-frame callback with frozen conditions, and an explicit exposure lock survives weather changes; no pixel assertion is made",
         "Actual GPU-matrix UI freezes real physics against P/H/X/R, driving and synthetic click events, restores fixed/offset cameras and presentation, and reports failed for no draws",
-        "A genuinely pending environment-ready promise times out, restores controls, presentation and real physics, and emits no passing capture",
+        "A genuinely pending resource wait exports an explicitly failed 0/14 ZIP with zero PNGs, restores the UI/physics and keeps its original 20-second cause visible",
+        "Slow PNG callbacks stay single-flight; ESC retains a cancelled one-frame prefix, restores controls/physics and ignores a late encoder callback",
         "Actual main adapter replays the recorded fixed-step state with zero terminal position error, restores weather/camera, and ends a new recording before returning to the previous scene state",
         "The main capture controls reset only before recording, accelerate through ordinary inputs, preserve manual takeover, and retain failed preflight evidence without repositioning",
+        "Actual record-button quota/write failures keep old archive bytes, retain complete exportable session results and persistent bilingual warnings without a false saved toast",
         "A context-lost event stops live simulation and closes its recording while retaining the same application and local research history",
         "Without graphics, the same-page standard study executes the actual solver and keeps visible history, selected-record CSV and complete-library JSON usable",
-        "English reaches the actual main shell and lazy research UI, persists and switches back without changing snapshots or exported history"
+        "English reaches the actual main shell and lazy research UI, persists and switches back without changing snapshots or exported history",
+        "Runtime deployment identity fetch uses an explicit matching fixture and does not hide an unexpected-network rejection"
       ]
     },
     "advancedStudy": {
-      "report": "qa/research-panel-dom-3.13.json",
+      "report": "qa/research-panel-dom-3.14.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM events and state, with actual deterministic solver reports through an asynchronous Worker API facade. Historical-version fixtures test storage only. Canvas is stubbed; no browser layout, actual Worker-thread scheduling, GPU pixels or FPS evidence.",
@@ -1392,7 +2401,7 @@
       ]
     },
     "liveExperiments": {
-      "report": "qa/experiment-console-dom-3.13.json",
+      "report": "qa/experiment-console-dom-3.14.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "Actual console DOM and actual fixed-step RoadsterSim replay/A-B. Canvas and asynchronous Worker endpoints are facades; no browser layout, Worker-thread performance, WebGL pixels or FPS evidence.",
@@ -1412,18 +2421,19 @@
       ]
     },
     "withoutWebGL": {
-      "report": "qa/no-webgl-research-3.13.json",
+      "report": "qa/no-webgl-research-3.14.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.",
       "checks": [
         "Actual app.js initializes the research shell before a deliberately rejected WebGLRenderer and resolves ?view=lab to the same-page study",
         "Without graphics, the same-page standard study executes the actual solver and keeps visible history, selected-record CSV and complete-library JSON usable",
-        "English reaches the actual main shell and lazy research UI, persists and switches back without changing snapshots or exported history"
+        "English reaches the actual main shell and lazy research UI, persists and switches back without changing snapshots or exported history",
+        "Runtime deployment identity fetch uses an explicit matching fixture and does not hide an unexpected-network rejection"
       ]
     },
     "workflow": {
-      "report": "qa/research-workflow-3.13.json",
+      "report": "qa/research-workflow-3.14.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM text/events and actual numerical Roadster solver reports through a Worker endpoint facade. No browser layout, GPU pixels, native Worker timing or FPS acceptance.",
@@ -1442,13 +2452,13 @@
       ]
     },
     "vehicleInspection": {
-      "report": "qa/vehicle-inspection-3.13-dom.json",
+      "report": "qa/vehicle-inspection-3.14-dom.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM interface and metadata regression, plus actual inspection matrix state handling through a no-draw renderer facade. Not a real-browser, GPU, image or performance result.",
       "checks": [
         "3D failure leaves truthful metadata export and language selection available while disabling PNG/ZIP frame capture and reference rendering",
-        "3.9 default / 3.8 retained options",
+        "3.13 is the new frozen comparison default; 3.9 and 3.8 remain selectable",
         "Original-frame ZIP and independent-state JSON labels translate to English and back without storage identity changes",
         "No-GPU metadata has null camera/resolution/device, separate surface protocol, and the actual chosen frozen reference identity",
         "Independent JSON explicitly has current-state-unbound scope and null captureId/frameAssociation",
@@ -1457,7 +2467,7 @@
       ]
     },
     "robustnessStudy": {
-      "report": "qa/research-robustness-3.13-dom.json",
+      "report": "qa/research-robustness-3.14-dom.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM contracts and actual solver reports through a Worker facade; no layout, native Worker timing, graphics or FPS acceptance.",
@@ -1469,7 +2479,7 @@
       ]
     },
     "recoveryGridStudy": {
-      "report": "qa/research-recovery-grid-3.13-dom.json",
+      "report": "qa/research-recovery-grid-3.14-dom.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM DOM/state/storage contracts and actual solver through Worker facade; no WebGL pixels, native Worker throughput, layout or FPS acceptance.",
@@ -1478,6 +2488,23 @@
         "Changed controls never relabel old results; a failed batch retains three returned results and all thirteen unreturned conditions",
         "Zero-result cancellation remains a sixteen-cell incomplete grid after refresh, retaining execution identity and original data",
         "Import/recompute reproduces actual curves; the 4 MiB ceiling preserves earlier records and keeps all new reports/failed attempts exportable in-session"
+      ]
+    },
+    "researchSafety": {
+      "report": "qa/research-safety-3.14-dom.json",
+      "sourceHashesCurrent": true,
+      "status": "passed",
+      "scope": "Isolated DOM/storage + actual 120 Hz solver; Canvas/Worker scheduling facades. No user archive was modified. No native 3D, GPU or frame-time claim.",
+      "checks": [
+        "Live save failure persists past completion, append/import stay in session export, failed deletion retains old disk and selection",
+        "Procedure delete / controller save commit only after disk success; import/save/reload preserve ±360 / ±120 rate requests",
+        "Procedure result save failure remains independently visible after completed notification; raw live link and 120 Hz metrics are retained",
+        "Damaged procedure/results archives are isolated with exact original strings and new finished results cannot overwrite them",
+        "Standard research failed clear keeps report/selection/raw disk; quota and protected attempt logs are separate persistent states",
+        "Numeric challenge, saved editable graph, refresh, same-task re-decision, comparison, cancellation and EN editing share one usable UI",
+        "Live challenge uses the host fixed-step loop; pilot takeover releases authority and an invalid graph cannot start",
+        "Live low-pressure challenge keeps its real hard-landing failure, offers event telemetry and survives export/import/refresh",
+        "Challenge quota and quarantined original archives keep full new results and edited algorithms in session export with a persistent warning"
       ]
     }
   }

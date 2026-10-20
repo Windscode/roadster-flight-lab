@@ -1,0 +1,823 @@
+{
+  "schema": "roadster-city-geometry-scope-3.14-result",
+  "status": "passed",
+  "modelVersion": "3.14.0",
+  "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+  "createdAt": "2026-10-20T10:40:27.892Z",
+  "checks": [
+    {
+      "name": "Changing an unrelated original road remains forbidden",
+      "status": "passed",
+      "injectedMutationRejected": {
+        "name": "AssertionError",
+        "message": "An unrelated historical geometry entity changed\n+ actual - expected\n\n+ '74703c0f5caacf828f4a9c1945891640a152b4fd586c482a1f69d687ca0762f6'\n- '96d05d9e509be1dbae4a93885b4cdcfe3cae65867d44600017b6c03999159c91'\n"
+      }
+    },
+    {
+      "name": "Changing an original perimeter remains forbidden",
+      "status": "passed",
+      "injectedMutationRejected": {
+        "name": "AssertionError",
+        "message": "An unrelated historical geometry entity changed\n+ actual - expected\n\n+ '14ec6425f5cb5ee94064e8eaf4f4f8a7db90c4e4f8c28308c62880f6ed958242'\n- '96d05d9e509be1dbae4a93885b4cdcfe3cae65867d44600017b6c03999159c91'\n"
+      }
+    },
+    {
+      "name": "Changing a previously accepted corridor/entry is not hidden by its addition label",
+      "status": "passed",
+      "injectedMutationRejected": {
+        "name": "AssertionError",
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   0.601,\n-   0.6,\n    6.4,\n    1\n  ]\n"
+      }
+    },
+    {
+      "name": "Changing an approved tower value remains forbidden",
+      "status": "passed",
+      "injectedMutationRejected": {
+        "name": "AssertionError",
+        "message": "Unapproved tower profile change: arcology-west\n+ actual - expected\n\n+ '[{\"id\":\"arcology-west\",\"type\":\"box\",\"kind\":\"building\",\"size\":[45,30.95483871,64],\"position\":[-284,15.477419355,-450],\"quaternion\":[0,0,0,1]},{\"id\":\"arcology-west-tier-1\",\"type\":\"box\",\"kind\":\"building\",\"size\":[35.001,60.696774194,43],\"position\":[-287,61.303225806,-446],\"quaternion\":[0,0,0,1]},{\"id\":\"arcology-west-tier-2\",\"type\":\"box\",\"kind\":\"building\",\"size\":[20,30.348387097,43],\"position\":[-292,106.825806452,-446],\"quaternion\":[0,0,0,1]}]'\n- '[{\"id\":\"arcology-west\",\"type\":\"box\",\"kind\":\"building\",\"size\":[45,30.95483871,64],\"position\":[-284,15.477419355,-450],\"quaternion\":[0,0,0,1]},{\"id\":\"arcology-west-tier-1\",\"type\":\"box\",\"kind\":\"building\",\"size\":[35,60.696774194,43],\"position\":[-287,61.303225806,-446],\"quaternion\":[0,0,0,1]},{\"id\":\"arcology-west-tier-2\",\"type\":\"box\",\"kind\":\"building\",\"size\":[20,30.348387097,43],\"position\":[-292,106.825806452,-446],\"quaternion\":[0,0,0,1]}]'\n"
+      }
+    },
+    {
+      "name": "Restoring a superseded invisible tower tier remains forbidden",
+      "status": "passed",
+      "injectedMutationRejected": {
+        "name": "AssertionError",
+        "message": "Replaced old tower tier must not remain as an invisible collider: arcology-west-tier-3"
+      }
+    },
+    {
+      "name": "Removing an unrelated original entity remains forbidden",
+      "status": "passed",
+      "injectedMutationRejected": {
+        "name": "AssertionError",
+        "message": "Expected values to be strictly equal:\n\n1946 !== 1947\n"
+      }
+    },
+    {
+      "name": "An unlisted new entity cannot be excluded by a continuity prefix",
+      "status": "passed",
+      "injectedMutationRejected": {
+        "name": "AssertionError",
+        "message": "Expected values to be strictly equal:\n\n1948 !== 1947\n"
+      }
+    },
+    {
+      "name": "A duplicate entity cannot be hidden by a Map",
+      "status": "passed",
+      "injectedMutationRejected": {
+        "name": "AssertionError",
+        "message": "Duplicate physical geometry identities\n\n2219 !== 2220\n"
+      }
+    }
+  ],
+  "geometryContract": {
+    "sourceCommit": "1dde9a3df081297978d7cc98409be86bcc6daa23",
+    "sourcePhysicsSHA256": "d6fbfe7e3ed5c3503c91334d40672cd855ab5169437371a5bdda47f644ca27d8",
+    "sourceCitySHA256": "ba228d0e2b51ce357062346c6452e63514b93ba39c2ffa52eb38359ffec1f9b9",
+    "quantization": 1e-9,
+    "unchangedHistoricalCount": 1947,
+    "unchangedHistoricalCanonicalSHA256": "96d05d9e509be1dbae4a93885b4cdcfe3cae65867d44600017b6c03999159c91",
+    "unchangedSource313Count": 2105,
+    "unchangedSource313CanonicalSHA256": "954ae6a556cd1064f361d2573661b90ed01d43679bb4eeb08a05d170786f78e8",
+    "reconstructedHistoricalCount": 1962,
+    "reconstructedHistoricalCanonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+    "reconstructedSource313Count": 2120,
+    "reconstructedSource313CanonicalSHA256": "ad28b4192e8367ac32491a5c3d0e08667b9946d667aa2c2405c375c0a15e8e4b",
+    "explicit314AdditionCount": 105,
+    "explicit314AdditionIds": [
+      "continuity-foundry-yard-kerb-1--1-2",
+      "continuity-foundry-yard-kerb-1--1-164",
+      "continuity-foundry-yard-kerb-1-1-2",
+      "continuity-foundry-yard-kerb-1-1-164",
+      "continuity-terrace-link-kerb-1--1-12",
+      "continuity-terrace-link-kerb-1--1-62",
+      "continuity-terrace-link-kerb-1-1-12",
+      "continuity-terrace-link-kerb-1-1-62",
+      "continuity-forum-west-link-kerb-1--1-6",
+      "continuity-forum-west-link-kerb-1-1-6",
+      "continuity-forum-west-link-kerb-2--1-2",
+      "continuity-forum-west-link-kerb-2-1-2",
+      "continuity-forum-main-kerb-1--1-2",
+      "continuity-forum-main-kerb-1--1-102",
+      "continuity-forum-main-kerb-1--1-184",
+      "continuity-forum-main-kerb-1-1-2",
+      "continuity-forum-main-kerb-1-1-102",
+      "continuity-forum-main-kerb-1-1-184",
+      "continuity-forum-cross-240-kerb-1--1-2",
+      "continuity-forum-cross-240-kerb-1--1-124",
+      "continuity-forum-cross-240-kerb-1-1-2",
+      "continuity-forum-cross-240-kerb-1-1-124",
+      "continuity-forum-cross-322-kerb-1--1-2",
+      "continuity-forum-cross-322-kerb-1--1-124",
+      "continuity-forum-cross-322-kerb-1--1-208",
+      "continuity-forum-cross-322-kerb-1-1-124",
+      "continuity-forum-cross-322-kerb-1-1-204",
+      "continuity-forum-cross-410-kerb-1--1-2",
+      "continuity-forum-cross-410-kerb-1--1-120",
+      "continuity-forum-cross-410-kerb-1--1-204",
+      "continuity-forum-cross-410-kerb-1-1-2",
+      "continuity-forum-cross-410-kerb-1-1-124",
+      "continuity-forum-cross-410-kerb-1-1-208",
+      "continuity-forum-court-kerb-1--1-12",
+      "continuity-forum-court-kerb-1-1-12",
+      "continuity-south-arrival-edge--1",
+      "continuity-south-arrival-stone--1",
+      "continuity-south-arrival-edge-1",
+      "continuity-south-arrival-stone-1",
+      "continuity-south-parking-post",
+      "continuity-south-guidance-post",
+      "continuity-foundry-bay-back",
+      "continuity-foundry-bay-post-240.55",
+      "continuity-foundry-bay-post-250.45",
+      "continuity-foundry-bay-roof",
+      "continuity-foundry-bay-rail",
+      "continuity-foundry-power-base",
+      "continuity-foundry-power-cabinet",
+      "continuity-cross-portal-foot-69",
+      "continuity-cross-portal-pier-69",
+      "continuity-cross-portal-canopy-69",
+      "continuity-cross-portal-foot-132",
+      "continuity-cross-portal-pier-132",
+      "continuity-cross-portal-canopy-132",
+      "continuity-forum-side-bench-335.5",
+      "continuity-forum-side-bench-394.5",
+      "continuity-forum-tree-kerb-x-337--1",
+      "continuity-forum-tree-kerb-z-337--1",
+      "continuity-forum-tree-kerb-x-337-1",
+      "continuity-forum-tree-kerb-z-337-1",
+      "continuity-forum-tree-kerb-x-393--1",
+      "continuity-forum-tree-kerb-z-393--1",
+      "continuity-forum-tree-kerb-x-393-1",
+      "continuity-forum-tree-kerb-z-393-1",
+      "continuity-ramp-abutment--1-0",
+      "continuity-ramp-abutment--1-1",
+      "continuity-ramp-abutment--1-2",
+      "continuity-ramp-abutment--1-3",
+      "continuity-ramp-abutment--1-4",
+      "continuity-ramp-abutment-1-0",
+      "continuity-ramp-abutment-1-1",
+      "continuity-ramp-abutment-1-2",
+      "continuity-ramp-abutment-1-3",
+      "continuity-ramp-abutment-1-4",
+      "continuity-pendant-backing--279",
+      "continuity-pendant-hanger--279--0.3",
+      "continuity-pendant-hanger--279-0.3",
+      "continuity-pendant-backing--255",
+      "continuity-pendant-hanger--255--0.3",
+      "continuity-pendant-hanger--255-0.3",
+      "continuity-pendant-backing--230",
+      "continuity-pendant-hanger--230--0.3",
+      "continuity-pendant-hanger--230-0.3",
+      "continuity-pendant-backing--218",
+      "continuity-pendant-hanger--218--0.3",
+      "continuity-pendant-hanger--218-0.3",
+      "continuity-industrial-1-2-service-core",
+      "continuity-industrial-1-2-exhaust-stack",
+      "continuity-industrial-1-2-stack-collar-23",
+      "continuity-industrial-1-2-stack-collar-29",
+      "continuity-industrial--1-5-service-core",
+      "continuity-industrial--1-5-exhaust-stack",
+      "continuity-industrial--1-5-stack-collar-23",
+      "continuity-industrial--1-5-stack-collar-29",
+      "continuity-arcology-west-crown",
+      "continuity-arcology-east-crown",
+      "continuity-arcology-spire-crown",
+      "continuity-perimeter-bank-east",
+      "continuity-perimeter-bank-west",
+      "continuity-perimeter-bank-north",
+      "continuity-perimeter-bank-south",
+      "continuity-boundary-sign-east",
+      "continuity-boundary-sign-west",
+      "continuity-boundary-sign-north",
+      "continuity-boundary-sign-south"
+    ],
+    "approvedTowerChanges": [
+      {
+        "id": "arcology-west",
+        "before": [
+          {
+            "id": "arcology-west",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              45,
+              4.4,
+              64
+            ],
+            "position": [
+              -284,
+              2.2,
+              -450
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-west-tier-1",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              45,
+              26.55483870967742,
+              64
+            ],
+            "position": [
+              -284,
+              17.677419354838708,
+              -450
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-west-tier-2",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              30.150000000000002,
+              37.935483870967744,
+              49.92
+            ],
+            "position": [
+              -289.4,
+              49.92258064516129,
+              -445.52
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-west-tier-3",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              37.8,
+              26.554838709677426,
+              55.04
+            ],
+            "position": [
+              -285.8,
+              82.16774193548387,
+              -448.08
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-west-tier-4",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              25.200000000000003,
+              26.554838709677412,
+              39.68
+            ],
+            "position": [
+              -276.8,
+              108.72258064516129,
+              -455.76
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "current": [
+          {
+            "id": "arcology-west",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              45,
+              30.954838709677418,
+              64
+            ],
+            "position": [
+              -284,
+              15.477419354838709,
+              -450
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-west-tier-1",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              35,
+              60.69677419354839,
+              43
+            ],
+            "position": [
+              -287,
+              61.303225806451614,
+              -446
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-west-tier-2",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              20,
+              30.34838709677419,
+              43
+            ],
+            "position": [
+              -292,
+              106.8258064516129,
+              -446
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "removedIds": [
+          "arcology-west-tier-3",
+          "arcology-west-tier-4"
+        ],
+        "oldBounds": {
+          "min": [
+            -306.5,
+            0,
+            -482
+          ],
+          "max": [
+            -261.5,
+            122,
+            -418
+          ]
+        },
+        "newBounds": {
+          "min": [
+            -306.5,
+            0,
+            -482
+          ],
+          "max": [
+            -261.5,
+            122,
+            -418
+          ]
+        },
+        "parcelUnchanged": true
+      },
+      {
+        "id": "arcology-east",
+        "before": [
+          {
+            "id": "arcology-east",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              47,
+              4.4,
+              58
+            ],
+            "position": [
+              -75,
+              2.2,
+              -300
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-east-tier-1",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              47,
+              23.089655172413792,
+              58
+            ],
+            "position": [
+              -75,
+              15.944827586206895,
+              -300
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-east-tier-2",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              42.77,
+              38.48275862068965,
+              41.18
+            ],
+            "position": [
+              -74.06,
+              46.731034482758616,
+              -306.38
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-east-tier-3",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              33.839999999999996,
+              26.93793103448276,
+              36.54
+            ],
+            "position": [
+              -69.83,
+              79.44137931034481,
+              -309.28
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-east-tier-4",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              25.380000000000003,
+              23.0896551724138,
+              27.84
+            ],
+            "position": [
+              -66.07,
+              104.4551724137931,
+              -311.6
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "current": [
+          {
+            "id": "arcology-east",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              47,
+              23.641379310344824,
+              58
+            ],
+            "position": [
+              -75,
+              11.820689655172412,
+              -300
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-east-tier-1",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              40,
+              73.11724137931034,
+              26
+            ],
+            "position": [
+              -75,
+              60.2,
+              -290
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-east-tier-2",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              19,
+              19.241379310344826,
+              26
+            ],
+            "position": [
+              -65,
+              106.37931034482759,
+              -290
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "removedIds": [
+          "arcology-east-tier-3",
+          "arcology-east-tier-4"
+        ],
+        "oldBounds": {
+          "min": [
+            -98.5,
+            0,
+            -329
+          ],
+          "max": [
+            -51.5,
+            116,
+            -271
+          ]
+        },
+        "newBounds": {
+          "min": [
+            -98.5,
+            0,
+            -329
+          ],
+          "max": [
+            -51.5,
+            116,
+            -271
+          ]
+        },
+        "parcelUnchanged": true
+      },
+      {
+        "id": "arcology-spire",
+        "before": [
+          {
+            "id": "arcology-spire",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              39,
+              4.4,
+              44
+            ],
+            "position": [
+              -65,
+              2.2,
+              -195
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-spire-tier-1",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              39,
+              30.577777777777776,
+              44
+            ],
+            "position": [
+              -65,
+              19.688888888888886,
+              -195
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-spire-tier-2",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              28.08,
+              45.866666666666674,
+              30.799999999999997
+            ],
+            "position": [
+              -65,
+              57.91111111111111,
+              -195
+            ],
+            "quaternion": [
+              0,
+              0.0799146939691727,
+              0,
+              0.9968017063026194
+            ]
+          },
+          {
+            "id": "arcology-spire-tier-3",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              24.96,
+              30.57777777777777,
+              26.84
+            ],
+            "position": [
+              -63.44,
+              96.13333333333333,
+              -196.76
+            ],
+            "quaternion": [
+              0,
+              0.0799146939691727,
+              0,
+              0.9968017063026194
+            ]
+          },
+          {
+            "id": "arcology-spire-tier-4",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              18.72,
+              30.577777777777783,
+              23.76
+            ],
+            "position": [
+              -61.1,
+              126.71111111111111,
+              -197.64
+            ],
+            "quaternion": [
+              0,
+              0.0799146939691727,
+              0,
+              0.9968017063026194
+            ]
+          }
+        ],
+        "current": [
+          {
+            "id": "arcology-spire",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              39,
+              34.977777777777774,
+              44
+            ],
+            "position": [
+              -65,
+              17.488888888888887,
+              -195
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-spire-tier-1",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              18,
+              95.55555555555556,
+              40
+            ],
+            "position": [
+              -72,
+              82.75555555555556,
+              -195
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "id": "arcology-spire-tier-2",
+            "type": "box",
+            "kind": "building",
+            "size": [
+              18,
+              11.466666666666669,
+              27
+            ],
+            "position": [
+              -72,
+              136.26666666666665,
+              -190
+            ],
+            "quaternion": [
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "removedIds": [
+          "arcology-spire-tier-3",
+          "arcology-spire-tier-4"
+        ],
+        "oldBounds": {
+          "min": [
+            -84.5,
+            0,
+            -217
+          ],
+          "max": [
+            -45.5,
+            142,
+            -173
+          ]
+        },
+        "newBounds": {
+          "min": [
+            -84.5,
+            0,
+            -217
+          ],
+          "max": [
+            -45.5,
+            142,
+            -173
+          ]
+        },
+        "parcelUnchanged": true
+      }
+    ],
+    "originalFailure": {
+      "gate": "qa/render-budget-check.mjs:95",
+      "actual": "b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b",
+      "expected": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+      "reason": "The historical exclusion list did not include 105 explicit 3.14 additions, and the old unconditional geometry identity could not represent three intentionally redesigned anchor towers (9 changed and 6 replaced original tier IDs). All other original physical geometry is unchanged.",
+      "rawLog": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b'\n- '77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146'\n\n    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/qa/render-budget-check.mjs:95:8 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b',\n  expected: '77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n"
+    },
+    "scope": "Exact geometry identity and explicit shared-profile changes only; not GPU, aesthetics, driving or performance acceptance."
+  },
+  "sourceSHA256": {
+    "qa/city-geometry-scope.mjs": "5485d98da4ddb04ad7d65f7935b2729c338e65561cab444153893c40ec9a69e6",
+    "qa/fixtures/city-geometry-scope-3.14.json": "7c54dfeacc46550d89800cd34ec469ee2b9549cc9d292cf073dd345a7df32ea9",
+    "tests/city-geometry-scope-3.14.test.mjs": "13bae1cdfab23135388e1ea42fc85e7f1e2e3ec0010518fa00076b1f1c30085c"
+  },
+  "scope": "Independent frozen 3.13 source comparison and injected contract violations only. Does not claim image, GPU, collision traversal or performance acceptance."
+}

@@ -1,0 +1,2190 @@
+{
+  "modelVersion": "3.14.0",
+  "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+  "status": "passed",
+  "scope": "Actual numerical 120 Hz physics, editable bounded graph, deterministic task re-decision and isolated archive fixtures. No target-GPU, native driving, layout or performance acceptance.",
+  "sourceHashes": {
+    "research-storage.js": "c7ff58556f1d52566046ca75e3e7cc89c3f1a5c619b95519d6276b48804113f3",
+    "research-comparison.js": "0c58e5785b457ecfec8d6f05e18bece610a72de0a4010a5a29637190fa78ac77",
+    "bounded-height-controller.js": "e310531ade879e91d6921c785b8cc73aa029839cafa37c46a321ff0c8b9697e0",
+    "landing-challenge.js": "0bf41621ea07071d3c74086bbe3f3186cc9d2a24f214c070a23f954340bfc696",
+    "landing-research-ui.js": "9e72526dc25640cf94076bb1964c2f5cc2fe647e9f6a04149c488003e6df5d17",
+    "landing-research-worker.js": "f72458ce4e3905e315b8b709b503974b07d2c98b10d25ff0542fa7714fce8850",
+    "flight-programs.js": "dbb04c43f29e73b1459c05b223969a74078eba6d2a3bd1ad2ebf6d5245e95cca",
+    "experiment-records.js": "fde55d6fdecea9f03feabaed0b0b09fe3628aa67a7792cac1a89ddb825c54c4c",
+    "research-console.js": "50723929ef70785e5cea56b50bb22730bfadd64d261fb11366e276fbc132baec",
+    "research-lab.js": "7e185abe048af450401ddfa26c9ab600fbc060a7d5ffce7ef632a9a563176b84",
+    "experiment-reproduction.js": "4165dd4b5699f39487acecdae456b1cf43729ee9b82f89a542d49ae675306fd9",
+    "runtime-identity.js": "147c924df8e30f61228fe5b97cecbeba2d0eb0d14a5a91227295bd51578d12bc",
+    "app-shell.js": "9fd8d2ee57a37cccc429cb276475601ad502336ca6cc430c6feb3e2cb7684674"
+  },
+  "checks": [
+    {
+      "name": "Data-only AST accepts composition, bounded states and exact integer subrates; no arbitrary nodes or coercion",
+      "status": "passed",
+      "detail": {
+        "limits": {
+          "physicsHz": 120,
+          "maxNodes": 80,
+          "maxDepth": 14,
+          "maxBytes": 12000,
+          "stateSlots": 4,
+          "operations": 96,
+          "maxAccelerationMps2": 6,
+          "maxSlewMps3": 30,
+          "maxState": 20
+        },
+        "frequencyHz": [
+          10,
+          20,
+          30,
+          40,
+          60,
+          120
+        ]
+      }
+    },
+    {
+      "name": "NaN observations and division by zero disable the control law at the exact step, retaining last valid internal state",
+      "status": "passed",
+      "detail": {
+        "fault": {
+          "step": 2,
+          "timeS": 0.016666666666666666,
+          "code": "height-controller-disabled",
+          "reason": "Non-finite observation: error",
+          "operations": 0,
+          "lastValidState": {
+            "interfaceVersion": "height-outer-acceleration-1",
+            "hash": "fnv1a32-de4069ad",
+            "states": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "lastOutput": 0.3,
+            "lastStep": 0,
+            "fault": null
+          }
+        }
+      }
+    },
+    {
+      "name": "The default challenge uses actual 120 Hz physics, takes off, experiences timed wind, and confirms sustained landing",
+      "status": "passed",
+      "detail": {
+        "summary": {
+          "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+          "statisticsHz": 120,
+          "count": 1372,
+          "heightErrorSquared": 325.0772560598743,
+          "peakHeightErrorM": 1.3761262059955417,
+          "maxHeightM": 2.497772598250652,
+          "minHeightM": 0.579490149394913,
+          "minEnvelopeClearanceM": 0.029488634519173607,
+          "saturationSeconds": 0.008333333333333333,
+          "controllerLimitedSeconds": 0.03333333333333333,
+          "gasThroughputKg": 404.7650505174985,
+          "onboardDischargedKg": 0,
+          "externalSupplyKg": 404.7650505174985,
+          "peakLateralErrorM": 0.0030194753362025994,
+          "heightRmseM": 0.48676151815220997,
+          "takeoffAtS": 1.475,
+          "firstContact": {
+            "timeS": 10.733333333333333,
+            "step": 1288,
+            "preContactVerticalMps": 0.3214010218971134,
+            "postContactVerticalMps": -0.3420094010122658,
+            "tiltDeg": 0.000006334055474687007,
+            "position": {
+              "x": -0.000022785998621023652,
+              "y": 0.7052742646755342,
+              "z": 0.0000034254095002210485
+            },
+            "errorM": 0.00002304203036630011,
+            "contacts": 4
+          },
+          "stableLandingAtS": 11.433333333333334,
+          "landingErrorM": 0.000019524648361373973,
+          "gasRemainingKg": 249.55820028489444,
+          "landingSucceeded": true,
+          "recoveryFromLastDisturbanceS": 3.9333333333333336,
+          "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+          "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+        },
+        "status": "completed",
+        "reason": "stable_landing",
+        "stepCount": 1372
+      }
+    },
+    {
+      "name": "An edited user law truly re-decides the identical task; re-execution is deterministic and comparison declares its only changed factor",
+      "status": "passed",
+      "detail": {
+        "algorithm": {
+          "schema": "roadster.height-controller",
+          "version": 1,
+          "name": "我的组合 / edited",
+          "interfaceVersion": "height-outer-acceleration-1",
+          "controlHz": 60,
+          "outputLimit": 6,
+          "slewLimit": 18,
+          "root": {
+            "op": "sub",
+            "args": [
+              {
+                "op": "add",
+                "args": [
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "op": "const",
+                        "value": 1.8
+                      },
+                      {
+                        "op": "input",
+                        "name": "error"
+                      }
+                    ]
+                  },
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "op": "const",
+                        "value": 0.35
+                      },
+                      {
+                        "op": "integrate",
+                        "slot": 0,
+                        "limit": 2,
+                        "input": {
+                          "op": "input",
+                          "name": "error"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "mul",
+                "args": [
+                  {
+                    "op": "const",
+                    "value": 3.4
+                  },
+                  {
+                    "op": "filter",
+                    "slot": 1,
+                    "tau": 0.08,
+                    "input": {
+                      "op": "input",
+                      "name": "verticalSpeed"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "summary": {
+          "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+          "statisticsHz": 120,
+          "count": 1423,
+          "heightErrorSquared": 644.4475989683451,
+          "peakHeightErrorM": 1.4919188035917987,
+          "maxHeightM": 2.77104597459043,
+          "minHeightM": 0.5784009999964048,
+          "minEnvelopeClearanceM": 0.02839998621319395,
+          "saturationSeconds": 0.008333333333333333,
+          "controllerLimitedSeconds": 0,
+          "gasThroughputKg": 420.735763291611,
+          "onboardDischargedKg": 0,
+          "externalSupplyKg": 420.735763291611,
+          "peakLateralErrorM": 0.003019283265987181,
+          "heightRmseM": 0.6729632601568777,
+          "takeoffAtS": 1.775,
+          "firstContact": {
+            "timeS": 11.158333333333333,
+            "step": 1339,
+            "preContactVerticalMps": 0.3937759500065597,
+            "postContactVerticalMps": -0.4143860248833761,
+            "tiltDeg": 0.000004259139288032756,
+            "position": {
+              "x": 0.0000183060901544122,
+              "y": 0.7104981033050061,
+              "z": 2.247108439005235e-7
+            },
+            "errorM": 0.000018307469287283637,
+            "contacts": 4
+          },
+          "stableLandingAtS": 11.858333333333333,
+          "landingErrorM": 0.0000204420587528436,
+          "gasRemainingKg": 249.55820028489444,
+          "landingSucceeded": true,
+          "recoveryFromLastDisturbanceS": 4.3583333333333325,
+          "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+          "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+        },
+        "conditions": {
+          "controlled": true,
+          "interpretation": "Controlled conditions; declared algorithm/controller differences only. Success, collision and landing verdict precede time/gas comparison.",
+          "differences": [
+            "algorithm"
+          ],
+          "missing": [],
+          "conditions": {
+            "A": {
+              "initialState": {
+                "contentLabel": "fnv1a32-5bb98324",
+                "world": "windlab",
+                "collisionIdentity": "08604efb",
+                "simTime": 1.9999999999999953,
+                "position": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    0.5970116834000383,
+                    0
+                  ]
+                },
+                "velocity": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    -0.000010178045887559133,
+                    0
+                  ]
+                },
+                "quaternion": {
+                  "$type": "Quaternion",
+                  "values": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ]
+                },
+                "angularVelocity": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "controllerInitialState": {
+                  "states": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "lastOutput": 0,
+                  "lastStep": null,
+                  "fault": null
+                }
+              },
+              "model": {
+                "modelVersion": "3.14.0",
+                "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+                "sourceCommit": null,
+                "sourceTree": null,
+                "sourceIdentityStatus": "not-available",
+                "protocolVersion": "live-fixed-inputs-1",
+                "fixedHz": 120,
+                "taskProtocol": "windlab-disturbance-landing-1"
+              },
+              "wind": [
+                {
+                  "timeS": 2,
+                  "speedMps": 3,
+                  "directionDeg": 90,
+                  "gustMps": 1,
+                  "gustPeriodS": 2.8
+                },
+                {
+                  "timeS": 4,
+                  "speedMps": 4,
+                  "directionDeg": 270,
+                  "gustMps": 1.5,
+                  "gustPeriodS": 3.1
+                },
+                {
+                  "timeS": 7.5,
+                  "speedMps": 0,
+                  "directionDeg": 0,
+                  "gustMps": 0,
+                  "gustPeriodS": 4
+                }
+              ],
+              "gas": {
+                "mode": "bench",
+                "initialPressureBar": 350,
+                "remainingKg": 249.55820028489444,
+                "temperatureK": 293.15
+              },
+              "task": {
+                "contentLabel": "fnv1a32-6d222ba9",
+                "definition": {
+                  "schema": "roadster.landing-task",
+                  "version": 1,
+                  "name": "Crosswind landing / VECTOR 07",
+                  "seed": 31415,
+                  "supplyMode": "bench",
+                  "initialPressureBar": 350,
+                  "targetHeightM": 2.5,
+                  "timeoutS": 16,
+                  "nozzleScale": 1,
+                  "landingRadiusM": 1.5,
+                  "disturbances": [
+                    {
+                      "timeS": 2,
+                      "speedMps": 3,
+                      "directionDeg": 90,
+                      "gustMps": 1,
+                      "gustPeriodS": 2.8
+                    },
+                    {
+                      "timeS": 4,
+                      "speedMps": 4,
+                      "directionDeg": 270,
+                      "gustMps": 1.5,
+                      "gustPeriodS": 3.1
+                    },
+                    {
+                      "timeS": 7.5,
+                      "speedMps": 0,
+                      "directionDeg": 0,
+                      "gustMps": 0,
+                      "gustPeriodS": 4
+                    }
+                  ],
+                  "faultTimeS": 4.5,
+                  "nozzleId": "lift-FL"
+                }
+              },
+              "algorithm": {
+                "hash": "fnv1a32-de4069ad",
+                "name": "PD / height outer loop",
+                "interface": "height-outer-acceleration-1",
+                "controlHz": 60
+              }
+            },
+            "B": {
+              "initialState": {
+                "contentLabel": "fnv1a32-5bb98324",
+                "world": "windlab",
+                "collisionIdentity": "08604efb",
+                "simTime": 1.9999999999999953,
+                "position": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    0.5970116834000383,
+                    0
+                  ]
+                },
+                "velocity": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    -0.000010178045887559133,
+                    0
+                  ]
+                },
+                "quaternion": {
+                  "$type": "Quaternion",
+                  "values": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ]
+                },
+                "angularVelocity": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "controllerInitialState": {
+                  "states": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "lastOutput": 0,
+                  "lastStep": null,
+                  "fault": null
+                }
+              },
+              "model": {
+                "modelVersion": "3.14.0",
+                "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+                "sourceCommit": null,
+                "sourceTree": null,
+                "sourceIdentityStatus": "not-available",
+                "protocolVersion": "live-fixed-inputs-1",
+                "fixedHz": 120,
+                "taskProtocol": "windlab-disturbance-landing-1"
+              },
+              "wind": [
+                {
+                  "timeS": 2,
+                  "speedMps": 3,
+                  "directionDeg": 90,
+                  "gustMps": 1,
+                  "gustPeriodS": 2.8
+                },
+                {
+                  "timeS": 4,
+                  "speedMps": 4,
+                  "directionDeg": 270,
+                  "gustMps": 1.5,
+                  "gustPeriodS": 3.1
+                },
+                {
+                  "timeS": 7.5,
+                  "speedMps": 0,
+                  "directionDeg": 0,
+                  "gustMps": 0,
+                  "gustPeriodS": 4
+                }
+              ],
+              "gas": {
+                "mode": "bench",
+                "initialPressureBar": 350,
+                "remainingKg": 249.55820028489444,
+                "temperatureK": 293.15
+              },
+              "task": {
+                "contentLabel": "fnv1a32-6d222ba9",
+                "definition": {
+                  "schema": "roadster.landing-task",
+                  "version": 1,
+                  "name": "Crosswind landing / VECTOR 07",
+                  "seed": 31415,
+                  "supplyMode": "bench",
+                  "initialPressureBar": 350,
+                  "targetHeightM": 2.5,
+                  "timeoutS": 16,
+                  "nozzleScale": 1,
+                  "landingRadiusM": 1.5,
+                  "disturbances": [
+                    {
+                      "timeS": 2,
+                      "speedMps": 3,
+                      "directionDeg": 90,
+                      "gustMps": 1,
+                      "gustPeriodS": 2.8
+                    },
+                    {
+                      "timeS": 4,
+                      "speedMps": 4,
+                      "directionDeg": 270,
+                      "gustMps": 1.5,
+                      "gustPeriodS": 3.1
+                    },
+                    {
+                      "timeS": 7.5,
+                      "speedMps": 0,
+                      "directionDeg": 0,
+                      "gustMps": 0,
+                      "gustPeriodS": 4
+                    }
+                  ],
+                  "faultTimeS": 4.5,
+                  "nozzleId": "lift-FL"
+                }
+              },
+              "algorithm": {
+                "hash": "fnv1a32-8bd63bb6",
+                "name": "我的组合 / edited",
+                "interface": "height-outer-acceleration-1",
+                "controlHz": 60
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Finite low-pressure failure is a physical hard landing, retained separately from solver errors and external gas throughput",
+      "status": "passed",
+      "detail": {
+        "summary": {
+          "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+          "statisticsHz": 120,
+          "count": 254,
+          "heightErrorSquared": 258.73188450687985,
+          "peakHeightErrorM": 1.8364181287463643,
+          "maxHeightM": 1.6703391848641205,
+          "minHeightM": 0.6038506785334997,
+          "minEnvelopeClearanceM": 0.05385067853349973,
+          "saturationSeconds": 1.333333333333331,
+          "controllerLimitedSeconds": 0.5500000000000005,
+          "gasThroughputKg": 68.53375692624196,
+          "onboardDischargedKg": 68.53375692624196,
+          "externalSupplyKg": 0,
+          "peakLateralErrorM": 0.00004928912018574484,
+          "heightRmseM": 1.00927175060165,
+          "takeoffAtS": 1.475,
+          "firstContact": {
+            "timeS": 2.1166666666666667,
+            "step": 254,
+            "preContactVerticalMps": 4.209523016185775,
+            "postContactVerticalMps": -3.8913667087460464,
+            "tiltDeg": 0.00010058397520066941,
+            "position": {
+              "x": 0.00004928912017907064,
+              "y": 0.6635818712536357,
+              "z": -8.111294587086701e-10
+            },
+            "errorM": 0.00004928912018574484,
+            "contacts": 4
+          },
+          "stableLandingAtS": null,
+          "landingErrorM": 0.00004928912018574484,
+          "gasRemainingKg": 2.7685860122993384,
+          "landingSucceeded": false,
+          "recoveryFromLastDisturbanceS": null,
+          "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+          "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+        },
+        "events": [
+          {
+            "step": 0,
+            "timeS": 0,
+            "type": "task_start",
+            "detail": {
+              "taskId": "fnv1a32-cf366b2f",
+              "algorithmHash": "fnv1a32-de4069ad",
+              "preview": {
+                "taskId": "fnv1a32-cf366b2f",
+                "field": "VECTOR 07 / actual windlab collision geometry",
+                "seed": 31415,
+                "seedMeaning": "Reserved observer RNG seed retained in the initial snapshot. V1 uses ideal measurements and prescribed deterministic gusts, no stochastic disturbance.",
+                "workingBounds": {
+                  "min": [
+                    -24,
+                    0,
+                    -42
+                  ],
+                  "max": [
+                    24,
+                    24,
+                    42
+                  ]
+                },
+                "clearHeightM": 24.1,
+                "targetHeightM": 2.5,
+                "warnings": [],
+                "timeline": [
+                  {
+                    "timeS": 0,
+                    "event": "takeoff",
+                    "targetWorldHeightM": 2.5
+                  },
+                  {
+                    "event": "wind",
+                    "timeS": 2,
+                    "speedMps": 3,
+                    "directionDeg": 90,
+                    "gustMps": 1,
+                    "gustPeriodS": 2.8
+                  },
+                  {
+                    "event": "wind",
+                    "timeS": 4,
+                    "speedMps": 4,
+                    "directionDeg": 270,
+                    "gustMps": 1.5,
+                    "gustPeriodS": 3.1
+                  },
+                  {
+                    "event": "wind",
+                    "timeS": 7.5,
+                    "speedMps": 0,
+                    "directionDeg": 0,
+                    "gustMps": 0,
+                    "gustPeriodS": 4
+                  },
+                  {
+                    "timeS": 4.5,
+                    "event": "single nozzle derating",
+                    "id": "lift-FL",
+                    "scale": 1
+                  },
+                  {
+                    "timeS": 6,
+                    "event": "descent begins; target reaches 0.45 m at 10 s"
+                  }
+                ],
+                "criteria": {
+                  "takeoffHeightM": 1.6,
+                  "radiusM": 1.5,
+                  "touchdownVerticalMps": 1.4,
+                  "touchdownTiltDeg": 8,
+                  "stableSeconds": 0.5,
+                  "stableContacts": 3,
+                  "stableHorizontalMps": 0.4,
+                  "stableVerticalMps": 0.35,
+                  "stableAngularRadS": 0.15,
+                  "timeoutS": 16
+                },
+                "authority": "Height outer-loop AST → bounded acceleration → existing position/attitude control, allocation, valves and gas. Pilot input cancels."
+              }
+            }
+          },
+          {
+            "step": 0,
+            "timeS": 0,
+            "type": "phase",
+            "detail": {
+              "phase": "takeoff"
+            }
+          },
+          {
+            "step": 1,
+            "timeS": 0.008333333333333333,
+            "type": "actuator_saturation_begin",
+            "detail": {
+              "allocationError": 0.20596459481510765,
+              "pressureBar": 99.90322926316794
+            }
+          },
+          {
+            "step": 2,
+            "timeS": 0.016666666666666666,
+            "type": "actuator_saturation_end",
+            "detail": {
+              "allocationError": 0.171149092482386,
+              "pressureBar": 99.72609430428479
+            }
+          },
+          {
+            "step": 96,
+            "timeS": 0.8,
+            "type": "actuator_saturation_begin",
+            "detail": {
+              "allocationError": 0.00015335828400944975,
+              "pressureBar": 48.49431056858151
+            }
+          },
+          {
+            "step": 120,
+            "timeS": 1,
+            "type": "phase",
+            "detail": {
+              "phase": "disturbance_hold"
+            }
+          },
+          {
+            "step": 177,
+            "timeS": 1.475,
+            "type": "takeoff_confirmed",
+            "detail": {
+              "heightM": 1.6016229881075155
+            }
+          },
+          {
+            "step": 240,
+            "timeS": 2,
+            "type": "wind_change",
+            "detail": {
+              "scheduledTimeS": 2,
+              "wind": {
+                "speedMps": 3,
+                "directionDeg": 90,
+                "gustMps": 1,
+                "gustPeriodS": 2.8
+              }
+            }
+          },
+          {
+            "step": 254,
+            "timeS": 2.1166666666666667,
+            "type": "first_contact",
+            "detail": {
+              "timeS": 2.1166666666666667,
+              "step": 254,
+              "preContactVerticalMps": 4.209523016185775,
+              "postContactVerticalMps": -3.8913667087460464,
+              "tiltDeg": 0.00010058397520066941,
+              "position": {
+                "x": 0.00004928912017907064,
+                "y": 0.6635818712536357,
+                "z": -8.111294587086701e-10
+              },
+              "errorM": 0.00004928912018574484,
+              "contacts": 4
+            }
+          },
+          {
+            "step": 254,
+            "timeS": 2.1166666666666667,
+            "type": "task_finish",
+            "detail": {
+              "status": "failed",
+              "reason": "hard_or_tilted_touchdown"
+            }
+          }
+        ],
+        "conditions": {
+          "controlled": false,
+          "interpretation": "Descriptive comparison only; conditions differ or lack provenance. No better/worse verdict.",
+          "differences": [
+            "initialState",
+            "gas",
+            "task"
+          ],
+          "missing": [],
+          "conditions": {
+            "A": {
+              "initialState": {
+                "contentLabel": "fnv1a32-5bb98324",
+                "world": "windlab",
+                "collisionIdentity": "08604efb",
+                "simTime": 1.9999999999999953,
+                "position": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    0.5970116834000383,
+                    0
+                  ]
+                },
+                "velocity": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    -0.000010178045887559133,
+                    0
+                  ]
+                },
+                "quaternion": {
+                  "$type": "Quaternion",
+                  "values": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ]
+                },
+                "angularVelocity": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "controllerInitialState": {
+                  "states": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "lastOutput": 0,
+                  "lastStep": null,
+                  "fault": null
+                }
+              },
+              "model": {
+                "modelVersion": "3.14.0",
+                "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+                "sourceCommit": null,
+                "sourceTree": null,
+                "sourceIdentityStatus": "not-available",
+                "protocolVersion": "live-fixed-inputs-1",
+                "fixedHz": 120,
+                "taskProtocol": "windlab-disturbance-landing-1"
+              },
+              "wind": [
+                {
+                  "timeS": 2,
+                  "speedMps": 3,
+                  "directionDeg": 90,
+                  "gustMps": 1,
+                  "gustPeriodS": 2.8
+                },
+                {
+                  "timeS": 4,
+                  "speedMps": 4,
+                  "directionDeg": 270,
+                  "gustMps": 1.5,
+                  "gustPeriodS": 3.1
+                },
+                {
+                  "timeS": 7.5,
+                  "speedMps": 0,
+                  "directionDeg": 0,
+                  "gustMps": 0,
+                  "gustPeriodS": 4
+                }
+              ],
+              "gas": {
+                "mode": "bench",
+                "initialPressureBar": 350,
+                "remainingKg": 249.55820028489444,
+                "temperatureK": 293.15
+              },
+              "task": {
+                "contentLabel": "fnv1a32-6d222ba9",
+                "definition": {
+                  "schema": "roadster.landing-task",
+                  "version": 1,
+                  "name": "Crosswind landing / VECTOR 07",
+                  "seed": 31415,
+                  "supplyMode": "bench",
+                  "initialPressureBar": 350,
+                  "targetHeightM": 2.5,
+                  "timeoutS": 16,
+                  "nozzleScale": 1,
+                  "landingRadiusM": 1.5,
+                  "disturbances": [
+                    {
+                      "timeS": 2,
+                      "speedMps": 3,
+                      "directionDeg": 90,
+                      "gustMps": 1,
+                      "gustPeriodS": 2.8
+                    },
+                    {
+                      "timeS": 4,
+                      "speedMps": 4,
+                      "directionDeg": 270,
+                      "gustMps": 1.5,
+                      "gustPeriodS": 3.1
+                    },
+                    {
+                      "timeS": 7.5,
+                      "speedMps": 0,
+                      "directionDeg": 0,
+                      "gustMps": 0,
+                      "gustPeriodS": 4
+                    }
+                  ],
+                  "faultTimeS": 4.5,
+                  "nozzleId": "lift-FL"
+                }
+              },
+              "algorithm": {
+                "hash": "fnv1a32-de4069ad",
+                "name": "PD / height outer loop",
+                "interface": "height-outer-acceleration-1",
+                "controlHz": 60
+              }
+            },
+            "B": {
+              "initialState": {
+                "contentLabel": "fnv1a32-9e4f965e",
+                "world": "windlab",
+                "collisionIdentity": "08604efb",
+                "simTime": 1.9999999999999953,
+                "position": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    0.6037355954661169,
+                    0
+                  ]
+                },
+                "velocity": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    -0.000008879514290300904,
+                    0
+                  ]
+                },
+                "quaternion": {
+                  "$type": "Quaternion",
+                  "values": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ]
+                },
+                "angularVelocity": {
+                  "$type": "Vec3",
+                  "values": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "controllerInitialState": {
+                  "states": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "lastOutput": 0,
+                  "lastStep": null,
+                  "fault": null
+                }
+              },
+              "model": {
+                "modelVersion": "3.14.0",
+                "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+                "sourceCommit": null,
+                "sourceTree": null,
+                "sourceIdentityStatus": "not-available",
+                "protocolVersion": "live-fixed-inputs-1",
+                "fixedHz": 120,
+                "taskProtocol": "windlab-disturbance-landing-1"
+              },
+              "wind": [
+                {
+                  "timeS": 2,
+                  "speedMps": 3,
+                  "directionDeg": 90,
+                  "gustMps": 1,
+                  "gustPeriodS": 2.8
+                },
+                {
+                  "timeS": 4,
+                  "speedMps": 4,
+                  "directionDeg": 270,
+                  "gustMps": 1.5,
+                  "gustPeriodS": 3.1
+                },
+                {
+                  "timeS": 7.5,
+                  "speedMps": 0,
+                  "directionDeg": 0,
+                  "gustMps": 0,
+                  "gustPeriodS": 4
+                }
+              ],
+              "gas": {
+                "mode": "finite",
+                "initialPressureBar": 100,
+                "remainingKg": 71.30234293854127,
+                "temperatureK": 293.15
+              },
+              "task": {
+                "contentLabel": "fnv1a32-cf366b2f",
+                "definition": {
+                  "schema": "roadster.landing-task",
+                  "version": 1,
+                  "name": "Crosswind landing / VECTOR 07",
+                  "seed": 31415,
+                  "supplyMode": "finite",
+                  "initialPressureBar": 100,
+                  "targetHeightM": 2.5,
+                  "timeoutS": 16,
+                  "nozzleScale": 1,
+                  "landingRadiusM": 1.5,
+                  "disturbances": [
+                    {
+                      "timeS": 2,
+                      "speedMps": 3,
+                      "directionDeg": 90,
+                      "gustMps": 1,
+                      "gustPeriodS": 2.8
+                    },
+                    {
+                      "timeS": 4,
+                      "speedMps": 4,
+                      "directionDeg": 270,
+                      "gustMps": 1.5,
+                      "gustPeriodS": 3.1
+                    },
+                    {
+                      "timeS": 7.5,
+                      "speedMps": 0,
+                      "directionDeg": 0,
+                      "gustMps": 0,
+                      "gustPeriodS": 4
+                    }
+                  ],
+                  "faultTimeS": 4.5,
+                  "nozzleId": "lift-FL"
+                }
+              },
+              "algorithm": {
+                "hash": "fnv1a32-de4069ad",
+                "name": "PD / height outer loop",
+                "interface": "height-outer-acceleration-1",
+                "controlHz": 60
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Derating, controller faults, cancellation and pilot takeover have explicit events and no body-state shortcut",
+      "status": "passed",
+      "detail": {
+        "derated": {
+          "status": "completed",
+          "reason": "stable_landing"
+        },
+        "cancelledSteps": 120,
+        "controllerFault": {
+          "step": 0,
+          "timeS": 0,
+          "code": "height-controller-disabled",
+          "reason": "Division denominator below 1e-9",
+          "operations": 3,
+          "lastValidState": {
+            "interfaceVersion": "height-outer-acceleration-1",
+            "hash": "fnv1a32-e5d74a72",
+            "states": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "lastOutput": 0,
+            "lastStep": null,
+            "fault": null
+          }
+        }
+      }
+    },
+    {
+      "name": "Out-of-room targets are previewed without silent clamping and unavailable model identities cannot pretend exact replay",
+      "status": "passed",
+      "detail": {
+        "preview": {
+          "taskId": "fnv1a32-e5dd6a4f",
+          "field": "VECTOR 07 / actual windlab collision geometry",
+          "seed": 31415,
+          "seedMeaning": "Reserved observer RNG seed retained in the initial snapshot. V1 uses ideal measurements and prescribed deterministic gusts, no stochastic disturbance.",
+          "workingBounds": {
+            "min": [
+              -24,
+              0,
+              -42
+            ],
+            "max": [
+              24,
+              24,
+              42
+            ]
+          },
+          "clearHeightM": 24.1,
+          "targetHeightM": 30,
+          "warnings": [
+            "Requested target plus vehicle envelope intersects the laboratory clear-height limit; request is preserved, not clamped."
+          ],
+          "timeline": [
+            {
+              "timeS": 0,
+              "event": "takeoff",
+              "targetWorldHeightM": 30
+            },
+            {
+              "event": "wind",
+              "timeS": 2,
+              "speedMps": 3,
+              "directionDeg": 90,
+              "gustMps": 1,
+              "gustPeriodS": 2.8
+            },
+            {
+              "event": "wind",
+              "timeS": 4,
+              "speedMps": 4,
+              "directionDeg": 270,
+              "gustMps": 1.5,
+              "gustPeriodS": 3.1
+            },
+            {
+              "event": "wind",
+              "timeS": 7.5,
+              "speedMps": 0,
+              "directionDeg": 0,
+              "gustMps": 0,
+              "gustPeriodS": 4
+            },
+            {
+              "timeS": 4.5,
+              "event": "single nozzle derating",
+              "id": "lift-FL",
+              "scale": 1
+            },
+            {
+              "timeS": 6,
+              "event": "descent begins; target reaches 0.45 m at 10 s"
+            }
+          ],
+          "criteria": {
+            "takeoffHeightM": 1.6,
+            "radiusM": 1.5,
+            "touchdownVerticalMps": 1.4,
+            "touchdownTiltDeg": 8,
+            "stableSeconds": 0.5,
+            "stableContacts": 3,
+            "stableHorizontalMps": 0.4,
+            "stableVerticalMps": 0.35,
+            "stableAngularRadS": 0.15,
+            "timeoutS": 16
+          },
+          "authority": "Height outer-loop AST → bounded acceleration → existing position/attitude control, allocation, valves and gas. Pilot input cancels."
+        }
+      }
+    },
+    {
+      "name": "Live and procedure source records are generated by real physics; program primary metrics use all 120 Hz states",
+      "status": "passed",
+      "detail": {
+        "statisticsHz": 120,
+        "count": 120
+      }
+    },
+    {
+      "name": "Real solver faults preserve pre-reset terminals, serializable non-finite descriptions and last valid metrics without importing a safety reset",
+      "status": "passed",
+      "detail": {
+        "fixtures": [
+          {
+            "kind": "finite-boundary",
+            "terminalKind": "failure-trigger-continuation",
+            "failureStep": 244,
+            "statisticsCount": 4,
+            "recordSteps": 5,
+            "terminalReplayable": true
+          },
+          {
+            "kind": "nonfinite",
+            "terminalKind": "diagnostic-only",
+            "failureStep": 244,
+            "statisticsCount": 4,
+            "recordSteps": 5,
+            "terminalReplayable": false
+          }
+        ],
+        "scope": "Intentional isolated state corruption proves terminal retention/serialization, not faithful replay of an unjournaled fixture intervention."
+      }
+    },
+    {
+      "name": "All three archive types protect corrupt/unsupported/partial-invalid raw bytes and refuse overwrite by a new result",
+      "status": "passed",
+      "detail": {
+        "libraries": [
+          "roadster-live-experiments-v1",
+          "roadster-flight-results-v1",
+          "roadster-flight-programs-v1"
+        ],
+        "cases": [
+          "corrupt JSON",
+          "unsupported version",
+          "one valid + one invalid entry"
+        ]
+      }
+    },
+    {
+      "name": "Quota / denied writes leave old disk and destructive candidates unchanged; append results stay exportable in the session",
+      "status": "passed",
+      "detail": {
+        "operations": [
+          "append",
+          "delete",
+          "clear",
+          "save control params"
+        ],
+        "oldRawPreserved": true
+      }
+    },
+    {
+      "name": "Capacity boundary never evicts history, and maximum legal rate requests survive save/import/reload",
+      "status": "passed",
+      "detail": {
+        "roll": 360,
+        "pitch": -120
+      }
+    },
+    {
+      "name": "Full task graph/results export, reload and deterministic re-execution preserve statistics and control decisions without display decimation",
+      "status": "passed",
+      "detail": {
+        "serializedBytes": 1400432,
+        "records": 3,
+        "algorithmHash": "fnv1a32-de4069ad",
+        "taskId": "fnv1a32-6d222ba9",
+        "collisionIdentity": "08604efb"
+      }
+    }
+  ],
+  "evidence": {
+    "nominal": {
+      "summary": {
+        "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+        "statisticsHz": 120,
+        "count": 1372,
+        "heightErrorSquared": 325.0772560598743,
+        "peakHeightErrorM": 1.3761262059955417,
+        "maxHeightM": 2.497772598250652,
+        "minHeightM": 0.579490149394913,
+        "minEnvelopeClearanceM": 0.029488634519173607,
+        "saturationSeconds": 0.008333333333333333,
+        "controllerLimitedSeconds": 0.03333333333333333,
+        "gasThroughputKg": 404.7650505174985,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 404.7650505174985,
+        "peakLateralErrorM": 0.0030194753362025994,
+        "heightRmseM": 0.48676151815220997,
+        "takeoffAtS": 1.475,
+        "firstContact": {
+          "timeS": 10.733333333333333,
+          "step": 1288,
+          "preContactVerticalMps": 0.3214010218971134,
+          "postContactVerticalMps": -0.3420094010122658,
+          "tiltDeg": 0.000006334055474687007,
+          "position": {
+            "x": -0.000022785998621023652,
+            "y": 0.7052742646755342,
+            "z": 0.0000034254095002210485
+          },
+          "errorM": 0.00002304203036630011,
+          "contacts": 4
+        },
+        "stableLandingAtS": 11.433333333333334,
+        "landingErrorM": 0.000019524648361373973,
+        "gasRemainingKg": 249.55820028489444,
+        "landingSucceeded": true,
+        "recoveryFromLastDisturbanceS": 3.9333333333333336,
+        "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+        "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+      },
+      "status": "completed",
+      "reason": "stable_landing",
+      "stepCount": 1372
+    },
+    "edited": {
+      "algorithm": {
+        "schema": "roadster.height-controller",
+        "version": 1,
+        "name": "我的组合 / edited",
+        "interfaceVersion": "height-outer-acceleration-1",
+        "controlHz": 60,
+        "outputLimit": 6,
+        "slewLimit": 18,
+        "root": {
+          "op": "sub",
+          "args": [
+            {
+              "op": "add",
+              "args": [
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 1.8
+                    },
+                    {
+                      "op": "input",
+                      "name": "error"
+                    }
+                  ]
+                },
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 0.35
+                    },
+                    {
+                      "op": "integrate",
+                      "slot": 0,
+                      "limit": 2,
+                      "input": {
+                        "op": "input",
+                        "name": "error"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "op": "mul",
+              "args": [
+                {
+                  "op": "const",
+                  "value": 3.4
+                },
+                {
+                  "op": "filter",
+                  "slot": 1,
+                  "tau": 0.08,
+                  "input": {
+                    "op": "input",
+                    "name": "verticalSpeed"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "summary": {
+        "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+        "statisticsHz": 120,
+        "count": 1423,
+        "heightErrorSquared": 644.4475989683451,
+        "peakHeightErrorM": 1.4919188035917987,
+        "maxHeightM": 2.77104597459043,
+        "minHeightM": 0.5784009999964048,
+        "minEnvelopeClearanceM": 0.02839998621319395,
+        "saturationSeconds": 0.008333333333333333,
+        "controllerLimitedSeconds": 0,
+        "gasThroughputKg": 420.735763291611,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 420.735763291611,
+        "peakLateralErrorM": 0.003019283265987181,
+        "heightRmseM": 0.6729632601568777,
+        "takeoffAtS": 1.775,
+        "firstContact": {
+          "timeS": 11.158333333333333,
+          "step": 1339,
+          "preContactVerticalMps": 0.3937759500065597,
+          "postContactVerticalMps": -0.4143860248833761,
+          "tiltDeg": 0.000004259139288032756,
+          "position": {
+            "x": 0.0000183060901544122,
+            "y": 0.7104981033050061,
+            "z": 2.247108439005235e-7
+          },
+          "errorM": 0.000018307469287283637,
+          "contacts": 4
+        },
+        "stableLandingAtS": 11.858333333333333,
+        "landingErrorM": 0.0000204420587528436,
+        "gasRemainingKg": 249.55820028489444,
+        "landingSucceeded": true,
+        "recoveryFromLastDisturbanceS": 4.3583333333333325,
+        "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+        "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+      },
+      "conditions": {
+        "controlled": true,
+        "interpretation": "Controlled conditions; declared algorithm/controller differences only. Success, collision and landing verdict precede time/gas comparison.",
+        "differences": [
+          "algorithm"
+        ],
+        "missing": [],
+        "conditions": {
+          "A": {
+            "initialState": {
+              "contentLabel": "fnv1a32-5bb98324",
+              "world": "windlab",
+              "collisionIdentity": "08604efb",
+              "simTime": 1.9999999999999953,
+              "position": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  0.5970116834000383,
+                  0
+                ]
+              },
+              "velocity": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  -0.000010178045887559133,
+                  0
+                ]
+              },
+              "quaternion": {
+                "$type": "Quaternion",
+                "values": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "angularVelocity": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "controllerInitialState": {
+                "states": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "lastOutput": 0,
+                "lastStep": null,
+                "fault": null
+              }
+            },
+            "model": {
+              "modelVersion": "3.14.0",
+              "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+              "sourceCommit": null,
+              "sourceTree": null,
+              "sourceIdentityStatus": "not-available",
+              "protocolVersion": "live-fixed-inputs-1",
+              "fixedHz": 120,
+              "taskProtocol": "windlab-disturbance-landing-1"
+            },
+            "wind": [
+              {
+                "timeS": 2,
+                "speedMps": 3,
+                "directionDeg": 90,
+                "gustMps": 1,
+                "gustPeriodS": 2.8
+              },
+              {
+                "timeS": 4,
+                "speedMps": 4,
+                "directionDeg": 270,
+                "gustMps": 1.5,
+                "gustPeriodS": 3.1
+              },
+              {
+                "timeS": 7.5,
+                "speedMps": 0,
+                "directionDeg": 0,
+                "gustMps": 0,
+                "gustPeriodS": 4
+              }
+            ],
+            "gas": {
+              "mode": "bench",
+              "initialPressureBar": 350,
+              "remainingKg": 249.55820028489444,
+              "temperatureK": 293.15
+            },
+            "task": {
+              "contentLabel": "fnv1a32-6d222ba9",
+              "definition": {
+                "schema": "roadster.landing-task",
+                "version": 1,
+                "name": "Crosswind landing / VECTOR 07",
+                "seed": 31415,
+                "supplyMode": "bench",
+                "initialPressureBar": 350,
+                "targetHeightM": 2.5,
+                "timeoutS": 16,
+                "nozzleScale": 1,
+                "landingRadiusM": 1.5,
+                "disturbances": [
+                  {
+                    "timeS": 2,
+                    "speedMps": 3,
+                    "directionDeg": 90,
+                    "gustMps": 1,
+                    "gustPeriodS": 2.8
+                  },
+                  {
+                    "timeS": 4,
+                    "speedMps": 4,
+                    "directionDeg": 270,
+                    "gustMps": 1.5,
+                    "gustPeriodS": 3.1
+                  },
+                  {
+                    "timeS": 7.5,
+                    "speedMps": 0,
+                    "directionDeg": 0,
+                    "gustMps": 0,
+                    "gustPeriodS": 4
+                  }
+                ],
+                "faultTimeS": 4.5,
+                "nozzleId": "lift-FL"
+              }
+            },
+            "algorithm": {
+              "hash": "fnv1a32-de4069ad",
+              "name": "PD / height outer loop",
+              "interface": "height-outer-acceleration-1",
+              "controlHz": 60
+            }
+          },
+          "B": {
+            "initialState": {
+              "contentLabel": "fnv1a32-5bb98324",
+              "world": "windlab",
+              "collisionIdentity": "08604efb",
+              "simTime": 1.9999999999999953,
+              "position": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  0.5970116834000383,
+                  0
+                ]
+              },
+              "velocity": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  -0.000010178045887559133,
+                  0
+                ]
+              },
+              "quaternion": {
+                "$type": "Quaternion",
+                "values": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "angularVelocity": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "controllerInitialState": {
+                "states": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "lastOutput": 0,
+                "lastStep": null,
+                "fault": null
+              }
+            },
+            "model": {
+              "modelVersion": "3.14.0",
+              "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+              "sourceCommit": null,
+              "sourceTree": null,
+              "sourceIdentityStatus": "not-available",
+              "protocolVersion": "live-fixed-inputs-1",
+              "fixedHz": 120,
+              "taskProtocol": "windlab-disturbance-landing-1"
+            },
+            "wind": [
+              {
+                "timeS": 2,
+                "speedMps": 3,
+                "directionDeg": 90,
+                "gustMps": 1,
+                "gustPeriodS": 2.8
+              },
+              {
+                "timeS": 4,
+                "speedMps": 4,
+                "directionDeg": 270,
+                "gustMps": 1.5,
+                "gustPeriodS": 3.1
+              },
+              {
+                "timeS": 7.5,
+                "speedMps": 0,
+                "directionDeg": 0,
+                "gustMps": 0,
+                "gustPeriodS": 4
+              }
+            ],
+            "gas": {
+              "mode": "bench",
+              "initialPressureBar": 350,
+              "remainingKg": 249.55820028489444,
+              "temperatureK": 293.15
+            },
+            "task": {
+              "contentLabel": "fnv1a32-6d222ba9",
+              "definition": {
+                "schema": "roadster.landing-task",
+                "version": 1,
+                "name": "Crosswind landing / VECTOR 07",
+                "seed": 31415,
+                "supplyMode": "bench",
+                "initialPressureBar": 350,
+                "targetHeightM": 2.5,
+                "timeoutS": 16,
+                "nozzleScale": 1,
+                "landingRadiusM": 1.5,
+                "disturbances": [
+                  {
+                    "timeS": 2,
+                    "speedMps": 3,
+                    "directionDeg": 90,
+                    "gustMps": 1,
+                    "gustPeriodS": 2.8
+                  },
+                  {
+                    "timeS": 4,
+                    "speedMps": 4,
+                    "directionDeg": 270,
+                    "gustMps": 1.5,
+                    "gustPeriodS": 3.1
+                  },
+                  {
+                    "timeS": 7.5,
+                    "speedMps": 0,
+                    "directionDeg": 0,
+                    "gustMps": 0,
+                    "gustPeriodS": 4
+                  }
+                ],
+                "faultTimeS": 4.5,
+                "nozzleId": "lift-FL"
+              }
+            },
+            "algorithm": {
+              "hash": "fnv1a32-8bd63bb6",
+              "name": "我的组合 / edited",
+              "interface": "height-outer-acceleration-1",
+              "controlHz": 60
+            }
+          }
+        }
+      }
+    },
+    "finiteFailure": {
+      "summary": {
+        "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+        "statisticsHz": 120,
+        "count": 254,
+        "heightErrorSquared": 258.73188450687985,
+        "peakHeightErrorM": 1.8364181287463643,
+        "maxHeightM": 1.6703391848641205,
+        "minHeightM": 0.6038506785334997,
+        "minEnvelopeClearanceM": 0.05385067853349973,
+        "saturationSeconds": 1.333333333333331,
+        "controllerLimitedSeconds": 0.5500000000000005,
+        "gasThroughputKg": 68.53375692624196,
+        "onboardDischargedKg": 68.53375692624196,
+        "externalSupplyKg": 0,
+        "peakLateralErrorM": 0.00004928912018574484,
+        "heightRmseM": 1.00927175060165,
+        "takeoffAtS": 1.475,
+        "firstContact": {
+          "timeS": 2.1166666666666667,
+          "step": 254,
+          "preContactVerticalMps": 4.209523016185775,
+          "postContactVerticalMps": -3.8913667087460464,
+          "tiltDeg": 0.00010058397520066941,
+          "position": {
+            "x": 0.00004928912017907064,
+            "y": 0.6635818712536357,
+            "z": -8.111294587086701e-10
+          },
+          "errorM": 0.00004928912018574484,
+          "contacts": 4
+        },
+        "stableLandingAtS": null,
+        "landingErrorM": 0.00004928912018574484,
+        "gasRemainingKg": 2.7685860122993384,
+        "landingSucceeded": false,
+        "recoveryFromLastDisturbanceS": null,
+        "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+        "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+      },
+      "events": [
+        {
+          "step": 0,
+          "timeS": 0,
+          "type": "task_start",
+          "detail": {
+            "taskId": "fnv1a32-cf366b2f",
+            "algorithmHash": "fnv1a32-de4069ad",
+            "preview": {
+              "taskId": "fnv1a32-cf366b2f",
+              "field": "VECTOR 07 / actual windlab collision geometry",
+              "seed": 31415,
+              "seedMeaning": "Reserved observer RNG seed retained in the initial snapshot. V1 uses ideal measurements and prescribed deterministic gusts, no stochastic disturbance.",
+              "workingBounds": {
+                "min": [
+                  -24,
+                  0,
+                  -42
+                ],
+                "max": [
+                  24,
+                  24,
+                  42
+                ]
+              },
+              "clearHeightM": 24.1,
+              "targetHeightM": 2.5,
+              "warnings": [],
+              "timeline": [
+                {
+                  "timeS": 0,
+                  "event": "takeoff",
+                  "targetWorldHeightM": 2.5
+                },
+                {
+                  "event": "wind",
+                  "timeS": 2,
+                  "speedMps": 3,
+                  "directionDeg": 90,
+                  "gustMps": 1,
+                  "gustPeriodS": 2.8
+                },
+                {
+                  "event": "wind",
+                  "timeS": 4,
+                  "speedMps": 4,
+                  "directionDeg": 270,
+                  "gustMps": 1.5,
+                  "gustPeriodS": 3.1
+                },
+                {
+                  "event": "wind",
+                  "timeS": 7.5,
+                  "speedMps": 0,
+                  "directionDeg": 0,
+                  "gustMps": 0,
+                  "gustPeriodS": 4
+                },
+                {
+                  "timeS": 4.5,
+                  "event": "single nozzle derating",
+                  "id": "lift-FL",
+                  "scale": 1
+                },
+                {
+                  "timeS": 6,
+                  "event": "descent begins; target reaches 0.45 m at 10 s"
+                }
+              ],
+              "criteria": {
+                "takeoffHeightM": 1.6,
+                "radiusM": 1.5,
+                "touchdownVerticalMps": 1.4,
+                "touchdownTiltDeg": 8,
+                "stableSeconds": 0.5,
+                "stableContacts": 3,
+                "stableHorizontalMps": 0.4,
+                "stableVerticalMps": 0.35,
+                "stableAngularRadS": 0.15,
+                "timeoutS": 16
+              },
+              "authority": "Height outer-loop AST → bounded acceleration → existing position/attitude control, allocation, valves and gas. Pilot input cancels."
+            }
+          }
+        },
+        {
+          "step": 0,
+          "timeS": 0,
+          "type": "phase",
+          "detail": {
+            "phase": "takeoff"
+          }
+        },
+        {
+          "step": 1,
+          "timeS": 0.008333333333333333,
+          "type": "actuator_saturation_begin",
+          "detail": {
+            "allocationError": 0.20596459481510765,
+            "pressureBar": 99.90322926316794
+          }
+        },
+        {
+          "step": 2,
+          "timeS": 0.016666666666666666,
+          "type": "actuator_saturation_end",
+          "detail": {
+            "allocationError": 0.171149092482386,
+            "pressureBar": 99.72609430428479
+          }
+        },
+        {
+          "step": 96,
+          "timeS": 0.8,
+          "type": "actuator_saturation_begin",
+          "detail": {
+            "allocationError": 0.00015335828400944975,
+            "pressureBar": 48.49431056858151
+          }
+        },
+        {
+          "step": 120,
+          "timeS": 1,
+          "type": "phase",
+          "detail": {
+            "phase": "disturbance_hold"
+          }
+        },
+        {
+          "step": 177,
+          "timeS": 1.475,
+          "type": "takeoff_confirmed",
+          "detail": {
+            "heightM": 1.6016229881075155
+          }
+        },
+        {
+          "step": 240,
+          "timeS": 2,
+          "type": "wind_change",
+          "detail": {
+            "scheduledTimeS": 2,
+            "wind": {
+              "speedMps": 3,
+              "directionDeg": 90,
+              "gustMps": 1,
+              "gustPeriodS": 2.8
+            }
+          }
+        },
+        {
+          "step": 254,
+          "timeS": 2.1166666666666667,
+          "type": "first_contact",
+          "detail": {
+            "timeS": 2.1166666666666667,
+            "step": 254,
+            "preContactVerticalMps": 4.209523016185775,
+            "postContactVerticalMps": -3.8913667087460464,
+            "tiltDeg": 0.00010058397520066941,
+            "position": {
+              "x": 0.00004928912017907064,
+              "y": 0.6635818712536357,
+              "z": -8.111294587086701e-10
+            },
+            "errorM": 0.00004928912018574484,
+            "contacts": 4
+          }
+        },
+        {
+          "step": 254,
+          "timeS": 2.1166666666666667,
+          "type": "task_finish",
+          "detail": {
+            "status": "failed",
+            "reason": "hard_or_tilted_touchdown"
+          }
+        }
+      ],
+      "conditions": {
+        "controlled": false,
+        "interpretation": "Descriptive comparison only; conditions differ or lack provenance. No better/worse verdict.",
+        "differences": [
+          "initialState",
+          "gas",
+          "task"
+        ],
+        "missing": [],
+        "conditions": {
+          "A": {
+            "initialState": {
+              "contentLabel": "fnv1a32-5bb98324",
+              "world": "windlab",
+              "collisionIdentity": "08604efb",
+              "simTime": 1.9999999999999953,
+              "position": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  0.5970116834000383,
+                  0
+                ]
+              },
+              "velocity": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  -0.000010178045887559133,
+                  0
+                ]
+              },
+              "quaternion": {
+                "$type": "Quaternion",
+                "values": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "angularVelocity": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "controllerInitialState": {
+                "states": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "lastOutput": 0,
+                "lastStep": null,
+                "fault": null
+              }
+            },
+            "model": {
+              "modelVersion": "3.14.0",
+              "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+              "sourceCommit": null,
+              "sourceTree": null,
+              "sourceIdentityStatus": "not-available",
+              "protocolVersion": "live-fixed-inputs-1",
+              "fixedHz": 120,
+              "taskProtocol": "windlab-disturbance-landing-1"
+            },
+            "wind": [
+              {
+                "timeS": 2,
+                "speedMps": 3,
+                "directionDeg": 90,
+                "gustMps": 1,
+                "gustPeriodS": 2.8
+              },
+              {
+                "timeS": 4,
+                "speedMps": 4,
+                "directionDeg": 270,
+                "gustMps": 1.5,
+                "gustPeriodS": 3.1
+              },
+              {
+                "timeS": 7.5,
+                "speedMps": 0,
+                "directionDeg": 0,
+                "gustMps": 0,
+                "gustPeriodS": 4
+              }
+            ],
+            "gas": {
+              "mode": "bench",
+              "initialPressureBar": 350,
+              "remainingKg": 249.55820028489444,
+              "temperatureK": 293.15
+            },
+            "task": {
+              "contentLabel": "fnv1a32-6d222ba9",
+              "definition": {
+                "schema": "roadster.landing-task",
+                "version": 1,
+                "name": "Crosswind landing / VECTOR 07",
+                "seed": 31415,
+                "supplyMode": "bench",
+                "initialPressureBar": 350,
+                "targetHeightM": 2.5,
+                "timeoutS": 16,
+                "nozzleScale": 1,
+                "landingRadiusM": 1.5,
+                "disturbances": [
+                  {
+                    "timeS": 2,
+                    "speedMps": 3,
+                    "directionDeg": 90,
+                    "gustMps": 1,
+                    "gustPeriodS": 2.8
+                  },
+                  {
+                    "timeS": 4,
+                    "speedMps": 4,
+                    "directionDeg": 270,
+                    "gustMps": 1.5,
+                    "gustPeriodS": 3.1
+                  },
+                  {
+                    "timeS": 7.5,
+                    "speedMps": 0,
+                    "directionDeg": 0,
+                    "gustMps": 0,
+                    "gustPeriodS": 4
+                  }
+                ],
+                "faultTimeS": 4.5,
+                "nozzleId": "lift-FL"
+              }
+            },
+            "algorithm": {
+              "hash": "fnv1a32-de4069ad",
+              "name": "PD / height outer loop",
+              "interface": "height-outer-acceleration-1",
+              "controlHz": 60
+            }
+          },
+          "B": {
+            "initialState": {
+              "contentLabel": "fnv1a32-9e4f965e",
+              "world": "windlab",
+              "collisionIdentity": "08604efb",
+              "simTime": 1.9999999999999953,
+              "position": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  0.6037355954661169,
+                  0
+                ]
+              },
+              "velocity": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  -0.000008879514290300904,
+                  0
+                ]
+              },
+              "quaternion": {
+                "$type": "Quaternion",
+                "values": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "angularVelocity": {
+                "$type": "Vec3",
+                "values": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "controllerInitialState": {
+                "states": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "lastOutput": 0,
+                "lastStep": null,
+                "fault": null
+              }
+            },
+            "model": {
+              "modelVersion": "3.14.0",
+              "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+              "sourceCommit": null,
+              "sourceTree": null,
+              "sourceIdentityStatus": "not-available",
+              "protocolVersion": "live-fixed-inputs-1",
+              "fixedHz": 120,
+              "taskProtocol": "windlab-disturbance-landing-1"
+            },
+            "wind": [
+              {
+                "timeS": 2,
+                "speedMps": 3,
+                "directionDeg": 90,
+                "gustMps": 1,
+                "gustPeriodS": 2.8
+              },
+              {
+                "timeS": 4,
+                "speedMps": 4,
+                "directionDeg": 270,
+                "gustMps": 1.5,
+                "gustPeriodS": 3.1
+              },
+              {
+                "timeS": 7.5,
+                "speedMps": 0,
+                "directionDeg": 0,
+                "gustMps": 0,
+                "gustPeriodS": 4
+              }
+            ],
+            "gas": {
+              "mode": "finite",
+              "initialPressureBar": 100,
+              "remainingKg": 71.30234293854127,
+              "temperatureK": 293.15
+            },
+            "task": {
+              "contentLabel": "fnv1a32-cf366b2f",
+              "definition": {
+                "schema": "roadster.landing-task",
+                "version": 1,
+                "name": "Crosswind landing / VECTOR 07",
+                "seed": 31415,
+                "supplyMode": "finite",
+                "initialPressureBar": 100,
+                "targetHeightM": 2.5,
+                "timeoutS": 16,
+                "nozzleScale": 1,
+                "landingRadiusM": 1.5,
+                "disturbances": [
+                  {
+                    "timeS": 2,
+                    "speedMps": 3,
+                    "directionDeg": 90,
+                    "gustMps": 1,
+                    "gustPeriodS": 2.8
+                  },
+                  {
+                    "timeS": 4,
+                    "speedMps": 4,
+                    "directionDeg": 270,
+                    "gustMps": 1.5,
+                    "gustPeriodS": 3.1
+                  },
+                  {
+                    "timeS": 7.5,
+                    "speedMps": 0,
+                    "directionDeg": 0,
+                    "gustMps": 0,
+                    "gustPeriodS": 4
+                  }
+                ],
+                "faultTimeS": 4.5,
+                "nozzleId": "lift-FL"
+              }
+            },
+            "algorithm": {
+              "hash": "fnv1a32-de4069ad",
+              "name": "PD / height outer loop",
+              "interface": "height-outer-acceleration-1",
+              "controlHz": 60
+            }
+          }
+        }
+      }
+    },
+    "failureTerminals": {
+      "fixtures": [
+        {
+          "kind": "finite-boundary",
+          "terminalKind": "failure-trigger-continuation",
+          "failureStep": 244,
+          "statisticsCount": 4,
+          "recordSteps": 5,
+          "terminalReplayable": true
+        },
+        {
+          "kind": "nonfinite",
+          "terminalKind": "diagnostic-only",
+          "failureStep": 244,
+          "statisticsCount": 4,
+          "recordSteps": 5,
+          "terminalReplayable": false
+        }
+      ],
+      "scope": "Intentional isolated state corruption proves terminal retention/serialization, not faithful replay of an unjournaled fixture intervention."
+    }
+  }
+}

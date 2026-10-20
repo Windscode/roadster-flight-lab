@@ -1,0 +1,61 @@
+{
+  "schema": "roadster.landing-figure",
+  "version": 1,
+  "modelVersion": "3.14.0",
+  "modelBuildId": "8bd395944531d200879531311e42a50abf027f0eb15582d7652aa6e087a91484",
+  "input": "qa/landing-task-fixtures-3.14.json",
+  "inputSHA256": "fa33a6ef1a79cb1bab85bea8608c451eb836e095817a48a1a69f94b0f420040b",
+  "generator": "scripts/plot-landing-3.14.py",
+  "generatorSHA256": "a60c64b7af7e3c89234952e256ff499cedd92382f613830b839373a738fdf0ef",
+  "records": [
+    {
+      "id": "landing-mvgjxa60-a955e9bd",
+      "taskId": "fnv1a32-6d222ba9",
+      "algorithmHash": "fnv1a32-de4069ad",
+      "initialStateLabel": "fnv1a32-5bb98324",
+      "collisionIdentity": "08604efb",
+      "status": "completed",
+      "reason": "stable_landing",
+      "statisticsHz": 120,
+      "statisticsCount": 1372,
+      "displaySamples": 230,
+      "controllerDecisions": 686,
+      "activeCommandDecisions": 644,
+      "inactiveRequestDecisions": 42
+    },
+    {
+      "id": "landing-mvgjxaj6-bea28d1c",
+      "taskId": "fnv1a32-6d222ba9",
+      "algorithmHash": "fnv1a32-8bd63bb6",
+      "initialStateLabel": "fnv1a32-5bb98324",
+      "collisionIdentity": "08604efb",
+      "status": "completed",
+      "reason": "stable_landing",
+      "statisticsHz": 120,
+      "statisticsCount": 1423,
+      "displaySamples": 239,
+      "controllerDecisions": 712,
+      "activeCommandDecisions": 669,
+      "inactiveRequestDecisions": 43
+    },
+    {
+      "id": "landing-mvgjxawn-e3309e63",
+      "taskId": "fnv1a32-cf366b2f",
+      "algorithmHash": "fnv1a32-de4069ad",
+      "initialStateLabel": "fnv1a32-9e4f965e",
+      "collisionIdentity": "08604efb",
+      "status": "failed",
+      "reason": "hard_or_tilted_touchdown",
+      "statisticsHz": 120,
+      "statisticsCount": 254,
+      "displaySamples": 44,
+      "controllerDecisions": 127,
+      "activeCommandDecisions": 127,
+      "inactiveRequestDecisions": 0
+    }
+  ],
+  "benchComparison": "Only algorithm differs; complete initial physical snapshot, initial state values, task, model and collision identity checked equal.",
+  "finiteComparison": "Separate descriptive failure; gas mode, initial pressure, initial state and task identity differ. Not a single-factor controller comparison.",
+  "dataScope": "Height, target and actual main-nozzle forces from retained 20 Hz samples; active applied acceleration request from 60 Hz controller IO, with inactive requests separately dashed and stale applied values omitted; exact contact markers and all metrics from 120 Hz event/summary records. No interpolation, smoothing or inferred peak.",
+  "gasScope": "Bench externalSupplyKg to its own completed task endpoint; finite onboardDischargedKg and gasRemainingKg at physical failure. Never equate throughput with onboard tank use."
+}

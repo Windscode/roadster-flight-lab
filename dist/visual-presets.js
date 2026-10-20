@@ -34,12 +34,12 @@ export const CITY_BENCHMARK_ROUTE=Object.freeze({
 });
 
 export const CITY_VISUAL_CAPTURE_PROTOCOL=Object.freeze({
-  schema:'roadster.visual-comparison',version:2,baselineCommit:'6083bbf0e01f4eef5447f2c1b951d8b41e691f46',baselineModelVersion:'3.9.0',
+  schema:'roadster.visual-comparison',version:3,baselineCommit:'a62b6e3d6f9b7a1410561ae64d9026dd35b64a2b',baselineModelVersion:'3.13.0',
   referenceResolution:[1280,720],pixelRatio:1,weather:['clear-day','wet-night'],quality:['balanced','high','ultra'],
   cameraIds:['weave-entry','exchange','viaduct','junction','canal'],
   addedViewIds:['crosstown','foundry-south'],routeId:CITY_BENCHMARK_ROUTE.id,
-  baselineScope:'Full untouched 3.9 checkout. User-supplied IAB frames prove real WebGL, but their displayed version alone does not verify commit or cache identity. Keep 1280x720 and 2031x1244 capture batches separate.',
-  stillConditions:'Same camera position/target, 48 degree vertical FOV, full paused vehicle position/quaternion/wing/light state, 1280x720 drawing buffer, pixel ratio 1, quality and weather. Wait 3 s of rendered frames for light selection to settle. Lock 3.9 exposure (day .87, night 1.02). Save source build, actual light IDs/gains, vehicle state, exposure, reflection time/position with the same PNG. A changed lighting preset is a separate comparison.',
+  baselineScope:'Untouched 3.13 checkout. The supplied 1280x720 wet-night high/balanced/high frames establish recovery of observed road/mineral facades; requiredCategories was empty and this is not a full-scene gate. Ultra had GL1286 despite linked programs. Keep different resolution, camera, LOD and supply-mode records separate.',
+  stillConditions:'Same camera position/target, 48 degree vertical FOV, full paused vehicle position/quaternion/wing/light state, 1280x720 drawing buffer, pixel ratio 1, quality and weather. Wait 3 s of rendered frames for light selection to settle. Lock matched baseline exposure (day .87, night 1.02). Save source build, actual light IDs/gains, vehicle state, exposure, reflection time/position with the same PNG. A changed lighting preset is a separate comparison.',
   timingConditions:'Record observed browser/renderer (unknown stays unknown), resolution and quality. Separate paused 30 Hz refresh, loading/5 s warmup and 150 s driven steady capture. Actual route inputs/trajectory accompany p50/p95/p99 and long frames. A point HUD FPS is not a route benchmark.',
   acceptance:'Requires actual WebGL images and measured display/GPU timing. Scene graph, shader and DOM checks are separate structural evidence.'
 });

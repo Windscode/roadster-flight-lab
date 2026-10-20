@@ -1,10 +1,12 @@
-import {currentExperimentIdentity,captureExperimentSnapshot,sampleDescription} from './experiment-records.js';
+import {currentExperimentIdentity,captureExperimentSnapshot,attachRuntimeProvenance,failurePhysicalTelemetry,sampleDescription} from './experiment-records.js';
+import {readProtectedArchive,writeArchiveCandidate} from './research-storage.js';
 /* Research references are commands to the physical controller. This module
  * never assigns rigid-body position, velocity, orientation, force or torque. */
 export const FLIGHT_PROGRAM_SCHEMA = 'roadster.flight-program-library';
 export const FLIGHT_PROGRAM_VERSION = 1;
 export const PROGRAM_STORAGE_KEY = 'roadster-flight-programs-v1';
 export const RESULT_STORAGE_KEY = 'roadster-flight-results-v1';
+export const RATE_LIMITS=Object.freeze({roll:360,pitch:120,yaw:100});
 export const PROGRAM_SHORTCUTS = Object.freeze(Array.from({length:7},(_,i)=>`Digit${i+3}`));
 export const PROGRAM_LIMITS = Object.freeze({programs:16,stages:12,durationS:300,importBytes:131072,results:16,samples:6201});
 export const CONTROLLER_FIELDS = Object.freeze([
@@ -13,9 +15,9 @@ export const CONTROLLER_FIELDS = Object.freeze([
   ['altitudeGain','高度位置增益',.3,10,.1,'s⁻²',3.2],
   ['verticalDamping','垂直速度阻尼',.5,10,.1,'s⁻¹',3.6],
   ['attitudeResponse','姿态响应',1,7,.1,'rad/s',4.5],
-  ['rollRateDegS','滚转指令上限',15,360,5,'°/s',180],
-  ['pitchRateDegS','俯仰指令上限',5,120,1,'°/s',60],
-  ['yawRateDegS','偏航指令上限',5,100,1,'°/s',46],
+  ['rollRateDegS','滚转指令上限',15,RATE_LIMITS.roll,5,'°/s',180],
+  ['pitchRateDegS','俯仰指令上限',5,RATE_LIMITS.pitch,1,'°/s',60],
+  ['yawRateDegS','偏航指令上限',5,RATE_LIMITS.yaw,1,'°/s',46],
   ['angularAccelerationDegS2','角加速度上限',20,720,10,'°/s²',360],
   ['verticalAccelerationMps2','升降加速度参考',1,10,.5,'m/s²',5],
 ]);
@@ -54,7 +56,7 @@ export function validateStage(value,path='阶段'){
   if(type==='pose'&&out.exit==='settled'&&out.settleS>out.durationS)fail(path,'稳定保持时间不能超过阶段超时');
   if(type==='rate'){
     out.axis=choose(value.axis,['roll','pitch','yaw'],`${path}.旋转轴`);
-    out.rateDegS=number(value.rateDegS,out.axis==='roll'?-360:out.axis==='pitch'?-120:-100,out.axis==='roll'?360:out.axis==='pitch'?120:100,`${path}.角速度`);
+    out.rateDegS=number(value.rateDegS,-RATE_LIMITS[out.axis],RATE_LIMITS[out.axis],`${path}.角速度`);
     if(Math.abs(out.rateDegS)<1)fail(path,'角速度绝对值至少为 1°/s');
   }
   if(type==='wind')out.wind=validateWind(value.wind,`${path}.风场`);
@@ -98,10 +100,13 @@ export function defaultProgramLibrary(){
   ]});
 }
 export function loadProgramLibrary(storage){
-  try{const raw=storage?.getItem(PROGRAM_STORAGE_KEY);return{library:raw?parseProgramLibrary(raw):defaultProgramLibrary(),warning:null};}
-  catch(error){return{library:defaultProgramLibrary(),warning:`本地流程未载入：${error.message}`};}
+  const loaded=readProtectedArchive(storage,PROGRAM_STORAGE_KEY,{parse:parseProgramLibrary,empty:defaultProgramLibrary,maxBytes:PROGRAM_LIMITS.importBytes});
+  return{...loaded,library:loaded.value,warning:loaded.warning?'本地流程已只读隔离：'+loaded.warning:null};
 }
-export function saveProgramLibrary(storage,value){const library=validateProgramLibrary(value);if(!storage)throw new Error('浏览器存储不可用，请导出 JSON 保留配置');storage.setItem(PROGRAM_STORAGE_KEY,JSON.stringify(library));return library;}
+export function saveProgramLibrary(storage,value,{protectedRaw=null,expectedRaw}={}){
+  const library=validateProgramLibrary(value);
+  writeArchiveCandidate(storage,PROGRAM_STORAGE_KEY,library,{parse:parseProgramLibrary,maxBytes:PROGRAM_LIMITS.importBytes,protectedRaw,expectedRaw});return library;
+}
 export function quaternionFromAttitude(pitchDeg,rollDeg,headingDeg){
   // Heading about world +Y; positive pitch raises the +Z nose; positive roll
   // follows the existing +Z body-axis convention used by Z in this simulator.
@@ -134,7 +139,7 @@ export class FlightProgramRunner{
     if(t.suctionEnabled)throw new Error('请先关闭吸附，再启动飞行研究流程');
     if(t.maneuver)sim.startManeuver('cancel');
     const initialSnapshot=typeof sim.exportState==='function'?captureExperimentSnapshot(sim,this.getContext()):null;
-    const active={identity:currentExperimentIdentity(),initialSnapshot,initialParams:copy(sim.params),initialGasMass:t.gasMass,program:validated,sim,context:this.getContext(),origin:capture(t),heading:t.headingDeg||0,index:-1,stage:null,elapsedS:0,stageElapsedS:0,settledS:0,lastSimTime:t.simTime,startTime:t.simTime,startedAt:this.now(),target:null,lastTelemetry:t,previousSample:null,samples:[],stages:[],gasThroughputKg:0,startEnergy:t.energyUsedKWh||0,previousWind:safeWind(sim,t),previousSupply:sim.params.supplyMode,windChanged:false,supplyChanged:false,stageTargetStart:null,hasSeenManeuver:false,effectiveRateDegS:null};
+    const active={identity:currentExperimentIdentity(),initialSnapshot,initialParams:copy(sim.params),initialGasMass:t.gasMass,program:validated,sim,context:this.getContext(),origin:capture(t),heading:t.headingDeg||0,index:-1,stage:null,elapsedS:0,stageElapsedS:0,settledS:0,lastSimTime:t.simTime,startTime:t.simTime,startedAt:this.now(),target:null,lastTelemetry:t,previousSample:null,samples:[],stages:[],gasThroughputKg:0,startEnergy:t.energyUsedKWh||0,previousWind:safeWind(sim,t),previousSupply:sim.params.supplyMode,windChanged:false,supplyChanged:false,stageTargetStart:null,hasSeenManeuver:false,effectiveRateDegS:null,fixedStats:{lastTime:t.simTime,count:0,positionCount:0,sumPositionSquared:0,peakPositionErrorM:null,peakAttitudeErrorDeg:null,allocationCount:0,saturatedCount:0,gasThroughputKg:0}};
     this.active=active;
     try{
       if(validated.supplyMode!=='inherit'){sim.setSupplyMode(validated.supplyMode);active.supplyChanged=true;}
@@ -198,7 +203,7 @@ export class FlightProgramRunner{
     const a=this.active;
     if(a.sim!==this.getSim()||a.context!==this.getContext()){this.cancel('已切换场景');return pilotInput;}
     if(hasPilotInput(pilotInput)){this.cancel('驾驶输入接管');return pilotInput;}
-    const sim=a.sim;
+    const sim=a.sim;this.afterFixedStep(sim.telemetry());
     if(sim.simTime<a.lastSimTime-1e-8){this.cancel('仿真已重新初始化');return pilotInput;}
     a.lastSimTime=sim.simTime;
     if(sim.simTime-(a.previousSample?.simTime??a.startTime)>=.05-1e-9){const t=sim.telemetry();a.lastTelemetry=t;this._sample(t);if(t.fault){this._finish('failed',t.fault);return pilotInput;}}
@@ -234,6 +239,9 @@ export class FlightProgramRunner{
     }
     return pilotInput;
   }
+  afterFixedStep(t,dt=1/120){
+    const a=this.active;if(!a||!t||t.simTime<=a.fixedStats.lastTime+1e-10)return;const s=a.fixedStats,elapsed=t.simTime-s.lastTime;if(Math.abs(elapsed-1/120)>1e-7)return;s.lastTime=t.simTime;s.count++;const ep=positionError(t.position,a.target?.position),ea=quaternionErrorDeg(t.quaternion,a.target?.quaternion??(a.stage?.type==='rate'?t.manualQuaternionTarget:null));if(ep!==null){s.positionCount++;s.sumPositionSquared+=ep*ep;s.peakPositionErrorM=Math.max(s.peakPositionErrorM??0,ep);}if(ea!==null)s.peakAttitudeErrorDeg=Math.max(s.peakAttitudeErrorDeg??0,ea);if(finite(t.allocationError)){s.allocationCount++;if(t.holdFeasible===false||t.manualPoseFeasible===false||t.allocationError>.2)s.saturatedCount++;}s.gasThroughputKg+=Math.max(0,t.massFlowKgS||0)/120;
+  }
   _sample(t){
     const a=this.active;if(!a)return;
     const dt=a.previousSample?Math.max(0,t.simTime-a.previousSample.simTime):0;
@@ -256,7 +264,7 @@ export class FlightProgramRunner{
   }
   cancel(reason='已停止流程'){if(!this.active)return false;this._finish('cancelled',reason);return true;}
   _finish(status,reason,{preservePhysicalRecovery=false}={}){
-    const a=this.active;if(!a)return;const sim=a.sim,t=sim.telemetry();this._sample(t);
+    const a=this.active;if(!a)return;const sim=a.sim,failure=status==='failed'&&sim._fault?sim.getFailureReport?.()??null:null,t=failurePhysicalTelemetry(sim.telemetry(),failure);if(!failure)this._sample(t);
     const lastStage=a.stages.at(-1);if(lastStage?.outcome==='running'){lastStage.outcome=status;lastStage.durationS=a.stageElapsedS;}
     if(status!=='completed'){
       // Keep finite authority and actual momentum. Cancelling an automatic
@@ -269,7 +277,8 @@ export class FlightProgramRunner{
     if(a.supplyChanged)sim.setSupplyMode(a.previousSupply);
     const es=a.samples.filter(s=>s.positionErrorM!==null),att=a.samples.filter(s=>s.attitudeErrorDeg!==null),alloc=a.samples.filter(s=>s.allocationError!==null);
     const result={schema:'roadster.flight-program-result',version:2,identity:copy(a.identity),initialSnapshot:a.initialSnapshot,initialParams:a.initialParams,actualInheritedWind:a.previousWind,initialSimTime:a.startTime,sourceProtocol:'flight-program-v1',replayNote:'完整现场输入与命令日志由关联 live-experiment 记录保存；仅此流程结果不能替代原始输入重放。',id:`run-${++this.serial}-${a.startedAt.replace(/[^0-9]/g,'')}`,programId:a.program.id,name:a.program.name,context:a.context,startedAt:a.startedAt,status,reason,durationS:Math.max(0,t.simTime-a.startTime),supplyMode:a.program.supplyMode==='inherit'?a.previousSupply:a.program.supplyMode,controller:Object.fromEntries(CONTROLLER_FIELDS.map(([key,,,,,,fallback])=>[key,sim.params[key]??fallback])),wind:a.program.wind===null?a.previousWind:a.program.wind,program:copy(a.program),sampling:sampleDescription(a.samples),summary:{statisticsSource:'raw simulation-time samples before display decimation',statisticsHz:20,statisticsCount:a.samples.length,peakPositionErrorM:es.length?Math.max(...es.map(s=>s.positionErrorM)):null,rmsPositionErrorM:es.length?Math.sqrt(es.reduce((sum,s)=>sum+s.positionErrorM*s.positionErrorM,0)/es.length):null,peakAttitudeErrorDeg:att.length?Math.max(...att.map(s=>s.attitudeErrorDeg)):null,saturationFraction:alloc.length?alloc.filter(s=>s.feasible===false||s.allocationError>.2).length/alloc.length:null,gasThroughputKg:a.gasThroughputKg,onboardDischargedKg:(a.program.supplyMode==='inherit'?a.previousSupply:a.program.supplyMode)==='finite'?a.gasThroughputKg:0,externalSupplyKg:(a.program.supplyMode==='inherit'?a.previousSupply:a.program.supplyMode)==='bench'?a.gasThroughputKg:0,gasRemainingKg:numeric(t.gasMass),energyUsedKWh:Math.max(0,(t.energyUsedKWh||0)-a.startEnergy),finalPositionErrorM:positionError(t.position,a.target?.position),finalAttitudeErrorDeg:quaternionErrorDeg(t.quaternion,a.target?.quaternion),finalFeasible:t.holdFeasible??null},stages:copy(a.stages),samples:copy(a.samples)};
-    this.active=null;this.lastResult=result;this.onEvent('program_finish',{id:a.program.id,status,reason,durationS:result.durationS});this.onFinish(result);
+    if(!failure)this.afterFixedStep(t);const fixed=a.fixedStats;const expected=Math.round(result.durationS*120);if(fixed.count===expected&&fixed.count>0){Object.assign(result.summary,{statisticsSource:'all fixed 120 Hz post-integration states; independent of stored display curves',statisticsHz:120,statisticsCount:fixed.count,peakPositionErrorM:fixed.peakPositionErrorM,rmsPositionErrorM:fixed.positionCount?Math.sqrt(fixed.sumPositionSquared/fixed.positionCount):null,peakAttitudeErrorDeg:fixed.peakAttitudeErrorDeg,saturationFraction:fixed.allocationCount?fixed.saturatedCount/fixed.allocationCount:null,gasThroughputKg:fixed.gasThroughputKg,onboardDischargedKg:result.supplyMode==='finite'?fixed.gasThroughputKg:0,externalSupplyKg:result.supplyMode==='bench'?fixed.gasThroughputKg:0});}result.failureEvidence=failure;
+    attachRuntimeProvenance(result);this.active=null;this.lastResult=result;this.onEvent('program_finish',{id:a.program.id,status,reason,durationS:result.durationS});this.onFinish(result);
   }
   getState(){const a=this.active,r=this.lastResult;return a?{running:true,id:a.program.id,name:a.program.name,stage:a.index+1,stageCount:a.program.stages.length,stageType:a.stage?.type,stageLabel:a.stage?stageLabel(a.stage):'',elapsedS:a.elapsedS,stageElapsedS:a.stageElapsedS,stageDurationS:a.stage?.durationS??0,settledS:a.settledS,target:a.target?copy(a.target):null,effectiveRateDegS:a.effectiveRateDegS,gasThroughputKg:a.gasThroughputKg}:{running:false,result:r?{id:r.id,name:r.name,programId:r.programId,status:r.status,reason:r.reason,durationS:r.durationS,summary:{...r.summary}}:null};}
 }
@@ -279,18 +288,27 @@ export class FlightProgramRunner{
 export function compactResult(result){
   const out=copy(result),raw=out.samples;const stride=Math.max(1,Math.ceil((raw.length-1)/180));out.samples=raw.filter((_,i)=>i%stride===0||i===raw.length-1);out.sampling=sampleDescription(out.samples,{rawCount:result.sampling?.rawCount??(result.version===2?raw.length:null),rawHz:result.sampling?.rawHz??null,decimated:!result.sampling||result.sampling?.decimated===true||out.samples.length<raw.length});return out;
 }
-export function loadResults(storage){
-  try{
-    const raw=storage?.getItem(RESULT_STORAGE_KEY);if(!raw)return[];if(raw.length>2_000_000)return[];
-    const value=JSON.parse(raw);if(value.schema!=='roadster.flight-results'||value.version!==1||!Array.isArray(value.results)||value.results.length>PROGRAM_LIMITS.results)return[];
-    return value.results.filter(r=>{
-      if(!r||r.schema!=='roadster.flight-program-result'||![1,2].includes(r.version)||typeof r.name!=='string'||r.name.length>42||typeof r.id!=='string'||r.id.length>90||typeof r.startedAt!=='string'||r.startedAt.length>48||!['completed','cancelled','failed','timeout'].includes(r.status)||!finite(r.durationS)||r.durationS<0||r.durationS>301||!r.summary||!Array.isArray(r.samples)||r.samples.length>181||!Array.isArray(r.stages)||r.stages.length>12)return false;
-      try{validateProgram(r.program);validateController(r.controller);for(const s of r.samples)if(!s||Object.values(s).some(v=>typeof v==='number'&&!Number.isFinite(v)))return false;for(const [key,v]of Object.entries(r.summary))if(key!=='statisticsSource'&&v!==null&&typeof v!=='boolean'&&(!finite(v)||v<0))return false;}catch{return false;}
-      return true;
-    });
-  }catch{return[];}
+export function parseResultArchive(raw){
+  const value=JSON.parse(raw);
+  if(value?.schema!=='roadster.flight-results'||value.version!==1||!Array.isArray(value.results)||value.results.length>PROGRAM_LIMITS.results)throw Error('流程结果格式或版本不支持');
+  const ids=new Set();for(const r of value.results){
+    if(!r||r.schema!=='roadster.flight-program-result'||![1,2].includes(r.version)||typeof r.name!=='string'||r.name.length>42||typeof r.id!=='string'||r.id.length>90||ids.has(r.id)||typeof r.startedAt!=='string'||r.startedAt.length>48||!['completed','cancelled','failed','timeout'].includes(r.status)||!finite(r.durationS)||r.durationS<0||r.durationS>301||!r.summary||!Array.isArray(r.samples)||r.samples.length>181||!Array.isArray(r.stages)||r.stages.length>12)throw Error('流程结果含非法条目；保留完整原文');
+    ids.add(r.id);validateProgram(r.program);validateController(r.controller);
+    for(const sample of r.samples)if(!sample||Object.values(sample).some(v=>typeof v==='number'&&!Number.isFinite(v)))throw Error('流程曲线含非法值');
+    for(const [key,v]of Object.entries(r.summary))if(key!=='statisticsSource'&&v!==null&&typeof v!=='boolean'&&(!finite(v)||v<0))throw Error('流程指标含非法值');
+  }return value.results;
 }
-export function saveResults(storage,results){if(!storage)throw new Error('浏览器存储不可用');if(results.length>PROGRAM_LIMITS.results)throw new Error('流程历史达到 16 条上限；旧记录保持，新增记录只在本会话，请导出整库');const compact=results.map(compactResult),text=JSON.stringify({schema:'roadster.flight-results',version:1,results:compact});if(new TextEncoder().encode(text).byteLength>2_000_000)throw new Error('流程存储达到 2 MB 上限；旧记录未覆盖，请导出整库');storage.setItem(RESULT_STORAGE_KEY,text);}
+export function loadResultArchive(storage){
+  const loaded=readProtectedArchive(storage,RESULT_STORAGE_KEY,{parse:parseResultArchive,empty:()=>[],maxBytes:2_000_000});return{...loaded,results:loaded.value};
+}
+export function loadResults(storage){return loadResultArchive(storage).results;}
+export function saveResults(storage,results,{protectedRaw=null}={}){
+  const loaded=loadResultArchive(storage);if(loaded.readOnly)throw Error('旧流程结果只读隔离：'+loaded.warning);
+  const merged=new Map(loaded.results.map(r=>[r.id,r]));for(const r of results)merged.set(r.id,r);
+  if(merged.size>PROGRAM_LIMITS.results)throw Error('流程历史达到 16 条上限；旧记录保持，新增记录仅本会话 / 未保存');
+  const compact=[...merged.values()].map(compactResult);
+  writeArchiveCandidate(storage,RESULT_STORAGE_KEY,{schema:'roadster.flight-results',version:1,results:compact},{parse:parseResultArchive,maxBytes:2_000_000,protectedRaw});return compact;
+}
 export function resultCSV(result){
   const fields=['timeS','stage','heightM','targetHeightM','positionErrorM','attitudeErrorDeg','rollDeg','pitchDeg','speedMps','pressureBar','massFlowKgS','allocationError','feasible'];
   const sampling=result.sampling??sampleDescription(result.samples,{rawCount:null,rawHz:null,decimated:true});

@@ -1,5 +1,15 @@
 {
   "version": 1,
+  "createdAt": "2026-10-20T10:25:12.507Z",
+  "sourceHashes": {
+    "dist/city-data.js": "b05f0346d544afb92e728db27a79b5730b02f88a6fcd9c7b7ac8a3e73f779e69",
+    "dist/city-continuity.js": "a9b85cb298104c8a5a948fc9661e3344628e6b85d182b5b810447f57ec94a541",
+    "dist/city-plan.js": "0258b8489058b9051458e0b1809dcce3018e8013c3ea5b9bec10080947e9fc2c",
+    "dist/city-landmarks.js": "c59b9c67908e6e4c90d8f14356cb4c937a58e4a868c63e35eb9594b133aeb884",
+    "dist/urban-architecture.js": "7fd38b4d03ee9e4c4c5e4199eb0efccb08649700eadceb1f514beeed8c17b835",
+    "dist/irradiance-math.js": "f4c9de47c61ebf8a661d9cfddfbcf0a47c77266438f43909090cd1032b1637f9",
+    "scripts/bake-indirect.mjs": "5aca6bd831d921804dce84a62c9280aff88e5fb7f0b892e91815269db82212d3"
+  },
   "algorithm": "Offline diffuse path tracing / explicit sun next-event estimation / cosine hemisphere / order-2 real SH",
   "bounces": 3,
   "samplesPerProbe": 768,
@@ -73,9 +83,9 @@
         64
       ],
       "file": "city.bin",
-      "validProbes": 8323,
+      "validProbes": 8320,
       "bytes": 691200,
-      "sha256": "2957c30cc8174ba9b6bb63651d30fd1328f2f0c01d9870504bfa1ef447ab8611"
+      "sha256": "9b7a3c300f8ec568291136049a0c145a0c829c727c66883b5fd3f721ac3a6659"
     },
     {
       "id": "lower-market",
@@ -102,18 +112,18 @@
       "file": "lower-market.bin",
       "validProbes": 3590,
       "bytes": 331344,
-      "sha256": "41782ded95856e80b2b99d6b7c8fd94bb7f6ef2da6b62ce02ac8467c4229d23b"
+      "sha256": "d4cdcfa367c3f1fd4f8d5392b3580a7039039f8d84148753793bf9c5bd67b892"
     }
   ],
   "totalProbes": 14202,
-  "validProbes": 11913,
-  "staticEnvelopes": 2120,
-  "seconds": 150.718553899,
-  "geometrySHA256": "2dba61c7784a22bcf1f29ce9dfe2af28607ed600a4d5a5e2d8c1fa03fd382c67",
-  "geometryCanonicalSHA256": "ad28b4192e8367ac32491a5c3d0e08667b9946d667aa2c2405c375c0a15e8e4b",
+  "validProbes": 11910,
+  "staticEnvelopes": 2219,
+  "seconds": 193.843586053,
+  "geometrySHA256": "a432aa3945e3ebc311d71d515e89d3ca64b5f95cb04faa1941c8e2b15d4cae4a",
+  "geometryCanonicalSHA256": "125babef182e8071ff69a2c947d4aeaf8aee5d989a0354a9541235a087da5310",
   "geometryHashQuantization": 1e-9,
   "materialModel": {
-    "version": "3.10",
+    "version": "3.14",
     "source": "dist/urban-architecture.js / URBAN_MATERIAL_PALETTE",
     "wallTintSRGB": [
       9477021,
@@ -129,14 +139,14 @@
       0.06984488376582869,
       0.07376618803434053
     ],
-    "assumption": "Static envelope averages; scanned asphalt baseline average is rescaled by the current linear material tint. Individual windows, metal, shop interiors and textured facade variation are averaged."
+    "assumption": "Static envelope averages including 3.14 civic/service/mineral embankment materials; scanned asphalt baseline average is rescaled by the current linear material tint. Individual windows, metal, shop interiors and textured facade variation are averaged."
   },
-  "materialModelSHA256": "0da6642456a8a9971b5ade64cc9750b27d5aea4893e9cae76fa761ae5ac65e3c",
+  "materialModelSHA256": "390d17c76ae16626b490fe429a11aba2e79da2b781cb256f2c3f9f662614ba71",
   "limitations": [
     "Static shared solid envelopes and average diffuse reflectances; fine facade, foliage and animated people are not path-traced.",
     "Three surface events; not an unlimited-bounce solution, hardware ray tracing or DDGI.",
     "Invalid solid probes are rejected; finite probe spacing may leak or blur lighting near thin geometry.",
     "Specular reflections remain rasterized local probes; transparent transport and participating media are excluded.",
-    "Rebaked with the current physical geometry, including the retained corridor and 3.13 South Quay entrance; fine facade articulation remains an averaged envelope, not a facade-detail lightmap."
+    "Rebaked with the current physical geometry, including the retained corridor/3.13 entrance and the 3.14 continuity, roof silhouettes and peripheral banks; fine facade articulation remains an averaged envelope, not a facade-detail lightmap."
   ]
 }

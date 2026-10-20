@@ -16,7 +16,7 @@ import {createNightDirectLighting} from '../dist/night-direct-lighting.js';
 import {injectReceiverPlaneShadows} from '../dist/receiver-plane-shadows.js';
 import {CITY_RENDER_PRESETS} from '../dist/city-render-budget.js';
 import {attachRoadSurface} from '../dist/road-surface-material.js';
-import {attachPavementSurface} from '../dist/pavement-surface-material.js';
+import {attachPavementSurface,CITY_PAVEMENT_SPECIFICATIONS} from '../dist/pavement-surface-material.js';
 import {createLocalProbeSun} from '../dist/local-probe-sun.js';
 import {createCityExteriorMaterials} from '../dist/city-exterior-materials.js';
 import {cityLightingVariant,injectCityMaterialLighting} from '../dist/city-material-lighting.js';
@@ -149,7 +149,7 @@ try{
   const nightDirect=createNightDirectLighting({fetchAsset:async url=>{const bytes=await fs.readFile(url);return {ok:true,json:async()=>JSON.parse(bytes.toString('utf8')),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};}});await nightDirect.ready;
   const probeSun=createLocalProbeSun(new THREE.Scene(),{}),exterior=createCityExteriorMaterials(THREE);
   const dummyTextures={albedo:new THREE.Texture(),normal:new THREE.Texture(),roughness:new THREE.Texture()};
-  for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const night of [false,true])for(const kind of ['standard','physical','asphalt','pavement','exterior-concrete','exterior-glass','exterior-enamel']){
+  for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const night of [false,true])for(const kind of ['standard','physical','asphalt','pavement',...['continuity-stone','service-concrete','ivory','basalt'].map(id=>'pavement-'+id),'exterior-concrete','exterior-glass','exterior-enamel']){
     // Exterior/night material variants are required by the stationary field.
     const physical=kind==='physical',spots=night?({balanced:3,high:5,ultra:6}[quality]):0;
     gi.setEnabled(!night);nightGI.setEnabled(night);nightGI.setQuality(quality);
@@ -159,7 +159,7 @@ try{
     const material=physical?new THREE.MeshPhysicalMaterial():new THREE.MeshStandardMaterial();
     try{
       if(kind==='asphalt')attachRoadSurface(material,dummyTextures).setQuality(quality);
-      if(kind==='pavement')attachPavementSurface(material).setWetness(night?1:0);
+      if(kind==='pavement'||kind.startsWith('pavement-'))attachPavementSurface(material,CITY_PAVEMENT_SPECIFICATIONS[kind.slice(9)]||{}).setWetness(night?1:0);
       if(kind.startsWith('exterior-')){exterior.attach(material,kind.slice(9));exterior.setQuality(quality);}
       const surfaceCompile=material.onBeforeCompile;
       csm.fade=true;csm.setupMaterial(material);gi.setQuality(quality,profile);

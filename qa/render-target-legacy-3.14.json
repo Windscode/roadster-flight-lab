@@ -1,0 +1,19 @@
+{
+  "scope": "Bundled Three.js CPU target lifecycle reproduction; no actual GPU framebuffer creation",
+  "before": {
+    "width": 256,
+    "height": null,
+    "viewport": [
+      0,
+      0,
+      256,
+      null
+    ],
+    "colorAllocation": [
+      "max(1, width >> level)",
+      "max(1, height >> level)"
+    ],
+    "depthAllocation": "renderbufferStorage(... renderTarget.width, renderTarget.height)",
+    "reason": "CubeRenderTarget inherits RenderTarget.setSize(width,height); omitted height becomes undefined. Color is allocated with height max(1, undefined >> 0)=1; depth is passed undefined (WebIDL 0), so attachments cannot define the intended square framebuffer."
+  }
+}

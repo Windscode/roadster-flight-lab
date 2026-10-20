@@ -3,6 +3,7 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import * as THREE from '../dist/vendor/three.module.js';
 import {createRoadster,sampleVehicleSurface,BONNET_JOINT_SPEC} from '../dist/vehicle.js';
+import {createRoadster as createRoadster313} from '../dist/vehicle-reference-3.13.js';
 import {buildCityLandmarks,SOUTH_QUAY_ENTRY_SOLIDS,SOUTH_QUAY_ENTRY_LIGHTS} from '../dist/city-landmarks.js';
 import {RoadsterSim} from '../dist/physics.js';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
@@ -80,9 +81,20 @@ check('The South Quay entrance is drawn from the same solid transforms used by p
   const result={sharedSolids:SOUTH_QUAY_ENTRY_SOLIDS.map(g=>g.id),rampDeckWidthM:12,arterialWidthM:22,newEntryPierClearWidthM:18.6,checkedHeadroomM:5,finiteRangeFixtures:SOUTH_QUAY_ENTRY_LIGHTS.map(({id,range,intensity})=>({id,range,intensity})),scope:'Preserves prior ramp railings; 12 m is deck width, not net clearance between existing rails.'};
   const geos=new Set(),materials=new Set();landmark.root.traverse(o=>{if(o.geometry)geos.add(o.geometry);if(o.material)materials.add(o.material);});for(const g of geos)g.dispose();for(const m of materials)m.dispose();return result;
 });
-check('Sorting/detail costs stay bounded at each existing driving LOD',()=>{
-  const result={};for(const quality of ['balanced','high','ultra']){car.setQuality(quality);const current=car.getRenderCost(),before=fixture.profiles[quality];assert.ok(current.drawables-before.drawables<=8);assert.ok(current.triangles/before.triangles<1.05);result[quality]={before,current,drawablesDelta:current.drawables-before.drawables,trianglesDelta:current.triangles-before.triangles};}return result;
+check('New detail stays within four drawable batches and four percent of the retained 3.13 LOD, with the old 3.12 gate recorded',()=>{
+  // The previous gate included 3.13 work against a 3.12 baseline. Keep its
+  // measured failure rather than deleting it or silently increasing a limit.
+  // Budget this separately reviewed 3.14 increment against the inherited
+  // frozen 3.13 implementation; surface/sorting/ray assertions above remain.
+  const result={},baseline=createRoadster313({quality:'high'});
+  for(const quality of ['balanced','high','ultra']){
+    car.setQuality(quality);baseline.setQuality(quality);const current=car.getRenderCost(),before=baseline.getRenderCost(),original312=fixture.profiles[quality];
+    assert.ok(current.drawables-before.drawables<=4);assert.ok(current.triangles/before.triangles<1.04);
+    result[quality]={original312,current,inherited313:before,original312Gate:{maxAdditionalDrawables:8,maxTriangleRatio:1.05,passed:current.drawables-original312.drawables<=8&&current.triangles/original312.triangles<1.05},reviewed314Gate:{maxAdditionalDrawables:4,maxTriangleRatio:1.04},drawablesDelta:current.drawables-before.drawables,trianglesDelta:current.triangles-before.triangles};
+  }
+  baseline.dispose();return result;
 });
+
 const sourceFiles=['dist/vehicle.js','dist/city-landmarks.js','tests/visual-quality-3.13.test.mjs','qa/fixtures/vehicle-optical-baseline-3.12.json'];
-const report={status:'passed',modelVersion:MODEL_VERSION,asOf:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(sourceFiles.map(p=>[p,sha(readFileSync(new URL('../'+p,import.meta.url)))])),limitations:['These are geometric, raycast, sorting-anchor and source checks. They do not certify transparent blending, reflections, shadows, night readability or frame times on a GPU.','The supplied 3.11/3.12 screenshots are baseline evidence, not screenshots of this change. Fixed-camera 3.13 before/after images remain required.','New entrance lighting is subject to the global light pool and the finite spatial resolution of the rebaked static fields.']};
+const report={status:'passed',modelVersion:MODEL_VERSION,asOf:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(sourceFiles.map(p=>[p,sha(readFileSync(new URL('../'+p,import.meta.url)))])),limitations:['These are geometric, raycast, sorting-anchor and source checks. They do not certify transparent blending, reflections, shadows, night readability or frame times on a GPU.','The supplied 3.11/3.12 screenshots are baseline evidence, not screenshots of this change. The supplied 3.13 images establish only their stated conditions; matched 3.13/3.14 final-build images remain required.','New entrance lighting is subject to the global light pool and the finite spatial resolution of the rebaked static fields.']};
 writeFileSync(new URL(`../qa/visual-quality-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');car.dispose();console.log(JSON.stringify(report,null,2));

@@ -68,7 +68,7 @@ export const VEHICLE_GEOMETRY = Object.freeze({
   suspensionMinimum:.24,suspensionMaximum:.41,maxSteer:.49,
   archCentreY:-.22,archLongRadius:.452,archVerticalRadius:.435,
   linerInnerX:.54,linerOuterX:1.040,
-  model:'v9 / 3.13: preserved wedge sections, recessed service-lid joints, independently sorted glazing and layered projector covers; independent official-photo reconstruction, not OEM CAD',
+  model:'v10 / 3.14: photo-referenced upper-edge lamp signatures, differentiated wheel finishes, two inspection identities and integrated experimental tail; independent reconstruction, not OEM CAD',
   surfaceConstruction:'Shape-preserving longitudinal stations; feature-aligned transverse strips; no per-vertex wheel-arch uplift; analytic derivative normals',
   referenceRig:VEHICLE_INSPECTION_RIG.id
 });
@@ -103,7 +103,7 @@ const fenderEdgeY=z=>Math.max(shoulderAt(z),bodySurfaceY(widthAt(z),z));
 const sideSurfaceX=(z,y)=>{
   const t=clamp((fenderEdgeY(z)-y)/(fenderEdgeY(z)+.315),0,1);
   const door=Math.exp(-(((z+.03)/.89)**4)),haunch=Math.max(Math.exp(-(((z-1.42)/.48)**2)),Math.exp(-(((z+1.42)/.51)**2)));
-  return widthAt(z)+.012*Math.sin(t*PI)+.009*haunch*Math.sin(t*PI)-.037*t*t-.020*door*Math.sin(t*PI)**2-.006*door*smoothstep(.50,.72,t);
+  return widthAt(z)+.012*Math.sin(t*PI)+.009*haunch*Math.sin(t*PI)-.037*t*t-.012*door*Math.sin(t*PI)**2-.006*door*smoothstep(.50,.72,t);
 };
 // Read-only geometry specification lets the suspension acceptance test sample
 // the same surface as the renderer, instead of duplicating an optimistic box.
@@ -239,15 +239,17 @@ function recessedBonnetJoint(parent,point,name,paint,seam,segments=64){
   }
 }
 
-function cutSurfaceOpenings(mesh,openings){
-  // Clip the actual body mesh at each lamp perimeter. A black triangle resting
-  // on top of paint cannot show a recessed housing / edge thickness correctly.
+function cutSurfaceOpenings(mesh,openings,{axes=[0,2],role='lamp'}={}){
+  // Clip the actual surface in its authored projection, preserving its normals
+  // and UVs. Lamps use XZ; the four rear mounting apertures use XY.
+  const [axisA,axisB]=axes;
+  const bounds=new Map(openings.map(hole=>[hole,{minA:Math.min(...hole.map(p=>p[0])),maxA:Math.max(...hole.map(p=>p[0])),minB:Math.min(...hole.map(p=>p[1])),maxB:Math.max(...hole.map(p=>p[1]))}]));
   const source=mesh.geometry,pos=source.attributes.position,norm=source.attributes.normal,uv=source.attributes.uv;
   const detail=geometryDetail.get(mesh);
   const positions=[],normals=[],uvs=[],indices=[],cache=new Map();
   const read=i=>[pos.getX(i),pos.getY(i),pos.getZ(i),norm.getX(i),norm.getY(i),norm.getZ(i),uv.getX(i),uv.getY(i)];
   const vertex=v=>{const key=v.slice(0,3).map(a=>Math.round(a*1e7)).join(',');if(cache.has(key))return cache.get(key);const i=positions.length/3,n=new THREE.Vector3(v[3],v[4],v[5]).normalize();positions.push(...v.slice(0,3));normals.push(n.x,n.y,n.z);uvs.push(v[6],v[7]);cache.set(key,i);return i;};
-  const signed=(p,a,b)=>((b[0]-a[0])*(p[2]-a[1])-(b[1]-a[1])*(p[0]-a[0]));
+  const signed=(p,a,b)=>((b[0]-a[0])*(p[axisB]-a[1])-(b[1]-a[1])*(p[axisA]-a[0]));
   const split=(poly,a,b,sign)=>{
     const inside=[],outside=[];
     for(let i=0;i<poly.length;i++){
@@ -264,22 +266,29 @@ function cutSurfaceOpenings(mesh,openings){
     for(const hole of openings){
       const sign=Math.sign((hole[1][0]-hole[0][0])*(hole[2][1]-hole[0][1])-(hole[1][1]-hole[0][1])*(hole[2][0]-hole[0][0]));
       const output=[];
-      for(const polygon of polygons){let remaining=polygon;for(let edge=0;edge<hole.length&&remaining.length>=3;edge++){
-        const pieces=split(remaining,hole[edge],hole[(edge+1)%hole.length],sign);if(pieces.outside.length>=3)output.push(pieces.outside);remaining=pieces.inside;
-      }}
+      for(const polygon of polygons){
+        const box=bounds.get(hole);
+        // A disjoint triangle cannot intersect this aperture. Avoid subdividing
+        // the rest of the rear panel along every extended polygon edge.
+        if(polygon.every(p=>p[axisA]<box.minA)||polygon.every(p=>p[axisA]>box.maxA)||polygon.every(p=>p[axisB]<box.minB)||polygon.every(p=>p[axisB]>box.maxB)){output.push(polygon);continue;}
+        let remaining=polygon;for(let edge=0;edge<hole.length&&remaining.length>=3;edge++){
+          const pieces=split(remaining,hole[edge],hole[(edge+1)%hole.length],sign);if(pieces.outside.length>=3)output.push(pieces.outside);remaining=pieces.inside;
+        }
+      }
       polygons=output;
     }
     for(const polygon of polygons)for(let j=1;j<polygon.length-1;j++){
       const a=polygon[0],b=polygon[j],c=polygon[j+1];
-      if(Math.abs((b[0]-a[0])*(c[2]-a[2])-(b[2]-a[2])*(c[0]-a[0]))<1e-12)continue;
+      if(Math.abs((b[axisA]-a[axisA])*(c[axisB]-a[axisB])-(b[axisB]-a[axisB])*(c[axisA]-a[axisA]))<1e-12)continue;
       indices.push(vertex(a),vertex(b),vertex(c));
     }
   }
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.setIndex(indices);g.computeBoundingSphere();source.dispose();mesh.geometry=g;
-  mesh.userData.hasRecessedLampOpenings=true;
+  if(role==='lamp')mesh.userData.hasRecessedLampOpenings=true;
+  else mesh.userData.surfaceOpenings={role,axes:[...axes],count:openings.length};
   if(detail){
     const build=detail.build;
-    detailGeometry(mesh,quality=>{const proxy={geometry:build(quality),userData:{}};cutSurfaceOpenings(proxy,openings);return proxy.geometry;});
+    detailGeometry(mesh,quality=>{const proxy={geometry:build(quality),userData:{}};cutSurfaceOpenings(proxy,openings,{axes,role});return proxy.geometry;});
   }
 }
 
@@ -291,6 +300,20 @@ function recessedLamp(parent,outline,materials){
     const rim=grid(parent,materials.black,(u,v)=>{const x=lerp(lerp(a[0],b[0],v),lerp(ia[0],ib[0],v),u),z=lerp(lerp(a[1],b[1],v),lerp(ia[1],ib[1],v),u);return[x,bodySurfaceY(x,z)-u*.025,z];},4,24,false,'recessed headlamp bevel');rim.castShadow=false;
   }
   const floor=bonnetTriangle(parent,inner,materials.black,-.025,'triangular headlight housing');floor.castShadow=false;
+  // The official front photograph concentrates light at the short upper edge.
+  // A recessed prismatic guide and opaque brow carry that silhouette. The three
+  // underlying projectors remain as inferred internals, below the bright edge.
+  const upperA=inner[2],upperB=inner[1];
+  for(const [mat,start,end,depth,name] of [
+    [materials.black,-.018,.060,.002,'headlamp upper opaque eyebrow'],
+    [materials.lampGuide,.065,.145,.004,'headlamp continuous upper edge light guide'],
+    [materials.lampGuide,.145,.205,.009,'headlamp prismatic downward return']]){
+    const strip=grid(parent,mat,(u,v)=>{
+      const edgeX=lerp(upperA[0],upperB[0],v),edgeZ=lerp(upperA[1],upperB[1],v),toward=lerp(start,end,u);
+      const x=lerp(edgeX,inner[0][0],toward),z=lerp(edgeZ,inner[0][1],toward);
+      return[x,bodySurfaceY(x,z)-depth,z];
+    },3,28,cx<0,name);strip.castShadow=false;
+  }
   // Small optical cells sit below the cover in black sockets. The former
   // five large coplanar white rectangles read as a striped sticker in the
   // captured front-light close-up. These are illustrative projector internals,
@@ -299,10 +322,10 @@ function recessedLamp(parent,outline,materials){
     const along=.22+j*.28,back=[lerp(inner[2][0],inner[1][0],along),lerp(inner[2][1],inner[1][1],along)];
     const x=lerp(back[0],inner[0][0],.14),z=lerp(back[1],inner[0][1],.14),delta=.0005;
     const normal=new THREE.Vector3(-(bodySurfaceY(x+delta,z)-bodySurfaceY(x-delta,z))/(2*delta),1,-(bodySurfaceY(x,z+delta)-bodySurfaceY(x,z-delta))/(2*delta)).normalize();
-    const cell=new THREE.Group();cell.position.set(x,bodySurfaceY(x,z)-.021,z);cell.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),normal);parent.add(cell);
+    const cell=new THREE.Group();cell.position.set(x,bodySurfaceY(x,z)-.028,z);cell.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),normal);parent.add(cell);
     cylinder(cell,.0165,.0155,.013,materials.black,[0,0,0],'z',18,'recessed projector socket');
     ring(cell,.0125,.002,materials.chrome,[0,0,.006],'z',22,'projector reflector bevel');
-    const emitter=addMesh(cell,new THREE.CircleGeometry(.0105,20),materials.lampEmitter,'individual LED projector');emitter.position.z=.0065;emitter.castShadow=false;
+    const emitter=addMesh(cell,new THREE.CircleGeometry(.0105,20),materials.lampEmitter,'individual LED projector behind upper guide');emitter.position.z=.0065;emitter.castShadow=false;
     const dome=addMesh(cell,new THREE.SphereGeometry(.012,16,6,0,TAU,0,PI/2),materials.lens,'convex projector optic');
     dome.rotation.x=PI/2;dome.scale.y=.22;dome.position.z=.008;dome.castShadow=false;
   }
@@ -562,40 +585,46 @@ function buildSuspension(parent,wheel,materials){
   update();return {group,update};
 }
 
-function buildCockpit(cabin,mats){
+function buildCockpit(cabin,mats,{official=false}={}){
   box(cabin,1.40,.026,1.67,mats.interior,[0,-.095,-.18],.015,'continuous cabin floor');
   box(cabin,1.38,.30,.075,mats.interior,[0,.066,-.75],.025,'cockpit rear bulkhead');
   const cx=-.36;
+  for(const seatX of official?[-.36,.36]:[-.36]){
+    const cx=seatX;
   box(cabin,.39,.065,.48,mats.interior,[cx,-.055,-.15],.028,'sculpted bucket seat shell');
   const cushion=(u,v)=>[cx+u*.204,-.018+.042*Math.abs(u)**3+.009*Math.cos(v*PI),lerp(.080,-.360,v)];
   const back=(u,v)=>{
     const w=.198-.066*smoothstep(.66,1,v),y=lerp(.015,.495,v),z=-.365-.187*v+.043*u*u;
     return[cx+u*w,y,z];
   };
-  for(const [a,b,mat] of [[-1,-.67,mats.interiorTrim],[-.67,.67,mats.upholstery],[.67,1,mats.interiorTrim]]){
+  for(const [a,b,mat] of [[-1,-.67,official?mats.seatBolster:mats.interiorTrim],[-.67,.67,official?mats.seatFabric:mats.upholstery],[.67,1,official?mats.seatBolster:mats.interiorTrim]]){
     grid(cabin,mat,(u,v)=>cushion(lerp(a,b,u),v),12,20,false,'bucket seat contoured cushion');
     grid(cabin,mat,(u,v)=>back(lerp(a,b,u),v),12,28,false,'bucket seat sculpted backrest');
   }
   for(const side of [-1,1]){
     const seam=[];for(let i=0;i<=32;i++){const p=back(side*.67,i/32);p[2]+=.0015;seam.push(p);}curve(cabin,seam,.0008,mats.stitch,'seat bolster stitch');
-    const strap=grid(cabin,mats.black,(u,v)=>{
+    if(!official){const strap=grid(cabin,mats.black,(u,v)=>{
       const y=lerp(.415,.015,v),x=cx+side*.078+lerp(-.014,.014,u),z=lerp(-.506,-.134,v)+.003;
       return[x,y,z];
-    },2,14,false,'flat woven shoulder harness');strap.material.side=THREE.DoubleSide;
+    },2,14,false,'flat woven shoulder harness');strap.material.side=THREE.DoubleSide;}
   }
-  box(cabin,.046,.020,.036,mats.chrome,[cx,.010,-.125],.005,'harness quick release buckle');
+  if(!official){
+    box(cabin,.046,.020,.036,mats.chrome,[cx,.010,-.125],.005,'harness quick release buckle');
+    for(const side of [-1,1])curve(cabin,[[cx+side*.16,-.018,-.25],[cx+side*.085,.016,-.15],[cx,.020,-.125]],.012,mats.black,'experimental four-point lap belt',false);
+  }
+  }
   for(const side of [-1,1]){
     grid(cabin,mats.interior,(u,v)=>{
       const z=lerp(.49,-.72,v),y=lerp(-.025,.238,u),x=side*(.748+.018*Math.sin(v*PI)-.018*Math.sin(u*PI));return[x,y,z];
     },8,24,side<0,'sculpted inner door card');
-    curve(cabin,[[side*.745,.205,.43],[side*.746,.187,-.15],[side*.733,.143,-.61]],.020,mats.interiorTrim,'door armrest insert');
+    curve(cabin,[[side*.745,.205,.43],[side*.746,.187,-.15],[side*.733,.143,-.61]],.020,official?mats.seatBolster:mats.interiorTrim,'door armrest insert');
     curve(cabin,[[side*.744,.186,.39],[side*.744,.167,-.14],[side*.732,.122,-.59]],.0021,mats.cabinRed,'subtle red door ambient strip');
     box(cabin,.021,.021,.070,mats.chrome,[side*.734,.153,-.33],.004,'interior door release');
   }
-  const dash=box(cabin,1.42,.10,.25,mats.upholstery,[0,.192,.48],.040,'stitched dashboard brow');dash.rotation.x=.06;
+  const dash=box(cabin,1.42,.10,.25,official?mats.headlining:mats.upholstery,[0,.192,.48],.040,'stitched dashboard brow');dash.rotation.x=.06;
   box(cabin,1.34,.011,.030,mats.black,[0,.164,.338],.004,'full width dash ventilation slot');
   for(const side of [-1,1])box(cabin,.19,.014,.033,mats.carbon,[side*.53,.163,.332],.004,'flush dash air vent');
-  for(const side of [-1,1]){
+  if(!official)for(const side of [-1,1]){
     const instrument=new THREE.Group();instrument.position.set(side*.51,.272,.429);instrument.rotation.x=-.15;cabin.add(instrument);
     box(instrument,.205,.072,.013,mats.black,[0,0,0],.007,'forward auxiliary display bezel');
     box(instrument,.190,.058,.002,mats.screen,[0,0,-.008],.003,'forward auxiliary driving display');
@@ -613,6 +642,18 @@ function buildCockpit(cabin,mats){
   for(const side of [-1,1]){
     box(steering,.053,.012,.016,mats.chrome,[side*.073,.012,-.012],.003,'steering spoke trim');
     cylinder(steering,.012,.012,.006,mats.black,[side*.078,.025,-.024],'z',16,'steering scroll control');
+  }
+  if(official){
+    // Only public front-cabin surfaces are reconstructed. Hidden crash beams,
+    // airbags and seat mechanisms are deliberately not presented as OEM data.
+    box(cabin,.185,.026,.39,mats.seatBolster,[0,.108,-.20],.012,'two-seat study centre armrest');
+    box(cabin,.143,.011,.128,mats.black,[0,.105,.025],.006,'two-seat study covered console well');
+    for(const side of [-1,1]){
+      curve(cabin,[[side*.67,.266,.48],[side*.579,.493,.17],[side*.565,.603,-.20],[side*.566,.601,-.63]],.024,mats.headlining,'photograph-study inner roof rail');
+      grid(cabin,mats.seatBolster,(u,v)=>[side*(.735-.018*Math.sin(u*PI)),lerp(.076,.183,u),lerp(.43,-.61,v)],5,20,side>0,'photograph-study door shoulder insert');
+      box(cabin,.23,.025,.165,mats.headlining,[side*.37,.576,.04],.012,'photograph-study sun visor');
+    }
+    box(cabin,1.15,.026,.054,mats.headlining,[0,.604,-.66],.012,'photograph-study rear headlining crossmember');
   }
   // Attach the mirror below the windscreen. Its old .612 m anchor at
   // z=.250 pierced the glass canopy and appeared as an exterior black lump.
@@ -711,13 +752,16 @@ function nozzleGeometry(parent,materials,name) {
   return {root,level:0};
 }
 
-export function createRoadster({quality:initialQuality='high'}={}) {
+export function createRoadster({quality:initialQuality='high',inspection=false,displayConfiguration='experimental'}={}) {
   const group=new THREE.Group();group.name='Tesla Roadster — 2026 exterior study';
   group.userData={type:'independent parametric visual reconstruction',units:'metres',forward:'+Z',reference:'https://www.tesla.com/roadster',dimensionsAssumed:true};
   const shell=new THREE.Group();shell.name='exterior body panels';group.add(shell);
   const underbody=new THREE.Group();underbody.name='underbody and cold-gas equipment';group.add(underbody);
   const equipment=new THREE.Group();equipment.name='illustrative internal equipment';group.add(equipment);
   const cabin=new THREE.Group();cabin.name='single-seat cockpit';group.add(cabin);
+  const officialCabin=inspection?new THREE.Group():null;
+  if(officialCabin){officialCabin.name='two-seat official-photograph cabin study';officialCabin.userData={seatCount:2,source:'Tesla Roadster Carousel Slide 4',hiddenStructure:'not reconstructed as OEM facts'};group.add(officialCabin);}
+  const experimentalTail=new THREE.Group();experimentalTail.name='experimental rear installation supports';underbody.add(experimentalTail);
   const wheelsRoot=new THREE.Group();wheelsRoot.name='four suspension uprights';group.add(wheelsRoot);
   const transparentMaterials=[];
   const mats={
@@ -728,10 +772,10 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     seam:material(0x060a0c,.05,.72),
     rubber:material(0x171a1c,0,.85),
     sidewall:material(0x25292b,0,.78),
-    wheelDark:material(0x20272e,.78,.29,{side:THREE.DoubleSide}),
-    wheelSilver:material(0xb1bac0,.88,.25,{side:THREE.DoubleSide}),
-    wheelBarrel:material(0x252a30,.7,.32),
-    rotor:material(0x5f6267,.86,.42),
+    wheelDark:material(0x151a20,.18,.40,{side:THREE.DoubleSide}),
+    wheelSilver:material(0xa6afb5,.86,.33,{side:THREE.DoubleSide}),
+    wheelBarrel:material(0x161c21,.24,.56),
+    rotor:material(0x68737a,.78,.54),
     chrome:material(0xa3b4bb,.93,.18),
     nozzle:material(0x998173,.82,.29,{side:THREE.DoubleSide}),
     caliper:material(0xb3583e,.52,.32),
@@ -741,6 +785,11 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     interior:material(0x262829,.04,.79),
     interiorTrim:material(0x34393d,.02,.86),
     upholstery:material(0x42494c,.01,.90),
+    seatFabric:material(0xbec4c4,.0,.94,{side:THREE.DoubleSide}),
+    seatBolster:material(0xcdd1cf,.0,.69,{side:THREE.DoubleSide}),
+    headlining:material(0x626970,.0,.95),
+    lampGuide:material(0xe0e9ec,.0,.29,{emissive:0xdcebf1,emissiveIntensity:1.7,toneMapped:true,side:THREE.DoubleSide}),
+    tailMount:material(0x343d43,.23,.56,{side:THREE.DoubleSide}),
     stitch:material(0x797e80,.01,.82),
     screen:material(0x080f17,.12,.16,{emissive:0x0a1b28,emissiveIntensity:.32}),
     screenInk:material(0x8ba8b8,.03,.40,{emissive:0x285268,emissiveIntensity:.3}),
@@ -766,6 +815,9 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   for(const mat of transparentMaterials)mat.userData.exteriorOpacity=mat.opacity;
   for(const [name,mat] of Object.entries(mats)){mat.forceSinglePass=true;mat.name='Roadster / '+name.replace(/[A-Z]/g,c=>' '+c.toLowerCase());}
   mats.coverLens.userData.opticalAssumption='Illustrative clear polycarbonate cover; one-sided outward surface, ior 1.49, alpha approximation without refraction.';
+  mats.wheelDark.userData.opticalAssumption='Dark coated alloy: dielectric coating dominates the diffuse/rough reflection; not bare polished metal.';
+  mats.wheelSilver.userData.opticalAssumption='Exposed satin machined aluminium study, separated from coated spokes and grey brake rotor; no measured OEM BRDF.';
+  mats.lampGuide.userData.opticalAssumption='Upper-edge visible lighting pattern reconstructed from official front photograph; internal light-guide optics are inferred.';
   mats.paint.userData.opticalAssumption='Satin silver metallic base + dielectric clearcoat; visual estimate, not Tesla measured reflectance.';
   mats.glass.userData.opticalAssumption='Neutral smoked dielectric glazing with .94 exterior opacity; alpha surface approximation, no optical refraction pass. Cabin is an illustrative dark cockpit, not a measured Tesla interior.';
   // The weave map modulates the carbon base colour around a light neutral.
@@ -970,10 +1022,15 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   for(const side of [-1,1])for(let j=0;j<3;j++)box(underbody,.010,.122,.018,mats.black,[side*(.474+j*.047),-.310,2.307],.003,'front intake fin');
 
   // Rear valance, continuous red blade, four main cold-gas nozzles and diffuser.
-  grid(underbody,mats.carbon,(u,v)=>{
-    const y=lerp(.219,-.423,v),w=lerp(.942,.827,smoothstep(.55,1,v)),x=lerp(-w,w,u),z=-2.309+.025*(Math.abs(x)/w)**4+.018*v;
-    return[x,y,z];
+  const rearValanceZ=(x,y)=>{const v=(.219-y)/.642,w=lerp(.942,.827,smoothstep(.55,1,v));return-2.309+.025*(Math.abs(x)/w)**4+.018*v;};
+  const rearValance=grid(underbody,mats.carbon,(u,v)=>{
+    const y=lerp(.219,-.423,v),w=lerp(.942,.827,smoothstep(.55,1,v)),x=lerp(-w,w,u);
+    return[x,y,rearValanceZ(x,y)];
   },48,24,false,'contoured rear carbon valance');
+  // The old uncut back panel crossed the mouths of the hollow nozzle bells.
+  // Cut four genuine apertures; the surrounding returns meet this same surface.
+  const rearMountApertures=Array.from({length:4},(_,j)=>Array.from({length:24},(_,k)=>{const a=k*TAU/24;return[(j-1.5)*.32+.113*Math.cos(a),-.035+.113*Math.sin(a)];}));
+  cutSurfaceOpenings(rearValance,rearMountApertures,{axes:[0,1],role:'rear-port'});
   // Official rear imagery has a dark lower valance underneath the red
   // optical strip. Painted corner returns, rather than a white full-width
   // apron, preserve the floating deck and the width of the exposed diffuser.
@@ -1008,6 +1065,32 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     mergeStaticMeshes(fan);
     n.fan=fan;
   }
+  // All four visible outlets stay at the original centres and retain the same
+  // throat / lip radii. This mounting architecture surrounds the existing ports;
+  // it adds no actuator, force, or fictitious independent gas circuit.
+  for(let j=0;j<4;j++){
+    const x=(j-1.5)*.32;
+    // Public rear photographs also show the four round ports. These shared
+    // returns close the actual valance apertures in both inspection identities;
+    // only the inferred cassette supports below belong to the experiment.
+    const shield=grid(underbody,mats.carbon,(u,v)=>{
+      const angle=v*TAU,r=lerp(.080,.114,u),px=x+r*Math.cos(angle),py=-.035+r*Math.sin(angle);
+      return[px,py,lerp(-2.323,rearValanceZ(px,py)-.0008,u*u)];
+    },4,32,true,'recessed cold-gas mounting pocket');
+    shield.userData.portCentre=[x,-.035,-2.322];
+    ring(underbody,.079,.003,mats.nozzle,[x,-.035,-2.325],'z',32,'unchanged-port thermal isolation edge');
+    for(const side of [-1,1])box(experimentalTail,.026,.115,.030,mats.tailMount,[x+side*.119,-.112,-2.310],.004,'tail cassette support web');
+    for(const dx of [-.09,.09])cylinder(experimentalTail,.006,.006,.006,mats.nozzle,[x+dx,.052,-2.321],'z',8,'captive tail cassette fastener');
+  }
+  box(experimentalTail,1.38,.035,.045,mats.tailMount,[0,-.129,-2.303],.005,'continuous rear module support sill');
+  for(const side of [-1,1]){
+    grid(experimentalTail,mats.tailMount,(u,v)=>{
+      const x=side*lerp(.668,.810,u),y=lerp(.119,-.356,v);
+      return[x,y,-2.311+.027*u+.010*Math.sin(v*PI)];
+    },5,16,side<0,'rear installation tapered cheek');
+    box(experimentalTail,.016,.232,.040,mats.carbon,[side*.665,-.260,-2.308],.004,'fan module structural boundary');
+  }
+  mergeStaticMeshes(experimentalTail);
   curve(underbody,[[-.660,-.141,-2.348],[-.682,-.174,-2.353],[-.682,-.345,-2.351],[-.623,-.395,-2.341],[.623,-.395,-2.341],[.682,-.345,-2.351],[.682,-.174,-2.353],[.660,-.141,-2.348]],.012,mats.black,'recessed four-fan module frame');
   for(let j=0;j<5;j++)polygon(underbody,[[(j-2)*.323,-.434,-2.351],[(j-2)*.323,-.152,-2.32],[(j-2)*.323,-.273,-1.81],[(j-2)*.323,-.444,-1.89]],mats.carbon,'rear diffuser strake',true);
   solidXZ(underbody,[[-.848,-2.36],[.848,-2.36],[.835,-1.86],[-.835,-1.86]],.022,-.422,mats.carbon,'rear diffuser floor');
@@ -1044,6 +1127,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     curve(equipment,[[side*.28,-.004,-1.73],[side*.58,-.066,-1.77],[side*.63,-.147,-.40],[side*.66,-.145,.91]],.012,mats.copper,'gas supply manifold');
   }
   buildCockpit(cabin,mats);
+  if(officialCabin){buildCockpit(officialCabin,mats,{official:true});mergeStaticMeshes(officialCabin);}
   equipment.visible=false;
 
   const wheels=[buildWheel(wheelsRoot,-1,1.42,mats),buildWheel(wheelsRoot,1,1.42,mats),buildWheel(wheelsRoot,-1,-1.42,mats),buildWheel(wheelsRoot,1,-1.42,mats)];
@@ -1054,11 +1138,11 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   mergeStaticMeshes(underbody,false);
   // Tiny gaps and luminous lenses do not cast extra stair-stepped shadows onto
   // the adjacent body. The actual surrounding body still casts full shadows.
-  shell.traverse(o=>{if(o.isMesh&&[mats.seam,mats.black,mats.whiteLight,mats.lampEmitter,mats.tailLight,mats.lens,mats.coverLens].includes(o.material))o.castShadow=false;});
+  shell.traverse(o=>{if(o.isMesh&&[mats.seam,mats.black,mats.whiteLight,mats.lampGuide,mats.lampEmitter,mats.tailLight,mats.lens,mats.coverLens].includes(o.material))o.castShadow=false;});
   const jets=[];
   const jetsRoot=new THREE.Group();jetsRoot.name='simulated force application nozzles';group.add(jetsRoot);
   const jetExhaust=new THREE.Vector3(),shadowDefaults=new WeakMap();
-  let time=0,cutaway=false,wingExtension=0,quality='high',geometryQuality='high',projectedPixels=null;
+  let time=0,cutaway=false,wingExtension=0,quality='high',geometryQuality='high',projectedPixels=null,displayMode='experimental',lampMode='low-beam';
   const viewPoint=new THREE.Vector3();
 
   function applyProfileObjects(root){
@@ -1079,7 +1163,12 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     const anisotropy=geometryQuality==='balanced'?2:8;
     if(mats.carbon.map.anisotropy!==anisotropy){mats.carbon.map.anisotropy=anisotropy;mats.carbon.map.needsUpdate=true;}
     for(const s of suspensions)s.group.visible=geometryQuality!=='balanced'||cutaway;
-    cabin.visible=geometryQuality!=='balanced'||cutaway;
+    cabin.visible=displayMode==='experimental'&&(geometryQuality!=='balanced'||cutaway||inspection);
+    if(officialCabin)officialCabin.visible=displayMode==='official-study';
+    equipment.visible=cutaway&&displayMode==='experimental';
+    chamber.root.visible=displayMode==='experimental';
+    experimentalTail.visible=displayMode==='experimental';
+    jetsRoot.visible=displayMode==='experimental';
     for(const wheel of wheels)wheel.spin.traverse(o=>{
       if(o.isLineSegments||[mats.sidewall,mats.seam,mats.chrome].includes(o.material))o.visible=geometryQuality!=='balanced'||cutaway;
     });
@@ -1167,12 +1256,12 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     else{wing.position.set(0,.325+wingExtension*.30,-2.065);wing.rotation.x=-wingExtension*.25;}
     wing.userData.deployment=wingExtension;wing.userData.source=hasPhysicalPose?'telemetry.wing.position/incidenceRad':'telemetry.wing.deployment';
     for(const strut of wingStruts){strut.scale.y=1+wingExtension*2.5;strut.position.y=.30+wingExtension*.15;}
-    mats.tailLight.emissiveIntensity=brake>.02?2.4:1.25;
+    mats.tailLight.emissiveIntensity=brake>.02?2.4:lampMode==='off'?0:1.25;
   }
 
   function setColor(color) {mats.paint.color.set(color);mats.balancedPaint.color.copy(mats.paint.color);}
   function setCutaway(enabled) {
-    cutaway=!!enabled;equipment.visible=cutaway;
+    cutaway=!!enabled;equipment.visible=cutaway&&displayMode==='experimental';
     for(const mat of transparentMaterials) {
       const glass=mat===mats.glass||mat===mats.balancedGlass;
       mat.transparent=cutaway||glass;mat.opacity=cutaway?(glass?.08:.17):mat.userData.exteriorOpacity;
@@ -1180,6 +1269,23 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     }
     chamber.roof.visible=!cutaway;
     setQuality(quality);
+  }
+  function setDisplayConfiguration(value){
+    if(!['experimental','official-study'].includes(value))throw new RangeError('Unknown vehicle display configuration.');
+    if(value==='official-study'&&!inspection)throw new Error('The two-seat study is inspection-only; it does not rebuild mass, inertia or collision.');
+    displayMode=value;group.userData.displayConfiguration=value;group.userData.displayOnly=inspection;
+    group.userData.physicsIdentity='unchanged experimental vehicle; display selection does not write the simulation';
+    applyDisplayProfile(geometryQuality);return displayMode;
+  }
+  function setLampMode(value){
+    if(!['off','drl','low-beam'].includes(value))throw new RangeError('Unknown headlamp state.');
+    lampMode=value;
+    mats.whiteLight.emissiveIntensity=value==='off'?0:value==='drl'?1.0:2.4;
+    mats.lampGuide.emissiveIntensity=value==='off'?0:value==='drl'?1.15:1.9;
+    mats.lampEmitter.emissiveIntensity=value==='low-beam'?.44:0;
+    mats.tailLight.emissiveIntensity=value==='off'?0:1.25;
+    group.userData.lampMode=value;
+    return lampMode;
   }
   function dispose() {
     const geometries=new Set(),materials=new Set(),textures=new Set();
@@ -1192,7 +1298,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());
   }
   group.userData.pressureChamber={...chamber.root.userData};
-  setQuality(initialQuality);
-  return {group,update,setColor,setCutaway,setQuality,setViewBudget,getRenderCost,get quality(){return quality;},dispose,wheels,materials:mats,wing,chamber,suspensions};
+  setQuality(initialQuality);setDisplayConfiguration(displayConfiguration);setLampMode('low-beam');
+  return {group,update,setColor,setCutaway,setQuality,setViewBudget,getRenderCost,setDisplayConfiguration,setLampMode,get displayConfiguration(){return displayMode;},get lampMode(){return lampMode;},get quality(){return quality;},dispose,wheels,materials:mats,wing,chamber,suspensions};
 }
 

@@ -4,7 +4,7 @@ import {readFileSync,writeFileSync,mkdtempSync,openSync,closeSync,rmSync} from '
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 const root=new URL('../',import.meta.url),read=p=>JSON.parse(readFileSync(new URL(p,root),'utf8'));
-function run(path,args=[],nodeArgs=[]){
+function run(path,args=[],nodeArgs=[],runtime=process.execPath){
   // Regular files preserve actual child output when a managed runner denies
   // pipe handles. An execution error or nonzero exit still fails the gate.
   const directory=mkdtempSync(join(tmpdir(),'roadster-validation-'));
@@ -12,7 +12,7 @@ function run(path,args=[],nodeArgs=[]){
   let outFd,errFd;
   try{
     outFd=openSync(stdoutPath,'w');errFd=openSync(stderrPath,'w');
-    const result=spawnSync(process.execPath,[...nodeArgs,path,...args],{cwd:root,stdio:['ignore',outFd,errFd]});
+    const result=spawnSync(runtime,[...nodeArgs,path,...args],{cwd:root,stdio:['ignore',outFd,errFd]});
     const stdout=readFileSync(stdoutPath,'utf8'),stderr=readFileSync(stderrPath,'utf8');
     if(result.error||result.status!==0){process.stdout.write(stdout);process.stderr.write(stderr);throw new Error(path+' failed',{cause:result.error});}
     console.log('PASS '+path);return stdout;
@@ -62,6 +62,17 @@ const renderPrograms313=run('tests/render-program-diagnostics-3.13.test.mjs');
 const flip313=run('tests/x-flip-3.13.test.mjs');
 const surfaces313=run('tests/visual-quality-3.13.test.mjs');
 const history313=run('tests/history-compatibility-3.13.test.mjs');
+const framebuffer314=run('tests/framebuffer-matrix-3.14.test.mjs');
+const controls314=run('tests/physics-controls-3.14.test.mjs');
+const camera314=run('tests/camera-clearance-3.14.test.mjs');
+const contacts314=run('tests/contact-regressions-3.14.test.mjs');
+const vehicle314=run('tests/vehicle-display-3.14.test.mjs');
+const vehicleCapture314=run('tests/vehicle-study-capture-3.14.test.mjs');
+const city314=run('tests/city-continuity-3.14.test.mjs');
+const research314=run('tests/research-platform-3.14.test.mjs');
+run('tests/clearance-cpu-3.14.mjs');
+if(process.env.TRIM_ORACLE_PYTHON)run('tests/trim-independent-3.14.py',[],[],process.env.TRIM_ORACLE_PYTHON);
+
 const visualStructure=run('qa/visual-upgrade-check.mjs');
 const render=run('tests/render-performance.test.mjs');
 const probeSun=run('tests/local-probe-sun.test.mjs');
@@ -76,10 +87,12 @@ const payloads311=run('tests/repository-payloads.test.mjs');
 run('scripts/check-static.mjs',[],['--experimental-vm-modules']);
 // Optional tools are explicitly supplied by the caller; validation never installs
 // dependencies or substitutes these DOM/GLSL checks for actual WebGL acceptance.
+let boundaries314=null;
 if(process.env.JSDOM_MODULE_PATH){
+  boundaries314=run('tests/research-boundaries-3.14.test.mjs',[process.env.JSDOM_MODULE_PATH]);
   run('qa/same-page-ui-check.mjs',[],['--experimental-vm-modules']);
   run('qa/same-page-ui-check.mjs',['--graphics-unavailable'],['--experimental-vm-modules']);
-  for(const path of ['qa/research-panel-dom-check.mjs','qa/experiment-console-dom-check.mjs','qa/research-workflow-3.10-check.mjs','qa/research-robustness-3.11-dom-check.mjs','qa/research-recovery-grid-3.12-dom-check.mjs','qa/vehicle-inspection-3.10-dom-check.mjs'])run(path,[process.env.JSDOM_MODULE_PATH]);
+  for(const path of ['qa/research-panel-dom-check.mjs','qa/experiment-console-dom-check.mjs','qa/research-workflow-3.10-check.mjs','qa/research-robustness-3.11-dom-check.mjs','qa/research-recovery-grid-3.12-dom-check.mjs','qa/vehicle-inspection-3.10-dom-check.mjs','qa/research-safety-3.14-dom-check.mjs'])run(path,[process.env.JSDOM_MODULE_PATH]);
 }
 if(process.env.GLSLANG_VALIDATOR){
   run('scripts/validate-city-shaders.mjs',['--validatorPath',process.env.GLSLANG_VALIDATOR,'--compareBaseline']);
@@ -89,6 +102,16 @@ const report=read('dist/validation.json'),vehicle=read(`qa/vehicle-geometry-${RE
 const passChecks=text=>[...text.matchAll(/PASS: (.+)/g)].map(m=>m[1]);
 report.regressions={flightControls:{status:'passed',checks:passChecks(flight)},flightPrograms:{status:'passed',checks:passChecks(programs)},windLaboratory:{status:'passed',checks:passChecks(windlab)},localReflectionSun:{status:'passed',checks:[...probeSun.matchAll(/PASS: (.+)/g)].map(m=>m[1])},exteriorMaterials:{status:'passed',checks:[...exterior.matchAll(/PASS: (.+)/g)].map(m=>m[1])},physicsCpu:{status:'passed',checks:[...physicsCpu.matchAll(/PASS: (.+)/g)].map(m=>m[1])},cityRenderBudget:{status:'passed',checks:read(`qa/render-budget-${REPORT_VERSION}.json`).checks},poseHold:{status:'passed',checks:[...hold.matchAll(/PASS: (.+)/g)].map(m=>m[1])},renderPerformance:{status:'passed',checks:[...render.matchAll(/PASS: (.+)/g)].map(m=>m[1])},researchStudy:{status:'passed',checks:[...study.matchAll(/PASS: (.+)/g)].map(m=>m[1])},researchDynamics:{status:'passed',checks:[...research.matchAll(/PASS: (.+)/g)].map(m=>m[1])},cityArchitecture:{status:'passed',checks:read(`qa/city-architecture-${REPORT_VERSION}.json`).checks},airStabilization:{status:'passed',checks:[...air.matchAll(/PASS: (.+)/g)].map(m=>m[1])},indirectLighting:{status:'passed',checks:[...indirect.matchAll(/PASS: (.+)/g)].map(m=>m[1])},handlingControlsAudioAndBroadphase:{status:'passed',checks:[...handling.matchAll(/PASS: (.+)/g)].map(m=>m[1])},braking:{status:'passed',checks:[...brakes.matchAll(/PASS: (.+)/g)].map(m=>m[1])},vehicleGeometry:{status:vehicle.status,checks:vehicle.tests,sweep:vehicle.sweep},cityAndSeal:{status:'passed',checks:[...city.matchAll(/PASS: (.+)/g)].map(m=>m[1])}};
 Object.assign(report.regressions,{
+  framebufferAndMatrix314:{status:'passed',checks:read('qa/framebuffer-matrix-3.14.json').checks.map(x=>typeof x==='string'?x:x.name),report:'qa/framebuffer-matrix-3.14.json',scope:'Actual Three target construction, GL-interface and archive/PNG fixtures. Target-GPU framebuffer and color draws remain required.'},
+  trimAndFailure314:{status:'passed',checks:passChecks(controls314),report:'qa/physics-controls-deepening-3.14.json',independentOracle:'qa/trim-independent-3.14.json',scope:'Bounded static wrench and preserved solver-failure states. Static feasibility is not dynamic recovery.'},
+  cameraAndClearance314:{status:'passed',checks:passChecks(camera314),report:'qa/camera-clearance-3.14.json',scope:'Actual OrbitControls and independent OBB/ray geometry. No native camera feel, visibility or recovery-height acceptance.'},
+  contactFixtures314:{status:'passed',checks:['120 Hz contact fixtures complete with bounded energy and penetration diagnostics; adverse physical outcomes retained'],fixtureOutcomeStatus:read('qa/contact-regressions-3.14.json').status,report:'qa/contact-regressions-3.14.json',scope:'Actual 120 Hz solver contact and steering fixtures with retained upsets and precondition failures; not realistic-speed obstacle certification.'},
+  vehicleDisplay314:{status:'passed',checks:read('qa/vehicle-display-3.14.json').checks.map(x=>typeof x==='string'?x:x.name),report:'qa/vehicle-display-3.14.json',scope:'Actual new geometry, material roles, display-only identity and independent nozzle-hole rays. Artistic result remains unaccepted.'},
+  vehicleCapture314:{status:'passed',checks:read('qa/vehicle-study-capture-3.14.json').checks.map(x=>typeof x==='string'?x:x.name),report:'qa/vehicle-study-capture-3.14.json',scope:'Same-condition still/video transaction and failure fixtures; synthetic capture bytes, not native images.'},
+  cityContinuity314:{status:'passed',checks:read('qa/city-continuity-3.14.json').checks.map(x=>x.name),report:'qa/city-continuity-3.14.json',scope:'Twelve-street and 113-route geometry preservation, independent SAT/rays, real instance transforms and low-detail primary masses. Native driving, pixels and performance remain pending.'},
+  boundedResearchInterface314:{status:boundaries314?'passed':'not_performed',checks:boundaries314?passChecks(boundaries314):[],report:'qa/research-boundaries-3.14.json',scope:'Data-only AST/state contracts, actual Node Worker generation/cancellation, isolated DOM error paths; not native browser/GPU execution.'},
+  researchPlatform314:{status:'passed',checks:passChecks(research314),report:'qa/research-platform-3.14.json',scope:'Isolated storage failure/quarantine transactions, bounded height AST, actual-solver same-task decisions and landing success/failure; no GPU play acceptance.'},
+
   samplerBudget313:{status:'passed',checks:passChecks(sampler313),report:`qa/sampler-budget-${REPORT_VERSION}.json`,scope:'Exact final source and offline active sampler reflection, never target-GPU acceptance.'},
   actualProgramCapture313:{status:'passed',checks:passChecks(renderPrograms313),report:`qa/render-program-diagnostics-${REPORT_VERSION}.json`,scope:'GL-interface contract tests, not a real GPU run.'},
   quickRoll313:{status:'passed',checks:passChecks(flip313),report:`qa/x-flip-${REPORT_VERSION}.json`,curves:`qa/x-flip-curves-${REPORT_VERSION}.json`,scope:'Frozen 3.9/3.12 and current actual-solver traces, finite/bench, real manual input and failure boundaries.'},

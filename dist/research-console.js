@@ -1,10 +1,15 @@
+import './research-i18n-3.14.js';
+import {WIND_LAB_DIMENSIONS} from './wind-lab-data.js';
+import {createLandingResearchPanel} from './landing-research-ui.js';
+import {PersistenceState} from './research-storage.js';
+import {compareConditions} from './research-comparison.js';
 import {createExperimentConsole} from './experiment-console.js';
 import {t as tr,onLanguageChange,localizeTree} from './i18n.js';
 import {
-  FlightProgramRunner,CONTROLLER_FIELDS,PROGRAM_SHORTCUTS,PROGRAM_LIMITS,
+  FlightProgramRunner,CONTROLLER_FIELDS,PROGRAM_SHORTCUTS,PROGRAM_LIMITS,RATE_LIMITS,
   defaultStage,defaultProgramLibrary,validateProgram,validateProgramLibrary,
   validateController,validateWind,parseProgramLibrary,loadProgramLibrary,
-  saveProgramLibrary,loadResults,saveResults,quaternionFromAttitude,
+  saveProgramLibrary,loadResults,loadResultArchive,saveResults,quaternionFromAttitude,
   quaternionErrorDeg,resultCSV,
 } from './flight-programs.js';
 
@@ -27,16 +32,17 @@ const button=(action,label,cls='')=>`<button type="button" data-rc-action="${act
 export function createResearchConsole({mount=document.body,getSim,getContext=()=> 'city',getSceneConfiguration=()=>null,onEnterLab=()=>{},onReturnCity=()=>{},onOpenStudy=()=>{},onEvent=()=>{},onToast=()=>{},onStart=()=>{},onCancel=()=>{},getLiveAvailable=()=>true,onRestoreExperiment}={}){
   const doc=mount.ownerDocument||document;let liveAvailable=getLiveAvailable(),liveReason='';
   let storage;try{storage=doc.defaultView?.localStorage;}catch{storage=null;}
-  const loaded=loadProgramLibrary(storage);let library=loaded.library,results=loadResults(storage);
+  const loaded=loadProgramLibrary(storage),loadedResults=loadResultArchive(storage);let library=loaded.library,results=loadedResults.results;const programPersistence=new PersistenceState(loaded.warning||'',loaded.protectedRaw),resultPersistence=new PersistenceState(loadedResults.warning||'',loadedResults.protectedRaw);let pendingImport=null;
   let draft=copy(library.programs[0]),selectedId=draft.id,tab='controls',opened=false,lastPaint=-Infinity,lastLiveSample=-Infinity,liveSamples=[],plotMetric='height';
   let message=loaded.warning||'',messageKind=loaded.warning?'warning':'',latestFullResult=null,selectedResults=results.slice(-2).map(r=>r.id),disposed=false;
   const shell=doc.createElement('section');shell.className='research-console';shell.hidden=true;shell.setAttribute('aria-label','风场研究控制台');
   shell.innerHTML=`
     <header class="rc-header"><div class="rc-emblem" aria-hidden="true">R<span>LAB</span></div><div><p>ROADSTER / RESEARCH</p><h2>风场实验室</h2></div><button type="button" data-rc-action="close" class="rc-close" aria-label="收起研究控制台">×</button></header>
     <div class="rc-context"><span data-rc="context">城市 · 现场试验</span><button type="button" data-rc-action="context" data-rc="context-button">进入风场实验室 ↗</button></div>
-    <nav class="rc-tabs" aria-label="研究项目"><button type="button" data-rc-tab="controls" aria-selected="true">控制与风场</button><button type="button" data-rc-tab="programs" aria-selected="false">自动流程</button><button type="button" data-rc-tab="results" aria-selected="false">流程结果</button><button type="button" data-rc-tab="experiments" aria-selected="false">记录与重放</button></nav>
-    <div class="rc-message" role="status" data-rc="message" hidden></div>
-    <div class="rc-body">
+    <p class="rc-help" data-rc="space-warning" role="status"></p>
+    <nav class="rc-tabs" aria-label="研究项目"><button type="button" data-rc-tab="controls" aria-selected="true">控制与风场</button><button type="button" data-rc-tab="programs" aria-selected="false">自动流程</button><button type="button" data-rc-tab="results" aria-selected="false">流程结果</button><button type="button" data-rc-tab="experiments" aria-selected="false">记录与重放</button><button type="button" data-rc-tab="landing" aria-selected="false">控制律 / 着陆</button></nav>
+    <div class="rc-message" role="status" data-rc="message" hidden></div><div class="rc-message" role="alert" data-rc="persistence" data-kind="warning" hidden></div><div class="rc-button-row">${button('export-protected','导出受保护流程原存档')}${button('export-session','导出当前会话完整研究成果')}</div>
+    <div class="rc-body"><section data-rc-panel="landing" hidden></section>
       <section data-rc-panel="controls">
         <div class="rc-section-title"><h3>实际状态 <span>SIMULATION</span></h3><span class="rc-state-pill" data-rc="feasibility">待采样</span></div>
         <div class="rc-telemetry"><div><span>世界高度</span><strong data-rc="height">—</strong><small>m</small></div><div><span>俯仰</span><strong data-rc="pitch">—</strong><small>°</small></div><div><span>滚转</span><strong data-rc="roll">—</strong><small>°</small></div></div>
@@ -91,18 +97,20 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
   mount.append(shell,chip);
   const $=name=>shell.querySelector(`[data-rc="${name}"]`),$$=query=>Array.from(shell.querySelectorAll(query));
   const notify=(text,kind='info')=>{message=text;messageKind=kind;$('message').textContent=text;$('message').dataset.kind=kind;$('message').hidden=!text;if(text)onToast(text,kind==='error'?7000:4200);};
-  let experiments=null;
+  let experiments=null,landing=null;
   const runner=new FlightProgramRunner({getSim,getContext,onEvent,onStart,onFinish(result){
     experiments?.finishProgram(result);latestFullResult=result;results.push(result);selectedResults=results.slice(-2).map(r=>r.id);
-    try{saveResults(storage,results);}catch(error){notify(error.message+'；请导出流程结果整库。','warning');}
+    try{saveResults(storage,results,{protectedRaw:loadedResults.protectedRaw});resultPersistence.saved();}catch(error){resultPersistence.failed(error,[result.id]);notify(error.message+'；请导出流程结果整库。','warning');}paintPersistence();
     renderResults();paintStatus();notify(`${statusNames[result.status]}：${result.reason}`,result.status==='completed'?'info':result.status==='cancelled'?'info':'warning');
   }});
   experiments=createExperimentConsole({mount:shell.querySelector('[data-rc-panel="experiments"]'),getSim,getContext,getSceneConfiguration,getLiveAvailable:()=>liveAvailable&&getLiveAvailable(),onRestoreExperiment,onBeforeRestore:reason=>{if(runner.cancel(reason))onCancel(reason);},onStart,onCancel,onStatus:()=>paintStatus(),notify,getControllerDraft:localControllerValues,storage});
+  landing=createLandingResearchPanel({mount:shell.querySelector('[data-rc-panel="landing"]'),getSim,getLiveAvailable:()=>liveAvailable&&getLiveAvailable(),onRestoreExperiment,onBeforeStart:()=>{runner.cancel('开始抗扰着陆挑战');experiments.stopAll('开始抗扰着陆挑战');},onStart,onCancel,notify,storage});
   function requireLive(){if(!liveAvailable||!getLiveAvailable()||!getSim())throw new Error(liveReason||'三维现场不可用；仍可查看历史、导出与运行数值研究');}
   function download(content,name,type='application/json'){
     const url=URL.createObjectURL(new Blob([content],{type})),a=doc.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
-  function persist(){library=saveProgramLibrary(storage,library);}
+  function paintPersistence(){const states=[['流程配置',programPersistence.snapshot()],['流程结果',resultPersistence.snapshot()]],failures=states.filter(([,s])=>s.sessionOnly);$('persistence').hidden=!failures.length;$('persistence').textContent=failures.map(([label,s])=>label+'：仅本会话 / 未保存。'+s.message).join('\n');$('persistence').dataset.persistence=JSON.stringify(Object.fromEntries(states));for(const b of $$('[data-rc-action="export-protected"]'))b.hidden=!loaded.protectedRaw&&!loadedResults.protectedRaw;localizeTree($('persistence'));}
+  function persist(candidate=library){try{const saved=saveProgramLibrary(storage,candidate,{protectedRaw:loaded.protectedRaw,expectedRaw:loaded.raw});library=saved;loaded.raw=storage.getItem('roadster-flight-programs-v1');programPersistence.saved();paintPersistence();return saved;}catch(error){programPersistence.failed(error);paintPersistence();throw error;}}
   function fieldNumbers(selector,keyName){const values={};for(const el of $$(selector)){const value=el.valueAsNumber;if(!Number.isFinite(value)||!el.checkValidity())throw new Error(`${el.closest('label')?.querySelector('span')?.textContent||keyName} 超出范围或不是有效数字`);values[el.dataset[keyName]]=value;}return values;}
   function readCurrentPose(){
     const t=getSim()?.telemetry?.();if(!t)return;const values={x:t.position.x,y:t.position.y,z:t.position.z,pitch:t.pitchDeg,roll:t.rollDeg,heading:t.headingDeg};
@@ -114,11 +122,11 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
     for(const el of $$('[data-rc-wind]'))el.value=wind?.[el.dataset.rcWind]??flowDefault[el.dataset.rcWind];
   }
   function applyController(values){validateController(values);for(const[key,value]of Object.entries(values))getSim().setParam(key,value);onEvent('research_controller_change',{values});}
-  function cancel(reason='研究流程已停止',status='cancelled'){const replayed=experiments?.stopReplay(reason,status)||false,did=runner.cancel(reason);if(did)onCancel(reason);return did||replayed;}
+  function cancel(reason='研究流程已停止',status='cancelled'){const challenge=landing?.cancel(reason)||false,replayed=experiments?.stopReplay(reason,status)||false,did=runner.cancel(reason);if(did)onCancel(reason);return did||replayed||challenge;}
   function run(program){requireLive();cancel('启动新的研究流程');const owned=experiments.startProgramRecording(program);try{runner.start(program);}catch(error){if(owned)experiments.stopRecording(error.message,'failed');throw error;}paintStatus();}
   function saveDraft(){
-    const p=validateProgram(draft),others=library.programs.filter(x=>x.id!==p.id);const candidate=validateProgramLibrary({...library,programs:[...others,p]});
-    library=saveProgramLibrary(storage,candidate);selectedId=p.id;draft=copy(p);renderPrograms();notify('流程与快捷键已保存，可在城市或实验室中运行。');
+    const p=validateProgram(draft),exists=library.programs.some(x=>x.id===p.id);const candidate=validateProgramLibrary({...library,programs:exists?library.programs.map(x=>x.id===p.id?p:x):[...library.programs,p]});
+    persist(candidate);selectedId=p.id;draft=copy(p);renderPrograms();notify('流程与快捷键已保存，可在城市或实验室中运行。');
   }
   function updateDraftHeader(){draft.name=$('program-name').value;draft.shortcut=$('program-shortcut').value||null;draft.supplyMode=$('program-supply').value;}
   function renderProgramChoices(){
@@ -135,7 +143,7 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
     const n=(label,key,min,max,step=1)=>input(label,stage[key],`data-rc-stage-field="${key}" min="${min}" max="${max}" step="${step}"`);
     let fields='';
     if(stage.type==='pose')fields=`<div class="rc-grid rc-grid-3">${n('ΔX · m','dxM',-100,100,.1)}${n('ΔY · m','dyM',-50,80,.1)}${n('ΔZ · m','dzM',-100,100,.1)}</div><label class="rc-field rc-full"><span>姿态参考</span><select data-rc-stage-field="attitude">${select([['start','保持流程起始姿态'],['custom','自定义俯仰 / 滚转 / 航向']],stage.attitude)}</select></label><div class="rc-grid rc-grid-3"${stage.attitude==='start'?' hidden':''}>${n('俯仰 · °','pitchDeg',-180,180)}${n('滚转 · °','rollDeg',-180,180)}${n('Δ航向 · °','yawDeg',-360,360)}</div><div class="rc-grid"><label class="rc-field"><span>结束条件</span><select data-rc-stage-field="exit">${select([['duration','运行指定时长'],['settled','达到稳定 / 超时终止']],stage.exit)}</select></label>${n('稳定保持 · s','settleS',.25,5,.25)}</div>`;
-    if(stage.type==='rate'){const maximum=stage.axis==='roll'?180:stage.axis==='pitch'?90:100;fields=`<div class="rc-grid"><label class="rc-field"><span>机体旋转轴</span><select data-rc-stage-field="axis">${select([['roll','滚转（Z / B）'],['pitch','俯仰（1 / 2）'],['yaw','偏航（A / D）']],stage.axis)}</select></label>${n('指令角速度 · °/s','rateDegS',-maximum,maximum,1)}</div><p class="rc-help">连续积分角速度参考，允许完整翻转；有效指令受控制器速率上限约束。阶段结束后捕获实际达到的姿态。倒置时可能无法持续悬停。</p>`;}
+    if(stage.type==='rate'){const maximum=RATE_LIMITS[stage.axis];fields=`<div class="rc-grid"><label class="rc-field"><span>机体旋转轴</span><select data-rc-stage-field="axis">${select([['roll','滚转（Z / B）'],['pitch','俯仰（1 / 2）'],['yaw','偏航（A / D）']],stage.axis)}</select></label>${n('请求角速度 · °/s','rateDegS',-maximum,maximum,1)}</div><p class="rc-help">请求范围：滚转 ±${RATE_LIMITS.roll}°/s，俯仰 ±${RATE_LIMITS.pitch}°/s，偏航 ±${RATE_LIMITS.yaw}°/s。连续积分参考；实际有效请求另受控制器速率上限约束。阶段结束后捕获实际达到的姿态。倒置时可能无法持续悬停。</p>`;}
     if(stage.type==='wind')fields=`<div class="rc-grid">${['speedMps','directionDeg','gustMps','gustPeriodS'].map((key,i)=>input(['平均风速 · m/s','气流去向 · °','阵风幅值 · m/s','阵风周期 · s'][i],stage.wind?.[key]??flowDefault[key],`data-rc-stage-wind="${key}" min="${i===3?.5:0}" max="${[30,360,20,60][i]}" step="0.5"`)).join('')}</div><p class="rc-help">该阶段保留前一控制参考，只改变风场。风速与阵风均设为 0 即静风。</p>`;
     if(stage.type==='roll')fields='<p class="rc-help">使用与 X 相同的物理自动流程。地面出发会返回地面；空中出发会返回起始高度附近。需通过净空、姿态与剩余气量预检。</p>';
     if(stage.type==='land')fields='<p class="rc-help">持续闭环下降，确认接触地面与下降速度收敛后结束。超时不会显示着陆成功。</p>';
@@ -148,14 +156,15 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
     const selected=selectedResults.map(id=>results.find(r=>r.id===id)).filter(Boolean).slice(-2);
     if(!selected.length){$('comparison').innerHTML='';return;}
     const rows=[['位置误差 RMS · m',r=>f(r.summary.rmsPositionErrorM)],['最大位置误差 · m',r=>f(r.summary.peakPositionErrorM)],['最大姿态误差 · °',r=>f(r.summary.peakAttitudeErrorDeg,1)],['目标方向最大超调 · m',r=>f(Math.max(0,...r.stages.map(s=>s.overshootM||0)))],['最后定姿段稳定时间 · s',r=>{const stage=r.stages.filter(s=>s.type==='pose').at(-1);return f(stage?.settlingTimeS);}],['推力受限采样比例',r=>r.summary.saturationFraction===null?'—':`${f(r.summary.saturationFraction*100,1)}%`],['喷口通过气量 · kg',r=>f(r.summary.gasThroughputKg)],['车载排出气量 · kg',r=>f(r.summary.onboardDischargedKg)],['外供气量 · kg',r=>f(r.summary.externalSupplyKg)],['供气模式',r=>r.supplyMode==='finite'?'有限储气':'外部持续'],['结束姿态可配平',r=>r.summary.finalFeasible===null?'未判定':r.summary.finalFeasible?'是':'否']];
-    $('comparison').innerHTML=`<table><thead><tr><th>测量指标</th>${selected.map(r=>`<th data-no-i18n>${esc(programName(r))}</th>`).join('')}</tr></thead><tbody>${rows.map(([label,value])=>`<tr><th>${label}</th>${selected.map(r=>`<td>${esc(value(r))}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="rc-help">超调沿各次位置阶跃的目标方向投影；喷出气体累计由 20 Hz 流量梯形积分得到。流程完成只表示阶段已执行，稳定与受限情况请看测量。</p>`;
+    const conditions=selected.length===2?compareConditions(selected[0],selected[1]):null;
+    $('comparison').dataset.conditions=JSON.stringify(conditions);$('comparison').innerHTML=(conditions?`<p class="rc-help">${esc(conditions.controlled?'受控比较：只有声明的控制器差异。':'描述性比较：初态 / 模型 / 风 / 气源 / 任务条件未全部匹配，不判定哪组更好。')}</p><pre class="rc-record-details" data-no-i18n>${esc(JSON.stringify(conditions,null,2))}</pre>`:'')+`<table><thead><tr><th>测量指标</th>${selected.map(r=>`<th data-no-i18n>${esc(programName(r))}</th>`).join('')}</tr></thead><tbody>${rows.map(([label,value])=>`<tr><th>${label}</th>${selected.map(r=>`<td>${esc(value(r))}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="rc-help">超调沿目标方向投影。新版主统计来自全部 120 Hz 物理步；20 Hz 曲线及历史抽稀仅供显示。每条结果的 statisticsHz 独立保留。流程完成只表示阶段已执行，稳定与受限情况请看测量。</p>`;
   }
   function paintStatus(){
-    const s=runner.getState(),experiment=experiments?.getState();const line=experiment?.recording?tr(`现场记录 · ${f(experiment.durationS,1)} / 300 s`):experiment?.replaying?tr(`原条件重放 · ${experiment.step}/${experiment.totalSteps} 步`):experiment?.numericRunning?tr('后台数值执行中 · 可停止并保留记录'):s.running?`${programName(s)} · ${s.stage}/${s.stageCount} ${tr(s.stageLabel)} · ${f(s.stageElapsedS,1)} / ${f(s.stageDurationS,1)} s`:tr('就绪 · 驾驶键可随时接管');
-    for(const el of [$('run-status'),chip.querySelector('[data-rc="chip-status"]')]){el.dataset.noI18n='';el.textContent=line;}chip.hidden=!(s.running||experiment?.recording||experiment?.replaying||experiment?.numericRunning)||opened;
+    const s=runner.getState(),experiment=experiments?.getState(),challenge=landing?.getState();const line=challenge?.running?tr('抗扰着陆挑战')+' · '+f(challenge.live.timeS,1)+' s':experiment?.recording?tr(`现场记录 · ${f(experiment.durationS,1)} / 300 s`):experiment?.replaying?tr(`原条件重放 · ${experiment.step}/${experiment.totalSteps} 步`):experiment?.numericRunning?tr('后台数值执行中 · 可停止并保留记录'):s.running?`${programName(s)} · ${s.stage}/${s.stageCount} ${tr(s.stageLabel)} · ${f(s.stageElapsedS,1)} / ${f(s.stageDurationS,1)} s`:tr('就绪 · 驾驶键可随时接管');
+    for(const el of [$('run-status'),chip.querySelector('[data-rc="chip-status"]')]){el.dataset.noI18n='';el.textContent=line;}chip.hidden=!(s.running||experiment?.recording||experiment?.replaying||experiment?.numericRunning||challenge?.running||challenge?.numericRunning)||opened;
     shell.dataset.running=String(s.running);const context=getContext()==='lab'?'lab':'city';shell.dataset.context=context;$('context').textContent=context==='lab'?'风场实验室 · 原位研究':'城市 · 现场试验';$('context-button').textContent=context==='lab'?'返回城市 ↗':'进入风场实验室 ↗';
   }
-  function setTab(name){if(!['controls','programs','results','experiments'].includes(name))return;tab=name;for(const el of $$('[data-rc-panel]'))el.hidden=el.dataset.rcPanel!==tab;for(const el of $$('[data-rc-tab]'))el.setAttribute('aria-selected',String(el.dataset.rcTab===tab));if(tab==='results')drawPlot();}
+  function setTab(name){if(!['controls','programs','results','experiments','landing'].includes(name))return;tab=name;for(const el of $$('[data-rc-panel]'))el.hidden=el.dataset.rcPanel!==tab;for(const el of $$('[data-rc-tab]'))el.setAttribute('aria-selected',String(el.dataset.rcTab===tab));if(tab==='results')drawPlot();}
   function open(name=tab){opened=true;shell.hidden=false;localizeTree(shell);doc.body.classList.add('research-open');setTab(name);paintStatus();if(getSim())update(getSim().telemetry(),0);}
   function close(){opened=false;shell.hidden=true;doc.body.classList.remove('research-open');paintStatus();}
   function localControllerValues(){return fieldNumbers('[data-rc-param]','rcParam');}
@@ -177,16 +186,18 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
       else if(action==='clear-wind'){cancel('手动恢复静风');getSim().clearWind();readSettings();onEvent('research_wind',{wind:null});notify('风场已恢复静风。');}
       else if(action==='wind-program'){const wind=validateWind(fieldNumbers('[data-rc-wind]','rcWind'));draft=validateProgram({id:uniqueId(),name:'我的风场快捷动作',shortcut:null,supplyMode:'inherit',wind:null,stages:[{type:'wind',durationS:12,wind}]});selectedId=draft.id;renderPrograms();setTab('programs');$('program-shortcut').focus();notify('已生成 12 s 风场动作；执行时沿用当前驾驶 / 姿态控制，结束恢复原风场。');}
       else if(action==='apply-controller'){cancel('手动调整控制参数');applyController(localControllerValues());notify('控制参数已实时应用。');}
-      else if(action==='save-controller'){const values=validateController(localControllerValues());library={...library,controller:values};persist();notify('控制参数已保存。换场景后先“载入已保存参数”，再“应用参数”。');}
+      else if(action==='save-controller'){const values=validateController(localControllerValues());persist({...library,controller:values});notify('控制参数已保存。换场景后先“载入已保存参数”，再“应用参数”。');}
       else if(action==='load-controller'){if(!Object.keys(library.controller).length)throw new Error('尚未保存自定义控制参数');for(const el of $$('[data-rc-param]'))if(el.dataset.rcParam in library.controller)el.value=library.controller[el.dataset.rcParam];notify('已载入保存值；点击“应用参数”后才会改变当前控制器。');}
       else if(action==='defaults-controller'){cancel('恢复控制参数');const values=Object.fromEntries(CONTROLLER_FIELDS.map(([key,,,,,,value])=>[key,value]));applyController(values);readSettings();notify('控制器参数已恢复默认值。');}
       else if(action==='new'){if(library.programs.length>=PROGRAM_LIMITS.programs)throw new Error('最多保存 16 个流程，请先删除不需要的流程');draft={id:uniqueId(),name:'我的研究流程',shortcut:null,supplyMode:'inherit',wind:null,stages:[defaultStage()]};selectedId=draft.id;renderPrograms();}
       else if(action==='duplicate'){draft={...copy(draft),id:uniqueId(),name:`${draft.name.slice(0,35)} 副本`,shortcut:null};selectedId=draft.id;renderPrograms();}
-      else if(action==='delete'){if(library.programs.length===1)throw new Error('至少保留一个流程');library={...library,programs:library.programs.filter(p=>p.id!==selectedId)};persist();draft=copy(library.programs[0]);selectedId=draft.id;renderPrograms();notify('已从此浏览器的流程库删除。');}
+      else if(action==='delete'){if(library.programs.length===1)throw new Error('至少保留一个流程');persist({...library,programs:library.programs.filter(p=>p.id!==selectedId)});draft=copy(library.programs[0]);selectedId=draft.id;renderPrograms();notify('已从此浏览器的流程库删除。');}
       else if(action==='add-stage'){if(draft.stages.length>=PROGRAM_LIMITS.stages)throw new Error('每个流程最多 12 个阶段');updateDraftHeader();draft.stages.push(defaultStage('wait'));renderPrograms();}
       else if(action==='save-program'){updateDraftHeader();saveDraft();}
       else if(action==='run'){updateDraftHeader();run(validateProgram(draft));notify('流程开始。W/A/S/D、E/Q、1/2、Z/B 或刹车会立即交还操纵权。');}
       else if(action==='export-programs'){download(JSON.stringify(validateProgramLibrary(library),null,2),'roadster-flight-programs-v1.json');notify('已导出已保存的流程库。');}
+      else if(action==='export-protected'){download(JSON.stringify({programs:loaded.protectedRaw,results:loadedResults.protectedRaw},null,2),'roadster-flight-protected-raw.json');}
+      else if(action==='export-session'){download(JSON.stringify({schema:'roadster.research-session',version:1,library,draft,pendingImport,results,persistence:{programs:programPersistence.snapshot(),results:resultPersistence.snapshot()},protectedRaw:{programs:loaded.protectedRaw,results:loadedResults.protectedRaw},liveRecords:experiments.getRecords()},null,2),'roadster-research-session.json');}
       else if(action==='export-results-all'){download(JSON.stringify({schema:'roadster.flight-results',version:1,scope:'全部流程结果，每项保持原身份、原始统计和已存曲线',results},null,2),'roadster-flight-results-all.json');}
       else if(action==='export-result'||action==='export-csv'){const result=results.find(r=>r.id===selectedResults.at(-1))||latestFullResult||results.at(-1);if(!result)throw new Error('尚无试验记录');const suffix=action==='export-csv'?'csv':'json';download(action==='export-csv'?'\uFEFF'+resultCSV(result):JSON.stringify(result,null,2),`roadster-${result.programId}-${result.id}.${suffix}`,action==='export-csv'?'text/csv;charset=utf-8':'application/json');if(result.sampling?.decimated)notify('导出的是选中历史曲线；采样间隔与原始统计来源已写入文件，不标称为完整 20 Hz。','warning');}
     }catch(error){notify(error.message,'error');}
@@ -211,7 +222,7 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
     if(target.dataset.rcResult){selectedResults=selectedResults.filter(id=>id!==target.dataset.rcResult);if(target.checked)selectedResults.push(target.dataset.rcResult);selectedResults=selectedResults.slice(-2);renderResults();}
     if(target===$('plot-metric')){plotMetric=target.value;drawPlot();}
   }
-  async function importFile(event){const file=event.target.files?.[0];if(!file)return;try{if(file.size>PROGRAM_LIMITS.importBytes)throw new Error('流程 JSON 不能大于 128 KiB');const parsed=parseProgramLibrary(await file.text());library=saveProgramLibrary(storage,parsed);draft=copy(library.programs[0]);selectedId=draft.id;renderPrograms();if(Object.keys(library.controller).length)for(const el of $$('[data-rc-param]'))if(el.dataset.rcParam in library.controller)el.value=library.controller[el.dataset.rcParam];notify('流程库已导入；车辆状态与当前参数未改变。');}catch(error){notify(error.message,'error');}finally{event.target.value='';}}
+  async function importFile(event){const file=event.target.files?.[0];if(!file)return;try{if(file.size>PROGRAM_LIMITS.importBytes)throw new Error('流程 JSON 不能大于 128 KiB');const parsed=parseProgramLibrary(await file.text());pendingImport=parsed;persist(parsed);pendingImport=null;draft=copy(library.programs[0]);selectedId=draft.id;renderPrograms();if(Object.keys(library.controller).length)for(const el of $$('[data-rc-param]'))if(el.dataset.rcParam in library.controller)el.value=library.controller[el.dataset.rcParam];notify('流程库已导入；车辆状态与当前参数未改变。');}catch(error){notify(error.message,'error');}finally{event.target.value='';}}
   shell.addEventListener('click',click);chip.addEventListener('click',click);shell.addEventListener('change',change);$('import-programs').addEventListener('change',importFile);
   function drawPlot(){
     if(!opened||tab!=='results')return;const canvas=$('plot'),ctx=canvas.getContext('2d');if(!ctx)return;
@@ -238,11 +249,12 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
   }
   function update(telemetry,dt=0){
     if(disposed||!telemetry)return;if(!liveSamples.length)captureSample(telemetry);
-    const now=typeof performance!=='undefined'?performance.now():Date.now();if(now-lastPaint<90&&dt!==0)return;lastPaint=now;experiments?.update(telemetry);paintStatus();if(!opened)return;
+    const now=typeof performance!=='undefined'?performance.now():Date.now();if(now-lastPaint<90&&dt!==0)return;lastPaint=now;experiments?.update(telemetry);landing?.update();paintStatus();if(!opened)return;
     $('height').textContent=f(telemetry.heightWorld,2);$('pitch').textContent=f(telemetry.pitchDeg,1);$('roll').textContent=f(telemetry.rollDeg,1);
     const holding=telemetry.stabilizationMode==='hold',limited=telemetry.holdFeasible===false||telemetry.manualPoseFeasible===false||telemetry.pressureLimited;
     $('feasibility').textContent=limited?'推力 / 配平受限':holding?(telemetry.holdActive?'正在物理跟踪':'等待可控状态'):'驾驶控制';$('feasibility').dataset.limited=String(limited);
     const active=runner.getState(),target=active.target?.position??telemetry.holdPositionTarget;
+    const lab=getContext()==='lab',outside=lab&&target&&(Math.abs(target.x)>24||Math.abs(target.z)>42||target.y+1.1>WIND_LAB_DIMENSIONS.clearHeight);$('space-warning').textContent=(lab?'实验室工作区 X ±24 / Z ±42 m，净高 24.1 m。':'城市现场：世界高度不等于恢复净空。')+(outside?'目标及车体包络可能越出工作区 / 净高；请求未被夹紧。':'')+' '+(telemetry.supplyMode==='bench'?'恒压外供气':'有限车载气源')+' · '+(telemetry.stabilizationMode==='hold'?'研究定姿定点':telemetry.stabilizationMode==='level'?'普通 G 水平稳定':'驾驶控制');
     $('target-line').textContent=target?`目标世界位置  X ${f(target.x,2)} / Y ${f(target.y,2)} / Z ${f(target.z,2)} m${active.effectiveRateDegS!==null&&active.effectiveRateDegS!==undefined?` · 有效角速度指令 ${f(active.effectiveRateDegS,1)}°/s`:''}`:'无研究位置参考 · 车辆按当前驾驶模式控制';
     const manual=telemetry.mode==='hover'&&telemetry.stabilizationMode==='off'&&!telemetry.maneuver,q=active.target?.quaternion??telemetry.holdQuaternionTarget??(manual?telemetry.manualQuaternionTarget:null);
     if(q){const fy=2*(q.y*q.z-q.w*q.x),fx=2*(q.x*q.z+q.w*q.y),fz=1-2*(q.x*q.x+q.y*q.y),ry=2*(q.x*q.y+q.w*q.z),uy=1-2*(q.x*q.x+q.z*q.z);$('target-attitude').textContent=`目标姿态  俯仰 ${f(Math.asin(Math.max(-1,Math.min(1,fy)))*180/Math.PI,1)}° / 滚转 ${f(Math.atan2(ry,uy)*180/Math.PI,1)}° / 航向 ${f((Math.atan2(fx,fz)*180/Math.PI+360)%360,1)}°`;}
@@ -250,11 +262,11 @@ export function createResearchConsole({mount=document.body,getSim,getContext=()=
     const sample=liveSamples.at(-1);$('position-error').textContent=`${f(sample?.positionErrorM)} m`;$('attitude-error').textContent=`${f(sample?.attitudeErrorDeg,1)} °`;$('allocation').textContent=f(telemetry.allocationError,3);$('flow').textContent=`${f(telemetry.massFlowKgS,2)} kg/s`;drawPlot();
   }
   function handleKey(code){if(!PROGRAM_SHORTCUTS.includes(code))return false;const program=library.programs.find(p=>p.shortcut===code);if(!program)return false;try{run(program);}catch(error){notify(error.message,'error');}return true;}
-  function onContextChange(){cancel('研究环境已切换');experiments.onContextChange();liveSamples=[];lastLiveSample=-Infinity;readSettings();readCurrentPose();paintStatus();if(opened)if(getSim())update(getSim().telemetry(),0);}
+  function onContextChange(){cancel('研究环境已切换');landing?.onContextChange();experiments.onContextChange();liveSamples=[];lastLiveSample=-Infinity;readSettings();readCurrentPose();paintStatus();if(opened)if(getSim())update(getSim().telemetry(),0);}
   function setLiveAvailable(value,reason=''){liveAvailable=!!value;liveReason=reason;experiments.setLiveAvailable(value,reason);if(!value)cancel('三维现场不可用');for(const action of ['context','capture','apply-pose','release','apply-wind','clear-wind','apply-controller','defaults-controller','run'])for(const el of $$('[data-rc-action="'+action+'"]'))el.disabled=!liveAvailable;if(!value&&reason)notify(reason,'warning');}
-  function beforeFixedStep(fixedDt,pilotInput={}){if(experiments.getState().replaying)return experiments.beforeStep(pilotInput);const input=runner.stepInput(fixedDt,pilotInput);return experiments.beforeStep(input);}
-  renderPrograms();renderResults();readSettings();readCurrentPose();setLiveAvailable(liveAvailable);
+  function beforeFixedStep(fixedDt,pilotInput={}){if(landing?.getState().running)return landing.beforeStep(pilotInput);if(experiments.getState().replaying)return experiments.beforeStep(pilotInput);const input=runner.stepInput(fixedDt,pilotInput);return experiments.beforeStep(input);}
+  renderPrograms();renderResults();readSettings();readCurrentPose();setLiveAvailable(liveAvailable);paintPersistence();
   if(message){$('message').textContent=message;$('message').dataset.kind=messageKind;$('message').hidden=false;}
   const stopLanguage=onLanguageChange(()=>{renderProgramChoices();renderResults();paintStatus();localizeTree(shell);localizeTree(chip);drawPlot();if(getSim())update(getSim().telemetry(),0);});
-  return{open,close,toggle:()=>opened?close():open(),stepInput:beforeFixedStep,beforeFixedStep,afterFixedStep:experiments.afterStep,recordEvent:experiments.recordEvent,startRecording:experiments.startRecording,stopRecording:experiments.stopRecording,startReplay:experiments.startReplay,setLiveAvailable,getExperimentState:experiments.getState,getExperimentRecords:experiments.getRecords,needsFixedStep:()=>{const state=experiments.getState();return state.recording||state.replaying;},captureSample,update,handleKey,onContextChange,cancel,getState:()=>({...runner.getState(),experiment:experiments.getState(),open:opened,tab,context:getContext(),savedPrograms:library.programs.map(p=>({id:p.id,name:p.name,shortcut:p.shortcut})),resultCount:results.length}),dispose(){stopLanguage();experiments.dispose();cancel('控制台已关闭');close();disposed=true;shell.removeEventListener('click',click);shell.removeEventListener('change',change);chip.removeEventListener('click',click);$('import-programs').removeEventListener('change',importFile);shell.remove();chip.remove();}};
+  return{open,close,toggle:()=>opened?close():open(),stepInput:beforeFixedStep,beforeFixedStep,afterFixedStep:(t,input,dt)=>{runner.afterFixedStep?.(t,dt);experiments.afterStep(t,input,dt);landing.afterStep(t);},recordEvent:experiments.recordEvent,startRecording:experiments.startRecording,stopRecording:experiments.stopRecording,startReplay:experiments.startReplay,setLiveAvailable,getExperimentState:experiments.getState,getExperimentRecords:experiments.getRecords,getLandingRecords:landing.getRecords,needsFixedStep:()=>{const state=experiments.getState();return state.recording||state.replaying||landing.getState().running;},captureSample,update,handleKey,onContextChange,cancel,getState:()=>({...runner.getState(),experiment:experiments.getState(),landing:landing.getState(),open:opened,tab,context:getContext(),savedPrograms:library.programs.map(p=>({id:p.id,name:p.name,shortcut:p.shortcut})),resultCount:results.length,persistence:{programs:programPersistence.snapshot(),results:resultPersistence.snapshot()}}),dispose(){stopLanguage();landing.dispose();experiments.dispose();cancel('控制台已关闭');close();disposed=true;shell.removeEventListener('click',click);shell.removeEventListener('change',change);chip.removeEventListener('click',click);$('import-programs').removeEventListener('change',importFile);shell.remove();chip.remove();}};
 }

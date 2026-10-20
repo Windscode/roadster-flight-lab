@@ -1,0 +1,88 @@
+{
+  "schema": "roadster.historical-gate-first-failures",
+  "version": 1,
+  "modelVersion": "3.14.0",
+  "modelBuildId": "d51f60a0bd7861ba055ace2a4fefcf188ed475f788864b23c328d9170582ea09",
+  "scope": "Original final-aggregate / targeted-test failures retained after separating version availability from collision-contract validation. Only tests and QA changed; published fixture bytes and frozen runtime were not altered.",
+  "originalTestSourceSHA256": {
+    "tests/reproduction-verdict-3.9.test.mjs": "24cb8d38878bad76f0a7bc6f246a80baa677684b65ebf2d3926c1b768d49eec1",
+    "tests/history-compatibility-3.10.test.mjs": "7c0b8dfb989fe42f81c5c80252112b3fb3b9447707534b405e37f2297c7f77ce",
+    "tests/history-compatibility-3.11.test.mjs": "266b45967c1155e3dfc070c25f81c1d9442e3aa9c8460382a1c356081bec2f3d",
+    "tests/history-compatibility-3.13.test.mjs": "be1b5062595b8c53b1d0417b6588ca75cd6ad5976d8be9e1ce50ad9953598342"
+  },
+  "failures": [
+    {
+      "test": "tests/reproduction-verdict-3.9.test.mjs",
+      "location": "73:550",
+      "expected": "/碰撞几何已经改变/",
+      "actual": "原模型 3.8.0 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。",
+      "originalAssertionTrace": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /碰撞几何已经改变/. Input:\n\n'原模型 3.8.0 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。'\n\n    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/reproduction-verdict-3.9.test.mjs:73:550\n    at test (file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/reproduction-verdict-3.9.test.mjs:13:47)\n    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/tests/reproduction-verdict-3.9.test.mjs:72:7 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: '原模型 3.8.0 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。',\n  expected: /碰撞几何已经改变/,\n  operator: 'match',\n  diff: 'simple'\n}\n\n",
+      "reason": "The old fixture combined an unavailable 3.8 model with a changed world. In 3.14 the version-availability gate rejects first; that rejection cannot prove or disprove current-model geometry safety."
+    },
+    {
+      "test": "tests/history-compatibility-3.10.test.mjs",
+      "location": "19:46",
+      "expected": true,
+      "actual": false,
+      "assertion": "replayEligibility(original3_9).recompute === true",
+      "reason": "The 3.9-to-current test still expected the declared 3.9-to-3.13 migration to apply to 3.14."
+    },
+    {
+      "test": "tests/history-compatibility-3.11.test.mjs",
+      "location": "12:150",
+      "expected": true,
+      "actual": false,
+      "assertion": "replayEligibility(source3_9).recompute === true",
+      "reason": "The 3.9/3.10/3.11-to-current test still assumed all future destinations had a complete-state migrator."
+    },
+    {
+      "test": "tests/history-compatibility-3.13.test.mjs",
+      "location": "43:45",
+      "expected": true,
+      "actual": false,
+      "assertion": "replayEligibility(source3_12).recompute === true",
+      "reason": "The 3.12-to-3.13 migration contract was still asserted for 3.14, which adds research-height control state and changes city geometry without declaring a public historical full-state mapping."
+    }
+  ],
+  "acceptanceRevision": {
+    "notChanged": "No migrator was added and no model, geometry, state, parameter or refusal check in runtime was weakened. No public historical snapshot was relabelled to pass the current contract.",
+    "history": "Assert exact refusal messages for both exact replay and explicit recomputation; zero physical import and zero integration; original fixture and archive bytes, record identity, parameters, state and journals remain readable and exportable.",
+    "currentModel": "Generate genuine current-model physical records; independently corrupt only geometry, one parameter, or one controller-state field and require the corresponding exact error with unchanged destination and zero integration. Preserve the separate unknown-build/current-model explicit recomputation success case.",
+    "legacyEvidence": [
+      "qa/reproduction-verdict-3.13.json",
+      "qa/history-original-3.9-to-3.13.json",
+      "qa/history-compatibility-3.13.json",
+      "qa/history-compatibility-3.12-to-3.13.json"
+    ],
+    "futureGate": "Shared no-migrator assertions explicitly require MODEL_VERSION 3.14.0 so a future version cannot silently inherit this acceptance policy."
+  },
+  "targetedRerun": {
+    "status": "passed",
+    "modelBuildId": "d51f60a0bd7861ba055ace2a4fefcf188ed475f788864b23c328d9170582ea09",
+    "runtimeChanged": false,
+    "commands": [
+      {
+        "command": "node tests/reproduction-verdict-3.9.test.mjs",
+        "exitCode": 0,
+        "groups": 14,
+        "report": "qa/reproduction-verdict-3.14.json"
+      },
+      {
+        "command": "node tests/history-compatibility-3.10.test.mjs",
+        "exitCode": 0,
+        "report": "qa/history-original-3.9-to-3.14.json"
+      },
+      {
+        "command": "node tests/history-compatibility-3.11.test.mjs",
+        "exitCode": 0,
+        "report": "qa/history-compatibility-3.14.json"
+      },
+      {
+        "command": "node tests/history-compatibility-3.13.test.mjs",
+        "exitCode": 0,
+        "report": "qa/history-compatibility-3.12-to-3.14.json"
+      }
+    ],
+    "scope": "Targeted numerical and byte-preservation regressions only; not a rerun or completion claim for the full aggregate."
+  }
+}

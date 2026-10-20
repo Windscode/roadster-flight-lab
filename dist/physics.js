@@ -1,6 +1,9 @@
 import * as CANNON from './vendor/cannon-es.js';
 import {roadWheelAngle,nozzleExhaustVelocity,hoverBudget,rearWingPose,quickRollManeuverProfile,sampleRollManeuver} from './vehicle-models.js';
 import {exportSimulationState,importSimulationState} from './simulation-snapshot.js';
+import {solveStaticWrench,staticWrenchFeasible} from './trim-feasibility.js';
+import {sampleVehicleClearance,sampleQuickRollHeadroom} from './vehicle-clearance.js';
+import {resetSafetyJournal,noteSafetyInput,rememberValidStep,preserveFailure,getFailureReport,contactDiagnostics} from './simulation-safety.js';
 import {DEFAULT_OBSERVATION,observationConfiguration,measureControlState,controllerBody} from './control-observation.js';
 import {integrateWheel,regularizedSlip,lateralTireForce} from './tire-dynamics.js';
 import {CITY,CITY_COLLIDERS,CITY_LOCATIONS} from './city-data.js';
@@ -212,7 +215,11 @@ export class RoadsterSim {
     else if(!SCENARIOS[scenario])scenario='free';
     const s=scenario==='windlab'?{...WIND_LAB_SPAWN,rotation:[0,0,0]}:SCENARIOS[scenario];this.scenario=scenario;
     this.body.position.set(...s.position);this.body.quaternion.setFromEuler(...s.rotation,'XYZ');
-    this.body.velocity.setZero();this.body.angularVelocity.setZero();this.body.force.setZero();this.body.torque.setZero();
+    this.body.velocity.setZero();this.body.angularVelocity.setZero();this.body.force.setZero();this.body.torque.setZero();this.body.vlambda.setZero();this.body.wlambda.setZero();
+    // A reset starts a new contact configuration. Old manifolds can contain
+    // the state that triggered safety recovery, including non-finite impulses.
+    this.world.contacts.length=0;this.world.frictionEquations.length=0;this.world.collisionMatrix.reset();this.world.collisionMatrixPrevious.reset();
+    for(const keeper of [this.world.bodyOverlapKeeper,this.world.shapeOverlapKeeper]){keeper.current.length=0;keeper.previous.length=0;}
     this.body.previousPosition.copy(this.body.position);this.body.interpolatedPosition.copy(this.body.position);
     this.body.previousQuaternion.copy(this.body.quaternion);this.body.interpolatedQuaternion.copy(this.body.quaternion);
     this.body.aabbNeedsUpdate=true;this.body.wakeUp();this._resetMass();
@@ -234,20 +241,41 @@ export class RoadsterSim {
     this._motorForceN=0;this._regenForceN=0;this._longitudinalAcceleration=0;this._steerCentre=0;this._massFlowKgS=0;this._impulseNs=0;this._effectiveExhaustVelocity=nozzleExhaustVelocity(this.params,this.pressureBar(),this.gasTemperature);
     this.status='就绪';this._fault=null;this._thrustWanted=0;this._lastInput={};this._fallReset=false;
     this._nozzles.forEach(n=>{n.force=0;n.command=0;n.maxForce=0;});
-    this.wheelStates.forEach(w=>{w.rotation=0;w.angularVelocityRadS=0;w.contact=false;w.normalLoadN=0;w.relaxedSlip=0;w.slipRatio=0;w.absPressure=1;w.tcsFactor=1;w.absActive=false;w.tcsActive=false;w.corneringTractionActive=false;w.corneringDriveScale=1;w.wheelEnergyJ=0;w.brakeDemandN=0;w.serviceBrakeDemandN=0;w.regenBrakeDemandN=0;w.brakeTorqueNm=0;w.serviceBrakeTorqueNm=0;w.regenBrakeTorqueNm=0;w.rollingBrakeTorqueNm=0;});
+    this.wheelStates.forEach((w,i)=>{w.steer=0;w.suspensionLength=.30;w.position={x:WHEEL_LOCATIONS[i][0],y:WHEEL_LOCATIONS[i][1]-.30,z:WHEEL_LOCATIONS[i][2]};w.contactPointWorld=null;w.contactObjectId=null;w.contactNormalWorld=plain(this.body.quaternion.vmult(Y));w.slipAngle=0;w.gripUse=0;w.longitudinalForceN=0;w.lateralForceN=0;w.lateralSpeedMps=null;w.longitudinalSpeedMps=null;w.rotation=0;w.angularVelocityRadS=0;w.contact=false;w.normalLoadN=0;w.relaxedSlip=0;w.slipRatio=0;w.absPressure=1;w.tcsFactor=1;w.absActive=false;w.tcsActive=false;w.corneringTractionActive=false;w.corneringDriveScale=1;w.wheelEnergyJ=0;w.brakeDemandN=0;w.serviceBrakeDemandN=0;w.regenBrakeDemandN=0;w.brakeTorqueNm=0;w.serviceBrakeTorqueNm=0;w.regenBrakeTorqueNm=0;w.rollingBrakeTorqueNm=0;});
     this._wing={deployment:this.params.wingMode==='fixed'?this.params.wingDeployment:0,command:0,dragN:0,downforceN:0,dynamicPressurePa:0,forceBody:{x:0,y:0,z:0},...rearWingPose(this.params.wingMode==='fixed'?this.params.wingDeployment:0)};
     this._observationSeed=this._observationConfig.seed>>>0;this._observationHistory=[];this._observation=null;this._observationBody=null;
     this._gasConsumedKg=0;this._externalGasKg=0;this._brakeDissipationJ=0;this._tireDissipationJ=0;
     this._driveAccounting={torqueBudgetNm:0,requestedTorqueNm:0,postTcsTorqueNm:0,actualTorqueNm:0,mechanicalPowerLimitW:this.params.motorPower,mechanicalPowerW:0,electricalPowerW:0,mechanicalWorkJ:0,electricalWorkJ:0,powerLimited:false,airbornePolicy:this.params.tractionAssist?'unloaded-drive-cut':'equal-four-wheel-shares',shares:[0,0,0,0],brakeMechanicalWorkJ:0,liftOffBrakeMechanicalWorkJ:0,electricalRecoveredWorkJ:0};
     this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:this.params.verticalAccelerationMps2,braking:false,pilotActive:false};
     this._levelRecovery={active:false,status:'inactive',tiltErrorDeg:0,headingTargetRad:0,verticalSupportFeasible:true,torqueSaturated:false};
+    this._researchHeightControl={enabled:false,active:false,requestedAccelerationMps2:null,appliedAccelerationMps2:null,commandStep:null,expiresAtStep:null,controllerHash:null,reason:'reset',lastFault:null};
     this._hasPower=this._energyUsed<this.params.batteryKWh;this._sealQuality=0;this._sealDistanceSum=0;this._sealDistanceCount=0;
-    measureControlState(this);
+    measureControlState(this);resetSafetyJournal(this);
     return this;
   }
 
   exportState(){return exportSimulationState(this);}
-  importState(snapshot,options){return importSimulationState(this,snapshot,options);}
+  importState(snapshot,options){const result=importSimulationState(this,snapshot,options);resetSafetyJournal(this);return result;}
+  getFailureReport(){return getFailureReport(this);}
+  getContactDiagnostics(){return contactDiagnostics(this);}
+  getClearanceEstimate(options){return sampleVehicleClearance(this,options);}
+  setResearchHeightControl({accelerationMps2,step=this._stepCount,controllerHash,expiresAfterSteps=12}={}){
+    const reason=!Number.isFinite(accelerationMps2)?'non-finite-output':!Number.isInteger(step)||step!==this._stepCount?'stale-control-step':!Number.isInteger(expiresAfterSteps)||expiresAfterSteps<1||expiresAfterSteps>12?'invalid-expiry':typeof controllerHash!=='string'||controllerHash.length<1||controllerHash.length>128?'invalid-controller-identity':this.worldType!=='windlab'?'research-world-required':this.mode!=='hover'||this.stabilizationMode!=='hold'||this._maneuver?'hover-hold-required':null;
+    if(reason){this.clearResearchHeightControl(reason);this._researchHeightControl.lastFault={reason,step:this._stepCount,simTime:this.simTime};return false;}
+    const previous=this._researchHeightControl,continuous=previous.enabled&&previous.controllerHash===controllerHash;
+    this._researchHeightControl={enabled:true,active:false,requestedAccelerationMps2:accelerationMps2,appliedAccelerationMps2:continuous?previous.appliedAccelerationMps2:0,commandStep:step,expiresAtStep:step+expiresAfterSteps,controllerHash,reason:Math.abs(accelerationMps2)>6?'request-clamped':'awaiting-physical-step',lastFault:null};return true;
+  }
+  clearResearchHeightControl(reason='cleared'){
+    if(!this._researchHeightControl)return;
+    this._researchHeightControl={...this._researchHeightControl,enabled:false,active:false,appliedAccelerationMps2:null,reason:String(reason).slice(0,120)};
+  }
+  _researchHeightAcceleration(fallback,dt){
+    const state=this._researchHeightControl;if(!state.enabled)return fallback;
+    if(this._stepCount>=state.expiresAtStep){this.clearResearchHeightControl('command-expired');return fallback;}
+    const requested=clamp(state.requestedAccelerationMps2,-6,6),before=state.appliedAccelerationMps2??0;
+    state.appliedAccelerationMps2=before+clamp(requested-before,-30*dt,30*dt);state.active=true;
+    state.reason=Math.abs(state.requestedAccelerationMps2)>6?'request-clamped':Math.abs(state.appliedAccelerationMps2-requested)>1e-9?'slew-limited':'applied';return state.appliedAccelerationMps2;
+  }
   setRoadSurface(preset){if(!['dry','wet','split'].includes(preset))return false;this.params.roadSurface=preset;return true;}
   getRoadSurface(){return{preset:this.params.roadSurface,dryMu:this.params.tireMu,wetMu:this.params.tireMu*this.params.wetGripMultiplier,splitPositionX:this.params.splitMuPositionX,splitLowMuSide:'negative-world-x'};}
   _surfaceMu(point){const p=this.params;return p.tireMu*(p.roadSurface==='wet'||p.roadSurface==='split'&&point.x<p.splitMuPositionX?p.wetGripMultiplier:1);}
@@ -271,6 +299,7 @@ export class RoadsterSim {
       bodyUpDot:b.quaternion.vmult(Y).y,verticalForceUpperBoundN:verticalUpper,verticalForceReserveUpperBoundN:verticalUpper-weight,
       positiveTorqueUpperNm:{x:positive[0],y:positive[1],z:positive[2]},negativeTorqueLowerNm:{x:negative[0],y:negative[1],z:negative[2]},
       currentPoseTrimFeasible:this._holdTrimFeasible(maxes,b.quaternion),levelTargetTrimFeasible:this._holdTrimFeasible(maxes,this._levelQuaternion()),
+      currentPoseTrim:this._assessHoldTrim(maxes,b.quaternion),levelTargetTrim:this._assessHoldTrim(maxes,this._levelQuaternion()),
       allocationResidual:this._allocationError,saturatedNozzles:this._nozzles.filter(n=>n.maxForce>0&&n.command>=n.maxForce*.985).map(n=>n.id),
       boundMeaning:'independent-axis bounds; not simultaneously achievable, valve lag and allocation coupling remain'};
   }
@@ -283,7 +312,7 @@ export class RoadsterSim {
   setMode(mode) {
     if(!['drive','hover','manual'].includes(mode)) return;
     if(this.stabilizationMode==='hold')this.setStabilizationMode('level');
-    this.mode=mode;this._maneuver=null;
+    this.mode=mode;this._maneuver=null;this.clearResearchHeightControl('control-mode-changed');
     this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:this.params.verticalAccelerationMps2,braking:false,pilotActive:false};
     this._heightIntegral=0;
     this._headingTarget=this._angles().heading;
@@ -308,6 +337,7 @@ export class RoadsterSim {
       this._headingTarget=this._angles().heading;this._heightIntegral=0;this._heightJogging=false;this._stableJogging=false;
     }
     this.stabilizationMode=mode;this.airStabilization=mode!=='off';this._stabilizationActive=false;
+    if(mode!=='hold')this.clearResearchHeightControl('stabilization-mode-changed');
     this._holdActive=false;this._holdFeasible=null;this._holdStatus='inactive';
     this._holdPositionTarget=null;this._holdQuaternionTarget=null;this._poseTargetExplicit=false;this._poseTakeoffActive=false;
     // Switching off automatic levelling preserves the attitude reached now.
@@ -428,10 +458,8 @@ export class RoadsterSim {
         peakVy+=(rollAccel*Math.max(0,Math.cos(angle))-p.gravity)*step;peakY+=peakVy*step;rotationPeak=Math.max(rotationPeak,peakY);
       }
       const peakRise=launchRise+rotationPeak+1.8;
-      for(const [x,z]of [[0,0],[-1.2,-2.2],[1.2,-2.2],[-1.2,2.2],[1.2,2.2]]){
-        const above=this.traceSurface({x:b.position.x+x,y:b.position.y,z:b.position.z+z},{x:0,y:1,z:0},peakRise+1.5);
-        if(above&&above.distance<peakRise+1.2){this.status='滚转预检：快翻旋转 / 制动包络上方净空不足';return false;}
-      }
+      const overhead=sampleQuickRollHeadroom(b.position,(origin,direction,distance)=>this.traceSurface(origin,direction,distance),peakRise+1.5);
+      if(overhead.distanceM!==null&&overhead.distanceM<peakRise+1.2){this.status='滚转预检：快翻旋转 / 制动包络上方净空不足';return false;}
       // Account for takeoff, actual reference angular impulse, the predicted
       // remaining downward speed, then 1.5 s settling and 16% explicit margin.
       // Counting half of g*T again for arrest double-counted the fast profile's
@@ -474,7 +502,7 @@ export class RoadsterSim {
 
   traceSurface(origin,direction,distance=8) {
     const from=V(origin.x,origin.y,origin.z),to=from.vadd(V(direction.x,direction.y,direction.z).scale(distance));
-    return this._raySurface(from,to)?{point:plain(this._ray.hitPointWorld),normal:plain(this._ray.hitNormalWorld),distance:this._ray.distance}:null;
+    return this._raySurface(from,to)?{point:plain(this._ray.hitPointWorld),normal:plain(this._ray.hitNormalWorld),distance:this._ray.distance,objectId:this._ray.body?.userData?.id??null,kind:this._ray.body?.userData?.kind??null}:null;
   }
 
   pressureBar() {
@@ -507,7 +535,7 @@ export class RoadsterSim {
       const hit=this._raySurface(from,to,ray);
       const alignment=hit?ray.hitNormalWorld.dot(up):0;
       w.contactNormalWorld=hit?plain(ray.hitNormalWorld):plain(up);
-      w.contactPointWorld=hit?plain(ray.hitPointWorld):null;
+      w.contactPointWorld=hit?plain(ray.hitPointWorld):null;w.contactObjectId=hit?ray.body?.userData?.id??null:null;
       const length=hit?ray.distance-p.wheelRadius:extension;
       w.contact=!!hit && length<=extension && alignment>.30;
       w.suspensionLength=clamp(length,p.suspensionMin,extension);
@@ -844,6 +872,7 @@ export class RoadsterSim {
       const accel=V(clamp(error.x*p.positionGain-b.velocity.x*p.velocityGain,-6,6),
         clamp(error.y*p.altitudeGain-b.velocity.y*p.verticalDamping,-p.gravity*.8,p.gravity*1.4),
         clamp(error.z*p.positionGain-b.velocity.z*p.velocityGain,-6,6));
+      accel.y=this._researchHeightAcceleration(accel.y,dt);
       const force=b.quaternion.conjugate().vmult(accel.vadd(V(0,p.gravity,0)).scale(m));
       // Establish wheel clearance before tilting toward an explicit lab pose;
       // the one-wheel interval must not chatter the takeoff controller on/off.
@@ -1068,18 +1097,23 @@ export class RoadsterSim {
     this._updateMass();
   }
 
+  _assessHoldTrim(maxes,target=this._holdQuaternionTarget,{includeReserve=false}={}) {
+    if(!target)return null;
+    const f=target.conjugate().vmult(V(0,this.body.mass*this.params.gravity,0));
+    return solveStaticWrench(this._nozzles,maxes,[f.x,f.y,f.z,0,0,0],{includeReserve});
+  }
+
   _holdTrimFeasible(maxes,target=this._holdQuaternionTarget) {
     if(!target)return null;
-    // Exact static trim for this symmetric ten-nozzle layout. Axial jets act
-    // through the centre line. Equal front/rear side forces cancel yaw; their
-    // +0.22*Fx roll moment is balanced by a left/right lift differential.
-    // Any opposing-jet common mode only uses more capacity, so testing this
-    // minimum-flow solution certifies support without another iterative solve.
     const f=target.conjugate().vmult(V(0,this.body.mass*this.params.gravity,0));
-    const differential=.22*f.x/.59;
-    const trim=this._nozzles.map(n=>n.kind==='lift'?(f.y-Math.sign(n.position.x)*differential)/4:
-      n.kind==='roll'?Math.max(0,f.x*n.direction.x)/2:Math.max(0,f.z*n.direction.z));
-    return trim.every((force,i)=>force>=-1e-7&&force<=maxes[i]+1e-7);
+    return staticWrenchFeasible(this._nozzles,maxes,[f.x,f.y,f.z,0,0,0]);
+  }
+
+  getHoldTrimAssessment({target='current',includeReserve=true}={}) {
+    const p=this.params,derate=clamp((this.pressureBar()-p.ambientPressureBar)/(p.regulatorBar-p.ambientPressureBar),0,1)*Number(this._hasPower);
+    const maxes=this._nozzles.map(n=>(n.kind==='lift'?p.liftNozzleMax:n.kind==='roll'?p.sideNozzleMax:p.axialNozzleMax)*derate*(this._nozzleFault?.id===n.id?this._nozzleFault.scale:1));
+    const q=target==='current'?this.body.quaternion:target==='level'?this._levelQuaternion():target==='hold'?this._holdQuaternionTarget:target;
+    return this._assessHoldTrim(maxes,q,{includeReserve});
   }
 
   _holdErrors() {
@@ -1114,7 +1148,9 @@ export class RoadsterSim {
   }
 
   _advance(dt,raw) {
-    raw=raw&&typeof raw==='object'?raw:{};
+    raw=raw&&typeof raw==='object'?raw:{};noteSafetyInput(this,raw);
+    this._researchHeightControl.active=false;
+    if(this._researchHeightControl.enabled&&(this._stepCount>=this._researchHeightControl.expiresAtStep||this.mode!=='hover'||this.stabilizationMode!=='hold'||this._maneuver))this.clearResearchHeightControl(this._stepCount>=this._researchHeightControl.expiresAtStep?'command-expired':'control-layer-inactive');
     this._hasPower=this._energyUsed<this.params.batteryKWh;
     const input={throttle:clamp(finite(raw.throttle),-1,1),steer:clamp(finite(raw.steer),-1,1),
       brake:clamp(finite(raw.brake),0,1),lift:clamp(finite(raw.lift),-1,1),roll:clamp(finite(raw.roll),-1,1),pitch:clamp(finite(raw.pitch),-1,1),boost:!!raw.boost,
@@ -1128,7 +1164,7 @@ export class RoadsterSim {
     // Releasing the adhesion seal here precedes the fan/contact force pass.
     if(this.mode==='drive'&&input.lift>0){this.setMode('hover');this._heightTarget=Math.max(.65,this.body.position.y);}
     if(this.mode==='drive'&&input.brake>.01)input.boost=false;
-    if(input.frontJets>0||input.rearJets>0)this._maneuver=null;
+    if(input.frontJets>0||input.rearJets>0){this._maneuver=null;this.clearResearchHeightControl('raw-valve-takeover');}
     if(this._maneuver?.name==='ramp') {
       const f=this.body.quaternion.vmult(Z),speed=this.body.velocity.dot(f);
       const gravityFeedForward=this.body.mass*this.params.gravity*f.y/Math.max(1,this.params.maxMotorForce);
@@ -1149,7 +1185,7 @@ export class RoadsterSim {
     const accel=this.body.velocity.vsub(before).scale(1/dt).vsub(this.world.gravity);
     this._longitudinalAcceleration=this.body.velocity.vsub(before).scale(1/dt).dot(this.body.quaternion.vmult(Z));
     this._gLoad+=(accel.length()/this.params.gravity-this._gLoad)*Math.min(1,dt*8);
-    this._sanity();
+    const sane=this._sanity();if(sane)rememberValidStep(this,dt);
     if(this._fault) this.status=this._fault;
     else if(!this._hasPower)this.status='电池耗尽：电驱、风扇与喷口已失去供电';
     else if(this.params.supplyMode==='finite'&&this.pressureBar()<1.2&&(this.mode!=='drive'||this.airStabilization)) this.status='气源压差耗尽：推进器失去支撑';
@@ -1167,24 +1203,27 @@ export class RoadsterSim {
     }
   }
 
-  _sanity(normalize=true) {
-    const b=this.body;
-    const values=[...Object.values(plain(b.position)),...Object.values(plain(b.velocity)),...quatArray(b.quaternion),...Object.values(plain(b.angularVelocity))];
-    if(!values.every(Number.isFinite)) {
-      this.reset(this.scenario);this._fault='非有限状态已捕获，试验复位';return;
+  _sanity(normalize=true,phase='after-fixed-step') {
+    const b=this.body,fields={};
+    for(const [name,value]of Object.entries({position:b.position,velocity:b.velocity,quaternion:b.quaternion,angularVelocity:b.angularVelocity}))for(const key of name==='quaternion'?['x','y','z','w']:['x','y','z'])fields[name+'.'+key]=value[key];
+    Object.assign(fields,{gasMass:this.gasMass,gasTemperature:this.gasTemperature,energyUsed:this._energyUsed,simTime:this.simTime});
+    const nonFiniteFields=Object.entries(fields).filter(([,value])=>!Number.isFinite(value)).map(([path,value])=>({path,value:Number.isNaN(value)?'NaN':value>0?'Infinity':'-Infinity'}));
+    const badQuaternion=Math.hypot(b.quaternion.x,b.quaternion.y,b.quaternion.z,b.quaternion.w)<1e-9;
+    const outside=b.position.y < -15 || b.position.y>350 || Math.abs(b.position.x)>CITY.extent+80 || Math.abs(b.position.z)>CITY.extent+80;
+    if(nonFiniteFields.length||badQuaternion||outside){
+      const reason=nonFiniteFields.length?'非有限状态已捕获，试验复位':badQuaternion?'无效姿态已捕获，试验复位':'越过试验安全域，场景已复位';
+      preserveFailure(this,{kind:nonFiniteFields.length?'non-finite-state':badQuaternion?'invalid-quaternion':'safety-domain',reason,phase,nonFiniteFields});
+      this.reset(this.scenario);this._fault=reason;this.status=reason;return false;
     }
-    if(b.position.y < -15 || b.position.y>350 || Math.abs(b.position.x)>CITY.extent+80 || Math.abs(b.position.z)>CITY.extent+80) {
-      this.reset(this.scenario);this._fault='越过试验安全域，场景已复位';
-    }
-    if(normalize)b.quaternion.normalize();
+    if(normalize)b.quaternion.normalize();return true;
   }
 
-  advanceFixed(input={},dt=1/PHYSICS_HZ){if(!Number.isFinite(dt)||dt<1/240-1e-12||dt>1/60+1e-12)throw new Error('显式物理步长限于 60–240 Hz');this._sanity(false);this._advance(dt,input);return this.telemetry();}
+  advanceFixed(input={},dt=1/PHYSICS_HZ){if(!Number.isFinite(dt)||dt<1/240-1e-12||dt>1/60+1e-12)throw new Error('显式物理步长限于 60–240 Hz');if(this._fault||!this._sanity(false,'before-fixed-step'))return this.telemetry();this._advance(dt,input);return this.telemetry();}
 
   step(dt,input={},onSample,onFixedStep) {
     // Rendering may call step without advancing a physical tick. Normalizing
     // here introduced frame-rate-dependent roundoff in the feedback state.
-    this._sanity(false);
+    if(this._fault||!this._sanity(false,'before-render-step')){const failed=this.telemetry();if(onFixedStep)onFixedStep(failed,{},1/PHYSICS_HZ);if(onSample)onSample(failed);return failed;}
     if(!Number.isFinite(dt)||dt<=0) return this.telemetry();
     this._accumulator+=Math.min(dt,.1);
     const fixed=1/PHYSICS_HZ;
@@ -1215,6 +1254,7 @@ export class RoadsterSim {
       wing:{...this._wing,position:{...this._wing.position},forceBody:{...this._wing.forceBody},applicationPoint:{...this._wing.applicationPoint},mode:p.wingMode,actuatorRatePerS:p.wingActuatorRate},
       onboardGasConsumedKg:this._gasConsumedKg,externalGasSuppliedKg:this._externalGasKg,brakeDissipationJ:this._brakeDissipationJ,tireDissipationJ:this._tireDissipationJ,
       massFlowKgS:this._massFlowKgS,effectiveExhaustVelocity:this._effectiveExhaustVelocity,deliveredImpulseNs:this._impulseNs,hoverSecondsEstimate:budget.seconds,usableHoverImpulseNs:budget.impulseNs,nozzleModel:p.nozzleModel,
+      researchHeightControl:{...this._researchHeightControl,lastFault:this._researchHeightControl.lastFault?{...this._researchHeightControl.lastFault}:null},
       controlAuthority:this.getControlAuthority(),driveAccounting:{...this._driveAccounting,shares:[...this._driveAccounting.shares]},verticalControl:{...this._verticalControl},levelRecovery:{...this._levelRecovery},
       motorForceN:this._motorForceN,regenForceN:this._regenForceN,motorLoad:Math.abs(this._motorForceN)/Math.max(1,p.maxMotorForce),
       longitudinalAcceleration:this._longitudinalAcceleration,driverInput:{...this._lastInput},
@@ -1235,7 +1275,7 @@ export class RoadsterSim {
       holdQuaternionTarget:this._holdQuaternionTarget?{x:this._holdQuaternionTarget.x,y:this._holdQuaternionTarget.y,z:this._holdQuaternionTarget.z,w:this._holdQuaternionTarget.w}:null,
       targetAltitude:this._heightTarget,maneuver:this._maneuver?{...this._maneuver}:null,
       position:plain(b.position),velocity:plain(b.velocity),quaternion:{x:b.quaternion.x,y:b.quaternion.y,z:b.quaternion.z,w:b.quaternion.w},
-      angularVelocity:plain(b.angularVelocity),fault:this._fault,
+      angularVelocity:plain(b.angularVelocity),fault:this._fault,failure:this._fault?getFailureReport(this):null,
       desiredWrench:[...this._desiredWrench],achievedWrench:[...this._achievedWrench],allocationError:this._allocationError,
       thrustMargin:this._nozzles.slice(0,4).reduce((s,n)=>s+n.maxForce,0)/Math.max(1,b.mass*p.gravity),
       nozzles:this._nozzles.map(n=>({id:n.id,kind:n.kind,position:plain(n.position),direction:plain(n.direction),force:n.force,command:n.command,maxForce:n.maxForce,healthScale:this._nozzleFault?.id===n.id?this._nozzleFault.scale:1,ratedForce:n.kind==='lift'?p.liftNozzleMax:n.kind==='roll'?p.sideNozzleMax:p.axialNozzleMax})),

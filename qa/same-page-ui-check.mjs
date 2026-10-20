@@ -11,6 +11,7 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {resolve,dirname,relative} from 'node:path';
 import * as NativeThree from '../dist/vendor/three.module.js';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
+import {MODEL_BUILD_ID} from '../dist/model-build.js';
 import {CONTROL_CAPTURE_STARTS} from '../dist/driving-capture.js';
 import {CITY_BENCHMARK_ROUTE} from '../dist/visual-presets.js';
 
@@ -19,7 +20,9 @@ const jsdomPath=process.env.JSDOM_MODULE_PATH||'/tmp/roadster-dom-qa/node_module
 const {JSDOM,VirtualConsole}=await import(pathToFileURL(jsdomPath));
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),dist=resolve(root,'dist');
 const source=await readFile(resolve(dist,'index.html'),'utf8'),errors=[],checks=[],values={};
-const noGraphics=process.argv.includes('--graphics-unavailable'),workerRequests=[],expectedGraphicsErrors=[];let lastBlob=null;const graphicsFailure=new Error('QA: WebGL context deliberately unavailable');
+const noGraphics=process.argv.includes('--graphics-unavailable'),workerRequests=[],expectedGraphicsErrors=[],deploymentRequests=[];
+const deploymentFixture={modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,sourceCommit:'fixture:dom-source-commit',sourceTree:'fixture:dom-source-tree',source:'same-page-ui deployment response fixture; not an actual Git commit or deployment'};
+const pngEncoderFixture={defer:false,calls:0,pending:[]};let lastBlob=null;const graphicsFailure=new Error('QA: WebGL context deliberately unavailable');
 const virtualConsole=new VirtualConsole();virtualConsole.on('jsdomError',error=>errors.push(error.message));
 const dom=new JSDOM(source,{url:'https://qa.invalid/roadster-flight-lab/'+(noGraphics?'?view=lab':''),runScripts:'outside-only',pretendToBeVisual:true,virtualConsole});
 const window=dom.window,document=window.document,context=dom.getInternalVMContext();
@@ -28,7 +31,10 @@ let nowMs=0,nextTimer=1,raf=[];const timers=new Map(),graphics={rendered:[],envi
 const noop=()=>{};
 const canvasContext=canvas=>new Proxy({canvas,measureText:text=>({width:String(text).length*8}),createLinearGradient:()=>({addColorStop:noop}),createRadialGradient:()=>({addColorStop:noop}),getImageData:()=>({data:new Uint8ClampedArray(4)})},{get:(target,key)=>key in target?target[key]:noop,set:(target,key,value)=>(target[key]=value,true)});
 window.HTMLCanvasElement.prototype.getContext=function(type){if(type!=='2d')throw new Error('GPU contexts are deliberately unavailable in DOM QA');return this._qaContext??=canvasContext(this);};
-window.HTMLCanvasElement.prototype.toBlob=function(callback){callback(new globalThis.Blob(['DOM facade: no pixels'],{type:'image/png'}));};
+window.HTMLCanvasElement.prototype.toBlob=function(callback){
+  pngEncoderFixture.calls++;const finish=()=>callback(new globalThis.Blob(['DOM facade: no pixels'],{type:'image/png'}));
+  if(pngEncoderFixture.defer)pngEncoderFixture.pending.push(finish);else finish();
+};
 window.HTMLElement.prototype.scrollIntoView=noop;window.HTMLAnchorElement.prototype.click=noop;
 window.HTMLElement.prototype.setPointerCapture=noop;
 window.HTMLElement.prototype.releasePointerCapture=noop;
@@ -40,6 +46,7 @@ window.setTimeout=(callback,delay=0)=>{const id=nextTimer++;timers.set(id,{callb
 window.console={...console,error:(...args)=>{if(noGraphics&&args[0]===graphicsFailure)expectedGraphicsErrors.push(graphicsFailure.message);else errors.push(args.map(value=>value?.stack||String(value)).join(' '));}};
 window.fetch=async request=>{
   const raw=String(request),url=new URL(raw,window.location.href),name=url.pathname.split('/').at(-1);
+  if(name==='deployment.json'){deploymentRequests.push({url:raw,source:'explicit deployment fixture'});return{ok:true,status:200,json:async()=>structuredClone(deploymentFixture),text:async()=>JSON.stringify(deploymentFixture)};}
   if(!['research.json','research-panel.html'].includes(name))throw new Error('Unexpected network dependency in DOM QA: '+raw);
   const text=await readFile(resolve(dist,name),'utf8');
   loadedSources.add('dist/'+name);sourceSnapshots.set('dist/'+name,hashBytes(text));
@@ -167,6 +174,24 @@ key('Numpad2');tick(1);assert.equal(state().driverInput.pitch,-1);assert.equal(s
 tick(1);assert.equal(state().driverInput.pitch,0);
 pass('Actual G event routing has only off/level states, and keyboard/numpad 1/2 deliver normalized pitch without opening raw valves');
 
+// Real main DOM events; they validate routing and visible text, not a native
+// keyboard device, rendered camera pixels or human driving feel.
+key('KeyW');tick(3);tap('KeyR');
+assert.equal(state().paused,true);assert.equal(state().simTime,0);assert.equal($('drive-pause-hint').classList.contains('hidden'),false);assert.match($('drive-pause-hint').textContent,/P/);assert.match($('toast').textContent,/已复位并暂停.*P.*旧按键与阀门/);
+assert.equal(Object.keys(state().driverInput).length,0);assert.ok(state().nozzles.every(n=>n.command===0&&n.force===0));const resetState=numerical(state()),resetNotice=$('toast').textContent;tick(8);assert.equal(numerical(state()),resetState);
+tap('KeyP');tick(30);assert.equal(state().paused,false);assert.ok(state().simTime>0);assert.equal(state().driverInput.throttle,0,'R must clear the previously held W command before P resumes');assert.equal($('drive-pause-hint').classList.contains('hidden'),true);key('KeyW',{type:'keyup'});
+values.resetPause={resetPaused:true,resetTimeS:0,notice:resetNotice,oldThrottleCleared:true,resumedThroughP:true};
+pass('Actual R resets and pauses with a visible P hint; P resumes without resurrecting old held input or valve commands');
+
+click('[data-game-panel="parameters"]');assert.equal($('engineering-parameters').classList.contains('hidden'),false);assert.equal(state().paused,true);tick(20);
+const trimBefore=numerical(state());click('#trim-inspect');assert.equal(numerical(state()),trimBefore);assert.match($('trim-status').textContent,/存在静态配平解.*力残差.*力矩残差.*动态恢复未据此判定/);assert.equal($('trim-forces').querySelectorAll('tr').length,10);assert.equal($('trim-export').disabled,false);
+click('#trim-export');const trimExport=JSON.parse(await lastBlob.text());assert.equal(trimExport.modelVersion,MODEL_VERSION);assert.equal(trimExport.modelBuildId,MODEL_BUILD_ID);assert.equal(trimExport.sourceIdentityStatus,'matched-current-build');assert.equal(trimExport.sourceCommit,deploymentFixture.sourceCommit);assert.equal(trimExport.sourceTree,deploymentFixture.sourceTree);assert.equal(trimExport.physical.schema,'roadster-sim-state');assert.equal(trimExport.trim.staticFeasible,true);assert.equal(trimExport.trim.dynamicRecovery,'not-evaluated');assert.ok(trimExport.trim.forceResidualN<=.05&&trimExport.trim.torqueResidualNm<=.05);assert.equal(numerical(state()),trimBefore);
+const clearance=JSON.parse($('hud-clearance').dataset.estimate);assert.equal(clearance.estimate,true);assert.equal(clearance.recoveryHeightM,null);assert.equal(clearance.rangeM,8);assert.ok(Math.abs(clearance.worldCgHeightM-state().heightWorld)<1e-9);assert.ok(clearance.hullDistances.down.distanceM>0);assert.ok(clearance.hullDistances.down.distanceM<clearance.centreDownDistanceM);assert.equal(clearance.distances.down.distanceM,0);assert.match($('hud-flight').textContent,/世界重心 H/);assert.ok($('hud-flight').textContent.includes(state().heightWorld.toFixed(1)));assert.match($('hud-clearance').textContent,/车壳下估计.*整车上方.*含轮胎下方/);assert.match($('hud-clearance').title,/不是可用恢复高度/);
+values.trimAndClearance={scope:'Actual main DOM and numerical API; no camera or pixel evidence',trimText:$('trim-status').textContent,forceResidualN:trimExport.trim.forceResidualN,torqueResidualNm:trimExport.trim.torqueResidualNm,rows:10,physicalStateUnchanged:true,exportContainsCompletePhysical:true,worldCgHeightM:clearance.worldCgHeightM,centreDownDistanceM:clearance.centreDownDistanceM,hullDownEstimateM:clearance.hullDistances.down.distanceM,includingTyresDownEstimateM:clearance.distances.down.distanceM,worldLabel:$('hud-flight').textContent,clearanceLabel:$('hud-clearance').textContent};
+tap('Escape');assert.equal(state().paused,true);tap('KeyP');assert.equal(state().paused,false);
+pass('Static trim inspect/export preserves physics, reports residuals and limited claims, while HUD separates world CG height from estimated hull and tyre clearance');
+
+
 key('KeyW');tick(30);key('KeyW',{type:'keyup'});tick(1);
 const cityBefore=numerical(state()),cityScene=graphics.environments[0].scene.uuid,urlBefore=window.location.href;
 click('#context-switch');assert.equal(state().context,'lab');assert.equal(state().worldType,'windlab');assert.equal(state().research.open,true);assert.equal(state().paused,false);tick(60);
@@ -258,7 +283,12 @@ click('#visual-capture-metadata');const locked=JSON.parse(await lastBlob.text())
 $('weather-preset').value='clear-day';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));tick(2);
 click('#visual-capture-metadata');const dayLocked=JSON.parse(await lastBlob.text());assert.equal(dayLocked.exposureLock,1.02);assert.equal(dayLocked.exposure,1.02);
 $('weather-preset').value='wet-night';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));
-click('#visual-capture-bundle');tick(2);await settle(()=>lastBlob?.type==='application/zip','Same-frame archive must finish');
+click('#visual-capture-bundle');
+// Paused rendering is capped at 30 Hz. Two binary floating-point 60 Hz ticks
+// can land just below the next permitted frame; keep RAF moving until that
+// real main render callback occurs instead of relying on a phase coincidence.
+for(let frame=0;frame<6&&lastBlob?.type!=='application/zip';frame++){tick(1,40);await new Promise(resolve=>setImmediate(resolve));}
+await settle(()=>lastBlob?.type==='application/zip','Same-frame archive must finish');
 const zip=new Uint8Array(await lastBlob.arrayBuffer()),zipView=new DataView(zip.buffer),zipEntries={};let zipOffset=0;
 while(zipView.getUint32(zipOffset,true)===0x04034b50){const size=zipView.getUint32(zipOffset+18,true),nameLength=zipView.getUint16(zipOffset+26,true),extraLength=zipView.getUint16(zipOffset+28,true),name=new TextDecoder().decode(zip.slice(zipOffset+30,zipOffset+30+nameLength));const start=zipOffset+30+nameLength+extraLength;zipEntries[name]=zip.slice(start,start+size);zipOffset=start+size;}
 const metadataName=Object.keys(zipEntries).find(name=>name.endsWith('.json')),sameFrame=JSON.parse(new TextDecoder().decode(zipEntries[metadataName]));
@@ -292,8 +322,8 @@ async function checkProgramMatrix(label){
     if($('render-program-matrix').disabled){assert.equal(mutationFingerprint(),beforeFingerprint);assert.equal(state().paused,true);if(frames%9===0)attemptMutations();}
   }
   assert.equal($('render-program-matrix').disabled,false,'Matrix did not restore controls after its frames/archive completed');assert.equal(mutationFingerprint(),beforeFingerprint);
-  assert.equal(lastBlob?.type,'application/zip');const entries=await storedZipEntries(lastBlob),matrix=JSON.parse(new TextDecoder().decode(entries['gpu-switch-matrix.json']));
-  assert.equal(matrix.status,'failed','A renderer facade without linked draws must never pass a GPU gate');assert.equal(matrix.physicsUnchanged,true);assert.equal(matrix.cases.length,14);assert.equal(Object.keys(entries).length,30);
+  await settle(()=>lastBlob?.type==='application/zip','Restored matrix must finish packaging its diagnostic archive');const entries=await storedZipEntries(lastBlob),matrix=JSON.parse(new TextDecoder().decode(entries['gpu-switch-matrix.json']));
+  assert.equal(matrix.status,'failed','A renderer facade without linked draws must never pass a GPU gate');assert.equal(matrix.physicsUnchanged,true);assert.equal(matrix.cases.length,14);assert.equal(matrix.completedFrames,14);assert.equal(matrix.expectedFrames,14);assert.equal(matrix.executionStatus,'completed');assert.equal(matrix.drawStatus,'failed');assert.equal(Object.keys(entries).length,30);
   const expected=[['high','clear-day'],['high','wet-night'],['ultra','wet-night'],['ultra','clear-day'],['balanced','wet-night'],['high','wet-night'],['ultra','wet-night']];
   for(let i=0;i<matrix.cases.length;i++){
     const item=matrix.cases[i],condition=JSON.parse(new TextDecoder().decode(entries[item.conditionsFile]));
@@ -319,18 +349,54 @@ pass('Actual GPU-matrix UI freezes real physics against P/H/X/R, driving and syn
 // A resource request can remain pending. Its wait must time out before the
 // first diagnostic draw and release the real UI/physics capture transaction.
 const cityEnvironment=graphics.environments.find(e=>e.scene.userData.qaContext==='city'),savedReady=cityEnvironment.ready;
+if(!state().paused)click('#pause-btn');
 const timeoutBefore=await readVisualConditions(),timeoutFingerprint=mutationFingerprint(),timeoutBlob=lastBlob;
+const timeoutControlStates=['pause-btn','reset-btn','context-switch','render-program-matrix','render-program-capture','render-program-driving'].map(id=>[id,$(id).disabled]);
 try{
   cityEnvironment.ready=new Promise(()=>{});click('#render-program-matrix');
   assert.equal($('render-program-matrix').disabled,true);assert.equal(state().paused,true);
   await new Promise(resolve=>setImmediate(resolve));tick(1,20001);
-  await settle(()=>!$('render-program-matrix').disabled,'A pending resource wait must restore the UI after its bounded timeout');
-  assert.match($('render-program-status').textContent,/20 秒内未就绪/);assert.equal(mutationFingerprint(),timeoutFingerprint);assert.equal(lastBlob,timeoutBlob,'No fake success archive may be emitted before resources become ready');
+  await settle(()=>!$('render-program-matrix').disabled&&lastBlob!==timeoutBlob&&lastBlob?.type==='application/zip','The bounded resource timeout must restore the UI and finish an explicitly failed evidence ZIP');
+  const timeoutArchive=lastBlob,entries=await storedZipEntries(timeoutArchive),manifest=JSON.parse(new TextDecoder().decode(entries['gpu-switch-matrix.json']));
+  assert.equal(manifest.status,'failed');assert.equal(manifest.executionStatus,'failed');assert.equal(manifest.drawStatus,'incomplete');assert.equal(manifest.expectedFrames,14);assert.equal(manifest.completedFrames,0);assert.equal(manifest.cases.length,0);assert.equal(manifest.physicsUnchanged,true);assert.equal(manifest.modelVersion,MODEL_VERSION);assert.equal(manifest.modelBuildId,MODEL_BUILD_ID);assert.equal(manifest.sourceCommit,deploymentFixture.sourceCommit);assert.equal(manifest.sourceTree,deploymentFixture.sourceTree);assert.equal(Object.keys(entries).filter(name=>name.endsWith('.png')).length,0);assert.equal(Object.keys(entries).length,2);assert.match(manifest.failure.message,/20 秒内未就绪/);
+  // Retain the original assertion failure as an explicit contract revision:
+  // failed 0/14 diagnostics are useful evidence; they are never a success ZIP.
+  let retiredGateFailure=null;try{assert.equal(timeoutArchive,timeoutBlob,'No fake success archive may be emitted before resources become ready');}catch(error){retiredGateFailure={name:error.name,code:error.code,message:error.message,previousAssertion:'lastBlob === timeoutBlob',actualArchiveType:timeoutArchive.type};}
+  assert.ok(retiredGateFailure,'The changed failure-output contract must be recorded, not silently remove the old assertion');
+  const timeoutMessage=$('render-program-status').textContent;assert.match(timeoutMessage,/20 秒内未就绪/);assert.match(timeoutMessage,/0 \/ 14/);assert.match(timeoutMessage,/未通过/);assert.equal(mutationFingerprint(),timeoutFingerprint);
+  for(const[id,disabled]of timeoutControlStates)assert.equal($(id).disabled,disabled,'Timeout did not restore '+id);assert.equal($('render-program-progress').classList.contains('hidden'),true);assert.equal($('render-program-cancel').disabled,true);
   const timeoutAfter=await readVisualConditions();for(const key of ['quality','weatherPreset','exposureLock','exposure','autoExposure','route','camera','simState'])assert.deepEqual(timeoutAfter[key],timeoutBefore[key],'Readiness timeout failed to restore '+key);
   assert.equal(state().paused,timeoutBefore.paused);
-  values.programMatrix.readinessTimeout={boundedMs:20000,physicalStateUnchanged:true,presentationRestored:true,noArchiveEmitted:true};
+  // Verify exact transaction restoration before ordinary camera updates resume.
+  // Those later updates may settle from the last interpolated render pose to
+  // the paused physical pose; the persistent failure message is independent.
+  tick(5,250);await new Promise(resolve=>setImmediate(resolve));assert.equal($('render-program-status').textContent,timeoutMessage,'Generic later completion/ready messages must not replace the original timeout');assert.equal(mutationFingerprint(),timeoutFingerprint);
+  values.programMatrix.readinessTimeout={boundedMs:20000,physicalStateUnchanged:true,presentationRestored:true,archive:{status:manifest.status,executionStatus:manifest.executionStatus,drawStatus:manifest.drawStatus,expectedFrames:manifest.expectedFrames,completedFrames:manifest.completedFrames,pngCount:0,entries:Object.keys(entries),failure:manifest.failure},persistentMessage:timeoutMessage,contractRevision:{retainedOriginalFailure:retiredGateFailure,reason:'3.14 retains an explicitly failed 0/14 evidence archive instead of suppressing all output; no passing capture, invented frame or pixel evidence is allowed',replacementChecks:['failed execution','incomplete draw','0 of 14 frames','zero PNG entries','unchanged physics','original 20-second cause persists']}};
 }finally{cityEnvironment.ready=savedReady;}
-pass('A genuinely pending environment-ready promise times out, restores controls, presentation and real physics, and emits no passing capture');
+pass('A genuinely pending resource wait exports an explicitly failed 0/14 ZIP with zero PNGs, restores the UI/physics and keeps its original 20-second cause visible');
+
+// Hold a real main.js PNG callback across many rendered facade frames, then
+// cancel during the next callback. Only one request may be in flight and the
+// completed prefix must survive; stale callbacks cannot start another capture.
+const cancelBefore=await readVisualConditions(),cancelFingerprint=mutationFingerprint(),cancelControlStates=['pause-btn','reset-btn','context-switch','render-program-matrix','render-program-capture','render-program-driving'].map(id=>[id,$(id).disabled]);
+const initialPngCalls=pngEncoderFixture.calls;pngEncoderFixture.defer=true;lastBlob=null;click('#render-program-matrix');
+for(let frame=0;frame<40&&!pngEncoderFixture.pending.length;frame++){tick(1,250);await new Promise(resolve=>setImmediate(resolve));}
+assert.equal(pngEncoderFixture.pending.length,1,'The first matrix PNG must be awaiting its deliberate callback');assert.equal(pngEncoderFixture.calls,initialPngCalls+1);assert.equal($('render-program-matrix').disabled,true);
+for(let frame=0;frame<12;frame++){tick(1,250);await new Promise(resolve=>setImmediate(resolve));assert.equal(pngEncoderFixture.calls,initialPngCalls+1,'An in-flight PNG request must not be captured again on later RAFs');assert.equal(pngEncoderFixture.pending.length,1);assert.equal(mutationFingerprint(),cancelFingerprint);}
+const blockedRestart=new window.MouseEvent('click',{bubbles:true,cancelable:true});$('render-program-matrix').dispatchEvent(blockedRestart);assert.equal(blockedRestart.defaultPrevented,true);assert.equal(pngEncoderFixture.calls,initialPngCalls+1);
+pngEncoderFixture.pending.shift()();
+for(let frame=0;frame<40&&!pngEncoderFixture.pending.length;frame++){tick(1,250);await new Promise(resolve=>setImmediate(resolve));}
+assert.equal(pngEncoderFixture.pending.length,1);assert.equal(pngEncoderFixture.calls,initialPngCalls+2);assert.match($('render-program-progress-text').textContent,/1 \/ 14/);
+const escaped=key('Escape');assert.equal(escaped.defaultPrevented,true);key('Escape',{type:'keyup'});
+await settle(()=>!$('render-program-matrix').disabled&&lastBlob?.type==='application/zip','ESC must end matrix collection and archive the captured prefix');
+const cancelledArchive=lastBlob,cancelEntries=await storedZipEntries(cancelledArchive),cancelled=JSON.parse(new TextDecoder().decode(cancelEntries['gpu-switch-matrix.json']));
+assert.equal(cancelled.executionStatus,'cancelled');assert.equal(cancelled.status,'cancelled');assert.equal(cancelled.completedFrames,1);assert.equal(cancelled.expectedFrames,14);assert.equal(cancelled.cases.length,1);assert.equal(cancelled.physicsUnchanged,true);assert.equal(cancelled.modelVersion,MODEL_VERSION);assert.equal(cancelled.modelBuildId,MODEL_BUILD_ID);assert.equal(cancelled.sourceCommit,deploymentFixture.sourceCommit);assert.equal(cancelled.sourceTree,deploymentFixture.sourceTree);assert.equal(cancelled.failure.name,'AbortError');assert.equal(cancelled.failure.completedFrames,1);assert.equal(Object.keys(cancelEntries).filter(name=>name.endsWith('.png')).length,1);assert.equal(Object.keys(cancelEntries).length,4);assert.equal(new TextDecoder().decode(cancelEntries[cancelled.cases[0].imageFile]),'DOM facade: no pixels');assert.equal(cancelled.cases[0].paused.status,'failed');assert.equal(cancelled.cases[0].export.status,'failed');
+for(const[id,disabled]of cancelControlStates)assert.equal($(id).disabled,disabled,'ESC did not restore '+id);assert.equal($('render-program-progress').classList.contains('hidden'),true);assert.equal($('render-program-cancel').disabled,true);assert.equal(state().paused,cancelBefore.paused);assert.equal(mutationFingerprint(),cancelFingerprint);
+const cancelMessage=$('render-program-status').textContent;assert.match(cancelMessage,/已取消/);assert.match(cancelMessage,/1 \/ 14/);
+const cancelAfter=await readVisualConditions();for(const key of ['quality','weatherPreset','exposureLock','exposure','autoExposure','route','camera','simState'])assert.deepEqual(cancelAfter[key],cancelBefore[key],'ESC matrix cancellation failed to restore '+key);
+const blobBeforeLateCallback=lastBlob;pngEncoderFixture.pending.shift()();pngEncoderFixture.defer=false;await new Promise(resolve=>setImmediate(resolve));tick(6,250);await new Promise(resolve=>setImmediate(resolve));assert.equal(lastBlob,blobBeforeLateCallback,'A late callback from the cancelled job must not initiate another download or finish another request');assert.equal(pngEncoderFixture.calls,initialPngCalls+2);assert.equal($('render-program-status').textContent,cancelMessage);assert.equal(mutationFingerprint(),cancelFingerprint);
+values.programMatrix.cancelAndSlowPng={scope:'Actual matrix handlers with an intentionally delayed fake PNG encoder; no pixel/driver claim',heldEncoderAcrossFrames:12,encoderCalls:pngEncoderFixture.calls-initialPngCalls,duplicateCaptureRequests:0,manualRestartBlocked:true,executionStatus:cancelled.executionStatus,drawStatus:cancelled.drawStatus,completedFrames:cancelled.completedFrames,expectedFrames:cancelled.expectedFrames,pngCount:1,entries:Object.keys(cancelEntries),failure:cancelled.failure,physicalStateUnchanged:true,controlsRestored:true,lateCallbackIgnored:true,message:cancelMessage};
+pass('Slow PNG callbacks stay single-flight; ESC retains a cancelled one-frame prefix, restores controls/physics and ignores a late encoder callback');
 
 // Return the established fixture used by the following recorder/replay checks.
 click('[data-rc-action="close"]');if(!state().paused)click('#pause-btn');
@@ -362,6 +428,35 @@ const beforeRejected=numerical(state());$('control-capture-kind').value='vertica
 click('#control-capture-export');const rejected=JSON.parse(await lastBlob.text());assert.equal(rejected.status,'failed');assert.equal(rejected.stepCount,0);assert.ok(rejected.events.some(event=>event.type==='control_capture_clearance'));
 values.controlCapture={scope:'Actual main input/recorder integration with numerical physics; renderer is stubbed',resetBeforeRecording:true,initialSpeedMps:0,manualTakeover:'cancelled',capturedSteps:capturedInputs.stepCount,invalidFlightCondition:'zero-step failed record'};
 pass('The main capture controls reset only before recording, accelerate through ordinary inputs, preserve manual takeover, and retain failed preflight evidence without repositioning');
+
+// This JSDOM document owns isolated storage. Reject only live-archive writes;
+// no real user archive is read, cleared or removed, and all existing fixture
+// records must survive byte-for-byte on disk and unchanged in session exports.
+const liveRecordsModule=(await getModule(resolve(dist,'experiment-records.js'))).namespace,liveStorageKey=liveRecordsModule.EXPERIMENT_LIBRARY_KEY;
+const oldLiveRaw=window.localStorage.getItem(liveStorageKey);assert.ok(oldLiveRaw,'A pre-existing live archive is required to test preservation');const oldDiskRecords=JSON.parse(oldLiveRaw).records;assert.ok(oldDiskRecords.length>0);
+click('#csv-btn');click('[data-ex-action="export-all"]');const beforeFailureRecords=JSON.parse(await lastBlob.text()).records,storagePrototype=Object.getPrototypeOf(window.localStorage),setItemDescriptor=Object.getOwnPropertyDescriptor(storagePrototype,'setItem'),writeFailures=[];
+const livePersistenceCases=[];let rejection=null;
+Object.defineProperty(storagePrototype,'setItem',{...setItemDescriptor,value:function(key,value){if(this===window.localStorage&&key===liveStorageKey&&rejection){writeFailures.push({name:rejection.name,message:rejection.message,key});throw new window.DOMException(rejection.message,rejection.name);}return setItemDescriptor.value.call(this,key,value);}});
+try{
+  for(const scenario of [{name:'QuotaExceededError',message:'QA isolated archive quota rejection',language:'zh'},{name:'SecurityError',message:'QA isolated archive write denial',language:'en'}]){
+    rejection=scenario;$('language-select').value=scenario.language;$('language-select').dispatchEvent(new window.Event('change',{bubbles:true}));await new Promise(resolve=>setImmediate(resolve));
+    const beforeCount=state().research.experiment.recordCount,beforeFailures=writeFailures.length;
+    click('#record-btn');tick(18);assert.equal(state().research.experiment.recording,true);click('#record-btn');await new Promise(resolve=>setImmediate(resolve));
+    const experiment=state().research.experiment,notice=q('[data-ex="persistence"]'),expectedToast=scenario.language==='en'?'The live experiment ended but is session only / unsaved. Export the complete result or archive; the previous archive was not overwritten.':'现场实验已结束，但仅本会话 / 未保存。请导出完整结果或整库；旧存档未覆盖。';
+    assert.equal(experiment.recording,false);assert.equal(experiment.recordCount,beforeCount+1);assert.equal(writeFailures.length,beforeFailures+1,'The actual completed recording must attempt exactly one rejected archive write');assert.equal(experiment.persistence.sessionOnly,true);assert.equal(experiment.persistence.status,'unsaved');assert.equal(experiment.persistence.message,scenario.message);assert.ok(experiment.persistence.unsavedIds.includes(experiment.selectedId));
+    assert.equal($('toast').textContent,expectedToast);assert.equal($('toast').classList.contains('hidden'),false);assert.doesNotMatch($('toast').textContent,/现场实验已保存|The live experiment (?:has been |was )?saved/i);assert.equal(notice.hidden,false);assert.match(notice.textContent,scenario.language==='en'?/session only \/ unsaved/i:/仅本会话 \/ 未保存/);assert.ok(notice.textContent.includes(scenario.message));assert.equal(window.localStorage.getItem(liveStorageKey),oldLiveRaw);
+    const initialNotice=notice.textContent;click('#csv-btn');click('[data-ex-action="export-one"]');const selectedText=await lastBlob.text(),selected=JSON.parse(selectedText);assert.equal(selected.id,experiment.selectedId);assert.equal(selected.status,'completed');assert.ok(selected.stepCount>0);assert.ok(selected.inputRuns.length>0);assert.ok(selected.initialSnapshot.physical);assert.ok(selected.finalSnapshot.physical);assert.equal(liveRecordsModule.parseExperimentArchive(selectedText).length,1,'The complete unsaved record must pass the normal import validator');
+    click('[data-ex-action="export-all"]');const sessionText=await lastBlob.text(),sessionArchive=JSON.parse(sessionText);assert.equal(sessionArchive.persistence.sessionOnly,true);assert.equal(sessionArchive.records.length,experiment.recordCount);assert.equal(liveRecordsModule.parseExperimentArchive(sessionText).length,experiment.recordCount);assert.deepEqual(sessionArchive.records.find(r=>r.id===selected.id),selected);
+    for(const record of beforeFailureRecords)assert.deepEqual(sessionArchive.records.find(r=>r.id===record.id),record,'A rejected append must not mutate a previous in-memory record');
+    const beforeExportedRecord=JSON.stringify(selected);tick(40,250);await new Promise(resolve=>setImmediate(resolve));assert.equal($('toast').classList.contains('hidden'),true,'Transient toast may expire, but persistence warning must not');assert.equal(notice.hidden,false);assert.equal(notice.textContent,initialNotice);assert.equal(state().research.experiment.persistence.sessionOnly,true);assert.equal(window.localStorage.getItem(liveStorageKey),oldLiveRaw);assert.deepEqual(JSON.parse(window.localStorage.getItem(liveStorageKey)).records,oldDiskRecords);
+    click('[data-ex-action="export-one"]');assert.equal(JSON.stringify(JSON.parse(await lastBlob.text())),beforeExportedRecord,'Later UI/physics updates must retain the complete session-only result');
+    if(scenario.language==='en'){assert.ok(!/[\u3400-\u9fff]/u.test(expectedToast));assert.ok(!/[\u3400-\u9fff]/u.test(notice.textContent),'The persistent unsaved alert needs English too');}
+    livePersistenceCases.push({error:scenario.name,language:scenario.language,rejectedWrites:writeFailures.length-beforeFailures,executionStatus:selected.status,persistenceStatus:experiment.persistence.status,selectedId:selected.id,stepCount:selected.stepCount,inputRuns:selected.inputRuns.length,fullRecordBytes:new TextEncoder().encode(selectedText).length,archiveRecords:sessionArchive.records.length,oldRawUnchanged:true,oldSessionRecordsUnchanged:true,exportPassesNormalImport:true,warningSurvivesToastExpiry:true,toast:expectedToast,persistentAlert:initialNotice});
+  }
+}finally{Object.defineProperty(storagePrototype,'setItem',setItemDescriptor);$('language-select').value='zh';$('language-select').dispatchEvent(new window.Event('change',{bubbles:true}));await new Promise(resolve=>setImmediate(resolve));}
+values.livePersistenceUI={scope:'Actual main record-button start/stop with isolated Storage prototype fault injection, actual recorder/export validator, no real user storage',oldDiskRecords:oldDiskRecords.length,oldRawSHA256:hashBytes(oldLiveRaw),oldRawBytes:new TextEncoder().encode(oldLiveRaw).length,cases:livePersistenceCases};
+pass('Actual record-button quota/write failures keep old archive bytes, retain complete exportable session results and persistent bilingual warnings without a false saved toast');
+
 click('#record-btn');tick(60);assert.equal(state().research.experiment.recording,true);
 const physicalBeforeLoss=numerical(state());const canvas=$('viewport').querySelector('canvas');canvas.dispatchEvent(new window.Event('webglcontextlost',{cancelable:true}));
 assert.equal(window.roadsterApp.getState().graphics.status,'context_lost');assert.equal(state().research.experiment.recording,false);tick(60);assert.equal(numerical(state()),physicalBeforeLoss);
@@ -406,6 +501,11 @@ assert.equal(nodes.length,0,'Untranslated application text: '+JSON.stringify(nod
 $('language-select').value='zh';$('language-select').dispatchEvent(new window.Event('change',{bubbles:true}));await new Promise(resolve=>setImmediate(resolve));assert.equal(document.documentElement.lang,'zh-CN');assert.equal($('graphics-open-study').textContent,'运行标准数值研究');
 pass('English reaches the actual main shell and lazy research UI, persists and switches back without changing snapshots or exported history');
 
+const runtimeIdentityModule=await getModule(resolve(dist,'runtime-identity.js')),runtimeIdentity=runtimeIdentityModule.namespace.getRuntimeIdentity();
+assert.ok(deploymentRequests.length>0,'The runtime identity network request must be explicitly covered');assert.equal(runtimeIdentity.sourceIdentityStatus,'matched-current-build');assert.equal(runtimeIdentity.modelVersion,MODEL_VERSION);assert.equal(runtimeIdentity.modelBuildId,MODEL_BUILD_ID);assert.equal(runtimeIdentity.sourceCommit,deploymentFixture.sourceCommit);assert.equal(runtimeIdentity.sourceTree,deploymentFixture.sourceTree);
+values.runtimeIdentity={source:'explicit matching deployment fixture, not a deployed Git identity',response:deploymentFixture,requests:deploymentRequests,observed:JSON.parse(JSON.stringify(runtimeIdentity))};
+pass('Runtime deployment identity fetch uses an explicit matching fixture and does not hide an unexpected-network rejection');
+
 const cannonInstances=moduleConstructionCounts.get(resolve(dist,'vendor/cannon-es.js'))||0;
 assert.equal(cannonInstances,1,'The real physics and snapshot modules must share one Cannon module instance');
 values.moduleIdentity={cannonInstances,maximumInstancesPerCanonicalPath:Math.max(...moduleConstructionCounts.values())};
@@ -413,10 +513,10 @@ assert.equal(values.moduleIdentity.maximumInstancesPerCanonicalPath,1,'The QA lo
 const hashes={};for(const filename of [...new Set([...loadedSources,...sourceSnapshots.keys(),'qa/same-page-ui-check.mjs'])].sort()){
   const current=hashBytes(await readFile(resolve(root,filename)));if(sourceSnapshots.has(filename))assert.equal(current,sourceSnapshots.get(filename),'Source changed during DOM execution; rerun after freezing '+filename);hashes[filename]=current;
 }
-const report={status:'passed',generatedAt:new Date().toISOString(),checks,values,sourceHashes:hashes,
+const report={status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,generatedAt:new Date().toISOString(),checks,values,sourceHashes:hashes,
   environment:{node:process.version,jsdom:'26.1.0',moduleEvaluation:'Actual app.js / app-shell.js / main.js and its non-visual dependency graph in vm.SourceTextModule',physics:'Actual RoadsterSim, no rigid-body/control mock',context:'JSDOM document only'},
   excluded:{browser:false,webgl:false,gpuTiming:false,pixelVisualQA:false,independentWorkerExecution:false,actualSolverThroughWorkerFacade:true},
-  mocks:[...mocks.keys()],limits:'DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.'};
+  mocks:[...mocks.keys(),'deployment.json: explicit matching fixture','canvas.toBlob: fake bytes with optional deferred callback'],limits:'DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.'};
 await writeFile(resolve(root,noGraphics?`qa/no-webgl-research-${REPORT_VERSION}.json`:`qa/same-page-ui-${REPORT_VERSION}.json`),JSON.stringify(report,null,2)+'\n');
 dom.window.close();console.log(`Same-page UI: ${checks.length} DOM integration groups passed; no browser or visual acceptance performed.`);
 

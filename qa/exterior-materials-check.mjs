@@ -23,10 +23,10 @@ await Promise.all([architecture.ready,street.ready]);
 const geometry=new RoadsterSim().getWorldGeometry(),canonicalSHA256=hash(canonicalGeometryJSON(geometry));
 assert.equal(hash(JSON.stringify(STREET_COLLIDERS)),base.colliderSHA256);
 assert.equal(hash(JSON.stringify(URBAN_MATERIAL_PALETTE)),base.paletteSHA256);
-const geometryScope=partitionCityGeometry(geometry),retainedGeometryCanonicalSHA256=hash(canonicalGeometryJSON(geometryScope.legacy));
-assert.equal(retainedGeometryCanonicalSHA256,protocol.geometry.canonicalSHA256);
-record('Original city subset, 108 street proxies and shared average wall palette retain their 3.5 identities; new shared roadside entities are explicit',{
-  canonicalSHA256,retainedGeometryCanonicalSHA256,newSharedEntities:geometryScope.added.length,streetColliderSHA256:base.colliderSHA256,paletteSHA256:base.paletteSHA256,quantization:1e-9,
+const geometryScope=partitionCityGeometry(geometry),retainedGeometryCanonicalSHA256=hash(canonicalGeometryJSON(geometryScope.unchangedLegacy));
+assert.equal(geometryScope.contract.reconstructedHistoricalCanonicalSHA256,protocol.geometry.canonicalSHA256);
+record('Unrelated original city geometry, 108 street proxies and shared wall palette retain their identities; three approved tower profiles and all new shared entities are explicit',{
+  canonicalSHA256,retainedGeometryCanonicalSHA256,geometryContract:geometryScope.contract,newSharedEntities:geometryScope.added.length,streetColliderSHA256:base.colliderSHA256,paletteSHA256:base.paletteSHA256,quantization:1e-9,
 });
 
 let metricInstances=0,finiteInstances=0,metricMaxError=0;const matrix=new THREE.Matrix4(),materials=new Map();

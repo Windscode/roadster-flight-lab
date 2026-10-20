@@ -1,0 +1,3077 @@
+{
+  "schema": "roadster-contact-regression-matrix",
+  "version": 1,
+  "modelVersion": "3.14.0",
+  "modelBuildId": "461466391bff8e9907d95c157ba2f8ce52b76eae0a202aaed6aac31a768fe2d0",
+  "status": "precondition-mismatch-retained",
+  "scope": "Declared isolated fixtures at 120 Hz. Intact city and real keyboard/camera driving acceptance are not inferred. Initial rolling velocity/wheel spin are fixture setup only; all subsequent movement is integrated.",
+  "physicsHz": 120,
+  "sourceHashes": {
+    "dist/physics.js": "5ea03e8987accff5791738eae3061488c35d652b792f62cb8d0e9f04b7207676",
+    "dist/tire-dynamics.js": "de2336ef6ff88d276a414a2e90a2a6a7c29e8b18bed5767a6031bb14782c388d",
+    "dist/simulation-safety.js": "ba351636badcbd39fb63beaa4a75fbd29931ad1d18a89d5b98ba13a390d95e18",
+    "dist/controls.js": "eb14d7f191cddd3d6ccd608a1d2b9df52b2466a1a2d43fdc953de04fc8f135e1"
+  },
+  "trace": {
+    "file": "contact-regressions-3.14.ndjson.gz",
+    "format": "gzip of UTF-8 NDJSON, one full sample per 120 Hz physical step",
+    "samples": 17368,
+    "uncompressedBytes": 38544368,
+    "compressedBytes": 8058422,
+    "sha256": "a89b7d39672fe1e43bb2670a36e09ccee3a3de464af66060c483fff71fe34d38"
+  },
+  "screeningCriteria": {
+    "passivePeakMechanicalEnergyGainFraction": 0.04,
+    "maximumContactPenetrationM": 0.3,
+    "notCertificationTolerances": true
+  },
+  "cases": [
+    {
+      "id": "full-width-step-2cm-20",
+      "kind": "step",
+      "heightM": 0.02,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 20,
+      "durationS": 5.6,
+      "initialSpeedKmh": 20,
+      "initialEnergy": {
+        "bodyTranslationJ": 33943.79938711257,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 811.6224332440548,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "79a086be3f2d5ae58ce97e0f949661571d555a160766ca8756ed8ea2f9043c93",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.02,
+            60
+          ],
+          "position": [
+            0,
+            0.01,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 20,
+      "minSpeedKmh": 6.939576436971129e-05,
+      "maxWheelLoadN": 6972.098878348739,
+      "minSuspensionLengthM": 0.26273743570668817,
+      "maxSuspensionLengthM": 0.29336929734622463,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 48532.845809217026,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.10915050517362636,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9680732727050779,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 13.145016609516563,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.6069955124411782,
+        "z": 1.1382458210909245
+      },
+      "finalSpeedKmh": 0.000580028992505702,
+      "speedLossKmh": 19.999419971007494,
+      "finalEnergy": {
+        "bodyTranslationJ": 2.8549589291703732e-05,
+        "bodyRotationJ": 8.885999225693498e-05,
+        "gravityJ": 13097.54639744529,
+        "wheelRotationJ": 0,
+        "springJ": 895.337908526201
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-2cm-20",
+      "kind": "step",
+      "heightM": 0.02,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 20,
+      "durationS": 5.6,
+      "initialSpeedKmh": 20,
+      "initialEnergy": {
+        "bodyTranslationJ": 33943.79938711257,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 811.6224332440548,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "14b9db392e9d2c5ad2ac798fa4d8a5bc91843a0a053d50d67ce6426993bad2de",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.02,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.01,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 20,
+      "minSpeedKmh": 6.304510444178682e-05,
+      "maxWheelLoadN": 6972.098878348739,
+      "minSuspensionLengthM": 0.26273743570668817,
+      "maxSuspensionLengthM": 0.30019843482314723,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 48532.845809217026,
+      "maxBodySlipDeg": 0.629958436658231,
+      "maxWheelLongitudinalSlip": 0.10952372892106173,
+      "maxWheelSlipAngleDeg": 0.2939425268558444,
+      "maxYawRateDegS": 0.04739571967332564,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9683158874567738,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 13.14510836407978,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -2.9940458466409532e-05,
+        "y": 0.5970090039956267,
+        "z": 1.1383430156676728
+      },
+      "finalSpeedKmh": 0.0005799566987469438,
+      "speedLossKmh": 19.999420043301253,
+      "finalEnergy": {
+        "bodyTranslationJ": 2.8542472997436952e-05,
+        "bodyRotationJ": 8.905630786456767e-05,
+        "gravityJ": 12882.06085425231,
+        "wheelRotationJ": 0,
+        "springJ": 895.3758138717895
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "full-width-step-5cm-20",
+      "kind": "step",
+      "heightM": 0.05,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 20,
+      "durationS": 5.6,
+      "initialSpeedKmh": 20,
+      "initialEnergy": {
+        "bodyTranslationJ": 33943.79938711257,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 811.6224332440548,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "eb28ef9e667e6aef1ce5117efa49d1a6708c908d509be24f8b0b1952cabc6fd0",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.05,
+            60
+          ],
+          "position": [
+            0,
+            0.025,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 20,
+      "minSpeedKmh": 0.00010246946933854447,
+      "maxWheelLoadN": 15355.468122533792,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.3031003990355786,
+      "maxPenetrationM": 0.002752441686682794,
+      "maxMechanicalEnergyJ": 48532.845809217026,
+      "maxBodySlipDeg": 0.0002693967328293922,
+      "maxWheelLongitudinalSlip": 0.10607981536827617,
+      "maxWheelSlipAngleDeg": 0.0014888342755271394,
+      "maxYawRateDegS": 0.00024451839362066936,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9658241271972667,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 3,
+      "airborneSteps": 0,
+      "pathLengthM": 13.081313029351154,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -4.399932660067694e-08,
+        "y": 0.6219246053417858,
+        "z": 1.072889757178405
+      },
+      "finalSpeedKmh": 0.00035359166752180275,
+      "speedLossKmh": 19.999646408332477,
+      "finalEnergy": {
+        "bodyTranslationJ": 1.060973422944199e-05,
+        "bodyRotationJ": 2.7083806510103224e-05,
+        "gravityJ": 13419.68137691341,
+        "wheelRotationJ": 0,
+        "springJ": 895.147184769794
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-5cm-20",
+      "kind": "step",
+      "heightM": 0.05,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 20,
+      "durationS": 5.6,
+      "initialSpeedKmh": 20,
+      "initialEnergy": {
+        "bodyTranslationJ": 33943.79938711257,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 811.6224332440548,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "dd832ed1747f72988d8723a47babd81ba3bea1d9ba573f085ab7334f6a73f350",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.05,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.025,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 20,
+      "minSpeedKmh": 6.965237598537017e-05,
+      "maxWheelLoadN": 14926.199594296957,
+      "minSuspensionLengthM": 0.24002318450587046,
+      "maxSuspensionLengthM": 0.3231685228389649,
+      "maxPenetrationM": 0.0033256291227878798,
+      "maxMechanicalEnergyJ": 48532.845809217026,
+      "maxBodySlipDeg": 2.0678212198136117,
+      "maxWheelLongitudinalSlip": 0.10824997049806044,
+      "maxWheelSlipAngleDeg": 2.2636413549515426,
+      "maxYawRateDegS": 0.3656552726649379,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9674095154273706,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 3,
+      "airborneSteps": 0,
+      "pathLengthM": 13.10319511038721,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -0.001049729688966673,
+        "y": 0.5970090132959384,
+        "z": 1.095449160792427
+      },
+      "finalSpeedKmh": 0.00042373890962584833,
+      "speedLossKmh": 19.999576261090375,
+      "finalEnergy": {
+        "bodyTranslationJ": 1.523691869478366e-05,
+        "bodyRotationJ": 4.276889935259801e-05,
+        "gravityJ": 12882.061054931326,
+        "wheelRotationJ": 0,
+        "springJ": 895.3756193564252
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "full-width-step-10cm-20",
+      "kind": "step",
+      "heightM": 0.1,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 20,
+      "durationS": 5.6,
+      "initialSpeedKmh": 20,
+      "initialEnergy": {
+        "bodyTranslationJ": 33943.79938711257,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 811.6224332440548,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "33d496a8bf61e893c0b37cc29d493aaaf4536c3e5721479bd2d9b71134b934d1",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 20,
+      "minSpeedKmh": 4.010979366604658e-05,
+      "maxWheelLoadN": 5996.292400956652,
+      "minSuspensionLengthM": 0.270356936901323,
+      "maxSuspensionLengthM": 0.3647998668141005,
+      "maxPenetrationM": 0.007712308416767287,
+      "maxMechanicalEnergyJ": 48532.845809217026,
+      "maxBodySlipDeg": 0.0006463958397429647,
+      "maxWheelLongitudinalSlip": 0.10174598106327938,
+      "maxWheelSlipAngleDeg": 0.0031363856439126487,
+      "maxYawRateDegS": 0.0026139572112803566,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9622383117675789,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 4,
+      "airborneSteps": 0,
+      "pathLengthM": 12.454377481711385,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -9.515948416977587e-07,
+        "y": 0.6466736657803429,
+        "z": 0.44177786614569425
+      },
+      "finalSpeedKmh": 0.00014936700688086485,
+      "speedLossKmh": 19.99985063299312,
+      "finalEnergy": {
+        "bodyTranslationJ": 1.893258073466432e-06,
+        "bodyRotationJ": 6.193010105100296e-06,
+        "gravityJ": 13953.708335504132,
+        "wheelRotationJ": 0,
+        "springJ": 894.4238025771626
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-10cm-20",
+      "kind": "step",
+      "heightM": 0.1,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 20,
+      "durationS": 5.6,
+      "initialSpeedKmh": 20,
+      "initialEnergy": {
+        "bodyTranslationJ": 33943.79938711257,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 811.6224332440548,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "c6a396d4460caa809d10ee70c4f6a73f9b1652ccb6767d7b1d3d8de33d6ab5ee",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 20,
+      "minSpeedKmh": 5.868628169466476e-06,
+      "maxWheelLoadN": 9054.85091979067,
+      "minSuspensionLengthM": 0.25696201729461254,
+      "maxSuspensionLengthM": 0.3641600690207354,
+      "maxPenetrationM": 0.009629236960813836,
+      "maxMechanicalEnergyJ": 48532.845809217026,
+      "maxBodySlipDeg": 3.4500418762134712,
+      "maxWheelLongitudinalSlip": 0.11436477917882863,
+      "maxWheelSlipAngleDeg": 7.989564458248288,
+      "maxYawRateDegS": 5.324254583803145,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9999877275947964,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 4,
+      "airborneSteps": 0,
+      "pathLengthM": 12.655610383169378,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -0.018429672566422618,
+        "y": 0.597008998048757,
+        "z": 0.6446282170056835
+      },
+      "finalSpeedKmh": 0.00027105332696992346,
+      "speedLossKmh": 19.99972894667303,
+      "finalEnergy": {
+        "bodyTranslationJ": 6.234619380850871e-06,
+        "bodyRotationJ": 2.6163408755711072e-05,
+        "gravityJ": 12882.060725932739,
+        "wheelRotationJ": 0,
+        "springJ": 895.3758418288509
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "full-width-step-2cm-50",
+      "kind": "step",
+      "heightM": 0.02,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 50,
+      "durationS": 3.44,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "79a086be3f2d5ae58ce97e0f949661571d555a160766ca8756ed8ea2f9043c93",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.02,
+            60
+          ],
+          "position": [
+            0,
+            0.01,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 34.84997601923919,
+      "maxWheelLoadN": 6973.376832540858,
+      "minSuspensionLengthM": 0.2627435096483576,
+      "maxSuspensionLengthM": 0.29435276573151026,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.006554142755751067,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.09833602905273438,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 40.51075246219513,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.6170053546506193,
+        "z": 28.510709239786227
+      },
+      "finalSpeedKmh": 34.84997601923919,
+      "speedLossKmh": 15.150023980760807,
+      "finalEnergy": {
+        "bodyTranslationJ": 103063.62838871001,
+        "bodyRotationJ": 6.269708527389151e-11,
+        "gravityJ": 13313.535428800718,
+        "wheelRotationJ": 2433.6277954069124,
+        "springJ": 897.7668691825648
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-2cm-50",
+      "kind": "step",
+      "heightM": 0.02,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 50,
+      "durationS": 3.44,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "14b9db392e9d2c5ad2ac798fa4d8a5bc91843a0a053d50d67ce6426993bad2de",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.02,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.01,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 34.84997557276461,
+      "maxWheelLoadN": 6973.376832540858,
+      "minSuspensionLengthM": 0.2627435096483576,
+      "maxSuspensionLengthM": 0.2977362184776913,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 0.046483468477629006,
+      "maxWheelLongitudinalSlip": 0.006566452001853261,
+      "maxWheelSlipAngleDeg": 0.07692066762252141,
+      "maxYawRateDegS": 0.044050909084856406,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.09888407582655935,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 40.510711436251704,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0.0005200408372408841,
+        "y": 0.5970053433791526,
+        "z": 28.510707940856516
+      },
+      "finalSpeedKmh": 34.84997557276461,
+      "speedLossKmh": 15.150024427235387,
+      "finalEnergy": {
+        "bodyTranslationJ": 103063.62574794548,
+        "bodyRotationJ": 7.463935936571999e-11,
+        "gravityJ": 12881.981866692877,
+        "wheelRotationJ": 2433.628875738979,
+        "springJ": 897.7671465066952
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "full-width-step-5cm-50",
+      "kind": "step",
+      "heightM": 0.05,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 50,
+      "durationS": 3.44,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "eb28ef9e667e6aef1ce5117efa49d1a6708c908d509be24f8b0b1952cabc6fd0",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.05,
+            60
+          ],
+          "position": [
+            0,
+            0.025,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 34.849954701524176,
+      "maxWheelLoadN": 22277.430159479227,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.30687181395350505,
+      "maxPenetrationM": 0.006208574632259503,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.008613775121089542,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.12641677856445313,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 3,
+      "airborneSteps": 0,
+      "pathLengthM": 40.51123707625155,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.6470053371568627,
+        "z": 28.510772305983913
+      },
+      "finalSpeedKmh": 34.849954701524176,
+      "speedLossKmh": 15.150045298475824,
+      "finalEnergy": {
+        "bodyTranslationJ": 103063.5023007962,
+        "bodyRotationJ": 7.70646271883087e-11,
+        "gravityJ": 13960.865029670125,
+        "wheelRotationJ": 2433.625915785464,
+        "springJ": 897.7672391237425
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-5cm-50",
+      "kind": "step",
+      "heightM": 0.05,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 50,
+      "durationS": 3.44,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "dd832ed1747f72988d8723a47babd81ba3bea1d9ba573f085ab7334f6a73f350",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.05,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.025,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 34.84999033109511,
+      "maxWheelLoadN": 22277.430159479227,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.3274019746457849,
+      "maxPenetrationM": 0.0067327981227499195,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 0.32334602011741415,
+      "maxWheelLongitudinalSlip": 0.008999092672466092,
+      "maxWheelSlipAngleDeg": 0.7087340503637929,
+      "maxYawRateDegS": 0.4700848915518963,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.15389955130042188,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 3,
+      "airborneSteps": 0,
+      "pathLengthM": 40.51088570782195,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0.023202737906700948,
+        "y": 0.5970053295572926,
+        "z": 28.510745578253022
+      },
+      "finalSpeedKmh": 34.84999033109511,
+      "speedLossKmh": 15.150009668904893,
+      "finalEnergy": {
+        "bodyTranslationJ": 103063.7130391041,
+        "bodyRotationJ": 1.0643091395105798e-10,
+        "gravityJ": 12881.981568449399,
+        "wheelRotationJ": 2433.631247267197,
+        "springJ": 897.7674668111271
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "full-width-step-10cm-50",
+      "kind": "step",
+      "heightM": 0.1,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 50,
+      "durationS": 3.44,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "33d496a8bf61e893c0b37cc29d493aaaf4536c3e5721479bd2d9b71134b934d1",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 33.23690812080064,
+      "maxWheelLoadN": 32281.504586131847,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0.04932636519767011,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 0.01102665917287061,
+      "maxWheelLongitudinalSlip": 0.01596954322867501,
+      "maxWheelSlipAngleDeg": 0.012862737574059382,
+      "maxYawRateDegS": 0.08243833335832475,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.26601794829927816,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 14,
+      "airborneSteps": 30,
+      "pathLengthM": 39.35671972765315,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -0.004437219058818374,
+        "y": 0.6970107289186711,
+        "z": 27.31191926681487
+      },
+      "finalSpeedKmh": 33.23690812080064,
+      "speedLossKmh": 16.763091879199358,
+      "finalEnergy": {
+        "bodyTranslationJ": 93743.61429433552,
+        "bodyRotationJ": 8.712525005393187e-08,
+        "gravityJ": 15039.864668545022,
+        "wheelRotationJ": 2213.5547944334894,
+        "springJ": 897.6453225001173
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-10cm-50",
+      "kind": "step",
+      "heightM": 0.1,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 50,
+      "durationS": 3.44,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "c6a396d4460caa809d10ee70c4f6a73f9b1652ccb6767d7b1d3d8de33d6ab5ee",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 34.419925487078636,
+      "maxWheelLoadN": 22318.025573890198,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0.053384363138845176,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 1.2640611659532672,
+      "maxWheelLongitudinalSlip": 0.050224153089336324,
+      "maxWheelSlipAngleDeg": 3.7430084933180567,
+      "maxYawRateDegS": 6.589944220435463,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.7594312866197002,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 7,
+      "airborneSteps": 0,
+      "pathLengthM": 40.195035419161755,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0.0037648693385891802,
+        "y": 0.5970052973832061,
+        "z": 28.18944167953758
+      },
+      "finalSpeedKmh": 34.419925487078636,
+      "speedLossKmh": 15.580074512921364,
+      "finalEnergy": {
+        "bodyTranslationJ": 100535.70143678627,
+        "bodyRotationJ": 2.426880133208591e-10,
+        "gravityJ": 12881.98087420771,
+        "wheelRotationJ": 2373.935634017943,
+        "springJ": 897.7684557468409
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "full-width-step-2cm-90",
+      "kind": "step",
+      "heightM": 0.02,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 90,
+      "durationS": 3,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "79a086be3f2d5ae58ce97e0f949661571d555a160766ca8756ed8ea2f9043c93",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.02,
+            60
+          ],
+          "position": [
+            0,
+            0.01,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 75.85243704949471,
+      "maxWheelLoadN": 6949.851622720732,
+      "minSuspensionLengthM": 0.2628529541001895,
+      "maxSuspensionLengthM": 0.2943341044040222,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.006425880116781298,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.09605636596679686,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 69.12172735297445,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.6169704065420579,
+        "z": 57.12169262803307
+      },
+      "finalSpeedKmh": 75.85243704949471,
+      "speedLossKmh": 14.14756295050529,
+      "finalEnergy": {
+        "bodyTranslationJ": 488246.9490187897,
+        "bodyRotationJ": 3.1971357756973734e-07,
+        "gravityJ": 13312.781330188778,
+        "wheelRotationJ": 11529.47308929769,
+        "springJ": 898.4660830154288
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-2cm-90",
+      "kind": "step",
+      "heightM": 0.02,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 90,
+      "durationS": 3,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "14b9db392e9d2c5ad2ac798fa4d8a5bc91843a0a053d50d67ce6426993bad2de",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.02,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.01,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 75.85240644696516,
+      "maxWheelLoadN": 6949.851622720732,
+      "minSuspensionLengthM": 0.2628529541001895,
+      "maxSuspensionLengthM": 0.2945450536708799,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 0.009998720185359081,
+      "maxWheelLongitudinalSlip": 0.00628982390251461,
+      "maxWheelSlipAngleDeg": 0.03974067672367869,
+      "maxYawRateDegS": 0.03688502336564807,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.09394149780273446,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 69.12166903429807,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0.0006080199835894008,
+        "y": 0.5969704028125056,
+        "z": 57.121668255332736
+      },
+      "finalSpeedKmh": 75.85240644696516,
+      "speedLossKmh": 14.147593553034838,
+      "finalEnergy": {
+        "bodyTranslationJ": 488246.5550541592,
+        "bodyRotationJ": 3.1998555475776464e-07,
+        "gravityJ": 12881.227930817846,
+        "wheelRotationJ": 11529.463064654108,
+        "springJ": 898.4662042982679
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "full-width-step-5cm-90",
+      "kind": "step",
+      "heightM": 0.05,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 90,
+      "durationS": 3,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "eb28ef9e667e6aef1ce5117efa49d1a6708c908d509be24f8b0b1952cabc6fd0",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.05,
+            60
+          ],
+          "position": [
+            0,
+            0.025,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 75.85252518853423,
+      "maxWheelLoadN": 22188.222246006542,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.3092895957882923,
+      "maxPenetrationM": 0.006095979283571376,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.008946294810751312,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.1337196350097656,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 5,
+      "airborneSteps": 0,
+      "pathLengthM": 69.12231307497686,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.6469703571829679,
+        "z": 57.12192234679847
+      },
+      "finalSpeedKmh": 75.85252518853423,
+      "speedLossKmh": 14.14747481146577,
+      "finalEnergy": {
+        "bodyTranslationJ": 488248.0836861467,
+        "bodyRotationJ": 3.2010451460732805e-07,
+        "gravityJ": 13960.110243478666,
+        "wheelRotationJ": 11529.501366024557,
+        "springJ": 898.467183050242
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-5cm-90",
+      "kind": "step",
+      "heightM": 0.05,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 90,
+      "durationS": 3,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "dd832ed1747f72988d8723a47babd81ba3bea1d9ba573f085ab7334f6a73f350",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.05,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.025,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 75.85244738378954,
+      "maxWheelLoadN": 22188.222246006542,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.3177427697474313,
+      "maxPenetrationM": 0.006618128990704977,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 0.09256804865558817,
+      "maxWheelLongitudinalSlip": 0.007852092975369148,
+      "maxWheelSlipAngleDeg": 0.39547936243546455,
+      "maxYawRateDegS": 0.30132248933285105,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.13324981350649107,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 3,
+      "airborneSteps": 0,
+      "pathLengthM": 69.12178819901196,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0.03801309609325637,
+        "y": 0.5969703870919952,
+        "z": 57.12172632974148
+      },
+      "finalSpeedKmh": 75.85244738378954,
+      "speedLossKmh": 14.147552616210461,
+      "finalEnergy": {
+        "bodyTranslationJ": 488247.08205837186,
+        "bodyRotationJ": 3.2053347506290874e-07,
+        "gravityJ": 12881.227591605926,
+        "wheelRotationJ": 11529.476747924291,
+        "springJ": 898.4665816100626
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "full-width-step-10cm-90",
+      "kind": "step",
+      "heightM": 0.1,
+      "singleWheelPatch": false,
+      "nominalSpeedKmh": 90,
+      "durationS": 3,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "33d496a8bf61e893c0b37cc29d493aaaf4536c3e5721479bd2d9b71134b934d1",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 9.772696518241986,
+      "maxWheelLoadN": 8403.79432687991,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0.0831387873237476,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 86.15976060050811,
+      "maxWheelLongitudinalSlip": 0.013225417709126866,
+      "maxWheelSlipAngleDeg": 0.0019382853034276522,
+      "maxYawRateDegS": 348.9015746975199,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.269648052457088,
+      "hullContactSteps": 19,
+      "wheelStopContactSteps": 6,
+      "airborneSteps": 295,
+      "pathLengthM": 49.45208535286553,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 1.5730491062491339,
+        "y": 2.4338981333059024,
+        "z": 36.34954369361292
+      },
+      "finalSpeedKmh": 9.772696518241986,
+      "speedLossKmh": 80.22730348175801,
+      "finalEnergy": {
+        "bodyTranslationJ": 8104.557082453676,
+        "bodyRotationJ": 8911.17729536293,
+        "gravityJ": 52517.84086413445,
+        "wheelRotationJ": 16024.865453490054,
+        "springJ": 0
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "single-wheel-step-10cm-90",
+      "kind": "step",
+      "heightM": 0.1,
+      "singleWheelPatch": true,
+      "nominalSpeedKmh": 90,
+      "durationS": 3,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "c6a396d4460caa809d10ee70c4f6a73f9b1652ccb6767d7b1d3d8de33d6ab5ee",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 75.11013263682004,
+      "maxWheelLoadN": 28493.71410091879,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0.06577805705376902,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 1.7821856734185553,
+      "maxWheelLongitudinalSlip": 0.0578427687166408,
+      "maxWheelSlipAngleDeg": 2.807984285304886,
+      "maxYawRateDegS": 11.380745490208746,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.7452613540585585,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 10,
+      "airborneSteps": 0,
+      "pathLengthM": 68.60144651856137,
+      "contactObjectIds": [
+        "ground",
+        "fixture-step"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0.8020965447801283,
+        "y": 0.5969718329011148,
+        "z": 56.583215774650384
+      },
+      "finalSpeedKmh": 75.11013263682004,
+      "speedLossKmh": 14.88986736317996,
+      "finalEnergy": {
+        "bodyTranslationJ": 478737.57820772595,
+        "bodyRotationJ": 3.058856438053137e-07,
+        "gravityJ": 12881.258788792127,
+        "wheelRotationJ": 11304.905490090689,
+        "springJ": 898.4391367712523
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "slope-foot-20",
+      "kind": "slope",
+      "slopeDegrees": 5.710593137499643,
+      "endpoint": "foot",
+      "nominalSpeedKmh": 20,
+      "durationS": 7.98,
+      "initialSpeedKmh": 20,
+      "initialEnergy": {
+        "bodyTranslationJ": 33943.79938711257,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 811.6224332440548,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "ee136c3ea9dcd12c65d63ca1fcd44dc662a493c0e96a5faa13294d10c73cb73d",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-ramp",
+          "type": "box",
+          "kind": "ramp",
+          "size": [
+            12,
+            0.5,
+            20.09975124224178
+          ],
+          "position": [
+            0,
+            0.7487531094719777,
+            10
+          ],
+          "quaternion": [
+            -0.049813701880159766,
+            0,
+            0,
+            0.998758526924799
+          ]
+        },
+        {
+          "id": "fixture-upper",
+          "type": "box",
+          "kind": "deck",
+          "size": [
+            12,
+            2,
+            70
+          ],
+          "position": [
+            0,
+            1,
+            55
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 20,
+      "minSpeedKmh": 0.0003538127364234353,
+      "maxWheelLoadN": 7129.371347173432,
+      "minSuspensionLengthM": 0.2706652554006175,
+      "maxSuspensionLengthM": 0.2926900941080145,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 48532.845809217026,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.10264995402448475,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9629676818847656,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 12.362901840914798,
+      "contactObjectIds": [
+        "ground",
+        "fixture-ramp"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 0.6856816579568674,
+        "z": 0.3380076052949876
+      },
+      "finalSpeedKmh": 0.006686146060956688,
+      "speedLossKmh": 19.993313853939043,
+      "finalEnergy": {
+        "bodyTranslationJ": 0.0037936056199654664,
+        "bodyRotationJ": 8.139104845551301e-06,
+        "gravityJ": 14795.409759866347,
+        "wheelRotationJ": 0,
+        "springJ": 891.0818797708089
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "slope-crest-20",
+      "kind": "slope",
+      "slopeDegrees": 5.710593137499643,
+      "endpoint": "crest",
+      "nominalSpeedKmh": 20,
+      "durationS": 4.5600000000000005,
+      "initialSpeedKmh": 19.999999999999996,
+      "initialEnergy": {
+        "bodyTranslationJ": 33943.79938711256,
+        "bodyRotationJ": 0,
+        "gravityJ": 38836.428539390734,
+        "wheelRotationJ": 811.6224332440548,
+        "springJ": 888.1287448596931
+      },
+      "fixtureGeometryHash": "ee136c3ea9dcd12c65d63ca1fcd44dc662a493c0e96a5faa13294d10c73cb73d",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-ramp",
+          "type": "box",
+          "kind": "ramp",
+          "size": [
+            12,
+            0.5,
+            20.09975124224178
+          ],
+          "position": [
+            0,
+            0.7487531094719777,
+            10
+          ],
+          "quaternion": [
+            -0.049813701880159766,
+            0,
+            0,
+            0.998758526924799
+          ]
+        },
+        {
+          "id": "fixture-upper",
+          "type": "box",
+          "kind": "deck",
+          "size": [
+            12,
+            2,
+            70
+          ],
+          "position": [
+            0,
+            1,
+            55
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 1.7998438125213096,
+        "z": 11.994442180442459
+      },
+      "maxSpeedKmh": 19.999999999999996,
+      "minSpeedKmh": 0.0004617732547323064,
+      "maxWheelLoadN": 6006.983691234703,
+      "minSuspensionLengthM": 0.2817091503568373,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 74479.97910460705,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.09228243519211783,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9533149719238281,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 7.447830756995921,
+      "contactObjectIds": [
+        "fixture-ramp",
+        "fixture-upper"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 2.496798555249291,
+        "z": 19.39526480866287
+      },
+      "finalSpeedKmh": 0.007732783491210126,
+      "speedLossKmh": 19.992267216508786,
+      "finalEnergy": {
+        "bodyTranslationJ": 0.0050742535231004275,
+        "bodyRotationJ": 9.293838461404979e-06,
+        "gravityJ": 53875.08515661553,
+        "wheelRotationJ": 0,
+        "springJ": 890.8080462147758
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "slope-foot-50",
+      "kind": "slope",
+      "slopeDegrees": 5.710593137499643,
+      "endpoint": "foot",
+      "nominalSpeedKmh": 50,
+      "durationS": 4.0920000000000005,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "ee136c3ea9dcd12c65d63ca1fcd44dc662a493c0e96a5faa13294d10c73cb73d",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-ramp",
+          "type": "box",
+          "kind": "ramp",
+          "size": [
+            12,
+            0.5,
+            20.09975124224178
+          ],
+          "position": [
+            0,
+            0.7487531094719777,
+            10
+          ],
+          "quaternion": [
+            -0.049813701880159766,
+            0,
+            0,
+            0.998758526924799
+          ]
+        },
+        {
+          "id": "fixture-upper",
+          "type": "box",
+          "kind": "deck",
+          "size": [
+            12,
+            2,
+            70
+          ],
+          "position": [
+            0,
+            1,
+            55
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 25.365346501091057,
+      "maxWheelLoadN": 21176.61376663935,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0.007752621807953898,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 8.038949548316701e-05,
+      "maxWheelLongitudinalSlip": 0.013396820358773806,
+      "maxWheelSlipAngleDeg": 0.0004161837989504064,
+      "maxYawRateDegS": 0.0005675315582413022,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.18380661010745222,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 4,
+      "airborneSteps": 0,
+      "pathLengthM": 42.315745793585485,
+      "contactObjectIds": [
+        "ground",
+        "fixture-ramp",
+        "fixture-upper"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -2.2463588203983274e-05,
+        "y": 2.5969454697325474,
+        "z": 30.2214846651568
+      },
+      "finalSpeedKmh": 25.365346501091057,
+      "speedLossKmh": 24.634653498908943,
+      "finalEnergy": {
+        "bodyTranslationJ": 54598.66946656596,
+        "bodyRotationJ": 4.1490797172255376e-05,
+        "gravityJ": 56036.02182273717,
+        "wheelRotationJ": 1289.1932383187411,
+        "springJ": 899.1040004076119
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "slope-crest-50",
+      "kind": "slope",
+      "slopeDegrees": 5.710593137499643,
+      "endpoint": "crest",
+      "nominalSpeedKmh": 50,
+      "durationS": 2.724,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 38836.428539390734,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 888.1287448596931
+      },
+      "fixtureGeometryHash": "ee136c3ea9dcd12c65d63ca1fcd44dc662a493c0e96a5faa13294d10c73cb73d",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-ramp",
+          "type": "box",
+          "kind": "ramp",
+          "size": [
+            12,
+            0.5,
+            20.09975124224178
+          ],
+          "position": [
+            0,
+            0.7487531094719777,
+            10
+          ],
+          "quaternion": [
+            -0.049813701880159766,
+            0,
+            0,
+            0.998758526924799
+          ]
+        },
+        {
+          "id": "fixture-upper",
+          "type": "box",
+          "kind": "deck",
+          "size": [
+            12,
+            2,
+            70
+          ],
+          "position": [
+            0,
+            1,
+            55
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 1.7998438125213096,
+        "z": 11.994442180442459
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 35.762436343762566,
+      "maxWheelLoadN": 6568.657359789752,
+      "minSuspensionLengthM": 0.2786765127048708,
+      "maxSuspensionLengthM": 0.36688540407320047,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 256945.94366147934,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.015057553440610065,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.28266983032226556,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 31.783787752625884,
+      "contactObjectIds": [
+        "fixture-ramp",
+        "fixture-upper"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 2.597005917937594,
+        "z": 43.739961528235426
+      },
+      "finalSpeedKmh": 35.762436343762566,
+      "speedLossKmh": 14.237563656237434,
+      "finalEnergy": {
+        "bodyTranslationJ": 108531.21283052767,
+        "bodyRotationJ": 1.107419094779932e-10,
+        "gravityJ": 56037.32615391263,
+        "wheelRotationJ": 2562.7369895871952,
+        "springJ": 897.7559554262383
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "slope-foot-90",
+      "kind": "slope",
+      "slopeDegrees": 5.710593137499643,
+      "endpoint": "foot",
+      "nominalSpeedKmh": 90,
+      "durationS": 2.94,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "ee136c3ea9dcd12c65d63ca1fcd44dc662a493c0e96a5faa13294d10c73cb73d",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-ramp",
+          "type": "box",
+          "kind": "ramp",
+          "size": [
+            12,
+            0.5,
+            20.09975124224178
+          ],
+          "position": [
+            0,
+            0.7487531094719777,
+            10
+          ],
+          "quaternion": [
+            -0.049813701880159766,
+            0,
+            0,
+            0.998758526924799
+          ]
+        },
+        {
+          "id": "fixture-upper",
+          "type": "box",
+          "kind": "deck",
+          "size": [
+            12,
+            2,
+            70
+          ],
+          "position": [
+            0,
+            1,
+            55
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 73.26621482538549,
+      "maxWheelLoadN": 35700.25422834516,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0.01627750701172533,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 0.0006370145346767288,
+      "maxWheelLongitudinalSlip": 0.01581414405785227,
+      "maxWheelSlipAngleDeg": 0.0023153113781846273,
+      "maxYawRateDegS": 0.008804267322316562,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.22961196903033265,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 8,
+      "airborneSteps": 24,
+      "pathLengthM": 66.12789419624448,
+      "contactObjectIds": [
+        "ground",
+        "fixture-ramp",
+        "fixture-upper"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -0.0010306657509311524,
+        "y": 2.597115898656813,
+        "z": 54.02062703405184
+      },
+      "finalSpeedKmh": 73.26621482538549,
+      "speedLossKmh": 16.73378517461451,
+      "finalEnergy": {
+        "bodyTranslationJ": 455520.5464145109,
+        "bodyRotationJ": 4.402271468844269e-05,
+        "gravityJ": 56039.69928113231,
+        "wheelRotationJ": 10756.570819522742,
+        "springJ": 895.2517439863726
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "slope-crest-90",
+      "kind": "slope",
+      "slopeDegrees": 5.710593137499643,
+      "endpoint": "crest",
+      "nominalSpeedKmh": 90,
+      "durationS": 2.18,
+      "initialSpeedKmh": 89.99999999999999,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890293,
+        "bodyRotationJ": 0,
+        "gravityJ": 38836.428539390734,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 888.1287448596931
+      },
+      "fixtureGeometryHash": "ee136c3ea9dcd12c65d63ca1fcd44dc662a493c0e96a5faa13294d10c73cb73d",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-ramp",
+          "type": "box",
+          "kind": "ramp",
+          "size": [
+            12,
+            0.5,
+            20.09975124224178
+          ],
+          "position": [
+            0,
+            0.7487531094719777,
+            10
+          ],
+          "quaternion": [
+            -0.049813701880159766,
+            0,
+            0,
+            0.998758526924799
+          ]
+        },
+        {
+          "id": "fixture-upper",
+          "type": "box",
+          "kind": "deck",
+          "size": [
+            12,
+            2,
+            70
+          ],
+          "position": [
+            0,
+            1,
+            55
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 1.7998438125213096,
+        "z": 11.994442180442459
+      },
+      "maxSpeedKmh": 89.99999999999999,
+      "minSpeedKmh": 79.24229292076394,
+      "maxWheelLoadN": 16433.766772483385,
+      "minSuspensionLengthM": 0.2427990261849985,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 743521.8491464718,
+      "maxBodySlipDeg": 0,
+      "maxWheelLongitudinalSlip": 0.014647263619220556,
+      "maxWheelSlipAngleDeg": 0,
+      "maxYawRateDegS": 0,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.2127937316894531,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 32,
+      "pathLengthM": 51.142276755150085,
+      "contactObjectIds": [
+        "fixture-ramp",
+        "fixture-upper"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 0,
+        "y": 2.5969275473582396,
+        "z": 63.08456690216514
+      },
+      "finalSpeedKmh": 79.24229292076394,
+      "speedLossKmh": 10.757707079236042,
+      "finalEnergy": {
+        "bodyTranslationJ": 532861.726893869,
+        "bodyRotationJ": 4.971608667525021e-06,
+        "gravityJ": 56035.63509973142,
+        "wheelRotationJ": 12583.129801033532,
+        "springJ": 899.3684209637121
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "pillar-head-on-50",
+      "kind": "collision",
+      "nominalSpeedKmh": 50,
+      "durationS": 3,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "4bc111160628b6584ffe7f5c1077ecdb2604a78329ca571f4252ed03bebdfa91",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-pillar",
+          "type": "box",
+          "kind": "pillar",
+          "size": [
+            1.2,
+            12,
+            1.2
+          ],
+          "position": [
+            0,
+            6,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 0.0033868876796439434,
+      "maxWheelLoadN": 6079.906005502145,
+      "minSuspensionLengthM": 0.2803438644873181,
+      "maxSuspensionLengthM": 0.2936789650125522,
+      "maxPenetrationM": 0.09048854539367646,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 4.457755611666441,
+      "maxWheelLongitudinalSlip": 1.9937363459669364,
+      "maxWheelSlipAngleDeg": 5.391204391826378,
+      "maxYawRateDegS": 3.553697198668702,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.970326995849629,
+      "hullContactSteps": 7,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 11.650428497177929,
+      "contactObjectIds": [
+        "ground",
+        "fixture-pillar"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -0.011531156300276893,
+        "y": 0.5970102559127126,
+        "z": -5.028767818257215
+      },
+      "finalSpeedKmh": 0.009412392035145857,
+      "speedLossKmh": 49.990587607964855,
+      "finalEnergy": {
+        "bodyTranslationJ": 0.007517968055337359,
+        "bodyRotationJ": 0.01638109517679578,
+        "gravityJ": 12882.087867700979,
+        "wheelRotationJ": 0,
+        "springJ": 895.4776690293986
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "pillar-head-on-90",
+      "kind": "collision",
+      "nominalSpeedKmh": 90,
+      "durationS": 3,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "4bc111160628b6584ffe7f5c1077ecdb2604a78329ca571f4252ed03bebdfa91",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-pillar",
+          "type": "box",
+          "kind": "pillar",
+          "size": [
+            1.2,
+            12,
+            1.2
+          ],
+          "position": [
+            0,
+            6,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 1.6428846812402378e-06,
+      "maxWheelLoadN": 6309.0215177704185,
+      "minSuspensionLengthM": 0.2775093340778648,
+      "maxSuspensionLengthM": 0.2936218147932015,
+      "maxPenetrationM": 0.07379762248255728,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 12.292435747662136,
+      "maxWheelLongitudinalSlip": 1.8104296865040457,
+      "maxWheelSlipAngleDeg": 13.473160998823426,
+      "maxYawRateDegS": 5.980927802766245,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.9999996578833169,
+      "hullContactSteps": 7,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 9.99651242405904,
+      "contactObjectIds": [
+        "ground",
+        "fixture-pillar"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -0.00927124039994066,
+        "y": 0.5970089775656517,
+        "z": -3.421604842745142
+      },
+      "finalSpeedKmh": 1.0527179464725515e-05,
+      "speedLossKmh": 89.99998947282053,
+      "finalEnergy": {
+        "bodyTranslationJ": 9.40425754441171e-09,
+        "bodyRotationJ": 2.5456597548816014e-08,
+        "gravityJ": 12882.060283955137,
+        "wheelRotationJ": 0,
+        "springJ": 895.376265298997
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "pillar-oblique-50",
+      "kind": "collision",
+      "nominalSpeedKmh": 50,
+      "headingDeg": 10,
+      "durationS": 3,
+      "initialSpeedKmh": 50,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945357,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435014
+      },
+      "fixtureGeometryHash": "4bc111160628b6584ffe7f5c1077ecdb2604a78329ca571f4252ed03bebdfa91",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-pillar",
+          "type": "box",
+          "kind": "pillar",
+          "size": [
+            1.2,
+            12,
+            1.2
+          ],
+          "position": [
+            0,
+            6,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": -0.8,
+        "y": 0.5970097961232198,
+        "z": -12.000000048641066
+      },
+      "maxSpeedKmh": 50,
+      "minSpeedKmh": 2.448294091161251e-05,
+      "maxWheelLoadN": 18693.195695763818,
+      "minSuspensionLengthM": 0.2418063644185815,
+      "maxSuspensionLengthM": 0.34349219847394696,
+      "maxPenetrationM": 0.07821512265443953,
+      "maxMechanicalEnergyJ": 230998.8103660893,
+      "maxBodySlipDeg": 85.30479194930894,
+      "maxWheelLongitudinalSlip": 1.8838942092786533,
+      "maxWheelSlipAngleDeg": 78.87789770193388,
+      "maxYawRateDegS": 94.28649278043015,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 1.0000000000000002,
+      "hullContactSteps": 7,
+      "wheelStopContactSteps": 4,
+      "airborneSteps": 0,
+      "pathLengthM": 10.138859095454206,
+      "contactObjectIds": [
+        "ground",
+        "fixture-pillar"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 1.5529474617570926,
+        "y": 0.5970090016146051,
+        "z": -3.0896917320376667
+      },
+      "finalSpeedKmh": 2.448294091161251e-05,
+      "speedLossKmh": 49.99997551705909,
+      "finalEnergy": {
+        "bodyTranslationJ": 5.08660049919012e-08,
+        "bodyRotationJ": 3.462957778772353e-08,
+        "gravityJ": 12882.06080287542,
+        "wheelRotationJ": 0,
+        "springJ": 895.3761374343981
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "guardrail-oblique-50",
+      "kind": "collision",
+      "nominalSpeedKmh": 50,
+      "headingDeg": 5,
+      "durationS": 4,
+      "initialSpeedKmh": 50.00000000000001,
+      "initialEnergy": {
+        "bodyTranslationJ": 212148.74616945363,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5072.640207775344,
+        "springJ": 895.3460423435014
+      },
+      "fixtureGeometryHash": "3bf44bb989b25ad21ae8100e9955c7a9c142baec0ba7fa1d175977bc7cba2f34",
+      "fixtureGeometry": [
+        {
+          "id": "fixture-guardrail",
+          "type": "box",
+          "kind": "rail",
+          "size": [
+            0.3,
+            1.1,
+            100
+          ],
+          "position": [
+            3,
+            0.55,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "initialPosition": {
+        "x": 1,
+        "y": 0.5970097961232198,
+        "z": -12.000000048641066
+      },
+      "maxSpeedKmh": 50.00000000000001,
+      "minSpeedKmh": 32.22051217917013,
+      "maxWheelLoadN": 6627.036232971455,
+      "minSuspensionLengthM": 0.2773852786390756,
+      "maxSuspensionLengthM": 0.29663007548859954,
+      "maxPenetrationM": 0.008462350796520024,
+      "maxMechanicalEnergyJ": 230998.81036608937,
+      "maxBodySlipDeg": 1.7198853036448434,
+      "maxWheelLongitudinalSlip": 0.006903624142377235,
+      "maxWheelSlipAngleDeg": 4.505578469694559,
+      "maxYawRateDegS": 23.928255987075364,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.5873660643896476,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 192,
+      "airborneSteps": 0,
+      "pathLengthM": 45.528038582928815,
+      "contactObjectIds": [
+        "ground",
+        "fixture-guardrail"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 1.827499993628609,
+        "y": 0.5970055368896696,
+        "z": 33.495593140161326
+      },
+      "finalSpeedKmh": 32.22051217917013,
+      "speedLossKmh": 17.77948782082988,
+      "finalEnergy": {
+        "bodyTranslationJ": 88097.85616437922,
+        "bodyRotationJ": 6.359829696150655e-11,
+        "gravityJ": 12881.98604219817,
+        "wheelRotationJ": 2080.238262402794,
+        "springJ": 897.7631436221463
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "hard-landing-8mps",
+      "kind": "landing",
+      "initialVerticalMps": -8,
+      "initialCgHeightM": 5,
+      "durationS": 3,
+      "initialSpeedKmh": 28.8,
+      "initialEnergy": {
+        "bodyTranslationJ": 70385.86240911663,
+        "bodyRotationJ": 0,
+        "gravityJ": 107888.3297239741,
+        "wheelRotationJ": 0,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 5,
+        "z": -12
+      },
+      "maxSpeedKmh": 43.63931973892772,
+      "minSpeedKmh": 2.271021806395639e-07,
+      "maxWheelLoadN": 49628.63167302808,
+      "minSuspensionLengthM": 0.24,
+      "maxSuspensionLengthM": 0.41,
+      "maxPenetrationM": 0.028277571590912265,
+      "maxMechanicalEnergyJ": 179169.53817543422,
+      "maxBodySlipDeg": 0.060957737424085306,
+      "maxWheelLongitudinalSlip": 2.6362887418027384e-05,
+      "maxWheelSlipAngleDeg": 0.16144923461064928,
+      "maxYawRateDegS": 6.793553868062335e-06,
+      "peakWheelSteerDeg": 0,
+      "maxGripUse": 0.05200740377836265,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 5,
+      "airborneSteps": 64,
+      "pathLengthM": 4.697953947000446,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 3.886162339123111e-05,
+        "y": 0.5970088473384292,
+        "z": -12.000001133362016
+      },
+      "finalSpeedKmh": 4.4150757805447024e-06,
+      "speedLossKmh": 28.79999558492422,
+      "finalEnergy": {
+        "bodyTranslationJ": 1.6541572210807934e-09,
+        "bodyRotationJ": 4.154719215819405e-13,
+        "gravityJ": 12882.057473955632,
+        "wheelRotationJ": 0,
+        "springJ": 895.3793050941243
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "steering-54-dry-keyboard",
+      "kind": "steering",
+      "nominalSpeedKmh": 54,
+      "roadSurface": "dry",
+      "inputDeviceFixture": "keyboard",
+      "inputMeaning": "held KeyD mapped through production driverAxes",
+      "physicalDryMu": 1.25,
+      "durationS": 4,
+      "initialSpeedKmh": 54,
+      "initialEnergy": {
+        "bodyTranslationJ": 247450.29753205064,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5916.72753834916,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 54,
+      "minSpeedKmh": 25.693617132936563,
+      "maxWheelLoadN": 10531.866648520603,
+      "minSuspensionLengthM": 0.2505648644202051,
+      "maxSuspensionLengthM": 0.34162698570288796,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 267144.4490592602,
+      "maxBodySlipDeg": 8.521398260256042,
+      "maxWheelLongitudinalSlip": 0.00678067238301045,
+      "maxWheelSlipAngleDeg": 6.7201381241255325,
+      "maxYawRateDegS": 60.79444037812823,
+      "peakWheelSteerDeg": 26.10043657844047,
+      "maxGripUse": 0.9100568904047405,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 44.752610688105534,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -25.94822418480445,
+        "y": 0.6047386219488087,
+        "z": 2.619028084520566
+      },
+      "finalSpeedKmh": 25.693617132936563,
+      "speedLossKmh": 28.306382867063437,
+      "finalEnergy": {
+        "bodyTranslationJ": 56021.0129496987,
+        "bodyRotationJ": 2326.957563433692,
+        "gravityJ": 13048.847968326958,
+        "wheelRotationJ": 1384.8687091724132,
+        "springJ": 936.6387597560754
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "steering-54-dry-axis",
+      "kind": "steering",
+      "nominalSpeedKmh": 54,
+      "roadSurface": "dry",
+      "inputDeviceFixture": "axis",
+      "inputMeaning": "constant normalized analogue request",
+      "physicalDryMu": 1.25,
+      "durationS": 4,
+      "initialSpeedKmh": 54,
+      "initialEnergy": {
+        "bodyTranslationJ": 247450.29753205064,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5916.72753834916,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 54,
+      "minSpeedKmh": 35.96074469442803,
+      "maxWheelLoadN": 6436.044828245372,
+      "minSuspensionLengthM": 0.2710927451644243,
+      "maxSuspensionLengthM": 0.30293484504685175,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 267144.4490592602,
+      "maxBodySlipDeg": 0.7818462801528941,
+      "maxWheelLongitudinalSlip": 0.006299430097360083,
+      "maxWheelSlipAngleDeg": 0.7907470713416376,
+      "maxYawRateDegS": 10.197501368099132,
+      "peakWheelSteerDeg": 3.030057668586773,
+      "maxGripUse": 0.18963410343434722,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 49.914023025749174,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 11.82628974836322,
+        "y": 0.5969656229751341,
+        "z": 35.74057249359813
+      },
+      "finalSpeedKmh": 35.96074469442803,
+      "speedLossKmh": 18.03925530557197,
+      "finalEnergy": {
+        "bodyTranslationJ": 109738.19542185249,
+        "bodyRotationJ": 65.4921462574373,
+        "gravityJ": 12881.124793083774,
+        "wheelRotationJ": 2592.519404844129,
+        "springJ": 913.6485737369885
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "steering-54-wet-keyboard",
+      "kind": "steering",
+      "nominalSpeedKmh": 54,
+      "roadSurface": "wet",
+      "inputDeviceFixture": "keyboard",
+      "inputMeaning": "held KeyD mapped through production driverAxes",
+      "physicalDryMu": 1.25,
+      "durationS": 4,
+      "initialSpeedKmh": 54,
+      "initialEnergy": {
+        "bodyTranslationJ": 247450.29753205064,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5916.72753834916,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 54,
+      "minSpeedKmh": 33.07067756065701,
+      "maxWheelLoadN": 7830.466968679856,
+      "minSuspensionLengthM": 0.2544894273919075,
+      "maxSuspensionLengthM": 0.32130102389048987,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 267144.4490592602,
+      "maxBodySlipDeg": 2.208199979341088,
+      "maxWheelLongitudinalSlip": 0.01231567575312572,
+      "maxWheelSlipAngleDeg": 3.188724902250304,
+      "maxYawRateDegS": 29.188392677727006,
+      "peakWheelSteerDeg": 9.862563010980471,
+      "maxGripUse": 0.8852721685390135,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 48.43998630860708,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -25.449618165311453,
+        "y": 0.5976476465036218,
+        "z": 23.17610485393567
+      },
+      "finalSpeedKmh": 33.07067756065701,
+      "speedLossKmh": 20.92932243934299,
+      "finalEnergy": {
+        "bodyTranslationJ": 92808.26344667703,
+        "bodyRotationJ": 536.4898928080414,
+        "gravityJ": 12895.841268947972,
+        "wheelRotationJ": 2175.4571797596623,
+        "springJ": 982.8672926083007
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "steering-54-wet-axis",
+      "kind": "steering",
+      "nominalSpeedKmh": 54,
+      "roadSurface": "wet",
+      "inputDeviceFixture": "axis",
+      "inputMeaning": "constant normalized analogue request",
+      "physicalDryMu": 1.25,
+      "durationS": 4,
+      "initialSpeedKmh": 54,
+      "initialEnergy": {
+        "bodyTranslationJ": 247450.29753205064,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 5916.72753834916,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 54,
+      "minSpeedKmh": 36.203320006410664,
+      "maxWheelLoadN": 6095.406784893282,
+      "minSuspensionLengthM": 0.27627515712971873,
+      "maxSuspensionLengthM": 0.2977449974608568,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 267144.4490592602,
+      "maxBodySlipDeg": 0.42913687005721424,
+      "maxWheelLongitudinalSlip": 0.012218717092787539,
+      "maxWheelSlipAngleDeg": 0.43866054297652296,
+      "maxYawRateDegS": 5.699313606484548,
+      "peakWheelSteerDeg": 1.6829864993016554,
+      "maxGripUse": 0.2511671933800463,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 50.048150350066436,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 6.729164660380993,
+        "y": 0.5969927052745106,
+        "z": 37.36358893734353
+      },
+      "finalSpeedKmh": 36.203320006410664,
+      "speedLossKmh": 17.796679993589336,
+      "finalEnergy": {
+        "bodyTranslationJ": 111223.67965479218,
+        "bodyRotationJ": 20.457618188835216,
+        "gravityJ": 12881.709165892738,
+        "wheelRotationJ": 2595.573352210772,
+        "springJ": 902.7906966809214
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "steering-90-dry-keyboard",
+      "kind": "steering",
+      "nominalSpeedKmh": 90,
+      "roadSurface": "dry",
+      "inputDeviceFixture": "keyboard",
+      "inputMeaning": "held KeyD mapped through production driverAxes",
+      "physicalDryMu": 1.25,
+      "durationS": 4,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 62.4609863057252,
+      "maxWheelLoadN": 9643.469392895462,
+      "minSuspensionLengthM": 0.2518082591480889,
+      "maxSuspensionLengthM": 0.3420712186718642,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 2.7883240261245623,
+      "maxWheelLongitudinalSlip": 0.006360831737557967,
+      "maxWheelSlipAngleDeg": 5.025657030535371,
+      "maxYawRateDegS": 28.65976660835281,
+      "peakWheelSteerDeg": 5.56886502999891,
+      "maxGripUse": 0.8253173245713434,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 85.21732030075759,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -44.5744097133064,
+        "y": 0.6061588247959971,
+        "z": 49.91139464982612
+      },
+      "finalSpeedKmh": 62.4609863057252,
+      "speedLossKmh": 27.5390136942748,
+      "finalEnergy": {
+        "bodyTranslationJ": 331068.7097355354,
+        "bodyRotationJ": 517.129103837519,
+        "gravityJ": 13079.492630937437,
+        "wheelRotationJ": 7779.439073154957,
+        "springJ": 946.741597405103
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "steering-90-dry-axis",
+      "kind": "steering",
+      "nominalSpeedKmh": 90,
+      "roadSurface": "dry",
+      "inputDeviceFixture": "axis",
+      "inputMeaning": "constant normalized analogue request",
+      "physicalDryMu": 1.25,
+      "durationS": 4,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 69.11924742573804,
+      "maxWheelLoadN": 7694.574007467539,
+      "minSuspensionLengthM": 0.25468757476890846,
+      "maxSuspensionLengthM": 0.31997484655901853,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 1.137705546085016,
+      "maxWheelLongitudinalSlip": 0.0062974677112079954,
+      "maxWheelSlipAngleDeg": 2.0609633363068034,
+      "maxYawRateDegS": 13.989748195422184,
+      "peakWheelSteerDeg": 2.339566281306797,
+      "maxGripUse": 0.42797951032069703,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 88.49721504192969,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 28.49370294364882,
+        "y": 0.5971006620243855,
+        "z": 69.05676597608644
+      },
+      "finalSpeedKmh": 69.11924742573804,
+      "speedLossKmh": 20.88075257426196,
+      "finalEnergy": {
+        "bodyTranslationJ": 405413.7390931643,
+        "bodyRotationJ": 123.2438973599992,
+        "gravityJ": 12884.038620578023,
+        "wheelRotationJ": 9563.533822615307,
+        "springJ": 993.6053345184918
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "steering-90-wet-keyboard",
+      "kind": "steering",
+      "nominalSpeedKmh": 90,
+      "roadSurface": "wet",
+      "inputDeviceFixture": "keyboard",
+      "inputMeaning": "held KeyD mapped through production driverAxes",
+      "physicalDryMu": 1.25,
+      "durationS": 4,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 68.38029348965797,
+      "maxWheelLoadN": 7742.965620127623,
+      "minSuspensionLengthM": 0.2546165575410284,
+      "maxSuspensionLengthM": 0.32098835228591993,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 1.6694619641534068,
+      "maxWheelLongitudinalSlip": 0.012216592916251073,
+      "maxWheelSlipAngleDeg": 2.8159353498186372,
+      "maxYawRateDegS": 14.777984435989556,
+      "peakWheelSteerDeg": 2.655863183595719,
+      "maxGripUse": 0.8440109878738647,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 88.16025538408303,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": -29.250489432377485,
+        "y": 0.5974973793737153,
+        "z": 68.20994040325806
+      },
+      "finalSpeedKmh": 68.38029348965797,
+      "speedLossKmh": 21.619706510342027,
+      "finalEnergy": {
+        "bodyTranslationJ": 396791.5195752018,
+        "bodyRotationJ": 137.52215699743618,
+        "gravityJ": 12892.598855016366,
+        "wheelRotationJ": 9242.230282607748,
+        "springJ": 991.3935351667517
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    },
+    {
+      "id": "steering-90-wet-axis",
+      "kind": "steering",
+      "nominalSpeedKmh": 90,
+      "roadSurface": "wet",
+      "inputDeviceFixture": "axis",
+      "inputMeaning": "constant normalized analogue request",
+      "physicalDryMu": 1.25,
+      "durationS": 4,
+      "initialSpeedKmh": 90,
+      "initialEnergy": {
+        "bodyTranslationJ": 687361.9375890295,
+        "bodyRotationJ": 0,
+        "gravityJ": 12882.077946516898,
+        "wheelRotationJ": 16435.354273192108,
+        "springJ": 895.3460423435032
+      },
+      "fixtureGeometryHash": "a67b283c10631fc6bfddc82d5e0cf22bdc25b5045636806aa92fdc09130aaceb",
+      "fixtureGeometry": [],
+      "initialPosition": {
+        "x": 0,
+        "y": 0.5970097961232198,
+        "z": -12
+      },
+      "maxSpeedKmh": 90,
+      "minSpeedKmh": 70.53480221586811,
+      "maxWheelLoadN": 6727.647751229805,
+      "minSuspensionLengthM": 0.26652104815104005,
+      "maxSuspensionLengthM": 0.307414227120549,
+      "maxPenetrationM": 0,
+      "maxMechanicalEnergyJ": 717574.7158510821,
+      "maxBodySlipDeg": 0.6402858386294401,
+      "maxWheelLongitudinalSlip": 0.012213762151770472,
+      "maxWheelSlipAngleDeg": 1.148179634852115,
+      "maxYawRateDegS": 7.66240467423224,
+      "peakWheelSteerDeg": 1.2597105526642371,
+      "maxGripUse": 0.47147892413491177,
+      "hullContactSteps": 0,
+      "wheelStopContactSteps": 0,
+      "airborneSteps": 0,
+      "pathLengthM": 89.22201070653834,
+      "contactObjectIds": [
+        "ground"
+      ],
+      "solverFault": null,
+      "finalPosition": {
+        "x": 16.591745041699486,
+        "y": 0.5968986704649516,
+        "z": 74.8479399179393
+      },
+      "finalSpeedKmh": 70.53480221586811,
+      "speedLossKmh": 19.465197784131888,
+      "finalEnergy": {
+        "bodyTranslationJ": 422189.4401411886,
+        "bodyRotationJ": 36.97618395933627,
+        "gravityJ": 12879.68011418489,
+        "wheelRotationJ": 9848.523809747901,
+        "springJ": 931.5778470035692
+      },
+      "unexplainedPeakEnergyGainJ": 0,
+      "energyAccountingScope": "rigid translation + rotation + wheel rotation + gravity + ray-spring potential; no motor in passive cases. Ideal ray suspension relocates spring compression at a discontinuity; this diagnostic is not a complete deformable-tyre work model.",
+      "unexplainedPeakEnergyGainFraction": 0
+    }
+  ],
+  "retainedFailures": [],
+  "reason": "Default lift-off regenerative braking reduced approach speed. Initial speed alone is not the requested contact speed. The follow-up passive contact fixture disables only regenForce, declares that parameter, and reports first actual fixture contact speed. Production defaults are unchanged.",
+  "selectedRawTrace": {
+    "file": "contact-preconditions-3.14.ndjson.gz",
+    "format": "gzip UTF-8 NDJSON",
+    "samples": 1990,
+    "sha256": "e9832d857a227091a478eb632cba7b4e6ede84f542c2f64a8e87ecf5e4d43917",
+    "scope": "Original default-lift-off-regen trial; this failed the intended contact-speed precondition. Retained unchanged selected full traces."
+  }
+}
