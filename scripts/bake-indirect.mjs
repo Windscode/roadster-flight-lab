@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from './qa-report-version.mjs';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import * as THREE from '../dist/vendor/three.module.js';
@@ -60,7 +61,7 @@ if(process.argv.includes('--audit')){
     if(relativeError>.25)throw Error('Probe convergence exceeds 25% at '+p);
     cases.push({point:p,bounceIrradiance:levels,preview768:preview,reference1536:reference,relativeError});
   }
-  const report={status:'passed',meaning:'Independent fixed-direction three-event transport and 768/1536-ray convergence spot checks; not a full-scene ground truth',cases};writeFileSync(new URL('../qa/irradiance-convergence-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));process.exit(0);
+  const report={status:'passed',meaning:'Independent fixed-direction three-event transport and 768/1536-ray convergence spot checks; not a full-scene ground truth',cases};writeFileSync(new URL(`../qa/irradiance-convergence-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));process.exit(0);
 }
 const output=new URL('../dist/assets/irradiance/',import.meta.url);mkdirSync(output,{recursive:true});
 const volumes=[];let valid=0,total=0;

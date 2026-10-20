@@ -1,6 +1,6 @@
 # Lossless repository payloads
 
-The files listed in [manifest.json](manifest.json) are stored as gzip segments of at most 192 KiB. This keeps individual source-transfer requests bounded. The original light fields, PNG evidence and complete numerical JSON are preserved byte-for-byte; this is a source-storage format, not a rendering change or reduced-resolution data.
+The files listed in [manifest.json](manifest.json) are stored as gzip segments of at most 192 KiB. This keeps individual source-transfer requests bounded. The original light fields and complete numerical JSON are preserved byte-for-byte; this is a source-storage format, not a rendering change or reduced-resolution data.
 
 `npm start`, `npm test`, `npm run validate` and the existing Pages workflow restore the original paths before using them. A fresh checkout can restore them explicitly with:
 
@@ -15,3 +15,5 @@ The runtime still loads its original `.bin` paths. Pages preparation publishes r
 `tests/repository-payloads.test.mjs` reconstructs every file in an empty temporary directory and compares it with the original, then checks local-edit preservation and corrupted-segment rejection. Generated reports record numerical and graphical limits separately.
 
 The original user-uploaded stripe PNG and its segments are retained locally and excluded from the public Git tree and Pages. Its inspected provenance and SHA-256 remain in `qa/body-stripe-source-3.11.json`. This image is not a runtime dependency.
+
+The 3.12 addition retains all earlier entries and archives four complete generated JSON files. See [the 3.12 public data inventory](../docs/publication-payloads-3.12.md) for original-byte identities and direct Pages download links.

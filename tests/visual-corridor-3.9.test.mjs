@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -101,4 +102,4 @@ evidence.captureProtocol={...CITY_VISUAL_CAPTURE_PROTOCOL,actualScreenshots:null
 const sourcePaths=['dist/city-corridor-plan.js','dist/city-plan.js','dist/city-environment.js','dist/urban-architecture.js','dist/city-frontage-design.js','dist/pavement-surface-material.js','dist/road-surface-material.js','dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/vehicle.js','dist/vehicle-inspection.js','dist/visual-presets.js','tests/visual-corridor-3.9.test.mjs'];
 const sourceHashes=Object.fromEntries(sourcePaths.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')]));
 const report={format:'roadster-visual-corridor-3.10',createdAt:new Date().toISOString(),status:'passed',checks,evidence,sourceHashes,limits:['CPU geometry, matrix, shared world and renderer-state contracts only. None establish real image quality, shadow leakage, frame times or steering feel.','Reflection distance culling is conservative per mesh/instanced batch. A sphere crossing 400 m is retained; the rebuilt bounded base projection then receives an oblique near plane.','The original city and physical corridor remain. Daytime diffuse was rebaked for the current envelopes and a stationary one-bounce night field was added; fine facade details remain an averaged-envelope approximation.']};
-writeFileSync(new URL('../qa/visual-corridor-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,checks:checks.length,evidence:{...evidence,captureProtocol:undefined}},null,2));
+writeFileSync(new URL(`../qa/visual-corridor-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,checks:checks.length,evidence:{...evidence,captureProtocol:undefined}},null,2));

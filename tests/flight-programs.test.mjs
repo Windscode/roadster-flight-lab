@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
@@ -146,6 +147,6 @@ test('actual finite-tank preset lands and preserves measured consumption when su
 });
 const sourceFiles=['dist/flight-programs.js','dist/research-console.js','dist/research-console.css','dist/physics.js','dist/wind-lab-data.js','tests/flight-programs.test.mjs'];
 const hashes=Object.fromEntries(sourceFiles.map(file=>[file,crypto.createHash('sha256').update(fs.readFileSync(new URL(`../${file}`,import.meta.url))).digest('hex')]));
-const report={version:'3.11',pass:true,groups:count,schedulerAndSchemaGroups:16,actualPhysicsGroups:6,physicsHz:120,metricsHz:20,sourceHashes:hashes,physicalResults,limitations:'Deterministic analytic-wind and rigid-body model. Interface-fixture schedule tests are listed separately from actual physics preset runs. Authored wind-lab geometry, its real roll refusal, open-city roll starts and default parameters are covered; arbitrary obstacles, user-defined controls and unsupported sustained attitudes are not certified. No browser rendering or real vehicle validity claim.'};
-fs.writeFileSync(new URL('../qa/flight-programs-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+const report={version:REPORT_VERSION,pass:true,groups:count,schedulerAndSchemaGroups:16,actualPhysicsGroups:6,physicsHz:120,metricsHz:20,sourceHashes:hashes,physicalResults,limitations:'Deterministic analytic-wind and rigid-body model. Interface-fixture schedule tests are listed separately from actual physics preset runs. Authored wind-lab geometry, its real roll refusal, open-city roll starts and default parameters are covered; arbitrary obstacles, user-defined controls and unsupported sustained attitudes are not certified. No browser rendering or real vehicle validity claim.'};
+fs.writeFileSync(new URL(`../qa/flight-programs-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(`Flight program regression complete: ${count} groups; 16 scheduler/schema interface groups and 6 actual 120 Hz rigid-body preset / refusal checks.`);

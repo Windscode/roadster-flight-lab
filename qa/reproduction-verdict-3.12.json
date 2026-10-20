@@ -1,0 +1,504 @@
+{
+  "status": "passed",
+  "modelVersion": "3.12.0",
+  "scope": "Actual deterministic solver, complete snapshots, matching retained curve samples, error/verdict contracts and explicit historical migration. No GPU, pixel, driving-feel or browser FPS acceptance.",
+  "sourceHashes": {
+    "dist/experiment-records.js": "c7c2f73a41f2fd626020080adf12f0ffddfece4402f40312a4e26c5de2c631d7",
+    "dist/experiment-reproduction.js": "f757b9c59066904a0df3ef804e10f01a2fb935d0a92f80a0b52b95f0d5db1cb9",
+    "dist/experiment-console.js": "75c883e65c7b0c531557f970d487ddfc043ad7754692bd137cb97880f2b8e4f8",
+    "dist/research-lab.js": "76414b4f055bcaf6ce52f0856e066d62db13a3639e10b1e5bafb6968ee6b641d",
+    "dist/research-study.js": "149b1e530c386b2614aacd299857e209848a7f9d037899b7feccd544d58b03cb",
+    "dist/physics.js": "035f1ba01c7acacddf56a2a5497a52516c474f56a6f1fe027bf7c8046bf791ae",
+    "dist/simulation-snapshot.js": "e3a5ea6a8e5d0b298843a8d3200ce3bf4a11596dfe8c993af386dcc4da6e379f",
+    "tests/reproduction-verdict-3.9.test.mjs": "24cb8d38878bad76f0a7bc6f246a80baa677684b65ebf2d3926c1b768d49eec1",
+    "qa/fixtures/live-record-3.8.json": "1b424b88458fbf95aa7affe58438ade9bdbec8181b0910ab0a00c2ca47799952"
+  },
+  "evidence": [
+    {
+      "name": "Same snapshot, seeded delay/noise, wind phase, nozzle derating and recorded takeover give a measured reproduction match",
+      "status": "PASS",
+      "executionStatus": "completed",
+      "reproduction": "matched",
+      "terminal": {
+        "position": {
+          "error": 0,
+          "tolerance": 0.000001,
+          "unit": "m",
+          "available": true,
+          "withinTolerance": true
+        },
+        "velocity": {
+          "error": 0,
+          "tolerance": 0.000001,
+          "unit": "m/s",
+          "available": true,
+          "withinTolerance": true
+        },
+        "attitude": {
+          "error": 0,
+          "tolerance": 0.00001,
+          "unit": "deg",
+          "available": true,
+          "withinTolerance": true
+        },
+        "angularVelocity": {
+          "error": 0,
+          "tolerance": 0.000001,
+          "unit": "rad/s",
+          "available": true,
+          "withinTolerance": true
+        },
+        "gasMass": {
+          "error": 0,
+          "tolerance": 1e-8,
+          "unit": "kg",
+          "available": true,
+          "withinTolerance": true
+        },
+        "tankTemperature": {
+          "error": 0,
+          "tolerance": 0.000001,
+          "unit": "K",
+          "available": true,
+          "withinTolerance": true
+        },
+        "wheelOmega": {
+          "error": 0,
+          "tolerance": 0.00001,
+          "unit": "rad/s",
+          "available": true,
+          "withinTolerance": true,
+          "wheels": [
+            {
+              "id": "FR",
+              "error": 0,
+              "unit": "rad/s"
+            },
+            {
+              "id": "FL",
+              "error": 0,
+              "unit": "rad/s"
+            },
+            {
+              "id": "RR",
+              "error": 0,
+              "unit": "rad/s"
+            },
+            {
+              "id": "RL",
+              "error": 0,
+              "unit": "rad/s"
+            }
+          ]
+        }
+      },
+      "controllerScalars": 483,
+      "retainedCurveSamples": 81
+    },
+    {
+      "name": "60 / 120 / 240 Hz rendering groups retain the same physical response and reproduction verdict",
+      "status": "PASS",
+      "scope": "Numerical display-step grouping, not browser FPS measurement",
+      "results": [
+        {
+          "displayGroupingHz": 60,
+          "steps": 480,
+          "positionErrorM": 0,
+          "quaternionErrorDeg": 0
+        },
+        {
+          "displayGroupingHz": 120,
+          "steps": 480,
+          "positionErrorM": 0,
+          "quaternionErrorDeg": 0
+        },
+        {
+          "displayGroupingHz": 240,
+          "steps": 480,
+          "positionErrorM": 0,
+          "quaternionErrorDeg": 0
+        }
+      ]
+    },
+    {
+      "name": "A changed retained curve cannot pass merely because execution completes and its terminal state agrees",
+      "status": "PASS",
+      "execution": "completed",
+      "verdict": "diverged",
+      "firstDivergence": {
+        "scope": "stored-curve",
+        "channel": "position",
+        "step": 60,
+        "error": 0.005,
+        "tolerance": 0.000001,
+        "unit": "m",
+        "timeS": 0.5
+      }
+    },
+    {
+      "name": "Terminal velocity, angular rate, gas, temperature, wheel speed and controller state are checked independently of position",
+      "status": "PASS",
+      "results": [
+        {
+          "channel": "velocity",
+          "firstDivergence": {
+            "scope": "terminal",
+            "channel": "velocity",
+            "step": 480,
+            "error": 0.001,
+            "tolerance": 0.000001,
+            "unit": "m/s",
+            "timeS": 4
+          }
+        },
+        {
+          "channel": "angularVelocity",
+          "firstDivergence": {
+            "scope": "terminal",
+            "channel": "angularVelocity",
+            "step": 480,
+            "error": 0.001,
+            "tolerance": 0.000001,
+            "unit": "rad/s",
+            "timeS": 4
+          }
+        },
+        {
+          "channel": "gasMass",
+          "firstDivergence": {
+            "scope": "terminal",
+            "channel": "gasMass",
+            "step": 480,
+            "error": 0.0010000000000047748,
+            "tolerance": 1e-8,
+            "unit": "kg",
+            "timeS": 4
+          }
+        },
+        {
+          "channel": "tankTemperature",
+          "firstDivergence": {
+            "scope": "terminal",
+            "channel": "tankTemperature",
+            "step": 480,
+            "error": 0.009999999999990905,
+            "tolerance": 0.000001,
+            "unit": "K",
+            "timeS": 4
+          }
+        },
+        {
+          "channel": "wheelOmega",
+          "firstDivergence": {
+            "scope": "terminal",
+            "channel": "wheelOmega",
+            "step": 480,
+            "error": 0.01,
+            "tolerance": 0.00001,
+            "unit": "rad/s",
+            "timeS": 4
+          }
+        },
+        {
+          "channel": "controller",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._heightIntegral",
+            "step": 480,
+            "error": 0.010000000000000002,
+            "tolerance": 1.0003246838578879e-7,
+            "unit": "state units",
+            "timeS": 4
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quaternion sign equivalence and small-angle precision avoid false pose errors, while a real tilt is detected",
+      "status": "PASS",
+      "signEquivalentErrorDeg": 0,
+      "smallRotationRad": 1e-7
+    },
+    {
+      "name": "Steering memory, lateral relaxation, vertical/level references and disturbance clocks cannot silently diverge behind an identical body pose",
+      "status": "PASS",
+      "results": [
+        {
+          "field": "_steerCentre",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._steerCentre",
+            "step": 480,
+            "error": 0.01,
+            "tolerance": 1.0001e-7,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "wheel.0.relaxedSlip",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "wheel.0.relaxedSlip",
+            "step": 480,
+            "error": 0.01,
+            "tolerance": 1.0001e-7,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "_verticalControl.targetMps",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._verticalControl.targetMps",
+            "step": 480,
+            "error": 0.1,
+            "tolerance": 1.0010608734729155e-7,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "_levelRecovery.headingTargetRad",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._levelRecovery.headingTargetRad",
+            "step": 480,
+            "error": 0.01,
+            "tolerance": 1.0001e-7,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "simTime",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state.simTime",
+            "step": 480,
+            "error": 0.00833333333333286,
+            "tolerance": 1.0981666666666675e-7,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "_stepCount",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._stepCount",
+            "step": 480,
+            "error": 1,
+            "tolerance": 0,
+            "unit": "state units",
+            "timeS": 4
+          }
+        }
+      ],
+      "missingRequiredMemoryVerdict": "insufficient_evidence"
+    },
+    {
+      "name": "Decimation compares only retained matching steps and never presents missing curves as full 120 Hz evidence",
+      "status": "PASS",
+      "storedSamples": 11,
+      "rawSamples": 81,
+      "missingRequiredControllerVerdict": "insufficient_evidence"
+    },
+    {
+      "name": "Anti-windup memory, final parameters and mass/inertia are required; equivalent plain sensor-history quaternions do not create false divergence",
+      "status": "PASS",
+      "results": [
+        {
+          "field": "_allocationError",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._allocationError",
+            "step": 480,
+            "error": 1,
+            "tolerance": 1.0100206767990575e-7,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "_pressureLimited",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._pressureLimited",
+            "step": 480,
+            "error": null,
+            "tolerance": 0,
+            "unit": "exact state",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "params.altitudeGain",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "params.altitudeGain",
+            "step": 480,
+            "error": 0.7000000000000002,
+            "tolerance": 1.039e-7,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "body.mass",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "body.mass",
+            "step": 480,
+            "error": 10,
+            "tolerance": 0.0000023095582002848947,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "body.inertia",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "body.inertia.values.0",
+            "step": 480,
+            "error": 10,
+            "tolerance": 0.000003607297538452983,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "_observationSeed",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._observationSeed",
+            "step": 480,
+            "error": 1,
+            "tolerance": 0,
+            "unit": "state units",
+            "timeS": 4
+          }
+        },
+        {
+          "field": "_observationConfig.seed",
+          "firstDivergence": {
+            "scope": "terminal-controller",
+            "channel": "state._observationConfig.seed",
+            "step": 480,
+            "error": 1,
+            "tolerance": 0,
+            "unit": "state units",
+            "timeS": 4
+          }
+        }
+      ],
+      "equivalentObservationQuaternionVerdict": "matched",
+      "missingContinuationEvidenceVerdict": "insufficient_evidence"
+    },
+    {
+      "name": "Cancellation and solver failures retain partial evidence without comparing an early state to a future terminal state",
+      "status": "PASS",
+      "cancelled": {
+        "step": 120,
+        "verdict": "incomplete"
+      },
+      "failed": {
+        "step": 12,
+        "verdict": "incomplete"
+      },
+      "terminalCommandFailure": {
+        "completedSteps": 480,
+        "accountedSteps": 480,
+        "externalSupplyKg": 152.66497531478097,
+        "energyUsedKWh": 0.0008888888888888835,
+        "verdict": "incomplete"
+      },
+      "cancelledSourceSegment": {
+        "execution": "completed",
+        "sourceStatus": "cancelled",
+        "verdict": "matched"
+      }
+    },
+    {
+      "name": "Controller A/B is explicitly fixed driver inputs with controller redecision, not a demand to reproduce the historical trajectory",
+      "status": "PASS",
+      "declaredChanges": [
+        "altitudeGain"
+      ],
+      "baselineVerdict": "not_applicable",
+      "candidateVerdict": "not_applicable"
+    },
+    {
+      "name": "Previous contact support and every required retained kinematic channel participate in the reproduction judgment",
+      "status": "PASS",
+      "recordedContacts": 20,
+      "firstDivergence": {
+        "scope": "terminal-controller",
+        "channel": "world.contactSupport.0",
+        "step": 1,
+        "error": null,
+        "tolerance": 0,
+        "unit": "exact state",
+        "timeS": 0.008333333333333333
+      },
+      "missingCurveFields": [
+        {
+          "field": "velocity",
+          "verdict": "insufficient_evidence"
+        },
+        {
+          "field": "angularVelocity",
+          "verdict": "insufficient_evidence"
+        }
+      ]
+    },
+    {
+      "name": "The actual archived 3.8 record stays historical, refuses exact execution and only migrates explicitly to current-model recomputation",
+      "status": "PASS",
+      "originalIdentity": {
+        "modelVersion": "3.8.0",
+        "modelBuildId": "4accaa4482dc396a2d9fe5d09492e79bf5f2db4ede830f52a50a7f44758a9d4f",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "currentModel": "3.12.0",
+      "migration": {
+        "from": "3.8.0",
+        "to": "3.12.0",
+        "addedDefaultState": [
+          "state._driveAccounting",
+          "state._verticalControl",
+          "state._levelRecovery"
+        ],
+        "parameterMapping": {
+          "verticalAccelerationMps2": {
+            "value": 3,
+            "meaning": "Historical E/Q acceleration envelope; not the stronger new-session default."
+          }
+        },
+        "defaultStateMeaning": "Current drive accounting, vertical braking/pilot-active control memory and level-recovery defaults. These control laws did not exist in 3.8; this is an explicit new-model condition mapping.",
+        "changed": [
+          "modelVersion",
+          "params.verticalAccelerationMps2"
+        ],
+        "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+        "limitation": "The 3.8.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+      },
+      "verdict": "not_applicable"
+    },
+    {
+      "name": "Road study names include the actual road condition and both driver aids without changing recorded numeric requests",
+      "status": "PASS",
+      "names": [
+        "A / ABS关闭 · 干地 · ABS关闭 · TCS开启",
+        "B / ABS开启 · 干地 · ABS开启 · TCS开启",
+        "A / ABS关闭 · 湿地 · ABS关闭 · TCS开启",
+        "B / ABS开启 · 湿地 · ABS开启 · TCS开启",
+        "A / ABS关闭 · 左右分离附着 · ABS关闭 · TCS开启",
+        "B / ABS开启 · 左右分离附着 · ABS开启 · TCS开启"
+      ]
+    }
+  ]
+}

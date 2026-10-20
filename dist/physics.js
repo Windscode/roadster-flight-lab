@@ -234,11 +234,11 @@ export class RoadsterSim {
     this._motorForceN=0;this._regenForceN=0;this._longitudinalAcceleration=0;this._steerCentre=0;this._massFlowKgS=0;this._impulseNs=0;this._effectiveExhaustVelocity=nozzleExhaustVelocity(this.params,this.pressureBar(),this.gasTemperature);
     this.status='就绪';this._fault=null;this._thrustWanted=0;this._lastInput={};this._fallReset=false;
     this._nozzles.forEach(n=>{n.force=0;n.command=0;n.maxForce=0;});
-    this.wheelStates.forEach(w=>{w.rotation=0;w.angularVelocityRadS=0;w.contact=false;w.normalLoadN=0;w.relaxedSlip=0;w.slipRatio=0;w.absPressure=1;w.tcsFactor=1;w.absActive=false;w.tcsActive=false;w.corneringTractionActive=false;w.corneringDriveScale=1;w.wheelEnergyJ=0;});
+    this.wheelStates.forEach(w=>{w.rotation=0;w.angularVelocityRadS=0;w.contact=false;w.normalLoadN=0;w.relaxedSlip=0;w.slipRatio=0;w.absPressure=1;w.tcsFactor=1;w.absActive=false;w.tcsActive=false;w.corneringTractionActive=false;w.corneringDriveScale=1;w.wheelEnergyJ=0;w.brakeDemandN=0;w.serviceBrakeDemandN=0;w.regenBrakeDemandN=0;w.brakeTorqueNm=0;w.serviceBrakeTorqueNm=0;w.regenBrakeTorqueNm=0;w.rollingBrakeTorqueNm=0;});
     this._wing={deployment:this.params.wingMode==='fixed'?this.params.wingDeployment:0,command:0,dragN:0,downforceN:0,dynamicPressurePa:0,forceBody:{x:0,y:0,z:0},...rearWingPose(this.params.wingMode==='fixed'?this.params.wingDeployment:0)};
     this._observationSeed=this._observationConfig.seed>>>0;this._observationHistory=[];this._observation=null;this._observationBody=null;
     this._gasConsumedKg=0;this._externalGasKg=0;this._brakeDissipationJ=0;this._tireDissipationJ=0;
-    this._driveAccounting={torqueBudgetNm:0,requestedTorqueNm:0,postTcsTorqueNm:0,actualTorqueNm:0,mechanicalPowerLimitW:this.params.motorPower,mechanicalPowerW:0,electricalPowerW:0,mechanicalWorkJ:0,electricalWorkJ:0,powerLimited:false,airbornePolicy:this.params.tractionAssist?'unloaded-drive-cut':'equal-four-wheel-shares',shares:[0,0,0,0]};
+    this._driveAccounting={torqueBudgetNm:0,requestedTorqueNm:0,postTcsTorqueNm:0,actualTorqueNm:0,mechanicalPowerLimitW:this.params.motorPower,mechanicalPowerW:0,electricalPowerW:0,mechanicalWorkJ:0,electricalWorkJ:0,powerLimited:false,airbornePolicy:this.params.tractionAssist?'unloaded-drive-cut':'equal-four-wheel-shares',shares:[0,0,0,0],brakeMechanicalWorkJ:0,liftOffBrakeMechanicalWorkJ:0,electricalRecoveredWorkJ:0};
     this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:this.params.verticalAccelerationMps2,braking:false,pilotActive:false};
     this._levelRecovery={active:false,status:'inactive',tiltErrorDeg:0,headingTargetRad:0,verticalSupportFeasible:true,torqueSaturated:false};
     this._hasPower=this._energyUsed<this.params.batteryKWh;this._sealQuality=0;this._sealDistanceSum=0;this._sealDistanceCount=0;
@@ -527,6 +527,27 @@ export class RoadsterSim {
     this._motorForceN=0;this._regenForceN=0;
     let driveForce=this._hasPower&&input.brake<.01&&(this.mode==='drive'||contacts.length>0)?input.throttle*p.maxMotorForce:0;
     const speed=Math.abs(b.velocity.dot(b.quaternion.vmult(Z)));
+    // Keep the existing 60/40 service-axle budgets. Sharing equal quarters
+    // inside an axle overloaded the lightly loaded inside tire during a bend.
+    // An unloaded wheel gets no extra share while its axle partner is grounded;
+    // an entirely airborne axle retains its budget for braking wheel spin.
+    const axleLoads=[this.wheelStates[0].normalLoadN+this.wheelStates[1].normalLoadN,this.wheelStates[2].normalLoadN+this.wheelStates[3].normalLoadN];
+    const serviceShares=this.wheelStates.map((w,i)=>axleLoads[i>>1]>1?(i<2?.6:.4)*w.normalLoadN/axleLoads[i>>1]:(i<2?.30:.20));
+    const pedal=Math.abs(input.throttle),pedalU=clamp((pedal-.010)/.010,0,1),pedalBlend=pedalU*pedalU*(3-2*pedalU);
+    const liftOff=this._hasPower&&contacts.length?Math.min(p.brakeForce,p.regenForce,p.regenPower/Math.max(speed,1))*(1-pedalBlend):0;
+    const serviceRequest=input.brake*p.brakeForce,totalBrakeRequest=Math.max(liftOff,serviceRequest);
+    const takeover=liftOff>0?clamp(serviceRequest/liftOff,0,1):1,serviceBlend=takeover*takeover*(3-2*takeover);
+    const regenRequest=liftOff*(1-serviceBlend),serviceRemainder=totalBrakeRequest-regenRequest;
+    const regenDemands=this.wheelStates.map(w=>regenRequest*w.normalLoadN/totalLoad);
+    const serviceDemands=serviceShares.map(share=>serviceRemainder*share);
+    // A small brake-pedal movement must not release the existing low-speed
+    // parking hold. Top-ups share only the unused vehicle brake budget.
+    const parkTopUps=this.wheelStates.map((w,i)=>{
+      const c=contacts.find(c=>c.w===w),holding=pedal<.010&&c&&Math.abs(c.vlong)<.18;
+      return holding?Math.max(0,p.brakeForce*serviceShares[i]-serviceDemands[i]-regenDemands[i]):0;
+    });
+    const parkSum=parkTopUps.reduce((sum,value)=>sum+value,0),parkScale=Math.min(1,Math.max(0,p.brakeForce-totalBrakeRequest)/Math.max(1e-12,parkSum));
+    for(let i=0;i<4;i++)serviceDemands[i]+=parkTopUps[i]*parkScale;
     const poweredWheels=p.tractionAssist?this.wheelStates.filter(w=>w.contact):this.wheelStates;
     const motorSpeed=Math.max(speed,...poweredWheels.map(w=>Math.abs(w.angularVelocityRadS*p.wheelRadius)));
     driveForce=clamp(driveForce,-p.motorPower/Math.max(8,motorSpeed),p.motorPower/Math.max(8,motorSpeed));
@@ -563,20 +584,23 @@ export class RoadsterSim {
     const shares=rawShares.map(value=>value*shareScale),totalTorque=driveForce*p.wheelRadius;
     const accounting=this._driveAccounting={torqueBudgetNm:Math.abs(pilotDriveForce*p.wheelRadius),requestedTorqueNm:0,postTcsTorqueNm:0,actualTorqueNm:0,
       mechanicalPowerLimitW:p.motorPower,mechanicalPowerW:0,electricalPowerW:0,mechanicalWorkJ:0,electricalWorkJ:0,
-      powerLimited:false,airbornePolicy:p.tractionAssist?'unloaded-drive-cut':'equal-four-wheel-shares',shares:[...shares],corneringDriveScale,corneringTractionActive:corneringDriveScale<.98,steeringSurfaceMu:steeringMu,steeringSpeedMps:planarSpeed};
+      powerLimited:false,airbornePolicy:p.tractionAssist?'unloaded-drive-cut':'equal-four-wheel-shares',shares:[...shares],corneringDriveScale,corneringTractionActive:corneringDriveScale<.98,steeringSurfaceMu:steeringMu,steeringSpeedMps:planarSpeed,
+      brakeMechanicalWorkJ:0,liftOffBrakeMechanicalWorkJ:0,electricalRecoveredWorkJ:0};
     for(let i=0;i<4;i++) {
       const w=this.wheelStates[i],c=contactByWheel.get(w),effectiveMass=b.mass/n;
       const driveTorque=totalTorque*shares[i],maxDrivePowerW=p.motorPower*shares[i];
       accounting.requestedTorqueNm+=Math.abs(driveTorque);
+      w.serviceBrakeDemandN=serviceDemands[i];w.regenBrakeDemandN=regenDemands[i];w.brakeDemandN=serviceDemands[i]+regenDemands[i];
       w.corneringDriveScale=corneringDriveScale;w.corneringTractionActive=!!c&&corneringDriveScale<.98&&Math.abs(pilotDriveForce*shares[i])>1;
       if(!c){
         // Free wheels retain spin and respond to axle/brake torque. Rotation is
         // never inferred from chassis speed, including immediately after lift.
         const result=integrateWheel(w,{dt,vlong:0,normalLoadN:0,mu:0,lateralForceN:0,
-          driveTorqueNm:driveTorque,maxDrivePowerW,brakeTorqueNm:input.brake*p.brakeForce*p.wheelRadius/4,
+          driveTorqueNm:driveTorque,maxDrivePowerW,brakeTorqueNm:w.brakeDemandN*p.wheelRadius,regenTorqueNm:w.regenBrakeDemandN*p.wheelRadius,
           radius:p.wheelRadius,inertia:p.wheelInertia,effectiveMass,absEnabled:false,tcsEnabled:p.tractionAssist});
         b.torque.vadd(b.quaternion.vmult(V(Math.cos(w.steer),0,-Math.sin(w.steer))).scale(-result.spinMomentumChangeNms/dt),b.torque);
         this._motorWork+=result.driveWorkJ/.9;this._brakeDissipationJ+=result.brakeEnergyJ;
+        accounting.brakeMechanicalWorkJ+=result.brakeEnergyJ;accounting.liftOffBrakeMechanicalWorkJ+=result.regenBrakeEnergyJ;
         this._motorForceN+=w.driveTorqueNm/p.wheelRadius;
         accounting.postTcsTorqueNm+=Math.abs(w.postTcsTorqueRequestNm);accounting.actualTorqueNm+=Math.abs(w.driveTorqueNm);accounting.mechanicalWorkJ+=result.driveWorkJ;accounting.powerLimited||=w.drivePowerLimited;
         w.longitudinalForceN=0;w.lateralForceN=0;w.gripUse=0;w.slipRatio=null;continue;
@@ -591,29 +615,21 @@ export class RoadsterSim {
       // rotational inertia, contact reaction torque and a slip regulator that
       // releases/reapplies its requested pressure after measured wheel slip.
       // TCS only releases its already budgeted torque; it never creates a new pool.
-      const serviceBrake=input.brake*p.brakeForce*(i<2?.30:.20);
-      // Equal quarters of lift-off regeneration overloaded the unloaded inner
-      // wheels in a bend, consuming their lateral budget and producing a
-      // reproduced lift-off spin. Keep the same TOTAL regen force/power but
-      // distribute it with the instantaneous normal loads.
-      const regen=this._hasPower?Math.min(p.regenForce,p.regenPower/Math.max(speed,1))*w.normalLoadN/totalLoad:0;
-      const pedal=Math.abs(input.throttle),pedalU=clamp((pedal-.010)/.010,0,1),pedalBlend=pedalU*pedalU*(3-2*pedalU);
-      const released=pedal<.020&&input.brake<=.01;
-      const holding=pedal<.010&&input.brake<=.01&&Math.abs(c.vlong)<.18;
-      // The old .015 threshold removed all regeneration and added rolling
-      // resistance in a single tick. A continuous pedal crossover permits a
-      // genuine small-force equilibrium during crawling / precise speed hold.
-      const brake=released?(holding?p.brakeForce/4:regen*(1-pedalBlend)):serviceBrake;
-      w.brakeDemandN=input.brake>.01?serviceBrake:0;
+      // The pedal first takes over the existing lift-off deceleration, then
+      // adds service braking. max(R, S) is continuous and nondecreasing in S;
+      // its smooth allocation crossfade never adds R on top of the 42 kN cap.
+      // "regen" remains an equivalent motor-retarding channel: all passive
+      // wheel work is dissipated in this model; no battery energy is credited.
+      const brake=w.brakeDemandN;
       const result=integrateWheel(w,{dt,vlong:c.vlong,normalLoadN:w.normalLoadN,mu,lateralForceN:lateral,
-        driveTorqueNm:driveTorque,maxDrivePowerW,brakeTorqueNm:brake*p.wheelRadius,
+        driveTorqueNm:driveTorque,maxDrivePowerW,brakeTorqueNm:brake*p.wheelRadius,regenTorqueNm:w.regenBrakeDemandN*p.wheelRadius,
         rollingTorqueNm:w.normalLoadN*.011*p.wheelRadius*pedalBlend,
         radius:p.wheelRadius,inertia:p.wheelInertia,effectiveMass,gravityLong:g.dot(c.forward),absEnabled:p.absEnabled,tcsEnabled:p.tractionAssist});
       w.tcsActive||=w.corneringTractionActive;
       const flong=result.longitudinalForceN,flat=result.lateralForceN;
       w.longitudinalForceN=flong;w.lateralForceN=flat;w.gripUse=capacity?Math.hypot(flong,flat)/capacity:0;
       this._motorForceN+=w.driveTorqueNm/p.wheelRadius;
-      if(released&&!holding)this._regenForceN+=w.brakeTorqueNm/p.wheelRadius;
+      this._regenForceN+=w.regenBrakeTorqueNm/p.wheelRadius;
       b.applyForce(c.forward.scale(flong).vadd(c.right.scale(flat)),c.relative);
       // Contact forces act on the complete vehicle. Subtract the wheel's
       // changing relative spin momentum from chassis pitch torque; otherwise
@@ -623,6 +639,7 @@ export class RoadsterSim {
       this._motorWork+=result.driveWorkJ/.9;
       accounting.postTcsTorqueNm+=Math.abs(w.postTcsTorqueRequestNm);accounting.actualTorqueNm+=Math.abs(w.driveTorqueNm);accounting.mechanicalWorkJ+=result.driveWorkJ;accounting.powerLimited||=w.drivePowerLimited;
       this._brakeDissipationJ+=result.brakeEnergyJ;this._tireDissipationJ+=result.tireEnergyJ+Math.max(0,-flat*c.vlat)*dt;
+      accounting.brakeMechanicalWorkJ+=result.brakeEnergyJ;accounting.liftOffBrakeMechanicalWorkJ+=result.regenBrakeEnergyJ;
     }
     accounting.mechanicalPowerW=accounting.mechanicalWorkJ/dt;accounting.electricalWorkJ=accounting.mechanicalWorkJ/.9;accounting.electricalPowerW=accounting.electricalWorkJ/dt;
   }

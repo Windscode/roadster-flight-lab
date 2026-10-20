@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {mkdtempSync,mkdirSync,readFileSync,writeFileSync,copyFileSync,rmSync,symlinkSync,existsSync,lstatSync} from 'node:fs';
 import {tmpdir} from 'node:os';
@@ -41,6 +42,6 @@ try{
   const corrupt=join(isolated,entry.parts[0].path),bytes=readFileSync(corrupt);bytes[0]^=1;writeFileSync(corrupt,bytes);
   assert.throws(()=>restorePayloads({root:isolated,strict:true}),/Corrupt payload segment/);
   const report={status:'passed',scope:'Fresh-directory byte-for-byte reconstruction of every packed original; idempotent restore, preservation of local edits, refusal of symbolic links and publication rejection of modified/corrupt data. No model or visual acceptance.',files:manifest.files.map(({path,bytes,sha256,gitBlobSha,compressedBytes})=>({path,bytes,sha256,gitBlobSha,compressedBytes})),checks:['Every packed asset and full evidence file reconstructs byte-for-byte from only checked-in segments','Repeated restoration preserves identical files','Local edits are preserved, and strict publication declines unreviewed edits','Existing and dangling symbolic links are refused without writing outside the checkout','Corrupt segments fail even when an already restored file exists'],sourceHashes:Object.fromEntries(['scripts/repository-payloads.mjs','repository-payloads/manifest.json','tests/repository-payloads.test.mjs'].map(path=>[path,sha(readFileSync(join(root,path)))]))};
-  writeFileSync(join(root,'qa/repository-payloads-3.11.json'),JSON.stringify(report,null,2)+'\n');
+  writeFileSync(join(root,`qa/repository-payloads-${REPORT_VERSION}.json`),JSON.stringify(report,null,2)+'\n');
   for(const check of report.checks)console.log('PASS: '+check);
 }finally{rmSync(isolated,{recursive:true,force:true});}

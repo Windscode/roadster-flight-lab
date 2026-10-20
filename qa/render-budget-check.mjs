@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -70,5 +71,5 @@ assert.equal(canonicalSHA256,JSON.parse(readFileSync(new URL('../dist/assets/irr
 assert.equal(retainedGeometryCanonicalSHA256,JSON.parse(readFileSync(new URL('./city-3.4-browser-assets.json',import.meta.url))).stats.roundedGeometryHash);
 record('Original physical city retains its exact canonical identity and the new daylight bake matches the complete current city including retained roadside fixtures',{geometrySHA256,canonicalSHA256,retainedGeometryCanonicalSHA256,newSharedEntities:geometryScope.added.length,newSharedEntityIds:geometryScope.addedIds});
 const result={status:'passed',method:'Real Three geometry/frustum and material lifecycle; no GPU context or browser timing',checks,profiles:CITY_RENDER_PRESETS,views:actual,coldStart,limits:['Beauty submission estimates omit the vehicle, externally loaded shrubs and canvas label meshes.','Shadow counts in comparison files are visible casting candidates, not draws measured inside each light frustum.','More spatial batches can increase draws in sparse views while removing many vertices; the total allocated batch count is not a performance gate.','Actual browser FPS, GPU shader execution and visual appearance need a supported browser on target hardware.','The 3.10 daylight field was rebaked against the full current static geometry including the retained 3.9 roadside fixtures. Fine facade details still use averaged closed envelopes; the separate night field is one stationary diffuse surface bounce.']};
-writeFileSync(new URL('./render-budget-3.11.json',import.meta.url),JSON.stringify(result,null,2)+'\n');globalThis.fetch=originalFetch;
+writeFileSync(new URL(`./render-budget-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(result,null,2)+'\n');globalThis.fetch=originalFetch;
 console.log(JSON.stringify({status:result.status,checks:checks.map(c=>c.name),balanced:actual.balanced},null,2));

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
 import {telemetryRow,TELEMETRY_COLUMNS} from '../dist/telemetry.js';
@@ -39,4 +40,4 @@ console.log('PASS: Armed ground takeoff retains the hover target and CSV records
 
 {const s=airborne(25),initial=s.gasMass;let used=0;for(let i=0;i<240;i++){const t=s.step(dt);used+=t.massFlowKgS*dt;}const t=s.telemetry();assert.ok(Math.abs(initial-s.gasMass-used)<1e-8);assert.ok(Math.abs(t.rollDeg)<1&&Math.abs(t.pitchDeg)<1);assert.ok(s.gasMass<initial&&s.gasMass>50);}
 console.log('PASS: Finite-tank recovery consumes temperature-dependent actual mass flow without hidden refill');
-writeFileSync('qa/air-stabilization-3.11.json',JSON.stringify({status:'passed',durationSeconds:5,supplyMode:'bench',initialHeight:32,attitudeCases:results,finiteRecovery:{durationSeconds:2,initialRoll:25,massConservation:'actual nozzle mass flow',status:'passed'},checks:7,limits:'Known synthetic initial disturbances, not an arbitrary-envelope or OEM validation'},null,2)+'\n');
+writeFileSync(`qa/air-stabilization-${REPORT_VERSION}.json`,JSON.stringify({status:'passed',durationSeconds:5,supplyMode:'bench',initialHeight:32,attitudeCases:results,finiteRecovery:{durationSeconds:2,initialRoll:25,massConservation:'actual nozzle mass flow',status:'passed'},checks:7,limits:'Known synthetic initial disturbances, not an arbitrary-envelope or OEM validation'},null,2)+'\n');

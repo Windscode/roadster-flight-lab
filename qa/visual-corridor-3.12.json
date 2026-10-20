@@ -1,0 +1,162 @@
+{
+  "format": "roadster-visual-corridor-3.10",
+  "createdAt": "2026-10-20T04:44:46.159Z",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "A 400 m reflection lens retains the main optical settings without inheriting its 2300 m far projection",
+      "status": "passed"
+    },
+    {
+      "name": "Ground-plane clipping remains finite at low clearance, changing heading, pitch and camera roll",
+      "status": "passed"
+    },
+    {
+      "name": "Dedicated radial culling removes far meshes and far instanced batches while preserving near and already-hidden objects",
+      "status": "passed"
+    },
+    {
+      "name": "A failed reflection pass restores dedicated visibility without reviving the generic hidden set",
+      "status": "passed"
+    },
+    {
+      "name": "Connector pavements and fixtures share physics records and stay outside the entire canonical carriageway width",
+      "status": "passed"
+    },
+    {
+      "name": "Authored frontage orders cover every route family and every facade retains outward-facing doorway fixtures",
+      "status": "passed"
+    },
+    {
+      "name": "A near road fixture retains a slot when nearby door lights compete for the balanced budget",
+      "status": "passed"
+    }
+  ],
+  "evidence": {
+    "reflectionLens": {
+      "mainFarM": 2300,
+      "reflectionFarM": 400,
+      "nearM": 0.08,
+      "lensAndViewOffsetPreserved": true,
+      "sourceCameraUnchanged": true
+    },
+    "reflectionClip": {
+      "cameraConditions": 72,
+      "heightM": [
+        0.17,
+        12
+      ],
+      "pitchRad": [
+        -0.09,
+        0.12
+      ],
+      "rollRad": [
+        0,
+        0.22
+      ],
+      "aboveGroundRetained": true,
+      "belowGroundClipped": true
+    },
+    "reflectionCull": {
+      "knownNearM": 50,
+      "knownFarM": 600,
+      "farInstancedBatchHidden": true,
+      "boundaryCrossingBatchRetained": true,
+      "genericHiddenStatePreserved": true
+    },
+    "corridor": {
+      "sharedSolids": 150,
+      "pavements": 6,
+      "lightFixtures": 44,
+      "legs": [
+        "crosstown-link",
+        "foundry-main",
+        "canal-link"
+      ],
+      "completeRoadWidthsClear": true
+    },
+    "frontages": {
+      "families": {
+        "canal": 12,
+        "industrial": 2,
+        "market": 19,
+        "civic": 7
+      },
+      "orders": {
+        "southbank": 12,
+        "service": 2,
+        "gallery": 3,
+        "market": 4,
+        "exchange": 4,
+        "crosstown": 7,
+        "residential": 6,
+        "workshop": 2
+      },
+      "routeFacingFrontages": 40,
+      "broadCivicPortals": 16,
+      "doorwayAnchors": 90,
+      "eachFacadeHasEntranceAndFirstBayFixtures": true,
+      "windowBacklights": 185,
+      "roomsOrCrowdsAdded": 0
+    },
+    "captureProtocol": {
+      "schema": "roadster.visual-comparison",
+      "version": 2,
+      "baselineCommit": "6083bbf0e01f4eef5447f2c1b951d8b41e691f46",
+      "baselineModelVersion": "3.9.0",
+      "referenceResolution": [
+        1280,
+        720
+      ],
+      "pixelRatio": 1,
+      "weather": [
+        "clear-day",
+        "wet-night"
+      ],
+      "quality": [
+        "balanced",
+        "high",
+        "ultra"
+      ],
+      "cameraIds": [
+        "weave-entry",
+        "exchange",
+        "viaduct",
+        "junction",
+        "canal"
+      ],
+      "addedViewIds": [
+        "crosstown",
+        "foundry-south"
+      ],
+      "routeId": "weave-canal-loop-38",
+      "baselineScope": "Full untouched 3.9 checkout. User-supplied IAB frames prove real WebGL, but their displayed version alone does not verify commit or cache identity. Keep 1280x720 and 2031x1244 capture batches separate.",
+      "stillConditions": "Same camera position/target, 48 degree vertical FOV, full paused vehicle position/quaternion/wing/light state, 1280x720 drawing buffer, pixel ratio 1, quality and weather. Wait 3 s of rendered frames for light selection to settle. Lock 3.9 exposure (day .87, night 1.02). Save source build, actual light IDs/gains, vehicle state, exposure, reflection time/position with the same PNG. A changed lighting preset is a separate comparison.",
+      "timingConditions": "Record observed browser/renderer (unknown stays unknown), resolution and quality. Separate paused 30 Hz refresh, loading/5 s warmup and 150 s driven steady capture. Actual route inputs/trajectory accompany p50/p95/p99 and long frames. A point HUD FPS is not a route benchmark.",
+      "acceptance": "Requires actual WebGL images and measured display/GPU timing. Scene graph, shader and DOM checks are separate structural evidence.",
+      "actualScreenshots": null,
+      "actualFrameTimes": null,
+      "reason": "User-supplied 3.9 IAB WebGL images were inspected separately. These Node checks have no graphics driver and do not provide 3.10 after-images or route frame times."
+    }
+  },
+  "sourceHashes": {
+    "dist/city-corridor-plan.js": "640a9f8d3d6ca9403338b419f973c3856d2164edba6b4854f76a7a87e8a96428",
+    "dist/city-plan.js": "0258b8489058b9051458e0b1809dcce3018e8013c3ea5b9bec10080947e9fc2c",
+    "dist/city-environment.js": "b8dab4a30d321129edb7ffe5cf885f804ba5984177e91f6ffd2cfeea3c8a6b56",
+    "dist/urban-architecture.js": "7fd38b4d03ee9e4c4c5e4199eb0efccb08649700eadceb1f514beeed8c17b835",
+    "dist/city-frontage-design.js": "53856b8c6f447ba455ecc30c16533783dea891eee8664f10b280f39544a77739",
+    "dist/pavement-surface-material.js": "3cfc78c9596994becccfe9afb5656b97d4b7290540abe6e83a7bcc1664e80bbe",
+    "dist/road-surface-material.js": "c73da629769b4bbe1cbcce06006ede15564daa779d20e9e3b1a8afce90bbf833",
+    "dist/city-practical-lights.js": "77381ce63ce8976b40a65025de829deb4aeb5b289e196da91a8756ee20860e17",
+    "dist/wet-road-reflection.js": "237baf4e5bc76ad1969f1e04a51d22777d429c0f3a89e295dff80a18f5a27061",
+    "dist/vehicle.js": "b1de2dd86bdeee27a059101e9e004e3a2030214376d415f64fd0c0e251f5dfa5",
+    "dist/vehicle-inspection.js": "14d7eefc053fdca3c154da0568582f909854e7a3b0380990a7e462ce27a197a5",
+    "dist/visual-presets.js": "0476d3ab39adb6d38bc8a6904f4c630f87109f38bd7cf426c14355cd2bb24a06",
+    "tests/visual-corridor-3.9.test.mjs": "2a49fee1b6096ea4414f42eec438bb4b96b7946d52260668a85ac731a74a43e1"
+  },
+  "limits": [
+    "CPU geometry, matrix, shared world and renderer-state contracts only. None establish real image quality, shadow leakage, frame times or steering feel.",
+    "Reflection distance culling is conservative per mesh/instanced batch. A sphere crossing 400 m is retained; the rebuilt bounded base projection then receives an oblique near plane.",
+    "The original city and physical corridor remain. Daytime diffuse was rebaked for the current envelopes and a stationary one-bounce night field was added; fine facade details remain an averaged-envelope approximation."
+  ]
+}

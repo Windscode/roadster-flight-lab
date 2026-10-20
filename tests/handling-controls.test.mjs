@@ -11,7 +11,7 @@ for(const [key,sign]of [['KeyD',-1],['ArrowRight',-1],['KeyA',1],['ArrowLeft',1]
   for(let k=0;k<120;k++)s.step(dt,{...i,throttle:.2});assert.ok(s.body.position.x*sign>.5,'Driver-right must curve toward local -X');
 }
 const pad={connected:true,axes:[.7,0,.6],buttons:[]};
-assert.equal(driverAxes(new Set(),pad).steer,-.7);assert.equal(driverAxes(new Set(),pad).roll,-.6);
+assert.equal(driverAxes(new Set(),pad).steer,-(.7-.13)/.87);assert.equal(driverAxes(new Set(),pad).roll,-(.6-.13)/.87);
 assert.equal(driverAxes(new Set(['KeyD']),pad).steer,-1);
 assert.equal(driverAxes(new Set(['KeyB'])).roll,-1);
 console.log('PASS: Keyboard, arrow, touch-key and gamepad steering share driver-right coordinates');

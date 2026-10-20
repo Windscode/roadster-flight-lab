@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 // Reproduce the finite/bench capacity probe using public city scenarios and the
 // actual flight-program runner. This is numerical evidence, not visual QA.
 import fs from 'node:fs';
@@ -44,4 +45,4 @@ const report={modelVersion:MODEL_VERSION,generatedAt:new Date().toISOString(),
   reproductionCommand:'node qa/check-flight-capacity-3.11.mjs',
   scope:'Complete original city, public free/hover starts, 2 s settling with physical pose hold in hover, actual 120 Hz solver, no parameter overrides after start and no WebGL.',
   interpretation:'A null plan means a preflight refusal: duration/rise/rate zero indicate no maneuver was executed. Hover settling consumes finite gas before the recorded start; compare gasAtStartKg and the full stated scenario.',cases};
-fs.writeFileSync(new URL('./flight-capacity-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+fs.writeFileSync(new URL(`./flight-capacity-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');

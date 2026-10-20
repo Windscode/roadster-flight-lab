@@ -350,7 +350,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
     },
     updateReflections(time,p,exclude=[]){
       const aoBefore=indirect.uniforms.giAOEnabled.value;indirect.setAOEnabled(false);
-      try{wetReflection.render(time,exclude.slice(1));}finally{indirect.setAOEnabled(aoBefore>.5);}
+      try{wetReflection.render(time,exclude.slice(1),{dynamicRoot:exclude[0],practicalLights:practicals.stats.selected});}finally{indirect.setAOEnabled(aoBefore>.5);}
       renderStats.planarReflectionPasses=wetReflection.stats.passesThisFrame;
       if(wetReflection.stats.passesThisFrame)stats.lightingDiagnostics.lastReflection={time,cameraPosition:camera.position.toArray(),vehiclePosition:[p.x,p.y,p.z],weatherPreset};
       if(!cubeTarget||(!hdr&&!presentation.night))return;

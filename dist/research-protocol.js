@@ -2,6 +2,7 @@ import {DEFAULT_PARAMS} from './physics.js';
 import {MODEL_VERSION} from './vehicle-models.js';
 import {MODEL_BUILD_ID} from './model-build.js';
 import {normalizeRobustnessCase} from './research-robustness.js';
+import {normalizeRecoveryGridCase,RECOVERY_GRID_PROTOCOL} from './research-recovery-grid.js';
 export const PROTOCOL_VERSION='flat-lab-4';
 export const EXPERIMENTS={
  steer:{title:'转向阶跃',domain:'车辆操稳',duration:4,description:'平路初速，0.5–2.5秒施加转向阶跃。速度由独立PI驾驶器维持，记录实际速度误差。'},
@@ -43,11 +44,14 @@ export function validateResearchParams(params={}){
 }
 export function normalizeResearchRequest(request={}){
  const kind=request.kind||'steer';if(!EXPERIMENTS[kind])throw Error('未知试验类型');
- const speedKmh=request.speedKmh??80,angleDeg=request.angleDeg??2,steerInput=request.steerInput??.22,initialRollDeg=request.initialRollDeg??35,heightM=request.heightM??12;
+ const grid=request.recoveryGrid===undefined?null:normalizeRecoveryGridCase(request.recoveryGrid);
+ if(grid&&(kind!=='attitude'||request.stabilization===false||request.robustness!==undefined||Object.keys(request).some(key=>!['kind','params','speedKmh','angleDeg','steerInput','steeringProtocol','initialRollDeg','heightM','stabilization','recoveryGrid'].includes(key))))throw Error('恢复网格只接受声明的G回正工况，不兼容其它控制协议或额外字段');
+ const speedKmh=request.speedKmh??80,angleDeg=request.angleDeg??2,steerInput=request.steerInput??.22,initialRollDeg=request.initialRollDeg??grid?.rollDeg??35,heightM=request.heightM??grid?.heightM??12;
  if(!Number.isFinite(speedKmh)||speedKmh<20||speedKmh>160)throw Error('请输入20–160 km/h初速');
  if(!Number.isFinite(angleDeg)||angleDeg<.2||angleDeg>5)throw Error('请输入0.2–5°路轮转角');
  if(!Number.isFinite(steerInput)||steerInput<.01||steerInput>1)throw Error('驾驶转向输入应为0.01–1');
- if(!Number.isFinite(initialRollDeg)||initialRollDeg<0||initialRollDeg>70||!Number.isFinite(heightM)||heightM<8||heightM>32)throw Error('稳姿初态允许0–70°滚转和8–32米高度');
+ if(grid){if(initialRollDeg!==grid.rollDeg||heightM!==grid.heightM)throw Error('恢复网格的初始滚转或高度与案例声明不一致');}
+ else if(!Number.isFinite(initialRollDeg)||initialRollDeg<0||initialRollDeg>70||!Number.isFinite(heightM)||heightM<8||heightM>32)throw Error('稳姿初态允许0–70°滚转和8–32米高度');
  const steeringProtocol=request.steeringProtocol??'wheel';if(!['wheel','driver'].includes(steeringProtocol))throw Error('未知转向协议');
  if(request.stabilization!==undefined&&typeof request.stabilization!=='boolean')throw Error('稳姿开关需要布尔值');
  const result={kind,params:validateResearchParams(request.params),speedKmh,angleDeg,steerInput,steeringProtocol,initialRollDeg,heightM,stabilization:request.stabilization??true};
@@ -57,12 +61,14 @@ export function normalizeResearchRequest(request={}){
   result.durationS=durationS;
  }
  if(request.robustness!==undefined){if(kind!=='attitude'||!result.stabilization)throw Error('鲁棒试验要求启用研究姿态控制');result.robustness=normalizeRobustnessCase(request.robustness);}
+ if(grid)result.recoveryGrid=grid;
  return result;
 }
 // Historical requests did not carry duration. Preserve their saved input window
 // when exporting/loading/recomputing; this never changes the original report.
-export function savedResearchRequest(request,{protocolVersion,durationS}={}){
+export function savedResearchRequest(request,{protocolVersion,durationS,modelVersion}={}){
  const next=structuredClone(request);
+ if(next?.params&&!('verticalAccelerationMps2' in next.params)&&(['3.8.0','3.9.0','3.10.0'].includes(modelVersion)||['flat-lab-1','flat-lab-2','flat-lab-3'].includes(protocolVersion)))next.params.verticalAccelerationMps2=3;
  if(next?.kind==='roll'){
   if(next.durationS!==undefined&&durationS!==undefined&&next.durationS!==durationS)throw Error('保存的滚转请求与记录观察窗口不一致');
   const recorded=next.durationS??durationS??(['flat-lab-1','flat-lab-2','flat-lab-3'].includes(protocolVersion)?8:undefined);
@@ -77,4 +83,5 @@ export function stableStringify(value){
  return JSON.stringify(value);
 }
 // Reproducible identity for comparison, not a security signature.
-export function protocolId(request){let hash=2166136261;for(const c of stableStringify({version:PROTOCOL_VERSION,model:MODEL_VERSION,build:MODEL_BUILD_ID,...request})){hash^=c.charCodeAt(0);hash=Math.imul(hash,16777619);}return'R-'+(hash>>>0).toString(16).padStart(8,'0');}
+export function researchProtocolVersion(request){return request?.recoveryGrid?RECOVERY_GRID_PROTOCOL:PROTOCOL_VERSION;}
+export function protocolId(request){let hash=2166136261;for(const c of stableStringify({version:researchProtocolVersion(request),model:MODEL_VERSION,build:MODEL_BUILD_ID,...request})){hash^=c.charCodeAt(0);hash=Math.imul(hash,16777619);}return'R-'+(hash>>>0).toString(16).padStart(8,'0');}

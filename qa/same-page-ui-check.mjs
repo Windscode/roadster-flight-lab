@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 /** Optional DOM integration check. No browser, WebGL context or pixel output.
  * Run: JSDOM_MODULE_PATH=/path/to/jsdom/lib/api.js node --experimental-vm-modules qa/same-page-ui-check.mjs
  * jsdom is a developer-only optional dependency, not part of the static site.
@@ -335,7 +336,7 @@ const report={status:'passed',generatedAt:new Date().toISOString(),checks,values
   environment:{node:process.version,jsdom:'26.1.0',moduleEvaluation:'Actual app.js / app-shell.js / main.js and its non-visual dependency graph in vm.SourceTextModule',physics:'Actual RoadsterSim, no rigid-body/control mock',context:'JSDOM document only'},
   excluded:{browser:false,webgl:false,gpuTiming:false,pixelVisualQA:false,independentWorkerExecution:false,actualSolverThroughWorkerFacade:true},
   mocks:[...mocks.keys()],limits:'DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.'};
-await writeFile(resolve(root,noGraphics?'qa/no-webgl-research-3.11.json':'qa/same-page-ui-3.11.json'),JSON.stringify(report,null,2)+'\n');
+await writeFile(resolve(root,noGraphics?`qa/no-webgl-research-${REPORT_VERSION}.json`:`qa/same-page-ui-${REPORT_VERSION}.json`),JSON.stringify(report,null,2)+'\n');
 dom.window.close();console.log(`Same-page UI: ${checks.length} DOM integration groups passed; no browser or visual acceptance performed.`);
 
 dom.window.close();

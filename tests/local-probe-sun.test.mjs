@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
 import * as THREE from '../dist/vendor/three.module.js';
@@ -94,6 +95,6 @@ pass('Opaque mass remains eligible beyond the main-view shadow-distance gate; tr
 pass('Render target, viewport, scissor, clear state, override, background, XR, shadow flags and visibility recover after success and injected failure');
 pass('Returning to balanced releases the local sunlight target and disables its shader branch');
 
-writeFileSync('qa/local-probe-sun-3.11.json',JSON.stringify({status:'passed',checks,cases,
+writeFileSync(`qa/local-probe-sun-${REPORT_VERSION}.json`,JSON.stringify({status:'passed',checks,cases,
   scope:'Deterministic resource, camera projection, HiDPI viewport and renderer-state regression tests with a stateful renderer double. No browser, graphics driver or rendered image is exercised.',
   limits:'Shadow rasterization, packed-depth GPU filtering and visual quality require actual browser/GPU acceptance.'},null,2)+'\n');

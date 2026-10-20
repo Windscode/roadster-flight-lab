@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -94,4 +95,4 @@ const report={status:'passed',checks,evidence,sourceHashes:Object.fromEntries(pa
   'Actual 3.9 IAB images supplied by the user were inspected. This report does not contain 3.10 GPU pixels or motion/FPS acceptance.',
   'Night diffuse transport is one stationary surface bounce with representative envelope albedos; it does not include dynamic car occlusion or fine facade lightmaps.',
   'The preserved physical city and tyre/flight models are independent of these material/light changes.']};
-writeFileSync('qa/city-lighting-3.11.json',JSON.stringify(report,null,2)+'\n');
+writeFileSync(`qa/city-lighting-${REPORT_VERSION}.json`,JSON.stringify(report,null,2)+'\n');

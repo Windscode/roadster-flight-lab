@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -116,5 +117,5 @@ pass('Static direct night field has source/geometry identities, independent inve
 evidence.stationaryDirect={identity,bytes,totalWithExistingBounceBytes:bytes+JSON.parse(readFileSync('dist/assets/night-irradiance/manifest.json')).volumes.reduce((n,v)=>n+v.bytes,0),cases,blend:NIGHT_DIRECT_BLEND};
 
 const paths=['dist/city-environment.js','dist/receiver-plane-shadows.js','dist/vehicle-surface-diagnostics.js','dist/vehicle-inspection.js','dist/vehicle-inspection.html','dist/inspection-diagnostics-capture.js','dist/night-city-lighting.js','dist/night-direct-lighting.js','dist/night-direct-transport.js','scripts/bake-night-direct.mjs','tests/visual-regressions-3.11.test.mjs'];
-const report={status:'passed',createdAt:new Date().toISOString(),checks,evidence,sourceHashes:Object.fromEntries(paths.map(p=>[p,sha(readFileSync(p))])),limits:['Numerical transport, restoration and sampling tests do not constitute GPU pixel, motion or performance acceptance.','The uploaded 3.9 evidence established the visible defects; no matched 3.11 rendered after-frame is present in this report.','Static direct lighting is a budgeted interpolation of closed-envelope visibility, not industrial radiometry or fine facade lightmaps.']};
-writeFileSync('qa/visual-regressions-3.11.json',JSON.stringify(report,null,2)+'\n');
+const report={status:'passed',createdAt:new Date().toISOString(),checks,evidence,sourceHashes:Object.fromEntries(paths.map(p=>[p,sha(readFileSync(p))])),limits:['Numerical transport, restoration and sampling tests do not constitute GPU pixel, motion or performance acceptance.','The uploaded 3.9 evidence established the visible defects; no matched current-release rendered after-frame is present in this report.','Static direct lighting is a budgeted interpolation of closed-envelope visibility, not industrial radiometry or fine facade lightmaps.']};
+writeFileSync(`qa/visual-regressions-${REPORT_VERSION}.json`,JSON.stringify(report,null,2)+'\n');

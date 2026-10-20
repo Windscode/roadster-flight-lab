@@ -36,7 +36,7 @@ Locale must never rewrite raw state, protocol fields, stored user names or ident
 - `tests/physics-controls-3.9.test.mjs` compares the unchanged 3.8 torque-budget fixture, handling/recovery and 3.9 commands. Historical 0.9 g / 1.5 m/s tests explicitly retain their old input references; their numerical thresholds were not broadened for the new defaults.
 - Optional DOM checks under `qa/` require an existing JSDOM installation. `qa/same-page-ui-check.mjs` uses actual application and physical modules with declared graphics facades; `--graphics-unavailable` covers initialization failure. These are not browser, pixel or FPS tests.
 - Offline GLSL checks require an existing `glslangValidator`. They establish syntax/interface compatibility only, not driver behavior, framebuffer correctness or visual quality.
-- `qa/` retains earlier release reports. A report whose source hashes do not match this build must never be cited as current release acceptance.
+- `qa/` retains earlier release reports. Legacy test filenames name the feature's introduction; `scripts/qa-report-version.mjs` sends each new run to the current model's report filename, preserving the earlier bytes. A report whose source hashes do not match this build must never be cited as current release acceptance.
 
 The 3.11 dynamics gate compares the retained 3.10 source against the current solver with 30 stated road protocols and 14 flight cases. It records 120 Hz extrema and 20 Hz curves, with actual speed, wheel load, tire slip, force usage, quaternion, angular speed and delivered nozzle force. These deterministic cases do not establish human steering feel. `npm test` and `npm run validate` now run the same complete numerical/integration gate.
 
@@ -50,7 +50,9 @@ npm run validate
 
 The compiler reports exact passes separately from the documented temporary-input normalization of the stock Three `average` identifier. Production vendor code is unchanged. Raw 3.11 curve JSON and its plotting script are retained; `python scripts/plot-dynamics-3.11.py` regenerates the numerical figures when matplotlib is available.
 
-For exact commands and measured outcomes, see [3.11 release evidence](release-3.11.md), [matched driving and flight comparisons](vehicle-dynamics-3.11.md), [seeded controller protocol](research-robustness-3.11.md), [continuous capture protocols](control-capture-3.11.md), [physical assumptions and results](../dist/physics-3.9-notes.md), and the release-specific JSON reports under `qa/`.
+The 3.12 gates add matched service-braking ablations, a continuous pedal handoff and passive wheel-work ledger, camera transport, moving-source reflection invalidation, and sixteen ordinary-G recovery samples. Grid results preserve failed/missing cells and never interpolate a safe minimum height.
+
+For exact commands and measured outcomes, see [3.12 release evidence](release-3.12.md), [corner braking](braking-controls-3.12.md), [reflection stability](reflection-stability-3.12.md), [chase-camera kinematics](chase-camera-3.12.md), [3.11 release evidence](release-3.11.md), [matched driving and flight comparisons](vehicle-dynamics-3.11.md), [seeded controller protocol](research-robustness-3.11.md), [continuous capture protocols](control-capture-3.11.md), [physical assumptions and results](../dist/physics-3.9-notes.md), and the release-specific JSON reports under `qa/`.
 
 ## Actual graphics acceptance
 
@@ -58,7 +60,7 @@ The graphics panel supports fixed route cameras and a ZIP containing an original
 
 Capture five active seconds of warm-up followed by 30 seconds or the 150-second route. Export rAF p50/p95/p99, long frames, CPU stages and GPU timings where supported. Retain resolution-governor changes and separate menu/pause/loading from steady driving. A reduced draw-call count, a DOM canvas facade or offline shader compilation cannot substitute for these observations.
 
-The user’s computer supplied actual WebGL 3.9 city and vehicle images, which were retrieved and inspected for 3.10. The development cloud browser has no usable WebGL; this is a separate environment limitation, not evidence of a website rendering fault. Matched 3.11 after-images, motion and route GPU timings remain pending. Use the [current isolation and light-field handoff](visual-3.11.md) alongside the [original same-frame conditions](visual-evidence-3.10.md); keep paused preview, loading, warmup and steady driving separate. The cloud browser can validate the same-page numerical UI and exports, not current 3D pixels or driving feel.
+The user’s computer supplied actual WebGL 3.9 city and vehicle images, which were retrieved and inspected for 3.10. The development cloud browser has no usable WebGL; this is a separate environment limitation, not evidence of a website rendering fault. Matched current-release after-images, motion and route GPU timings remain pending. Use the [current graphics protocol](visual-3.12.md) and [inherited isolation and light-field handoff](visual-3.11.md) alongside the [original same-frame conditions](visual-evidence-3.10.md); keep paused preview, loading, warmup and steady driving separate. The cloud browser can validate the same-page numerical UI and exports, not current 3D pixels or driving feel.
 
 ## Existing Pages delivery
 
@@ -80,4 +82,4 @@ Do not use a previous release’s successful deployment as evidence for a new on
 
 ### 验证输出与当前环境
 
-完整整合命令的实际退出码、模型构建身份、先前失败与最终运行证据保存在 `qa/validation-final-run-3.11.json`。本次开发环境的 Node 管道捕获曾返回 `EPERM` 且丢失子进程输出，导致明细汇总低计数；`scripts/validate.mjs` 改用临时常规文件描述符保存 stdout/stderr，任何执行错误或非零退出仍使门禁失败。成功和退出码 7 的独立探针见 `qa/validation-subprocess-output-diagnostic-3.11.json`。该修正仅涉及报告收集，物理判据与实际调用的子测试保持原样。
+3.11 完整整合命令的实际退出码、模型构建身份、先前失败与最终运行证据保存在 `qa/validation-final-run-3.11.json`；3.12 的独立最终运行记录使用 `qa/validation-final-run-3.12.json`。本次开发环境的 Node 管道捕获曾返回 `EPERM` 且丢失子进程输出，导致明细汇总低计数；`scripts/validate.mjs` 改用临时常规文件描述符保存 stdout/stderr，任何执行错误或非零退出仍使门禁失败。成功和退出码 7 的独立探针见 `qa/validation-subprocess-output-diagnostic-3.11.json`。该修正仅涉及报告收集，物理判据与实际调用的子测试保持原样。

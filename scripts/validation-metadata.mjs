@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from './qa-report-version.mjs';
 import {readFileSync,existsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
@@ -26,13 +27,13 @@ export function enrichValidationReport(report){
   report.model='Roadster Flight Lab '+MODEL_VERSION;
   report.sourceIdentity={modelBuildId:MODEL_BUILD_ID,sourceHashes:MODEL_SOURCE_HASHES};
   report.browserVisualQA={status:'current_release_after_capture_pending',modelVersion:MODEL_VERSION,
-    reason:'User-computer IAB screenshots of 3.8/3.9 were successfully retrieved, opened and used to diagnose this revision. No actual 3.11 after-pixels, human driving time series or GPU frame-time acceptance has yet been collected. The root cloud browser has no usable WebGL; that environment limit does not invalidate the user-computer evidence or prove a website rendering fault.',
-    baselineEvidence:'qa/visual-evidence-3.10.json',captureInstructions:'docs/visual-3.11.md',bodyStripeSource:'qa/body-stripe-source-3.11.json',
+    reason:'User-computer IAB screenshots of 3.8/3.9 were successfully retrieved, opened and used to diagnose this revision. No matched after-pixels for the current release, human driving time series or GPU frame-time acceptance has yet been collected. The root cloud browser has no usable WebGL; that environment limit does not invalidate the user-computer evidence or prove a website rendering fault.',
+    baselineEvidence:'qa/visual-evidence-3.10.json',captureInstructions:'docs/visual-3.12.md',bodyStripeSource:'qa/body-stripe-source-3.11.json',
     historicalReports:['qa/browser-release-3.9.json','qa/browser.json','qa/city-3.4-browser-assets.json'],
     historyScope:'3.9 real WebGL screenshots establish the observed defects only. Mixed resolutions/vehicle states, paused preview refresh and instantaneous HUD FPS are not strict visual or performance A/B. The real GPU was not identified.'};
   report.offlineShaderValidation={scope:'Offline syntax and stage-interface checks, not WebGL driver, framebuffer, rendered-pixel or FPS validation.',
-    postProcessing:shaderEvidence('qa/render-shader-validation-3.11.json'),
-    cityLighting:shaderEvidence('qa/city-shaders-3.11.json')};
+    postProcessing:shaderEvidence(`qa/render-shader-validation-${REPORT_VERSION}.json`),
+    cityLighting:shaderEvidence(`qa/city-shaders-${REPORT_VERSION}.json`)};
   function domEvidence(file){
     if(!existsSync(new URL(file,root)))return{report:file,status:'not_performed',checks:[]};
     const evidence=read(file),hashes=Object.entries(evidence.sourceHashes||{});
@@ -40,10 +41,11 @@ export function enrichValidationReport(report){
     const groups=Array.isArray(evidence.checks)?evidence.checks:evidence.tests||evidence.evidence||[],passed=evidence.status==='passed'||evidence.pass===true||groups.length>0&&groups.every(group=>group.status==='PASS');
     return{report:file,sourceHashesCurrent:current,status:!current?'outdated_source':passed?'passed':'failed',scope:evidence.scope||evidence.limits,checks:groups.map(group=>typeof group==='string'?group:group.name)};
   }
-  const mainPage=domEvidence('qa/same-page-ui-3.11.json'),advancedStudy=domEvidence('qa/research-panel-dom-3.11.json'),liveExperiments=domEvidence('qa/experiment-console-dom-3.11.json'),withoutWebGL=domEvidence('qa/no-webgl-research-3.11.json');
-  const workflow=domEvidence('qa/research-workflow-3.11.json'),vehicleInspection=domEvidence('qa/vehicle-inspection-3.11-dom.json'),robustnessStudy=domEvidence('qa/research-robustness-3.11-dom.json');
-  report.domInteractionQA={status:[mainPage,advancedStudy,liveExperiments,withoutWebGL,workflow,vehicleInspection,robustnessStudy].every(e=>e.status==='passed')?'passed':'incomplete_or_stale',
+  const mainPage=domEvidence(`qa/same-page-ui-${REPORT_VERSION}.json`),advancedStudy=domEvidence(`qa/research-panel-dom-${REPORT_VERSION}.json`),liveExperiments=domEvidence(`qa/experiment-console-dom-${REPORT_VERSION}.json`),withoutWebGL=domEvidence(`qa/no-webgl-research-${REPORT_VERSION}.json`);
+  const workflow=domEvidence(`qa/research-workflow-${REPORT_VERSION}.json`),vehicleInspection=domEvidence(`qa/vehicle-inspection-${REPORT_VERSION}-dom.json`),robustnessStudy=domEvidence(`qa/research-robustness-${REPORT_VERSION}-dom.json`);
+  const recoveryGridStudy=domEvidence(`qa/research-recovery-grid-${REPORT_VERSION}-dom.json`);
+  report.domInteractionQA={status:[mainPage,advancedStudy,liveExperiments,withoutWebGL,workflow,vehicleInspection,robustnessStudy,recoveryGridStudy].every(e=>e.status==='passed')?'passed':'incomplete_or_stale',
     scope:'DOM events with actual application/controller code and explicit graphics/Worker facades. No actual browser layout, WebGL execution or FPS validation.',
-    acceptanceGroups:[mainPage,advancedStudy,liveExperiments,withoutWebGL,workflow,vehicleInspection,robustnessStudy].reduce((sum,e)=>sum+e.checks.length,0),mainPage,advancedStudy,liveExperiments,withoutWebGL,workflow,vehicleInspection,robustnessStudy};
+    acceptanceGroups:[mainPage,advancedStudy,liveExperiments,withoutWebGL,workflow,vehicleInspection,robustnessStudy,recoveryGridStudy].reduce((sum,e)=>sum+e.checks.length,0),mainPage,advancedStudy,liveExperiments,withoutWebGL,workflow,vehicleInspection,robustnessStudy,recoveryGridStudy};
   return report;
 }

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 // Optional DOM-only integration check. Supply an installed jsdom package path:
 // node qa/research-panel-dom-check.mjs /path/to/node_modules/jsdom
 // Canvas drawing is stubbed; this is not browser layout or GPU visual QA.
@@ -38,7 +39,8 @@ try{
     const ids=Array.from(doc.querySelectorAll('[id]'),e=>e.id);assert.equal(new Set(ids).size,ids.length);
     assert.equal(doc.querySelectorAll('link[data-roadster-study-styles]').length,1);
     for(const panel of [first,second]){for(const key of Object.keys(RESEARCH_PARAMETERS))assert.ok($(panel,'lab-param-'+key),key);for(const label of panel.root.querySelectorAll('label[for]'))assert.ok(doc.getElementById(label.htmlFor),label.htmlFor);}
-    const css=readFileSync(new URL('../dist/research.css',import.meta.url),'utf8');for(const [,selector]of css.matchAll(/([^{}]+)\{/g))if(!selector.trim().startsWith('@'))for(const s of selector.split(','))assert.ok(s.trim().startsWith('.research-study-panel'),s);
+    // CSS comments are not selectors; every real selector remains panel-scoped.
+    const css=readFileSync(new URL('../dist/research.css',import.meta.url),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');for(const [,selector]of css.matchAll(/([^{}]+)\{/g))if(!selector.trim().startsWith('@'))for(const s of selector.split(','))assert.ok(s.trim().startsWith('.research-study-panel'),s);
     assert.equal(first.getState().open,false);first.open();assert.equal(first.getState().open,true);
   });
   await test('Reading current parameters does not reset or advance the live laboratory vehicle',async()=>{
@@ -89,5 +91,5 @@ try{
     oversized.dispose();assert.equal(workers.size,0);
   });
   const sourceFiles=['dist/research-lab.js','dist/research-panel.html','dist/research.css','qa/research-panel-dom-check.mjs'],sourceHashes=Object.fromEntries(sourceFiles.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')]));
-  writeFileSync(new URL('./research-panel-dom-3.11.json',import.meta.url),JSON.stringify({version:'3.11',generatedAt:new Date().toISOString(),scope:'JSDOM events and state, with actual deterministic solver reports through an asynchronous Worker API facade. Historical-version fixtures test storage only. Canvas is stubbed; no browser layout, actual Worker-thread scheduling, GPU pixels or FPS evidence.',tests:results,sourceHashes,solverReports,uniqueLiveInstancesTested:2,canvasDrawingCalls:drawCalls},null,2)+'\n');
+  writeFileSync(new URL(`./research-panel-dom-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({version:REPORT_VERSION,generatedAt:new Date().toISOString(),scope:'JSDOM events and state, with actual deterministic solver reports through an asynchronous Worker API facade. Historical-version fixtures test storage only. Canvas is stubbed; no browser layout, actual Worker-thread scheduling, GPU pixels or FPS evidence.',tests:results,sourceHashes,solverReports,uniqueLiveInstancesTested:2,canvasDrawingCalls:drawCalls},null,2)+'\n');
 }finally{first?.dispose();second?.dispose();history?.dispose();oversized?.dispose();globalThis.fetch=saved.fetch;globalThis.Worker=saved.Worker;URL.createObjectURL=saved.createObjectURL;URL.revokeObjectURL=saved.revokeObjectURL;dom.window.close();}

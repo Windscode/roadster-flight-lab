@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -90,5 +91,5 @@ check('The interior mirror remains below the actual glazing mesh instead of brea
 });
 const files=['dist/vehicle.js','dist/vehicle-inspection.js','dist/vehicle-inspection.html','dist/i18n-vehicle-310-en.js','dist/vehicle-reference-3.9.js','dist/vehicle-reference-layout-3.9.js','tests/vehicle-surface-3.10.test.mjs'];
 const report={status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,asOf:new Date().toISOString(),geometry:VEHICLE_GEOMETRY,checks,sourceHashes:Object.fromEntries(files.map(path=>[path,sha(readFileSync(new URL('../'+path,import.meta.url)))])),limitations:['No GPU was used in these tests. Original WebGL images supplied by the user established the visible defects; this report verifies source, surface continuity and state handling only.','Rendered after-images under the unchanged studio and broad daylight rigs remain necessary for visual acceptance.','Official camera focal length, CAD surfaces and optical properties are not available; the source image is a proportion/landmark reference, not a metric calibration.']};
-writeFileSync(new URL('../qa/vehicle-surface-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL(`../qa/vehicle-surface-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');
 car.dispose();baseline.dispose();console.log(JSON.stringify(report,null,2));

@@ -415,7 +415,7 @@ function mergeStaticMeshes(parent,recursive=true,keep=new Set()) {
 }
 
 function buildWheel(parent,side,z,materials) {
-  const assembly=new THREE.Group();assembly.name=(z>0?'front':'rear')+(side<0?'-left':'-right');
+  const assembly=new THREE.Group();assembly.name=(z>0?'front':'rear')+(side<0?'-right':'-left');
   assembly.position.set(side*.89,-.22,z);parent.add(assembly);
   const spin=new THREE.Group();assembly.add(spin);
   const w=z>0?.265:.284,half=w/2;
@@ -769,7 +769,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
       const sidePanel=grid(shell,mats.paint,(u,v)=>{
         const z=lerp(edges[segment],edges[segment+1],v),top=fenderEdgeY(z),base=centre===null?lower:archY+archRY*Math.sqrt(Math.max(0,1-((z-centre)/archRadius)**2));
         const y=lerp(top,base,u);return[side*sideSurfaceX(z,y),y,z];
-      },24,centre===null?36:88,side>0,side<0?'left sculpted door and fenders':'right sculpted door and fenders');
+      },24,centre===null?36:88,side>0,side<0?'right sculpted door and fenders':'left sculpted door and fenders');
       setGraphNormals(sidePanel,side);
     }
     for(const zc of [1.42,-1.42]) {

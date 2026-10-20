@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {REPORT_VERSION} from './qa-report-version.mjs';
 // Offline GLSL syntax / stage-interface validation only. This script uses an
 // existing compiler and never downloads tools or creates a browser / GL context.
 import fs from 'node:fs/promises';
@@ -22,7 +23,7 @@ import {createCityExteriorMaterials} from '../dist/city-exterior-materials.js';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const dist=new URL('../dist/',import.meta.url);
 let validator=process.env.GLSLANG_VALIDATOR||'glslangValidator';
-let reportPath=path.join(root,'qa/city-shaders-3.11.json');
+let reportPath=path.join(root,`qa/city-shaders-${REPORT_VERSION}.json`);
 const args=process.argv.slice(2);
 for(let i=0;i<args.length;i++){
   if(args[i]==='--validatorPath')validator=args[++i];

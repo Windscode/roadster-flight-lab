@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync,readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -68,4 +69,4 @@ const repeat=runExperiment({kind:'steer'});assert.deepEqual(repeat.rows,wheel.ro
 pass('Identical model and protocol reproduce complete source curves at uniform 20 Hz and protocol identity ignores parameter ordering');
 const archive=studyArchive(brakes.map((report,i)=>({label:brakeJobs[i].label,report})));archive.results[0].report={metrics:{fake:true}};const imported=importStudy(archive);assert.deepEqual(imported.map(j=>j.request),brakeJobs.map(j=>j.request));assert.ok(imported.every(j=>!('metrics'in j.request)));assert.throws(()=>importStudy({...archive,requests:Array(13).fill(archive.requests[0])}));assert.throws(()=>normalizeResearchRequest({params:{gasGamma:1}}));assert.throws(()=>normalizeResearchRequest({params:{tankLitres:NaN}}));assert.throws(()=>buildStudyRequests({kind:'hover'},{mode:'sweep',sweepKey:'tireMu',from:.65,to:1.25,count:3}));
 pass('Study archive import revalidates frozen requests, ignores supplied metrics and rejects oversized, non-finite or scientifically inapplicable protocols');
-writeFileSync('qa/research-study-3.11.json',JSON.stringify({status:'passed',checks,values,scope:'Software and research-protocol validation; no physical Tesla calibration'},null,2)+'\n');
+writeFileSync(`qa/research-study-${REPORT_VERSION}.json`,JSON.stringify({status:'passed',checks,values,scope:'Software and research-protocol validation; no physical Tesla calibration'},null,2)+'\n');

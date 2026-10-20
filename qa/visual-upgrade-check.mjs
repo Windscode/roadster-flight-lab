@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -129,4 +130,4 @@ await test('Inspection retains six calibrated views, adds two close-ups and free
 const paths=['dist/visual-presets.js','dist/vehicle.js','dist/vehicle-inspection.js','dist/vehicle-inspection.html','dist/vehicle-inspection.css','dist/vehicle-reference-3.8.js','dist/vehicle-reference-layout-3.8.js','dist/city-corridor-plan.js','dist/pavement-surface-material.js','dist/i18n-visual-en.js','dist/city-environment.js','dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/road-surface-material.js','dist/indirect-lighting.js','dist/urban-architecture.js','dist/city-map.js','qa/visual-upgrade-check.mjs'];
 const sourceHashes=Object.fromEntries(paths.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')]));
 const result={format:'roadster-visual-structure-acceptance-1',status:'passed',createdAt:new Date().toISOString(),checks,evidence,sourceHashes,limits:['Geometry, API state and renderer-contract tests only. No real WebGL frame, browser graphics driver, pixel/shadow-leak inspection, GPU performance or real driving experience is certified.','The reflection renderer is exercised through a state-recording stub; its real framebuffer needs target-device validation.','A 50 mm rig makes future comparison repeatable. Official image focal lengths and dimensions are not published.','Additional street facade surfaces remain within the existing conservative building envelopes; no buildings or city routes were removed.']};
-writeFileSync(new URL('./visual-upgrade-3.11.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:result.status,checks:checks.length,evidence},null,2));car.dispose();
+writeFileSync(new URL(`./visual-upgrade-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:result.status,checks:checks.length,evidence},null,2));car.dispose();

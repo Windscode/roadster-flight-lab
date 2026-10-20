@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdtempSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
@@ -33,7 +34,7 @@ check('The reproduced 3 m/s lateral-force jump becomes a continuous contact law,
 
 check('Wheel rays, contact velocities and forces use a consistent world-space contact basis and the real moment arm',()=>{
   evidence.contactGeometry=[];
-  for(const [version,Sim]of [['3.10',Before],['3.11',RoadsterSim]]){
+  for(const [version,Sim]of [['3.10',Before],[REPORT_VERSION,RoadsterSim]]){
     const sim=flatDynamics(Sim),b=sim.body,weightN=b.mass*sim.params.gravity,staticLoadN=sim.wheelStates.reduce((sum,w)=>sum+w.normalLoadN,0);
     close(staticLoadN,weightN,weightN*1e-4,'Settled flat-ground normal support');
     const staticData={massKg:b.mass,inertiaKgm2:{...b.inertia},heightM:b.position.y,weightN,normalSumN:staticLoadN,wheelLoadsN:sim.wheelStates.map(w=>w.normalLoadN)};
@@ -55,7 +56,7 @@ check('Wheel rays, contact velocities and forces use a consistent world-space co
       const right=normal.cross(forward);right.normalize();const velocity=b.angularVelocity.cross(relative).vadd(b.velocity),longitudinal=velocity.dot(forward),lateral=velocity.dot(right);
       close(normal.length(),1,1e-12,'Unit contact normal');close(forward.dot(normal),0,1e-12,'Longitudinal force tangent');close(right.dot(normal),0,1e-12,'Lateral force tangent');close(right.dot(forward),0,1e-12,'Orthogonal tire basis');
       close(point.y,0,1e-10,'Ray hits the actual floor');close(w.slipAngle,Math.atan2(lateral,Math.abs(longitudinal)+.6),1e-12,'Measured contact velocity controls slip angle');
-      if(version==='3.11'){close(w.lateralSpeedMps,lateral,1e-12,'Exposed lateral contact velocity');close(w.longitudinalSpeedMps,longitudinal,1e-12,'Exposed longitudinal contact velocity');}
+      if(version===REPORT_VERSION){close(w.lateralSpeedMps,lateral,1e-12,'Exposed lateral contact velocity');close(w.longitudinalSpeedMps,longitudinal,1e-12,'Exposed longitudinal contact velocity');}
       close(applications[i].relative.distanceTo(relative),0,1e-12,'Spring contact moment arm');close(applications[4+i].relative.distanceTo(relative),0,1e-12,'Tire contact moment arm');
       close(applications[i].force.distanceTo(normal.scale(w.normalLoadN)),0,1e-8,'Reported normal load is the applied normal force');
       close(applications[4+i].force.distanceTo(forward.scale(w.longitudinalForceN).vadd(right.scale(w.lateralForceN))),0,1e-8,'Reported tire forces are the applied tangent force');
@@ -139,7 +140,7 @@ check('8 m/s E/Q commands and release braking become faster in both G modes with
 
 check('Manual full rotation, X and G recovery use bounded actual nozzles; the new default and maneuver preset have explicit different costs',()=>{
   evidence.flight=[];
-  const variants=[{id:'3.10',Sim:Before,params:{}},{id:'3.11-default',Sim:RoadsterSim,params:{}},{id:'3.11-maneuver',Sim:RoadsterSim,params:{climbRateMps:14,verticalAccelerationMps2:6,rollRateDegS:240,pitchRateDegS:90,angularAccelerationDegS2:480}}];
+  const variants=[{id:'3.10',Sim:Before,params:{}},{id:`${REPORT_VERSION}-default`,Sim:RoadsterSim,params:{}},{id:`${REPORT_VERSION}-maneuver`,Sim:RoadsterSim,params:{climbRateMps:14,verticalAccelerationMps2:6,rollRateDegS:240,pitchRateDegS:90,angularAccelerationDegS2:480}}];
   for(const {id,Sim,params}of variants){
     const options=[{automatic:true},{},{axis:'roll',gestureSeconds:.70},{axis:'pitch',gestureSeconds:.65}];
     if(Sim===RoadsterSim)options.push({prelaunch:true,params:{...params,climbRateMps:14}});
@@ -155,7 +156,7 @@ check('Manual full rotation, X and G recovery use bounded actual nozzles; the ne
       evidence.flight.push({id,...summarize(r)});curves.flight.runs.push({id:id+'-'+(option.automatic?'X':option.prelaunch?'E14-roll-G':option.gestureSeconds?option.axis+'-release-G':'full-manual-roll-G'),...r});
     }
   }
-  const before=evidence.flight.find(r=>r.id==='3.10'&&!r.configuration.automatic&&r.configuration.gestureSeconds===null),after=evidence.flight.find(r=>r.id==='3.11-default'&&!r.configuration.automatic&&!r.configuration.prelaunch&&r.configuration.gestureSeconds===null);
+  const before=evidence.flight.find(r=>r.id==='3.10'&&!r.configuration.automatic&&r.configuration.gestureSeconds===null),after=evidence.flight.find(r=>r.id===`${REPORT_VERSION}-default`&&!r.configuration.automatic&&!r.configuration.prelaunch&&r.configuration.gestureSeconds===null);
   assert.ok(after.metrics.release.timeS<before.metrics.release.timeS*.75);assert.ok(after.metrics.heightLossM<before.metrics.heightLossM*.55);
   evidence.defaultRationale='180 deg/s and 360 deg/s2 retain a less severe partial-roll/G recovery than the 240/480 maneuver preset. Both are references, not hard clips on actual body rates. X shares the selected reference limits and preflight accounts for its greater time, headroom and gas cost.';
 });
@@ -180,6 +181,6 @@ check('Finite gas, overhead clearance, low altitude and G key semantics remain p
 });
 
 const sourceSha256=Object.fromEntries(['dist/physics.js','dist/tire-dynamics.js','dist/vehicle-models.js','dist/simulation-snapshot.js','dist/flight-programs.js'].map(path=>[path,hash(path)]));
-writeFileSync(new URL('../qa/vehicle-dynamics-curves-3.11.json',import.meta.url),JSON.stringify({schema:'roadster.numerical-control-curves',version:1,modelVersion:MODEL_VERSION,sampleHz:20,solverHz:120,sourceSha256,scope:'Flat numerical fixtures; same stated initial conditions and pedal/steer protocols. No WebGL, device input, camera feel, FPS or Tesla calibration acceptance.',...curves})+'\n');
-writeFileSync(new URL('../qa/vehicle-dynamics-3.11.json',import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,generatedAt:new Date().toISOString(),baselineCommit:'6d2b897bc928ae0e44fa258a7184719cd660e48b',sourceSha256,checks,evidence,curveFile:'qa/vehicle-dynamics-curves-3.11.json',limits:['Numerical dynamics only. Real keyboard/camera road feel still requires the matched live capture.','Large CG body beta on a tight low-speed turn can be kinematic; per-wheel slip and contact use are reported separately.','The raw tire capacity is unchanged. TCS reduces driver torque under combined demand; disabling it retains slide risk.','X shares reference limits, not a guarantee of zero height loss. Slower profiles need more headroom and gas.','Engineering assumptions remain mu=1.25, 700 kW mechanical drive and 20 kN per main nozzle.']},null,2)+'\n');
+writeFileSync(new URL(`../qa/vehicle-dynamics-curves-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({schema:'roadster.numerical-control-curves',version:1,modelVersion:MODEL_VERSION,sampleHz:20,solverHz:120,sourceSha256,scope:'Flat numerical fixtures; same stated initial conditions and pedal/steer protocols. No WebGL, device input, camera feel, FPS or Tesla calibration acceptance.',...curves})+'\n');
+writeFileSync(new URL(`../qa/vehicle-dynamics-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,generatedAt:new Date().toISOString(),baselineCommit:'6d2b897bc928ae0e44fa258a7184719cd660e48b',sourceSha256,checks,evidence,curveFile:`qa/vehicle-dynamics-curves-${REPORT_VERSION}.json`,limits:['Numerical dynamics only. Real keyboard/camera road feel still requires the matched live capture.','Large CG body beta on a tight low-speed turn can be kinematic; per-wheel slip and contact use are reported separately.','The raw tire capacity is unchanged. TCS reduces driver torque under combined demand; disabling it retains slide risk.','X shares reference limits, not a guarantee of zero height loss. Slower profiles need more headroom and gas.','Engineering assumptions remain mu=1.25, 700 kW mechanical drive and 20 kN per main nozzle.']},null,2)+'\n');
 console.log(JSON.stringify({status:'passed',checks:checks.length,handlingCases:evidence.handling.length,flightCases:evidence.flight.length,primary:evidence.primaryHandlingComparisons}));

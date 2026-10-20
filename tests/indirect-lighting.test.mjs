@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -37,7 +38,7 @@ for(const v of manifest.volumes){
 assert.equal(valid,manifest.validProbes);assert.equal(total,manifest.totalProbes);assert.ok(valid<total&&valid>10000);
 pass('Every stored probe has finite coefficients, consistent validity, exact dimensions and verified data, full current canonical geometry and material identities');
 {
- const result=spawnSync(process.execPath,['scripts/bake-indirect.mjs','--audit'],{encoding:'utf8'});assert.equal(result.status,0,result.stdout+result.stderr);const report=JSON.parse(readFileSync('qa/irradiance-convergence-3.11.json'));assert.equal(report.status,'passed');assert.ok(report.cases.every(c=>c.relativeError<.25));
+ const result=spawnSync(process.execPath,['scripts/bake-indirect.mjs','--audit'],{encoding:'utf8'});assert.equal(result.status,0,result.stdout+result.stderr);const report=JSON.parse(readFileSync(`qa/irradiance-convergence-${REPORT_VERSION}.json`));assert.equal(report.status,'passed');assert.ok(report.cases.every(c=>c.relativeError<.25));
 }
 pass('Four city locations retain nonnegative bounce energy and agree with a 1536-ray transport reference within the documented spot-check tolerance');
 const shader=readFileSync('dist/indirect-lighting.js','utf8');assert.ok(shader.includes('textureLod(field'));assert.ok(shader.includes('reflectedLight.indirectDiffuse*=mix'));assert.ok(!shader.includes('reflectedLight.directDiffuse*='));
@@ -49,4 +50,4 @@ pass('Contact AO affects only indirect diffuse; spatial probe samples use explic
  for(const p of [{x:-200,y:.8,z:-344},{x:-180,y:14,z:48},{x:680,y:100,z:-650}])for(const sun of [true,false])assert.ok(Number.isFinite(gi.exposureAt(p,sun))&&gi.exposureAt(p,sun)>=.9&&gi.exposureAt(p,sun)<=2.7);
 }
 pass('Camera adaptation responds to spatial shade and sun visibility, stays bounded and has an unloaded fixed-exposure fallback');
-writeFileSync('qa/indirect-light-validation-3.11.json',JSON.stringify({status:'passed',checks,validProbes:valid,totalProbes:total,bounces:manifest.bounces,samplesPerProbe:manifest.samplesPerProbe,geometrySHA256:manifest.geometrySHA256,geometryCanonicalSHA256:manifest.geometryCanonicalSHA256,geometryHashQuantization:manifest.geometryHashQuantization,materialModelSHA256:manifest.materialModelSHA256,fullGeometryCanonicalSHA256,newSharedEntityIds:geometryScope.addedIds,limits:[...manifest.limitations,approximation]},null,2)+'\n');
+writeFileSync(`qa/indirect-light-validation-${REPORT_VERSION}.json`,JSON.stringify({status:'passed',checks,validProbes:valid,totalProbes:total,bounces:manifest.bounces,samplesPerProbe:manifest.samplesPerProbe,geometrySHA256:manifest.geometrySHA256,geometryCanonicalSHA256:manifest.geometryCanonicalSHA256,geometryHashQuantization:manifest.geometryHashQuantization,materialModelSHA256:manifest.materialModelSHA256,fullGeometryCanonicalSHA256,newSharedEntityIds:geometryScope.addedIds,limits:[...manifest.limitations,approximation]},null,2)+'\n');

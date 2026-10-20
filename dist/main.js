@@ -17,6 +17,7 @@ import { createRoadster } from './vehicle.js';
 import { createEnvironment } from './city-environment.js';
 import {CITY,CITY_BUILDINGS,CITY_ROUTES,CITY_LOCATIONS,districtAt} from './city-data.js';
 import {driverAxes} from './controls.js';
+import {advanceChasePosition} from './chase-camera.js';
 import {SUN_DIRECTION} from './irradiance-math.js';
 import {createVehicleAudio} from './audio.js';
 import {createCarRadio} from './car-radio.js';
@@ -598,7 +599,7 @@ export async function boot(shell){
     }else if(cameraMode==='fixed'){const view=CITY_BENCHMARK_ROUTE.cameras.find(item=>item.id===fixedCameraId);if(view){camera.clearViewOffset();camera.position.set(...view.position);camera.up.set(0,1,0);camera.lookAt(new THREE.Vector3(...view.target));}}else if(cameraMode==='chase'){
       const speed=Math.hypot(data.velocity.x,data.velocity.z);const offset=new THREE.Vector3(-Math.sin(heading)*(6.7+Math.min(speed*.045,2.5)),2.2,-Math.cos(heading)*(6.7+Math.min(speed*.045,2.5)));
       if(data.heightWorld>6&&data.contactCount>1&&Math.abs(data.rollDeg)>100)offset.y=-2.4;
-      const desired=p.clone().add(offset);camera.position.lerp(desired,1-Math.exp(-dt*4));const look=p.clone().add(new THREE.Vector3(Math.sin(heading)*1.2,.4,Math.cos(heading)*1.2));camera.up.set(0,1,0);camera.lookAt(look);
+      const next=advanceChasePosition(camera.position,p,lastPosition,offset,dt);camera.position.set(next.x,next.y,next.z);const look=p.clone().add(new THREE.Vector3(Math.sin(heading)*1.2,.4,Math.cos(heading)*1.2));camera.up.set(0,1,0);camera.lookAt(look);
     }else if(cameraMode==='cockpit'){
       car.group.visible=false;camera.position.copy(new THREE.Vector3(-.33,.4,-.15).applyQuaternion(q).add(p));camera.up.copy(new THREE.Vector3(0,1,0).applyQuaternion(q));camera.lookAt(new THREE.Vector3(0,.25,20).applyQuaternion(q).add(p));
     }else{camera.up.set(0,0,1);camera.position.lerp(p.clone().add(new THREE.Vector3(0,37,0)),1-Math.exp(-dt*5));camera.lookAt(p);}

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
 import * as THREE from '../dist/vendor/three.module.js';
@@ -80,4 +81,4 @@ pass('GPU timing is nonblocking/disjoint-aware; 30-second performance capture ex
 }
 pass('Balanced exhaust limits particles and GPU uploads, amortizes visual raycasts, and never changes physical thrust');
 
-writeFileSync('qa/render-performance-3.11.json',JSON.stringify({status:'passed',scope:'Deterministic render-budget, shader-pass scheduling and runtime instrumentation regression tests; no browser or GPU FPS measurement.',checks,resolutionMatrix:matrices},null,2)+'\n');
+writeFileSync(`qa/render-performance-${REPORT_VERSION}.json`,JSON.stringify({status:'passed',scope:'Deterministic render-budget, shader-pass scheduling and runtime instrumentation regression tests; no browser or GPU FPS measurement.',checks,resolutionMatrix:matrices},null,2)+'\n');

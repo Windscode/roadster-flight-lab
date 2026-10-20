@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
@@ -76,4 +77,4 @@ await test('Road study names include the actual road condition and both driver a
   const names=[];for(const surface of ['dry','wet','split']){const jobs=buildStudyRequests({kind:'brake',params:{roadSurface:surface}},{mode:'pair',pairKey:'absEnabled'});for(const job of jobs){assert.match(job.label,new RegExp(researchConditionLabel(job.request).replaceAll(' / ',' \\/ ')));assert.equal(job.request.params.roadSurface,surface);assert.ok(job.label.includes('TCS'));names.push(job.label);}assert.deepEqual(jobs.map(j=>j.request.params.absEnabled),[false,true]);}return{names};
 });
 const sources=['dist/experiment-records.js','dist/experiment-reproduction.js','dist/experiment-console.js','dist/research-lab.js','dist/research-study.js','dist/physics.js','dist/simulation-snapshot.js','tests/reproduction-verdict-3.9.test.mjs','qa/fixtures/live-record-3.8.json'];
-fs.writeFileSync(new URL('../qa/reproduction-verdict-3.11.json',import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,scope:'Actual deterministic solver, complete snapshots, matching retained curve samples, error/verdict contracts and explicit historical migration. No GPU, pixel, driving-feel or browser FPS acceptance.',sourceHashes:Object.fromEntries(sources.map(path=>[path,crypto.createHash('sha256').update(fs.readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),evidence},null,2)+'\n');
+fs.writeFileSync(new URL(`../qa/reproduction-verdict-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,scope:'Actual deterministic solver, complete snapshots, matching retained curve samples, error/verdict contracts and explicit historical migration. No GPU, pixel, driving-feel or browser FPS acceptance.',sourceHashes:Object.fromEntries(sources.map(path=>[path,crypto.createHash('sha256').update(fs.readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),evidence},null,2)+'\n');

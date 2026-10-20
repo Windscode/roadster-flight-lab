@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 // DOM behavior and localization contract with real numerical reports.
 // No browser layout, WebGL pixels, native Worker timing or FPS evidence.
 import assert from 'node:assert/strict';
@@ -128,5 +129,5 @@ try{
     return{fixtureScope:legacyEntry.note,legacyActualDurationS:8,legacyActualSamples:160,legacyReportUnchanged:true,jsonAndCSVUnchanged:true,legacyDraftWithoutWindowOrProtocolKeeps8:true,importedWindow:{visible:8,pending:8,worker:8,actualDurationS:8,samples:160,outcome:importedResult.report.outcome},englishOptions:options,realHistoricalBrakeUnchanged:true,liveStateUnchanged:true};
   });
   const files=['dist/research-lab.js','dist/research-panel.html','dist/research-study.js','dist/research-protocol.js','dist/experiment-worker.js','dist/research-console.js','dist/experiment-console.js','dist/i18n.js','dist/i18n-research-en.js','qa/research-workflow-3.10-check.mjs','qa/fixtures/standard-brake-wet-3.8.json'];
-  writeFileSync(new URL('./research-workflow-3.11.json',import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'JSDOM text/events and actual numerical Roadster solver reports through a Worker endpoint facade. No browser layout, GPU pixels, native Worker timing or FPS acceptance.',sourceHashes:Object.fromEntries(files.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),evidence},null,2)+'\n');
+  writeFileSync(new URL(`./research-workflow-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'JSDOM text/events and actual numerical Roadster solver reports through a Worker endpoint facade. No browser layout, GPU pixels, native Worker timing or FPS acceptance.',sourceHashes:Object.fromEntries(files.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),evidence},null,2)+'\n');
 }finally{stopObserver?.();live?.dispose();study?.dispose();setLanguage('zh',{persist:false});globalThis.fetch=original.fetch;globalThis.Worker=original.Worker;if(original.localStorage===undefined)delete globalThis.localStorage;else globalThis.localStorage=original.localStorage;dom.window.close();}

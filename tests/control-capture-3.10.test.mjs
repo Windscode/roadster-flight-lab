@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -67,7 +68,7 @@ await test('Every explicit outer-city zero-speed setup completes against the int
     const surfaceClassification={scope:'20 Hz vehicle-centre samples on existing city street/intersection asphalt. Not a continuous geometry sweep or a lane-keeping criterion; physical contact/collision guards run at 120 Hz.',samples:steeringSamples.length,surfaceIds,nominalGridStreetWidthM:CITY.roadWidth,maximumDistanceFromNearestGridAxisM:Math.max(...gridDistances),outsideNominalStreetStripSamples:gridDistances.filter(d=>d>CITY.roadWidth/2).length};
     const replay=await executeExperiment(result.record,{createSim:()=>new RoadsterSim(),yieldEvery:0});assert.equal(replay.reproduction.status,'matched');cases.push({protocol:id,explicitAtRestSetup:start,initialContactCount:0,cityBodyCount:bodyCount,geometryUnchanged:true,surfaceClassification,metrics:result.metrics,phases:result.phases,recordId:result.recordId,reproduction:replay.reproduction.status});records.push(result.record);
   }
-  writeFileSync(new URL('../qa/fixtures/numerical-control-capture-city-3.11.json',import.meta.url),JSON.stringify({schema:'roadster.live-experiment-library',version:1,scope:'Numerical fixed-step runs in the intact city collision world. Explicit at-rest setup precedes recording. These are not captured IAB frames or real keyboard-device evidence.',records})+'\n');
+  writeFileSync(new URL(`../qa/fixtures/numerical-control-capture-city-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({schema:'roadster.live-experiment-library',version:1,scope:'Numerical fixed-step runs in the intact city collision world. Explicit at-rest setup precedes recording. These are not captured IAB frames or real keyboard-device evidence.',records})+'\n');
   return{scope:'Intact website city geometry and dynamics, with declared zero-speed initialization; no WebGL.',cases};
 });
 
@@ -110,4 +111,4 @@ await test('Operator vertical-setting changes survive cancellation, and an exter
 });
 
 const sources=['dist/driving-capture.js','dist/physics.js','dist/city-data.js','dist/experiment-records.js','dist/experiment-reproduction.js','tests/control-capture-3.10.test.mjs'];
-writeFileSync(new URL('../qa/control-capture-3.11.json',import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'Fixed-step physical solver, declared flat numerical fixtures, actual city read-only preflight and existing record/replay/storage. Does not establish real WebGL frames, live keyboard timing or GPU performance.',sourceHashes:Object.fromEntries(sources.map(p=>[p,hash(p)])),evidence},null,2)+'\n');
+writeFileSync(new URL(`../qa/control-capture-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'Fixed-step physical solver, declared flat numerical fixtures, actual city read-only preflight and existing record/replay/storage. Does not establish real WebGL frames, live keyboard timing or GPU performance.',sourceHashes:Object.fromEntries(sources.map(p=>[p,hash(p)])),evidence},null,2)+'\n');

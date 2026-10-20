@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {REPORT_VERSION} from './qa-report-version.mjs';
 // Offline shader syntax/link validation. This never creates a browser, WebGL
 // context, preview server or image, and makes no GPU/performance assertion.
 import fs from 'node:fs/promises';
@@ -12,7 +13,7 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const dist=new URL('../dist/',import.meta.url);
 const args=process.argv.slice(2);
 let validator=process.env.GLSLANG_VALIDATOR||'glslangValidator';
-let reportPath=path.join(root,'qa/render-shader-validation-3.11.json');
+let reportPath=path.join(root,`qa/render-shader-validation-${REPORT_VERSION}.json`);
 for(let i=0;i<args.length;i++){
   if(args[i]==='--validatorPath')validator=args[++i];
   else if(args[i].startsWith('--validatorPath='))validator=args[i].slice(16);

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync}from'node:fs';
 import {createHash}from'node:crypto';
@@ -86,4 +87,4 @@ pass('Independent research fixtures are deterministic, retain applied parameters
  for(const t of m.tracks){const data=readFileSync('dist/'+t.src);assert.equal(data.length,t.bytes);assert.equal(createHash('sha256').update(data).digest('hex'),t.sha256);assert.ok(['CC-BY-4.0','CC0-1.0'].includes(t.license)&&t.attribution&&t.licenseEvidenceUrl);}
 }
 pass('The local radio includes instrumental, English and Chinese recordings with explicit attribution licenses and matching asset hashes');
-writeFileSync('qa/research-dynamics-3.11.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');
+writeFileSync(`qa/research-dynamics-${REPORT_VERSION}.json`,JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');

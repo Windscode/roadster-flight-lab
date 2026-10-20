@@ -1,0 +1,515 @@
+{
+  "version": "3.12",
+  "pass": true,
+  "groups": 22,
+  "schedulerAndSchemaGroups": 16,
+  "actualPhysicsGroups": 6,
+  "physicsHz": 120,
+  "metricsHz": 20,
+  "sourceHashes": {
+    "dist/flight-programs.js": "cd6e0bc472d641b10305ae0b6955b8364f689a73c4436c32604286b6510b63e4",
+    "dist/research-console.js": "ff976e05a8d4d9cc08d1029329327ec40ceb34c8e8ffa697b810cda204103cf1",
+    "dist/research-console.css": "a183831a7d13a1998b4d18195fcfe8fd1f200e90578eb39e3a0f16c48c36f046",
+    "dist/physics.js": "035f1ba01c7acacddf56a2a5497a52516c474f56a6f1fe027bf7c8046bf791ae",
+    "dist/wind-lab-data.js": "27ce72f8053b99037462be6c4b62d37d371021d6e02fca96d4392587d9f2ab41",
+    "tests/flight-programs.test.mjs": "437617309efb522bf184bd9054187cfa9b6922a8565efff219ab5ff3cf8a3f2d"
+  },
+  "physicalResults": [
+    {
+      "preset": "pose-step",
+      "world": "windlab",
+      "scenario": "windlab",
+      "initialState": "ground",
+      "status": "completed",
+      "durationS": 19.8999999999994,
+      "positionStart": {
+        "x": 0,
+        "y": 0.5970116834000383,
+        "z": 0
+      },
+      "positionEnd": {
+        "x": -0.00005942255622548672,
+        "y": 2.5968176933409763,
+        "z": -0.00005429868447570278
+      },
+      "minHeightM": 0.5970116834000383,
+      "maxHeightM": 2.5968176933409763,
+      "finalMode": "hover",
+      "finalContacts": 0,
+      "finalThrustN": 21577.72564658961,
+      "sampleCallbacks": 398,
+      "summary": {
+        "statisticsSource": "raw simulation-time samples before display decimation",
+        "statisticsHz": 20,
+        "statisticsCount": 399,
+        "peakPositionErrorM": 1.9925086248708856,
+        "rmsPositionErrorM": 0.3632964190522417,
+        "peakAttitudeErrorDeg": 26.757862738504386,
+        "saturationFraction": 0,
+        "gasThroughputKg": 892.095137214783,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 892.095137214783,
+        "gasRemainingKg": 249.55820028489444,
+        "energyUsedKWh": 0.0044222222222221955,
+        "finalPositionErrorM": 0.0002100528861852147,
+        "finalAttitudeErrorDeg": 0,
+        "finalFeasible": true
+      },
+      "stages": [
+        {
+          "index": 0,
+          "type": "pose",
+          "label": "姿态 / 位置参考",
+          "startS": 0,
+          "durationS": 2.8999999999999924,
+          "outcome": "completed",
+          "settlingTimeS": 1.8999999999999957,
+          "peakPositionErrorM": 1.9925086248708856,
+          "peakAttitudeErrorDeg": 0,
+          "overshootM": 0,
+          "command": {
+            "type": "pose",
+            "durationS": 9,
+            "dxM": 0,
+            "dyM": 2,
+            "dzM": 0,
+            "attitude": "start",
+            "pitchDeg": 0,
+            "rollDeg": 0,
+            "yawDeg": 0,
+            "exit": "settled",
+            "settleS": 1
+          },
+          "finalPositionErrorM": 0.07538999929111156,
+          "finalAttitudeErrorDeg": 0,
+          "finalFeasible": true
+        },
+        {
+          "index": 1,
+          "type": "pose",
+          "label": "姿态 / 位置参考",
+          "startS": 2.8999999999999924,
+          "durationS": 10.000000000000073,
+          "outcome": "completed",
+          "settlingTimeS": 1.3999999999999975,
+          "peakPositionErrorM": 0.0712105018473344,
+          "peakAttitudeErrorDeg": 26.757862738504386,
+          "overshootM": 0,
+          "command": {
+            "type": "pose",
+            "durationS": 10,
+            "dxM": 0,
+            "dyM": 2,
+            "dzM": 0,
+            "attitude": "custom",
+            "pitchDeg": 8,
+            "rollDeg": 15,
+            "yawDeg": 20,
+            "exit": "duration",
+            "settleS": 1
+          },
+          "finalPositionErrorM": 0.0002002537438845454,
+          "finalAttitudeErrorDeg": 0,
+          "finalFeasible": true
+        },
+        {
+          "index": 2,
+          "type": "pose",
+          "label": "姿态 / 位置参考",
+          "startS": 12.899999999999908,
+          "durationS": 7.000000000000138,
+          "outcome": "completed",
+          "settlingTimeS": 1.3999999999999975,
+          "peakPositionErrorM": 0.029265798176476825,
+          "peakAttitudeErrorDeg": 26.744128958069957,
+          "overshootM": 0,
+          "command": {
+            "type": "pose",
+            "durationS": 7,
+            "dxM": 0,
+            "dyM": 2,
+            "dzM": 0,
+            "attitude": "start",
+            "pitchDeg": 0,
+            "rollDeg": 0,
+            "yawDeg": 0,
+            "exit": "duration",
+            "settleS": 1
+          },
+          "finalPositionErrorM": 0.0002100528861852147,
+          "finalAttitudeErrorDeg": 0,
+          "finalFeasible": true
+        }
+      ]
+    },
+    {
+      "preset": "gust-rejection",
+      "world": "windlab",
+      "scenario": "windlab",
+      "initialState": "ground",
+      "status": "completed",
+      "durationS": 21.249999999999325,
+      "positionStart": {
+        "x": 0,
+        "y": 0.5970116834000383,
+        "z": 0
+      },
+      "positionEnd": {
+        "x": -0.000052305756513645586,
+        "y": 3.5968274829366886,
+        "z": 0.00006510535935998615
+      },
+      "minHeightM": 0.5970116834000383,
+      "maxHeightM": 3.5968274829366886,
+      "finalMode": "hover",
+      "finalContacts": 0,
+      "finalThrustN": 21577.755125588923,
+      "sampleCallbacks": 425,
+      "summary": {
+        "statisticsSource": "raw simulation-time samples before display decimation",
+        "statisticsHz": 20,
+        "statisticsCount": 426,
+        "peakPositionErrorM": 2.9910295646272913,
+        "rmsPositionErrorM": 0.5342238759744196,
+        "peakAttitudeErrorDeg": 0.0012878642718562425,
+        "saturationFraction": 0,
+        "gasThroughputKg": 808.1912835937865,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 808.1912835937865,
+        "gasRemainingKg": 249.55820028489444,
+        "energyUsedKWh": 0.004722222222222194,
+        "finalPositionErrorM": 0.00020218316819536975,
+        "finalAttitudeErrorDeg": 0,
+        "finalFeasible": true
+      },
+      "stages": [
+        {
+          "index": 0,
+          "type": "pose",
+          "label": "姿态 / 位置参考",
+          "startS": 0,
+          "durationS": 3.249999999999991,
+          "outcome": "completed",
+          "settlingTimeS": 2.2499999999999947,
+          "peakPositionErrorM": 2.9910295646272913,
+          "peakAttitudeErrorDeg": 0,
+          "overshootM": 0,
+          "command": {
+            "type": "pose",
+            "durationS": 10,
+            "dxM": 0,
+            "dyM": 3,
+            "dzM": 0,
+            "attitude": "start",
+            "pitchDeg": 0,
+            "rollDeg": 0,
+            "yawDeg": 0,
+            "exit": "settled",
+            "settleS": 1
+          },
+          "finalPositionErrorM": 0.07202799111346748,
+          "finalAttitudeErrorDeg": 0,
+          "finalFeasible": true
+        },
+        {
+          "index": 1,
+          "type": "wind",
+          "label": "风场扰动",
+          "startS": 3.249999999999991,
+          "durationS": 11.99999999999996,
+          "outcome": "completed",
+          "settlingTimeS": null,
+          "peakPositionErrorM": 0.06727820383559054,
+          "peakAttitudeErrorDeg": 0.0007716508047312442,
+          "overshootM": 0,
+          "command": {
+            "type": "wind",
+            "durationS": 12,
+            "wind": {
+              "speedMps": 8,
+              "directionDeg": 90,
+              "gustMps": 5,
+              "gustPeriodS": 4
+            }
+          },
+          "finalPositionErrorM": 0.015473662787528897,
+          "finalAttitudeErrorDeg": 0.0005331978765244748,
+          "finalFeasible": true
+        },
+        {
+          "index": 2,
+          "type": "wind",
+          "label": "风场扰动",
+          "startS": 15.249999999999774,
+          "durationS": 6.000000000000088,
+          "outcome": "completed",
+          "settlingTimeS": null,
+          "peakPositionErrorM": 0.016338512144594666,
+          "peakAttitudeErrorDeg": 0.0012878642718562425,
+          "overshootM": 0,
+          "command": {
+            "type": "wind",
+            "durationS": 6,
+            "wind": null
+          },
+          "finalPositionErrorM": 0.00020218316819536975,
+          "finalAttitudeErrorDeg": 0,
+          "finalFeasible": true
+        }
+      ]
+    },
+    {
+      "preset": "roll-return",
+      "world": "windlab",
+      "scenario": "windlab",
+      "initialState": "ground",
+      "status": "failed",
+      "reason": "滚转预检：旋转 / 制动包络上方净空不足",
+      "positionStart": {
+        "x": 0,
+        "y": 0.5970116834000383,
+        "z": 0
+      },
+      "positionEnd": {
+        "x": 0,
+        "y": 0.5970116834000383,
+        "z": 0
+      },
+      "rigidBodyUnchanged": true
+    },
+    {
+      "preset": "roll-return",
+      "world": "city",
+      "scenario": "free",
+      "initialState": "ground",
+      "status": "completed",
+      "durationS": 11.899999999999856,
+      "positionStart": {
+        "x": 0,
+        "y": 0.5970093908740407,
+        "z": -28
+      },
+      "positionEnd": {
+        "x": -0.03440862061997901,
+        "y": 0.6961510693288533,
+        "z": -27.999715526953537
+      },
+      "minHeightM": 0.5970093908740407,
+      "maxHeightM": 31.592960663382915,
+      "finalMode": "drive",
+      "finalContacts": 4,
+      "finalThrustN": 7937.013160299285,
+      "sampleCallbacks": 238,
+      "summary": {
+        "statisticsSource": "raw simulation-time samples before display decimation",
+        "statisticsHz": 20,
+        "statisticsCount": 239,
+        "peakPositionErrorM": null,
+        "rmsPositionErrorM": null,
+        "peakAttitudeErrorDeg": null,
+        "saturationFraction": 0,
+        "gasThroughputKg": 454.0474355234589,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 454.0474355234589,
+        "gasRemainingKg": 249.55820028489444,
+        "energyUsedKWh": 0.0026444444444444284,
+        "finalPositionErrorM": null,
+        "finalAttitudeErrorDeg": null,
+        "finalFeasible": null
+      },
+      "stages": [
+        {
+          "index": 0,
+          "type": "roll",
+          "label": "自动翻转",
+          "startS": 0,
+          "durationS": 11.899999999999965,
+          "outcome": "completed",
+          "settlingTimeS": null,
+          "peakPositionErrorM": null,
+          "peakAttitudeErrorDeg": null,
+          "overshootM": 0,
+          "command": {
+            "type": "roll",
+            "durationS": 25
+          },
+          "finalPositionErrorM": null,
+          "finalAttitudeErrorDeg": null,
+          "finalFeasible": null
+        }
+      ]
+    },
+    {
+      "preset": "roll-return",
+      "world": "city",
+      "scenario": "hover",
+      "initialState": "airborne",
+      "status": "completed",
+      "durationS": 12.649999999999814,
+      "positionStart": {
+        "x": 0,
+        "y": 3.9760997966163045,
+        "z": -5
+      },
+      "positionEnd": {
+        "x": -0.020728585078345272,
+        "y": 4.006021975381706,
+        "z": -4.999886776318222
+      },
+      "minHeightM": 3.9760997966163045,
+      "maxHeightM": 35.046146117924074,
+      "finalMode": "hover",
+      "finalContacts": 0,
+      "finalThrustN": 23799.65217483521,
+      "sampleCallbacks": 253,
+      "summary": {
+        "statisticsSource": "raw simulation-time samples before display decimation",
+        "statisticsHz": 20,
+        "statisticsCount": 254,
+        "peakPositionErrorM": null,
+        "rmsPositionErrorM": null,
+        "peakAttitudeErrorDeg": null,
+        "saturationFraction": 0.003937007874015748,
+        "gasThroughputKg": 485.16007763204857,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 485.16007763204857,
+        "gasRemainingKg": 249.55820028489444,
+        "energyUsedKWh": 0.002811111111111094,
+        "finalPositionErrorM": 0,
+        "finalAttitudeErrorDeg": 0,
+        "finalFeasible": null
+      },
+      "stages": [
+        {
+          "index": 0,
+          "type": "roll",
+          "label": "自动翻转",
+          "startS": 0,
+          "durationS": 12.649999999999922,
+          "outcome": "completed",
+          "settlingTimeS": null,
+          "peakPositionErrorM": null,
+          "peakAttitudeErrorDeg": null,
+          "overshootM": 0,
+          "command": {
+            "type": "roll",
+            "durationS": 25
+          },
+          "finalPositionErrorM": null,
+          "finalAttitudeErrorDeg": null,
+          "finalFeasible": null
+        }
+      ]
+    },
+    {
+      "preset": "finite-budget",
+      "world": "windlab",
+      "scenario": "windlab",
+      "initialState": "ground",
+      "status": "completed",
+      "durationS": 6.050000000000188,
+      "positionStart": {
+        "x": 0,
+        "y": 0.5970116834000383,
+        "z": 0
+      },
+      "positionEnd": {
+        "x": 8.356981935797134e-16,
+        "y": 0.5500097009630334,
+        "z": 1.357256573606926e-8
+      },
+      "minHeightM": 0.5490996207282598,
+      "maxHeightM": 2.095930067223005,
+      "finalMode": "drive",
+      "finalContacts": 4,
+      "finalThrustN": 1130.225241094909,
+      "sampleCallbacks": 121,
+      "summary": {
+        "statisticsSource": "raw simulation-time samples before display decimation",
+        "statisticsHz": 20,
+        "statisticsCount": 122,
+        "peakPositionErrorM": 1.4932455945246468,
+        "rmsPositionErrorM": 0.5344568284652367,
+        "peakAttitudeErrorDeg": 0,
+        "saturationFraction": 0.05737704918032787,
+        "gasThroughputKg": 241.91927095036237,
+        "onboardDischargedKg": 241.91927095036237,
+        "externalSupplyKg": 0,
+        "gasRemainingKg": 7.587628745264871,
+        "energyUsedKWh": 0.0013444444444444363,
+        "finalPositionErrorM": null,
+        "finalAttitudeErrorDeg": null,
+        "finalFeasible": null
+      },
+      "stages": [
+        {
+          "index": 0,
+          "type": "pose",
+          "label": "姿态 / 位置参考",
+          "startS": 0,
+          "durationS": 3.9999999999999885,
+          "outcome": "completed",
+          "settlingTimeS": 1.6499999999999966,
+          "peakPositionErrorM": 1.4932455945246468,
+          "peakAttitudeErrorDeg": 0,
+          "overshootM": 0,
+          "command": {
+            "type": "pose",
+            "durationS": 4,
+            "dxM": 0,
+            "dyM": 1.5,
+            "dzM": 0,
+            "attitude": "start",
+            "pitchDeg": 0,
+            "rollDeg": 0,
+            "yawDeg": 0,
+            "exit": "duration",
+            "settleS": 1
+          },
+          "finalPositionErrorM": 0.009939805511492325,
+          "finalAttitudeErrorDeg": 0,
+          "finalFeasible": true
+        },
+        {
+          "index": 1,
+          "type": "wait",
+          "label": "等待",
+          "startS": 3.9999999999999885,
+          "durationS": 0.9999999999999989,
+          "outcome": "completed",
+          "settlingTimeS": null,
+          "peakPositionErrorM": 0.009148693573727506,
+          "peakAttitudeErrorDeg": 0,
+          "overshootM": 0,
+          "command": {
+            "type": "wait",
+            "durationS": 1
+          },
+          "finalPositionErrorM": 0.0010816161770332124,
+          "finalAttitudeErrorDeg": 0,
+          "finalFeasible": true
+        },
+        {
+          "index": 2,
+          "type": "land",
+          "label": "制导着陆",
+          "startS": 5.000000000000038,
+          "durationS": 1.0499999999999987,
+          "outcome": "completed",
+          "settlingTimeS": null,
+          "peakPositionErrorM": null,
+          "peakAttitudeErrorDeg": null,
+          "overshootM": 0,
+          "command": {
+            "type": "land",
+            "durationS": 25
+          },
+          "finalPositionErrorM": null,
+          "finalAttitudeErrorDeg": null,
+          "finalFeasible": null
+        }
+      ]
+    }
+  ],
+  "limitations": "Deterministic analytic-wind and rigid-body model. Interface-fixture schedule tests are listed separately from actual physics preset runs. Authored wind-lab geometry, its real roll refusal, open-city roll starts and default parameters are covered; arbitrary obstacles, user-defined controls and unsupported sustained attitudes are not certified. No browser rendering or real vehicle validity claim."
+}

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from './qa-report-version.mjs';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import * as THREE from '../dist/vendor/three.module.js';
@@ -29,4 +30,4 @@ const report={version:1,createdAt:new Date().toISOString(),heights:NIGHT_FIELD_L
   assumptions:'Fixture intensities are authored visual estimates. Static direct diffuse replaces live street diffuse across a complementary 12–28 m viewing-distance transition. Headlamps, vehicle and live specular are excluded.',
   limits:['4/8 m route and 24 m outer probe spacing soften far light boundaries; these are not per-texel facade lightmaps.','Static closed envelopes exclude fine facade details and dynamic car occlusion. The near live region retains dynamic contact shadows.','The blend prevents additive double counting but still interpolates lighting approximations with different source coverage.','No GPU pixel, motion stability or frame-time acceptance follows from this offline bake.']};
 report.identity=sha(JSON.stringify({geometry:report.geometryCanonicalSHA256,anchors:report.anchorSHA256,volumes:volumes.map(v=>v.sha256),layout:{heights:report.heights,coefficients:6}}));
-writeFileSync(new URL('manifest.json',output),JSON.stringify(report,null,2)+'\n');writeFileSync(new URL('../qa/night-direct-bake-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({identity:report.identity,bytes:volumes.reduce((n,v)=>n+v.bytes,0),seconds:report.seconds,cases},null,2));
+writeFileSync(new URL('manifest.json',output),JSON.stringify(report,null,2)+'\n');writeFileSync(new URL(`../qa/night-direct-bake-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({identity:report.identity,bytes:volumes.reduce((n,v)=>n+v.bytes,0),seconds:report.seconds,cases},null,2));

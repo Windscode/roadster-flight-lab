@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -21,7 +22,7 @@ assert.equal(result.status,'completed');assert.equal(result.sourceIdentity.model
 assert.equal(result.identity.modelVersion,MODEL_VERSION);assert.equal(result.reproduction.status,'not_applicable');
 assert.equal(result.completedSteps,original.stepCount);assert.equal(JSON.stringify(original),bytesBefore);
 const expected=clone(original.initialSnapshot.physical);expected.modelVersion=MODEL_VERSION;
-if(MODEL_VERSION==='3.11.0'){expected.params.verticalAccelerationMps2=3;assert.equal(result.compatibility.migration.parameterMapping.verticalAccelerationMps2.value,3);}
+if(['3.11.0','3.12.0'].includes(MODEL_VERSION)){expected.params.verticalAccelerationMps2=3;assert.equal(result.compatibility.migration.parameterMapping.verticalAccelerationMps2.value,3);}
 assert.deepEqual(result.initialSnapshot.physical,expected,'Migration must preserve the complete physical snapshot apart from its explicitly mapped model label and declared legacy acceleration parameter.');
 assert.deepEqual(result.compatibility.migration.addedDefaultState,[]);
 evidence.push({name:'Actual published 3.9 source record is retained and explicitly recomputed without relabelling it as exact replay',status:'PASS',sourceIdentity:original.identity,executionIdentity:result.identity,steps:result.completedSteps,migration:result.compatibility.migration,reproduction:result.reproduction.status});
@@ -33,11 +34,11 @@ const badParameters=clone(original);delete badParameters.initialSnapshot.physica
 assert.throws(()=>prepareRecordedStateForCurrentModel(badParameters,createSim(original.initialSnapshot.physical),{recompute:true}),/参数契约/);
 const badState=clone(original);delete badState.initialSnapshot.physical.state._heightIntegral;
 assert.throws(()=>prepareRecordedStateForCurrentModel(badState,createSim(original.initialSnapshot.physical),{recompute:true}),/尚未声明迁移/);
-for(const version of ['3.6.0','3.12.0']){
+for(const version of ['3.6.0','3.13.0']){
   const unknown=clone(original);unknown.identity.modelVersion=version;unknown.initialSnapshot.physical.modelVersion=version;
   assert.equal(replayEligibility(unknown).exact,false);assert.equal(replayEligibility(unknown).recompute,false);
 }
 evidence.push({name:'Incompatible collision worlds, parameter/state contracts and unimplemented model versions refuse execution',status:'PASS'});
 console.log('PASS: Historical compatibility checks fail closed before advancing physics.');
 const sources=['dist/experiment-records.js','dist/simulation-snapshot.js','dist/physics.js','dist/vehicle-models.js','dist/model-build.js','tests/history-compatibility-3.10.test.mjs','qa/fixtures/live-record-3.9.json'];
-writeFileSync(new URL('qa/history-original-3.9-to-3.11.json',root),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'Original 3.9 solver fixture and actual current numerical solver. Historical recomputation is not execution of the old solver. No graphics or human driving acceptance.',sourceHashes:Object.fromEntries(sources.map(path=>[path,createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex')])),evidence},null,2)+'\n');
+writeFileSync(new URL(`qa/history-original-3.9-to-${REPORT_VERSION}.json`,root),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'Original 3.9 solver fixture and actual current numerical solver. Historical recomputation is not execution of the old solver. No graphics or human driving acceptance.',sourceHashes:Object.fromEntries(sources.map(path=>[path,createHash('sha256').update(readFileSync(new URL(path,root))).digest('hex')])),evidence},null,2)+'\n');

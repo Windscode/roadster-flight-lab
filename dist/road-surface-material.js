@@ -18,7 +18,7 @@ export const ROAD_SURFACE_MODEL=Object.freeze({
 });
 
 export function attachRoadSurface(material,{albedo,normal,roughness}){
-  const uniforms={roadAlbedo:{value:albedo},roadNormal:{value:normal},roadRoughness:{value:roughness},roadFineDetail:{value:0},roadWetness:{value:0},roadReflection:{value:null},roadReflectionMatrix:{value:new THREE.Matrix4()},roadReflectionTexel:{value:new THREE.Vector2(1/512,1/288)},roadReflectionEnabled:{value:0}};
+  const uniforms={roadAlbedo:{value:albedo},roadNormal:{value:normal},roadRoughness:{value:roughness},roadFineDetail:{value:0},roadWetness:{value:0},roadReflection:{value:null},roadReflectionMatrix:{value:new THREE.Matrix4()},roadReflectionTexel:{value:new THREE.Vector2(1/512,1/288)},roadReflectionEnabled:{value:0},roadReflectionStrength:{value:0}};
   const original=material.onBeforeCompile,key=material.customProgramCacheKey();
   // World projection is used explicitly; the unused per-map UV transforms must
   // not accidentally create a second normal frame on long instanced ramps.
@@ -38,7 +38,7 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       #include <project_vertex>`);
     shader.fragmentShader=`
       uniform sampler2D roadAlbedo,roadNormal,roadRoughness;
-      uniform float roadFineDetail,roadWetness,roadReflectionEnabled;
+      uniform float roadFineDetail,roadWetness,roadReflectionEnabled,roadReflectionStrength;
       uniform sampler2D roadReflection;uniform mat4 roadReflectionMatrix;uniform vec2 roadReflectionTexel;
       varying vec3 roadSurfaceWorld;
       float roadJoint(float coordinate,float spacing,float halfWidth){
@@ -126,7 +126,7 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
         vec2 roadReflectionUv=roadProjection.xy/max(roadProjection.w,.0001);
         float roadRegion=min(min(roadSurfaceWorld.x+245.,145.-roadSurfaceWorld.x),min(roadSurfaceWorld.z+425.,-105.-roadSurfaceWorld.z));
         float roadEdge=min(min(roadReflectionUv.x,1.-roadReflectionUv.x),min(roadReflectionUv.y,1.-roadReflectionUv.y));
-        float roadReflectionMask=smoothstep(0.,.045,roadEdge)*smoothstep(0.,9.,roadRegion)*(1.-smoothstep(36.,65.,length(vViewPosition)));
+        float roadReflectionMask=roadReflectionStrength*smoothstep(0.,.045,roadEdge)*smoothstep(0.,9.,roadRegion)*(1.-smoothstep(36.,65.,length(vViewPosition)));
         if(roadProjection.w>0.&&roadReflectionMask>.001){
           vec2 roadBlur=roadReflectionTexel*(1.3+roughnessFactor*4.0);
           vec2 roadWarp=roadN.xy*.0025;
@@ -143,7 +143,7 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|road-surface-damp-aggregate-puddles-3.10';
+  material.customProgramCacheKey=()=>key+'|road-surface-damp-aggregate-puddles-domain-fade-3.12';
   material.needsUpdate=true;
   return{uniforms,model:ROAD_SURFACE_MODEL,setWetness(value){uniforms.roadWetness.value=Math.min(1,Math.max(0,Number(value)||0));},setQuality(q){uniforms.roadFineDetail.value=q==='balanced'?0:1;}};
 }

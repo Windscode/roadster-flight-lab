@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
@@ -77,5 +78,5 @@ await test('Program compressed CSV and standard historical CSV identify the stor
 });
 
 const paths=['dist/experiment-records.js','dist/experiment-console.js','dist/experiment-replay-worker.js','dist/flight-programs.js','dist/research-console.js','dist/research-lab.js','dist/physics.js','dist/simulation-snapshot.js','dist/control-observation.js','dist/tire-dynamics.js'];
-fs.writeFileSync(new URL('../qa/experiment-records-3.11.json',import.meta.url),JSON.stringify({status:'passed',checks:count,modelVersion:road.identity.modelVersion,scope:'Actual fixed-step physical snapshot/input replay, seeded measurements, controller A/B, historical metadata and bounded persistence. No browser GPU/pixel/FPS acceptance.',sourceHashes:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(new URL('../'+p,import.meta.url))).digest('hex')])),evidence},null,2));
+fs.writeFileSync(new URL(`../qa/experiment-records-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',checks:count,modelVersion:road.identity.modelVersion,scope:'Actual fixed-step physical snapshot/input replay, seeded measurements, controller A/B, historical metadata and bounded persistence. No browser GPU/pixel/FPS acceptance.',sourceHashes:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(new URL('../'+p,import.meta.url))).digest('hex')])),evidence},null,2));
 console.log('Research closed-loop regression complete: '+count+' acceptance groups.');

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 // Capture transaction and archive association only. The fixture supplies opaque
 // canvas marker bytes; this is deliberately not pixel, WebGL or FPS evidence.
 import assert from 'node:assert/strict';
@@ -39,4 +40,4 @@ class NoImage extends CanvasFixture{toBlob(callback){queueMicrotask(()=>callback
 await assert.rejects(captureInspectionPair({...request,canvasFactory:()=>new NoImage()}),/PNG encoding returned no image/);
 const sourcePaths=['dist/inspection-capture.js','dist/capture-archive.js','tests/inspection-capture-3.10.test.mjs'];
 const report={status:'passed',asOf:new Date().toISOString(),modelVersion:MODEL_VERSION,buildId:MODEL_BUILD_ID,scope:'Synthetic canvas lifecycle and ZIP association regression. Fixture marker bytes are not PNG image evidence; no WebGL, appearance or frame-time result.',checks:['Two render/copy/snapshot operations complete before asynchronous PNG encoding','Immutable per-frame nested conditions remain unchanged after caller state mutates','Both original frame copies preserve their role and conditions while a separate comparison carries labels','Original drawing-buffer size is preserved; the comparison alone adds a label band','Five-file ZIP binds original/comparison bytes and JSON by one captureId','Standalone comparison PNG remains available; unavailable canvas and missing PNG reject without a success bundle'],sourceHashes:Object.fromEntries(sourcePaths.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')]))};
-writeFileSync(new URL('../qa/inspection-capture-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+writeFileSync(new URL(`../qa/inspection-capture-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

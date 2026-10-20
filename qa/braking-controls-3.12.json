@@ -1,0 +1,2538 @@
+{
+  "status": "passed",
+  "generatedAt": "2026-10-20T04:45:29.617Z",
+  "modelVersion": "3.12.0",
+  "solverHz": 120,
+  "sourceSha256": {
+    "dist/physics.js": "035f1ba01c7acacddf56a2a5497a52516c474f56a6f1fe027bf7c8046bf791ae",
+    "dist/tire-dynamics.js": "de2336ef6ff88d276a414a2e90a2a6a7c29e8b18bed5767a6031bb14782c388d",
+    "dist/vehicle-models.js": "6ed2e0462d2161dd78bdd6b9b0c2c9bf95bbe7ab40b708ff8431db5a0c2e0499",
+    "dist/controls.js": "eb14d7f191cddd3d6ccd608a1d2b9df52b2466a1a2d43fdc953de04fc8f135e1",
+    "dist/driving-capture.js": "53f78df5e38078dfb0010c7e82bf8313d8a0829032720f60530e8e4938f321e2",
+    "dist/simulation-snapshot.js": "e3a5ea6a8e5d0b298843a8d3200ce3bf4a11596dfe8c993af386dcc4da6e379f"
+  },
+  "baselinePublishedCommit": "ab9372b56a01c2a47b18d32baf48162f3cd8f86c",
+  "scope": "Flat numerical fixtures and command-mapper tests. Same declared initial conditions and protocols within each comparison. No WebGL, GPU/FPS, keyboard/device latency, camera feel, city collision route or Tesla calibration acceptance.",
+  "checks": [
+    {
+      "name": "The service-brake/load-transfer cause is isolated before adding the continuous pedal handover",
+      "status": "PASS"
+    },
+    {
+      "name": "Gentle inputs, opposite turns, straight full braking and split-friction limits are retained under actual wheel integration",
+      "status": "PASS"
+    },
+    {
+      "name": "Passing one percent brake no longer removes the lift-off force; a nondecreasing envelope stays inside 42 kN",
+      "status": "PASS"
+    },
+    {
+      "name": "Contact loss cannot duplicate an axle budget and low-speed brake input cannot release parking hold",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual passive torque/work is separated after ABS and wheel stopping, without inventing battery recharge",
+      "status": "PASS"
+    },
+    {
+      "name": "Gamepad centre/edge/full-scale continuity and keyboard priority are exercised through the real input mapper",
+      "status": "PASS"
+    },
+    {
+      "name": "Blended braking snapshots replay exactly and reset clears the new brake diagnostics",
+      "status": "PASS"
+    }
+  ],
+  "evidence": {
+    "primary": [
+      {
+        "surface": "dry",
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "dry",
+              "steer": 1,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.6611057544985,
+              "endSpeedKmh": 11.168367548362088,
+              "peakBodySlipDeg": 26.34597133659737,
+              "peakBodySlipAbove30KmhDeg": 26.27345338739205,
+              "speedAtPeakBodySlipKmh": 29.137998948766278,
+              "peakTireSlipDeg": 40.62098622921024,
+              "peakLongitudinalSlip": 0.4566648863410644,
+              "peakYawRateDegS": 57.98042834171722,
+              "peakWheelAngleDeg": 28.068376828150182,
+              "peakGrip": 0.9999999999222892,
+              "saturatedAnyWheelSeconds": 3.358333333333324,
+              "minimumLoadN": 536.1585429485197,
+              "maximumLoadN": 12174.58434460286,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 61.96928485929099,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300,
+              "minimumBrakeRequestN": 6300,
+              "peakActualBrakeEquivalentN": 6300.000000000027,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 78.49273820613641,
+              "totalPassiveMechanicalWorkJ": 302710.0814813103
+            }
+          },
+          {
+            "stage": "axle-only-ablation",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "dry",
+              "steer": 1,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.6611057544985,
+              "endSpeedKmh": 38.742453903582536,
+              "peakBodySlipDeg": 2.253678929041199,
+              "peakBodySlipAbove30KmhDeg": 2.253678929041199,
+              "speedAtPeakBodySlipKmh": 78.71969624396604,
+              "peakTireSlipDeg": 5.731512369754731,
+              "peakLongitudinalSlip": 0.018306841630503043,
+              "peakYawRateDegS": 41.207175732682806,
+              "peakWheelAngleDeg": 12.759873442992854,
+              "peakGrip": 0.886918807359404,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 1811.5105888943335,
+              "maximumLoadN": 10206.920161222914,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 71.79624500970903,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300.000000000002,
+              "minimumBrakeRequestN": 6299.999999999999,
+              "peakActualBrakeEquivalentN": 6300.000000000056,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 50.91865185091596,
+              "totalPassiveMechanicalWorkJ": 450586.2932440632
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "dry",
+              "steer": 1,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.6611057544985,
+              "endSpeedKmh": 38.7424539035825,
+              "peakBodySlipDeg": 2.253678929041193,
+              "peakBodySlipAbove30KmhDeg": 2.253678929041193,
+              "speedAtPeakBodySlipKmh": 78.71969624396604,
+              "peakTireSlipDeg": 5.731512369754739,
+              "peakLongitudinalSlip": 0.018306841630503043,
+              "peakYawRateDegS": 41.207175732682856,
+              "peakWheelAngleDeg": 12.759873442992866,
+              "peakGrip": 0.8869188073594036,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 1811.5105888943544,
+              "maximumLoadN": 10206.920161222892,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 71.79624500970903,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300.000000000002,
+              "minimumBrakeRequestN": 6299.999999999998,
+              "peakActualBrakeEquivalentN": 6300.000000000056,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": 450586.2932440636,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 50.91865185091599,
+              "totalPassiveMechanicalWorkJ": 450586.2932440636
+            }
+          }
+        ]
+      },
+      {
+        "surface": "wet",
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "wet",
+              "steer": 1,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.65994651059708,
+              "endSpeedKmh": 21.35902724474905,
+              "peakBodySlipDeg": 87.96163003083576,
+              "peakBodySlipAbove30KmhDeg": 87.96163003083576,
+              "speedAtPeakBodySlipKmh": 30.40632928001393,
+              "peakTireSlipDeg": 86.43583621430052,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 55.64796067733925,
+              "peakWheelAngleDeg": 18.74106127854201,
+              "peakGrip": 1.0000000000000002,
+              "saturatedAnyWheelSeconds": 3.4583333333333237,
+              "minimumLoadN": 2705.4192787654238,
+              "maximumLoadN": 8636.698124950408,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 67.4491001853278,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300,
+              "minimumBrakeRequestN": 6300,
+              "peakActualBrakeEquivalentN": 6300.00000000002,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 68.30091926584802,
+              "totalPassiveMechanicalWorkJ": 324626.2603471081
+            }
+          },
+          {
+            "stage": "axle-only-ablation",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "wet",
+              "steer": 1,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.65994651059708,
+              "endSpeedKmh": 44.7236875064848,
+              "peakBodySlipDeg": 1.3378490981024258,
+              "peakBodySlipAbove30KmhDeg": 1.3378490981024258,
+              "speedAtPeakBodySlipKmh": 78.0892476434005,
+              "peakTireSlipDeg": 2.959469449695574,
+              "peakLongitudinalSlip": 0.03702668896027189,
+              "peakYawRateDegS": 20.581201665723512,
+              "peakWheelAngleDeg": 5.56861791462425,
+              "peakGrip": 0.9562252316901267,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 2962.1165039117136,
+              "maximumLoadN": 8198.14738966143,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 74.6646162042177,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300.000000000001,
+              "minimumBrakeRequestN": 6299.999999999999,
+              "peakActualBrakeEquivalentN": 6300.000000000058,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 44.93625900411228,
+              "totalPassiveMechanicalWorkJ": 457238.1788854635
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "wet",
+              "steer": 1,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.65994651059708,
+              "endSpeedKmh": 44.72368750648481,
+              "peakBodySlipDeg": 1.3378490981024247,
+              "peakBodySlipAbove30KmhDeg": 1.3378490981024247,
+              "speedAtPeakBodySlipKmh": 78.0892476434005,
+              "peakTireSlipDeg": 2.959469449695578,
+              "peakLongitudinalSlip": 0.03702668896027189,
+              "peakYawRateDegS": 20.581201665723455,
+              "peakWheelAngleDeg": 5.56861791462425,
+              "peakGrip": 0.9562252316901276,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 2962.1165039117227,
+              "maximumLoadN": 8198.147389661432,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 74.6646162042177,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300.000000000002,
+              "minimumBrakeRequestN": 6299.999999999998,
+              "peakActualBrakeEquivalentN": 6300.000000000058,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": 457238.178885464,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 44.93625900411227,
+              "totalPassiveMechanicalWorkJ": 457238.1788854636
+            }
+          }
+        ]
+      }
+    ],
+    "gentle": [
+      {
+        "speedKmh": 54,
+        "surface": "dry",
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 54,
+              "surface": "dry",
+              "steer": 0.2,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 54.047708654854674,
+              "endSpeedKmh": 12.72699004204733,
+              "peakBodySlipDeg": 2.665011996660372,
+              "peakBodySlipAbove30KmhDeg": 1.2487007540585426,
+              "speedAtPeakBodySlipKmh": 12.72699004204733,
+              "peakTireSlipDeg": 0.8348692435907407,
+              "peakLongitudinalSlip": 0.01936312986419107,
+              "peakYawRateDegS": 13.051667270448405,
+              "peakWheelAngleDeg": 5.614984845409754,
+              "peakGrip": 0.32797768869834193,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 3891.9692497059364,
+              "maximumLoadN": 6899.538667294886,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 36.92238454413608,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300,
+              "minimumBrakeRequestN": 6300,
+              "peakActualBrakeEquivalentN": 6300.000000000009,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 41.32071861280734,
+              "totalPassiveMechanicalWorkJ": 229278.45464727233
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 54,
+              "surface": "dry",
+              "steer": 0.2,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 54.047708654854674,
+              "endSpeedKmh": 12.685471287596485,
+              "peakBodySlipDeg": 2.6667579030801143,
+              "peakBodySlipAbove30KmhDeg": 1.2887281365829766,
+              "speedAtPeakBodySlipKmh": 12.685471287596485,
+              "peakTireSlipDeg": 0.826300002574733,
+              "peakLongitudinalSlip": 0.01852325079901431,
+              "peakYawRateDegS": 12.625157125453972,
+              "peakWheelAngleDeg": 5.614984868170411,
+              "peakGrip": 0.29672751347822063,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 3986.41439264237,
+              "maximumLoadN": 6804.895088388822,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 36.9108902016108,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300.000000000002,
+              "minimumBrakeRequestN": 6299.999999999998,
+              "peakActualBrakeEquivalentN": 6300.000000000022,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": 229631.10453766098,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 41.36223736725819,
+              "totalPassiveMechanicalWorkJ": 229631.104537661
+            }
+          }
+        ]
+      },
+      {
+        "speedKmh": 54,
+        "surface": "wet",
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 54,
+              "surface": "wet",
+              "steer": 0.2,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 54.04702145471792,
+              "endSpeedKmh": 12.905588192226032,
+              "peakBodySlipDeg": 2.670736519151457,
+              "peakBodySlipAbove30KmhDeg": 0.7094603770717743,
+              "speedAtPeakBodySlipKmh": 12.905588192226032,
+              "peakTireSlipDeg": 0.4634587859478766,
+              "peakLongitudinalSlip": 0.03776609879791996,
+              "peakYawRateDegS": 9.11841222807949,
+              "peakWheelAngleDeg": 5.6122766108178945,
+              "peakGrip": 0.5390005001086823,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 4261.732418115282,
+              "maximumLoadN": 6529.36638539971,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 37.0641081876317,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300,
+              "minimumBrakeRequestN": 6300,
+              "peakActualBrakeEquivalentN": 6300.000000000015,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 41.14143326249189,
+              "totalPassiveMechanicalWorkJ": 226377.61603197546
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 54,
+              "surface": "wet",
+              "steer": 0.2,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 54.04702145471792,
+              "endSpeedKmh": 12.883660060469431,
+              "peakBodySlipDeg": 2.6710939734095476,
+              "peakBodySlipAbove30KmhDeg": 0.7320054783053221,
+              "speedAtPeakBodySlipKmh": 12.883660060469431,
+              "peakTireSlipDeg": 0.493469700836368,
+              "peakLongitudinalSlip": 0.03774216161821843,
+              "peakYawRateDegS": 8.95939993820223,
+              "peakWheelAngleDeg": 5.61231149559411,
+              "peakGrip": 0.512990514273638,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 4275.018775450344,
+              "maximumLoadN": 6518.099547935356,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 37.05913651423261,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300.000000000002,
+              "minimumBrakeRequestN": 6299.999999999998,
+              "peakActualBrakeEquivalentN": 6300.000000000034,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": 226536.4117555158,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 41.16336139424849,
+              "totalPassiveMechanicalWorkJ": 226536.41175551625
+            }
+          }
+        ]
+      },
+      {
+        "speedKmh": 90,
+        "surface": "dry",
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "dry",
+              "steer": 0.2,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.6611057544985,
+              "endSpeedKmh": 46.952559047250794,
+              "peakBodySlipDeg": 0.6223330004588509,
+              "peakBodySlipAbove30KmhDeg": 0.6223330004588509,
+              "speedAtPeakBodySlipKmh": 78.77712677241928,
+              "peakTireSlipDeg": 1.0347405045463591,
+              "peakLongitudinalSlip": 0.02002065686556243,
+              "peakYawRateDegS": 8.655751720080316,
+              "peakWheelAngleDeg": 1.8355241575361392,
+              "peakGrip": 0.3554732480580054,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 3737.045626740618,
+              "maximumLoadN": 7064.770933590331,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 75.70970586644654,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300,
+              "minimumBrakeRequestN": 6300,
+              "peakActualBrakeEquivalentN": 6300.0000000000255,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 42.7085467072477,
+              "totalPassiveMechanicalWorkJ": 469587.42213766614
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "dry",
+              "steer": 0.2,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.6611057544985,
+              "endSpeedKmh": 47.08530537896768,
+              "peakBodySlipDeg": 0.36836359325681756,
+              "peakBodySlipAbove30KmhDeg": 0.36836359325681756,
+              "speedAtPeakBodySlipKmh": 81.49681854172333,
+              "peakTireSlipDeg": 0.7933620596786906,
+              "peakLongitudinalSlip": 0.018303032984132148,
+              "peakYawRateDegS": 7.678033475072628,
+              "peakWheelAngleDeg": 1.826341369086872,
+              "peakGrip": 0.2933829460422321,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 3996.811034057983,
+              "maximumLoadN": 6802.506604431299,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 75.78929284701573,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300.000000000001,
+              "minimumBrakeRequestN": 6299.999999999998,
+              "peakActualBrakeEquivalentN": 6300.000000000042,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": 470561.0207051127,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 42.57580037553081,
+              "totalPassiveMechanicalWorkJ": 470561.0207051136
+            }
+          }
+        ]
+      },
+      {
+        "speedKmh": 90,
+        "surface": "wet",
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "wet",
+              "steer": 0.2,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.65994651059708,
+              "endSpeedKmh": 47.281127055356976,
+              "peakBodySlipDeg": 0.3484551590474685,
+              "peakBodySlipAbove30KmhDeg": 0.3484551590474685,
+              "speedAtPeakBodySlipKmh": 78.77078005240126,
+              "peakTireSlipDeg": 0.5777614092152003,
+              "peakLongitudinalSlip": 0.038137134572250944,
+              "peakYawRateDegS": 4.8051606326944825,
+              "peakWheelAngleDeg": 1.0107474804135288,
+              "peakGrip": 0.5561567928499888,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 4179.156666594256,
+              "maximumLoadN": 6622.512872380631,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 75.9021366254368,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300,
+              "minimumBrakeRequestN": 6300,
+              "peakActualBrakeEquivalentN": 6300.000000000049,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 42.378819455240105,
+              "totalPassiveMechanicalWorkJ": 463202.4625378529
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "wet",
+              "steer": 0.2,
+              "brake": 0.15,
+              "throttle": 0,
+              "seconds": 4,
+              "stopAtRest": false,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.65994651059708,
+              "endSpeedKmh": 47.32275182537325,
+              "peakBodySlipDeg": 0.20610058583359564,
+              "peakBodySlipAbove30KmhDeg": 0.20610058583359564,
+              "speedAtPeakBodySlipKmh": 81.54948065628808,
+              "peakTireSlipDeg": 0.43998329328869346,
+              "peakLongitudinalSlip": 0.037003086107362075,
+              "peakYawRateDegS": 4.261267973349863,
+              "peakWheelAngleDeg": 1.0091581819151325,
+              "peakGrip": 0.5049749514932768,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 4321.573534509042,
+              "maximumLoadN": 6476.739424371872,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 75.92674812373785,
+              "durationSeconds": 4,
+              "stopTimeSeconds": null,
+              "maximumBrakeRequestN": 6300.000000000002,
+              "minimumBrakeRequestN": 6299.999999999998,
+              "peakActualBrakeEquivalentN": 6300.000000000056,
+              "minimumAbsPressure": 1,
+              "brakeMechanicalWorkJ": 463599.83633134514,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 42.33719468522383,
+              "totalPassiveMechanicalWorkJ": 463599.8363313456
+            }
+          }
+        ]
+      },
+      {
+        "surface": "dry",
+        "mirror": {
+          "stage": "production-3.12",
+          "configuration": {
+            "speedKmh": 90,
+            "surface": "dry",
+            "steer": -1,
+            "brake": 0.15,
+            "throttle": 0,
+            "seconds": 4,
+            "stopAtRest": false,
+            "settle": true
+          },
+          "metrics": {
+            "initialSpeedKmh": 89.6611057544985,
+            "endSpeedKmh": 38.7424539035825,
+            "peakBodySlipDeg": 2.253678929041198,
+            "peakBodySlipAbove30KmhDeg": 2.253678929041198,
+            "speedAtPeakBodySlipKmh": 78.71969624396604,
+            "peakTireSlipDeg": 5.731512369754719,
+            "peakLongitudinalSlip": 0.018306841630503043,
+            "peakYawRateDegS": 41.207175732682934,
+            "peakWheelAngleDeg": 12.759873442992872,
+            "peakGrip": 0.8869188073594022,
+            "saturatedAnyWheelSeconds": 0,
+            "minimumLoadN": 1811.5105888943451,
+            "maximumLoadN": 10206.920161222797,
+            "minimumContacts": 4,
+            "hullContactSteps": 0,
+            "wheelStopContactSteps": 0,
+            "pathLengthM": 71.79624500970901,
+            "durationSeconds": 4,
+            "stopTimeSeconds": null,
+            "maximumBrakeRequestN": 6300.000000000002,
+            "minimumBrakeRequestN": 6299.999999999998,
+            "peakActualBrakeEquivalentN": 6300.000000000056,
+            "minimumAbsPressure": 1,
+            "brakeMechanicalWorkJ": 450586.293244063,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0,
+            "speedLossKmh": 50.91865185091599,
+            "totalPassiveMechanicalWorkJ": 450586.29324406286
+          }
+        }
+      },
+      {
+        "surface": "wet",
+        "mirror": {
+          "stage": "production-3.12",
+          "configuration": {
+            "speedKmh": 90,
+            "surface": "wet",
+            "steer": -1,
+            "brake": 0.15,
+            "throttle": 0,
+            "seconds": 4,
+            "stopAtRest": false,
+            "settle": true
+          },
+          "metrics": {
+            "initialSpeedKmh": 89.65994651059708,
+            "endSpeedKmh": 44.7236875064848,
+            "peakBodySlipDeg": 1.337849098102424,
+            "peakBodySlipAbove30KmhDeg": 1.337849098102424,
+            "speedAtPeakBodySlipKmh": 78.0892476434005,
+            "peakTireSlipDeg": 2.95946944969557,
+            "peakLongitudinalSlip": 0.03702668896027189,
+            "peakYawRateDegS": 20.58120166572348,
+            "peakWheelAngleDeg": 5.568617914624251,
+            "peakGrip": 0.9562252316901272,
+            "saturatedAnyWheelSeconds": 0,
+            "minimumLoadN": 2962.1165039117186,
+            "maximumLoadN": 8198.147389661428,
+            "minimumContacts": 4,
+            "hullContactSteps": 0,
+            "wheelStopContactSteps": 0,
+            "pathLengthM": 74.6646162042177,
+            "durationSeconds": 4,
+            "stopTimeSeconds": null,
+            "maximumBrakeRequestN": 6300.000000000002,
+            "minimumBrakeRequestN": 6299.999999999998,
+            "peakActualBrakeEquivalentN": 6300.000000000058,
+            "minimumAbsPressure": 1,
+            "brakeMechanicalWorkJ": 457238.1788854635,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0,
+            "speedLossKmh": 44.93625900411228,
+            "totalPassiveMechanicalWorkJ": 457238.1788854634
+          }
+        }
+      }
+    ],
+    "stopping": [
+      {
+        "surface": "dry",
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "dry",
+              "steer": 0,
+              "brake": 1,
+              "throttle": 0,
+              "seconds": 6,
+              "stopAtRest": true,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.6611057544985,
+              "endSpeedKmh": 0.2704492210426666,
+              "peakBodySlipDeg": 0,
+              "peakBodySlipAbove30KmhDeg": 0,
+              "speedAtPeakBodySlipKmh": 0,
+              "peakTireSlipDeg": 0,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 0,
+              "peakWheelAngleDeg": 0,
+              "peakGrip": 0.9839561462402344,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 2531.900431267077,
+              "maximumLoadN": 8689.659618831645,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 30.689189824785387,
+              "durationSeconds": 2.3166666666666664,
+              "stopTimeSeconds": 2.3166666666666664,
+              "maximumBrakeRequestN": 42000,
+              "minimumBrakeRequestN": 42000,
+              "peakActualBrakeEquivalentN": 41999.682978739715,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 89.39065653345583,
+              "totalPassiveMechanicalWorkJ": 604575.4074015182
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "dry",
+              "steer": 0,
+              "brake": 1,
+              "throttle": 0,
+              "seconds": 6,
+              "stopAtRest": true,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.6611057544985,
+              "endSpeedKmh": 0.2704492210426564,
+              "peakBodySlipDeg": 0,
+              "peakBodySlipAbove30KmhDeg": 0,
+              "speedAtPeakBodySlipKmh": 0,
+              "peakTireSlipDeg": 0,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 0,
+              "peakWheelAngleDeg": 0,
+              "peakGrip": 0.9839561462402344,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 2531.900431267077,
+              "maximumLoadN": 8689.659618831645,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 30.689189824785387,
+              "durationSeconds": 2.3166666666666664,
+              "stopTimeSeconds": 2.3166666666666664,
+              "maximumBrakeRequestN": 42000,
+              "minimumBrakeRequestN": 41999.99999999999,
+              "peakActualBrakeEquivalentN": 41999.682978739715,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": 604575.4074015197,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 89.39065653345584,
+              "totalPassiveMechanicalWorkJ": 604575.4074015187
+            }
+          }
+        ]
+      },
+      {
+        "surface": "wet",
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "wet",
+              "steer": 0,
+              "brake": 1,
+              "throttle": 0,
+              "seconds": 6,
+              "stopAtRest": true,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.65994651059708,
+              "endSpeedKmh": 0.2471135358179624,
+              "peakBodySlipDeg": 0,
+              "peakBodySlipAbove30KmhDeg": 0,
+              "speedAtPeakBodySlipKmh": 0,
+              "peakTireSlipDeg": 0,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 0,
+              "peakWheelAngleDeg": 0,
+              "peakGrip": 0.9834419250488282,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 3814.218142184022,
+              "maximumLoadN": 6992.714786063914,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 53.180510732911515,
+              "durationSeconds": 4.158333333333333,
+              "stopTimeSeconds": 4.158333333333333,
+              "maximumBrakeRequestN": 42000,
+              "minimumBrakeRequestN": 42000,
+              "peakActualBrakeEquivalentN": 41976.27815345326,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 89.41283297477912,
+              "totalPassiveMechanicalWorkJ": 583422.7603416143
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "wet",
+              "steer": 0,
+              "brake": 1,
+              "throttle": 0,
+              "seconds": 6,
+              "stopAtRest": true,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.65994651059708,
+              "endSpeedKmh": 0.24711353581796458,
+              "peakBodySlipDeg": 0,
+              "peakBodySlipAbove30KmhDeg": 0,
+              "speedAtPeakBodySlipKmh": 0,
+              "peakTireSlipDeg": 0,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 0,
+              "peakWheelAngleDeg": 0,
+              "peakGrip": 0.9834419250488282,
+              "saturatedAnyWheelSeconds": 0,
+              "minimumLoadN": 3814.218142184022,
+              "maximumLoadN": 6992.714786063914,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 53.180510732911515,
+              "durationSeconds": 4.158333333333333,
+              "stopTimeSeconds": 4.158333333333333,
+              "maximumBrakeRequestN": 42000,
+              "minimumBrakeRequestN": 41999.99999999999,
+              "peakActualBrakeEquivalentN": 41976.27815345326,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": 583422.7603416127,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 89.41283297477912,
+              "totalPassiveMechanicalWorkJ": 583422.7603416141
+            }
+          }
+        ]
+      }
+    ],
+    "split": [
+      {
+        "steer": 0,
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "split",
+              "steer": 0,
+              "brake": 1,
+              "throttle": 0,
+              "seconds": 6,
+              "stopAtRest": true,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.66052628694023,
+              "endSpeedKmh": 0.18112658975016221,
+              "peakBodySlipDeg": 6.303881371627534,
+              "peakBodySlipAbove30KmhDeg": 6.303881371627534,
+              "speedAtPeakBodySlipKmh": 56.54630654604704,
+              "peakTireSlipDeg": 8.609990270028591,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 30.962588758970362,
+              "peakWheelAngleDeg": 0,
+              "peakGrip": 0.9999999997606079,
+              "saturatedAnyWheelSeconds": 1.5083333333333304,
+              "minimumLoadN": 966.2545556986806,
+              "maximumLoadN": 12120.999069448888,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 39.06334561035112,
+              "durationSeconds": 2.808333333333333,
+              "stopTimeSeconds": 2.808333333333333,
+              "maximumBrakeRequestN": 42000,
+              "minimumBrakeRequestN": 42000,
+              "peakActualBrakeEquivalentN": 41987.98100397592,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 89.47939969719006,
+              "totalPassiveMechanicalWorkJ": 591271.5233976538
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "split",
+              "steer": 0,
+              "brake": 1,
+              "throttle": 0,
+              "seconds": 6,
+              "stopAtRest": true,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.66052628694023,
+              "endSpeedKmh": 0.34895748139493327,
+              "peakBodySlipDeg": 3.430095106668134,
+              "peakBodySlipAbove30KmhDeg": 3.430095106668134,
+              "speedAtPeakBodySlipKmh": 56.319789894275196,
+              "peakTireSlipDeg": 4.973512657773731,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 18.232598976328294,
+              "peakWheelAngleDeg": 0,
+              "peakGrip": 0.9999999994117141,
+              "saturatedAnyWheelSeconds": 1.1333333333333317,
+              "minimumLoadN": 1609.025298663094,
+              "maximumLoadN": 10960.259014833402,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 0,
+              "pathLengthM": 37.67065796842409,
+              "durationSeconds": 2.683333333333333,
+              "stopTimeSeconds": 2.683333333333333,
+              "maximumBrakeRequestN": 42000.00000000001,
+              "minimumBrakeRequestN": 41999.99999999999,
+              "peakActualBrakeEquivalentN": 41987.98093505417,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": 598876.8048595404,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 89.31156880554529,
+              "totalPassiveMechanicalWorkJ": 598876.8048595408
+            }
+          }
+        ]
+      },
+      {
+        "steer": 1,
+        "results": [
+          {
+            "stage": "published-3.11",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "split",
+              "steer": 1,
+              "brake": 1,
+              "throttle": 0,
+              "seconds": 6,
+              "stopAtRest": true,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.66052628694023,
+              "endSpeedKmh": 0.3478185976900896,
+              "peakBodySlipDeg": 80.19922087698919,
+              "peakBodySlipAbove30KmhDeg": 55.38673815464385,
+              "speedAtPeakBodySlipKmh": 6.521538119728053,
+              "peakTireSlipDeg": 83.55166544294075,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 63.69393914968305,
+              "peakWheelAngleDeg": 28.064852640887725,
+              "peakGrip": 1.0000000000000002,
+              "saturatedAnyWheelSeconds": 2.3499999999999943,
+              "minimumLoadN": 650.3313688116649,
+              "maximumLoadN": 13804.979685451044,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 7,
+              "pathLengthM": 35.959042540619215,
+              "durationSeconds": 2.5833333333333335,
+              "stopTimeSeconds": 2.5833333333333335,
+              "maximumBrakeRequestN": 42000,
+              "minimumBrakeRequestN": 42000,
+              "peakActualBrakeEquivalentN": 41987.98374275801,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": null,
+              "liftOffBrakeMechanicalWorkJ": null,
+              "electricalRecoveredWorkJ": null,
+              "speedLossKmh": 89.31270768925013,
+              "totalPassiveMechanicalWorkJ": 388060.1483320873
+            }
+          },
+          {
+            "stage": "production-3.12",
+            "configuration": {
+              "speedKmh": 90,
+              "surface": "split",
+              "steer": 1,
+              "brake": 1,
+              "throttle": 0,
+              "seconds": 6,
+              "stopAtRest": true,
+              "settle": true
+            },
+            "metrics": {
+              "initialSpeedKmh": 89.66052628694023,
+              "endSpeedKmh": 0.33690539380471246,
+              "peakBodySlipDeg": 28.882676558656243,
+              "peakBodySlipAbove30KmhDeg": 26.418850908594393,
+              "speedAtPeakBodySlipKmh": 20.51436630091492,
+              "peakTireSlipDeg": 51.43331105065776,
+              "peakLongitudinalSlip": 1,
+              "peakYawRateDegS": 47.0059914715561,
+              "peakWheelAngleDeg": 28.069594615970214,
+              "peakGrip": 1,
+              "saturatedAnyWheelSeconds": 2.2999999999999945,
+              "minimumLoadN": 644.3846780281943,
+              "maximumLoadN": 13622.339720971977,
+              "minimumContacts": 4,
+              "hullContactSteps": 0,
+              "wheelStopContactSteps": 3,
+              "pathLengthM": 36.544880406524925,
+              "durationSeconds": 2.683333333333333,
+              "stopTimeSeconds": 2.683333333333333,
+              "maximumBrakeRequestN": 42000.00000000001,
+              "minimumBrakeRequestN": 41999.999999999985,
+              "peakActualBrakeEquivalentN": 41987.98367383737,
+              "minimumAbsPressure": 0.02,
+              "brakeMechanicalWorkJ": 464022.3459018997,
+              "liftOffBrakeMechanicalWorkJ": 0,
+              "electricalRecoveredWorkJ": 0,
+              "speedLossKmh": 89.32362089313551,
+              "totalPassiveMechanicalWorkJ": 464022.3459018992
+            }
+          }
+        ]
+      }
+    ],
+    "pedalHandover": [
+      {
+        "stage": "published-3.11",
+        "rows": [
+          {
+            "brake": 0,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 0,
+            "actualBrakeEquivalentN": 2600.0000000000045,
+            "regenEquivalentN": 2600.0000000000045,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.009,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 0,
+            "actualBrakeEquivalentN": 2600.0000000000045,
+            "regenEquivalentN": 2600.0000000000045,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.01,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 0,
+            "actualBrakeEquivalentN": 2600.0000000000045,
+            "regenEquivalentN": 2600.0000000000045,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.010001,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.99273459267647,
+            "actualDecelerationMps2": 0.24218024411844397,
+            "reportedBrakeDemandN": 420.042,
+            "actualBrakeEquivalentN": 420.04200000001725,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.011,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.99229759734605,
+            "actualDecelerationMps2": 0.2567467551323688,
+            "reportedBrakeDemandN": 462,
+            "actualBrakeEquivalentN": 461.9999999999748,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.02,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.98836407804236,
+            "actualDecelerationMps2": 0.3878640652554566,
+            "reportedBrakeDemandN": 840,
+            "actualBrakeEquivalentN": 839.9999999999942,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.03,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.9839938440732,
+            "actualDecelerationMps2": 0.5335385308941198,
+            "reportedBrakeDemandN": 1260,
+            "actualBrakeEquivalentN": 1260.000000000022,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.061,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97044983522636,
+            "actualDecelerationMps2": 0.985005492494011,
+            "reportedBrakeDemandN": 2562,
+            "actualBrakeEquivalentN": 2562.0000000000314,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.062,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.970013681890805,
+            "actualDecelerationMps2": 0.9995439370126746,
+            "reportedBrakeDemandN": 2604,
+            "actualBrakeEquivalentN": 2604.0000000000273,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 1,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.679356215500576,
+            "actualDecelerationMps2": 10.688126150020452,
+            "reportedBrakeDemandN": 42000,
+            "actualBrakeEquivalentN": 41953.34033438236,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          }
+        ]
+      },
+      {
+        "stage": "axle-only-ablation",
+        "rows": [
+          {
+            "brake": 0,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 0,
+            "actualBrakeEquivalentN": 2600.0000000000045,
+            "regenEquivalentN": 2600.0000000000045,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.009,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 0,
+            "actualBrakeEquivalentN": 2600.0000000000045,
+            "regenEquivalentN": 2600.0000000000045,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.01,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 0,
+            "actualBrakeEquivalentN": 2600.0000000000045,
+            "regenEquivalentN": 2600.0000000000045,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.010001,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.99273459267647,
+            "actualDecelerationMps2": 0.24218024411844397,
+            "reportedBrakeDemandN": 420.042,
+            "actualBrakeEquivalentN": 420.04200000001725,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.011,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.99229759734605,
+            "actualDecelerationMps2": 0.2567467551323688,
+            "reportedBrakeDemandN": 462,
+            "actualBrakeEquivalentN": 461.9999999999748,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.02,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.98836407804236,
+            "actualDecelerationMps2": 0.3878640652554566,
+            "reportedBrakeDemandN": 840,
+            "actualBrakeEquivalentN": 839.9999999999942,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.03,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.9839938440732,
+            "actualDecelerationMps2": 0.5335385308941198,
+            "reportedBrakeDemandN": 1260,
+            "actualBrakeEquivalentN": 1260.000000000022,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.061,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97044983522636,
+            "actualDecelerationMps2": 0.985005492494011,
+            "reportedBrakeDemandN": 2562,
+            "actualBrakeEquivalentN": 2562.0000000000314,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 0.062,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.970013681890805,
+            "actualDecelerationMps2": 0.9995439370126746,
+            "reportedBrakeDemandN": 2604,
+            "actualBrakeEquivalentN": 2604.0000000000273,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          },
+          {
+            "brake": 1,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.679356215500576,
+            "actualDecelerationMps2": 10.688126150020452,
+            "reportedBrakeDemandN": 42000,
+            "actualBrakeEquivalentN": 41953.34033438236,
+            "regenEquivalentN": 0,
+            "regenRequestN": null,
+            "serviceRequestN": null
+          }
+        ]
+      },
+      {
+        "stage": "production-3.12",
+        "rows": [
+          {
+            "brake": 0,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 2600,
+            "actualBrakeEquivalentN": 2600.0000000000045,
+            "regenEquivalentN": 2600.0000000000045,
+            "regenRequestN": 2600,
+            "serviceRequestN": 0
+          },
+          {
+            "brake": 0.009,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005967119626,
+            "actualDecelerationMps2": 0.9980109601252707,
+            "reportedBrakeDemandN": 2600,
+            "actualBrakeEquivalentN": 2599.999999999994,
+            "regenEquivalentN": 2451.1131810650827,
+            "regenRequestN": 2451.1131810650886,
+            "serviceRequestN": 148.8868189349114
+          },
+          {
+            "brake": 0.01,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 2600,
+            "actualBrakeEquivalentN": 2599.9999999999964,
+            "regenEquivalentN": 2418.3810650887535,
+            "regenRequestN": 2418.3810650887576,
+            "serviceRequestN": 181.61893491124238
+          },
+          {
+            "brake": 0.010001,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005967119626,
+            "actualDecelerationMps2": 0.9980109601252707,
+            "reportedBrakeDemandN": 2600,
+            "actualBrakeEquivalentN": 2599.999999999994,
+            "regenEquivalentN": 2418.346931876655,
+            "regenRequestN": 2418.346931876661,
+            "serviceRequestN": 181.65306812333893
+          },
+          {
+            "brake": 0.011,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005995186121,
+            "actualDecelerationMps2": 0.9980016046269213,
+            "reportedBrakeDemandN": 2600,
+            "actualBrakeEquivalentN": 2599.999999999996,
+            "regenEquivalentN": 2382.893351479286,
+            "regenRequestN": 2382.89335147929,
+            "serviceRequestN": 217.1066485207102
+          },
+          {
+            "brake": 0.02,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.970060232526166,
+            "actualDecelerationMps2": 0.997992249128572,
+            "reportedBrakeDemandN": 2600,
+            "actualBrakeEquivalentN": 2599.9999999999895,
+            "regenEquivalentN": 1961.2023668638958,
+            "regenRequestN": 1961.2023668639054,
+            "serviceRequestN": 638.7976331360946
+          },
+          {
+            "brake": 0.03,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.970060232526166,
+            "actualDecelerationMps2": 0.997992249128572,
+            "reportedBrakeDemandN": 2600,
+            "actualBrakeEquivalentN": 2599.99999999999,
+            "regenEquivalentN": 1359.9810650887516,
+            "regenRequestN": 1359.9810650887575,
+            "serviceRequestN": 1240.0189349112425
+          },
+          {
+            "brake": 0.061,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.97005522030371,
+            "actualDecelerationMps2": 0.9981593232490837,
+            "reportedBrakeDemandN": 2600,
+            "actualBrakeEquivalentN": 2600.0000000000005,
+            "regenEquivalentN": 1.6499195266270545,
+            "regenRequestN": 1.6499195266270528,
+            "serviceRequestN": 2598.350080473373
+          },
+          {
+            "brake": 0.062,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.970013681890805,
+            "actualDecelerationMps2": 0.9995439370126746,
+            "reportedBrakeDemandN": 2604,
+            "actualBrakeEquivalentN": 2604.0000000000273,
+            "regenEquivalentN": 0,
+            "regenRequestN": 0,
+            "serviceRequestN": 2604
+          },
+          {
+            "brake": 1,
+            "initialSpeedKmh": 54,
+            "actualSpeedKmh": 53.679356215500576,
+            "actualDecelerationMps2": 10.688126150020452,
+            "reportedBrakeDemandN": 42000,
+            "actualBrakeEquivalentN": 41953.34033438236,
+            "regenEquivalentN": 0,
+            "regenRequestN": 0,
+            "serviceRequestN": 42000
+          }
+        ]
+      }
+    ],
+    "pedalEnvelope": {
+      "formula": "B=max(R,S); E=R*(1-smoothstep(clamp(S/R))); service=B-E",
+      "lowPedalMeaning": "The first part of brake travel transfers existing lift-off deceleration to service brakes; it does not add a second brake pool.",
+      "sweep": [
+        {
+          "brake": 0,
+          "requestN": 2600,
+          "regenRequestN": 2600,
+          "serviceRequestN": 0
+        },
+        {
+          "brake": 0.025,
+          "requestN": 2600,
+          "regenRequestN": 1670.377218934911,
+          "serviceRequestN": 929.6227810650889
+        },
+        {
+          "brake": 0.05,
+          "requestN": 2599.9999999999995,
+          "regenRequestN": 251.47928994082827,
+          "serviceRequestN": 2348.5207100591715
+        },
+        {
+          "brake": 0.075,
+          "requestN": 3150,
+          "regenRequestN": 0,
+          "serviceRequestN": 3150
+        },
+        {
+          "brake": 0.1,
+          "requestN": 4200,
+          "regenRequestN": 0,
+          "serviceRequestN": 4200
+        },
+        {
+          "brake": 0.125,
+          "requestN": 5250,
+          "regenRequestN": 0,
+          "serviceRequestN": 5250
+        },
+        {
+          "brake": 0.15,
+          "requestN": 6300,
+          "regenRequestN": 0,
+          "serviceRequestN": 6300
+        },
+        {
+          "brake": 0.175,
+          "requestN": 7349.999999999999,
+          "regenRequestN": 0,
+          "serviceRequestN": 7349.999999999999
+        },
+        {
+          "brake": 0.2,
+          "requestN": 8400,
+          "regenRequestN": 0,
+          "serviceRequestN": 8400
+        },
+        {
+          "brake": 0.225,
+          "requestN": 9450,
+          "regenRequestN": 0,
+          "serviceRequestN": 9450
+        },
+        {
+          "brake": 0.25,
+          "requestN": 10500,
+          "regenRequestN": 0,
+          "serviceRequestN": 10500
+        },
+        {
+          "brake": 0.275,
+          "requestN": 11550.000000000002,
+          "regenRequestN": 0,
+          "serviceRequestN": 11550.000000000002
+        },
+        {
+          "brake": 0.3,
+          "requestN": 12600,
+          "regenRequestN": 0,
+          "serviceRequestN": 12600
+        },
+        {
+          "brake": 0.325,
+          "requestN": 13650,
+          "regenRequestN": 0,
+          "serviceRequestN": 13650
+        },
+        {
+          "brake": 0.35,
+          "requestN": 14699.999999999998,
+          "regenRequestN": 0,
+          "serviceRequestN": 14699.999999999998
+        },
+        {
+          "brake": 0.375,
+          "requestN": 15750,
+          "regenRequestN": 0,
+          "serviceRequestN": 15750
+        },
+        {
+          "brake": 0.4,
+          "requestN": 16800,
+          "regenRequestN": 0,
+          "serviceRequestN": 16800
+        },
+        {
+          "brake": 0.425,
+          "requestN": 17850,
+          "regenRequestN": 0,
+          "serviceRequestN": 17850
+        },
+        {
+          "brake": 0.45,
+          "requestN": 18900,
+          "regenRequestN": 0,
+          "serviceRequestN": 18900
+        },
+        {
+          "brake": 0.475,
+          "requestN": 19950,
+          "regenRequestN": 0,
+          "serviceRequestN": 19950
+        },
+        {
+          "brake": 0.5,
+          "requestN": 21000,
+          "regenRequestN": 0,
+          "serviceRequestN": 21000
+        },
+        {
+          "brake": 0.525,
+          "requestN": 22050,
+          "regenRequestN": 0,
+          "serviceRequestN": 22050
+        },
+        {
+          "brake": 0.55,
+          "requestN": 23100.000000000004,
+          "regenRequestN": 0,
+          "serviceRequestN": 23100.000000000004
+        },
+        {
+          "brake": 0.575,
+          "requestN": 24149.999999999996,
+          "regenRequestN": 0,
+          "serviceRequestN": 24149.999999999996
+        },
+        {
+          "brake": 0.6,
+          "requestN": 25200,
+          "regenRequestN": 0,
+          "serviceRequestN": 25200
+        },
+        {
+          "brake": 0.625,
+          "requestN": 26250,
+          "regenRequestN": 0,
+          "serviceRequestN": 26250
+        },
+        {
+          "brake": 0.65,
+          "requestN": 27300,
+          "regenRequestN": 0,
+          "serviceRequestN": 27300
+        },
+        {
+          "brake": 0.675,
+          "requestN": 28350,
+          "regenRequestN": 0,
+          "serviceRequestN": 28350
+        },
+        {
+          "brake": 0.7,
+          "requestN": 29399.999999999996,
+          "regenRequestN": 0,
+          "serviceRequestN": 29399.999999999996
+        },
+        {
+          "brake": 0.725,
+          "requestN": 30450,
+          "regenRequestN": 0,
+          "serviceRequestN": 30450
+        },
+        {
+          "brake": 0.75,
+          "requestN": 31500,
+          "regenRequestN": 0,
+          "serviceRequestN": 31500
+        },
+        {
+          "brake": 0.775,
+          "requestN": 32550,
+          "regenRequestN": 0,
+          "serviceRequestN": 32550
+        },
+        {
+          "brake": 0.8,
+          "requestN": 33600,
+          "regenRequestN": 0,
+          "serviceRequestN": 33600
+        },
+        {
+          "brake": 0.825,
+          "requestN": 34650,
+          "regenRequestN": 0,
+          "serviceRequestN": 34650
+        },
+        {
+          "brake": 0.85,
+          "requestN": 35700,
+          "regenRequestN": 0,
+          "serviceRequestN": 35700
+        },
+        {
+          "brake": 0.875,
+          "requestN": 36750,
+          "regenRequestN": 0,
+          "serviceRequestN": 36750
+        },
+        {
+          "brake": 0.9,
+          "requestN": 37800,
+          "regenRequestN": 0,
+          "serviceRequestN": 37800
+        },
+        {
+          "brake": 0.925,
+          "requestN": 38850,
+          "regenRequestN": 0,
+          "serviceRequestN": 38850
+        },
+        {
+          "brake": 0.95,
+          "requestN": 39900,
+          "regenRequestN": 0,
+          "serviceRequestN": 39900
+        },
+        {
+          "brake": 0.975,
+          "requestN": 40950,
+          "regenRequestN": 0,
+          "serviceRequestN": 40950
+        },
+        {
+          "brake": 1,
+          "requestN": 42000,
+          "regenRequestN": 0,
+          "serviceRequestN": 42000
+        }
+      ]
+    },
+    "contactBudgets": [
+      {
+        "contactMaskFR_FL_RR_RL": 15,
+        "brake": 0.15,
+        "frontRequestN": 3780,
+        "rearRequestN": 2520,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1890,
+            "actualBrakeNm": 699.300000000001
+          },
+          {
+            "id": "FL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1890,
+            "actualBrakeNm": 699.300000000001
+          },
+          {
+            "id": "RR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1260,
+            "actualBrakeNm": 466.19999999999516
+          },
+          {
+            "id": "RL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1260,
+            "actualBrakeNm": 466.19999999999516
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 15,
+        "brake": 1,
+        "frontRequestN": 25200,
+        "rearRequestN": 16800,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 12600,
+            "actualBrakeNm": 4653.367961860735
+          },
+          {
+            "id": "FL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 12600,
+            "actualBrakeNm": 4653.367961860735
+          },
+          {
+            "id": "RR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 8400,
+            "actualBrakeNm": 3108.0000000000014
+          },
+          {
+            "id": "RL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 8400,
+            "actualBrakeNm": 3108.0000000000014
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 7,
+        "brake": 0.15,
+        "frontRequestN": 3780,
+        "rearRequestN": 2520,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1890,
+            "actualBrakeNm": 699.3000000000015
+          },
+          {
+            "id": "FL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1890,
+            "actualBrakeNm": 699.3000000000015
+          },
+          {
+            "id": "RR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 2520,
+            "actualBrakeNm": 932.3999999999965
+          },
+          {
+            "id": "RL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 0,
+            "actualBrakeNm": 0
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 7,
+        "brake": 1,
+        "frontRequestN": 25200,
+        "rearRequestN": 16800,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 12600,
+            "actualBrakeNm": 4653.216226954678
+          },
+          {
+            "id": "FL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 12600,
+            "actualBrakeNm": 4653.216226954678
+          },
+          {
+            "id": "RR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 16800,
+            "actualBrakeNm": 6163.713822028288
+          },
+          {
+            "id": "RL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 0,
+            "actualBrakeNm": 0
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 3,
+        "brake": 0.15,
+        "frontRequestN": 3780,
+        "rearRequestN": 2520,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1890,
+            "actualBrakeNm": 699.3000000000011
+          },
+          {
+            "id": "FL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1890,
+            "actualBrakeNm": 699.3000000000011
+          },
+          {
+            "id": "RR",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 1260,
+            "actualBrakeNm": 466.19999999999806
+          },
+          {
+            "id": "RL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 1260,
+            "actualBrakeNm": 466.19999999999806
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 3,
+        "brake": 1,
+        "frontRequestN": 25200,
+        "rearRequestN": 16800,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 12600,
+            "actualBrakeNm": 4653.064712796711
+          },
+          {
+            "id": "FL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 12600,
+            "actualBrakeNm": 4653.064712796711
+          },
+          {
+            "id": "RR",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 8400,
+            "actualBrakeNm": 3108.000000000001
+          },
+          {
+            "id": "RL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 8400,
+            "actualBrakeNm": 3108.000000000001
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 12,
+        "brake": 0.15,
+        "frontRequestN": 3780,
+        "rearRequestN": 2520,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 1890,
+            "actualBrakeNm": 699.300000000001
+          },
+          {
+            "id": "FL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 1890,
+            "actualBrakeNm": 699.300000000001
+          },
+          {
+            "id": "RR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1260,
+            "actualBrakeNm": 466.1999999999963
+          },
+          {
+            "id": "RL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 1260,
+            "actualBrakeNm": 466.1999999999963
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 12,
+        "brake": 1,
+        "frontRequestN": 25200,
+        "rearRequestN": 16800,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 12600,
+            "actualBrakeNm": 4662.000000000001
+          },
+          {
+            "id": "FL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 12600,
+            "actualBrakeNm": 4662.000000000001
+          },
+          {
+            "id": "RR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 8400,
+            "actualBrakeNm": 3108.0000000000036
+          },
+          {
+            "id": "RL",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 8400,
+            "actualBrakeNm": 3108.0000000000036
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 5,
+        "brake": 0.15,
+        "frontRequestN": 3780,
+        "rearRequestN": 2520,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 3780,
+            "actualBrakeNm": 1398.6000000000015
+          },
+          {
+            "id": "FL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 0,
+            "actualBrakeNm": 0
+          },
+          {
+            "id": "RR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 2520,
+            "actualBrakeNm": 932.3999999999966
+          },
+          {
+            "id": "RL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 0,
+            "actualBrakeNm": 0
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 5,
+        "brake": 1,
+        "frontRequestN": 25200,
+        "rearRequestN": 16800,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 25200,
+            "actualBrakeNm": 9080.316566099664
+          },
+          {
+            "id": "FL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 0,
+            "actualBrakeNm": 0
+          },
+          {
+            "id": "RR",
+            "contact": true,
+            "loadN": 5394.389593187358,
+            "requestN": 16800,
+            "actualBrakeNm": 6163.379398340281
+          },
+          {
+            "id": "RL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 0,
+            "actualBrakeNm": 0
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 0,
+        "brake": 0.15,
+        "frontRequestN": 3780,
+        "rearRequestN": 2520,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 1890,
+            "actualBrakeNm": 699.300000000001
+          },
+          {
+            "id": "FL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 1890,
+            "actualBrakeNm": 699.300000000001
+          },
+          {
+            "id": "RR",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 1260,
+            "actualBrakeNm": 466.19999999999806
+          },
+          {
+            "id": "RL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 1260,
+            "actualBrakeNm": 466.19999999999806
+          }
+        ]
+      },
+      {
+        "contactMaskFR_FL_RR_RL": 0,
+        "brake": 1,
+        "frontRequestN": 25200,
+        "rearRequestN": 16800,
+        "wheels": [
+          {
+            "id": "FR",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 12600,
+            "actualBrakeNm": 4662.000000000001
+          },
+          {
+            "id": "FL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 12600,
+            "actualBrakeNm": 4662.000000000001
+          },
+          {
+            "id": "RR",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 8400,
+            "actualBrakeNm": 3108.000000000001
+          },
+          {
+            "id": "RL",
+            "contact": false,
+            "loadN": 0,
+            "requestN": 8400,
+            "actualBrakeNm": 3108.000000000001
+          }
+        ]
+      }
+    ],
+    "parking": [
+      {
+        "stage": "published-3.11",
+        "brake": 0,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.01455682697836079,
+        "peakSpeedKmh": 0.03184553207931013,
+        "maxRequestN": 0
+      },
+      {
+        "stage": "published-3.11",
+        "brake": 0.009,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.01455682697836079,
+        "peakSpeedKmh": 0.03184553207931013,
+        "maxRequestN": 0
+      },
+      {
+        "stage": "published-3.11",
+        "brake": 0.011,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 1.0791289188430806,
+        "peakSpeedKmh": 2.5710608759348994,
+        "maxRequestN": 462
+      },
+      {
+        "stage": "published-3.11",
+        "brake": 0.2,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.01455682697836079,
+        "peakSpeedKmh": 0.03184553207931013,
+        "maxRequestN": 8400
+      },
+      {
+        "stage": "published-3.11",
+        "brake": 1,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.014556823127333486,
+        "peakSpeedKmh": 0.031845531856089675,
+        "maxRequestN": 42000
+      },
+      {
+        "stage": "production-3.12",
+        "brake": 0,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.01455682697836079,
+        "peakSpeedKmh": 0.03184553207931013,
+        "maxRequestN": 42000
+      },
+      {
+        "stage": "production-3.12",
+        "brake": 0.009,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.01455682697836079,
+        "peakSpeedKmh": 0.03184553207931013,
+        "maxRequestN": 42000
+      },
+      {
+        "stage": "production-3.12",
+        "brake": 0.011,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.01455682697836079,
+        "peakSpeedKmh": 0.03184553207931013,
+        "maxRequestN": 42000
+      },
+      {
+        "stage": "production-3.12",
+        "brake": 0.2,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.01455682697836079,
+        "peakSpeedKmh": 0.03184553207931013,
+        "maxRequestN": 42000
+      },
+      {
+        "stage": "production-3.12",
+        "brake": 1,
+        "disturbanceN": 1000,
+        "durationSeconds": 3,
+        "displacementM": 0.014556823127333486,
+        "peakSpeedKmh": 0.031845531856089675,
+        "maxRequestN": 42000
+      }
+    ],
+    "workAttribution": [
+      {
+        "initialOmegaRadS": 40,
+        "finalOmegaRadS": 37.70833333333332,
+        "mechanicalWorkJ": 178.0815972222231,
+        "liftOffWorkJ": 64.75694444444477,
+        "actualTotalNm": 550.0000000000027,
+        "actualLiftOffNm": 200.00000000000105,
+        "actualServiceNm": 300.0000000000014,
+        "actualRollingNm": 50.00000000000026
+      },
+      {
+        "initialOmegaRadS": -40,
+        "finalOmegaRadS": -37.70833333333332,
+        "mechanicalWorkJ": 178.0815972222231,
+        "liftOffWorkJ": 64.75694444444477,
+        "actualTotalNm": 550.0000000000027,
+        "actualLiftOffNm": 200.00000000000105,
+        "actualServiceNm": 300.0000000000014,
+        "actualRollingNm": 50.00000000000026
+      },
+      {
+        "initialOmegaRadS": 0.04,
+        "finalOmegaRadS": 0,
+        "mechanicalWorkJ": 0.0016000000000000003,
+        "liftOffWorkJ": 0.0005818181818181819,
+        "actualTotalNm": 9.6,
+        "actualLiftOffNm": 3.490909090909091,
+        "actualServiceNm": 5.236363636363635,
+        "actualRollingNm": 0.8727272727272728
+      }
+    ],
+    "postAbsAttribution": {
+      "absPressure": 0.6903777256462412,
+      "actualBrakeNm": 2325.5437431335445,
+      "actualLiftOffNm": 919.5568154666971,
+      "actualServiceNm": 1379.3352232000457,
+      "actualRollingNm": 26.651704466801707,
+      "oldPhysicalResultEqualsNew": true
+    },
+    "energyLedger": {
+      "durationSeconds": 2,
+      "initialSpeedKmh": 54,
+      "brake": 0.03,
+      "surface": "wet",
+      "passiveMechanicalWorkJ": 70685.67441227974,
+      "equivalentLiftOffMechanicalWorkJ": 36976.11946360449,
+      "electricalRecoveredWorkJ": 0,
+      "batteryEnergySpentJ": 1599.9999999999902,
+      "scope": "Mechanical work removed from wheel motion. No battery recuperation efficiency or battery recharge is implemented; nominal regenPower still bounds the existing speed-based force request, not a newly validated substep recuperator model."
+    },
+    "gamepad": [
+      {
+        "axis": "steer",
+        "stick": -1,
+        "before": 1,
+        "after": 1
+      },
+      {
+        "axis": "steer",
+        "stick": -0.7,
+        "before": 0.7,
+        "after": 0.6551724137931034
+      },
+      {
+        "axis": "steer",
+        "stick": -0.130001,
+        "before": 0.130001,
+        "after": 0.0000011494252873574713
+      },
+      {
+        "axis": "steer",
+        "stick": -0.13,
+        "before": 0.13,
+        "after": 0
+      },
+      {
+        "axis": "steer",
+        "stick": -0.129999,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "steer",
+        "stick": 0,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "steer",
+        "stick": 0.129999,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "steer",
+        "stick": 0.13,
+        "before": -0.13,
+        "after": 0
+      },
+      {
+        "axis": "steer",
+        "stick": 0.130001,
+        "before": -0.130001,
+        "after": -0.0000011494252873574713
+      },
+      {
+        "axis": "steer",
+        "stick": 0.7,
+        "before": -0.7,
+        "after": -0.6551724137931034
+      },
+      {
+        "axis": "steer",
+        "stick": 1,
+        "before": -1,
+        "after": -1
+      },
+      {
+        "axis": "roll",
+        "stick": -1,
+        "before": 1,
+        "after": 1
+      },
+      {
+        "axis": "roll",
+        "stick": -0.7,
+        "before": 0.7,
+        "after": 0.6551724137931034
+      },
+      {
+        "axis": "roll",
+        "stick": -0.130001,
+        "before": 0.130001,
+        "after": 0.0000011494252873574713
+      },
+      {
+        "axis": "roll",
+        "stick": -0.13,
+        "before": 0.13,
+        "after": 0
+      },
+      {
+        "axis": "roll",
+        "stick": -0.129999,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "roll",
+        "stick": 0,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "roll",
+        "stick": 0.129999,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "roll",
+        "stick": 0.13,
+        "before": -0.13,
+        "after": 0
+      },
+      {
+        "axis": "roll",
+        "stick": 0.130001,
+        "before": -0.130001,
+        "after": -0.0000011494252873574713
+      },
+      {
+        "axis": "roll",
+        "stick": 0.7,
+        "before": -0.7,
+        "after": -0.6551724137931034
+      },
+      {
+        "axis": "roll",
+        "stick": 1,
+        "before": -1,
+        "after": -1
+      },
+      {
+        "axis": "lift",
+        "stick": -1,
+        "before": 1,
+        "after": 1
+      },
+      {
+        "axis": "lift",
+        "stick": -0.7,
+        "before": 0.7,
+        "after": 0.6551724137931034
+      },
+      {
+        "axis": "lift",
+        "stick": -0.130001,
+        "before": 0.130001,
+        "after": 0.0000011494252873574713
+      },
+      {
+        "axis": "lift",
+        "stick": -0.13,
+        "before": 0.13,
+        "after": 0
+      },
+      {
+        "axis": "lift",
+        "stick": -0.129999,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "lift",
+        "stick": 0,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "lift",
+        "stick": 0.129999,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "axis": "lift",
+        "stick": 0.13,
+        "before": -0.13,
+        "after": 0
+      },
+      {
+        "axis": "lift",
+        "stick": 0.130001,
+        "before": -0.130001,
+        "after": -0.0000011494252873574713
+      },
+      {
+        "axis": "lift",
+        "stick": 0.7,
+        "before": -0.7,
+        "after": -0.6551724137931034
+      },
+      {
+        "axis": "lift",
+        "stick": 1,
+        "before": -1,
+        "after": -1
+      }
+    ],
+    "replay": {
+      "result": "exact full snapshot after 180 continued mixed-braking steps",
+      "modelVersion": "3.12.0",
+      "resetDiagnostics": "zero"
+    }
+  },
+  "curveFile": "qa/braking-controls-curves-3.12.json",
+  "limits": [
+    "The primary 15% braking/full mapped-steering case is a reproduced remaining nonlinear combined-demand fault; 20% steering was already stable.",
+    "Service allocation retains a fixed 60/40 axle split; it is a simplified within-axle load-aware distribution, not a calibrated OEM EBD/ESC.",
+    "Split-friction hard corner braking still produces a real slide; no yaw/velocity override or friction increase is used.",
+    "The low-speed hold remains a compliant tire/static-friction approximation with small creep, not a pose clamp.",
+    "Equivalent motor retardation removes mechanical energy; no electrical energy is returned to the battery.",
+    "The selected limits remain engineering assumptions: dry mu 1.25, 700 kW traction, 42 kN brake request and 20 kN per main nozzle."
+  ]
+}

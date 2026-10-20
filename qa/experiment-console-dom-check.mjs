@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 // DOM integration with actual RoadsterSim / record / replay / numerical pair.
 // Canvas and Worker scheduling endpoints are facades, not GPU or browser FPS QA.
 import assert from 'node:assert/strict';
@@ -76,5 +77,5 @@ try{
     const count=ui.getExperimentState().recordCount;ui.dispose();ui=createResearchConsole({mount:doc.getElementById('mount'),getSim:()=>sim,getContext:()=>context,getLiveAvailable:()=>false,onToast:(...args)=>notices.push(args)});ui.open('experiments');assert.equal(ui.getExperimentState().recordCount,count);assert.match($('identity').textContent,/live-fixed-inputs-1/);assert.equal(button('record').disabled,true);assert.equal(button('numeric-replay').disabled,false);const r=ui.getExperimentRecords()[0];assert.equal(r.stepCount,r.inputRuns.reduce((s,x)=>s+x.steps,0));
   });
   const paths=['dist/experiment-console.js','dist/experiment-records.js','dist/experiment-reproduction.js','dist/research-console.js','dist/research-console.css','dist/experiment-replay-worker.js','qa/experiment-console-dom-check.mjs'];
-  writeFileSync(new URL('./experiment-console-dom-3.11.json',import.meta.url),JSON.stringify({status:'passed',checks:tests.length,scope:'Actual console DOM and actual fixed-step RoadsterSim replay/A-B. Canvas and asynchronous Worker endpoints are facades; no browser layout, Worker-thread performance, WebGL pixels or FPS evidence.',sourceHashes:Object.fromEntries(paths.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')])),tests},null,2)+'\n');
+  writeFileSync(new URL(`./experiment-console-dom-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',checks:tests.length,scope:'Actual console DOM and actual fixed-step RoadsterSim replay/A-B. Canvas and asynchronous Worker endpoints are facades; no browser layout, Worker-thread performance, WebGL pixels or FPS evidence.',sourceHashes:Object.fromEntries(paths.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')])),tests},null,2)+'\n');
 }finally{ui?.dispose();URL.createObjectURL=saved.createObjectURL;URL.revokeObjectURL=saved.revokeObjectURL;dom.window.close();}

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
 import {PerformanceMeter} from '../dist/performance-meter.js';
@@ -62,6 +63,6 @@ function fixture({timer=false,capacity=400}={}){
   pass('Asynchronous GPU queries are attributed to their original frame once, and disjoint queries are discarded with evidence');
 }
 
-writeFileSync(new URL('../qa/performance-meter-3.11.json',import.meta.url),JSON.stringify({status:'passed',createdAt:new Date().toISOString(),checks,
+writeFileSync(new URL(`../qa/performance-meter-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',createdAt:new Date().toISOString(),checks,
   scope:'Unit validation of timing statistics, phased capture and a deterministic GL query facade.',
   limitations:'No real browser, rAF scheduler, WebGL driver or GPU was measured. These checks do not constitute FPS or visual acceptance.'},null,2)+'\n');

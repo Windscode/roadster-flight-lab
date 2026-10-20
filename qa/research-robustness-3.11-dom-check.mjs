@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 // Actual standard-experiment reports delivered through a Worker facade.
 // This checks DOM/state/storage contracts; it is not browser graphics evidence.
 import assert from 'node:assert/strict';
@@ -46,6 +47,6 @@ try{
  const activeRequest=JSON.parse($('analysis-content').dataset.result);$('load-active-config').click();assert.equal($('lab-mode').value,'imported');const loadedDraft=JSON.parse(dom.window.localStorage.getItem('roadster-study-draft-v1'));assert.equal(loadedDraft.imported.length,1);assert.ok(loadedDraft.imported[0].request.robustness);assert.equal(loadedDraft.imported[0].request.robustness.group,'B');
  evidence.push({name:'Loading one historical robustness case preserves its full noise, seed, delay and fault request for explicit current-model recomputation',status:'PASS',runId:activeRequest.runId});
  const paths=['dist/research-lab.js','dist/research-panel.html','dist/research-robustness.js','dist/i18n-research-en.js','qa/research-robustness-3.11-dom-check.mjs'];
- writeFileSync(new URL('./research-robustness-3.11-dom.json',import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'JSDOM contracts and actual solver reports through a Worker facade; no layout, native Worker timing, graphics or FPS acceptance.',sourceHashes:Object.fromEntries(paths.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),evidence},null,2)+'\n');
+ writeFileSync(new URL(`./research-robustness-${REPORT_VERSION}-dom.json`,import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'JSDOM contracts and actual solver reports through a Worker facade; no layout, native Worker timing, graphics or FPS acceptance.',sourceHashes:Object.fromEntries(paths.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),evidence},null,2)+'\n');
  for(const row of evidence)console.log('PASS: '+row.name);
 }finally{panel?.dispose();setLanguage('zh',{persist:false});globalThis.fetch=previous.fetch;globalThis.Worker=previous.Worker;if(previous.localStorage===undefined)delete globalThis.localStorage;else globalThis.localStorage=previous.localStorage;dom.window.close();}

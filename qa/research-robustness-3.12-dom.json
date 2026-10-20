@@ -1,0 +1,82 @@
+{
+  "status": "passed",
+  "modelVersion": "3.12.0",
+  "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+  "scope": "JSDOM contracts and actual solver reports through a Worker facade; no layout, native Worker timing, graphics or FPS acceptance.",
+  "sourceHashes": {
+    "dist/research-lab.js": "76414b4f055bcaf6ce52f0856e066d62db13a3639e10b1e5bafb6968ee6b641d",
+    "dist/research-panel.html": "8122431c7b5a2d5d33a4d835618bebe016bc767ee7fd57994d8e4cb86f2acc1e",
+    "dist/research-robustness.js": "1068dd22eda5d3364847e40e40105ada9ed90dd2a5057af36f60b06c5839fcfe",
+    "dist/i18n-research-en.js": "59d427335f9560d6a924f40520b2b07d0860194fc840b15b58cd29e2e912ca78",
+    "qa/research-robustness-3.11-dom-check.mjs": "1d3a494c49f023620820ce4285c6118f2b24117932f67c2e669a57f31bbd710f"
+  },
+  "evidence": [
+    {
+      "name": "Twenty real reports, paired curve selection, completed-state persistence and unchanged pre-existing history/live vehicle",
+      "status": "PASS",
+      "groups": [
+        {
+          "group": "A",
+          "delayMs": 0,
+          "completed": 5,
+          "successes": 5,
+          "successFraction": 1,
+          "meanHeightRmseM": 0.03447468973942662,
+          "worstHeightLossM": 0.10671965202805644,
+          "meanGasKg": 472.6026457005013,
+          "worstSaturationSeconds": 0.3166666666666668
+        },
+        {
+          "group": "B",
+          "delayMs": 0,
+          "completed": 5,
+          "successes": 5,
+          "successFraction": 1,
+          "meanHeightRmseM": 0.04775254914888538,
+          "worstHeightLossM": 0.15748376496009975,
+          "meanGasKg": 476.4870634368593,
+          "worstSaturationSeconds": 0.483333333333334
+        },
+        {
+          "group": "A",
+          "delayMs": 120,
+          "completed": 5,
+          "successes": 0,
+          "successFraction": 0,
+          "meanHeightRmseM": 0.18347837942574585,
+          "worstHeightLossM": 0.20670342621692583,
+          "meanGasKg": 573.4734551367127,
+          "worstSaturationSeconds": 0.40833333333333377
+        },
+        {
+          "group": "B",
+          "delayMs": 120,
+          "completed": 5,
+          "successes": 5,
+          "successFraction": 1,
+          "meanHeightRmseM": 0.0564871291699031,
+          "worstHeightLossM": 0.20965776770887956,
+          "meanGasKg": 475.61615571864724,
+          "worstSaturationSeconds": 0.47500000000000064
+        }
+      ],
+      "archiveBytes": 2327871
+    },
+    {
+      "name": "New controls, complete and partial results, and selected-curve UI translate without changing raw records",
+      "status": "PASS"
+    },
+    {
+      "name": "Storage ceiling retains all earlier records and warns that newer results remain session-only and exportable",
+      "status": "PASS",
+      "persistedRecords": 37,
+      "sessionRecords": 41,
+      "archiveBytes": 4153962
+    },
+    {
+      "name": "Loading one historical robustness case preserves its full noise, seed, delay and fault request for explicit current-model recomputation",
+      "status": "PASS",
+      "runId": "R-1058bfbf"
+    }
+  ]
+}

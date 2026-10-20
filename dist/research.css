@@ -14,3 +14,27 @@
 .research-study-panel .result-actions button{white-space:normal;line-height:1.4}
 .research-study-panel .setup label,.research-study-panel .helper,.research-study-panel .result-banner h3{overflow-wrap:anywhere}
 .research-study-panel .run-controls{position:sticky;bottom:0;background:#152522;padding-block:8px;z-index:2}
+
+/* Discrete ordinary-G recovery samples remain visible before any case returns. */
+.research-study-panel #recovery-grid-fields,.research-study-panel [data-study-id="recovery-grid-fields"]{border:1px solid #3b5757;border-radius:8px;padding:12px;margin:14px 0;background:#152a2b}
+.research-study-panel .recovery-grid-summary{margin:18px 0}
+.research-study-panel .recovery-grid-legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;margin:12px 0}
+.research-study-panel .recovery-grid-legend span:before{content:"";display:inline-block;width:9px;height:9px;margin-right:6px;border-radius:2px;background:#697980}
+.research-study-panel .recovery-grid-legend [data-outcome="recovered"]:before{background:#71cba0}
+.research-study-panel .recovery-grid-legend [data-outcome="contact"]:before{background:#e28587}
+.research-study-panel .recovery-grid-legend [data-outcome="not_recovered_in_window"]:before{background:#dca968}
+.research-study-panel .recovery-grid-table{table-layout:fixed;min-width:460px;width:100%}
+.research-study-panel .recovery-grid-table caption{text-align:left;color:#b5c6c1;font-size:12px;padding:0 0 10px}
+.research-study-panel .recovery-grid-table th{text-align:center;font-size:12px}
+.research-study-panel .recovery-grid-table th:first-child{width:82px}
+.research-study-panel .recovery-grid-table td{padding:5px}
+.research-study-panel .recovery-grid-table button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;min-height:64px;padding:8px 3px;font-size:12px;border:1px solid #526468;border-radius:6px;color:#d2dddc;background:#223438}
+.research-study-panel .recovery-grid-table button[data-outcome="recovered"]{background:#21483d;border-color:#52876d;color:#cbf2dc}
+.research-study-panel .recovery-grid-table button[data-outcome="contact"]{background:#523238;border-color:#a05f69;color:#ffe0e1}
+.research-study-panel .recovery-grid-table button[data-outcome="not_recovered_in_window"]{background:#4b4030;border-color:#9e8158;color:#f9e3bf}
+.research-study-panel .recovery-grid-table button.active{outline:2px solid #d7ead5;outline-offset:1px}
+.research-study-panel .recovery-grid-table button:disabled{opacity:.68;cursor:default}
+.research-study-panel .recovery-grid-table button small{font:11px Consolas,monospace;opacity:.88}
+.research-study-panel .recovery-grid-lowest{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 14px;padding:10px 0}
+.research-study-panel .recovery-grid-lowest p{margin:0;color:#c5d7cf;font-size:12px;line-height:1.6}
+@media(max-width:620px){.research-study-panel .recovery-grid-lowest{grid-template-columns:1fr}}

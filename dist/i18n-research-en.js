@@ -875,6 +875,66 @@ Object.assign(entries,{'控制状态尚未到原记录终点，未作终态比�
 Object.assign(entries,{'3.8 城市记录的道路与碰撞几何已经改变，不能安全迁移完整现场状态；仍可查看与导出历史。请在当前城市重新建立实验。3.8 实验室 / 标准平地记录仍可选择明确的当前模型重算。':'Road and collision geometry have changed since the 3.8 city. Its complete live state cannot be safely migrated; historical viewing and export remain available. Create a new experiment in the current city. Historical 3.8 laboratory / standard flat-road records can still use explicit current-model recomputation.'});
 patterns.push([/^控制状态：(\d+) 个数值、(\d+) 个离散值；最大连续误差 \/ 容差 ([^；]+)；缺失 (\d+) 项。$/u,(_,numbers,discrete,ratio,missing)=>`Control state: ${numbers} numeric and ${discrete} discrete values; maximum continuous error / tolerance ${ratio}; ${missing} missing fields.`]);
 
-patterns.unshift([/^原 (3\.(?:9|10)\.0) 模型未安装，不能精确重放。可显式按当前模型重算；执行前核对完整状态字段与碰撞几何签名，保留原参数并声明新增参数映射。轮速、气源、控制器和扰动相位保持。$/u,(_,version)=>`The original ${version} model is unavailable, so exact replay is blocked. Explicit current-model recomputation checks the full state and collision signature, preserves original parameters and declares any new parameter mappings. Wheels, gas, controller memory and disturbance phase are retained.`]);
+patterns.unshift([/^原 (3\.(?:9|10|11)\.0) 模型未安装，不能精确重放。可显式按当前模型重算；执行前核对完整状态字段与碰撞几何签名，保留原参数并声明新增参数映射。轮速、气源、控制器和扰动相位保持。$/u,(_,version)=>`The original ${version} model is unavailable, so exact replay is blocked. Explicit current-model recomputation checks the full state and collision signature, preserves original parameters and declares any new parameter mappings. Wheels, gas, controller memory and disturbance phase are retained.`]);
 
 Object.assign(entries,{'升降加速度参考':'Vertical acceleration reference','升降加速度参考 · m/s²':'Vertical acceleration reference · m/s²'});
+
+Object.assign(entries,{
+ '普通 G 回正需要多少高度？':'How much height does ordinary G levelling need?',
+ '四种倾斜 × 四个高度 · 真实边界采样':'Four tilts × four heights · Actual recovery samples',
+ 'G恢复高度网格':'G recovery height grid',
+ '普通 G 回正 · 高度采样':'Ordinary G levelling · Sampled heights',
+ '普通G水平回正：四个初始滚转角 × 四个重心高度，共16格；每格观察12秒。':'Ordinary G levelling: four starting roll angles × four centre-of-mass heights, 16 cases with a 12-second observation window each.',
+ '初始滚转30°、60°、90°、120°；重心高度3、6、12、24 m。每格独立运行12秒，使用普通G水平回正及当前车辆参数、气源和喷口上限。':'Starting roll: 30°, 60°, 90°, 120°. Centre-of-mass heights: 3, 6, 12, 24 m. Each independent 12-second case uses ordinary G levelling and the current vehicle parameters, gas supply and thrust limits.',
+ '恒定侧风':'Constant crosswind',
+ '初态、恢复与接触判据':'Initial state, recovery and contact criteria',
+ '初始俯仰−10°、航向0°，世界角速率(0.2, 0, 0.3) rad/s。侧风方向90°，无阵风、额外观测噪声或延迟。G捕获初始高度与航向，不添加定点控制器。':'Initial pitch −10°, heading 0°, world angular velocity (0.2, 0, 0.3) rad/s. Constant crosswind at 90°, with no gusts or added observation noise/delay. G captures the starting height and heading; no position-hold controller is added.',
+ '成功需末段连续0.5秒满足倾角<2°、角速率<0.15 rad/s、垂速<0.4 m/s及高度误差<0.75 m；全程不能有轮胎接地或车身刚体接触。接触、未恢复与未返回分别显示。':'Success requires the final 0.5 s continuously below 2° tilt, 0.15 rad/s angular speed, 0.4 m/s vertical speed and 0.75 m height error, with no tire or rigid-body ground contact at any time. Contact, unrecovered and unreturned cases are shown separately.',
+ '每个120 Hz物理步参与判据与指标，曲线保存10 Hz。这里只报告已采样高度中的最低成功值，不插值成连续安全高度；有限气源耗尽也计入失败。':'Every 120 Hz physics step contributes to criteria and metrics; curves are saved at 10 Hz. Only the lowest successful sampled height is reported, with no interpolation into a continuous safety boundary. Finite-gas depletion can also cause failure.',
+ 'G恢复高度网格结果':'G recovery height-grid results',
+ '导出网格与完整条件':'Export grid and complete conditions',
+ '所示网格来自已保存批次；与当前待运行配置不同。':'This grid shows a saved batch whose conditions differ from the pending configuration.',
+ '恢复网格图例':'Recovery-grid legend',
+ '恢复':'Recovered',
+ '触地或刚体接触':'Tire or rigid-body contact',
+ '未返回':'Not returned',
+ '初始重心高度 × 初始滚转角；点击已返回格查看原始响应曲线':'Starting centre-of-mass height × roll; select a returned cell to view its original response',
+ '高度 / 滚转':'Height / roll',
+ '无成功样本':'No successful sample',
+ '仅报告已采样高度中的最低成功值。相邻高度之间、其他风场与气源条件没有被此网格验证；失败和未返回的案例均保留。':'Only the lowest successful sampled height is reported. The gaps between heights and other wind/gas conditions have not been tested by this grid. Failed and unreturned cases remain visible.',
+ '车身倾角 / °':'Body tilt / °',
+ '角速率模 / rad/s':'Angular speed / rad/s',
+ '右前主喷口实际推力 / N':'Front-right main delivered thrust / N',
+ '右前主喷口可用推力 / N':'Front-right main available thrust / N',
+ 'G恢复网格判据':'G recovery-grid criteria',
+ 'G恢复网格使用普通水平回正；固定初始俯仰−10°、世界角速率(0.2,0,0.3) rad/s，不设置额外定点目标。每格12秒，120Hz统计，10Hz保存曲线。':'The grid uses ordinary G levelling with initial pitch −10° and world angular velocity (0.2, 0, 0.3) rad/s. No extra position target is set. Each case runs for 12 s, calculates metrics at 120 Hz and saves curves at 10 Hz.',
+ '最后连续0.5秒保持车身倾角<2°、角速率<0.15 rad/s、垂速<0.4 m/s、起始高度误差<0.75 m；全程无轮胎承载触地或刚体接触。不要求固定水平位置，仅报告已采样高度中的最低成功值。':'The final 0.5 s must continuously remain below 2° body tilt, 0.15 rad/s angular speed, 0.4 m/s vertical speed and 0.75 m error from starting height. Any tire loading or rigid-body ground contact during the run prevents success. No fixed horizontal position is required. Only the lowest successful sampled height is reported.',
+ '车身倾角<2°、角速率<0.15 rad/s、垂速<0.4 m/s、起始高度误差<0.75 m，全程未触地或刚体接触，持续0.5秒至窗口结束':'Tilt <2°, angular speed <0.15 rad/s, vertical speed <0.4 m/s, starting-height error <0.75 m, and no tire or rigid-body contact at any time; continuously satisfied for 0.5 s through the end of the observation window',
+ '恢复网格设置格式无效':'Invalid recovery-grid options',
+ '恢复网格仅支持0–12 m/s侧风和100% / 75% / 50%喷口能力':'The recovery grid supports 0–12 m/s crosswind and 100% / 75% / 50% nozzle availability',
+ '恢复网格案例格式无效':'Invalid recovery-grid case format',
+ '恢复网格案例超出已声明的离散工况':'The recovery-grid case is outside the declared discrete conditions',
+ 'G恢复高度网格仅适用于独立空中稳姿试验':'The G recovery height grid is available only for independent attitude recovery trials',
+ '恢复网格只接受声明的G回正工况，不兼容其它控制协议或额外字段':'The recovery grid accepts only declared G-levelling conditions; other control protocols or extra fields are not supported',
+ '恢复网格的初始滚转或高度与案例声明不一致':'Recovery-grid roll or height differs from the declared case',
+ '完整恢复网格必须包含16个不同的滚转与高度组合':'A complete recovery grid requires 16 distinct roll/height combinations',
+ '恢复网格任务与初态声明不一致':'Recovery-grid requests differ from their declared initial conditions',
+ '恢复网格不能包含重复的滚转与高度组合':'Recovery grids cannot contain duplicate roll/height combinations',
+ '同一恢复网格必须使用相同的车辆参数、侧风和喷口工况':'All cells in a recovery grid must share the same vehicle parameters, crosswind and nozzle conditions',
+ '恢复网格条件未被实际G控制器接受':'The actual G controller did not accept the recovery-grid conditions',
+ '需要1–12条普通方案、最多20条鲁棒对照或16条G恢复网格方案':'Provide 1–12 ordinary requests, up to 20 robustness cases, or a complete 16-case G recovery grid',
+ '普通研究包最多12条、鲁棒对照最多20条、G恢复网格最多16条。也可导出全部记录作完整归档。':'Ordinary bundles support up to 12 cases, robustness bundles up to 20, and G recovery grids 16 cases. Export the full library to archive all records.',
+ '同模型、同构建与同协议的同类试验可勾选叠加；历史版本单独标记，可按当前模型重算。本机最多64项 / 4 MiB，达到上限后保留旧记录，新结果可在本会话导出。普通研究包支持1–12条方案，鲁棒对照包支持最多20条方案，G恢复网格包支持16条方案重算；标准实验整库 JSON 含本面板的标准报告及运行 / 失败 / 取消尝试；现场驾驶记录使用“记录与重放”中的现场整库导出。CSV 仅导出当前激活的单条记录，保留它原来的版本与采样说明。':'Overlay experiments of the same kind, model, build and protocol. Historical versions are marked and can be explicitly recomputed with the current model. The browser stores up to 64 records / 4 MiB; earlier records remain at the limit and new results remain exportable in-session. Ordinary bundles support 1–12 requests, robustness bundles up to 20, and G grids 16. Standard-library JSON contains reports and running, failed or cancelled attempts. Export live-driving records from Record & replay. CSV contains only the selected record with its original identity and sampling metadata.'
+});
+patterns.unshift(
+ [/^滚转 ([\d.]+)° \/ 高度 ([\d.]+) m$/u,(_,roll,height)=>`Roll ${roll}° / Height ${height} m`],
+ [/^普通G水平回正 · (恒压外供气|有限储气) · 恒定侧风 ([\d.]+) m\/s · 右前主喷口 ([\d.]+)% · 模型 ([^ ]+) \/ (.+)$/u,(_,supply,wind,nozzle,model,build)=>`Ordinary G levelling · ${tr(supply)} · Constant crosswind ${wind} m/s · Front-right main nozzle ${nozzle}% · Model ${model} / ${build}`],
+ [/^已返回 (\d+) \/ 16 格；恢复 (\d+)，接触 (\d+)，窗口内未恢复 (\d+)，未返回 (\d+)。$/u,(_,returned,recovered,contact,unrecovered,missing)=>`${returned} / 16 cells returned; ${recovered} recovered, ${contact} contact, ${unrecovered} unrecovered in the window, ${missing} not returned. `],
+ [/^最低 ([\d.−-]+) m$/u,(_,height)=>`Minimum ${height} m`],
+ [/^滚转 ([\d.]+)°：已采样最低成功高度$/u,(_,roll)=>`Roll ${roll}°: lowest successful sampled height `]
+);
+
+Object.assign(entries,{'出现刚体接触，当前响应含接触/机械止挡作用':'Rigid-body contact occurred; this response includes contact or mechanical-stop effects.','高度误差持续超限；不应只依据额定推重比判断控制成功':'Height error exceeded the sustained limit. Rated thrust-to-weight ratio alone does not establish recovery.','俯仰角 / °':'Pitch angle / °'});
+
+Object.assign(entries,{'已取消':'Cancelled','计算失败':'Computation failed','上次执行中断':'Previous execution interrupted','尚未执行':'Not run yet','正在计算':'Computing'});
+Object.assign(entries,{'已达到64项 / 4 MiB存储上限；旧记录保持不变，新结果只保留在本会话。请导出全部记录 JSON 后再清理。':'The 64-record / 4 MiB storage limit has been reached. Earlier records remain unchanged; new results remain in this session. Export the full JSON library before clearing data.'});

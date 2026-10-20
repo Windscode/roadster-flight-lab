@@ -1,0 +1,126 @@
+{
+  "status": "passed",
+  "modelVersion": "3.12.0",
+  "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+  "scope": "Actual published 3.9/3.11 and source-generated 3.10 records are immutably viewed and explicitly migrated for current-model numerical recomputation; the old solvers are not executed by the current application.",
+  "fixtureProvenance": {
+    "3.9": "6083bbf0e01f4eef5447f2c1b951d8b41e691f46",
+    "3.10": "6d2b897bc928ae0e44fa258a7184719cd660e48b (prior source commit; content incorporated in public 3.11)",
+    "3.11": "ab9372b56a01c2a47b18d32baf48162f3cd8f86c (public source solver fixture)"
+  },
+  "sourceHashes": {
+    "dist/experiment-records.js": "c7c2f73a41f2fd626020080adf12f0ffddfece4402f40312a4e26c5de2c631d7",
+    "dist/simulation-snapshot.js": "e3a5ea6a8e5d0b298843a8d3200ce3bf4a11596dfe8c993af386dcc4da6e379f",
+    "dist/physics.js": "035f1ba01c7acacddf56a2a5497a52516c474f56a6f1fe027bf7c8046bf791ae",
+    "dist/vehicle-models.js": "6ed2e0462d2161dd78bdd6b9b0c2c9bf95bbe7ab40b708ff8431db5a0c2e0499",
+    "tests/history-compatibility-3.11.test.mjs": "266b45967c1155e3dfc070c25f81c1d9442e3aa9c8460382a1c356081bec2f3d",
+    "qa/fixtures/live-record-3.9.json": "ec85dfa49f6f454ce002d73ef2ae78703d28561ddc4f925afdf4a9dc7c8d76ad",
+    "qa/fixtures/live-record-3.10.json": "89417a1f58d183e4f7ec6a103d8f5ebb9e75e7e11c862001fe5405232b5ba92c",
+    "qa/fixtures/live-record-3.11.json": "9b9ebd6914ad89a5a725224b196f3f2b6eddf3721b9886f4471756b74da05c6b",
+    "qa/fixtures/live-record-3.11-provenance.json": "080fe6ca4dffc6829427b49dce7e95b5cc6de84e9fb86a31e60c0b4f51a550a8"
+  },
+  "evidence": [
+    {
+      "sourceIdentity": {
+        "modelVersion": "3.9.0",
+        "modelBuildId": "b353a90366f128bcf4c188fee0c4a3aad38e6a9f83baf27272c8b5828369ad70",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "sourceSteps": 42,
+      "executionIdentity": {
+        "modelVersion": "3.12.0",
+        "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "status": "completed",
+      "reproduction": "not_applicable",
+      "migration": {
+        "from": "3.9.0",
+        "to": "3.12.0",
+        "addedDefaultState": [],
+        "parameterMapping": {
+          "verticalAccelerationMps2": {
+            "value": 3,
+            "meaning": "Historical E/Q acceleration envelope; not the stronger new-session default."
+          }
+        },
+        "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+        "changed": [
+          "modelVersion",
+          "params.verticalAccelerationMps2"
+        ],
+        "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+        "limitation": "The 3.9.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+      },
+      "sourceUnchanged": true
+    },
+    {
+      "sourceIdentity": {
+        "modelVersion": "3.10.0",
+        "modelBuildId": "a6b126a29a3e6702f28ef4921d04798c9f9b80b0285ca89c614e103231b9fd8c",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "sourceSteps": 180,
+      "executionIdentity": {
+        "modelVersion": "3.12.0",
+        "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "status": "completed",
+      "reproduction": "not_applicable",
+      "migration": {
+        "from": "3.10.0",
+        "to": "3.12.0",
+        "addedDefaultState": [],
+        "parameterMapping": {
+          "verticalAccelerationMps2": {
+            "value": 3,
+            "meaning": "Historical E/Q acceleration envelope; not the stronger new-session default."
+          }
+        },
+        "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+        "changed": [
+          "modelVersion",
+          "params.verticalAccelerationMps2"
+        ],
+        "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+        "limitation": "The 3.10.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+      },
+      "sourceUnchanged": true
+    },
+    {
+      "sourceIdentity": {
+        "modelVersion": "3.11.0",
+        "modelBuildId": "cd2e0dbd848ef6b14c21b3fb0cb509fd1cfb9c0aa8240fe082f734bc87821522",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "sourceSteps": 240,
+      "executionIdentity": {
+        "modelVersion": "3.12.0",
+        "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "status": "completed",
+      "reproduction": "not_applicable",
+      "migration": {
+        "from": "3.11.0",
+        "to": "3.12.0",
+        "addedDefaultState": [],
+        "parameterMapping": {},
+        "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+        "changed": [
+          "modelVersion"
+        ],
+        "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+        "limitation": "The 3.11.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+      },
+      "sourceUnchanged": true
+    }
+  ]
+}

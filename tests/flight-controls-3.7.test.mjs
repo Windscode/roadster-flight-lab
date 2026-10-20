@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
 import {RoadsterSim,PHYSICS_HZ} from '../dist/physics.js';
@@ -210,6 +211,6 @@ pass('Program input providers and wind advance at exactly 120 Hz independently o
 }
 pass('Prescribed lab wind acts through relative-airflow aerodynamic force with deterministic gust timing, validated parameters and a true calm reset');
 
-writeFileSync('qa/flight-controls-3.11.json',JSON.stringify({status:'passed',physicsHz:PHYSICS_HZ,checks,values,
+writeFileSync(`qa/flight-controls-${REPORT_VERSION}.json`,JSON.stringify({status:'passed',physicsHz:PHYSICS_HZ,checks,values,
   limits:'Deterministic reduced-order engineering model, not OEM identification. Flat-ground and authored lab fixtures are numerical acceptance checks. They do not certify arbitrary obstacles, all finite-tank parameters or real vehicle operation. One-way lift and bounded side jets cannot statically support every attitude; no inverse lift or pose freeze is introduced.'},null,2)+'\n');
 console.log(`Flight controls 3.7: ${checks.length} acceptance groups passed.`);
