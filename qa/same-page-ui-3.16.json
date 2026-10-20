@@ -1,8 +1,8 @@
 {
   "status": "passed",
   "modelVersion": "3.16.0",
-  "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
-  "generatedAt": "2026-10-20T18:38:11.023Z",
+  "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
+  "generatedAt": "2026-10-20T19:36:43.638Z",
   "checks": [
     "Actual main.js boots the city through the primary entry and advances the real 120 Hz simulation with a single viewport canvas",
     "Visible E/Q response changes the active target-speed parameter and persists without resetting physical state; reset restores 5 m/s",
@@ -138,7 +138,7 @@
       "label": "airborne manual E/1 reference and nonzero last physical input",
       "scope": "Actual main DOM handlers with real physics and a non-drawing renderer facade; no GPU/pixel validation",
       "virtualElapsedMs": 17752,
-      "wallElapsedMs": 3160.2815250000003,
+      "wallElapsedMs": 3676.112118000001,
       "virtualFrames": 71,
       "interceptedMutationAttempts": 207,
       "cases": 14,
@@ -182,7 +182,7 @@
           "label": "paused fixed camera with a custom exposure lock",
           "scope": "Actual main DOM handlers with real physics and a non-drawing renderer facade; no GPU/pixel validation",
           "virtualElapsedMs": 17752,
-          "wallElapsedMs": 3102.284455,
+          "wallElapsedMs": 3290.689602999999,
           "virtualFrames": 71,
           "interceptedMutationAttempts": 207,
           "cases": 14,
@@ -203,7 +203,7 @@
           "label": "airborne manual E/1 reference and nonzero last physical input",
           "scope": "Actual main DOM handlers with real physics and a non-drawing renderer facade; no GPU/pixel validation",
           "virtualElapsedMs": 17752,
-          "wallElapsedMs": 3160.2815250000003,
+          "wallElapsedMs": 3676.112118000001,
           "virtualFrames": 71,
           "interceptedMutationAttempts": 207,
           "cases": 14,
@@ -224,7 +224,7 @@
           "label": "running orbit camera with the research sidebar offset",
           "scope": "Actual main DOM handlers with real physics and a non-drawing renderer facade; no GPU/pixel validation",
           "virtualElapsedMs": 17752,
-          "wallElapsedMs": 4399.355707000001,
+          "wallElapsedMs": 4303.076557,
           "virtualFrames": 71,
           "interceptedMutationAttempts": 207,
           "cases": 14,
@@ -318,15 +318,148 @@
           "partialAudit": {
             "schema": "roadster.gpu-program-audit-2",
             "status": "failed",
-            "startedAt": "2026-10-20T18:37:55.563Z",
-            "finishedAt": "2026-10-20T18:37:55.563Z",
+            "startedAt": "2026-10-20T19:36:31.587Z",
+            "finishedAt": "2026-10-20T19:36:31.587Z",
             "conditions": {
               "modelVersion": "3.16.0",
-              "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+              "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
               "sourceCommit": "fixture:dom-source-commit",
               "sourceTree": "fixture:dom-source-tree",
               "sourceIdentityStatus": "matched-current-build",
               "label": "01-high-clear-day-vehicle-paused",
+              "context": "city",
+              "quality": "high",
+              "weatherPreset": "clear-day",
+              "paused": true,
+              "renderState": "paused-preview",
+              "simTime": 1.166666666666665,
+              "camera": {
+                "id": null,
+                "mode": "orbit",
+                "position": [
+                  -194.00001034754678,
+                  6.19786024224153,
+                  -383.000758607924
+                ],
+                "quaternion": [
+                  -0.13546044031475185,
+                  0.34330843111612264,
+                  0.0501100782471769,
+                  0.9280510601752373
+                ],
+                "up": [
+                  0,
+                  1,
+                  0
+                ],
+                "target": [
+                  -200.00001034754678,
+                  3.44786024224153,
+                  -390.000758607924
+                ],
+                "targetMeaning": "orbit look-at",
+                "orbitTarget": [
+                  -200.00001034754678,
+                  3.44786024224153,
+                  -390.000758607924
+                ],
+                "orbitDesiredPosition": [
+                  -193.8500089245771,
+                  5.860978951860593,
+                  -382.60063182627454
+                ],
+                "fov": 48,
+                "near": 0.07,
+                "far": 2300,
+                "aspect": 1.77734375,
+                "viewOffset": null
+              },
+              "resolution": {
+                "width": 1365,
+                "height": 768,
+                "pixelRatio": 1,
+                "budgetRatio": 1
+              },
+              "exposure": 1.17
+            },
+            "requiredCategories": [
+              "vehicle"
+            ],
+            "limits": {
+              "fragmentTextureImageUnits": 16,
+              "vertexTextureImageUnits": 16,
+              "combinedTextureImageUnits": 16,
+              "max3DTextureSize": null,
+              "targetFragmentSamplers": 16
+            },
+            "drawCalls": 0,
+            "unattributedDrawCalls": 0,
+            "unattributedErrorDraws": 0,
+            "unattributedDraws": [],
+            "programCount": 0,
+            "programs": [],
+            "framebuffers": [],
+            "targetBindings": [],
+            "drawEvents": 0,
+            "omittedDrawEvents": 0,
+            "observedCategories": [],
+            "failures": [
+              "no-observed-draw-calls",
+              "required-category-not-drawn:vehicle"
+            ],
+            "priorGlErrors": [],
+            "remainingGlErrors": [],
+            "shaderErrors": [],
+            "scope": "Actual WebGL link/validation, active sampler arrays, bound framebuffer completeness/attachments and per-draw pass/target/error association on this device. Carry-in, pre-draw, bind, draw and diagnostic errors remain separate and none yields a clean pass. Required categories count only Standard/Physical material color draws through the configured main camera, excluding shadow, normal and reflection-camera passes. All active sampler elements form a conservative fragment budget bound. Successful draws do not establish visual quality, complete city coverage or route performance."
+          },
+          "partialAuditSource": "ordinary-paused-frame",
+          "captureProgress": {
+            "captureId": "01-high-clear-day-vehicle-export-1792524991647",
+            "label": "01-high-clear-day-vehicle-export",
+            "png": true,
+            "phase": "toBlob-return",
+            "inFlight": true,
+            "deadlineMs": 20000,
+            "elapsedMs": 250,
+            "phases": {
+              "queued": {
+                "at": "2026-10-20T19:36:31.647Z",
+                "elapsedMs": 0
+              },
+              "draw-start": {
+                "at": "2026-10-20T19:36:31.666Z",
+                "elapsedMs": 250
+              },
+              "draw-end": {
+                "at": "2026-10-20T19:36:31.666Z",
+                "elapsedMs": 250
+              },
+              "conditions-frozen": {
+                "at": "2026-10-20T19:36:31.710Z",
+                "elapsedMs": 250
+              },
+              "toBlob-call": {
+                "at": "2026-10-20T19:36:31.710Z",
+                "elapsedMs": 250
+              },
+              "toBlob-return": {
+                "at": "2026-10-20T19:36:31.710Z",
+                "elapsedMs": 250
+              }
+            }
+          },
+          "captureAudit": {
+            "schema": "roadster.gpu-program-audit-2",
+            "status": "failed",
+            "startedAt": "2026-10-20T19:36:31.666Z",
+            "finishedAt": "2026-10-20T19:36:31.666Z",
+            "conditions": {
+              "modelVersion": "3.16.0",
+              "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
+              "sourceCommit": "fixture:dom-source-commit",
+              "sourceTree": "fixture:dom-source-tree",
+              "sourceIdentityStatus": "matched-current-build",
+              "label": "01-high-clear-day-vehicle-export",
               "context": "city",
               "quality": "high",
               "weatherPreset": "clear-day",
@@ -437,7 +570,7 @@
     "livePersistenceUI": {
       "scope": "Actual main record-button start/stop with isolated Storage prototype fault injection, actual recorder/export validator, no real user storage",
       "oldDiskRecords": 6,
-      "oldRawSHA256": "ca0ff7bc3c3271246abc4eb0d7e907199dc3b8d276da7e83a92c8ef803ff4dae",
+      "oldRawSHA256": "ffd4ac5a239324d6db832f11881a0211280f7a4151fc50eecfaf67ae6907fad4",
       "oldRawBytes": 332284,
       "cases": [
         {
@@ -446,7 +579,7 @@
           "rejectedWrites": 1,
           "executionStatus": "completed",
           "persistenceStatus": "unsaved",
-          "selectedId": "live-20261020183759923-7",
+          "selectedId": "live-20261020193635389-7",
           "stepCount": 36,
           "inputRuns": 1,
           "fullRecordBytes": 48250,
@@ -464,7 +597,7 @@
           "rejectedWrites": 1,
           "executionStatus": "completed",
           "persistenceStatus": "unsaved",
-          "selectedId": "live-20261020183802628-8",
+          "selectedId": "live-20261020193637885-8",
           "stepCount": 36,
           "inputRuns": 1,
           "fullRecordBytes": 47852,
@@ -502,20 +635,20 @@
       "source": "explicit matching deployment fixture, not a deployed Git identity",
       "response": {
         "modelVersion": "3.16.0",
-        "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+        "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
         "sourceCommit": "fixture:dom-source-commit",
         "sourceTree": "fixture:dom-source-tree",
         "source": "same-page-ui deployment response fixture; not an actual Git commit or deployment"
       },
       "requests": [
         {
-          "url": "file:///workspace/scratch/867d449c399e/roadster-flight-lab/dist/deployment.json",
+          "url": "file:///workspace/scratch/867d449c399e/roadster-capture-316/dist/deployment.json",
           "source": "explicit deployment fixture"
         }
       ],
       "observed": {
         "modelVersion": "3.16.0",
-        "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+        "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
         "sourceCommit": "fixture:dom-source-commit",
         "sourceTree": "fixture:dom-source-tree",
         "sourceIdentityStatus": "matched-current-build"
@@ -578,14 +711,14 @@
     "dist/landing-research-ui.js": "f196e56d47c69b6b3ac9e6ed8ceb9c9039dd93fda62931ece6e6ec5bb2a42322",
     "dist/landing-reserve.js": "391347f411d35af207058b1360a971a2ae3acc90a475d53422248ed1cda651df",
     "dist/locale-bootstrap.js": "2bfa0300dbed844c2e80616e79ed7fdef4f06210adaa7aa6c66f6f4b66c1d7c1",
-    "dist/main.js": "dd7b9c69f4fef5add7c6e8497bb9b5bf7e394bd0f3286e96e52c65d701e6c133",
-    "dist/model-build.js": "4e632abede9fc7e2adbdd395ef3efffd35b32834d58bf3e8e1faa3c183467367",
+    "dist/main.js": "e0fd7ea7753e4c663bfc4fe3e2b2feeb9f44b5bfa61823a4f7a773605b9eac00",
+    "dist/model-build.js": "f52441f278d154e8f78c4accc79de0c06f14eda44174ad6edbcc93097693b17b",
     "dist/operation-hud.js": "974f0d7d86724439e79f00d83587a0863ff772098b6acc2ba731c6d2842f71f0",
     "dist/pavement-surface-material.js": "c2b28f5548988a98bacbc801f4db41a97589fecf3cabe3a6a4ba97a4fa806da8",
     "dist/performance-meter.js": "0febb4a02352075265ab0c83e9eb2f9afec351b289974dc0918d744c6dc6f7d7",
     "dist/physics.js": "4717c20baa2a568ea85c32657279eef84f8dd9d7caf3971b58579b2c4166e2c0",
     "dist/pilot-input-intent.js": "97470ee5a7be87a2e8034ff1d39fdeceb7931f47becef79af8162ff31447a378",
-    "dist/render-capture-matrix.js": "02e453a7b9b03a9e43ea0935ba5b064d6a86cf152405c8f47fbae3c1786c19d2",
+    "dist/render-capture-matrix.js": "244ccc6973e6addc720eb670f89cbc0dea12d815e7fc1ae070921adc7e51eace",
     "dist/render-profiles.js": "4442bc45eab81e0a98c66551afba46b2049f916e66abaa7274f3a9c4b30f9719",
     "dist/render-program-diagnostics.js": "8c961ee03fcbff9b862df1c0f8aae931468f8405bc4b660523321242892adc70",
     "dist/research-comparison.js": "0c58e5785b457ecfec8d6f05e18bece610a72de0a4010a5a29637190fa78ac77",

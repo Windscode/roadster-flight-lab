@@ -174,7 +174,8 @@ try {
     const context = await browser.newContext({viewport: plan.viewport, deviceScaleFactor: 1, acceptDownloads: true}), page = await context.newPage();
     currentPage = page; page.setDefaultTimeout(45000);
     page.on('pageerror', e => {const error = {version, type: 'pageerror', message: e.stack || e.message}; errors.push(error); appendFileSync(join(out, 'browser-errors.ndjson'), JSON.stringify(error) + '\n');});
-    page.on('console', m => {if (m.type() === 'error') {const error = {version, type: 'console', message: m.text()}; errors.push(error); appendFileSync(join(out, 'browser-errors.ndjson'), JSON.stringify(error) + '\n');}});
+    page.on('console', m => {if (m.type() === 'error') {const error = {version, type: 'console', message: m.text(), location: m.location()}; errors.push(error); appendFileSync(join(out, 'browser-errors.ndjson'), JSON.stringify(error) + '\n');}});
+    page.on('response', response => {if (response.status() >= 400) {const error = {version, type: 'http-response', status: response.status(), url: response.url()}; errors.push(error); appendFileSync(join(out, 'browser-errors.ndjson'), JSON.stringify(error) + '\n');}});
     const session = {version, url: urls[version], startedAt: new Date().toISOString(), failure: null}; sessions.push(session);
     try {
       console.log('open city pixel baseline/candidate ' + version);

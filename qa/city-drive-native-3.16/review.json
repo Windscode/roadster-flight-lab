@@ -1,0 +1,4001 @@
+{
+  "schema": "roadster-native-city-drive-review",
+  "version": 1,
+  "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
+  "result": "The existing lower Foundry entrance navigation reported arrival and the native vehicle stopped during one uninterrupted route. Compound rigid-contact samples and QA-journal gaps remain explicit.",
+  "originalRun": {
+    "startedAt": "2026-10-20T19:50:29.126Z",
+    "finishedAt": "2026-10-20T20:19:39.375Z",
+    "automationWallS": 1750.249,
+    "plan": {
+      "schema": "roadster.native-city-drive-plan",
+      "version": 1,
+      "preparedAt": "2026-10-20T19:50:29.126Z",
+      "execution": "requested-native-run",
+      "url": "http://127.0.0.1:8317/",
+      "stage": "foundry",
+      "spawn": {
+        "ui": "#play-city",
+        "scenario": "city",
+        "position": [
+          -200,
+          0.62,
+          -345
+        ],
+        "headingDeg": 0
+      },
+      "destination": {
+        "ui": "#city-plan-nodes button:nth-child(2), then #city-plan-detail .secondary-button",
+        "id": "foundry-gate"
+      },
+      "plannedRoute": [
+        [
+          -200,
+          0,
+          -345
+        ],
+        [
+          -200,
+          0,
+          -132.5
+        ],
+        [
+          100,
+          0,
+          -132.5
+        ],
+        [
+          100,
+          0,
+          315
+        ]
+      ],
+      "selectedStage": {
+        "label": "Foundry Service Bridge vehicle entrance",
+        "point": [
+          100,
+          0,
+          315
+        ],
+        "plannedDistanceM": 960
+      },
+      "quality": "balanced",
+      "viewport": {
+        "width": 960,
+        "height": 540
+      },
+      "weather": "clear-day",
+      "tireSurface": "dry (existing default; checked, not changed)",
+      "cruiseKmh": 18,
+      "turnKmh": 8,
+      "maxWallS": 3600,
+      "maxSimS": 280,
+      "expectedBuild": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
+      "direction": "Vehicle forward is +Z; A turns towards +X, D towards -X. The first turn uses A and the second uses D.",
+      "evidence": "Fresh native UI record, requested-key journal, application-received input journal, telemetry/navigation samples, actual start/end images, explicit failure/partial/arrival state.",
+      "scope": "The planned distance is source geometry, not a native-drive result. Automated key selection does not establish human handling quality or hardware GPU performance. Upper-level continuation is a separate pending run."
+    },
+    "collectorResult": {
+      "status": "stage-reached",
+      "reason": "Live navigation reported arrival and the vehicle stopped.",
+      "remainingM": 5.890650102262384,
+      "navigationArrived": true
+    },
+    "failure": null
+  },
+  "sourceIdentity": {
+    "beforeStatus": "passed",
+    "afterStatus": "passed",
+    "sourceCountBefore": 172,
+    "sourceCountAfter": 172,
+    "changedSources": [],
+    "fieldManifests": 3,
+    "fieldVolumes": 8,
+    "allFieldManifestAndVolumeIdentitiesUnchanged": true,
+    "runtimeCommitAndTree": "The local original record retains null sourceCommit/sourceTree. Actual served byte audits do not invent a published commit.",
+    "operatorFile": {
+      "path": "../native-city-drive-3.16.mjs",
+      "sha256": "af87ec3d6c07202b517d04c70fb004484d19529311b6bbdf8fbb473f1d1daae1",
+      "measurement": "Measured after execution; original plan and run journals retain their own timestamps."
+    }
+  },
+  "endpoint": {
+    "goal": [
+      100,
+      0,
+      315
+    ],
+    "existingArrivalRadiusM": 8,
+    "firstObservedArrivalAndStopped": {
+      "browserTimeMs": 1683365.700000003,
+      "wallS": 1697.8298695849999,
+      "telemetry": {
+        "speedKmh": 0.12444392904912843,
+        "forwardSpeedKmh": 0.0771925169971342,
+        "bodySlipDeg": -3.4081821222198463,
+        "steeringCentreDeg": 0.14104824150668954,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "roadSurface": {
+          "preset": "dry",
+          "dryMu": 1.25,
+          "wetMu": 0.65,
+          "splitPositionX": 0,
+          "splitLowMuSide": "negative-world-x"
+        },
+        "observation": {
+          "configuration": {
+            "enabled": false,
+            "delayMs": 0,
+            "seed": 1,
+            "positionNoiseM": 0,
+            "velocityNoiseMps": 0,
+            "attitudeNoiseDeg": 0,
+            "angularRateNoiseRadS": 0
+          },
+          "sample": {
+            "simTime": 190.4666666666856,
+            "position": {
+              "x": 100.12084503846529,
+              "y": 0.5997000127864193,
+              "z": 309.10918290831506
+            },
+            "velocity": {
+              "x": -0.02100232287054885,
+              "y": -0.019939646655775824,
+              "z": 0.042300255883513264
+            },
+            "quaternion": {
+              "x": 0.011637921183665266,
+              "y": -0.025041244005724165,
+              "z": 0.00011272876620785126,
+              "w": 0.9996186683837962
+            },
+            "angularVelocity": {
+              "x": 0.02204837238234732,
+              "y": -0.001544033173692936,
+              "z": 0.024125073446482383
+            }
+          },
+          "truthTime": 190.47500000001892,
+          "measurementModel": "sampled uniform bounded noise, deterministic Mulberry32, zero-order-hold delay",
+          "channels": "flight position / attitude / velocity feedback; wheel speed and contact switches remain ideal"
+        },
+        "reference": {
+          "mode": "drive",
+          "stabilizationMode": "off",
+          "position": {
+            "x": -200,
+            "y": 0.62,
+            "z": -345
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 0.62,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "nozzleFault": null,
+        "wing": {
+          "deployment": 0.588814353953528,
+          "command": 0.588814353953528,
+          "dragN": 0.00019674741453117053,
+          "downforceN": 0.00028856287464571677,
+          "dynamicPressurePa": 0.001172426930045617,
+          "forceBody": {
+            "x": 0,
+            "y": -0.00028856287464571677,
+            "z": -0.00019674741453117053
+          },
+          "position": {
+            "x": 0,
+            "y": 0.5016443061860584,
+            "z": -2.065
+          },
+          "incidenceRad": -0.147203588488382,
+          "applicationPoint": {
+            "x": 0,
+            "y": 0.5089779332338611,
+            "z": -2.0155407449073106
+          },
+          "mode": "active",
+          "actuatorRatePerS": 1.5
+        },
+        "onboardGasConsumedKg": 0,
+        "externalGasSuppliedKg": 0,
+        "brakeDissipationJ": 3658703.0615058895,
+        "tireDissipationJ": 1399326.5720622116,
+        "massFlowKgS": 0,
+        "effectiveExhaustVelocity": 566.6500769168936,
+        "deliveredImpulseNs": 0,
+        "hoverSecondsEstimate": null,
+        "usableHoverImpulseNs": null,
+        "nozzleModel": "isentropic",
+        "researchHeightControl": {
+          "enabled": false,
+          "active": false,
+          "requestedAccelerationMps2": null,
+          "appliedAccelerationMps2": null,
+          "commandStep": null,
+          "expiresAtStep": null,
+          "controllerHash": null,
+          "reason": "reset",
+          "lastFault": null
+        },
+        "controlAuthority": {
+          "massKg": 2199.5582002848946,
+          "weightN": 21577.66594479482,
+          "pressureBar": 350,
+          "regulatorBar": 50,
+          "liftMaxN": 80000,
+          "hoverThrustRatio": 3.7075372380254317,
+          "hoverReserveN": 58422.33405520518,
+          "bodyUpDot": 0.9997268632655341,
+          "verticalForceUpperBoundN": 80237.12884782717,
+          "verticalForceReserveUpperBoundN": 58659.462903032356,
+          "positiveTorqueUpperNm": {
+            "x": 56800,
+            "y": 15620,
+            "z": 26020
+          },
+          "negativeTorqueLowerNm": {
+            "x": -56800,
+            "y": -15620,
+            "z": -26020
+          },
+          "currentPoseTrimFeasible": true,
+          "levelTargetTrimFeasible": true,
+          "currentPoseTrim": {
+            "staticFeasible": true,
+            "method": "bounded-symmetric-wrench-interval-v1",
+            "requestedWrench": [
+              -3.7407501726253907,
+              21571.772291581266,
+              -504.27555177040574,
+              0,
+              0,
+              0
+            ],
+            "achievedWrench": [
+              -3.7407501726253907,
+              21571.772291581266,
+              -504.27555177040574,
+              9.094947017729282e-13,
+              0,
+              -4.303224443447107e-13
+            ],
+            "residualWrench": [
+              0,
+              0,
+              0,
+              -9.094947017729282e-13,
+              0,
+              4.303224443447107e-13
+            ],
+            "forceResidualN": 0,
+            "torqueResidualNm": 1.0061600363062698e-12,
+            "tolerances": {
+              "forceN": 0.05,
+              "torqueNm": 0.05,
+              "boundN": 1e-07
+            },
+            "diagonalIntervalN": {
+              "minimum": 0.6974279982860025,
+              "maximum": 10785.886145790633
+            },
+            "nozzles": [
+              {
+                "id": "lift-FR",
+                "forceN": 5392.594358896174,
+                "maximumN": 20000,
+                "remainingIncreaseN": 14607.405641103825,
+                "remainingDecreaseN": 5392.594358896174,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "lift-FL",
+                "forceN": 5393.29178689446,
+                "maximumN": 20000,
+                "remainingIncreaseN": 14606.70821310554,
+                "remainingDecreaseN": 5393.29178689446,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "lift-RR",
+                "forceN": 5392.594358896174,
+                "maximumN": 20000,
+                "remainingIncreaseN": 14607.405641103825,
+                "remainingDecreaseN": 5392.594358896174,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "lift-RL",
+                "forceN": 5393.29178689446,
+                "maximumN": 20000,
+                "remainingIncreaseN": 14606.70821310554,
+                "remainingDecreaseN": 5393.29178689446,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "roll-FR",
+                "forceN": 0,
+                "maximumN": 5500,
+                "remainingIncreaseN": 5500,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "roll-FL",
+                "forceN": 1.8703750863126953,
+                "maximumN": 5500,
+                "remainingIncreaseN": 5498.129624913688,
+                "remainingDecreaseN": 1.8703750863126953,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "roll-RR",
+                "forceN": 0,
+                "maximumN": 5500,
+                "remainingIncreaseN": 5500,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "roll-RL",
+                "forceN": 1.8703750863126953,
+                "maximumN": 5500,
+                "remainingIncreaseN": 5498.129624913688,
+                "remainingDecreaseN": 1.8703750863126953,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "rear-boost",
+                "forceN": 0,
+                "maximumN": 11000,
+                "remainingIncreaseN": 11000,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "front-brake",
+                "forceN": 504.27555177040574,
+                "maximumN": 11000,
+                "remainingIncreaseN": 10495.724448229594,
+                "remainingDecreaseN": 504.27555177040574,
+                "disabled": false,
+                "saturated": false
+              }
+            ],
+            "saturatedNozzles": [],
+            "dynamicRecovery": "not-evaluated",
+            "reserve": null,
+            "scope": "zero velocity, zero angular velocity, gravity wrench only; no aerodynamic, valve-lag or transient recovery certificate"
+          },
+          "levelTargetTrim": {
+            "staticFeasible": true,
+            "method": "bounded-symmetric-wrench-interval-v1",
+            "requestedWrench": [
+              0,
+              21577.66594479482,
+              0,
+              0,
+              0,
+              0
+            ],
+            "achievedWrench": [
+              0,
+              21577.66594479482,
+              0,
+              0,
+              0,
+              0
+            ],
+            "residualWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "forceResidualN": 0,
+            "torqueResidualNm": 0,
+            "tolerances": {
+              "forceN": 0.05,
+              "torqueNm": 0.05,
+              "boundN": 1e-07
+            },
+            "diagonalIntervalN": {
+              "minimum": 0,
+              "maximum": 10788.83297239741
+            },
+            "nozzles": [
+              {
+                "id": "lift-FR",
+                "forceN": 5394.416486198705,
+                "maximumN": 20000,
+                "remainingIncreaseN": 14605.583513801295,
+                "remainingDecreaseN": 5394.416486198705,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "lift-FL",
+                "forceN": 5394.416486198705,
+                "maximumN": 20000,
+                "remainingIncreaseN": 14605.583513801295,
+                "remainingDecreaseN": 5394.416486198705,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "lift-RR",
+                "forceN": 5394.416486198705,
+                "maximumN": 20000,
+                "remainingIncreaseN": 14605.583513801295,
+                "remainingDecreaseN": 5394.416486198705,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "lift-RL",
+                "forceN": 5394.416486198705,
+                "maximumN": 20000,
+                "remainingIncreaseN": 14605.583513801295,
+                "remainingDecreaseN": 5394.416486198705,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "roll-FR",
+                "forceN": 0,
+                "maximumN": 5500,
+                "remainingIncreaseN": 5500,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "roll-FL",
+                "forceN": 0,
+                "maximumN": 5500,
+                "remainingIncreaseN": 5500,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "roll-RR",
+                "forceN": 0,
+                "maximumN": 5500,
+                "remainingIncreaseN": 5500,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "roll-RL",
+                "forceN": 0,
+                "maximumN": 5500,
+                "remainingIncreaseN": 5500,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "rear-boost",
+                "forceN": 0,
+                "maximumN": 11000,
+                "remainingIncreaseN": 11000,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              },
+              {
+                "id": "front-brake",
+                "forceN": 0,
+                "maximumN": 11000,
+                "remainingIncreaseN": 11000,
+                "remainingDecreaseN": 0,
+                "disabled": false,
+                "saturated": false
+              }
+            ],
+            "saturatedNozzles": [],
+            "dynamicRecovery": "not-evaluated",
+            "reserve": null,
+            "scope": "zero velocity, zero angular velocity, gravity wrench only; no aerodynamic, valve-lag or transient recovery certificate"
+          },
+          "allocationResidual": 0,
+          "saturatedNozzles": [],
+          "boundMeaning": "independent-axis bounds; not simultaneously achievable, valve lag and allocation coupling remain"
+        },
+        "driveAccounting": {
+          "torqueBudgetNm": 0,
+          "requestedTorqueNm": 0,
+          "postTcsTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerLimitW": 700000,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "mechanicalWorkJ": 0,
+          "electricalWorkJ": 0,
+          "powerLimited": false,
+          "airbornePolicy": "unloaded-drive-cut",
+          "shares": [
+            0.36434421155064706,
+            0.3551523782400194,
+            0.14484762175998045,
+            0.13565578844935308
+          ],
+          "corneringDriveScale": 1,
+          "corneringTractionActive": false,
+          "steeringSurfaceMu": 1.25,
+          "steeringSpeedMps": 0.04763956843823173,
+          "brakeMechanicalWorkJ": 0,
+          "liftOffBrakeMechanicalWorkJ": 0,
+          "electricalRecoveredWorkJ": 0
+        },
+        "verticalControl": {
+          "commandMps": 0,
+          "targetMps": 0,
+          "accelerationLimitMps2": 5,
+          "braking": false,
+          "pilotActive": false
+        },
+        "levelRecovery": {
+          "active": false,
+          "status": "inactive",
+          "tiltErrorDeg": 1.3337002039797643,
+          "headingTargetRad": 0,
+          "verticalSupportFeasible": true,
+          "torqueSaturated": false
+        },
+        "motorForceN": 0,
+        "regenForceN": 0,
+        "motorLoad": 0,
+        "longitudinalAcceleration": -2.677292910948432,
+        "driverInput": {
+          "throttle": 0,
+          "steer": 0,
+          "brake": 1,
+          "lift": 0,
+          "roll": 0,
+          "pitch": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "pilotIntent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 1,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "ground-drive",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 4,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "inactive"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "altitude": 0.5995259517692466,
+        "altitudeDatum": "重心至世界竖直向下最近碰撞面的距离",
+        "heightWorld": 0.5995259517692466,
+        "verticalSpeed": -0.0208873220607253,
+        "rollDeg": -0.0099356321798168,
+        "pitchDeg": -1.3391388860991285,
+        "headingDeg": 357.1294354169941,
+        "mass": 2199.5582002848946,
+        "pressureBar": 350,
+        "gasTemperatureK": 293.15,
+        "gasFraction": 1,
+        "gasMass": 249.55820028489444,
+        "initialGasMass": 249.55820028489444,
+        "supplyMode": "bench",
+        "pressureLimited": false,
+        "thrustN": 0,
+        "suctionN": 0,
+        "sealQuality": 0,
+        "sealLipExtensions": [
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074
+        ],
+        "sealLipContacts": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sealDistanceM": null,
+        "suctionEnabled": false,
+        "contactCount": 4,
+        "energyKWh": 198.3376033689883,
+        "energyUsedKWh": 1.6623966310116842,
+        "gLoad": 1.3321021469322414,
+        "mode": "drive",
+        "airStabilization": false,
+        "stabilizationActive": false,
+        "status": "轮胎接地",
+        "simTime": 190.47500000001892,
+        "scenario": "city",
+        "stabilizationMode": "off",
+        "holdActive": false,
+        "holdStatus": "inactive",
+        "holdFeasible": null,
+        "manualPoseFeasible": null,
+        "manualQuaternionTarget": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "wind": null,
+        "windVelocity": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "relativeAirSpeedMps": 0.03456775806920234,
+        "worldType": "city",
+        "holdPositionError": null,
+        "holdAttitudeErrorDeg": null,
+        "holdSpeed": 0.03456775806920234,
+        "holdWrenchResidual": 0,
+        "holdPositionTarget": null,
+        "holdQuaternionTarget": null,
+        "targetAltitude": 0.62,
+        "maneuver": null,
+        "physicalStep": 22857,
+        "rigidContactCount": 0,
+        "integration": {
+          "controlStep": 22857,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 1,
+          "completedSubsteps": 1,
+          "substepDtS": 0.008333333333333333,
+          "contactMicrosteps": 1,
+          "wheelContactMicrosteps": 1,
+          "rigidContactMicrosteps": 0,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 0,
+          "reason": "small-contact-travel",
+          "objectId": null,
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "attitudeTravel": {
+          "schema": "roadster-actual-attitude-travel",
+          "version": 1,
+          "sinceSimTimeS": 0,
+          "reason": "reset-or-state-import",
+          "samples": 22857,
+          "pitchDeg": -24.420136561693965,
+          "rollDeg": -0.4684937825181408,
+          "yawDeg": -2.981067674064747,
+          "absolutePitchDeg": 1013.7716084526305,
+          "absoluteRollDeg": 425.6405137383169,
+          "absoluteYawDeg": 1180.192842058356,
+          "scope": "Actual quaternion increments in the previous body frame. Signed/absolute axis travel is not an Euler angle or proof of a clean single-axis 360-degree maneuver."
+        },
+        "maneuverFeedback": {
+          "lastAction": null,
+          "lastRun": null
+        },
+        "position": {
+          "x": 100.12068756294985,
+          "y": 0.5995259517692466,
+          "z": 309.1093498977376
+        },
+        "velocity": {
+          "x": -0.01889706185231619,
+          "y": -0.0208873220607253,
+          "z": 0.02003873070860972
+        },
+        "quaternion": {
+          "x": 0.011684430532139366,
+          "y": -0.02504505848247375,
+          "z": 0.00020603488214762295,
+          "w": 0.9996180153830645
+        },
+        "angularVelocity": {
+          "x": -0.0008377068446600313,
+          "y": -0.0008139021042043313,
+          "z": 0.0211961041429584
+        },
+        "fault": null,
+        "failure": null,
+        "desiredWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "achievedWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "allocationError": 0,
+        "thrustMargin": 3.7075372380254317,
+        "nozzles": [
+          {
+            "id": "lift-FR",
+            "kind": "lift",
+            "position": {
+              "x": -0.59,
+              "y": -0.32,
+              "z": 1.42
+            },
+            "direction": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "healthScale": 1,
+            "ratedForce": 20000
+          },
+          {
+            "id": "lift-FL",
+            "kind": "lift",
+            "position": {
+              "x": 0.59,
+              "y": -0.32,
+              "z": 1.42
+            },
+            "direction": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "healthScale": 1,
+            "ratedForce": 20000
+          },
+          {
+            "id": "lift-RR",
+            "kind": "lift",
+            "position": {
+              "x": -0.59,
+              "y": -0.32,
+              "z": -1.42
+            },
+            "direction": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "healthScale": 1,
+            "ratedForce": 20000
+          },
+          {
+            "id": "lift-RL",
+            "kind": "lift",
+            "position": {
+              "x": 0.59,
+              "y": -0.32,
+              "z": -1.42
+            },
+            "direction": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "healthScale": 1,
+            "ratedForce": 20000
+          },
+          {
+            "id": "roll-FR",
+            "kind": "roll",
+            "position": {
+              "x": -0.89,
+              "y": -0.22,
+              "z": 1.42
+            },
+            "direction": {
+              "x": 1,
+              "y": 0,
+              "z": 0
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "healthScale": 1,
+            "ratedForce": 5500
+          },
+          {
+            "id": "roll-FL",
+            "kind": "roll",
+            "position": {
+              "x": 0.89,
+              "y": -0.22,
+              "z": 1.42
+            },
+            "direction": {
+              "x": -1,
+              "y": 0,
+              "z": 0
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "healthScale": 1,
+            "ratedForce": 5500
+          },
+          {
+            "id": "roll-RR",
+            "kind": "roll",
+            "position": {
+              "x": -0.89,
+              "y": -0.22,
+              "z": -1.42
+            },
+            "direction": {
+              "x": 1,
+              "y": 0,
+              "z": 0
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "healthScale": 1,
+            "ratedForce": 5500
+          },
+          {
+            "id": "roll-RL",
+            "kind": "roll",
+            "position": {
+              "x": 0.89,
+              "y": -0.22,
+              "z": -1.42
+            },
+            "direction": {
+              "x": -1,
+              "y": 0,
+              "z": 0
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "healthScale": 1,
+            "ratedForce": 5500
+          },
+          {
+            "id": "rear-boost",
+            "kind": "longitudinal",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": -2.07
+            },
+            "direction": {
+              "x": 0,
+              "y": 0,
+              "z": 1
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "healthScale": 1,
+            "ratedForce": 11000
+          },
+          {
+            "id": "front-brake",
+            "kind": "longitudinal",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 2.07
+            },
+            "direction": {
+              "x": 0,
+              "y": 0,
+              "z": -1
+            },
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "healthScale": 1,
+            "ratedForce": 11000
+          }
+        ],
+        "wheelStates": [
+          {
+            "id": "FR",
+            "steer": 0.002459858525404543,
+            "rotation": 2525.5460727845825,
+            "suspensionLength": 0.2570244399951995,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.19702443999519953,
+              "z": 1.42
+            },
+            "normalLoadN": 7770.497568478895,
+            "slipAngle": -0.011662312245019348,
+            "contactPointWorld": {
+              "x": 99.16103418753303,
+              "y": 6.207057437479513e-18,
+              "z": 310.47787559278225
+            },
+            "contactObjectId": "ground",
+            "contactGeometry": {
+              "method": "continuous-crowned-envelope",
+              "feature": "face",
+              "stationM": 0.0001110873689363648,
+              "suspensionLengthM": 0.2570244399951995,
+              "crownRadiusM": 0.37,
+              "halfWidthM": 0.1325
+            },
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 3.4694469519536126e-18
+            },
+            "gripUse": 0.17109423252031564,
+            "longitudinalForceN": -1659.0458718665595,
+            "lateralForceN": 96.65723075597776,
+            "lateralSpeedMps": -0.007323988270573182,
+            "longitudinalSpeedMps": 0.027976345482451728,
+            "angularVelocityRadS": 0,
+            "relaxedSlip": 0.01215694682184144,
+            "slipRatio": -0.0037789837716221703,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 0,
+            "brakeDemandN": 12760.96962981799,
+            "serviceBrakeDemandN": 12760.96962981799,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 613.8469725906269,
+            "serviceBrakeTorqueNm": 613.8469725906269,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "lateralDemandN": 96.65723075597776,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 255040.94808545295,
+            "contactSpeedMps": 0.027976345482451728,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": 613.846972590627,
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "FL",
+            "steer": 0.0024636568417347013,
+            "rotation": 2525.926391067197,
+            "suspensionLength": 0.25638794517187036,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.19638794517187036,
+              "z": 1.42
+            },
+            "normalLoadN": 7574.460095875417,
+            "slipAngle": -0.011622404351525641,
+            "contactPointWorld": {
+              "x": 100.93880128037185,
+              "y": -1.713039432527097e-17,
+              "z": 310.5670079031141
+            },
+            "contactObjectId": "ground",
+            "contactGeometry": {
+              "method": "continuous-crowned-envelope",
+              "feature": "face",
+              "stationM": 0.0001110546610036602,
+              "suspensionLengthM": 0.2563879451718704,
+              "crownRadiusM": 0.37,
+              "halfWidthM": 0.1325
+            },
+            "contactNormalWorld": {
+              "x": 4.336808689942016e-19,
+              "y": 1,
+              "z": -3.4694469519536126e-18
+            },
+            "gripUse": 0.19153939290583244,
+            "longitudinalForceN": -1810.926840453796,
+            "lateralForceN": 96.7480177265537,
+            "lateralSpeedMps": -0.007330867452838375,
+            "longitudinalSpeedMps": 0.030724688535469908,
+            "angularVelocityRadS": 0,
+            "relaxedSlip": 0.01280461540605008,
+            "slipRatio": -0.004374522485670614,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 0,
+            "brakeDemandN": 12439.03037018201,
+            "serviceBrakeDemandN": 12439.03037018201,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 670.0429309679045,
+            "serviceBrakeTorqueNm": 670.0429309679045,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "lateralDemandN": 96.74801772655371,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 248606.66476801358,
+            "contactSpeedMps": 0.030724688535469908,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": 670.0429309679046,
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "RR",
+            "steer": 0,
+            "rotation": 2502.1152143523377,
+            "suspensionLength": 0.3231365691920557,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.2631365691920557,
+              "z": -1.42
+            },
+            "normalLoadN": 3089.216342687577,
+            "slipAngle": -0.004568302243898041,
+            "contactPointWorld": {
+              "x": 99.30326019695711,
+              "y": 9.158797852071299e-17,
+              "z": 307.6406687663648
+            },
+            "contactObjectId": "ground",
+            "contactGeometry": {
+              "method": "continuous-crowned-envelope",
+              "feature": "face",
+              "stationM": 0.00013226926123658753,
+              "suspensionLengthM": 0.3231365691920557,
+              "crownRadiusM": 0.37,
+              "halfWidthM": 0.1325
+            },
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "gripUse": 0.30580374026855944,
+            "longitudinalForceN": -1180.2602611145676,
+            "lateralForceN": 37.86170984804051,
+            "lateralSpeedMps": -0.0028688874765196424,
+            "longitudinalSpeedMps": 0.02799424513072446,
+            "angularVelocityRadS": 0,
+            "relaxedSlip": 0.0009046788886755961,
+            "slipRatio": -0.013477229340190139,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 0,
+            "brakeDemandN": 8675.260110925743,
+            "serviceBrakeDemandN": 8675.260110925743,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 436.69629661239003,
+            "serviceBrakeTorqueNm": 436.69629661239003,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "lateralDemandN": 37.861709848040505,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 101393.33523198632,
+            "contactSpeedMps": 0.02799424513072446,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": 436.69629661239003,
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "RL",
+            "steer": 0,
+            "rotation": 2502.513446748353,
+            "suspensionLength": 0.3225000743687264,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.2625000743687264,
+              "z": -1.42
+            },
+            "normalLoadN": 2893.1788700841057,
+            "slipAngle": -0.004548396734180688,
+            "contactPointWorld": {
+              "x": 101.08102728979593,
+              "y": -1.9434323941802667e-17,
+              "z": 307.7298010766966
+            },
+            "contactObjectId": "ground",
+            "contactGeometry": {
+              "method": "continuous-crowned-envelope",
+              "feature": "face",
+              "stationM": 0.00013226926123658753,
+              "suspensionLengthM": 0.32250007436872646,
+              "crownRadiusM": 0.37,
+              "halfWidthM": 0.1325
+            },
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "gripUse": 0.34448209073625025,
+            "longitudinalForceN": -1245.2349176755217,
+            "lateralForceN": 37.86170984803977,
+            "lateralSpeedMps": -0.0028688874765195873,
+            "longitudinalSpeedMps": 0.03074262435560784,
+            "angularVelocityRadS": 0,
+            "relaxedSlip": 0.0007487900219010719,
+            "slipRatio": -0.015828851998302283,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 0,
+            "brakeDemandN": 8124.73988907426,
+            "serviceBrakeDemandN": 8124.73988907426,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 460.73691953994296,
+            "serviceBrakeTorqueNm": 460.73691953994296,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "lateralDemandN": 37.86170984803978,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 94959.05191454716,
+            "contactSpeedMps": 0.03074262435560784,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": 460.736919539943,
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          }
+        ],
+        "paused": false,
+        "quality": "balanced",
+        "cameraMode": "chase",
+        "context": "city",
+        "graphics": {
+          "status": "available",
+          "reason": "",
+          "startedAt": 237.80000001192093,
+          "readyAfterMs": 10568.59999999404
+        },
+        "research": {
+          "running": false,
+          "result": null,
+          "experiment": {
+            "recording": true,
+            "name": "城市驾驶 / 飞行记录",
+            "kind": "manual",
+            "stepCount": 22733,
+            "durationS": 189.44166666666666,
+            "eventCount": 1131,
+            "replaying": false,
+            "recordCount": 0,
+            "selectedId": null,
+            "persistence": {
+              "status": "saved",
+              "sessionOnly": false,
+              "message": "",
+              "unsavedIds": [],
+              "protectedArchive": false
+            },
+            "numericRunning": false,
+            "numericJob": null,
+            "lastReplay": null,
+            "liveAvailable": true
+          },
+          "landing": {
+            "running": false,
+            "numericRunning": false,
+            "recordCount": 0,
+            "selectedId": null,
+            "presentation": "setup",
+            "result": null,
+            "persistence": {
+              "status": "saved",
+              "sessionOnly": false,
+              "message": "",
+              "unsavedIds": [],
+              "protectedArchive": false
+            },
+            "live": null,
+            "exitContract": null,
+            "studyCount": 0
+          },
+          "open": false,
+          "tab": "controls",
+          "workspace": "operate",
+          "observing": false,
+          "context": "city",
+          "savedPrograms": [
+            {
+              "id": "pose-step",
+              "name": "高度与姿态阶跃",
+              "shortcut": "Digit3"
+            },
+            {
+              "id": "gust-rejection",
+              "name": "侧风与阵风抑制",
+              "shortcut": "Digit4"
+            },
+            {
+              "id": "roll-return",
+              "name": "翻转并返回起始高度",
+              "shortcut": "Digit5"
+            },
+            {
+              "id": "finite-budget",
+              "name": "有限储气悬停与着陆",
+              "shortcut": "Digit6"
+            }
+          ],
+          "resultCount": 0,
+          "persistence": {
+            "programs": {
+              "status": "saved",
+              "sessionOnly": false,
+              "message": "",
+              "unsavedIds": [],
+              "protectedArchive": false
+            },
+            "results": {
+              "status": "saved",
+              "sessionOnly": false,
+              "message": "",
+              "unsavedIds": [],
+              "protectedArchive": false
+            }
+          }
+        }
+      },
+      "navigation": {
+        "version": "selected-carriageways-1",
+        "geometryId": "fnv1a32-a68bfc87",
+        "status": "arrived",
+        "path": [
+          [
+            100,
+            0,
+            309.0873160074352
+          ],
+          [
+            100,
+            0,
+            315
+          ]
+        ],
+        "pathRoadIds": [
+          "foundry-main"
+        ],
+        "remainingM": 5.91268399256478,
+        "currentRoad": {
+          "id": "foundry-main",
+          "label": "机造大道",
+          "widthM": 18
+        },
+        "levelM": 0,
+        "surfaceDatum": "current wheel contact surface",
+        "surfaceEstimated": false,
+        "nextTurn": {
+          "kind": "arrive",
+          "inM": 5.91268399256478,
+          "roadId": "foundry-main",
+          "roadLabel": "机造服务桥"
+        },
+        "offRoute": false,
+        "rejoining": false,
+        "lateralM": 0.12335510269208783,
+        "rejoinPoint": null,
+        "destination": {
+          "id": "foundry-gate",
+          "label": "机造服务桥",
+          "labelEn": "Foundry Service Bridge",
+          "position": [
+            100,
+            0,
+            315
+          ],
+          "streetId": "foundry-main",
+          "arrivalRadiusM": 8,
+          "note": "沿机造大道到服务桥下。",
+          "noteEn": "Arrive on Foundry Avenue beneath the service bridge."
+        },
+        "scope": "Selected authored carriageways and their existing approaches; no automatic driver or off-road shortcut",
+        "messageZh": "已到 机造服务桥 · 车行入口",
+        "messageEn": "Foundry Service Bridge vehicle entrance reached"
+      }
+    },
+    "recordFinalPosition": {
+      "x": 100.12062235290658,
+      "y": 0.5969960823514844,
+      "z": 309.0953674887831
+    },
+    "recordFinalSpeedKmh": 0.000856521746932086,
+    "horizontalDistanceToGoalM": 5.905864445154523,
+    "postExport": {
+      "simTime": 192.8000000000168,
+      "position": {
+        "x": 100.12062698567819,
+        "y": 0.5970089721607882,
+        "z": 309.095433158573
+      },
+      "speedKmh": 1.053684979914035e-06,
+      "paused": false,
+      "mode": "drive"
+    },
+    "postExportMeaning": "Opening the existing research/export workspace resumed simulation after the completed record. Inputs were released; the record final snapshot and the paused end image are preserved separately."
+  },
+  "recordCoverage": {
+    "validator": {
+      "validator": "dist/experiment-records.js validateExperimentRecord",
+      "passed": true,
+      "id": "live-20261020195302900-1",
+      "stepCount": 22848,
+      "durationS": 190.4
+    },
+    "startSimTime": 1.033333333333332,
+    "endSimTime": 191.43333333335138,
+    "durationS": 190.4,
+    "fixedHz": 120,
+    "stepCount": 22848,
+    "snapshotPhysicalStepDelta": 22848,
+    "inputRuns": 1131,
+    "inputCoveredSteps": 22848,
+    "appliedInputRuns": 1131,
+    "appliedInputCoveredSteps": 22848,
+    "inputsAndAppliedInputsExactlyEqual": true,
+    "allStepStatisticsCount": 22848,
+    "storedCurve": {
+      "source": "simulation time",
+      "rawHz": 20,
+      "rawCount": 3809,
+      "storedCount": 3809,
+      "decimated": false,
+      "uniform": true,
+      "storedIntervalS": 0.05,
+      "minIntervalS": 0.04999999999998295,
+      "maxIntervalS": 0.05000000000001137,
+      "note": "原始 20 Hz 样本含初态和必要的最后端点；非整采样终止时最后间隔可能缩短。"
+    },
+    "curveStepDeltaCounts": {
+      "6": 3808
+    },
+    "curveFirstStep": 0,
+    "curveLastStep": 22848,
+    "events": 1141,
+    "recordedDrivingEvents": 1130,
+    "publicCommandsDuringRecord": [
+      {
+        "step": 22848,
+        "simTime": 191.43333333335138,
+        "method": "releasePilotInput",
+        "args": [
+          "pause"
+        ],
+        "accepted": true
+      },
+      {
+        "step": 22848,
+        "simTime": 191.43333333335138,
+        "method": "releasePilotInput",
+        "args": [
+          "pause"
+        ],
+        "accepted": true
+      },
+      {
+        "step": 22848,
+        "simTime": 191.43333333335138,
+        "method": "releasePilotInput",
+        "args": [
+          "panel-open"
+        ],
+        "accepted": true
+      }
+    ],
+    "scope": "All 120 Hz pre-solver and applied driver-input steps, initial/final physical snapshots and existing all-step statistics are retained. Full intermediate physical state is a 20 Hz curve; the raw record does not contain every Cannon contact pair or impulse."
+  },
+  "inputReceiptCoverage": {
+    "nativeRequestedDrivingEvents": 1130,
+    "returnedJournalLines": 1122,
+    "applicationDrivingEvents": 1130,
+    "requestAndReceiptCodeOrderExactlyEqual": true,
+    "recordAndApplicationDrivingEventsExactlyEqual": true,
+    "receivedJournalLines": 1146,
+    "receivedFirstSequence": 1,
+    "receivedLastSequence": 1146,
+    "receivedSequenceGaps": [],
+    "applicationDroppedEvents": 0,
+    "rejectedDrivingKeydowns": [],
+    "missingReturnedJournalLines": [
+      {
+        "request": {
+          "action": "keydown",
+          "key": "Space",
+          "reason": "navigation-speed-and-heading",
+          "at": "2026-10-20T19:57:08.017Z",
+          "lastObservedSimTime": 18.474999999999593,
+          "phase": "requested"
+        },
+        "applicationReceipt": {
+          "sequence": 95,
+          "wallTimeMs": 384677.8000000119,
+          "type": "keydown",
+          "code": "Space",
+          "repeat": false,
+          "accepted": true,
+          "reason": "pilot",
+          "pressed": [
+            "Space"
+          ]
+        },
+        "recordStep": 2103,
+        "meaning": "The returned line is absent. Application receipt and the actual record are separate, retained evidence; no return time is reconstructed."
+      },
+      {
+        "request": {
+          "action": "keyup",
+          "key": "Space",
+          "reason": "navigation-speed-and-heading",
+          "at": "2026-10-20T20:05:11.371Z",
+          "lastObservedSimTime": 61.358333333329675,
+          "phase": "requested"
+        },
+        "applicationReceipt": {
+          "sequence": 354,
+          "wallTimeMs": 867772.8000000119,
+          "type": "keyup",
+          "code": "Space",
+          "repeat": false,
+          "pressed": []
+        },
+        "recordStep": 7248,
+        "meaning": "The returned line is absent. Application receipt and the actual record are separate, retained evidence; no return time is reconstructed."
+      },
+      {
+        "request": {
+          "action": "keyup",
+          "key": "Space",
+          "reason": "navigation-speed-and-heading",
+          "at": "2026-10-20T20:05:24.154Z",
+          "lastObservedSimTime": 62.958333333329584,
+          "phase": "requested"
+        },
+        "applicationReceipt": {
+          "sequence": 362,
+          "wallTimeMs": 880675.900000006,
+          "type": "keyup",
+          "code": "Space",
+          "repeat": false,
+          "pressed": []
+        },
+        "recordStep": 7440,
+        "meaning": "The returned line is absent. Application receipt and the actual record are separate, retained evidence; no return time is reconstructed."
+      },
+      {
+        "request": {
+          "action": "keydown",
+          "key": "Space",
+          "reason": "navigation-speed-and-heading",
+          "at": "2026-10-20T20:05:29.153Z",
+          "lastObservedSimTime": 63.516666666662886,
+          "phase": "requested"
+        },
+        "applicationReceipt": {
+          "sequence": 365,
+          "wallTimeMs": 885629.6000000089,
+          "type": "keydown",
+          "code": "Space",
+          "repeat": false,
+          "accepted": true,
+          "reason": "pilot",
+          "pressed": [
+            "Space"
+          ]
+        },
+        "recordStep": 7517,
+        "meaning": "The returned line is absent. Application receipt and the actual record are separate, retained evidence; no return time is reconstructed."
+      },
+      {
+        "request": {
+          "action": "keydown",
+          "key": "Space",
+          "reason": "navigation-speed-and-heading",
+          "at": "2026-10-20T20:07:58.428Z",
+          "lastObservedSimTime": 85.20000000001194,
+          "phase": "requested"
+        },
+        "applicationReceipt": {
+          "sequence": 501,
+          "wallTimeMs": 1034743.400000006,
+          "type": "keydown",
+          "code": "Space",
+          "repeat": false,
+          "accepted": true,
+          "reason": "pilot",
+          "pressed": [
+            "Space"
+          ]
+        },
+        "recordStep": 10119,
+        "meaning": "The returned line is absent. Application receipt and the actual record are separate, retained evidence; no return time is reconstructed."
+      },
+      {
+        "request": {
+          "action": "keydown",
+          "key": "Space",
+          "reason": "navigation-speed-and-heading",
+          "at": "2026-10-20T20:14:27.091Z",
+          "lastObservedSimTime": 148.71666666671163,
+          "phase": "requested"
+        },
+        "applicationReceipt": {
+          "sequence": 901,
+          "wallTimeMs": 1423382.400000006,
+          "type": "keydown",
+          "code": "Space",
+          "repeat": false,
+          "accepted": true,
+          "reason": "pilot",
+          "pressed": [
+            "Space"
+          ]
+        },
+        "recordStep": 17741,
+        "meaning": "The returned line is absent. Application receipt and the actual record are separate, retained evidence; no return time is reconstructed."
+      },
+      {
+        "request": {
+          "action": "keydown",
+          "key": "Space",
+          "reason": "navigation-speed-and-heading",
+          "at": "2026-10-20T20:15:02.225Z",
+          "lastObservedSimTime": 154.3166666667078,
+          "phase": "requested"
+        },
+        "applicationReceipt": {
+          "sequence": 937,
+          "wallTimeMs": 1458538.200000003,
+          "type": "keydown",
+          "code": "Space",
+          "repeat": false,
+          "accepted": true,
+          "reason": "pilot",
+          "pressed": [
+            "Space"
+          ]
+        },
+        "recordStep": 18413,
+        "meaning": "The returned line is absent. Application receipt and the actual record are separate, retained evidence; no return time is reconstructed."
+      },
+      {
+        "request": {
+          "action": "keyup",
+          "key": "Space",
+          "reason": "navigation-speed-and-heading",
+          "at": "2026-10-20T20:16:07.410Z",
+          "lastObservedSimTime": 164.1583333333655,
+          "phase": "requested"
+        },
+        "applicationReceipt": {
+          "sequence": 986,
+          "wallTimeMs": 1523733,
+          "type": "keyup",
+          "code": "Space",
+          "repeat": false,
+          "pressed": []
+        },
+        "recordStep": 19584,
+        "meaning": "The returned line is absent. Application receipt and the actual record are separate, retained evidence; no return time is reconstructed."
+      }
+    ],
+    "gapMeaning": "Eight original requested calls lack a returned journal line, despite matched application receipts and complete record input coverage. Their browser-call completion timestamps are unavailable; the original journals are not repaired."
+  },
+  "telemetrySampling": {
+    "originalCollectorCount": 1245,
+    "actualJournalLines": 1244,
+    "counterDifference": 1,
+    "counterDifferenceCause": "Unresolved collector/log discrepancy. The original report and actual journal are both preserved.",
+    "controlDecisions": 1229,
+    "decisionTimesWithoutTelemetryRow": [],
+    "rowsWithinRecordInterval": 1237,
+    "firstRecordedIntervalSampleSimTime": 1.1999999999999982,
+    "recordHeadBeforeFirstTelemetrySampleS": 0.16666666666666607,
+    "positiveSimIntervalsS": {
+      "count": 1233,
+      "min": 0.07499999999993179,
+      "median": 0.15833333333332433,
+      "max": 0.7999999999992724
+    },
+    "repeatedSimTimeIntervals": 3,
+    "wallIntervalsS": {
+      "count": 1236,
+      "min": 0.3645232579999629,
+      "median": 1.0777989090000233,
+      "max": 10.343256234999899
+    },
+    "scope": "Readonly native telemetry/navigation polling. These rows do not establish continuous contact-force coverage; all-step inputs are in the separate original experiment record."
+  },
+  "observedDynamics": {
+    "peakSpeedKmhAll120HzStatistics": 23.33104858834607,
+    "peakSpeedKmhNativeTelemetrySamples": 22.664157213046902,
+    "nativeTelemetryPeakAbsRollDeg": 2.320377310894162,
+    "nativeTelemetryPeakAbsPitchDeg": 1.5125982568149468,
+    "record20HzPeakAbsRollDeg": 2.3024866884987314,
+    "record20HzPeakAbsPitchDeg": 1.5623044311038898,
+    "nativeTelemetryPeakGLoad": 1.4641224165202316,
+    "nativeTelemetryPeakNavigationLateralM": 1.3622052906660542,
+    "peakNavigationLateralAtSimTime": 46.15833333333119,
+    "offRouteTrueSamplesWithinRecord": 0,
+    "recordIntervalTelemetryWheelContacts": {
+      "4": 1237
+    },
+    "record20HzWheelContacts": {
+      "4": 3809
+    },
+    "all120HzMinimumHeightM": 0.5951170143439259,
+    "all120HzMaximumHeightM": 0.6083036050883612,
+    "recordSummary": {
+      "source": "all fixed 120 Hz post-integration states; independent of stored display curve",
+      "version": 1,
+      "count": 22848,
+      "positionCount": 0,
+      "sumPositionSquared": 0,
+      "peakPositionErrorM": null,
+      "peakAttitudeErrorDeg": 100.3128198162344,
+      "allocationCount": 22848,
+      "saturatedCount": 0,
+      "gasThroughputKg": 0,
+      "onboardDischargedKg": 0,
+      "externalSupplyKg": 0,
+      "energyUsedKWh": 1.6623799643450188,
+      "peakSpeedMps": 6.480846830096131,
+      "minimumHeightM": 0.5951170143439259,
+      "maximumHeightM": 0.6083036050883612,
+      "rmsPositionErrorM": null,
+      "saturationFraction": 0,
+      "gasRemainingKg": 249.55820028489444,
+      "finalPosition": {
+        "x": 100.12062235290658,
+        "y": 0.5969960823514844,
+        "z": 309.0953674887831
+      },
+      "finalVelocity": {
+        "x": 3.3641213178419265e-05,
+        "y": 8.370663417592616e-05,
+        "z": -0.00022015604217458023
+      },
+      "finalQuaternion": {
+        "x": -5.565222291222895e-05,
+        "y": -0.025039361265108112,
+        "z": 4.451222449147156e-06,
+        "w": 0.9996864644829658
+      },
+      "finalAngularVelocity": {
+        "x": -0.0001952638798319384,
+        "y": 6.018487260546057e-09,
+        "z": -8.426717073605293e-05
+      },
+      "finalFault": null
+    },
+    "attitudeReferenceCaution": "The record peakAttitudeErrorDeg compares a flight reference and includes authored road turns; it is not a route lateral error or a vehicle roll angle."
+  },
+  "compoundRigidContact": {
+    "lastIntegrationSlicePositiveSamples": 25,
+    "lastSliceCountUnavailableSamples": 0,
+    "anyIntegrationMicrostepPositiveSamples": 26,
+    "rigidMicrostepCountUnavailableSamples": 0,
+    "maxObservedLastSliceCount": 1,
+    "samples": [
+      {
+        "line": 356,
+        "simTime": 49.35833333333092,
+        "position": {
+          "x": -177.4242186289045,
+          "y": 0.6012554770554596,
+          "z": -132.1396030272552
+        },
+        "speedKmh": 17.628120491492826,
+        "rollDeg": 1.7888395278763014,
+        "pitchDeg": -0.7900093433976123,
+        "gLoad": 1.348806120862622,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 5923,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 49.11666666666431,
+          "position": {
+            "x": -178.73509757836334,
+            "y": 0.5974295045809082,
+            "z": -132.1153754393252
+          },
+          "speedKmh": 19.985599960681917,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 49.599999999997536,
+          "position": {
+            "x": -176.38127779861358,
+            "y": 0.6008926851238904,
+            "z": -132.44206275761928
+          },
+          "speedKmh": 15.572537363070174,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 376,
+        "simTime": 54.31666666666361,
+        "position": {
+          "x": -152.48320091915113,
+          "y": 0.6005128477593845,
+          "z": -132.88855591598738
+        },
+        "speedKmh": 19.530214866618394,
+        "rollDeg": -1.7751874663105591,
+        "pitchDeg": -0.7654903698447076,
+        "gLoad": 1.3753750995407743,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 6518,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 5,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 54.07499999999697,
+          "position": {
+            "x": -153.9243692967029,
+            "y": 0.5985275426509109,
+            "z": -132.7774916474075
+          },
+          "speedKmh": 22.22750786778974,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 54.474999999996896,
+          "position": {
+            "x": -151.68567080684437,
+            "y": 0.6064348763779469,
+            "z": -132.75887186129597
+          },
+          "speedKmh": 17.377981581868415,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 456,
+        "simTime": 68.15833333333275,
+        "position": {
+          "x": -80.25370469695454,
+          "y": 0.6018778297336845,
+          "z": -132.8023853173535
+        },
+        "speedKmh": 18.801994857522597,
+        "rollDeg": -1.8238065803773555,
+        "pitchDeg": -0.778779612786894,
+        "gLoad": 1.372472302935728,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 8179,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 8,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 67.91666666666598,
+          "position": {
+            "x": -81.64368091175741,
+            "y": 0.597169607953002,
+            "z": -132.7174542242283
+          },
+          "speedKmh": 21.27266807607606,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 68.39999999999954,
+          "position": {
+            "x": -79.11413859728356,
+            "y": 0.6007464919723585,
+            "z": -132.56702653659354
+          },
+          "speedKmh": 16.73842104586817,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 459,
+        "simTime": 68.87499999999982,
+        "position": {
+          "x": -76.46716234767894,
+          "y": 0.6003080927133373,
+          "z": -132.33060070145478
+        },
+        "speedKmh": 19.598732845473933,
+        "rollDeg": 1.784798529575258,
+        "pitchDeg": -0.7562049045355553,
+        "gLoad": 1.373792530692979,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 8265,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 3,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 68.63333333333298,
+          "position": {
+            "x": -77.91782303558644,
+            "y": 0.598475618717202,
+            "z": -132.3659513077638
+          },
+          "speedKmh": 22.269178896298754,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 69.0333333333332,
+          "position": {
+            "x": -75.67454618053735,
+            "y": 0.6065426665273329,
+            "z": -132.50207308965105
+          },
+          "speedKmh": 17.46247468799828,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 523,
+        "simTime": 78.6333333333407,
+        "position": {
+          "x": -25.19270687403241,
+          "y": 0.6015820807563198,
+          "z": -132.79985548929014
+        },
+        "speedKmh": 19.261987209377164,
+        "rollDeg": -1.8296236669054595,
+        "pitchDeg": -0.7713761384357662,
+        "gLoad": 1.3669279740159108,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 9436,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 4,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 78.40000000000725,
+          "position": {
+            "x": -26.562928074625134,
+            "y": 0.5974189824712057,
+            "z": -132.70332459156833
+          },
+          "speedKmh": 21.797910687077543,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 78.80000000000743,
+          "position": {
+            "x": -24.369916803775563,
+            "y": 0.6060752489503612,
+            "z": -132.6568547857821
+          },
+          "speedKmh": 17.001219884445838,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 530,
+        "simTime": 80.15833333334157,
+        "position": {
+          "x": -17.41552542918233,
+          "y": 0.6006367744006079,
+          "z": -132.65448635107296
+        },
+        "speedKmh": 18.43421152423517,
+        "rollDeg": -1.7604871330360923,
+        "pitchDeg": -0.7774788978733222,
+        "gLoad": 1.369270065255669,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 9619,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 6,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 79.91666666667474,
+          "position": {
+            "x": -18.786987803110268,
+            "y": 0.5982482439973209,
+            "z": -132.65271869370295
+          },
+          "speedKmh": 21.21852675097161,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 80.40000000000836,
+          "position": {
+            "x": -16.31347351327158,
+            "y": 0.60106702046924,
+            "z": -132.36065198558498
+          },
+          "speedKmh": 16.398633689858617,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 533,
+        "simTime": 80.87500000000864,
+        "position": {
+          "x": -13.723242309569361,
+          "y": 0.6001503137135145,
+          "z": -131.99746060585454
+        },
+        "speedKmh": 19.31443950441409,
+        "rollDeg": 1.7796912252724377,
+        "pitchDeg": -0.7537962995581519,
+        "gLoad": 1.3642458061919382,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 9705,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 80.63333333334181,
+          "position": {
+            "x": -15.150461135886745,
+            "y": 0.5984883301121812,
+            "z": -132.10393870318862
+          },
+          "speedKmh": 21.941262837468962,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 81.03333333334203,
+          "position": {
+            "x": -12.935441521115179,
+            "y": 0.6065474054623277,
+            "z": -132.12796089731967
+          },
+          "speedKmh": 17.183450223579484,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 725,
+        "simTime": 108.23333333336315,
+        "position": {
+          "x": 100.19766892648212,
+          "y": 0.601813461003365,
+          "z": -118.95104598370567
+        },
+        "speedKmh": 18.857751831566475,
+        "rollDeg": 1.8299470399833064,
+        "pitchDeg": -0.7495878544769602,
+        "gLoad": 1.3922991483989242,
+        "wheelContacts": 4,
+        "rigidContactCount": 0,
+        "integration": {
+          "controlStep": 12988,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 108.00000000002967,
+          "position": {
+            "x": 100.35105164293824,
+            "y": 0.5989033437025575,
+            "z": -120.29333325727198
+          },
+          "speedKmh": 21.568456945227982,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 108.47500000002995,
+          "position": {
+            "x": 100.37294159936117,
+            "y": 0.6005394198165178,
+            "z": -117.80132855973443
+          },
+          "speedKmh": 16.627022475861807,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 728,
+        "simTime": 108.95833333336357,
+        "position": {
+          "x": 100.47651913946449,
+          "y": 0.6008292200229584,
+          "z": -115.14364005640356
+        },
+        "speedKmh": 19.194802038693275,
+        "rollDeg": -1.7788769002811708,
+        "pitchDeg": -0.771805238019698,
+        "gLoad": 1.3822126441592717,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 13075,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 7,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 108.71666666669674,
+          "position": {
+            "x": 100.52083577639489,
+            "y": 0.5985689682039791,
+            "z": -116.56696432817503
+          },
+          "speedKmh": 22.02901654298137,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 109.20000000003036,
+          "position": {
+            "x": 100.13354242947376,
+            "y": 0.6009205202093544,
+            "z": -114.00327290108608
+          },
+          "speedKmh": 17.151996567796207,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 731,
+        "simTime": 109.67500000003065,
+        "position": {
+          "x": 99.63359827282343,
+          "y": 0.6004894380634991,
+          "z": -111.33937827014684
+        },
+        "speedKmh": 19.97537081167237,
+        "rollDeg": 1.7926433054526931,
+        "pitchDeg": -0.756123713077681,
+        "gLoad": 1.379359203913073,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 13161,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 4,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 109.43333333336382,
+          "position": {
+            "x": 99.81178976124195,
+            "y": 0.5983637319920749,
+            "z": -112.80565090760116
+          },
+          "speedKmh": 22.664157213046902,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 109.83333333336404,
+          "position": {
+            "x": 99.72839114006177,
+            "y": 0.6065866158012932,
+            "z": -110.51748771782756
+          },
+          "speedKmh": 17.8306269799104,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 869,
+        "simTime": 131.11666666671047,
+        "position": {
+          "x": 100.36888996244376,
+          "y": 0.6000356450040162,
+          "z": 0.7639455917906471
+        },
+        "speedKmh": 18.47655335269047,
+        "rollDeg": -1.7569543054705334,
+        "pitchDeg": -0.7618484096404009,
+        "gLoad": 1.3544918518495253,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 15734,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 130.8750000000439,
+          "position": {
+            "x": 100.32376302035476,
+            "y": 0.5986784943253489,
+            "z": -0.6074017375496259
+          },
+          "speedKmh": 21.056587408818384,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 131.3583333333775,
+          "position": {
+            "x": 100.10764533793319,
+            "y": 0.6013761961237235,
+            "z": 1.8742089630476468
+          },
+          "speedKmh": 16.392202609159245,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 872,
+        "simTime": 131.83333333337774,
+        "position": {
+          "x": 99.80112770199274,
+          "y": 0.6002913658433628,
+          "z": 4.473721514141554
+        },
+        "speedKmh": 19.35241175777374,
+        "rollDeg": 1.779542227508444,
+        "pitchDeg": -0.7566932138964362,
+        "gLoad": 1.3598713042151047,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 15820,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 131.6000000000445,
+          "position": {
+            "x": 99.86809299773198,
+            "y": 0.5993218057943149,
+            "z": 3.093131353238509
+          },
+          "speedKmh": 22.084204793944764,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 132.00000000004493,
+          "position": {
+            "x": 99.9596369117963,
+            "y": 0.6061026261248178,
+            "z": 5.298188854170548
+          },
+          "speedKmh": 17.102236238806984,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 875,
+        "simTime": 132.55833333337856,
+        "position": {
+          "x": 100.30305297835375,
+          "y": 0.6006506756737734,
+          "z": 8.180220283983294
+        },
+        "speedKmh": 18.50891817540384,
+        "rollDeg": -1.7625183188144626,
+        "pitchDeg": -0.7845855771707791,
+        "gLoad": 1.3629384210887299,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 15907,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 3,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 132.31666666671177,
+          "position": {
+            "x": 100.26222712584203,
+            "y": 0.5976712352117155,
+            "z": 6.805314416771851
+          },
+          "speedKmh": 21.28321546147786,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 132.80000000004557,
+          "position": {
+            "x": 100.03991149422778,
+            "y": 0.6010939804979673,
+            "z": 9.294815265226847
+          },
+          "speedKmh": 16.474205033636892,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 878,
+        "simTime": 133.27500000004594,
+        "position": {
+          "x": 99.74480143105693,
+          "y": 0.6001777998152444,
+          "z": 11.903206676571068
+        },
+        "speedKmh": 19.379745355782163,
+        "rollDeg": 1.7824067214758232,
+        "pitchDeg": -0.7551363060555522,
+        "gLoad": 1.3665771438055039,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 15993,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 133.03333333337926,
+          "position": {
+            "x": 99.81336793307068,
+            "y": 0.598476215500369,
+            "z": 10.469103842800328
+          },
+          "speedKmh": 22.015937462089845,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 133.4333333333797,
+          "position": {
+            "x": 99.89647470674444,
+            "y": 0.6065076578459154,
+            "z": 12.690163808705167
+          },
+          "speedKmh": 17.24841424661009,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 891,
+        "simTime": 135.91666666671202,
+        "position": {
+          "x": 99.7188828968386,
+          "y": 0.6012919705683928,
+          "z": 24.873379844528618
+        },
+        "speedKmh": 18.241604311287,
+        "rollDeg": 1.7962809215206992,
+        "pitchDeg": -0.7834128452993843,
+        "gLoad": 1.3481962246903512,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 16310,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 135.6750000000449,
+          "position": {
+            "x": 99.74528646939453,
+            "y": 0.5975661755253885,
+            "z": 23.52169659168544
+          },
+          "speedKmh": 20.518714376197924,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 136.15833333337903,
+          "position": {
+            "x": 99.99460136667106,
+            "y": 0.6010950840681539,
+            "z": 25.963056397667838
+          },
+          "speedKmh": 16.140506003121637,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 894,
+        "simTime": 136.63333333337928,
+        "position": {
+          "x": 100.32693229297254,
+          "y": 0.6001598971463714,
+          "z": 28.526958275047775
+        },
+        "speedKmh": 19.12290196082195,
+        "rollDeg": -1.7763881264228447,
+        "pitchDeg": -0.7557135180081449,
+        "gLoad": 1.3461506331370068,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 16396,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 1,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 136.40000000004605,
+          "position": {
+            "x": 100.24498016587508,
+            "y": 0.5994178327953023,
+            "z": 27.162485979157037
+          },
+          "speedKmh": 21.83561392609034,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 136.8750000000463,
+          "position": {
+            "x": 100.09244824878745,
+            "y": 0.6014709228945414,
+            "z": 29.684077068092485
+          },
+          "speedKmh": 16.92544869285891,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 897,
+        "simTime": 137.35833333338,
+        "position": {
+          "x": 99.83968042046854,
+          "y": 0.6009540711258685,
+          "z": 32.371265963957946
+        },
+        "speedKmh": 19.477232340105317,
+        "rollDeg": 1.783487711477514,
+        "pitchDeg": -0.7705946638036594,
+        "gLoad": 1.3832568398450957,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 16483,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 8,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 137.11666666671331,
+          "position": {
+            "x": 99.87403141300946,
+            "y": 0.5983918893790322,
+            "z": 30.928277247769906
+          },
+          "speedKmh": 22.321941640661407,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 137.51666666671375,
+          "position": {
+            "x": 100.01177654972255,
+            "y": 0.6061756928904798,
+            "z": 33.15975063733008
+          },
+          "speedKmh": 17.377581766445623,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 913,
+        "simTime": 140.71666666671197,
+        "position": {
+          "x": 100.3236087238577,
+          "y": 0.6016005734381122,
+          "z": 49.316401469959274
+        },
+        "speedKmh": 18.86249827176104,
+        "rollDeg": -1.8168084327838732,
+        "pitchDeg": -0.783095882658302,
+        "gLoad": 1.3668150884792178,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 16886,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 4,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 140.47500000004484,
+          "position": {
+            "x": 100.27401077398008,
+            "y": 0.5972771588215167,
+            "z": 47.92223468779562
+          },
+          "speedKmh": 21.211566664514027,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 140.958333333379,
+          "position": {
+            "x": 100.0565313753052,
+            "y": 0.6009248230434078,
+            "z": 50.45060473952102
+          },
+          "speedKmh": 16.755716773142783,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 916,
+        "simTime": 141.43333333337935,
+        "position": {
+          "x": 99.72586154764159,
+          "y": 0.6004266506477292,
+          "z": 53.09237449575487
+        },
+        "speedKmh": 19.65164086199203,
+        "rollDeg": 1.7846669444267673,
+        "pitchDeg": -0.7585924533030888,
+        "gLoad": 1.3702967582553742,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 16972,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 3,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 141.200000000046,
+          "position": {
+            "x": 99.80426658229862,
+            "y": 0.599309975206275,
+            "z": 51.691895661218936
+          },
+          "speedKmh": 22.42963339364459,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 141.60000000004644,
+          "position": {
+            "x": 99.88030321727223,
+            "y": 0.6061636672596667,
+            "z": 53.93156434893317
+          },
+          "speedKmh": 17.398188453069253,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 940,
+        "simTime": 145.91666666671168,
+        "position": {
+          "x": 99.86462349377081,
+          "y": 0.6001624828335121,
+          "z": 75.53462671822527
+        },
+        "speedKmh": 18.569310703350457,
+        "rollDeg": 1.7588416740411452,
+        "pitchDeg": -0.768690869793894,
+        "gLoad": 1.3594780307823502,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 17510,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 145.675000000045,
+          "position": {
+            "x": 99.87580571762994,
+            "y": 0.598258438538041,
+            "z": 74.15577525453077
+          },
+          "speedKmh": 21.180738193016758,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 146.1583333333787,
+          "position": {
+            "x": 100.15501291059168,
+            "y": 0.6012899710316908,
+            "z": 76.6443036630159
+          },
+          "speedKmh": 16.49036435014416,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 943,
+        "simTime": 146.63333333337906,
+        "position": {
+          "x": 100.53303976941135,
+          "y": 0.6002982952149258,
+          "z": 79.2468438814831
+        },
+        "speedKmh": 19.433650977898253,
+        "rollDeg": -1.7816017285972086,
+        "pitchDeg": -0.7571612002320112,
+        "gLoad": 1.36274659918825,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 17596,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 146.4000000000457,
+          "position": {
+            "x": 100.42837785992876,
+            "y": 0.5993035667935049,
+            "z": 77.86284879928422
+          },
+          "speedKmh": 22.177576927109488,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 146.80000000004614,
+          "position": {
+            "x": 100.39603406866155,
+            "y": 0.6061450082686204,
+            "z": 80.0789433445248
+          },
+          "speedKmh": 17.18473128808812,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 1214,
+        "simTime": 185.83333333334897,
+        "position": {
+          "x": 99.62118405518719,
+          "y": 0.6015503779839864,
+          "z": 287.37015742409955
+        },
+        "speedKmh": 19.246912433215535,
+        "rollDeg": 1.8278975979223222,
+        "pitchDeg": -0.7729662041991875,
+        "gLoad": 1.3706414227123258,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 22300,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 4,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 185.60000000001529,
+          "position": {
+            "x": 99.65935611214624,
+            "y": 0.5976568690519418,
+            "z": 285.99794478212357
+          },
+          "speedKmh": 21.77962042268999,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 186.00000000001606,
+          "position": {
+            "x": 99.79870422264773,
+            "y": 0.6059900959599792,
+            "z": 288.1856265172294
+          },
+          "speedKmh": 16.98768378353389,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 1217,
+        "simTime": 186.55833333334968,
+        "position": {
+          "x": 100.20124971907077,
+          "y": 0.6006164220070941,
+          "z": 291.04258875836183
+        },
+        "speedKmh": 18.403355135273817,
+        "rollDeg": -1.758891205075509,
+        "pitchDeg": -0.783878951664107,
+        "gLoad": 1.3600678441088627,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 22387,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 3,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 186.3166666666829,
+          "position": {
+            "x": 100.1315487667953,
+            "y": 0.5977249014668746,
+            "z": 289.67606705656317
+          },
+          "speedKmh": 21.174477275549908,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 186.8000000000167,
+          "position": {
+            "x": 99.96312807986803,
+            "y": 0.6011415441899499,
+            "z": 292.15559904898527
+          },
+          "speedKmh": 16.36847244236303,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 1220,
+        "simTime": 187.27500000001706,
+        "position": {
+          "x": 99.72976265136298,
+          "y": 0.6001426428884674,
+          "z": 294.7569511967581
+        },
+        "speedKmh": 19.288439880526674,
+        "rollDeg": 1.7785482664417223,
+        "pitchDeg": -0.7534982675654477,
+        "gLoad": 1.3634016147246328,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 22473,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 2,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 187.03333333335038,
+          "position": {
+            "x": 99.76486383470892,
+            "y": 0.5984914641388906,
+            "z": 293.32800511372267
+          },
+          "speedKmh": 21.912173121645935,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 187.43333333335082,
+          "position": {
+            "x": 99.89929222049585,
+            "y": 0.6065582136272157,
+            "z": 295.5361199977527
+          },
+          "speedKmh": 17.15816187457555,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 1223,
+        "simTime": 188.00000000001776,
+        "position": {
+          "x": 100.32781329372067,
+          "y": 0.6006708691370226,
+          "z": 298.43575885761743
+        },
+        "speedKmh": 18.42368297449206,
+        "rollDeg": -1.7582077654711032,
+        "pitchDeg": -0.789655065080182,
+        "gLoad": 1.3644134420030543,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 22560,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 3,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 187.75833333335098,
+          "position": {
+            "x": 100.2515462811502,
+            "y": 0.5976684979499949,
+            "z": 297.0674272909476
+          },
+          "speedKmh": 21.227357024990653,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 188.23333333335145,
+          "position": {
+            "x": 100.10386722116397,
+            "y": 0.6015475883643845,
+            "z": 299.5144108288194
+          },
+          "speedKmh": 16.38831043180301,
+          "rigidContactCount": 0
+        }
+      },
+      {
+        "line": 1226,
+        "simTime": 188.71666666668514,
+        "position": {
+          "x": 99.87296435984996,
+          "y": 0.6003379287018311,
+          "z": 302.1531660125068
+        },
+        "speedKmh": 19.27652343338975,
+        "rollDeg": 1.7713148811386557,
+        "pitchDeg": -0.7634147112959079,
+        "gLoad": 1.3732737727657243,
+        "wheelContacts": 4,
+        "rigidContactCount": 1,
+        "integration": {
+          "controlStep": 22646,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 8,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 8,
+          "wheelContactMicrosteps": 8,
+          "rigidContactMicrosteps": 4,
+          "maxWheelContacts": 4,
+          "maxRigidContacts": 1,
+          "reason": "approaching-hard-contact",
+          "objectId": "ground",
+          "observationPolicy": "ideal-state-at-each-integration-slice",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "onboardGasDeltaKg": 0,
+          "externalGasDeltaKg": 0,
+          "gasThroughputKg": 0,
+          "deliveredImpulseNs": 0
+        },
+        "previousSample": {
+          "simTime": 188.47500000001847,
+          "position": {
+            "x": 99.90184428134175,
+            "y": 0.5984907893157446,
+            "z": 300.72580028016233
+          },
+          "speedKmh": 21.92989576515038,
+          "rigidContactCount": 0
+        },
+        "nextSample": {
+          "simTime": 188.8750000000189,
+          "position": {
+            "x": 100.04591363428015,
+            "y": 0.6064091650272811,
+            "z": 302.9311838742529
+          },
+          "speedKmh": 17.13117863241864,
+          "rigidContactCount": 0
+        }
+      }
+    ],
+    "independentAnalysis": "rigid-contact-readonly.json",
+    "definition": "The vehicle compound rigid body includes four wheel bump-stop cylinders and four vehicle boxes. The count alone does not identify a body shell, wheel, contact object, contact point or severity.",
+    "readOnlyGeometryConclusion": "At the positive sampled poses the four vehicle boxes remain about 0.30 m above y=0; front wheel bump-stop cylinders slightly cross the ground plane. Ground is the only nearby static AABB candidate. This supports wheel hard-stop contact as an inference, not a captured Cannon pair.",
+    "remainingGap": "Actual contact pair/shape IDs, contact points, multipliers/forces/impulses and continuous contact timing were not captured. The 20 Hz experiment curve has no rigid-contact field. Zero contact or independently validated impact severity is not established."
+  },
+  "saveAndExport": {
+    "recordStatus": "completed",
+    "recordReason": "用户结束",
+    "persistence": {
+      "status": "saved",
+      "sessionOnly": false,
+      "message": "",
+      "unsavedIds": [],
+      "protectedArchive": false
+    },
+    "originalExports": [
+      {
+        "filename": "native-experiment.json",
+        "sourceFilename": "live-20261020195302900-1.json",
+        "bytes": 4149005,
+        "sha256": "23e2f26043f33ffdd8ef9515b1b780d8184eda66903c2f52cf4ae6e7454480b2",
+        "downloadFailure": null,
+        "automationObservedMs": 5968.403463999974,
+        "application": {
+          "status": "handed-off",
+          "filename": "live-20261020195302900-1.json",
+          "elapsedMs": 2382.7999999970198,
+          "snapshotMs": 0,
+          "serializeMs": 1945.7999999970198,
+          "blobMs": 0,
+          "bytes": 4149005,
+          "visited": 578548,
+          "characters": 4148893,
+          "error": null,
+          "browserCompletion": "unobservable",
+          "serializer": "worker",
+          "workerSerializeMs": 413.6000000089407,
+          "postMessageMs": 12.700000002980232
+        },
+        "record": {
+          "id": "live-20261020195302900-1",
+          "durationS": 190.4,
+          "stepCount": 22848,
+          "status": "completed",
+          "reason": "用户结束",
+          "identity": {
+            "modelVersion": "3.16.0",
+            "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
+            "sourceCommit": null,
+            "sourceTree": null,
+            "sourceIdentityStatus": "not-available",
+            "protocolVersion": "live-fixed-inputs-1",
+            "fixedHz": 120
+          },
+          "inputRuns": 1131,
+          "appliedInputRuns": 1131,
+          "events": 1141,
+          "summary": {
+            "source": "all fixed 120 Hz post-integration states; independent of stored display curve",
+            "version": 1,
+            "count": 22848,
+            "positionCount": 0,
+            "sumPositionSquared": 0,
+            "peakPositionErrorM": null,
+            "peakAttitudeErrorDeg": 100.3128198162344,
+            "allocationCount": 22848,
+            "saturatedCount": 0,
+            "gasThroughputKg": 0,
+            "onboardDischargedKg": 0,
+            "externalSupplyKg": 0,
+            "energyUsedKWh": 1.6623799643450188,
+            "peakSpeedMps": 6.480846830096131,
+            "minimumHeightM": 0.5951170143439259,
+            "maximumHeightM": 0.6083036050883612,
+            "rmsPositionErrorM": null,
+            "saturationFraction": 0,
+            "gasRemainingKg": 249.55820028489444,
+            "finalPosition": {
+              "x": 100.12062235290658,
+              "y": 0.5969960823514844,
+              "z": 309.0953674887831
+            },
+            "finalVelocity": {
+              "x": 3.3641213178419265e-05,
+              "y": 8.370663417592616e-05,
+              "z": -0.00022015604217458023
+            },
+            "finalQuaternion": {
+              "x": -5.565222291222895e-05,
+              "y": -0.025039361265108112,
+              "z": 4.451222449147156e-06,
+              "w": 0.9996864644829658
+            },
+            "finalAngularVelocity": {
+              "x": -0.0001952638798319384,
+              "y": 6.018487260546057e-09,
+              "z": -8.426717073605293e-05
+            },
+            "finalFault": null
+          }
+        }
+      }
+    ],
+    "byteHashMatched": true,
+    "timingScope": "Application handed-off elapsed time, worker serialization time and automation-observed browser download completion remain separate. The app does not claim to observe browser save completion."
+  },
+  "visualReview": [
+    {
+      "file": "01-native-start.png",
+      "actuallyOpened": true,
+      "pixelsEdited": false,
+      "observed": "Chase view shows the car, the lower Weave road, overhead structure and sky. The navigation displays the first left turn and 960 m remaining. Recording, four-wheel support and bench supply are visible; the mounted experimental rear assemblies are visible.",
+      "limits": "A single start image is not video and is not an atomic same-frame telemetry bundle. Software-renderer preview frame rate is not hardware performance."
+    },
+    {
+      "file": "02-native-end.png",
+      "actuallyOpened": true,
+      "pixelsEdited": false,
+      "observed": "The original UI displays Foundry vehicle entrance reached, 0 km/h and paused. Four experimental rear assemblies, lane markings, pavement borders and the lower street continue into the distance.",
+      "limits": "Foundry facade modules remain repetitive and simplified. The image shows the lower arrival area, not the maintenance court or an ascent to the upper road. It precedes ending/saving the live record."
+    }
+  ],
+  "errors": [
+    {
+      "type": "console",
+      "at": "2026-10-20T19:50:44.490Z",
+      "message": "Failed to load resource: the server responded with a status of 404 (File not found)"
+    }
+  ],
+  "errorScope": "One original console 404 lacks its URL in this operator journal. No pageerror was recorded. Its resource identity is not retrospectively inferred from a different capture.",
+  "limitations": [
+    "One original route from the legal city spawn, using real native keys and the existing physics. The external key chooser is QA operation, not human handling evaluation.",
+    "Lower Foundry entrance reached within the existing 8 m arrival radius; the vehicle did not need to touch the exact center coordinate. Upper-road ascent, maintenance court and the full drive-flight challenge remain untested by this run.",
+    "This x=100 northbound drive does not prove the separate transverse X crossing at z=-100. Its existing geometry-ray evidence is separate.",
+    "Existing bench supply, no wind, clear day and dry road. No flight thrust was requested; 0 kg gas throughput does not establish finite-air flight performance.",
+    "Native key receipts are complete in the original application journal; eight external returned lines and one collector telemetry-count difference are explicitly unresolved.",
+    "Geometry analysis does not replace unrecorded contact pair/force data, and the route is not described as compound-contact-free.",
+    "The two PNGs are original start/end stills, not a full route video. No RGB pixel edits or exposure postprocessing were performed."
+  ],
+  "files": [
+    {
+      "path": "01-native-start.png",
+      "role": "original-native-run-file",
+      "bytes": 523195,
+      "sha256": "591fb19fc3f410c06ea4c529c16bf79717b8e71baa2064ce87d4231426c215c1",
+      "dimensions": {
+        "width": 960,
+        "height": 540
+      },
+      "pixelsEdited": false
+    },
+    {
+      "path": "02-native-end.png",
+      "role": "original-native-run-file",
+      "bytes": 455327,
+      "sha256": "ea51e70b3f63b729d931cde10a395023ccff9c4f16c5c0b64172727d54c0ff80",
+      "dimensions": {
+        "width": 960,
+        "height": 540
+      },
+      "pixelsEdited": false
+    },
+    {
+      "path": "browser-errors.ndjson",
+      "role": "original-native-run-file",
+      "bytes": 147,
+      "sha256": "717dde40ec9c89d9866120b236bad19adf316173c8b520331bc3540e4c22f853"
+    },
+    {
+      "path": "key-decisions.ndjson",
+      "role": "original-native-run-file",
+      "bytes": 556359,
+      "sha256": "26c84b55fa22bd79e9988c8e7a2b0302a1e7ef2231ae7ecf6f74c62c7dadd70e"
+    },
+    {
+      "path": "key-requests.ndjson",
+      "role": "original-native-run-file",
+      "bytes": 417243,
+      "sha256": "b04f67778a83d460212e5c131c2f4073a1eabdea265bcee5c77d8e847d02d12c"
+    },
+    {
+      "path": "native-experiment.json",
+      "role": "original-native-run-file",
+      "bytes": 4149005,
+      "sha256": "23e2f26043f33ffdd8ef9515b1b780d8184eda66903c2f52cf4ae6e7454480b2"
+    },
+    {
+      "path": "plan.json",
+      "role": "original-native-run-file",
+      "bytes": 1737,
+      "sha256": "800abe9db3cad0e0c150499a4ad62388f1188794e19c2e9da5cb047d213b3e6c"
+    },
+    {
+      "path": "received-input-events.ndjson",
+      "role": "original-native-run-file",
+      "bytes": 143988,
+      "sha256": "69bc9aa2c9011dc14d6945fb18fa82826521a2bff016002a61efb93da63da40f"
+    },
+    {
+      "path": "report.json",
+      "role": "original-native-run-file",
+      "bytes": 227457,
+      "sha256": "6a0818a49f17e00747cc9813e9a6cf4ba59ed37ec1e02493117cb3ee75d6e083"
+    },
+    {
+      "path": "telemetry-navigation.ndjson",
+      "role": "original-native-run-file",
+      "bytes": 29833041,
+      "sha256": "6f56ff1a03368d646d47c2440e58ec474d5231aa158690021c004766a2499b44"
+    },
+    {
+      "path": "ui-actions.ndjson",
+      "role": "original-native-run-file",
+      "bytes": 6716,
+      "sha256": "7d35c2b60a5ab32f1da2fd68490a9f179cdb2ff5ef89d8a05e06d44c7b4e1399"
+    },
+    {
+      "path": "console.log",
+      "role": "original-process-output",
+      "bytes": 12753,
+      "sha256": "bf610a86ce11ab8108e9068f64d131e44ba8e37f5c5ef846ab99b2a2dc423217"
+    },
+    {
+      "path": "rigid-contact-readonly.json",
+      "role": "independent-read-only-geometry-analysis",
+      "bytes": 310314,
+      "sha256": "8f499b7d3cf33ae0cf868fbfef3ee8723e7df8cc33ec3bc2f58a1e1ab6913d3c"
+    }
+  ]
+}

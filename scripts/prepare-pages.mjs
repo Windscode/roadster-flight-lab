@@ -1,5 +1,5 @@
-// Publish reviewed, version-controlled runtime and explicitly listed QA payloads.
-// Local reference images outside these lists are not publication inputs.
+// Prepare version-controlled runtime and explicitly listed evidence locally.
+// Creating this directory is not a GitHub upload or publication authorization.
 import {spawnSync} from 'node:child_process';
 import {restorePayloads,readPayloadManifest} from './repository-payloads.mjs';
 restorePayloads({strict:true});
@@ -10,6 +10,7 @@ import {fileURLToPath} from 'node:url';
 import {tmpdir} from 'node:os';
 import {MODEL_BUILD_ID,MODEL_SOURCE_HASHES} from '../dist/model-build.js';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
+import {planPagesEvidence,assertValidationEvidenceCoverage,copyPagesEvidence,assertRuntimeSourceBrowseCopies} from './pages-evidence.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url)),output=resolve(root,'.pages-site');
 function gitText(args){
@@ -34,9 +35,17 @@ for(const [file,expected]of Object.entries(MODEL_SOURCE_HASHES)){
   const actual=createHash('sha256').update(readFileSync(resolve(root,'dist',file))).digest('hex');
   if(actual!==expected)throw Error('Model source differs from recorded build: '+file);
 }
-const packedRuntime=readPayloadManifest(root).files.filter(entry=>entry.path.startsWith('dist/')).map(entry=>entry.path);
+const payloadManifest=readPayloadManifest(root);
+const packedRuntime=payloadManifest.files.filter(entry=>entry.path.startsWith('dist/')).map(entry=>entry.path);
 const files=[...new Set([...gitText(['ls-files','-z','--','dist']).split('\0').filter(Boolean),...packedRuntime])];
 if(!files.length)throw Error('No tracked runtime files');
+const release=MODEL_VERSION.split('.').slice(0,2).join('.');
+const evidencePlan=planPagesEvidence({root,listFile:'scripts/pages-evidence-files-'+release+'.json',release,
+  // Read the full tracked inventory to verify explicitly listed source/notes
+  // categories as well as QA/docs. This does not add paths to the copy list.
+  trackedPaths:gitText(['ls-files','-z']).split('\0').filter(Boolean),
+  packedEntries:payloadManifest.files.filter(entry=>entry.path.startsWith('qa/'))});
+const evidenceCoverage=assertValidationEvidenceCoverage(JSON.parse(readFileSync(resolve(root,'dist/validation.json'),'utf8')),evidencePlan.files.map(entry=>entry.path));
 mkdirSync(output);
 let bytes=0,count=0;
 for(const file of files){
@@ -47,15 +56,19 @@ for(const file of files){
   mkdirSync(dirname(target),{recursive:true});copyFileSync(source,target);bytes+=lstatSync(source).size;count++;
 }
 for(const name of ['LICENSE','THIRD-PARTY-NOTICES.md'])copyFileSync(resolve(root,name),resolve(output,name));
-// Public numerical/raw-image evidence is explicitly listed in the reviewed
-// payload manifest. It is downloaded only when its link is opened.
-let evidenceFiles=0,evidenceBytes=0;
-for(const entry of readPayloadManifest(root).files.filter(entry=>entry.path.startsWith('qa/'))){
-  const source=resolve(root,entry.path),target=resolve(output,entry.path);
-  mkdirSync(dirname(target),{recursive:true});copyFileSync(source,target);evidenceFiles++;evidenceBytes+=entry.bytes;
-}
-for(const entry of ['index.html','app.js','app-shell.js','research.html','research-panel.html','vehicle-inspection.html','experiment-worker.js','experiment-replay-worker.js','assets/music/manifest.json','assets/music/CREDITS.txt','assets/irradiance/manifest.json','assets/night-irradiance/manifest.json','night-city-lighting.js','city-frontage-design.js','driving-capture.js','inspection-capture.js','capture-archive.js'])if(!existsSync(resolve(output,entry)))throw Error('Missing public entry: '+entry);
+// Keep every immutable QA payload, and copy ordinary generated reports from
+// the explicit tracked-path list. Content identities are measured for this
+// preparation; changing createdAt on a later test does not require repacking.
+const evidence=copyPagesEvidence({root,output,plan:evidencePlan});
+const sourceBrowseVerification=assertRuntimeSourceBrowseCopies({output,files:evidence.files});
+const evidenceFiles=evidence.fileCount,evidenceBytes=evidence.bytes;
+for(const entry of ['index.html','app.js','app-shell.js','research.html','research-panel.html','vehicle-inspection.html','experiment-worker.js','experiment-replay-worker.js','landing-research-worker.js','export-worker.js','export-encoder.js','export-download.js','assets/music/manifest.json','assets/music/CREDITS.txt','assets/irradiance/manifest.json','assets/night-irradiance/manifest.json','assets/night-direct-irradiance/manifest.json','night-city-lighting.js','city-frontage-design.js','driving-capture.js','inspection-capture.js','capture-archive.js'])if(!existsSync(resolve(output,entry)))throw Error('Missing public entry: '+entry);
 const sourceCommit=gitText(['rev-parse','HEAD']).trim();
 const sourceTree=gitText(['rev-parse','HEAD^{tree}']).trim();
-writeFileSync(resolve(output,'deployment.json'),JSON.stringify({application:'roadster-flight-lab',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,sourceCommit,sourceTree,sourceRepository:'https://github.com/Windscode/roadster-flight-lab',runtimeFiles:count,runtimeBytes:bytes,evidenceFiles,evidenceBytes},null,2)+'\n');
-console.log(JSON.stringify({status:'ready',directory:'.pages-site',runtimeFiles:count,runtimeBytes:bytes,modelBuildId:MODEL_BUILD_ID}));
+const evidenceManifest={schema:'roadster.prepared-evidence',version:1,preparedAt:new Date().toISOString(),modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,sourceCommit,sourceTree,
+  scope:'Exact evidence bytes copied into this local candidate. Not a public upload receipt or a new immutable-payload contract.',
+  immutablePayloadManifest:{path:'repository-payloads/manifest.json',sha256:createHash('sha256').update(readFileSync(resolve(root,'repository-payloads/manifest.json'))).digest('hex'),entries:payloadManifest.files.length,runtimeEntries:packedRuntime.length,qaEntries:evidencePlan.packedEntries},
+  ordinaryList:evidencePlan.list,validationCoverage:evidenceCoverage,sourceBrowseVerification,...evidence};
+const evidenceManifestBytes=Buffer.from(JSON.stringify(evidenceManifest,null,2)+'\n');writeFileSync(resolve(output,'evidence-manifest.json'),evidenceManifestBytes);
+writeFileSync(resolve(output,'deployment.json'),JSON.stringify({application:'roadster-flight-lab',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,sourceCommit,sourceTree,sourceRepository:'https://github.com/Windscode/roadster-flight-lab',runtimeFiles:count,runtimeBytes:bytes,evidenceFiles,evidenceBytes,evidenceManifest:{path:'evidence-manifest.json',sha256:createHash('sha256').update(evidenceManifestBytes).digest('hex')}},null,2)+'\n');
+console.log(JSON.stringify({status:'ready',directory:'.pages-site',runtimeFiles:count,runtimeBytes:bytes,evidenceFiles,evidenceBytes,modelBuildId:MODEL_BUILD_ID}));

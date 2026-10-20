@@ -4,17 +4,17 @@
 
 本轮继续 3.15 的原城，重点处理 **Weave 细街 → Central Cross Street → Foundry → 原有上层连接** 的连续空间，同时给原有普通网格街道补足可辨认的路边与夜间灯光。没有改写原来的街区布置、路网拓扑和高架路径。道路外的大面积沥青被明确区分为平齐的矿物铺装前场，横街有清楚的车道组织、座椅树池与候车设施；Foundry 过渡段的人行边界接续原有北段。所有实际新增的凸起支撑仍进入既有物理世界。[连续性报告](../qa/city-continuity-3.16.json)和[专项报告](../qa/city-quality-3.16.json)分别记录保留条件、实际几何检查及其局限。
 
-最终已用本地 Chrome 155 的 **WebGL2 / ANGLE SwiftShader** 实际渲染，保存并逐张打开 **10 组原 3.15 / 最终 3.16 同条件对照，加两张最终主城座舱原图**。最终构建为 `81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2`；12 个候选同帧包均有完整、通过的实际逐 draw 审计。宽大道的车道与前场、人行边界、细街湿铺装、底层暖窗和道路反射有可见变化；宽大道两侧仍较空、远景方楼重复、夜间高层实体偏暗，Foundry 维护庭仍欠照明。这是实际栅格图的局部改善，不能据此声称整城已达到照片级或玩家机器上的帧率目标。[全部原图对照](../qa/city-native-3.16/index.html)、[严格条件与绘制报告](../qa/city-native-3.16/report.json)、[逐张画面评审](../qa/city-native-3.16/visual-review.json)
+本地 Chrome 155 的 **WebGL2 / ANGLE SwiftShader** 已实际渲染并保存 **10 组原 3.15 / 3.16 同条件对照，加两张主城座舱原图**，全部逐张打开评审。这 12 张的实际采集检查点为 `81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2`，每个同帧包均有完整、通过的实际逐 draw 审计。随后 `28e9bc41…` 只修改诊断 PNG 调度及阶段记录，已另行完成原 1280×720、原 14 个场景与原 20 s 期限的矩阵；原图没有改标为新构建重拍。宽大道的车道与前场、人行边界、细街湿铺装、底层暖窗和道路反射有可见变化；宽大道两侧仍较空、远景方楼重复、夜间高层实体偏暗，Foundry 维护庭仍欠照明。这是实际栅格图的局部改善，不能据此声称整城已达到照片级或玩家机器上的帧率目标。[全部原图对照](../qa/city-native-3.16/index.html)、[严格条件与绘制报告](../qa/city-native-3.16/report.json)、[逐张画面评审](../qa/city-native-3.16/visual-review.json)、[28e9 原矩阵](../qa/capture-matrix-native-3.16/index.html)
 
-下图来自上述最后构建，已包含完整门灯安装、Foundry 横路修复、保留逐窗表面的预算修复和同步烘焙。PNG 与条件 JSON 来自应用已有的同帧 ZIP，未经裁切、补绘、重着色或生成图替代。较早的局部材料开发图和失败原件继续保留在本报告后文，身份没有改写。
+下图来自上述 81926 实际检查点，已包含完整门灯安装、Foundry 横路修复、保留逐窗表面的预算修复和同步烘焙。PNG 与条件 JSON 来自应用已有的同帧 ZIP，未经裁切、补绘、重着色或生成图替代。较早的局部材料开发图和失败原件继续保留在本报告后文，身份没有改写。
 
-![最终 3.16 Crosstown，湿夜 high，1280×720，曝光 1.02，原始同帧 PNG](../qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-wet-night.png)
+![3.16 检查点 81926 Crosstown，湿夜 high，1280×720，曝光 1.02，原始同帧 PNG](../qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-wet-night.png)
 
-## 最后构建的实际画面覆盖
+## 81926 实际检查点的画面覆盖
 
 所有对照保持 1280×720、high、原固定相机、静止物理状态和相同天气；晴天曝光 0.87，湿夜 1.02。实际导出的相机位置与四元数、投影、分辨率、车辆位置/姿态/速度、暂停状态、灯态和曝光逐项比较，10 对全部一致（数值容差 1e-9）。装饰动画的墙钟时间不同，未把它声称为逐像素时间同步。以下每个链接均是完整分辨率原 PNG；[对照页](../qa/city-native-3.16/index.html)同时展示原 3.15，并链接每张同帧 JSON。
 
-| 既有视点 | 最终白天 / 湿夜原图 | 实际观察与限制 | 候选白天 / 湿夜 draw |
+| 既有视点 | 81926 检查点白天 / 湿夜原图 | 实际观察与限制 | 候选白天 / 湿夜 draw |
 | --- | --- | --- | --- |
 | Weave 入口细街 | [白天](../qa/city-native-3.16/candidate/roadster-3.16.0-weave-entry-clear-day.png) · [湿夜](../qa/city-native-3.16/candidate/roadster-3.16.0-weave-entry-wet-night.png) | 原密度保留，湿人行道较暗且可读；店面灯池与路面反射有层次，部分近立面亮斑仍强，上层和局部街角仍暗 | 1,658 / 1,851 |
 | Crosstown 宽大道 | [白天](../qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-clear-day.png) · [湿夜](../qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-wet-night.png) | 车道、矿物前场、树池座椅可见，暖窗让楼层秩序可辨；两侧仍空旷，远景方楼与简化山体重复，夜间塔身仍暗 | 755 / 803 |
@@ -23,12 +23,16 @@
 | 原上层连接 | [白天](../qa/city-native-3.16/candidate/roadster-3.16.0-terrace-arrival-clear-day.png) · [湿夜](../qa/city-native-3.16/candidate/roadster-3.16.0-terrace-arrival-wet-night.png) | 原路径与护栏保留，真实护栏灯照到近处路面与栏杆；近灯高光仍明显剪切且 bloom 呈方块感，上层远处仍暗；不是完成爬升记录 | 543 / 382 |
 | 主城真实座舱 | [白天](../qa/city-native-3.16/candidate/roadster-3.16.0-cockpit-clear-day.png) · [湿夜](../qa/city-native-3.16/candidate/roadster-3.16.0-cockpit-wet-night.png) | 上半幅可见真实街道、天空、廊桥和店面；A 柱/门顶/仪表台有实际光照响应，仪表与材料仍简化。未新增同镜头旧座舱对照声明 | 1,892 / 1,708 |
 
-原 3.15 采集前已把全部 271 个网站文件与原候选 ZIP 逐字节核验，每张同帧 JSON 保留原构建和光场身份；采集后还有完整 161 源/三场实际 fetch 核验。来源帮助器在这 10 张采集之后才加入，不能倒写成原报告已有前后两次 fetch。最终 3.16 的 12 张则在同一个独立浏览器会话采集，前后实际 fetch 核验全部 172 个声明源及三场八个体积，两端都匹配最后构建。[原文件核验](../qa/city-native-3.16/baseline-candidate-file-verification.json)、[原基线后验 served 核验](../qa/city-native-3.16/baseline-served-source-audit.json)、[最终会话完整报告](../qa/city-native-3.16/candidate-collection-report.json)
+原 3.15 采集前已把全部 271 个网站文件与原候选 ZIP 逐字节核验，每张同帧 JSON 保留原构建和光场身份；采集后还有完整 161 源/三场实际 fetch 核验。来源帮助器在这 10 张采集之后才加入，不能倒写成原报告已有前后两次 fetch。检查点 81926 的 12 张则在同一个独立浏览器会话采集，前后实际 fetch 核验全部 172 个声明源及三场八个体积，两端都匹配 81926 检查点构建。[原文件核验](../qa/city-native-3.16/baseline-candidate-file-verification.json)、[原基线后验 served 核验](../qa/city-native-3.16/baseline-served-source-audit.json)、[81926 会话完整报告](../qa/city-native-3.16/candidate-collection-report.json)
 
-原 3.15 若干湿夜反射 draw 的 GL 1282 仍保留在原始 JSON，并没有为了对照将其删掉。因此“原图有效”不等于“原基线绘制链无错”。最后 Crosstown 湿夜同帧报告实际执行了 512×288 湿路反射 FBO 刷新，其中有 171 个真实 draw；先前会反馈读写的 5 个沥青 draw 全部没有 pre-draw、draw 或 diagnostic GL 错误。该证据包含真正写入反射目标的过程，不是复用缓存纹理的通过帧。[最后实际湿路刷新同帧报告](../qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-wet-night.json)
+原 3.15 若干湿夜反射 draw 的 GL 1282 仍保留在原始 JSON，并没有为了对照将其删掉。因此“原图有效”不等于“原基线绘制链无错”。81926 Crosstown 湿夜同帧报告实际执行了 512×288 湿路反射 FBO 刷新，其中有 171 个真实 draw；先前会反馈读写的 5 个沥青 draw 全部没有 pre-draw、draw 或 diagnostic GL 错误。该证据包含真正写入反射目标的过程，不是复用缓存纹理的通过帧。[81926 实际湿路刷新同帧报告](../qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-wet-night.json)
 
 <!-- NATIVE_CITY_MATRIX_316_BEGIN -->
-14 帧逐 draw 矩阵仍单独验收。首次最终构建 1280×720 尝试完成了第一案例的普通暂停绘制（1,209 draw，全部通过），随后其 PNG 导出超过应用原有 20 s `requestProgramFrame` 期限；0/14 个完整矩阵帧，物理状态保持，shaderFailures 为 0，不能标为矩阵通过。完整失败 JSON、普通帧 `partialAudit` 与原始 ZIP 保留。800×450 的第二次独立尝试使用相同 14 个案例、相同绘制门槛和相同应用期限，当前结果另行补记；软件渲染/回读延迟尚不作为已证实根因。[原 1280 失败及完整 partialAudit](../qa/city-native-3.16/matrix-1280-failed/gpu-switch-matrix.json)
+14 帧逐 draw 矩阵仍单独验收。`81926b47…` 的 1280×720 尝试完成了第一案例的普通暂停绘制（1,209 draw，全部通过），随后请求完整导出绘制和 PNG 的应用原有 20 s `requestProgramFrame` 期限触发；0/14 个完整矩阵帧。该期限从排队开始，不能把总耗时当作 PNG 编码时间。完整失败 JSON、前一个普通帧的 `partialAudit` 与原始 ZIP 保留。[原 1280 失败及完整 partialAudit](../qa/city-native-3.16/matrix-1280-failed/gpu-switch-matrix.json)
+
+同一构建的 800×450 第二次尝试保留了原 14 个案例、逐 draw 门槛和 20 s 期限，完成 4 张原 PNG、8 个通过的普通/导出 draw 审计；第 5 案例 `03-ultra-wet-night-viaduct` 的普通帧通过 1,458 draw 后，完整导出请求再次触发应用期限。物理状态保持，shaderFailures 为 0，仍是 **4/14，矩阵未通过**。这两次是应用实际 deadline，不能归为浏览器工具下载挂起。4 张原图已逐张打开评审；[第二次完整失败报告](../qa/city-native-3.16/matrix-800x450-failed/gpu-switch-matrix.json)与[独立逐图记录](../qa/city-native-3.16/matrix-800x450-failed/visual-review.json)均保留。
+
+源码核查确认：旧暂停主循环在 PNG 回调等待期间仍重复提交场景与 composer；旧失败记录也没有保存失败导出自身的阶段。`28e9bc41…` 修复这条暂停调度，维持 rAF、DOM 取消和 `lastTime`，不改变驾驶中物理推进，并增加已有任务的轻量阶段时间与自身审计。10 组实际函数抽取检查及 55 项相关原门槛通过后，已完成 **原 1280×720、原 14 case、原期限的原生复验**：14 张原 PNG、28 个普通/导出实际 draw 审计全部通过，前后 172 源/三场八体积身份一致，14 张原图逐张打开评审。实测请求至回调 3.433–13.232 s，均低于原 20 s；同步 `toBlob` 跨度与回调调度分别保存，未冒称纯编码耗时。两个旧失败原件仍保留。[完整新矩阵与逐图记录](../qa/capture-matrix-native-3.16/index.html)、[修复和阶段范围](capture-scheduler-3.16.md)
 <!-- NATIVE_CITY_MATRIX_316_END -->
 
 ## 3.15 继承核查
@@ -165,7 +169,9 @@ Weave 的样本能量下降与本轮压低过亮地面的方向一致，Crosstow
 
 早期开发阶段，Weave 的若干页面截图和下载在自动化 45 s 时限下超时，降低至 800×450 的一次截图仍超时；与此同时 Crosstown 页面和原生 PNG 已真实成功，且没有观察到对应的应用异常或 WebGL 上下文丢失。这里如实记录自动化未完成，不能直接诊断为应用导出失败、城市缺绘、没有 WebGL，或把用户早先 42 分钟工具挂起当成同一故障。[包含失效基线在内的完整错误摘要](../qa/city-pixels-3.16/capture-errors.json)
 
-本专项的固定照片和数值检查不能单独证明完整 Weave→Foundry→上层原生驾驶已经完成、所有区块运动中都无闪烁，或某档已达到指定 GPU 帧时。14 帧矩阵另按前文实际原始结果判定，不由固定照片的通过项数量替代。原生路线由其连续键盘与遥测记录判断。
+本专项的固定照片和数值检查不能单独证明完整 Weave→Foundry→上层原生驾驶已经完成、所有区块运动中都无闪烁，或某档已达到指定 GPU 帧时。14 帧矩阵另按前文实际原始结果判定，不由固定照片的通过项数量替代。
+
+之后已在 `28e9bc41…` 上另行完成一次从合法出生点经 Weave、Crosstown 到 Foundry **下层车行入口**的连续真实按键驾驶。现有导航显示抵达并刹停，保存/下载了 190.4 s、22,848 步的完整原生输入记录。1,130 个实际驾驶接收事件与请求顺序完全一致；25 个末片刚体计数阳性和 26 个微步阳性样本、8 个缺少 `returned` 的外部日志条目，以及遥测原计数 1 行差异分别保留。复合刚体包括车轮硬限位，计数本身不能识别车壳或接触冲量；独立只读几何分析单列。原有上层坡道、维护庭和横向 `z=-100` 穿越均不由这条下层路线代替。[原生驾驶报告及完整原件](native-city-drive-3.16.md)
 ## 补充：新开发图中的深色道路矩形身份
 
 车辆专项提供的实际开发图里，车前侧的深色矩形已经与源码对应：[原 PNG](../qa/city-pixels-3.16/road-cover-316-development.png)、[坐标与投影证据](../qa/road-cover-identification-3.16.json)。它是 `city-environment.js` 中现有 Weave 检修盖板序列的第 3 块，中心 `[-198,0.032,-341]`、尺寸 `1.3×0.014×1.3 m`、Y 轴旋转 `1.4 rad`，使用钢材。按该开发图已记录车辆位姿和原有 orbit 相机重建投影，四角约为 `(390,730)`、`(578,665)`、`(702,743)`、`(498,834)`，与图中矩形吻合。

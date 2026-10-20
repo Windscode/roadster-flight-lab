@@ -21,9 +21,9 @@ Roadster Flight Lab 是一个中等规模、可玩的车辆与飞行仿真研究
 
 ### 实际验证到哪里
 
-本轮已有真实 Chrome / WebGL2 车模原图，并逐张查看了 34 张渲染帧和另计的 4 张 UI 图；也继承用户电脑上已经运行的 3.15 城市、操控观察和研究流程。数值求解、独立接触几何、历史记录、DOM 接线和实际像素各有记录，不能相互替代。最终城市后图、连续驾驶和逐 draw／14 帧检查按各自构建列在[采集说明](docs/candidate-capture-3.16.md)，旧图的原身份保留。
+最新 `28e9bc41…` 构建整轮 **100 个执行项／607 条声明断言通过**，原 1280×720 图形矩阵 **14／14 帧、28 次普通／导出逐 draw 检查通过**，源文件与三套光场前后相同。另有真实短按 X、实际爬升后的完整俯仰与 G 回平、新研究任务保存／刷新／返回及真实下载。车模、城市前后原图也逐张审阅，保留硬面、暗部等不足。数值、DOM、像素和原生过程按各自构建列在[采集说明](docs/candidate-capture-3.16.md)，旧图不改身份；用户电脑上原 3.15 的已通过研究流程继续有效。
 
-- **完整地面起始 W / E / 1 后翻仍未获验收。** W / E / 1 同时输入、按键是否收到、G 松键后的回平请求都有观察入口；累计某轴超过 360° 不能单独证明干净完成后翻。实际恢复仍受初态、推力／力矩、供气和净空约束。
+- **地面起始 W / E / 1 的两组原生后翻与回平失败。** 持续 W 后追加 E／1 已到达求解器、G 正确让权；实际只到约 196°，倒置接地后 G 受限。独立真实爬升至 123.58 m 的组完成一圈并回平，连续俯仰／恢复记录无接触，但消耗大量外供气体；它不能替代地面和有限气源验收。
 - **90 km/h、10 cm 严重撞阶的完整轨迹未收敛。** 已补独立几何、60 / 120 / 240 Hz 及更细步长对照，并修支撑缺陷；大冲量和保留反例不包装为合理物理上限或已认证结果。[接触证据](qa/contact-convergence-3.16.json)
 - **新图使用 ANGLE SwiftShader 软件 GPU。** 这是实际 WebGL 绘制，不能据此推断用户显卡的帧率、显存或操控手感。车模的硬朗外轮廓、部分立面重复和简化座舱仍清楚可见。
 
@@ -33,9 +33,9 @@ Roadster Flight Lab 是一个中等规模、可玩的车辆与飞行仿真研究
 
 ## 本轮车辆实际画面
 
-![3.16 车辆组件实际 WebGL 后图：前四分之三棚光，原拍摄构建 2d88af03](qa/vehicle-native-3.16/study/studio-front-quarter-current.png)
+![3.16 最后构建 28e9bc41 实际补拍：前四分之三棚光](qa/vehicle-final-28e9-3.16/studio-front-quarter/surface-mvh3ixdo-275399e7-442d-4fe1-a931-07e39e513275-current-3.16.png)
 
-*900×720、ultra、固定棚光，原始拍摄构建为 `2d88af03b1867667f85f6a638b12648424a378450636bd400ba0095b3341acfa`。这是本轮车辆实改后图。封闭石墨鼻面、下部开口、轮毂和玻璃层次可见，前鼻与门侧仍偏硬朗。*
+*900×720、ultra、固定棚光，实际补拍构建为 `28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f`。原生 ZIP、同帧条件和源码核对均保留。石墨鼻面、下部开口、轮毂和玻璃层次可见；宽方鼻部、偏硬的肩部与门侧仍是本轮限制。下表保留原 `2d88…` 采集的同条件矩阵，没有改换其身份。*
 
 | 同机位、同光照 | 3.15 冻结参考 | 本轮 3.16 车辆组件 |
 | --- | --- | --- |
@@ -44,18 +44,22 @@ Roadster Flight Lab 是一个中等规模、可玩的车辆与飞行仿真研究
 | 实验座舱棚光 | [原图](qa/vehicle-native-3.16/study/studio-cabin-reference.png) | [后图](qa/vehicle-native-3.16/study/studio-cabin-current.png) |
 | 原车双座座舱棚光 | [原 3.15 页面](qa/vehicle-native-3.16/stock/studio-cabin-3.15.png) | [3.16 页面](qa/vehicle-native-3.16/stock/studio-cabin-3.16.png) |
 
-前三项使用同一检视渲染器和冻结 3.15 车模；双座补图分别来自原 3.15 页面和 3.16 页面，以 PNG 前后状态夹证关联，未称原子同帧条件。完整目录有 **24 张技术矩阵 + 8 张原车补图**，另有单独的主城座舱图。[32 张检视组件到 `c12a…` 的继承核验](qa/vehicle-native-3.16/component-inheritance-c12a.json)保留全部源码差分，并明确生成身份文件的变化；该结论只适用于所写目标构建。最后 `81926…` 构建已完成[独立依赖重核](qa/vehicle-final-3.16/README.md)：城市碰撞模块已变，完整静态闭包并非同字节；固定棚内渲染输入未找到受该远处人行带修正影响的数据通路。这是条件化调用推论，不是 32 张最后构建新拍，城市与 UI 均排除。两张同条件最后构建补图待 GPU 窗口，原图身份保持不变。[完整图片与来源](qa/vehicle-native-3.16/README.md) · [最终候选证据范围](docs/candidate-capture-3.16.md)
+前三项来自原 `2d88…` 检视采集，使用同一渲染器和冻结 3.15 车模；双座补图分别来自原 3.15 页面与原 `2d88…` 页面，以 PNG 前后状态夹证关联，未称原子同帧条件。完整目录保留 **24 张技术矩阵 + 8 张原车补图**，主城座舱另计。[c12a 组件核验](qa/vehicle-native-3.16/component-inheritance-c12a.json)与[81926 依赖重核](qa/vehicle-final-3.16/README.md)均保留原目标和原字节。最新 [28e9 依赖审阅](qa/vehicle-final-28e9-3.16/dependency-review-28e9.json)仍明确：城市碰撞模块与生成身份文件存在静态闭包差异；固定棚内输入的影响判断属于有限条件的数据流推论，城市与 UI 均排除。
+
+此后已实际补拍最后 `28e9…` 构建的[前侧](qa/vehicle-final-28e9-3.16/studio-front-quarter/surface-mvh3ixdo-275399e7-442d-4fe1-a931-07e39e513275-current-3.16.png)与[座舱](qa/vehicle-final-28e9-3.16/studio-cabin/surface-mvh3j1xu-bd493abd-d187-41dc-b2fc-2dc7d023b526-current-3.16.png)两张原 PNG，使用原 900×720 画布、机位、棚光、材质与关节状态。**这两个新拍 PNG 的 SHA-256 分别与原 `2d88…` 对应 PNG 相同**，结论只适用于这两个真实重拍机位，不将其余 30 张旧检视图改成新拍。[两图、条件与逐张评审](qa/vehicle-final-28e9-3.16/README.md) · [原完整图片与来源](qa/vehicle-native-3.16/README.md) · [最终候选证据范围](docs/candidate-capture-3.16.md)
 
 <!-- CITY_SHOWCASE_316_BEGIN: replace only with identity-verified final city evidence. -->
 ### 城市本轮原图 · 3.16
 
-![3.16 最终构建 Crosstown 日间：车道、人行边界与矿物铺装前场](qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-clear-day.png)
+![3.16 实际采集检查点 Crosstown 日间：车道、人行边界与矿物铺装前场](qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-clear-day.png)
 
-![3.16 最终构建 Crosstown 湿夜：实际路面反射、连续灯池与较低亮度的暖窗](qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-wet-night.png)
+![3.16 实际采集检查点 Crosstown 湿夜：实际路面反射、连续灯池与较低亮度的暖窗](qa/city-native-3.16/candidate/roadster-3.16.0-crosstown-wet-night.png)
 
-以上是最终本地构建 `81926b47…` 的 **1280×720 原始 WebGL PNG**，未经裁切或亮度后处理。白天和湿夜分别锁定曝光 0.87 / 1.02；[原 3.15 白天](qa/city-native-3.16/baseline/roadster-3.15.0-crosstown-clear-day.png)与[原 3.15 湿夜](qa/city-native-3.16/baseline/roadster-3.15.0-crosstown-wet-night.png)使用相同相机、车辆状态、画质和曝光。前场铺装、路口前中止的车道线、树池座椅和灯光层次均来自现有城市的实际改动。
+以上是实际采集检查点 `81926b47…` 的 **1280×720 原始 WebGL PNG**，未经裁切或亮度后处理。白天和湿夜分别锁定曝光 0.87 / 1.02；[原 3.15 白天](qa/city-native-3.16/baseline/roadster-3.15.0-crosstown-clear-day.png)与[原 3.15 湿夜](qa/city-native-3.16/baseline/roadster-3.15.0-crosstown-wet-night.png)使用相同相机、车辆状态、画质和曝光。前场铺装、路口前中止的车道线、树池座椅和灯光层次均来自现有城市的实际改动。
 
-[完整 10 组原图对照及两张主城座舱](qa/city-native-3.16/index.html)涵盖 Weave、Crosstown、跨区路口、机造维护庭与上层连接；[来源与逐 draw 报告](qa/city-native-3.16/report.json)和[逐张画面评审](qa/city-native-3.16/visual-review.json)保留具体范围。这些固定照片尚不能证明完整导航路线已驶通。宽大道两侧仍较空，远景方楼重复、湿夜高层实体偏暗，机造维护庭照明仍不足；本轮没有将这些剩余问题写成整城 3A 完成。[城市专项](docs/city-quality-3.16.md) · [本轮实际验收](docs/acceptance-3.16.md)
+当前 `28e9bc41…` 在此检查点之后仅修复暂停诊断 PNG 的重复渲染调度及阶段记录；城市、车模和三种光场输入保持同字节。它已在原 1280×720、原 14 场景和原 20 s 请求期限下完成 **14 张真实原图、28 个通过的普通/导出逐 draw 审计**，并逐张审读。[新构建原矩阵与阶段证据](qa/capture-matrix-native-3.16/index.html)保留独立来源；这里的 12 张固定城市图仍标为 `81926b47…`，没有改写成新构建重拍。
+
+[完整 10 组原图对照及两张主城座舱](qa/city-native-3.16/index.html)涵盖 Weave、Crosstown、跨区路口、机造维护庭与上层连接；[来源与逐 draw 报告](qa/city-native-3.16/report.json)和[逐张画面评审](qa/city-native-3.16/visual-review.json)保留具体范围。随后已在 `28e9bc41…` 另行完成一次真实按键的 **Weave → Crosstown → Foundry 下层车行入口**连续驾驶、刹停和原生记录导出，保存 190.4 s / 22,848 步；它不覆盖上层或维护庭。[实际路线报告](docs/native-city-drive-3.16.md)保留 compound 刚体接触采样及外部日志缺口。宽大道两侧仍较空，远景方楼重复、湿夜高层实体偏暗，机造维护庭照明仍不足；本轮没有将这些剩余问题写成整城 3A 完成。[城市专项](docs/city-quality-3.16.md) · [本轮实际验收](docs/acceptance-3.16.md)
 <!-- CITY_SHOWCASE_316_END -->
 
 ## 已继承的 3.15 成果
@@ -81,7 +85,7 @@ Roadster Flight Lab 是一个中等规模、可玩的车辆与飞行仿真研究
 
 X 保留独立的 `quick-roll-1`：短起跳、快速滚转，再通过实际喷力制动与返回。短按后可在 HUD 查是否接收、当前阶段和结束回执，动作未启动时也保留可读原因。气源、初始姿态 / 角速度或上方净空不合适时，显示具体拒绝原因。3.13 真人恒压记录已完成滚转并最终返回 DRIVE，也记录了超调；这不保证精确 360°、原地落点或所有初态成功。
 
-本轮完整 3.15 对照站也已接收原生 X，采到滚转／着陆阶段并返回 DRIVE；该次工具虽请求 50 ms，实际浏览器事件间隔约 1 s，故只作为动作触发证据保存。新的短沿测试独立安排松键，分别核对发键、浏览器事件、页面观察和应用接收时间；动作完成不能代替短按时序通过。[原始记录与范围](qa/native-controls-3.16/baseline-requested-50ms-delayed/scope-addendum.json) · [当前操控证据口径](docs/physics-controls-3.16.md)
+本轮完整 3.15 对照站也已接收原生 X，采到滚转／着陆阶段并返回 DRIVE；该次工具虽请求 50 ms，实际浏览器事件间隔约 1 s，故只作为动作触发证据保存。新的独立松键测试已经完成：3.16 正常组 DOM 间隔 **48.4 ms**、应用接收间隔 **1.5 ms**，动作 **3.692 s**、峰值 CG **3.899 m**、动作内累计滚转约 **361.18°**，最后 DRIVE 四轮承载。R 复位暂停态也能短按启动；菜单拒绝保留真实理由。API 请求、浏览器事件、页面观察和应用接收均单列，动作完成不代替时序通过。[旧原始范围](qa/native-controls-3.16/baseline-requested-50ms-delayed/scope-addendum.json) · [完整原生结果与图片](qa/native-controls-3.16/final-81926/README.md)
 
 手动练习可选 **快翻练习**，H 开启辅助飞行、关闭 G，先 E 起升再 Z / B 滚转；约四分之三圈时松键并开 G 尝试制动回正。G 使用当前高度参考，不自动回到起跳高度。时序、失败工况与气源差异见[快翻对照](docs/x-flip-3.13.md)和[当前物理说明](docs/physics-controls-3.16.md)。
 

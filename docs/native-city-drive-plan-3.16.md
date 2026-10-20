@@ -1,6 +1,6 @@
 # 3.16 原生街道驾驶验证方案
 
-状态：脚本已准备，尚未启动浏览器。本文中的距离、转向与入口位置来自当前源码和已有地图，不是新的实机驾驶结果。当前运行源码冻结；本方案仅增加 QA 脚本与说明。开始前应等待串行浏览器窗口，并让本轮平地制动修复完成必要回归。
+状态：平地制动修复及整轮回归完成、原 1280×720 的 14 帧矩阵通过后，已在冻结 `28e9bc41…` / 本地 8317 上完成一次 fresh-context 的完整 Foundry 下层入口原生路线，进程正常退出。原导航显示抵达，车辆刹停并导出 190.4 s / 22,848 步原生记录。运行开始前明确选择既有上限内的 3,600 墙钟秒、280 仿真秒、18 km/h 目标速度，未在进行中改门槛。本文下表仍是规划来源；实际到达、完整输入覆盖、compound 刚体接触采样及外部日志缺口见[本次实际报告](native-city-drive-3.16.md)，不能只用规划表宣称跑通。
 
 ## 路线与可执行的短段
 
@@ -32,10 +32,10 @@ node qa/native-city-drive-3.16.mjs --stage=crosstown
 node qa/native-city-drive-3.16.mjs --run --stage=crosstown --max-wall-s=900
 ```
 
-需要完整原生连续路线时，可使用新的输出目录再次执行：
+本轮完整原生连续路线使用新的输出目录执行：
 
 ```sh
-node qa/native-city-drive-3.16.mjs --run --stage=foundry --max-wall-s=1800 --max-sim-s=280
+node qa/native-city-drive-3.16.mjs --run --stage=foundry --max-wall-s=3600 --max-sim-s=280 --cruise-kmh=18 --url=http://127.0.0.1:8317/ --build=28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f --out=<新的绝对目录>
 ```
 
 每次运行默认创建带时间戳的独立目录。已有结果和中断目录均拒绝覆盖。可用 `--out=/absolute/path` 明确输出位置，用 `--url=http://127.0.0.1:8316/` 指向候选。默认 Chrome 和字体路径沿用本轮已经实际运行的环境，也可通过 `ROADSTER_CHROME`、`ROADSTER_FONTCONFIG` 覆盖。

@@ -389,8 +389,26 @@
       "status": "failed-retained",
       "ordinaryFrameDraws": 1209,
       "ordinaryFrameStatus": "passed",
-      "failureScope": "First case ordinary draw completed; its PNG export exceeded the existing 20 s requestProgramFrame deadline. Full partialAudit and the original ZIP are retained. No complete matrix or decoded matrix frame was produced. Software readback/render delay is not established as a root cause.",
-      "laterAttempt": "An unchanged 14-case protocol at 800x450 is in progress in an independent directory; no outcome is asserted here."
+      "failureScope": "First ordinary frame completed 1,209 draw calls. The following request for a complete export draw and PNG exceeded the original 20 s deadline, which starts when queued, before the export draw. The original report retains only the preceding ordinary partialAudit. It does not isolate which export phase consumed the time.",
+      "laterAttempt": "The separately preserved unchanged 800x450 protocol completed four original frames and then also failed its application deadline. Neither attempt passes the 14-frame matrix."
+    },
+    {
+      "viewport": [
+        800,
+        450
+      ],
+      "report": "matrix-800x450-failed/gpu-switch-matrix.json",
+      "sourceReport": "matrix-collection-report.json",
+      "completedFrames": 4,
+      "expectedFrames": 14,
+      "status": "failed-retained",
+      "completedOrdinaryAndExportAuditsPassed": 8,
+      "failedNextCase": "03-ultra-wet-night-viaduct",
+      "nextOrdinaryDrawCalls": 1458,
+      "nextOrdinaryStatus": "passed",
+      "visualReview": "matrix-800x450-failed/visual-review.json",
+      "failureScope": "The fifth complete export request exceeded the unchanged application 20 s deadline after its preceding ordinary frame passed. This is an application deadline, not an automation download timeout. Failed-export phase data was unavailable in this build.",
+      "schedulerFollowup": "The separate 28e9bc41 original 1280x720 matrix completed 14/14 images and 28 clean ordinary/export audits under the original 20s request deadline. All fourteen original PNGs were individually opened. The 81926 failed prefix remains unchanged."
     }
   ],
   "bounds": [
@@ -400,5 +418,29 @@
     "The final terrace image is a fixed upper-connection view, not a completed ascent.",
     "No whole-city AAA, photographic realism, stable moving-frame coverage or human driving-feel verdict is made.",
     "The Foundry court remains underlit; broad boulevard forecourts, repeated distant boxes, simplified hills and a clipped rail light remain visible limitations."
-  ]
+  ],
+  "reviewUpdatedAt": "2026-10-20T19:31:38.595878+00:00",
+  "independentCockpitReview": {
+    "reviewerRole": "Vehicle specialist agent; offline original PNG review, no additional browser session",
+    "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+    "originals": [
+      "candidate/roadster-3.16.0-cockpit-clear-day.png",
+      "candidate/roadster-3.16.0-cockpit-wet-night.png"
+    ],
+    "observations": [
+      "The upper half of the actual main-scene cockpit image contains the street, overhead structure and sky. Door top, A-pillar, wheel and dashboard remain readable.",
+      "Wet-night warm lighting reaches the interior while the headlamp foreground pool and facade lights remain separately visible.",
+      "The interior remains a simplified model: the right schematic display is large, control details and steering-wheel edges are coarse. This is not an OEM-production-interior claim."
+    ]
+  },
+  "currentDiagnosticMatrix": {
+    "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
+    "report": "../capture-matrix-native-3.16/report.json",
+    "gallery": "../capture-matrix-native-3.16/index.html",
+    "completedFrames": 14,
+    "expectedFrames": 14,
+    "ordinaryAndExportAuditsPassed": 28,
+    "allPngsIndividuallyOpened": true,
+    "scope": "New source-bound matrix; the prior twelve fixed-city originals retain their actual 81926 capture identity."
+  }
 }
