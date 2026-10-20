@@ -3,32 +3,50 @@ import * as THREE from './vendor/three.module.js';
 const PROFILES={balanced:{street:2,heads:1,size:256,headSize:384,hz:20},high:{street:3,heads:2,size:384,headSize:512,hz:24},ultra:{street:4,heads:2,size:512,headSize:768,hz:30}};
 export const CITY_PRACTICAL_LIGHT_BUDGET=Object.freeze(PROFILES);
 
+// Resolve the visible road layer from the retained street/ramp centrelines.
+// An upper fixture must not score light on its own deck while the camera is
+// below it; likewise a ground lamp cannot score an unseen y=0 road from y=8.
+// This is selection only: the light cone and shadow map still decide visibility.
+export function cityPracticalRoadHeight(point,streets,routes=[]){
+  let height=0;
+  for(const road of [...streets,...routes])for(let i=1;i<road.points.length;i++){
+    const a=road.points[i-1],b=road.points[i],dx=b[0]-a[0],dz=b[2]-a[2],l2=dx*dx+dz*dz;
+    if(l2<1e-8)continue;
+    const t=Math.max(0,Math.min(1,((point.x-a[0])*dx+(point.z-a[2])*dz)/l2)),y=a[1]+(b[1]-a[1])*t;
+    if(y>point.y-.30||y<height)continue;
+    if(Math.hypot(point.x-a[0]-dx*t,point.z-a[2]-dz*t)<=road.width/2+4)height=y;
+  }
+  return height;
+}
+
 // Coverage is evaluated on the viewed ground corridor, not merely distance
 // to a lamp housing. Camera direction matters at a fixed view or a corner.
-export function rankCityPracticalAnchors(anchors,p,{direction={x:0,y:0,z:1},previous=[]}={}){
+export function rankCityPracticalAnchors(anchors,p,{direction={x:0,y:0,z:1},previous=[],surfaceY=0}={}){
   const length=Math.hypot(direction.x,direction.z)||1,dx=direction.x/length,dz=direction.z/length;
   const samples=[[0,0,.25],[7,0,.31],[18,0,.26],[5,-4,.09],[5,4,.09]].map(([along,side,weight])=>({point:[p.x+dx*along+dz*side,.35,p.z+dz*along-dx*side],weight}));
   const remembered=new Set(previous),smooth=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
   return anchors.map((anchor,index)=>{
+    const anchorSurfaceY=anchor.surfaceY??((anchor.target?.[1]||0)>1?anchor.target[1]:0);
+    if(p.y<anchorSurfaceY-.65||Math.abs(anchorSurfaceY-surfaceY)>3) return null;
     const position=anchor.position,target=anchor.target||[position[0],Math.max(0,position[1]-10),position[2]],axis=target.map((v,k)=>v-position[k]),axisLength=Math.hypot(...axis)||1,
       range=Math.min(32,anchor.range||28),angle=anchor.angle||.90,outer=Math.cos(angle),inner=Math.cos(angle*(1-(anchor.penumbra??.55))),distance=Math.hypot(position[0]-p.x,position[1]-p.y,position[2]-p.z);
     let coverage=0;const contributions=[];
-    for(const sample of samples){const d=sample.point.map((v,k)=>v-position[k]),l=Math.hypot(...d),cone=l>0?smooth(outer,inner,d.reduce((sum,v,k)=>sum+v*axis[k],0)/(l*axisLength)):0,
+    for(const sample of samples){const d=sample.point.map((v,k)=>(k===1?v+surfaceY:v)-position[k]),l=Math.hypot(...d),cone=l>0?smooth(outer,inner,d.reduce((sum,v,k)=>sum+v*axis[k],0)/(l*axisLength)):0,
       value=l<range?(anchor.intensity||1500)*cone*(1-(l/range)**4)**2/Math.max(1,l*l):0;coverage+=value*sample.weight;contributions.push(value);}
     const preference=anchor.role==='door'?.80:1,score=coverage*preference*(remembered.has(anchor)?1.20:1);
     return {anchor,index,distance,score,coverage,contributions};
-  }).filter(a=>a.distance<58&&a.coverage>.002).sort((a,b)=>b.score-a.score||a.index-b.index);
+  }).filter(a=>a&&a.distance<58&&a.coverage>.002).sort((a,b)=>b.score-a.score||a.index-b.index);
 }
 
 // Reuse a bounded light pool rather than assigning a real light to each sign.
 // All selected practicals are shadowed; their downward cones and finite range
 // are coupled to visible fixture anchors, reducing through-wall illumination.
-export function createCityPracticalLights(scene,anchors){
+export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}){
   const pool=[],heads=[],position=new THREE.Vector3(),point=new THREE.Vector3();
   let quality='balanced',profile=PROFILES.balanced,enabled=false,vehicle=null,lastSelect=-Infinity,lastShadow=-Infinity,lastTime=null,shadowDirty=true;
   const forward=new THREE.Vector3(0,0,1),lastVehicleMatrix=new THREE.Matrix4(),lastViewpoint=new THREE.Vector3(Infinity,Infinity,Infinity);let vehicleMatrixReady=false;
   const stats={enabled:false,streetSpots:0,headlightSpots:0,shadowMaps:0,shadowMapSize:256,shadowHz:20,updates:0,selected:[],
-    policy:'Main camera ground coverage, 20% selection hysteresis, one occupied-slot crossfade at a time, 2/3/4 bounded shadowed fixtures. Static bounced diffuse stays continuous between direct-light pools.',selectionAnchor:null,selectionDirection:null,transitions:0};
+    policy:'Main camera coverage on its visible street or ramp layer, 20% selection hysteresis, one occupied-slot crossfade at a time, 2/3/4 bounded shadowed fixtures. Static bounced diffuse stays continuous between direct-light pools.',selectionAnchor:null,selectionDirection:null,selectionSurfaceY:0,transitions:0};
   const add=(isHead,index)=>{
     const light=new THREE.SpotLight(isHead?0xe6f0ff:0xffd1a0,0,isHead?66:30,isHead?.29:.90,.55,2);
     light.name=(isHead?'Roadster headlamp ':'City practical ')+index;
@@ -49,11 +67,11 @@ export function createCityPracticalLights(scene,anchors){
     const dt=lastTime===null?1/60:Math.max(0,Math.min(.10,time-lastTime));lastTime=time;
     if(!enabled){stats.streetSpots=stats.headlightSpots=stats.shadowMaps=0;return;}
     if(camera)camera.getWorldDirection(forward);else forward.set(0,0,1);
-    stats.selectionAnchor=[p.x,p.y,p.z];stats.selectionDirection=forward.toArray();
+    stats.selectionAnchor=[p.x,p.y,p.z];stats.selectionDirection=forward.toArray();stats.selectionSurfaceY=surfaceHeight(p);
     if(lastViewpoint.distanceToSquared(p)>70*70){for(const entry of pool){if(entry.anchor&&Math.hypot(entry.anchor.position[0]-p.x,entry.anchor.position[2]-p.z)>65){entry.anchor=entry.next=null;entry.gain=0;}}lastSelect=-Infinity;}
     lastViewpoint.copy(p);
     if(time-lastSelect>.18||time<lastSelect){
-      lastSelect=time;const active=pool.slice(0,profile.street),ranked=rankCityPracticalAnchors(anchors,p,{direction:forward,previous:active.map(e=>e.anchor).filter(Boolean)});
+      lastSelect=time;const active=pool.slice(0,profile.street),ranked=rankCityPracticalAnchors(anchors,p,{direction:forward,previous:active.map(e=>e.anchor).filter(Boolean),surfaceY:stats.selectionSurfaceY});
       // Greedy residual coverage avoids spending two scarce slots on the same
       // bright doorway while the next road segment receives no direct light.
       const chosen=[],covered=[0,0,0,0,0];

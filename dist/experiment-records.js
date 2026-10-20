@@ -136,7 +136,7 @@ function accumulate(stats,t,dt,previousEnergy){
   if(sample.positionErrorM!==null){stats.positionCount++;stats.sumPositionSquared+=sample.positionErrorM**2;stats.peakPositionErrorM=Math.max(stats.peakPositionErrorM??0,sample.positionErrorM);}
   if(sample.attitudeErrorDeg!==null)stats.peakAttitudeErrorDeg=Math.max(stats.peakAttitudeErrorDeg??0,sample.attitudeErrorDeg);
   if(sample.allocationError!==null){stats.allocationCount++;if(sample.feasible===false||sample.allocationError>.2)stats.saturatedCount++;}
-  const mass=sample.massFlowKgS*dt;stats.gasThroughputKg+=mass;if(t.supplyMode==='bench')stats.externalSupplyKg+=mass;else stats.onboardDischargedKg+=mass;
+  const mass=Number.isFinite(t.integration?.gasThroughputKg)&&Math.abs(t.integration.controlDtS-dt)<1e-10?t.integration.gasThroughputKg:sample.massFlowKgS*dt;stats.gasThroughputKg+=mass;if(t.supplyMode==='bench')stats.externalSupplyKg+=mass;else stats.onboardDischargedKg+=mass;
   stats.energyUsedKWh+=Math.max(0,(t.energyUsedKWh||0)-previousEnergy);stats.peakSpeedMps=Math.max(stats.peakSpeedMps,sample.speedMps);
   if(sample.heightM!==null){stats.minimumHeightM=Math.min(stats.minimumHeightM??Infinity,sample.heightM);stats.maximumHeightM=Math.max(stats.maximumHeightM??-Infinity,sample.heightM);}
 }

@@ -15,7 +15,7 @@ import {architectureDetailLevel,cityRenderProfile,createCityVisibility} from './
 import {attachRoadSurface} from './road-surface-material.js';
 import {createLocalProbeSun} from './local-probe-sun.js';
 import {CITY_WEATHER_PRESETS,CITY_BENCHMARK_ROUTE} from './visual-presets.js';
-import {createCityPracticalLights} from './city-practical-lights.js';
+import {createCityPracticalLights,cityPracticalRoadHeight} from './city-practical-lights.js';
 import {createWetRoadReflection} from './wet-road-reflection.js';
 import {attachPavementSurface,CITY_PAVEMENT_SPECIFICATIONS} from './pavement-surface-material.js';
 import {createNightCityLighting} from './night-city-lighting.js';
@@ -38,20 +38,22 @@ export function createEnvironment(scene,renderer,geometry,camera){
   mats['aged-copper']=new THREE.MeshStandardMaterial({color:0x826f59,roughness:.63,metalness:.35});
   mats.oxide=new THREE.MeshStandardMaterial({color:0x967052,roughness:.73,metalness:.32});
   mats.glazing=mats.glass;
-  mats['corridor-pale']=new THREE.MeshStandardMaterial({color:0xb3b0a4,roughness:.86});
+  mats['corridor-pale']=new THREE.MeshStandardMaterial({color:0x898f83,roughness:.89});
   mats['corridor-basalt']=new THREE.MeshStandardMaterial({color:0x737f7d,roughness:.89});
   mats['corridor-wood']=new THREE.MeshStandardMaterial({color:0x60533d,roughness:.75});
   for(const [key,material]of Object.entries(mats))if(!material.name)material.name='City / '+key;
   mats.road.name='City / scanned asphalt + local puddles';
-  mats['continuity-stone']=new THREE.MeshStandardMaterial({name:'City / cut civic limestone',color:0xb8b5a4,roughness:.88,metalness:0});
+  mats['continuity-stone']=new THREE.MeshStandardMaterial({name:'City / cut civic limestone',color:0x8c9185,roughness:.89,metalness:0});
   mats['service-concrete']=new THREE.MeshStandardMaterial({name:'City / brushed service concrete',color:0x8b9089,roughness:.93,metalness:0});
   mats['weathered-steel']=new THREE.MeshStandardMaterial({name:'City / coated service steel',color:0x506064,roughness:.56,metalness:.25});
   mats['safety-ochre']=new THREE.MeshStandardMaterial({name:'City / worn safety paint',color:0xb99a59,roughness:.86,metalness:0});
+  mats['forecourt-mineral']=new THREE.MeshStandardMaterial({name:'City / flush mineral forecourt',color:0x505950,roughness:.94,metalness:0});
+  mats['forecourt-border']=new THREE.MeshStandardMaterial({name:'City / forecourt basalt datum',color:0x35463e,roughness:.93,metalness:0});
   mats['boundary-aggregate']=new THREE.MeshStandardMaterial({name:'City / peripheral mineral embankment',color:0x737a6e,roughness:.97,metalness:0});
   const pavementSurfaces=Object.entries(CITY_PAVEMENT_SPECIFICATIONS).map(([name,options])=>attachPavementSurface(mats[name],options));
   const plannedGeometry=new Map([...CITY_PLAN_SOLIDS,...CITY_CONTINUITY.solids].map(g=>[g.id,g]));
   const roadSurface=attachRoadSurface(mats.road,{albedo,normal,roughness:rough});
-  const add=(size,pos,mat=mats.steel,rot=[0,0,0],shadow=true)=>{const a=buckets.get(mat)||[];a.push({size,pos,rot,shadow});buckets.set(mat,a);};
+  const add=(size,pos,mat=mats.steel,rot=[0,0,0],shadow=true,level=null)=>{const a=buckets.get(mat)||[];a.push({size,pos,rot,shadow,level});buckets.set(mat,a);};
   const geometryById=new Map(geometry.map(g=>[g.id,g]));
   for(const g of geometry){
     if(['building','podium','street-prop','landmark'].includes(g.kind))continue;
@@ -66,7 +68,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
     else{const items=buckets.get(mat)||[];items.push({size:g.size,pos:g.position,quaternion:g.quaternion,shadow:true,level:plannedGeometry.get(g.id)?.data.renderDetail});buckets.set(mat,items);}
   }
   const horizon=buildCityHorizon(THREE,root);
-  for(const item of CITY_CONTINUITY.finishes)add(item.size,item.position,mats[item.material]||mats.paint,item.rotation,false);
+  for(const item of CITY_CONTINUITY.finishes)add(item.size,item.position,mats[item.material]||mats.paint,item.rotation,false,item.renderDetail||null);
   const architecture=buildUrbanArchitecture(THREE,root,CITY_BUILDINGS);
   const streetLife=buildStreetLife(THREE,root),landmarks=buildCityLandmarks(THREE,root,mats.road);
   for(let z=-80;z<84;z+=12)add([.11,.013,5],[200,14.014,z],mats.paint,undefined,false);
@@ -203,12 +205,46 @@ export function createEnvironment(scene,renderer,geometry,camera){
   }
 
   for(let z=-397;z<40;z+=28)for(const side of [-1,1]){
-    const x=-200+side*9.4;add([.13,7.5,.13],[x,3.75,z],mats.steel);add([1.4,.13,.48],[x-side*.6,7.52,z],mats.steel);add([.9,.035,.32],[x-side*.6,7.43,z],mats.amber);lightAnchors.push({position:[x-side*.6,7.30,z],target:[-200+side*2.0,.08,z+2],color:z<-310?0xf7c28e:z<-238?0xc7e2ef:0xe8bfa0,intensity:1550,range:28,practical:true,role:'street'});
+    const x=-200+side*9.4;add([.13,7.5,.13],[x,3.75,z],mats.steel);add([1.4,.13,.48],[x-side*.6,7.52,z],mats.steel);add([.9,.035,.32],[x-side*.6,7.43,z],mats.amber);lightAnchors.push({position:[x-side*.6,7.30,z],target:[-200+side*2.0,.08,z+2],color:z<-310?0xf7c28e:z<-238?0xc7e2ef:0xe8bfa0,intensity:980,range:28,practical:true,role:'street'});
   }
   const backgroundLights=backgroundLightLayout(CITY_STREETS,CITY_ROUTES,plannedDistrictAt);
-  for(const {pole,head}of backgroundLights.lights){add([.11,8,.11],[pole[0],4,pole[2]],mats.steel);add([1.5,.10,.5],[head[0],8,head[2]],mats.steel);add([1.1,.035,.35],[head[0],7.93,head[2]],mats.amber);lightAnchors.push({position:head,color:0xf1d1a6,intensity:1600,range:30,practical:true});}
-  for(let z=154;z<490;z+=34)for(const side of [-1,1]){const x=100+side*10.2;add([.12,7.2,.12],[x,3.6,z],mats.steel);add([1.2,.09,.45],[x-side*.45,7.2,z],mats.steel);add([.85,.025,.25],[x-side*.45,7.14,z],mats.amber);}
-  for(const [x,z]of [[-203.2,-279],[-196.8,-255],[-201.8,-230],[-198.2,-218]]){add([.80,.055,.26],[x,7.35,z],mats.amber,undefined,false);lightAnchors.push({position:[x,7.25,z],color:0xdeb996,intensity:1650,range:24,practical:true});}
+  for(const {pole,head,target,side}of backgroundLights.lights){
+    add([.11,8,.11],[pole[0],4,pole[2]],mats.steel);
+    // The lens belongs to the actual cantilever; its inward cut-off cone
+    // reaches the carriageway instead of pointing at an empty kerb patch.
+    add([1.5,.10,.5],[head[0],8,head[2]],mats.steel);add([1.1,.035,.35],[head[0],7.93,head[2]],mats.amber);
+    lightAnchors.push({id:'grid-road-'+pole[0]+'-'+pole[2],position:head,target,surfaceY:0,color:side<0?0xc5d8e6:0xe5c79e,intensity:1450,range:32,angle:.96,penumbra:.42,practical:true,role:'street'});
+  }
+  for(let z=154;z<490;z+=34)for(const side of [-1,1]){
+    const x=100+side*10.2;add([.12,7.2,.12],[x,3.6,z],mats.steel);add([1.2,.09,.45],[x-side*.45,7.2,z],mats.steel);add([.85,.025,.25],[x-side*.45,7.14,z],mats.amber);
+    lightAnchors.push({id:'foundry-avenue-'+side+'-'+z,position:[x-side*.45,7.10,z],target:[100+side*2.6,.08,z+3.0],surfaceY:0,color:side<0?0xc8dce4:0xe7c29a,intensity:1150,range:29,angle:.96,penumbra:.45,practical:true,role:'street'});
+  }
+  // Lamps are fixed to the existing upper arcade underside. The upper-city
+  // light-selection plane is the actual 8 m street, not the ground at y=0.
+  for(const side of [-1,1])for(const [a,b]of [[150,231],[249,313],[331,401]])for(let j=0,n=Math.ceil((b-a-14)/29);j<=n;j++){
+    const z=Number((a+7+(b-a-14)*j/n).toFixed(4));
+    const x=400+side*17.5;add([.60,.08,2.15],[x,15.66,z],mats.steel,undefined,false);
+    add([.42,.025,1.85],[x,15.6075,z],mats.amber,undefined,false);
+    lightAnchors.push({id:'forum-arcade-'+side+'-'+z,position:[x,15.578,z],target:[400+side*4.4,8.08,z+3],surfaceY:8,color:0xdbd7bb,intensity:1400,range:30,angle:.92,penumbra:.45,practical:true,role:'street'});
+  }
+  // Recessed rail luminaires use the inherited ramp barrier as their support.
+  // They continue the route's direction across the ground/elevated transition
+  // without an extra pole or collision volume in the lane.
+  for(const route of CITY_ROUTES.filter(r=>r.id.startsWith('terrace-')))route.points.slice(1).forEach((b,i)=>{
+    const a=route.points[i],length=Math.hypot(...b.map((v,k)=>v-a[k]));
+    const barrier=geometryById.get(route.id+'-barrier-'+i+'-1');if(!barrier)return;
+    const q=new THREE.Quaternion(...barrier.quaternion),rotation=new THREE.Euler().setFromQuaternion(q).toArray().slice(0,3),normalUp=new THREE.Vector3(0,1,0).applyQuaternion(q),right=new THREE.Vector3(1,0,0).applyQuaternion(q);
+    for(const side of [-1,1])for(let distance=5+(side>0?9:0),index=0;distance<length-3;distance+=18,index++){
+      const t=distance/length,centre=new THREE.Vector3(...a.map((v,k)=>v+(b[k]-v)*t)),surfaceY=centre.y;
+      const mount=centre.clone().addScaledVector(right,side*(route.width/2-.22)).addScaledVector(normalUp,.722);
+      const position=mount.clone().addScaledVector(normalUp,.04);
+      const target=centre.clone().addScaledVector(right,side*2.1).addScaledVector(normalUp,.08);
+      add([.29,.048,.72],mount.toArray(),mats.steel,rotation,false);
+      add([.20,.030,.56],position.toArray(),mats.amber,rotation,false);
+      lightAnchors.push({id:'ramp-rail-'+route.id+'-'+i+'-'+side+'-'+index,position:position.toArray(),target:target.toArray(),surfaceY,color:0xb7d8dd,intensity:230,range:19,angle:.92,penumbra:.32,practical:true,role:'route-rail',mount:{sharedGeometryId:route.id+'-barrier-'+i+'-'+side,backingCentre:mount.toArray(),normal:normalUp.toArray()}});
+    }
+  });
+  for(const [x,z]of [[-203.2,-279],[-196.8,-255],[-201.8,-230],[-198.2,-218]]){add([.80,.055,.26],[x,7.35,z],mats.amber,undefined,false);lightAnchors.push({position:[x,7.25,z],color:0xdeb996,intensity:1080,range:24,practical:true});}
   // Twin soffit lanes belong to the existing upper walkways. The visible
   // lenses and finite cones are the same sources used by the night bake;
   // the render pool remains bounded at 2/3/4 shadowed fixtures.
@@ -216,7 +252,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
     const x=-200+side*7.70;
     add([.34,.055,1.75],[x,5.06,z],mats.steel,undefined,false);
     add([.20,.025,1.50],[x,5.02,z],mats.amber,undefined,false);
-    lightAnchors.push({id:'exchange-soffit-'+side+'-'+z,position:[x,4.98,z],target:[-200+side*3.5,.16,z+1.5],color:0xefdabc,intensity:320,range:18,angle:.86,practical:true,role:'soffit'});
+    lightAnchors.push({id:'exchange-soffit-'+side+'-'+z,position:[x,4.98,z],target:[-200+side*3.5,.16,z+1.5],color:0xefdabc,intensity:220,range:18,angle:.86,practical:true,role:'soffit'});
   }
   lightAnchors.push(...(architecture.lightAnchors||[]),...(streetLife.lightAnchors||[]),...(landmarks.lightAnchors||[]));
   lightAnchors.forEach((a,index)=>{a.id??='city-fixture-'+index;});
@@ -245,14 +281,14 @@ export function createEnvironment(scene,renderer,geometry,camera){
   const hemi=new THREE.HemisphereLight(0xd5e5f5,0x665c4d,.28);scene.add(hemi);
   let quality='balanced',profile=cityRenderProfile(quality),csm=null,hdr=null,sunlessSky=null,skyEnvironment=null,nightEnvironment=null;
   let weatherPreset='clear-day',presentation=CITY_WEATHER_PRESETS['clear-day'];
-  const practicals=createCityPracticalLights(scene,lightAnchors.filter(a=>a.practical));
+  const practicals=createCityPracticalLights(scene,lightAnchors.filter(a=>a.practical),{surfaceHeight:p=>cityPracticalRoadHeight(p,CITY_STREETS,CITY_ROUTES)});
   const wetReflection=createWetRoadReflection(scene,renderer,camera,roadSurface);
   const emissiveBases=new Map();
   let lastShadowTime=-Infinity,lastProbeTime=-Infinity,probeFace=-1,cubeTarget=null,cube=null,vehicleRoot=null;
   const lastShadowPoint=new THREE.Vector3(Infinity,Infinity,Infinity),lastProbe=new THREE.Vector3(Infinity,Infinity,Infinity);
   const originalMaterials=new Map(),staticMaterials=new Set(),probeMaterials=new Map(),particleAmbient=new THREE.Color(.70,.74,.76);
   const renderStats={quality,shadowCascades:1,shadowSize:1024,shadowHz:30,shadowUpdates:0,shadowUpdatedThisFrame:false,pointLights:0,spotShadowMaps:0,planarReflectionPasses:0,practicalLights:practicals.stats,wetRoadReflection:wetReflection.stats,probeSize:0,probeFacesPerFrame:0,probeFacesRendered:0,probeCaptures:0,probePendingFace:-1,probeShadowMode:'Dedicated local sun depth; one physical direct sun in cube faces',probeSun:probeSun.stats,lastProbeCpuMs:0,visibility:visibility.stats};
-  const stats={continuity:{version:CITY_CONTINUITY.version,streetCoverage:CITY_CONTINUITY.coverage,connectionSegments:CITY_CONTINUITY.connectionCoverage.length,backgroundLightsExcluded:backgroundLights.excluded,horizon:horizon.stats},cityPlan:{districts:CITY_PLAN.districts.length,nodes:CITY_NODES.length,streets:CITY_STREETS.length,version:CITY_PLAN.version},corridor:{version:'3.9',sharedSolids:CITY_ROUTE_CORRIDOR.solids.length,fixtures:CITY_ROUTE_CORRIDOR.lights.length,legs:CITY_ROUTE_CORRIDOR.legs},indirectLighting:indirect.stats,nightIndirectLighting:nightIndirect.stats,nightDirectLighting:nightDirect.stats,lightingDiagnostics:{selectionAnchor:'Main viewing camera, including fixed and paused views',practicals:practicals.stats,nightField:nightIndirect.stats,nightDirectField:nightDirect.stats,lastReflection:null},roadSurface:roadSurface.model,buildings:CITY_BUILDINGS.length,architecture:architecture.stats,streetLife:streetLife.stats,landmarks:landmarks.stats,routes:CITY_ROUTES.length,shadowCascades:1,benchmarkRoute:{id:CITY_BENCHMARK_ROUTE.id,lengthMetres:CITY_BENCHMARK_ROUTE.lengthMetres,estimatedDurationS:CITY_BENCHMARK_ROUTE.estimatedDurationS},weatherPreset,wetReflections:false,daylight:'CC0 measured midday sky / calibrated sun + baked diffuse',vehicleLocalProbe:false,renderBudget:renderStats,liveScene:{}};
+  const stats={continuity:{version:CITY_CONTINUITY.version,streetCoverage:CITY_CONTINUITY.coverage,connectionSegments:CITY_CONTINUITY.connectionCoverage.length,backgroundLightsExcluded:backgroundLights.excluded,streetSections:{version:CITY_CONTINUITY.streetSections.version,forecourts:CITY_CONTINUITY.streetSections.forecourts,laneSections:CITY_CONTINUITY.streetSections.laneSections,limits:CITY_CONTINUITY.streetSections.limits},connectorFootways:CITY_CONTINUITY.connectorFootways,horizon:horizon.stats},cityPlan:{districts:CITY_PLAN.districts.length,nodes:CITY_NODES.length,streets:CITY_STREETS.length,version:CITY_PLAN.version},corridor:{version:'3.9',sharedSolids:CITY_ROUTE_CORRIDOR.solids.length,fixtures:CITY_ROUTE_CORRIDOR.lights.length,legs:CITY_ROUTE_CORRIDOR.legs},indirectLighting:indirect.stats,nightIndirectLighting:nightIndirect.stats,nightDirectLighting:nightDirect.stats,lightingDiagnostics:{selectionAnchor:'Main viewing camera, including fixed and paused views',practicals:practicals.stats,nightField:nightIndirect.stats,nightDirectField:nightDirect.stats,lastReflection:null},roadSurface:roadSurface.model,buildings:CITY_BUILDINGS.length,architecture:architecture.stats,streetLife:streetLife.stats,landmarks:landmarks.stats,routes:CITY_ROUTES.length,shadowCascades:1,benchmarkRoute:{id:CITY_BENCHMARK_ROUTE.id,lengthMetres:CITY_BENCHMARK_ROUTE.lengthMetres,estimatedDurationS:CITY_BENCHMARK_ROUTE.estimatedDurationS},weatherPreset,wetReflections:false,daylight:'CC0 measured midday sky / calibrated sun + baked diffuse',vehicleLocalProbe:false,renderBudget:renderStats,liveScene:{}};
   scene.fog=new THREE.FogExp2(0xa2b5bf,.00055);
   function calibrateShadowBias(){
     csm?.lights.forEach(l=>{const camera=l.shadow.camera,texel=(camera.right-camera.left)/l.shadow.mapSize.x;l.shadow.normalBias=Math.min(.065,Math.max(.005,texel*.40));});

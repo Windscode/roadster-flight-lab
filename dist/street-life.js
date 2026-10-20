@@ -27,8 +27,17 @@ CITY_BUILDINGS.filter(b=>b.id.startsWith('terrace-')).forEach((b,bi)=>{
   for(const dir of [-1,1]){const face=b.z+dir*b.d/2;if(face>=229&&face<=338)sections.push({b,bi,dir,district:'upper',x:b.x,z:face,y:b.baseY+.12,yaw:dir>0?0:Math.PI,count:(b.id==='terrace-365-200'&&dir===1)||(b.id==='terrace-435-280'&&dir===1)?2:0,spacing:8.2});}
 });
 const courts=[[0,312,280],[1,499,285]];
+// Three pause points continue the existing narrow-street furniture language
+// along Central Cross Street. Every support stays behind its 3 m footway;
+// the inherited crossings at x=-100 and x=0 retain their full 28 m width.
+export const CITY_CONNECTOR_GARDENS=Object.freeze([-158,-51,37].flatMap(x=>[-1,1].map(side=>Object.freeze({x,z:-132.5+side*14,baseY:.05,yaw:side<0?0:Math.PI,size:1.45}))));
 const colliderDefinition=(id,size,x,z,baseY,yaw,u,y,v)=>({id:'street-'+id,kind:'street-prop',size,position:[x+Math.cos(yaw)*u+Math.sin(yaw)*v,baseY+y,z-Math.sin(yaw)*u+Math.cos(yaw)*v],rotation:[0,yaw,0]});
 export const STREET_COLLIDERS=[];
+for(const [i,g]of CITY_CONNECTOR_GARDENS.entries()){
+  STREET_COLLIDERS.push(colliderDefinition('connector-planter-'+i,[1.6,.44,1.2],g.x,g.z,g.baseY,g.yaw,0,.28,0));
+  STREET_COLLIDERS.push(colliderDefinition('connector-trunk-'+i,[.17,3.3*g.size,.17],g.x,g.z,g.baseY,g.yaw,0,1.8*g.size,0));
+  STREET_COLLIDERS.push(colliderDefinition('connector-seat-'+i,[1.7,1.1,.52],g.x,g.z,g.baseY,g.yaw,3,.61,0));
+}
 for(const s of sections.filter(s=>s.district==='lower')){
   STREET_COLLIDERS.push(colliderDefinition(s.b.id+'-pavement',[s.b.d+3,.12,5],s.x,s.z,s.y,s.yaw,0,-.06,2.5));
   if(s.b.d>35&&s.count>0)for(const edge of [-1,1]){
@@ -343,8 +352,8 @@ export function buildStreetLife(THREE,root){
   // receive outdoor kiosks; the continuous street wall remains the main scene.
   for(const s of sections.filter(s=>s.district==='lower')){
     const {b,bi,count,spacing}=s,f=surface(s.x,s.z,s.y,s.yaw),span=b.d;if(count)stats.marketSections++;
-    f.cube(m.paving,[span+3,.12,5],0,-.06,2.5,0x999c91);
-    f.cube(m.stone,[span+3,.10,.16],0,-.015,4.93,0xb3b6a4);
+    f.cube(m.paving,[span+3,.12,5],0,-.06,2.5,0x879089);
+    f.cube(m.stone,[span+3,.10,.16],0,-.015,4.93,0x989e8f);
     // Joints now come from the derivative-filtered metre-scale material.
     // The former 4 mm raised 12 mm line boxes shimmered in the supplied
     // long perspective and generated a second disconnected paving surface.
@@ -395,6 +404,8 @@ export function buildStreetLife(THREE,root){
     for(let k=0;k<10;k++)for(const side of [-1,1]){f.put(m.lamp,'sphere',[.09,.09,.09],side*8,3.03,-10+k*2.2,0xe3d8b2);}
     lightAnchors.push({position:f.point(0,3.1,0),color:0xf5d9ab,intensity:65,range:16});
   }
+
+  for(const g of CITY_CONNECTOR_GARDENS){const f=surface(g.x,g.z,g.baseY,g.yaw);tree(f,0,0,g.size);bench(f,3,0);}
 
   // 80 m cells let the adjacent block retire without retaining every item on
   // a 300 m street. Individual shop objects still share geometry/materials.

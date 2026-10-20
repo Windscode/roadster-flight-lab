@@ -128,26 +128,35 @@ export function createWetRoadReflection(scene,renderer,camera,surface){
     const old={target:renderer.getRenderTarget(),face:renderer.getActiveCubeFace(),mip:renderer.getActiveMipmapLevel(),
       viewport:renderer.getViewport(new THREE.Vector4()),scissor:renderer.getScissor(new THREE.Vector4()),scissorTest:renderer.getScissorTest(),
       xr:renderer.xr.enabled,shadowAuto:renderer.shadowMap.autoUpdate,shadowNeeded:renderer.shadowMap.needsUpdate,
-      enabled:uniforms.roadReflectionEnabled.value};
-    const hidden=exclude.filter(Boolean).map(object=>({object,visible:object.visible}));let distant=[];
+      texture:uniforms.roadReflection.value,enabled:uniforms.roadReflectionEnabled.value};
+    const hidden=exclude.filter(Boolean).map(object=>({object,visible:object.visible}));let distant=[],captured=false;
     const begin=performance.now();
     try{
-      hidden.forEach(({object})=>object.visible=false);distant=hideDistantReflectionMeshes(scene,p,reflection.far);stats.distanceCulledMeshes=distant.length;uniforms.roadReflectionEnabled.value=0;
+      hidden.forEach(({object})=>object.visible=false);distant=hideDistantReflectionMeshes(scene,p,reflection.far);stats.distanceCulledMeshes=distant.length;
+      // A uniform-controlled branch does not make an active sampler harmless:
+      // WebGL forbids sampling a texture attached to the drawing framebuffer.
+      // Three binds its separate empty 2D texture for this null sampler value.
+      uniforms.roadReflectionEnabled.value=0;uniforms.roadReflection.value=null;
       // This pass runs only at night: service pending local spotlight maps
       // before reflecting them, so a new fixture cannot be captured unshadowed.
       renderer.xr.enabled=false;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=old.shadowNeeded;
       renderer.setScissorTest(false);renderer.setRenderTarget(target);renderer.clear(true,true,false);renderer.render(scene,virtual);
-      stats.lastCaptureReason=!captureValid?'invalid-cache':moved?'camera-or-lens':sourceMoved?'dynamic-source':'idle-refresh';
-      if(captureValid&&sourceMoved)stats.dynamicRefreshes++;
-      lastCapture=time;lastPosition.copy(p);lastOrientation.copy(camera.quaternion);lastProjection.copy(camera.projectionMatrix);lastSources=sources;captureValid=true;
-      stats.passes++;stats.passesThisFrame=1;uniforms.roadReflectionMatrix.value.copy(matrix);setBlend(weight);return true;
+      captured=true;
     }finally{
       stats.lastCpuMs=performance.now()-begin;
       renderer.xr.enabled=old.xr;renderer.shadowMap.autoUpdate=old.shadowAuto;renderer.shadowMap.needsUpdate=old.shadowNeeded;
       renderer.setViewport(old.viewport);renderer.setScissor(old.scissor);renderer.setScissorTest(old.scissorTest);renderer.setRenderTarget(old.target,old.face,old.mip);
+      // Leave the writing target before exposing its texture to later passes.
+      uniforms.roadReflection.value=old.texture;uniforms.roadReflectionEnabled.value=old.enabled;
       distant.forEach(object=>object.visible=true);hidden.forEach(({object,visible})=>object.visible=visible);
-      if(stats.passesThisFrame===0){captureValid=false;setBlend(0);}
+      // clear/render may have overwritten part of the previous image. Restore
+      // pass state, but retain the existing policy of disabling a failed cache.
+      if(!captured){captureValid=false;setBlend(0);}
     }
+    stats.lastCaptureReason=!captureValid?'invalid-cache':moved?'camera-or-lens':sourceMoved?'dynamic-source':'idle-refresh';
+    if(captureValid&&sourceMoved)stats.dynamicRefreshes++;
+    lastCapture=time;lastPosition.copy(p);lastOrientation.copy(camera.quaternion);lastProjection.copy(camera.projectionMatrix);lastSources=sources;captureValid=true;
+    stats.passes++;stats.passesThisFrame=1;uniforms.roadReflectionMatrix.value.copy(matrix);setBlend(weight);return true;
   }
   return {stats,configure,render,setEnabled(value){enabled=!!value;stats.enabled=enabled&&!!target;lastCapture=-Infinity;captureValid=false;setBlend(0);},
     dispose(){target?.dispose();target=null;captureValid=false;stats.enabled=false;uniforms.roadReflection.value=null;setBlend(0);}};

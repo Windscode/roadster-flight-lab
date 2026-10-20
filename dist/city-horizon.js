@@ -1,7 +1,7 @@
 // A low-cost geographic backdrop begins outside the simulation's reachable
 // world (hard reset boundary ±700 m). It is explicitly distant scenery, not a
 // second drivable city. The existing ±620 m physical perimeter is retained.
-export const CITY_HORIZON=Object.freeze({version:'horizon-3.14-1',startM:700,endM:2100,reachable:false,collision:'Existing 620 m physical perimeter and 700 m working limit; shared banks join the floor to distant scenery.',sectors:['west-port-belt','north-upland','east-ridge','south-estuary']});
+export const CITY_HORIZON=Object.freeze({version:'horizon-3.16-1',startM:700,endM:2100,reachable:false,collision:'Existing 620 m physical perimeter and 700 m working limit; shared banks join the floor to distant scenery.',sectors:['west-port-belt','north-upland','east-ridge','south-estuary']});
 export function buildCityHorizon(THREE,parent){
   const group=new THREE.Group();group.name='Distant geography / outside simulation area';group.userData.distantScenery=true;parent.add(group);
   const positions=[],colors=[],indices=[],rings=18,segments=128,colour=new THREE.Color();
@@ -27,5 +27,24 @@ export function buildCityHorizon(THREE,parent){
   for(let i=0;i<7;i++){
     const shed=new THREE.Mesh(box,steel);shed.scale.set(48+i%2*24,11+i%3*5,90);shed.position.set(-830-i*85,shed.scale.y/2-1,-200+i*115);shed.name='Distant port shed';group.add(shed);
   }
-  return {group,stats:{...CITY_HORIZON,triangles:indices.length/3+2+7*12,renderBatches:9},setNight(night){material.color.set(night?0x7f90a2:0xffffff);}};
+  // The north exit faces a rail/utility horizon, with a long low viaduct and
+  // three tapered transmission frames against the upland. This is one distant
+  // infrastructure composition, rather than another array of city tower boxes.
+  const infrastructure=[],beaconPositions=[],tmp=new THREE.Object3D();
+  const element=(size,position,rotation=[0,0,0])=>infrastructure.push({size,position,rotation});
+  element([450,4.2,17],[-150,10.4,796]);
+  for(const x of [-350,-245,-140,-35,70]){element([5.2,14,6.0],[x,3.8,796]);element([22,1.4,19],[x,7.8,796]);}
+  for(const [i,x]of [-285,-82,132].entries()){
+    const h=[50,37,61][i],z=815+i*17;
+    for(const side of [-1,1])element([1.1,h,1.4],[x+side*6.3,h/2-1.4,z],[0,0,side*.115]);
+    for(const fraction of [.44,.74,.92])element([fraction>.8?15:22,1.05,2.1],[x,h*fraction-1.4,z]);
+    for(let k=0;k<4;k++)element([.62,h*.20,1.1],[x+(k%2?2:-2),h*(.17+k*.19)-1.4,z],[0,0,k%2?.57:-.57]);
+    beaconPositions.push([x,h*.92-.6,z]);
+  }
+  const belt=new THREE.InstancedMesh(box,steel,infrastructure.length);belt.name='North rail viaduct and transmission frames / distant';belt.userData.renderDetail='mass';
+  infrastructure.forEach((item,i)=>{tmp.position.set(...item.position);tmp.rotation.set(...item.rotation);tmp.scale.set(...item.size);tmp.updateMatrix();belt.setMatrixAt(i,tmp.matrix);});belt.computeBoundingSphere();group.add(belt);
+  const beaconMaterial=new THREE.MeshStandardMaterial({color:0xc89275,emissive:0xd5926c,emissiveIntensity:0,roughness:.7});beaconMaterial.name='Distant / fixed marker lens';
+  const beacons=new THREE.InstancedMesh(box,beaconMaterial,beaconPositions.length);beacons.name='Transmission marker lenses / emissive only';beacons.userData.renderDetail='mass';
+  beaconPositions.forEach((p,i)=>{tmp.position.set(...p);tmp.rotation.set(0,0,0);tmp.scale.set(1.1,.62,1.1);tmp.updateMatrix();beacons.setMatrixAt(i,tmp.matrix);});beacons.computeBoundingSphere();group.add(beacons);
+  return {group,stats:{...CITY_HORIZON,triangles:indices.length/3+2+(7+infrastructure.length+beaconPositions.length)*12,renderBatches:11,nonPlayableInfrastructure:'North rail approach and three transmission frames; marker lenses are emissive scenery, not runtime street-light sources.'},setNight(night){material.color.set(night?0x7f90a2:0xffffff);beaconMaterial.emissiveIntensity=night?.5:0;}};
 }

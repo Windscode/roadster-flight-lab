@@ -1,3 +1,4 @@
+import {FINITE_PROGRAM_RECOVERY,finiteProgramRecoveryDecision,beginFiniteRecovery,observeFiniteRecovery} from './finite-program-recovery.js';
 import {currentExperimentIdentity,captureExperimentSnapshot,attachRuntimeProvenance,failurePhysicalTelemetry,sampleDescription} from './experiment-records.js';
 import {readProtectedArchive,writeArchiveCandidate} from './research-storage.js';
 /* Research references are commands to the physical controller. This module
@@ -128,9 +129,9 @@ function stageLabel(stage){return{pose:'姿态 / 位置参考',wait:'等待',rat
  * dwell tests and 20 Hz samples advance only with simulation time. Rendering,
  * pause duration and animation frame grouping cannot speed up a sequence. */
 export class FlightProgramRunner{
-  constructor({getSim,getContext=()=> 'city',onEvent=()=>{},onStart=()=>{},onFinish=()=>{},now=()=>new Date().toISOString()}={}){
+  constructor({getSim,getContext=()=> 'city',onEvent=()=>{},onStart=()=>{},onFinish=()=>{},now=()=>new Date().toISOString(),finiteRecovery=true}={}){
     if(typeof getSim!=='function')throw new TypeError('getSim is required');
-    Object.assign(this,{getSim,getContext,onEvent,onStart,onFinish,now});this.active=null;this.lastResult=null;this.serial=0;
+    Object.assign(this,{getSim,getContext,onEvent,onStart,onFinish,now,finiteRecovery});this.active=null;this.lastResult=null;this.serial=0;
   }
   start(program){
     const validated=validateProgram(program);if(this.active)this.cancel('启动另一个流程');
@@ -139,7 +140,7 @@ export class FlightProgramRunner{
     if(t.suctionEnabled)throw new Error('请先关闭吸附，再启动飞行研究流程');
     if(t.maneuver)sim.startManeuver('cancel');
     const initialSnapshot=typeof sim.exportState==='function'?captureExperimentSnapshot(sim,this.getContext()):null;
-    const active={identity:currentExperimentIdentity(),initialSnapshot,initialParams:copy(sim.params),initialGasMass:t.gasMass,program:validated,sim,context:this.getContext(),origin:capture(t),heading:t.headingDeg||0,index:-1,stage:null,elapsedS:0,stageElapsedS:0,settledS:0,lastSimTime:t.simTime,startTime:t.simTime,startedAt:this.now(),target:null,lastTelemetry:t,previousSample:null,samples:[],stages:[],gasThroughputKg:0,startEnergy:t.energyUsedKWh||0,previousWind:safeWind(sim,t),previousSupply:sim.params.supplyMode,windChanged:false,supplyChanged:false,stageTargetStart:null,hasSeenManeuver:false,effectiveRateDegS:null,fixedStats:{lastTime:t.simTime,count:0,positionCount:0,sumPositionSquared:0,peakPositionErrorM:null,peakAttitudeErrorDeg:null,allocationCount:0,saturatedCount:0,gasThroughputKg:0}};
+    const active={identity:currentExperimentIdentity(),initialSnapshot,initialParams:copy(sim.params),initialGasMass:t.gasMass,program:validated,sim,context:this.getContext(),origin:capture(t),heading:t.headingDeg||0,index:-1,stage:null,elapsedS:0,stageElapsedS:0,settledS:0,lastSimTime:t.simTime,startTime:t.simTime,startedAt:this.now(),target:null,lastTelemetry:t,previousSample:null,samples:[],stages:[],gasThroughputKg:0,recovery:null,finiteCheckAt:t.simTime,startEnergy:t.energyUsedKWh||0,previousWind:safeWind(sim,t),previousSupply:sim.params.supplyMode,windChanged:false,supplyChanged:false,stageTargetStart:null,hasSeenManeuver:false,effectiveRateDegS:null,fixedStats:{lastTime:t.simTime,count:0,positionCount:0,sumPositionSquared:0,peakPositionErrorM:null,peakAttitudeErrorDeg:null,allocationCount:0,saturatedCount:0,gasThroughputKg:0}};
     this.active=active;
     try{
       if(validated.supplyMode!=='inherit'){sim.setSupplyMode(validated.supplyMode);active.supplyChanged=true;}
@@ -203,7 +204,24 @@ export class FlightProgramRunner{
     const a=this.active;
     if(a.sim!==this.getSim()||a.context!==this.getContext()){this.cancel('已切换场景');return pilotInput;}
     if(hasPilotInput(pilotInput)){this.cancel('驾驶输入接管');return pilotInput;}
-    const sim=a.sim;this.afterFixedStep(sim.telemetry());
+    const sim=a.sim,actual=sim.telemetry();this.afterFixedStep(actual);
+    if(!a.recovery&&this.finiteRecovery&&actual.simTime>=a.finiteCheckAt-1e-9){
+      a.finiteCheckAt=actual.simTime+FINITE_PROGRAM_RECOVERY.sampleIntervalS;
+      const decision=finiteProgramRecoveryDecision(sim,actual);
+      if(decision){
+        const accepted=sim.startManeuver('land');
+        if(accepted===false||!sim.telemetry().maneuver){this._finish('failed','有限储气回收请求未被着陆控制接受');return pilotInput;}
+        a.recovery=beginFiniteRecovery(actual,decision,Math.min(FINITE_PROGRAM_RECOVERY.maximumRecoveryS,Math.max(.25,PROGRAM_LIMITS.durationS-a.elapsedS)));
+        a.target=null;const stage=a.stages.at(-1);stage.durationS=a.stageElapsedS;stage.outcome='interrupted-for-finite-recovery';
+        this.onEvent('program_finite_recovery',{programId:a.program.id,stageIndex:a.index,decision});
+      }
+    }
+    if(a.recovery){
+      const outcome=observeFiniteRecovery(sim,a.recovery,actual,fixedDt);
+      if(actual.simTime-(a.previousSample?.simTime??a.startTime)>=.05-1e-9)this._sample(actual);
+      if(outcome){this._finish(outcome.status,outcome.reason);return pilotInput;}
+      a.elapsedS+=fixedDt;return pilotInput;
+    }
     if(sim.simTime<a.lastSimTime-1e-8){this.cancel('仿真已重新初始化');return pilotInput;}
     a.lastSimTime=sim.simTime;
     if(sim.simTime-(a.previousSample?.simTime??a.startTime)>=.05-1e-9){const t=sim.telemetry();a.lastTelemetry=t;this._sample(t);if(t.fault){this._finish('failed',t.fault);return pilotInput;}}
@@ -240,7 +258,7 @@ export class FlightProgramRunner{
     return pilotInput;
   }
   afterFixedStep(t,dt=1/120){
-    const a=this.active;if(!a||!t||t.simTime<=a.fixedStats.lastTime+1e-10)return;const s=a.fixedStats,elapsed=t.simTime-s.lastTime;if(Math.abs(elapsed-1/120)>1e-7)return;s.lastTime=t.simTime;s.count++;const ep=positionError(t.position,a.target?.position),ea=quaternionErrorDeg(t.quaternion,a.target?.quaternion??(a.stage?.type==='rate'?t.manualQuaternionTarget:null));if(ep!==null){s.positionCount++;s.sumPositionSquared+=ep*ep;s.peakPositionErrorM=Math.max(s.peakPositionErrorM??0,ep);}if(ea!==null)s.peakAttitudeErrorDeg=Math.max(s.peakAttitudeErrorDeg??0,ea);if(finite(t.allocationError)){s.allocationCount++;if(t.holdFeasible===false||t.manualPoseFeasible===false||t.allocationError>.2)s.saturatedCount++;}s.gasThroughputKg+=Math.max(0,t.massFlowKgS||0)/120;
+    const a=this.active;if(!a||!t||t.simTime<=a.fixedStats.lastTime+1e-10)return;const s=a.fixedStats,elapsed=t.simTime-s.lastTime;if(Math.abs(elapsed-1/120)>1e-7)return;s.lastTime=t.simTime;s.count++;const ep=positionError(t.position,a.target?.position),ea=quaternionErrorDeg(t.quaternion,a.target?.quaternion??(a.stage?.type==='rate'?t.manualQuaternionTarget:null));if(ep!==null){s.positionCount++;s.sumPositionSquared+=ep*ep;s.peakPositionErrorM=Math.max(s.peakPositionErrorM??0,ep);}if(ea!==null)s.peakAttitudeErrorDeg=Math.max(s.peakAttitudeErrorDeg??0,ea);if(finite(t.allocationError)){s.allocationCount++;if(t.holdFeasible===false||t.manualPoseFeasible===false||t.allocationError>.2)s.saturatedCount++;}s.gasThroughputKg+=Number.isFinite(t.integration?.gasThroughputKg)&&Math.abs(t.integration.controlDtS-1/120)<1e-10?t.integration.gasThroughputKg:Math.max(0,t.massFlowKgS||0)/120;
   }
   _sample(t){
     const a=this.active;if(!a)return;
@@ -277,10 +295,10 @@ export class FlightProgramRunner{
     if(a.supplyChanged)sim.setSupplyMode(a.previousSupply);
     const es=a.samples.filter(s=>s.positionErrorM!==null),att=a.samples.filter(s=>s.attitudeErrorDeg!==null),alloc=a.samples.filter(s=>s.allocationError!==null);
     const result={schema:'roadster.flight-program-result',version:2,identity:copy(a.identity),initialSnapshot:a.initialSnapshot,initialParams:a.initialParams,actualInheritedWind:a.previousWind,initialSimTime:a.startTime,sourceProtocol:'flight-program-v1',replayNote:'完整现场输入与命令日志由关联 live-experiment 记录保存；仅此流程结果不能替代原始输入重放。',id:`run-${++this.serial}-${a.startedAt.replace(/[^0-9]/g,'')}`,programId:a.program.id,name:a.program.name,context:a.context,startedAt:a.startedAt,status,reason,durationS:Math.max(0,t.simTime-a.startTime),supplyMode:a.program.supplyMode==='inherit'?a.previousSupply:a.program.supplyMode,controller:Object.fromEntries(CONTROLLER_FIELDS.map(([key,,,,,,fallback])=>[key,sim.params[key]??fallback])),wind:a.program.wind===null?a.previousWind:a.program.wind,program:copy(a.program),sampling:sampleDescription(a.samples),summary:{statisticsSource:'raw simulation-time samples before display decimation',statisticsHz:20,statisticsCount:a.samples.length,peakPositionErrorM:es.length?Math.max(...es.map(s=>s.positionErrorM)):null,rmsPositionErrorM:es.length?Math.sqrt(es.reduce((sum,s)=>sum+s.positionErrorM*s.positionErrorM,0)/es.length):null,peakAttitudeErrorDeg:att.length?Math.max(...att.map(s=>s.attitudeErrorDeg)):null,saturationFraction:alloc.length?alloc.filter(s=>s.feasible===false||s.allocationError>.2).length/alloc.length:null,gasThroughputKg:a.gasThroughputKg,onboardDischargedKg:(a.program.supplyMode==='inherit'?a.previousSupply:a.program.supplyMode)==='finite'?a.gasThroughputKg:0,externalSupplyKg:(a.program.supplyMode==='inherit'?a.previousSupply:a.program.supplyMode)==='bench'?a.gasThroughputKg:0,gasRemainingKg:numeric(t.gasMass),energyUsedKWh:Math.max(0,(t.energyUsedKWh||0)-a.startEnergy),finalPositionErrorM:positionError(t.position,a.target?.position),finalAttitudeErrorDeg:quaternionErrorDeg(t.quaternion,a.target?.quaternion),finalFeasible:t.holdFeasible??null},stages:copy(a.stages),samples:copy(a.samples)};
-    if(!failure)this.afterFixedStep(t);const fixed=a.fixedStats;const expected=Math.round(result.durationS*120);if(fixed.count===expected&&fixed.count>0){Object.assign(result.summary,{statisticsSource:'all fixed 120 Hz post-integration states; independent of stored display curves',statisticsHz:120,statisticsCount:fixed.count,peakPositionErrorM:fixed.peakPositionErrorM,rmsPositionErrorM:fixed.positionCount?Math.sqrt(fixed.sumPositionSquared/fixed.positionCount):null,peakAttitudeErrorDeg:fixed.peakAttitudeErrorDeg,saturationFraction:fixed.allocationCount?fixed.saturatedCount/fixed.allocationCount:null,gasThroughputKg:fixed.gasThroughputKg,onboardDischargedKg:result.supplyMode==='finite'?fixed.gasThroughputKg:0,externalSupplyKg:result.supplyMode==='bench'?fixed.gasThroughputKg:0});}result.failureEvidence=failure;
+    if(!failure)this.afterFixedStep(t);const fixed=a.fixedStats;const expected=Math.round(result.durationS*120);if(fixed.count===expected&&fixed.count>0){Object.assign(result.summary,{statisticsSource:'all fixed 120 Hz post-integration states; independent of stored display curves',statisticsHz:120,statisticsCount:fixed.count,peakPositionErrorM:fixed.peakPositionErrorM,rmsPositionErrorM:fixed.positionCount?Math.sqrt(fixed.sumPositionSquared/fixed.positionCount):null,peakAttitudeErrorDeg:fixed.peakAttitudeErrorDeg,saturationFraction:fixed.allocationCount?fixed.saturatedCount/fixed.allocationCount:null,gasThroughputKg:fixed.gasThroughputKg,onboardDischargedKg:result.supplyMode==='finite'?fixed.gasThroughputKg:0,externalSupplyKg:result.supplyMode==='bench'?fixed.gasThroughputKg:0});}result.failureEvidence=failure;result.finiteRecovery=a.recovery?copy(a.recovery):null;result.finiteRecoveryPolicy=this.finiteRecovery?FINITE_PROGRAM_RECOVERY:null;
     attachRuntimeProvenance(result);this.active=null;this.lastResult=result;this.onEvent('program_finish',{id:a.program.id,status,reason,durationS:result.durationS});this.onFinish(result);
   }
-  getState(){const a=this.active,r=this.lastResult;return a?{running:true,id:a.program.id,name:a.program.name,stage:a.index+1,stageCount:a.program.stages.length,stageType:a.stage?.type,stageLabel:a.stage?stageLabel(a.stage):'',elapsedS:a.elapsedS,stageElapsedS:a.stageElapsedS,stageDurationS:a.stage?.durationS??0,settledS:a.settledS,target:a.target?copy(a.target):null,effectiveRateDegS:a.effectiveRateDegS,gasThroughputKg:a.gasThroughputKg}:{running:false,result:r?{id:r.id,name:r.name,programId:r.programId,status:r.status,reason:r.reason,durationS:r.durationS,summary:{...r.summary}}:null};}
+  getState(){const a=this.active,r=this.lastResult;return a?{running:true,id:a.program.id,name:a.program.name,stage:a.index+1,stageCount:a.program.stages.length,stageType:a.recovery?'land':a.stage?.type,stageLabel:a.recovery?'有限储气：提前着陆':a.stage?stageLabel(a.stage):'',elapsedS:a.elapsedS,stageElapsedS:a.recovery?.elapsedS??a.stageElapsedS,stageDurationS:a.recovery?.maximumS??a.stage?.durationS??0,settledS:a.settledS,target:a.target?copy(a.target):null,effectiveRateDegS:a.effectiveRateDegS,gasThroughputKg:a.gasThroughputKg,finiteRecovery:a.recovery?{state:a.recovery.state,originalTaskCompleted:false,reason:a.recovery.decision.reason}:null}:{running:false,result:r?{id:r.id,name:r.name,programId:r.programId,status:r.status,reason:r.reason,durationS:r.durationS,summary:{...r.summary}}:null};}
 }
 
 /** Persist compact measured records, while full 20 Hz samples remain available

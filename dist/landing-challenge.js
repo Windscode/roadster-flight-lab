@@ -64,7 +64,7 @@ export class LandingTaskRunner{
     // Floor gap below the full collision shape AABB is explicitly an estimate;
     // it is valid only in this declared flat central task field, not city AGL.
     this.sim.body.updateAABB();const envelopeGap=this.sim.body.aabb.lowerBound.y;stats.minEnvelopeClearanceM=Math.min(stats.minEnvelopeClearanceM??Infinity,envelopeGap);
-    const flow=Math.max(0,t.massFlowKgS||0)*dt;stats.gasThroughputKg+=flow;if(t.supplyMode==='bench')stats.externalSupplyKg+=flow;else stats.onboardDischargedKg+=flow;
+    const flow=Number.isFinite(t.integration?.gasThroughputKg)&&Math.abs(t.integration.controlDtS-dt)<1e-10?t.integration.gasThroughputKg:Math.max(0,t.massFlowKgS||0)*dt;stats.gasThroughputKg+=flow;if(t.supplyMode==='bench')stats.externalSupplyKg+=flow;else stats.onboardDischargedKg+=flow;
     stats.peakMassFlowKgS=Math.max(stats.peakMassFlowKgS,t.massFlowKgS||0);
     if(time<=HEIGHT_RESPONSE_CRITERIA.plateauEndS+1e-10){stats.takeoffHoldGasKg+=flow;stats.takeoffHoldDurationS=time;}
     if(time>=HEIGHT_RESPONSE_CRITERIA.plateauStartS&&time<=HEIGHT_RESPONSE_CRITERIA.plateauEndS+1e-10){

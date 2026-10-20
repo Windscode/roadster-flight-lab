@@ -2,6 +2,16 @@
 // are exterior shop/portal compositions, not rooms or new collision volumes.
 export function streetFrontageDesign(building,frontage){
   if(!frontage)return null;
+  if(frontage.family==='downtown'){
+    const variants=[
+      {order:'gallery',bay:8.4,wall:0x9ca69f,trim:0x3d575a,base:0x596c66,glass:0x355a64,signTiles:[6,8]},
+      {order:'residential',bay:6.4,wall:0xafa18a,trim:0x4d514c,base:0x71634f,glass:0x3c525b,signTiles:[1,9]},
+      {order:'workshop',bay:8.9,wall:0x839d9c,trim:0x345458,base:0x4d6869,glass:0x355d6a,signTiles:[2,7]},
+      {order:'exchange',bay:10.2,wall:0xada998,trim:0x46585a,base:0x69726a,glass:0x405b66,signTiles:[8,5]},
+      {order:'gallery',bay:7.3,wall:0x899d95,trim:0x3b5754,base:0x576961,glass:0x365960,signTiles:[11,3]},
+    ];
+    return {...variants[(Math.abs(building.style||0)+(frontage.side%2))%variants.length],family:'downtown',portalOnlyLighting:true};
+  }
   const side=building.x< -200?0:1;
   if(frontage.family==='market'){
     const exchange=building.z>=-290&&building.z< -235;
@@ -55,7 +65,10 @@ export function buildStreetGroundOrder(f,design,{shopH,side,building,stats,light
       f.put('metal',[opening+.18,.15,.58],x,shopH-.65,.10,d.trim,.90);stats.facadePortals++;
     }else{
       const sill=d.order==='gallery'?.48:d.order==='market'?.60:.34;
-      f.put('glass',[w,shopH-sill-.64,.09],x,(shopH+sill)/2-.12,-.34,d.glass,.98);
+      // A dim sealed display panel gives selected occupied shop bays a lower
+      // luminance than the sparse upper windows. This is an exterior backing,
+      // not an invented interior, and supplies no unbaked world illumination.
+      f.put(!portal&&(j+side)%3!==2?'displayGlass':'glass',[w,shopH-sill-.64,.09],x,(shopH+sill)/2-.12,-.34,d.glass,.98);
       f.put(d.order==='gallery'?'concrete':'ceramic',[w,sill-.20,.36],x,(sill+.20)/2,.19,d.base,.92);
       // Shop window + offset door; proportions vary with actual business use.
       const doorX=x+(j%2?-.28:.28)*w;
@@ -66,11 +79,24 @@ export function buildStreetGroundOrder(f,design,{shopH,side,building,stats,light
     }
     if(portal||j===0||d.order==='market'&&j%2===0){
       const sw=portal&&tallOrder?Math.min(5.3,w):Math.min(w*.76,4.8),sy=shopH-.67;
-      f.put('metal',[sw+.14,.64,.18],x,sy,.27,d.trim,.88);
-      f.put('signs',[sw,.53,1],x,sy,.375,0xffffff,.91,'plane',d.signTiles[j%d.signTiles.length]);
-      f.put('lamp',[Math.min(sw-.28,2.4),.045,.10],x,sy-.38,.38,0xffffff,.56);
-      lights.push({id:`frontage-${building.id}-${side}-${j}`,position:f.point(x,sy-.40,.69),target:f.point(x,.30,3.0),
-        color:d.order==='service'?0xd2e0e5:d.order==='exchange'?0xe7d3b4:0xf2d6ac,intensity:portal?210:125,range:11,practical:true,role:'door',building:building.id});
+      // The face datum is 0.50 m inside the shared closed building envelope.
+      // Project the whole sign/downlight assembly beyond that envelope; moving
+      // only the emitter would detach it from its lens. Two short standoffs
+      // overlap both the masonry header and the sign backplate.
+      f.put('metal',[sw+.14,.64,.18],x,sy,.47,d.trim,.88);
+      for(const end of [-1,1])f.put('metal',[.10,.14,.34],x+end*sw*.36,sy+.27,.26,d.trim,.82);
+      f.put('signs',[sw,.53,1],x,sy,.575,0xffffff,.91,'plane',d.signTiles[j%d.signTiles.length]);
+      if(!d.portalOnlyLighting||portal){
+        const lampWidth=Math.min(sw-.28,2.4);
+        // This backing joins the sign's bottom edge and the lens top with a
+        // small overlap, closing the old 37.5 mm unsupported vertical gap.
+        f.put('metal',[lampWidth+.12,.04,.12],x,sy-.33875,.58,d.trim,.88);
+        f.put('lamp',[lampWidth,.045,.10],x,sy-.38,.58,0xffffff,.56);
+        // The source sits immediately under the actual lens and grazes the
+        // portal/reveals. Source and target now also clear the bake envelope.
+        lights.push({id:`frontage-${building.id}-${side}-${j}`,position:f.point(x,sy-.409,.58),target:f.point(x,.80,.62),
+          color:d.order==='service'?0xd2e0e5:d.order==='exchange'?0xe7d3b4:0xf2d6ac,intensity:d.portalOnlyLighting?120:portal?180:105,range:11,angle:1.08,penumbra:.48,practical:true,role:'door',building:building.id});
+      }
     }
     // Sparse upper transoms and service labels replace the repeated awning.
     if(!closed&&j%2===0&&d.order==='gallery'){

@@ -1,7 +1,8 @@
+import {createStreetSectionFinishes} from './city-street-sections.js';
 // Authored 3.14 public-space pass. Road centrelines, legal widths, the 114
 // building parcels and the 113 elevated segments are retained. Raised elements
 // enter the same collision/lighting geometry; markings are optical finishes.
-export const CITY_CONTINUITY_VERSION='city-continuity-3.14-1';
+export const CITY_CONTINUITY_VERSION='city-continuity-3.16-1';
 const distance=(p,a,b)=>{const dx=b[0]-a[0],dz=b[2]-a[2],t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[2]-a[2])*dz)/(dx*dx+dz*dz)));return{distance:Math.hypot(p[0]-a[0]-dx*t,p[2]-a[2]-dz*t),y:a[1]+(b[1]-a[1])*t,t};};
 export function roadOccupancy(position,streets,routes=[],margin=.6){
   for(const road of [...streets,...routes])for(let i=1;i<road.points.length;i++){
@@ -13,15 +14,16 @@ export function roadOccupancy(position,streets,routes=[],margin=.6){
 export function backgroundLightLayout(streets,routes,plannedDistrictAt){
   const lights=[],excluded=[];
   for(let x=-600;x<=600;x+=100)for(let z=-580;z<=580;z+=55)for(const side of [-1,1]){
-    if(plannedDistrictAt(x,z))continue;
-    const pole=[x+side*12.7,0,z],conflict=roadOccupancy(pole,streets,routes,1.0);
+    const staggered=z+(side>0?27.5:0);if(staggered>603)continue;
+    if(plannedDistrictAt(x,staggered))continue;
+    const pole=[x+side*12.7,0,staggered],conflict=roadOccupancy(pole,streets,routes,1.0);
     if(conflict){excluded.push({pole,reason:'authored-carriageway-or-ramp',road:conflict.road});continue;}
-    lights.push({pole,head:[x+side*12,7.85,z],side});
+    lights.push({pole,head:[x+side*12,7.85,staggered],target:[x+side*3.4,.08,staggered+4.5],side});
   }
   return {lights,excluded};
 }
 
-export function createCityContinuity(streets,routes,buildings){
+export function createCityContinuity(streets,routes,buildings,reservations=[]){
   const solids=[],finishes=[],signs=[],lights=[],coverage=[];
   const box=(id,size,position,material='continuity-stone',rotation=[0,0,0],kind='continuity-structure')=>{const item={id:'continuity-'+id,kind,size,position,rotation,data:{material,project:CITY_CONTINUITY_VERSION}};solids.push(item);return item;};
   const finish=(id,size,position,material='paint',rotation=[0,0,0])=>finishes.push({id:'continuity-'+id,size,position,material,rotation});
@@ -63,6 +65,29 @@ export function createCityContinuity(streets,routes,buildings){
     }
     row.finishes=finishes.filter(f=>f.id.startsWith('continuity-'+street.id+'-')).length;coverage.push(row);
   }
+
+  // The selected Weave → Central Cross Street → Foundry route previously
+  // lost its footway section between z=-149 and z=138. New shared strips
+  // connect to the existing industrial pavement, leaving the inherited
+  // 28 m background crossings at z=0 and z=100 and the turning mouth open.
+  const connectorFootways=[];
+  for(const [start,end]of [[-117,-16],[16,84],[116,138]])for(const side of [-1,1]){
+    const id='foundry-inner-walk-'+side+'-'+start;
+    box(id,[3,.12,end-start],[100+side*10.5,.06,(start+end)/2],'basalt',[0,0,0],'continuity-paving');
+    finish(id+'-edge',[.095,.006,end-start],[100+side*8.67,.024,(start+end)/2]);
+    connectorFootways.push({id:'continuity-'+id,street:'foundry-main',from:start,to:end,side,clearHalfWidthM:9});
+  }
+  // A sheltered seat marks the long cross-town transition. All structural
+  // volumes share the existing 3 m footway; no column enters the road.
+  for(const x of [-79,-73])box('crosstown-shelter-post-'+x,[.12,3.0,.12],[x,1.62,-144.05],'weathered-steel');
+  box('crosstown-shelter-roof',[6.6,.18,1.65],[-76,3.15,-143.64],'weathered-steel');
+  box('crosstown-shelter-back',[6.1,2.30,.08],[-76,1.60,-144.08],'glazing');
+  box('crosstown-shelter-seat',[3.5,.10,.48],[-76,.63,-143.72],'corridor-wood');
+  for(const x of [-77.3,-74.7])box('crosstown-shelter-seat-leg-'+x,[.08,.46,.38],[x,.35,-143.72],'steel');
+  signs.push({text:'CENTRAL → FOUNDRY / 机造大道',position:[-76,2.83,-143.92],width:5.3,height:.40,yaw:0});
+  lights.push({id:'crosstown-shelter-soffit',position:[-76,3.045,-143.28],target:[-76,.14,-141.8],intensity:95,range:9,color:0xc9e0e1,angle:.95,practical:true,role:'soffit',lensSize:[2.8,.028,.10]});
+  const sections=createStreetSectionFinishes(streets,routes,buildings,reservations);
+  finishes.push(...sections.finishes);
 
   // South approach: vehicle apron and parking stay north of the inherited
   // 12 m accessible ramp. A walking/service route is stated, not blocked off.
@@ -161,5 +186,5 @@ export function createCityContinuity(streets,routes,buildings){
     box('boundary-sign-'+id,[.16,3,.16],[position[0],1.5,position[2]],'steel');
   }
   const connectionCoverage=routes.flatMap(route=>route.points.slice(1).map((b,i)=>({routeId:route.id,segment:i,from:route.points[i],to:b,widthM:route.width,sharedSlab:true,railAndPaint:'retained actual tangent',nativeDrive:'pending-final-build'})));
-  return {version:CITY_CONTINUITY_VERSION,solids,finishes,signs,lights,coverage,connectionCoverage,routeSequence:['weave-main','crosstown-link','foundry-main','terrace-link','terrace-west','forum-west-link','forum-main','forum-cross-322','forum-court','canal-link','south-quay-entry'],limits:'Base street pass plus authored maintenance/civic/waterfront transitions. Not final all-street art, physical driving coverage or GPU/performance acceptance.'};
+  return {version:CITY_CONTINUITY_VERSION,solids,finishes,signs,lights,coverage,streetSections:sections,connectorFootways,connectionCoverage,routeSequence:['weave-main','crosstown-link','foundry-main','terrace-link','terrace-west','forum-west-link','forum-main','forum-cross-322','forum-court','canal-link','south-quay-entry'],limits:'Base street pass plus authored maintenance/civic/waterfront transitions. Not final all-street art, physical driving coverage or GPU/performance acceptance.'};
 }

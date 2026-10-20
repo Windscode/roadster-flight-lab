@@ -1,3 +1,4 @@
+import {exportJson,exportFile} from './export-download.js';
 import './research-i18n-3.14.js';
 import {ExperimentRecorder,ExperimentPlayback,EXPERIMENT_LIMITS,EXPERIMENT_LIBRARY_KEY,loadExperimentArchive,saveExperimentArchive,exportExperimentArchive,parseExperimentArchive,experimentCSV,replayEligibility,currentExperimentIdentity,contentLabel} from './experiment-records.js';
 import {CONTROLLER_FIELDS,validateController,hasPilotInput} from './flight-programs.js';
@@ -39,7 +40,7 @@ export function createExperimentConsole({mount,getSim,getContext=()=> 'city',get
       <p class="rc-help">整库 JSON 含全部现场实验及关联数值对照；单记录 CSV 仅含选中记录的已存曲线和原始统计说明。浏览器最多 32 项 / 4 MiB：达到上限后保留旧记录，新结果仍可在本会话导出。曲线可抽稀，快照、输入、事件和原始统计保持完整。</p>
     </section>`;
   const $=name=>mount.querySelector(`[data-ex="${name}"]`),buttons=key=>Array.from(mount.querySelectorAll(`[data-ex-action="${key}"]`));
-  function download(value,name,type='application/json'){const url=URL.createObjectURL(new Blob([value],{type})),a=doc.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  function download(value,name,type='application/json'){return exportFile(value,name,type,{doc});}
   function selected(){return records.find(r=>r.id===selectedId)||records.at(-1)||null;}
   function requireLive(){if(!available||!getLiveAvailable()||!getSim())throw Error(unavailableReason||'图形现场不可用；仍可查看历史、导出和运行数值研究');}
   function paintPersistence(){const state=persistence.snapshot();$('persistence').hidden=!state.sessionOnly;$('persistence').textContent=state.sessionOnly?'现场记录：仅本会话 / 未保存。'+state.message+'。可导出当前完整结果与整库；完成状态不表示已保存。':'';$('persistence').dataset.persistence=JSON.stringify(state);localizeTree($('persistence'));}
@@ -143,8 +144,8 @@ export function createExperimentConsole({mount,getSim,getContext=()=> 'city',get
     else if(action==='copy-draft-controller'){setControllerFields(getControllerDraft());notify('B 已读取控制面板输入值；现场车辆参数未改变。');}
     else if(action==='apply-observation'||action==='reset-observation'){requireLive();let config={enabled:false};if(action==='apply-observation'){config.enabled=$('observation-enabled').checked;for(const field of mount.querySelectorAll('[data-ex-observation]')){if(!field.checkValidity())throw Error('观测参数超出范围');config[field.dataset.exObservation]=field.valueAsNumber;}}if(getSim().setObservation(config)===false)throw Error('测量模型参数无效');notify('测量模型已应用；控制器将使用统一观测接口。');update(getSim().telemetry());}
     else if(action==='apply-fault'||action==='clear-fault'){requireLive();if(action==='clear-fault')getSim().clearNozzleFault();else{if(!$('fault-scale').checkValidity())throw Error('降额比例必须在 0–1');if(getSim().setNozzleFault({id:$('fault-id').value,scale:$('fault-scale').valueAsNumber})===false)throw Error('喷口 ID / 降额比例无效');}notify('喷口能力已更新，推力分配与气源消耗继续由物理模型计算。');update(getSim().telemetry());}
-    else if(action==='export-all')download(JSON.stringify({...exportExperimentArchive(records),persistence:persistence.snapshot(),protectedRaw},null,2),'roadster-live-experiments-all.json');
-    else if(action==='export-one'||action==='export-csv'){const record=selected();if(!record)throw Error('先选择记录');download(action==='export-csv'?'\uFEFF'+experimentCSV(record):JSON.stringify(record,null,2),record.id+(action==='export-csv'?'.csv':'.json'),action==='export-csv'?'text/csv;charset=utf-8':'application/json');}
+    else if(action==='export-all')exportJson(()=>({...exportExperimentArchive(records.slice()),persistence:persistence.snapshot(),protectedRaw}),'roadster-live-experiments-all.json',{doc});
+    else if(action==='export-one'||action==='export-csv'){const record=selected();if(!record)throw Error('先选择记录');if(action==='export-csv')download(()=>'\uFEFF'+experimentCSV(record),record.id+'.csv','text/csv;charset=utf-8');else exportJson(()=>record,record.id+'.json',{doc});}
     else if(action==='export-protected'&&protectedRaw)download(protectedRaw,'roadster-live-protected-archive.json');
     else if(action==='delete-selected'){if(recorder.active||playback||worker)throw Error('请先结束正在记录或执行的试验');const record=selected();if(!record)return;if(protectedRaw)throw Error('原存档受保护，请先导出并修复，当前不覆盖旧数据');const candidate=records.filter(r=>r.id!==record.id),expectedRaw=diskRaw;try{saveExperimentArchive(storage,candidate,{protectedRaw,replace:true,expectedRaw});}catch(error){persistence.failed(error);paintPersistence();throw error;}records=candidate;selectedId=records.at(-1)?.id??null;diskRaw=storage.getItem(EXPERIMENT_LIBRARY_KEY);persistence.saved();render();notify('已删除选中的现场记录。');}
     paintStatus();

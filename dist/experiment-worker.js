@@ -88,7 +88,7 @@ export function runExperiment(raw={}){
   if(['hover','attitude'].includes(kind)&&Math.abs(heightError)>.75)heightFailureTimer+=dt;else heightFailureTimer=0;
   if(heightFailureTimer>=.25&&heightLoss===null)heightLoss=t.simTime;
   if(t.gasMass<.01&&gasEmpty===null)gasEmpty=t.simTime;
-  totalFlow+=t.massFlowKgS*dt;impulse+=t.thrustN*dt;
+  totalFlow+=t.integration?.gasThroughputKg??t.massFlowKgS*dt;impulse+=t.integration?.deliveredImpulseNs??t.thrustN*dt;
   const saturated=t.nozzles.some(n=>n.maxForce>1&&n.command>=n.maxForce*.98);if(saturated)saturationSeconds+=dt;
   if(t.desiredWrench.some(v=>Math.abs(v)>1)){residualSquared+=t.allocationError**2;activeControlSteps++;}
   const positionError=Math.hypot(t.position.x,t.position.z+350),attitudeErrorDeg=2*Math.acos(clamp(Math.abs(t.quaternion.w),0,1))/rad;

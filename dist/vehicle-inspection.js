@@ -27,11 +27,12 @@ const $=id=>document.getElementById(id),stage=$('inspection-stage');
 const CURRENT_RELEASE=MODEL_VERSION.replace(/\.0$/,'');
 const inspectionParams=new URLSearchParams(location.search);
 const BASELINES=Object.freeze({
+  '3.15':{version:'3.15.0',commit:'9f6c8f47a2678beee3915a0320ac2bf93312e96b',sourceSHA256:'b9ce9ad625561c45e2843d88763adbf6767bb44d2dedcd3194f6080ca8e0f591',load:()=>import('./vehicle-reference-3.15.js')},
   '3.13':{version:'3.13.0',commit:'1dde9a3df081297978d7cc98409be86bcc6daa23',sourceSHA256:'70515d7eec676d7a36f121701d0a7be17be6b19c0b4a826bfc794c279ccbb5b2',load:()=>import('./vehicle-reference-3.13.js')},
   '3.9':{version:'3.9.0',commit:'6083bbf0e01f4eef5447f2c1b951d8b41e691f46',sourceSHA256:'cb37f8d9ca5b502831f1ea0f4a3642c3c3a4436976a75e489d65a412a6f1d05a',load:()=>import('./vehicle-reference-3.9.js')},
   '3.8':{version:'3.8.0',commit:'a25b228a6d56f358cba24106ce897e1cb5c99bc1',sourceSHA256:'3f532f879f1a86af187a7f89a8f860de61175bdef27d78a783e2ba7fb62763f7',load:()=>import('./vehicle-reference-3.8.js')}
 });
-const baselineCache=new Map(),baselineLoading=new Map();let baselineVersion='3.13';
+const baselineCache=new Map(),baselineLoading=new Map();let baselineVersion='3.15';
 let renderer,renderPrograms,scene,camera,controls,car,surfaceDiagnostics,inspectionKeyLight,baseline=null,baselineGeometry=null,baselineActive=false,cut=false,sealed=false,sweep=false,lightMode='studio',viewId='front-quarter',lastTime=performance.now(),frameId,captureBusy=false,photoReference=null,photoAligned=false,activeFocalLength=RIG.focalLengthMm,captureAbort=null,deploymentIdentity=null;
 const inspectionViews=[...RIG.cameras,...VEHICLE_EXTRA_TECHNICAL_VIEWS];
 if(typeof fetch==='function')fetch('./deployment.json',{cache:'no-store'}).then(response=>response.ok?response.json():null).then(value=>{deploymentIdentity=value;}).catch(()=>{});
@@ -129,6 +130,7 @@ try{
     $('model-current').textContent='当前 '+CURRENT_RELEASE+' 外观';$('model-baseline').textContent=baselineVersion+' 外观基线';
     $('model-caption').textContent=baselineActive?'BASELINE / '+baselineVersion:'CURRENT / '+CURRENT_RELEASE;
     $('capture-pair').textContent='导出同机位 '+baselineVersion+' / '+CURRENT_RELEASE+' 对照 PNG';
+    $('capture-study').textContent='六机位 · 棚光 / 自然光 · '+baselineVersion+' 对照 ZIP';
     $('wing-deployment').disabled=captureBusy;refreshDisplayIdentity();
   }
   async function loadBaseline(version=baselineVersion){
@@ -253,7 +255,7 @@ try{
     $('ready').textContent=kind==='suite'?'正在采集六机位同条件车模对照…':'正在录制 12 秒真实慢转；可取消并保留已录部分。';
     try{
       surfaceDiagnostics.setMode('surface');$('surface-mode').value='surface';baselineActive=false;
-      if(kind==='suite'){baselineVersion='3.13';$('reference-version').value='3.13';await loadBaseline();car.setDisplayConfiguration('experimental');car.setLampMode('low-beam');$('lamp-mode').value='low-beam';}
+      if(kind==='suite'){await loadBaseline();car.setDisplayConfiguration('experimental');car.setLampMode('low-beam');$('lamp-mode').value='low-beam';}
       frozenArticulation();refreshModel();
       const assertContext=()=>{if(renderer.getContext().isContextLost()||stage.dataset.graphics!=='ready')throw Error(t('采集时 WebGL 上下文不可用。'));};
       let result;

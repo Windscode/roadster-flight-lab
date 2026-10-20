@@ -38,6 +38,13 @@ export function routeFacingFacade(b,side){
   return best;
 }
 
+// General streets keep their own low-rise entrance rhythms as well. This
+// applies only to the ground storey; it does not promote every distant tower
+// to the expensive curated upper-facade representation.
+export function backgroundGroundFrontage(building,side){
+  return building.id.startsWith('block-')&&(building.baseY||0)===0?{family:'downtown',side}:null;
+}
+
 export function buildUrbanArchitecture(THREE,root,buildings) {
   const group=new THREE.Group();group.name='Urban architecture / street-facing civic, residential and working facades';root.add(group);
   const lightAnchors=[],batches=new Map(),geometries=[],materials=[],textures=[],visibility=createCityVisibility(THREE),surfaces=createCityExteriorMaterials(THREE);
@@ -107,13 +114,15 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     metal:material('weathered steel',{roughness:.7,metalness:.58}),
     edges:material('anodised frame',{roughness:.37,metalness:.74}),
     glass:material('sealed exterior glazing',{roughness:.16,metalness:0,envMapIntensity:1.12}),
-    litGlass:material('diffused exterior window pane',{roughness:.20,metalness:0,emissive:0xffd3a0,emissiveIntensity:.09,envMapIntensity:1.0}),
+    displayGlass:material('dim sealed street display glazing',{roughness:.25,metalness:0,emissive:0xe2c7a0,emissiveIntensity:.055,envMapIntensity:.8}),
+    litGlass:material('diffused exterior window pane',{roughness:.20,metalness:0,emissive:0xffd3a0,emissiveIntensity:.21,envMapIntensity:1.0}),
     shutter:material('rolled metal shutter',{roughness:.54,metalness:.72}),
     signs:material('original painted sign atlas',{map:signAtlas,emissiveMap:signAtlas,emissive:signAtlas?0xffffff:0x000000,emissiveIntensity:.18,roughness:.6,metalness:.12}),
     lamp:material('small practical light',{color:0xffdcb1,emissive:0xffc994,emissiveIntensity:2.1,roughness:.35}),
     accent:material('restrained signage accent',{emissive:0xffffff,emissiveIntensity:1.3,roughness:.4,metalness:.15}),
   };
   mat.litGlass.userData.windowBacklight=true;
+  mat.displayGlass.userData.windowBacklight=true;
   mat.accent.onBeforeCompile=shader=>{
     shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
       #if defined(USE_COLOR) || defined(USE_INSTANCING_COLOR)
@@ -121,7 +130,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       #endif`);
   };
   mat.accent.customProgramCacheKey=()=> 'urban-practical-instance-colour-v1';
-  for(const [key,kind]of Object.entries({concrete:'concrete',darkConcrete:'concrete',ceramic:'enamel',metal:'metal',edges:'frame',glass:'glass',litGlass:'glass',shutter:'shutter'}))surfaces.attach(mat[key],kind);
+  for(const [key,kind]of Object.entries({concrete:'concrete',darkConcrete:'concrete',ceramic:'enamel',metal:'metal',edges:'frame',glass:'glass',displayGlass:'glass',litGlass:'glass',shutter:'shutter'}))surfaces.attach(mat[key],kind);
   // One atlas material per sector, with per-instance UV rects, rather than one
   // draw call for every sign or one material for every illuminated window.
   for(const m of [mat.signs])if(m.map){
@@ -146,7 +155,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     // Mineral returns and tile trim share the 160 m facade-sector grid even
     // when their visibility is detail-limited. Material keys remain separate;
     // this avoids a new sparse batch for every small street-facing return.
-    const level=levelOverride||(kind==='shutter'||kind==='litGlass'?'facade':architectureDetailLevel(kind,geometry,size)),cellSize=level==='detail'&&kind!=='concrete'&&kind!=='ceramic'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
+    const level=levelOverride||(kind==='shutter'||kind==='litGlass'||kind==='displayGlass'?'facade':architectureDetailLevel(kind,geometry,size)),cellSize=level==='detail'&&kind!=='concrete'&&kind!=='ceramic'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
     const key=cell+'|'+kind+'|'+geometry+'|'+level;
     let batch=batches.get(key);if(!batch){batch={sector:cell,kind,geometry,level,instances:[]};batches.set(key,batch);}
     transform.position.set(...position);transform.rotation.set(...rotation,'YXZ');transform.scale.set(...size);transform.updateMatrix();
@@ -219,7 +228,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     localBox('darkConcrete',[b.w-2.8,shopH,b.d-2.8],0,shopH/2,0,p.trim,.67);
     localBox('concrete',[b.w-.06,.22,b.d-.06],0,.20,0,p.wall,.75);
     for(let side=0;side<4;side++){
-      const frontage=routeFacingFacade(b,side),f=face(side*Math.PI/2,b.w,b.d),weaveFront=weaveStreet&&side===(b.x<-200?1:3),count=Math.max(1,Math.floor((f.span-.8)/(weaveFront?(weaveBand==='arrival'?8.0:6.4):b.archetype==='civic'?10.5:hero?5.3:8.8))),bay=(f.span-.8)/count;
+      const frontage=routeFacingFacade(b,side)||backgroundGroundFrontage(b,side),f=face(side*Math.PI/2,b.w,b.d),weaveFront=weaveStreet&&side===(b.x<-200?1:3),count=Math.max(1,Math.floor((f.span-.8)/(weaveFront?(weaveBand==='arrival'?8.0:6.4):b.archetype==='civic'?10.5:hero?5.3:8.8))),bay=(f.span-.8)/count;
       if(frontage){
         stats.routeFacingFrontages++;
         if(weaveFront)stats.curatedWeaveFrontages++;
@@ -309,13 +318,21 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
         f.put('concrete',[f.span-.02,structuralBelt?.34:.18,structuralBelt?.66:.48],0,bottom+floorH-.20,-.02,p.wall,plasterShade);
         if(!detailed){
           f.put('glass',[f.span-.6,Math.max(.6,floorH-.92),.11],0,centre+.06,-.40,p.glass,.87+rng()*.16);
+          // A few sealed panes carry diffuse backlight at night. Clusters use
+          // the existing metre-scale window positions, not an emissive floor
+          // ribbon, room texture or an extra light on every window.
+          for(let j=0;j<count;j++)if((j*11+floor*7+side*5+Math.floor(b.seed*127))%31<3){
+            const x=-f.span/2+.33+(j+.5)*bay;
+            f.put('litGlass',[Math.min(bay-.30,2.9),Math.max(.7,floorH-1.18),.075],x,centre+.06,-.332,0x8d9384,.9);
+            stats.backlitWindowPanels++;
+          }
           for(let j=0;j<=count;j+=b.style===2?2:3)f.put(b.style===3?'edges':'concrete',[.19,floorH-.14,.46],-f.span/2+.33+j*bay,centre,-.04,b.style===3?p.trim:p.wall,plasterShade);
           continue;
         }
         for(let j=0;j<=count;j++)f.put('concrete',[.22,floorH-.15,.64],-f.span/2+.33+j*bay,centre,-.02,p.wall,plasterShade);
         for(let j=0;j<count;j++){
           stats.recessedWindows++;const x=-f.span/2+.33+(j+.5)*bay,ww=bay-.30,wh=Math.max(.7,floorH-1.0),wy=centre+.07;
-          const lighted=!!frontage&&(j*7+floor*3+side*11+Math.floor(b.seed*41))%13<2;
+          const lighted=(j*7+floor*3+side*11+Math.floor(b.seed*41))%23<3;
           f.put(lighted?'litGlass':'glass',[ww,wh,.075],x,wy,-.43,lighted?0x737872:p.glass,.94+rng()*.06);if(lighted)stats.backlitWindowPanels++;
           if(frontage&&b.style%2===0)for(const cross of [-1,1])f.put('edges',[.065,wh,.14],x+cross*ww*.29,wy,-.24,p.trim,.86);
           f.put('edges',[.055,wh,.10],x,wy,-.30,p.trim,.82);

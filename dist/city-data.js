@@ -100,7 +100,7 @@ export function buildingMassing(b){
   }
   return result;
 }
-export const CITY_CONTINUITY=createCityContinuity(CITY_STREETS,CITY_ROUTES,CITY_BUILDINGS);
+export const CITY_CONTINUITY=createCityContinuity(CITY_STREETS,CITY_ROUTES,CITY_BUILDINGS,LANDMARK_RESERVATIONS);
 export const CITY_COLLIDERS=[...LANDMARK_COLLIDERS,...CITY_PLAN_SOLIDS,...CITY_CONTINUITY.solids];
 for(const b of CITY_BUILDINGS){
   const lower=/^market-(front|gate)-/.test(b.id)||b.archetype==='foundry'||b.archetype==='civic',side=Math.sign(b.x-(b.archetype==='foundry'?100:b.archetype==='civic'?400:-200));

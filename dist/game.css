@@ -95,3 +95,13 @@ html[lang="en"] .menu-rail nav button{font-size:12px;line-height:1.25;white-spac
 .control-capture-chip.hidden{display:none}
 .body-cinema .control-capture-chip{display:none}
 @media(max-width:760px){.control-capture-chip{top:auto;bottom:155px}.control-capture-metrics{grid-template-columns:1fr}}
+
+/* Driving starts with a small settings handle. The controls remain one click away. */
+.vertical-response-card{width:244px;padding:0;max-height:calc(100dvh - 200px)}
+.response-card-toggle{display:flex;justify-content:space-between;align-items:center;gap:10px;list-style:none;padding:11px 13px;cursor:pointer;font-size:11px;color:#cee5df}
+.response-card-toggle:after{content:'＋';font-size:14px;color:#9fbab3}.vertical-response-card[open]>.response-card-toggle:after{content:'−'}.response-card-toggle small{font:10px Consolas,monospace;color:#a4c2c4;margin-left:auto}
+.response-card-content{padding:3px 14px 13px}.vertical-response-card[open]{width:304px}.response-card-toggle:focus-visible{outline:2px solid #96ddd3;outline-offset:2px}.research-open .vertical-response-card{display:none}
+.research-analysis .driver-hud,.research-analysis .game-tools,.research-analysis .render-stat-chip,.research-analysis .status-banner{visibility:hidden}
+body.research-open .driver-hud{opacity:1}body.research-open .speed-block{margin-right:0;display:block;width:190px;position:absolute;right:384px;bottom:0}body.research-open .speed-number strong{font-size:52px}
+@media(max-width:1000px){body.research-open .speed-block{display:none}.vertical-response-card{left:16px;width:225px}.vertical-response-card[open]{width:min(290px,calc(100vw - 32px))}}
+@media(max-width:650px){.vertical-response-card{top:68px;width:205px}.operation-stack{top:125px;width:225px;right:14px}.response-card-toggle{padding:8px 10px}.research-open .driver-hud{display:none}}
