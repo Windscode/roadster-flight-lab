@@ -75,7 +75,7 @@
       "file": "city.bin",
       "validProbes": 8323,
       "bytes": 691200,
-      "sha256": "8b8b66611f0b7e0dad3a7da0470ada69863ef464fbb5bb923807f263d63d4bb3"
+      "sha256": "13968aa848acc9edb8e1a891a24fe61d0ab0df80877a8d751a897bfcbb4def7a"
     },
     {
       "id": "lower-market",
@@ -102,18 +102,18 @@
       "file": "lower-market.bin",
       "validProbes": 3590,
       "bytes": 331344,
-      "sha256": "b082feccae56c3583357e86d61e0cb1f64809e0601a8dcbd116d9ae070c5a120"
+      "sha256": "082870d5e012aac49d06e6f76041d83f14eb669ec086cd2408fa3357c1ff66ab"
     }
   ],
   "totalProbes": 14202,
   "validProbes": 11913,
-  "staticEnvelopes": 1962,
-  "seconds": 624.098822821,
-  "geometrySHA256": "03d4eb0ea6e01e82d5a36d54b9db76374dc1ae6234aa6b50e7b29bc6d4f3dd57",
-  "geometryCanonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+  "staticEnvelopes": 2112,
+  "seconds": 168.333541913,
+  "geometrySHA256": "a6fe59dd5d78436218f22e08121dabcf90cdafd05ab7dcf641a585cf59f542c7",
+  "geometryCanonicalSHA256": "9b8c5ef0d7f94adba2ee9155d7a1565bffa48ade384dacb940bcbc2b3d4a6fff",
   "geometryHashQuantization": 1e-9,
   "materialModel": {
-    "version": "3.5",
+    "version": "3.10",
     "source": "dist/urban-architecture.js / URBAN_MATERIAL_PALETTE",
     "wallTintSRGB": [
       9477021,
@@ -131,11 +131,12 @@
     ],
     "assumption": "Static envelope averages; scanned asphalt baseline average is rescaled by the current linear material tint. Individual windows, metal, shop interiors and textured facade variation are averaged."
   },
-  "materialModelSHA256": "eace8ec3864e6adecfe3c3df384723a87696b8680e69eda4eb342538b42d205f",
+  "materialModelSHA256": "0da6642456a8a9971b5ade64cc9750b27d5aea4893e9cae76fa761ae5ac65e3c",
   "limitations": [
     "Static shared solid envelopes and average diffuse reflectances; fine facade, foliage and animated people are not path-traced.",
     "Three surface events; not an unlimited-bounce solution, hardware ray tracing or DDGI.",
     "Invalid solid probes are rejected; finite probe spacing may leak or blur lighting near thin geometry.",
-    "Specular reflections remain rasterized local probes; transparent transport and participating media are excluded."
+    "Specular reflections remain rasterized local probes; transparent transport and participating media are excluded.",
+    "Rebaked with the current physical geometry, including the 3.9 corridor fixtures; 3.10 fine facade articulation remains an averaged envelope, not a facade-detail lightmap."
   ]
 }

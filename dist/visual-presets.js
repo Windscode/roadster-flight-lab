@@ -4,11 +4,11 @@ export const CITY_WEATHER_PRESETS=Object.freeze({
   'clear-day':Object.freeze({id:'clear-day',name:'晴天',night:false,wetness:0,exposure:.87,
     backgroundIntensity:.72,environmentIntensity:.76,fog:0xa4b4b9,fogDensity:.00072,
     sunIntensity:2.7,sunColor:0xfff3e3,ambientIntensity:.18,bloomStrength:.16,
-    description:'实测日间天空、太阳阴影与原有静态漫反射光场。'}),
+    description:'实测日间天空、太阳阴影与按当前街道包络重烘焙的漫反射光场。'}),
   'wet-night':Object.freeze({id:'wet-night',name:'湿夜',night:true,wetness:1,exposure:1.02,
     backgroundIntensity:.88,environmentIntensity:.46,fog:0x14202c,fogDensity:.00125,
     sunIntensity:0,sunColor:0xaac6ef,ambientIntensity:.09,bloomStrength:.14,
-    description:'空间湿度与粗糙度、有限近灯阴影、车灯和局部反射；不复用白昼间接光。'})
+    description:'粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。'})
 });
 
 const routePoints=[[-200,0,-400],[-200,0,-320],[-200,0,-262],[-200,0,-225],[-200,0,-132.5],
@@ -16,7 +16,7 @@ const routePoints=[[-200,0,-400],[-200,0,-320],[-200,0,-262],[-200,0,-225],[-200
 const routeLength=routePoints.slice(1).reduce((s,b,i)=>s+Math.hypot(...b.map((v,k)=>v-routePoints[i][k])),0);
 export const CITY_BENCHMARK_ROUTE=Object.freeze({
   id:'weave-canal-loop-38',name:'织桥 · 南岸环线',version:1,points:routePoints,
-  presentationRevision:'3.9 / continuous connector pavements, functional frontages and street-oriented surfaces',
+  presentationRevision:'3.11 / retained ground/storey design; complementary near live and far static direct light, independent bounce, receiver-plane shadows and drained wet surfaces',
   lengthMetres:routeLength,speedKmh:30,estimatedDurationS:routeLength/(30/3.6),
   suggestedDurationS:[136,180],spawn:{position:{x:-200,y:.74,z:-390},heading:0},
   streetIds:['weave-main','crosstown-link','foundry-main','canal-link'],
@@ -34,13 +34,13 @@ export const CITY_BENCHMARK_ROUTE=Object.freeze({
 });
 
 export const CITY_VISUAL_CAPTURE_PROTOCOL=Object.freeze({
-  schema:'roadster.visual-comparison',version:1,baselineCommit:'a25b228a6d56f358cba24106ce897e1cb5c99bc1',baselineModelVersion:'3.8.0',
-  referenceResolution:[1600,900],pixelRatio:1,weather:['clear-day','wet-night'],quality:['balanced','high','ultra'],
+  schema:'roadster.visual-comparison',version:2,baselineCommit:'6083bbf0e01f4eef5447f2c1b951d8b41e691f46',baselineModelVersion:'3.9.0',
+  referenceResolution:[1280,720],pixelRatio:1,weather:['clear-day','wet-night'],quality:['balanced','high','ultra'],
   cameraIds:['weave-entry','exchange','viaduct','junction','canal'],
   addedViewIds:['crosstown','foundry-south'],routeId:CITY_BENCHMARK_ROUTE.id,
-  baselineScope:'Full untouched checkout at the baseline commit, including its original city plan/materials. New connector views can be set manually to these same coordinates in the old renderer.',
-  stillConditions:'Same camera position, target, 48 degree vertical FOV, paused physical state, 1600x900 drawing buffer, pixel ratio 1, quality and weather. Lock exposure to the matching baseline preset (day .90, night 1.08) for a material/geometry comparison; capture revised automatic exposure separately.',
-  timingConditions:'Record browser, GPU, resolution and quality; separate loading/5 s prewarm from 150 s driven steady capture. Actual route inputs/trajectory accompany p50/p95/p99 and long frames.',
+  baselineScope:'Full untouched 3.9 checkout. User-supplied IAB frames prove real WebGL, but their displayed version alone does not verify commit or cache identity. Keep 1280x720 and 2031x1244 capture batches separate.',
+  stillConditions:'Same camera position/target, 48 degree vertical FOV, full paused vehicle position/quaternion/wing/light state, 1280x720 drawing buffer, pixel ratio 1, quality and weather. Wait 3 s of rendered frames for light selection to settle. Lock 3.9 exposure (day .87, night 1.02). Save source build, actual light IDs/gains, vehicle state, exposure, reflection time/position with the same PNG. A changed lighting preset is a separate comparison.',
+  timingConditions:'Record observed browser/renderer (unknown stays unknown), resolution and quality. Separate paused 30 Hz refresh, loading/5 s warmup and 150 s driven steady capture. Actual route inputs/trajectory accompany p50/p95/p99 and long frames. A point HUD FPS is not a route benchmark.',
   acceptance:'Requires actual WebGL images and measured display/GPU timing. Scene graph, shader and DOM checks are separate structural evidence.'
 });
 

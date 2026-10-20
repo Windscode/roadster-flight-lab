@@ -74,7 +74,7 @@ export class PerformanceMeter{
     const cpu=Object.fromEntries([...cpuNames].map(name=>{const d=distribution(use.map(frame=>frame.cpu[name]||0));return[name,{...d,medianMs:d.p50Ms}];}));
     const gpu=gpuSamples.filter(sample=>frameNumbers.has(sample.frameNumber));
     const raf=distribution(intervals),resolutions=use.map(frame=>frame.resolution).filter(Boolean),pixels=resolutions.map(size=>size.width*size.height);
-    return{samples:use.length,activeDriving:active.length>0,medianFps:round(raf.p50Ms?1000/raf.p50Ms:null),frameMedianMs:raf.p50Ms,frameP95Ms:raf.p95Ms,frameP99Ms:raf.p99Ms,onePercentLowFps:round(raf.p99Ms?1000/raf.p99Ms:null),rafFrameTime:raf,
+    return{samples:use.length,activeDriving:active.length>0,population:active.length?'active-driving':use.length?'paused-preview':'no-frames',medianFps:round(raf.p50Ms?1000/raf.p50Ms:null),frameMedianMs:raf.p50Ms,frameP95Ms:raf.p95Ms,frameP99Ms:raf.p99Ms,onePercentLowFps:round(raf.p99Ms?1000/raf.p99Ms:null),rafFrameTime:raf,
       longFrames:{over50Ms:intervals.filter(ms=>ms>50).length,over100Ms:intervals.filter(ms=>ms>100).length,over250Ms:intervals.filter(ms=>ms>250).length,maxMs:raf.maxMs},
       cpuSubmission:cpu,gpuExecution:distribution(gpu.map(sample=>sample.gpuMs)),gpuMs:round(this.gpuMs),gpuTimerSupported:!!this.ext,
       renderPixels:pixels.length?{min:Math.min(...pixels),max:Math.max(...pixels),changed:Math.min(...pixels)!==Math.max(...pixels)}:null,
@@ -86,7 +86,7 @@ export class PerformanceMeter{
       capture:capture?{id:capture.id,startedAt:capture.startedAt,endedAt:capture.endedAt||null,metadata:capture.metadata,elapsedMs:capture.elapsedMs,durationMs:capture.durationMs,complete:capture.complete,stopped:capture.stopped,stopReason:capture.stopReason||null,
         warmup:{requestedMs:capture.warmupMs,elapsedMs:capture.warmupElapsedMs,summary:this.snapshot(capture.warmupFrames,capture.gpuSamples),frames:capture.warmupFrames},
         summary:this.snapshot(capture.frames,capture.gpuSamples),frames:capture.frames,gpuSamples:capture.gpuSamples,gpuDisjointDiscarded:capture.gpuDisjointDiscarded,events:capture.events,
-        comparisonConditionsChanged:capture.events.some(event=>['quality_change','weather_change','scene_change','camera_change'].includes(event.type))}:null,
+        comparisonConditionsChanged:capture.events.some(event=>['quality_change','weather_change','scene_change','camera_change','exposure_change'].includes(event.type))}:null,
       rolling:this.snapshot(),pendingGpuQueries:this.pending.length,disjointQueriesDiscarded:this.disjointDiscarded,
       measurement:'Actual browser rAF frame intervals including long frames; CPU submission timings; optional nonblocking WebGL GPU query results counted once each. Loading duration is separate from active warmup and steady-state capture. No actual GPU sample is inferred from draw calls, CPU time or an unavailable timer.'};
   }

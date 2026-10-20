@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "modelVersion": "3.10.0",
+  "modelBuildId": "a6b126a29a3e6702f28ef4921d04798c9f9b80b0285ca89c614e103231b9fd8c",
+  "scope": "JSDOM text/events and actual numerical Roadster solver reports through a Worker endpoint facade. No browser layout, GPU pixels, native Worker timing or FPS acceptance.",
+  "sourceHashes": {
+    "dist/research-lab.js": "060a183e0574ce56d75b64cf7c5ab4abac8998552c1707767e737ccdc6df6bfc",
+    "dist/research-panel.html": "b2fbcacdfef863e19c455fde9221e8ee5ff6ef74f666a3ae49dea88718a15fff",
+    "dist/research-study.js": "e265c41d8429c0ddbdd662ef0b0e85590740a14a305572aec8afbea1f305dee7",
+    "dist/research-console.js": "ff976e05a8d4d9cc08d1029329327ec40ceb34c8e8ffa697b810cda204103cf1",
+    "dist/experiment-console.js": "75c883e65c7b0c531557f970d487ddfc043ad7754692bd137cb97880f2b8e4f8",
+    "dist/i18n.js": "6735cf85a82021768a89d1dec541c7b2f16eeb426decab129c53257f9135ef4b",
+    "dist/i18n-research-en.js": "94d24343e3056d003a97d501b9b44312e8d296126336aed3ed4a7e92d7620b8a",
+    "qa/research-workflow-3.10-check.mjs": "9573dc263ae39d71298f92da8354fa28e53f73e05e36e5710df4d3cc0c4517cd",
+    "qa/fixtures/standard-brake-wet-3.8.json": "4755f37a5cf7a8930e359bfc7f7b98b84b6b527a2ab34f1839f6579a94dc8813"
+  },
+  "evidence": [
+    {
+      "name": "Input-only numeric edits immediately save the valid next-run request; partial edits keep it and rebuilding restores it independently of historical selection",
+      "status": "PASS",
+      "selectedResultKind": "brake",
+      "pendingKind": "steer",
+      "pendingSpeedKmh": 60,
+      "pendingAngleDeg": 3,
+      "eventPath": "input only; no numeric change or later select change",
+      "invalidIntermediateValuesPreserveLastValid": true,
+      "disposedListenerCannotWrite": true,
+      "liveStateUnchanged": true
+    },
+    {
+      "name": "Load historical configuration copies all request controls without running, changing the live vehicle or overwriting the selected response",
+      "status": "PASS",
+      "sourceVersion": "3.8.0",
+      "currentModel": "3.10.0",
+      "executionStarted": false
+    },
+    {
+      "name": "Running the loaded history creates a new current-model record with declared provenance and explicit wet-road / assist labels",
+      "status": "PASS",
+      "historicalDistanceM": 47.660222531435814,
+      "currentDistanceM": 47.660222531435814,
+      "historicalLockedSeconds": 3.933333333333322,
+      "currentLockedSeconds": 3.933333333333322,
+      "sourceConfiguration": {
+        "id": "actual-3.8-wet-brake",
+        "runId": "R-5b30e971",
+        "modelVersion": "3.8.0",
+        "modelBuildId": "4accaa4482dc396a2d9fe5d09492e79bf5f2db4ede830f52a50a7f44758a9d4f",
+        "protocolVersion": "flat-lab-3",
+        "edited": false
+      },
+      "completedAttempt": "mvfbh7gk-roadster-study-2-1"
+    },
+    {
+      "name": "Selected old history and the exact completed pending request survive reopening and rebuilding independently",
+      "status": "PASS",
+      "selectedId": "actual-3.8-wet-brake",
+      "completedAttempt": "mvfbh7gk-roadster-study-2-1",
+      "selectionIsNotExecutionIdentity": true
+    },
+    {
+      "name": "Editing while a frozen request runs cannot mark the new request as completed; restoring the executed conditions finds the real batch",
+      "status": "PASS",
+      "executedSpeedKmh": 81,
+      "editedSpeedKmh": 83,
+      "editedConfigurationWasNotFalselyCompleted": true
+    },
+    {
+      "name": "Failure and a partially cancelled pair keep distinct execution states, frozen requests and returned reports",
+      "status": "PASS",
+      "failedAttempt": "mvfbh8xb-roadster-study-3-2",
+      "cancelledAttempt": "mvfbh95p-roadster-study-3-3",
+      "returned": 1,
+      "requested": 2
+    },
+    {
+      "name": "Interrupted browser execution is not reported as successful and a build mismatch cannot inherit a completed status",
+      "status": "PASS",
+      "interruptedRetained": true,
+      "historicalBuildDoesNotCountAsCurrentExecution": true
+    },
+    {
+      "name": "English research panels, chart labels and prompts use presentation strings while JSON/CSV, user names and physical state stay unchanged",
+      "status": "PASS",
+      "language": "en",
+      "catalogEntries": 790,
+      "catalogPatterns": 80,
+      "rawHistoryUnchanged": true,
+      "graphicsAcceptance": false
+    },
+    {
+      "name": "Switching back restores Chinese presentation and preserves editable numeric configuration",
+      "status": "PASS",
+      "language": "zh",
+      "numericConfigurationUnchanged": true
+    }
+  ]
+}

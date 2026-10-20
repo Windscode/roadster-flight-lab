@@ -6,7 +6,7 @@ import { UnrealBloomPass } from './vendor/addons/postprocessing/UnrealBloomPass.
 import { OutputPass } from './vendor/addons/postprocessing/OutputPass.js';
 import { SMAAPass } from './vendor/addons/postprocessing/SMAAPass.js';
 import { ShaderPass } from './vendor/addons/postprocessing/ShaderPass.js';
-import { FXAAShader } from './vendor/addons/shaders/FXAAShader.js';
+import { FXAAShader } from './stable-fxaa-shader.js';
 import { ContactAOPass } from './contact-ao-pass.js';
 import { RENDER_PROFILES, ResolutionGovernor, sizeRenderPipeline } from './render-profiles.js';
 import { PerformanceMeter } from './performance-meter.js';
@@ -27,8 +27,14 @@ import {createWindLaboratory} from './wind-laboratory.js';
 import {WIND_LAB_GEOMETRY} from './wind-lab-data.js';
 import {MODEL_BUILD_ID} from './model-build.js';
 import {CITY_BENCHMARK_ROUTE,CITY_WEATHER_PRESETS,CITY_VISUAL_CAPTURE_PROTOCOL} from './visual-presets.js';
-import {t as tr,onLanguageChange} from './i18n.js';
-import {VERTICAL_RESPONSE,saveVerticalResponse} from './ui-preferences.js';
+import {t as tr,onLanguageChange,getLanguage,registerTranslations} from './i18n.js';
+import {ControlCaptureProtocol,CONTROL_CAPTURE_PROTOCOLS,CONTROL_CAPTURE_STARTS} from './driving-capture.js';
+import {VERTICAL_RESPONSE,saveVerticalResponse,CONTROL_RESPONSES,saveControlResponse} from './ui-preferences.js';
+import {captureArchive} from './capture-archive.js';
+import './i18n-capture-en.js';
+import './i18n-controls-311-en.js';
+import {entries as visual311Entries} from './i18n-visual-311-en.js';
+registerTranslations(visual311Entries);
 
 const $=id=>document.getElementById(id);
 const $$=selector=>[...document.querySelectorAll(selector)];
@@ -53,7 +59,7 @@ export async function boot(shell){
   let car=createRoadster({quality});scene.add(car.group);
   let environment=createEnvironment(scene,renderer,sim.getWorldGeometry(),camera);environment.setVehicleRoot?.(car.group);let waypoint=null;const cityMap=createCityMap(node=>{waypoint=node;});
   let exhaust=new ColdGasExhaust(scene,sim);
-  let activeContext='city',researchConsole=shell.research,studyWasRunning=false;
+  let activeContext='city',researchConsole=shell.research,studyWasRunning=false,controlCapture=null;
   const contexts={city:{scene,sim,car,environment,exhaust,scenario:'city',cameraState:null},lab:null};
   document.body.dataset.context=activeContext;
   const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.075;controls.enablePan=false;controls.minDistance=3.6;controls.maxDistance=85;controls.maxPolarAngle=Math.PI*.489;controls.minPolarAngle=.05;controls.mouseButtons={LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
@@ -72,7 +78,7 @@ export async function boot(shell){
   exhaust.mesh.userData.skipContactAO=true;
   let exposureTarget=.90,lastExposureSample=0;
   let graphicsStopped=false,paused=true,started=false,scenario='city',cameraMode='orbit',showForces=false,showTrail=false,day=true,cutaway=false,activeDrawer=null,scale=1;
-  let showHud=true,samples=[],weatherPreset='clear-day',fixedCameraId=null,activeBenchmarkRoute=null,captureImageRequested=false;
+  let showHud=true,samples=[],weatherPreset='clear-day',fixedCameraId=null,activeBenchmarkRoute=null,captureImageRequested=false,captureBundleRequested=false,exposureLock=null;
   let toastTimer=0,uiTimer=0,frames=0,fpsTime=0,displayFps=60,lastTime=performance.now(),lastPosition=new THREE.Vector3(),pendingManeuver=null;
   const keys=new Set();let sound=null;let radio=null;createCarRadio(toast).then(r=>radio=r).catch(e=>$('radio-status').textContent='音乐资源未就绪：'+e.message);createResearchWorkbench(()=>sim,logEvent);let menuOpen=true,reverseHold=0;document.body.classList.add('body-menu');
   const scenarioText={
@@ -105,6 +111,7 @@ export async function boot(shell){
     if(!['city','lab'].includes(name))return;
     closeStudy();
     if(name!==activeContext){
+      controlCapture?.cancel('切换场景，已保留采集区间。','Scene changed; captured interval retained.');
       researchConsole?.cancel('切换场景');
       if(sim.telemetry().maneuver)sim.startManeuver('cancel');
       researchConsole?.stopRecording?.('切换三维场景','cancelled');meter.markEvent('scene_change',{context:name});
@@ -171,6 +178,7 @@ export async function boot(shell){
     $('camera-name').textContent={orbit:'环绕视角',chase:'跟随视角',cockpit:'驾驶员视角',top:'俯视测量'}[mode];lastPosition.copy(p);
   }
   function activateScenario(name){
+    controlCapture?.cancel('重新初始化场景，已保留采集区间。','Scenario reset; captured interval retained.');
     researchConsole?.stopRecording?.('重新初始化试验','cancelled');researchConsole?.cancel('重置试验');if(name!=='windlab'&&activeContext==='lab')switchContext('city',{run:false,openConsole:false});
     scenario=activeContext==='lab'?'windlab':name;activeBenchmarkRoute=null;sim.reset(scenario);t=sim.telemetry();setPaused(true);resetTrace();pendingManeuver=name==='ramp'?'ramp':null;
     logEvent('scenario_reset',{scenario:name,params:{...sim.params}});
@@ -189,22 +197,24 @@ export async function boot(shell){
     viewport.focus({preventScroll:true});
   }
   function ensureRunning(){if(!started||!$('launch-card').classList.contains('hidden')){pendingManeuver=null;start();}else if(paused)setPaused(false);}
-  function setMode(mode){researchConsole?.cancel('切换控制模式');sim.setMode(mode);pendingManeuver=null;logEvent('control_mode',{mode});syncUi(sim.telemetry());if(mode==='hover'&&sim.body.position.y<1.3)toast('辅助飞行已接管：E / Q 调整高度，W / S 前后移动，A / D 偏航。');else if(mode==='manual')toast('原始喷口研究接口已启用。日常空中调姿请使用 H 辅助飞行，并用 G 切换自动回正。',6200);}
+  function setMode(mode){controlCapture?.cancel('手动切换控制模式，采集结束。','Control mode changed manually; capture ended.');researchConsole?.cancel('切换控制模式');sim.setMode(mode);pendingManeuver=null;logEvent('control_mode',{mode});syncUi(sim.telemetry());if(mode==='hover'&&sim.body.position.y<1.3)toast('辅助飞行已接管：E / Q 调整高度，W / S 前后移动，A / D 偏航。');else if(mode==='manual')toast('原始喷口研究接口已启用。日常空中调姿请使用 H 辅助飞行，并用 G 切换自动回正。',6200);}
   function toggleStabilization(){
+    controlCapture?.cancel('手动切换 G，采集结束。','G was switched manually; capture ended.');
     researchConsole?.cancel('G 切换自动回正');
     const mode=sim.stabilizationMode==='level'?'off':'level';
     sim.setStabilizationMode(mode);logEvent('stabilization_mode',{mode});syncUi(sim.telemetry());
     toast(mode==='level'?'自动回正已开启：松开操纵后恢复水平姿态。G 再次关闭。':'自动回正已关闭：Z / B 可连续滚转，1 / 2 平滑调整俯仰；松开后控制器尝试稳住新姿态与位置。',6000);
   }
   function maneuver(name){
+    controlCapture?.cancel('启动其他机动流程，采集结束。','Another maneuver started; capture ended.');
     researchConsole?.cancel('启动 '+(name==='roll'?'自动滚转':'自动降落'));
     if(name==='roll'&&sim.params.supplyMode==='finite'&&t.gasFraction<.75){toast('气量偏低。先按 T 补气，或选择恒压试验台；继续滚转可能中途失去推力。',5500);}
     if(name==='roll'&&t.suctionEnabled&&t.contactCount>1&&Math.abs(t.rollDeg)>90){toast('当前为倒悬接触工况。请先切换垂直飞行试验，再执行滚转。');return;}
     if(sim.startManeuver(name)===false){toast(sim.status,6000);return;}logEvent('maneuver_start',{name});ensureRunning();
     if(name==='roll'&&sim.params.supplyMode==='finite')toast('已通过有限气源预检：按起始状态规划滚转。地面起始回到地面，空中起始恢复到原高度附近。',5700);
   }
-  function takeOver(){researchConsole?.cancel('驾驶操纵接管');if(sim.telemetry().maneuver){sim.startManeuver('cancel');toast('已取消自动动作，操纵权交给你。',2400);logEvent('manual_takeover');}}
-  function refill(){researchConsole?.cancel('试验补气');sim.refillGas();logEvent('gas_refill',{pressureBar:sim.params.initialPressureBar});toast('试验干预：气源已恢复到 '+sim.params.initialPressureBar+' bar。');syncUi(sim.telemetry());}
+  function takeOver(){controlCapture?.cancel('人工操纵接管，已保留采集区间。','Pilot took over; captured interval retained.');researchConsole?.cancel('驾驶操纵接管');if(sim.telemetry().maneuver){sim.startManeuver('cancel');toast('已取消自动动作，操纵权交给你。',2400);logEvent('manual_takeover');}}
+  function refill(){controlCapture?.cancel('试验补气接管，采集结束。','Refill intervention ended capture.');researchConsole?.cancel('试验补气');sim.refillGas();logEvent('gas_refill',{pressureBar:sim.params.initialPressureBar});toast('试验干预：气源已恢复到 '+sim.params.initialPressureBar+' bar。');syncUi(sim.telemetry());}
 
   let panelFocus=null,pausedByPanel=false;
   function closePanels(){
@@ -294,9 +304,16 @@ export async function boot(shell){
   ];
   $('parameter-fields').innerHTML=params.map(([key,label,min,max,step,unit,factor])=>`<label class="field-label" for="param-${key}">${label}<small>假设</small><b id="param-label-${key}">${format(sim.params[key]*factor,factor===1&&step>=1?0:2)} ${unit}</b></label><input id="param-${key}" data-param="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${sim.params[key]}">`).join('');
   for(const [key,label,min,max,step,unit,factor] of params){const element=$('param-'+key);element.addEventListener('input',()=>{$('param-label-'+key).textContent=format(+element.value*factor,factor===1&&step>=1?0:2)+' '+unit;});element.addEventListener('change',()=>{researchConsole?.cancel('修改物理参数');sim.setParam(key,+element.value);logEvent('parameter_change',{key,value:+element.value});sim.reset(scenario);t=sim.telemetry();resetTrace();setPaused(true);syncUi(t);toast('已修改'+label+'并重新初始化试验，按 P 继续。');});}
+  const responseLabels={verticalAccelerationMps2:'升降加速与制动',rollRateDegS:'Z / B 滚转速率',pitchRateDegS:'1 / 2 俯仰速率',angularAccelerationDegS2:'姿态角加速度'};
+  $('control-response-fields').innerHTML=Object.entries(CONTROL_RESPONSES).map(([key,d])=>`<label for="response-${key}"><span>${responseLabels[key]}</span><output id="response-value-${key}" for="response-${key}"></output></label><input id="response-${key}" data-requires-graphics type="range" min="${d.min}" max="${d.max}" step="${d.step}" value="${sim.params[key]??d.default}">`).join('');
   function setVerticalResponse(value){
-    const next=saveVerticalResponse(value);sim.setParam('climbRateMps',next);
-    logEvent('vertical_response_change',{targetSpeedMps:next,definition:'World vertical target speed, immediate key command; actuator limits unchanged'});
+    const next=saveVerticalResponse(value);
+    if(sim.params.climbRateMps!==next){sim.setParam('climbRateMps',next);logEvent('vertical_response_change',{targetSpeedMps:next,definition:'World vertical target speed, immediate key command; actuator limits unchanged'});}
+    syncVerticalResponse(sim.telemetry());
+  }
+  function setControlResponse(key,value){
+    const next=saveControlResponse(key,value);
+    if(sim.params[key]!==next){sim.setParam(key,next);logEvent('control_response_change',{key,value:next,definition:'Reference motion limit shared by manual control and automatic roll; physical actuator capacity unchanged'});}
     syncVerticalResponse(sim.telemetry());
   }
   function syncVerticalResponse(data){
@@ -304,17 +321,25 @@ export async function boot(shell){
     $('vertical-speed-value').textContent=format(Number($('vertical-speed-command').value),1)+' m/s';
     const command=data.verticalControl;
     $('vertical-response-status').textContent=command&&data.mode==='hover'?'指令 '+format(command.commandMps,1)+' m/s · 实际垂速 '+format(data.verticalSpeed,1)+' m/s':'按键立即采用设定值；加速度受实际推力限制。';
+    for(const [key,d]of Object.entries(CONTROL_RESPONSES)){
+      const element=$('response-'+key);if(document.activeElement!==element)element.value=sim.params[key]??d.default;
+      $('response-value-'+key).textContent=format(Number(element.value),key==='verticalAccelerationMps2'?1:0)+' '+d.unit;
+    }
+    $('control-response-mode').textContent=data.stabilizationMode==='off'?'G 已关闭：Z / B 滚转，1 / 2 俯仰；松键后主动制动。':data.stabilizationMode==='hold'?'研究程序保持目标姿态；按 G 转为水平稳定，手动输入可接管。':'G 已开启：保持水平；Z / B 用于横移。关闭 G 后使用手动姿态。';
   }
-  $('vertical-speed-command').oninput=e=>{$('vertical-speed-value').textContent=format(Number(e.target.value),1)+' m/s';};
+  $('vertical-speed-command').oninput=e=>setVerticalResponse(Number(e.target.value));
   $('vertical-speed-command').onchange=e=>setVerticalResponse(Number(e.target.value));
-  $('vertical-speed-reset').onclick=()=>{setVerticalResponse(VERTICAL_RESPONSE.default);$('vertical-speed-command').value=VERTICAL_RESPONSE.default;syncVerticalResponse(sim.telemetry());toast('升降响应已恢复默认 3 m/s。');};
+  $('vertical-speed-reset').onclick=()=>{setVerticalResponse(VERTICAL_RESPONSE.default);$('vertical-speed-command').value=VERTICAL_RESPONSE.default;syncVerticalResponse(sim.telemetry());toast('升降响应已恢复默认 5 m/s。');};
+  for(const key of Object.keys(CONTROL_RESPONSES))$('response-'+key).oninput=e=>setControlResponse(key,Number(e.target.value));
+  const responsePresets={gentle:{climbRateMps:3,verticalAccelerationMps2:3,rollRateDegS:90,pitchRateDegS:30,angularAccelerationDegS2:180},standard:{climbRateMps:5,verticalAccelerationMps2:5,rollRateDegS:180,pitchRateDegS:60,angularAccelerationDegS2:360},maneuver:{climbRateMps:14,verticalAccelerationMps2:6,rollRateDegS:240,pitchRateDegS:90,angularAccelerationDegS2:480}};
+  for(const button of $$('[data-response-preset]'))button.onclick=()=>{const settings=responsePresets[button.dataset.responsePreset];setVerticalResponse(settings.climbRateMps);for(const key of Object.keys(CONTROL_RESPONSES))setControlResponse(key,settings[key]);syncVerticalResponse(sim.telemetry());toast('已应用操控响应；实际动作仍受喷口、压力与制动余量限制。');};
   $('radio-chip').onclick=()=>openPanel('radio');
   for(const [id,key]of [['steering-assist','steeringAssist'],['traction-assist','tractionAssist'],['abs-enabled','absEnabled']])$(id).onchange=e=>{sim.setParam(key,e.target.checked);logEvent('assistance_change',{key,enabled:e.target.checked});};
   $('nozzle-model').onchange=e=>{researchConsole?.cancel('修改喷口模型');sim.setParam('nozzleModel',e.target.value);logEvent('nozzle_model',{model:e.target.value});};
   $('gas-model').onchange=e=>{researchConsole?.cancel('修改气源模型');sim.setParam('gasModel',e.target.value);logEvent('gas_model',{model:e.target.value});toast(e.target.value==='adiabatic'?'气源模型：绝热放空 + 缓慢环境换热。':'气源模型：等温对照（恒定气温假设）。');};
   $('target-height').oninput=e=>{sim.setParam('hoverHeight',+e.target.value);$('target-height-label').textContent=format(+e.target.value,1)+' m';logEvent('height_target',{value:+e.target.value});};
   $('time-scale').oninput=e=>{scale=+e.target.value;$('time-scale-label').textContent=format(scale,2)+' ×';logEvent('time_scale',{value:scale});};
-  $('defaults-btn').onclick=()=>{setVerticalResponse(VERTICAL_RESPONSE.default);for(const [key]of params){sim.setParam(key,DEFAULT_PARAMS[key]);$('param-'+key).value=DEFAULT_PARAMS[key];$('param-'+key).dispatchEvent(new Event('input'));}for(const key of ['steeringAssist','tractionAssist','absEnabled','roadSurface','wingMode','wingDeployment','nozzleModel'])sim.setParam(key,DEFAULT_PARAMS[key]);sim.setSupplyMode(DEFAULT_PARAMS.supplyMode);$('supply-mode').value=DEFAULT_PARAMS.supplyMode;sim.setParam('gasModel','adiabatic');$('gas-model').value='adiabatic';sim.setParam('hoverHeight',4);$('target-height').value=4;$('target-height-label').textContent='4.0 m';activateScenario(scenario);toast('默认参数已恢复。');};
+  $('defaults-btn').onclick=()=>{setVerticalResponse(VERTICAL_RESPONSE.default);for(const [key,d]of Object.entries(CONTROL_RESPONSES))setControlResponse(key,d.default);for(const [key]of params){sim.setParam(key,DEFAULT_PARAMS[key]);$('param-'+key).value=DEFAULT_PARAMS[key];$('param-'+key).dispatchEvent(new Event('input'));}for(const key of ['steeringAssist','tractionAssist','absEnabled','roadSurface','wingMode','wingDeployment','nozzleModel'])sim.setParam(key,DEFAULT_PARAMS[key]);sim.setSupplyMode(DEFAULT_PARAMS.supplyMode);$('supply-mode').value=DEFAULT_PARAMS.supplyMode;sim.setParam('gasModel','adiabatic');$('gas-model').value='adiabatic';sim.setParam('hoverHeight',4);$('target-height').value=4;$('target-height-label').textContent='4.0 m';activateScenario(scenario);toast('默认参数已恢复。');};
   function setQuality(value){
     meter.markEvent('quality_change',{quality:value});quality=RENDER_PROFILES[value]?value:'balanced';renderProfile=RENDER_PROFILES[quality];governor.setQuality(quality);meter.reset();
     try{localStorage.setItem('roadster-quality',quality);}catch{}
@@ -328,8 +353,8 @@ export async function boot(shell){
   }
   $('quality').onchange=e=>setQuality(e.target.value);
   function cameraConditions(){return {id:fixedCameraId,mode:cameraMode,position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),up:camera.up.toArray(),target:controls.target.toArray(),fov:camera.fov,near:camera.near,far:camera.far,aspect:camera.aspect,viewOffset:camera.view?.enabled?{...camera.view}:null};}
-  function sceneConfiguration(){return {version:1,context:activeContext,weatherPreset:activeContext==='city'?weatherPreset:null,quality,routeId:activeContext==='city'?activeBenchmarkRoute:null,camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked};}
-  function visualConditions(){return {schema:'roadster-visual-conditions',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,context:activeContext,weatherPreset,route:activeContext==='city'?activeBenchmarkRoute:null,quality,profile:renderProfile,resolution:{...renderSize,cssWidth:innerWidth,cssHeight:innerHeight,devicePixelRatio:devicePixelRatio||1},camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked,simState:sim.exportState(),graphicsStartup:shell.graphics,device:meter.device,comparisonProtocol:CITY_VISUAL_CAPTURE_PROTOCOL};}
+  function sceneConfiguration(){return {version:2,exposureLock,context:activeContext,weatherPreset:activeContext==='city'?weatherPreset:null,quality,routeId:activeContext==='city'?activeBenchmarkRoute:null,camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked};}
+  function visualConditions(){return {schema:'roadster-visual-conditions',version:2,exposureLock,paused,renderState:paused?'paused-preview':'active-simulation',lighting:environment.stats?.lightingDiagnostics||null,sceneStats:environment.stats,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,context:activeContext,weatherPreset,route:activeContext==='city'?activeBenchmarkRoute:null,quality,profile:renderProfile,resolution:{...renderSize,cssWidth:innerWidth,cssHeight:innerHeight,devicePixelRatio:devicePixelRatio||1},camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked,simState:sim.exportState(),graphicsStartup:shell.graphics,device:meter.device,comparisonProtocol:CITY_VISUAL_CAPTURE_PROTOCOL};}
   function beginPerformanceCapture(durationMs){
     if(activeContext==='lab'&&durationMs>30000){toast('完整路线采样请先进入城市的织桥环线。');return;}
     closePanels();if(menuOpen)closeGameMenu();else if(paused)setPaused(false);
@@ -344,9 +369,28 @@ export async function boot(shell){
     if(!CITY_WEATHER_PRESETS[value])return;
     weatherPreset=value;contexts.city.environment.setWeatherPreset?.(value);const presentation=CITY_WEATHER_PRESETS[value];
     $('weather-preset').value=value;$('day-btn').textContent=presentation.name;
-    if(activeContext==='city'){bloom.strength=presentation.bloomStrength;exposureTarget=presentation.exposure;renderer.toneMappingExposure=presentation.exposure;lastExposureSample=0;$('weather-label').textContent=presentation.name;renderer.shadowMap.needsUpdate=true;}
+    syncExposureControls();
+    if(activeContext==='city'){bloom.strength=presentation.bloomStrength;exposureTarget=exposureLock??presentation.exposure;renderer.toneMappingExposure=exposureTarget;lastExposureSample=0;$('weather-label').textContent=presentation.name;renderer.shadowMap.needsUpdate=true;}
     if(record){meter.markEvent('weather_change',{weatherPreset:value});logEvent('visual_weather',{preset:value});}
   }
+  function syncExposureControls(){
+    const night=activeContext==='city'&&CITY_WEATHER_PRESETS[weatherPreset].night;
+    $('exposure-lock').checked=exposureLock!==null;
+    $('exposure-lock-value').disabled=exposureLock===null||graphicsStopped;
+    if(exposureLock!==null)$('exposure-lock-value').value=exposureLock;
+    $('auto-exposure').disabled=exposureLock!==null||night||graphicsStopped;
+    $('exposure-status').textContent=exposureLock!==null?'对照曝光已锁定；切换天气也保留该值。':night?'湿夜采用固定预设曝光；明暗适应只用于晴天，开关保存值不变。':'晴天可按相机所在街巷缓慢适应明暗。';
+  }
+  function setExposureLock(value){
+    exposureLock=value===null?null:clamp(Number(value)||1,.25,3);
+    if(exposureLock!==null){exposureTarget=exposureLock;renderer.toneMappingExposure=exposureLock;}
+    lastExposureSample=0;syncExposureControls();
+    meter.markEvent('exposure_change',{exposureLock});logEvent('visual_exposure',{exposureLock});
+  }
+  $('exposure-lock').onchange=event=>setExposureLock(event.target.checked?Number($('exposure-lock-value').value):null);
+  $('exposure-lock-value').onchange=event=>setExposureLock(Number(event.target.value));
+  $('exposure-baseline-39').onclick=()=>setExposureLock(weatherPreset==='wet-night'?1.02:.87);
+  $('auto-exposure').onchange=()=>{lastExposureSample=0;meter.markEvent('exposure_change',{autoExposure:$('auto-exposure').checked});};
   $('weather-preset').onchange=event=>setCityWeather(event.target.value);
   $('benchmark-camera').innerHTML='<option value="drive">驾驶相机</option>'+CITY_BENCHMARK_ROUTE.cameras.map(view=>'<option value="'+view.id+'">'+escapeHtml(view.name)+'</option>').join('');
   $('benchmark-route-start').onclick=()=>{
@@ -365,6 +409,7 @@ export async function boot(shell){
     meter.markEvent('camera_change',{id:view.id});toast('已锁定 '+view.name+'，可以切换晴天／湿夜并导出画面对照。');
   };
   $('visual-capture').onclick=()=>{closePanels();if(menuOpen)closeGameMenu();setPaused(true);captureImageRequested=true;};
+  $('visual-capture-bundle').onclick=()=>{closePanels();if(menuOpen)closeGameMenu();setPaused(true);captureBundleRequested=true;};
   $('visual-capture-metadata').onclick=()=>download(JSON.stringify(visualConditions(),null,2),'roadster-view-'+(fixedCameraId||cameraMode)+'-'+weatherPreset+'.json','application/json');
   $('road-surface').onchange=event=>{sim.setRoadSurface(event.target.value);logEvent('road_surface',{preset:event.target.value});};
   $('wing-mode').onchange=event=>{sim.setWing({mode:event.target.value});logEvent('wing_configuration',{mode:event.target.value,deployment:sim.params.wingDeployment});};
@@ -408,11 +453,70 @@ export async function boot(shell){
 
   // The primary record action creates a replayable experiment, not only a CSV.
   $('record-btn').onclick=()=>{
-    try{if(researchConsole.getExperimentState?.().recording){researchConsole.stopRecording('用户结束','completed');toast('现场实验已保存，可查看、导出或按原始条件重放。');}
+    try{if(controlCapture?.getState().active){controlCapture.cancel();return;}if(researchConsole.getExperimentState?.().recording){researchConsole.stopRecording('用户结束','completed');toast('现场实验已保存，可查看、导出或按原始条件重放。');}
       else{researchConsole.startRecording({name:(activeContext==='lab'?'风场实验室':'城市')+'驾驶 / 飞行记录'});toast('正在记录完整初态、逐物理步输入与事件；按同一按钮结束保存。');}
     }catch(error){toast(error.message,7000);}
   };
   function download(content,name,type='text/plain;charset=utf-8'){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);}
+  const controlPhaseNames={prepare:'预备与稳定',steer:'转向计量',brake:'制动收束',climb:'E 上升',release:'松键制动',descend:'Q 下降与接地',manual:'姿态输入', 'manual-release':'姿态松键',recover:'G 回正'};
+  function syncControlCapture(){
+    if(!controlCapture)return;
+    const state=controlCapture.getState(),result=controlCapture.getResult(),english=getLanguage()==='en';
+    const selection=$('control-capture-kind').value||CONTROL_CAPTURE_PROTOCOLS[0].id;
+    if($('control-capture-kind').dataset.language!==getLanguage()){
+      $('control-capture-kind').innerHTML=CONTROL_CAPTURE_PROTOCOLS.map(d=>'<option value="'+d.id+'">'+escapeHtml(english?d.labelEn:d.label)+'</option>').join('');
+      $('control-capture-kind').value=selection;$('control-capture-kind').dataset.language=getLanguage();
+    }
+    const def=CONTROL_CAPTURE_PROTOCOLS.find(d=>d.id===$('control-capture-kind').value);
+    $('control-capture-description').textContent=english?def.descriptionEn:def.description;
+    $('control-capture-direction').disabled=state.active||def.type!=='steer'||graphicsStopped;
+    $('control-capture-kind').disabled=state.active||graphicsStopped;
+    $('control-capture-start').disabled=state.active||graphicsStopped;
+    const initial=CONTROL_CAPTURE_STARTS[def.id];$('control-capture-reset').disabled=state.active||!initial||graphicsStopped;
+    $('control-capture-reset').textContent=initial?(english?initial.labelEn:initial.label):tr('飞行采集使用当前悬停初态');
+    $('control-capture-stop').disabled=!state.active;$('control-capture-export').disabled=!result?.record;
+    $('control-capture-chip').classList.toggle('hidden',!state.active);
+    const line=state.active?(english?state.labelEn:state.label)+' · '+tr(controlPhaseNames[state.phase]||state.phase)+' · '+format(state.timeS,1)+' s'+(state.targetSpeedKmh?' · '+format(state.actualSpeedKmh,1)+' / '+state.targetSpeedKmh+' km/h':''):state.reason?(english?state.reasonEn:state.reason):tr('尚未开始现场采集。');
+    $('control-capture-status').textContent=line;$('control-capture-chip-status').textContent=line;
+    if(!result)$('control-capture-metrics').innerHTML='';
+    if(result){const m=result.metrics,rows=result.protocolId.startsWith('steer')?[
+      ['转向起始 / 结束速度',[m.steerStartSpeedKmh,m.steerEndSpeedKmh].map(v=>format(v,1)).join(' / ')+' km/h'],
+      ['转向计量时长',format(m.measuredSteeringDurationS,2)+' s'],['路径半径中位数',format(m.medianPathRadiusM,2)+' m'],['最大侧滑',format(m.peakSlipDeg,2)+'°'],['最大横向加速度',format(m.peakLateralAccelerationMps2,2)+' m/s²'],['转向速度损失',format(m.speedLossKmh,2)+' km/h']
+    ]:result.protocolId==='vertical-8-release'?[
+      ['松键时垂速',format(m.releaseVerticalMps,2)+' m/s'],['松键后继续上升',format(m.releaseClimbDistanceM,2)+' m'],['松键制动时间',format(m.releaseBrakeTimeS,2)+' s'],['接地喷口推力',format(m.groundThrustN,2)+' N'],['接地流量',format(m.groundMassFlowKgS,3)+' kg/s']
+    ]:[['G 回正起始滚转 / 俯仰',[m.recoveryStartRollDeg,m.recoveryStartPitchDeg].map(v=>format(v,1)).join(' / ')+'°'],['G 恢复时间',format(m.recoveryTimeS,2)+' s'],['G 恢复掉高',format(m.recoveryHeightLossM,2)+' m'],['结束倾角',format(m.finalTiltDeg,2)+'°'],['航向误差',format(m.finalHeadingErrorDeg,2)+'°']];
+      $('control-capture-metrics').innerHTML=rows.map(([label,value])=>'<div><span>'+escapeHtml(tr(label))+'</span><b>'+escapeHtml(value)+'</b></div>').join('');
+    }
+  }
+  controlCapture=new ControlCaptureProtocol({getSim:()=>sim,startRecording:options=>researchConsole.startRecording(options),stopRecording:(...args)=>researchConsole.stopRecording(...args),recordEvent:(...args)=>researchConsole.recordEvent(...args),getRecordingState:()=>researchConsole.getExperimentState(),getRecords:()=>researchConsole.getExperimentRecords(),onStatus:()=>syncControlCapture(),onFinish:result=>{
+    meter.markEvent('control_capture_end',{protocolId:result.protocolId,status:result.status,recordId:result.recordId});
+    if(meter.capture?.metadata?.controlCaptureProtocol)meter.stopCapture('Control capture '+result.status);
+    syncControlCapture();toast(getLanguage()==='en'?result.reasonEn:result.reason,6500);
+  }});
+  $('control-capture-kind').onchange=syncControlCapture;
+  $('control-capture-reset').onclick=()=>{
+    const initial=CONTROL_CAPTURE_STARTS[$('control-capture-kind').value];if(!initial)return;
+    controlCapture.cancel('重置采集初态，已保留原记录。','Capture initial state reset; previous record retained.');
+    researchConsole.stopRecording?.('显式复位到静止采集起点','cancelled');researchConsole.cancel('显式复位到采集起点');
+    if(activeContext!=='city')switchContext('city',{run:false,openConsole:false});activateScenario('city');
+    const body=sim.body;body.position.set(...initial.position);body.quaternion.setFromEuler(0,initial.yaw,0,'YXZ');
+    body.previousPosition.copy(body.position);body.interpolatedPosition.copy(body.position);body.previousQuaternion.copy(body.quaternion);body.interpolatedQuaternion.copy(body.quaternion);body.aabbNeedsUpdate=true;
+    t=sim.telemetry();resetTrace();resetCamera('chase');car.group.position.copy(vec(t.position));car.group.quaternion.set(t.quaternion.x,t.quaternion.y,t.quaternion.z,t.quaternion.w);car.update(t,0);
+    $('control-capture-direction').value=String(initial.steerSign);$('launch-card').classList.add('hidden');if(menuOpen)closeGameMenu();started=true;document.body.classList.add('body-running');setPaused(true);
+    meter.markEvent('capture_initial_state',{id:initial.id,position:initial.position,yaw:initial.yaw,initialSpeedMps:0,scope:'Explicit reset before experiment recording.'});
+    syncUi(t);openPanel('engineering');engineeringTab('research');toast('已复位到外圈静止起点。点击开始采集后，车辆才真实加速；此复位不属于驾驶或飞行过程。',7500);
+  };
+  $('control-capture-start').onclick=()=>{
+    try{
+      if(researchConsole.getState().running||researchConsole.getExperimentState().recording||researchConsole.getExperimentState().replaying)throw Error(tr('请先结束当前流程 / 记录 / 重放。'));
+      const id=$('control-capture-kind').value;keys.clear();controlCapture.start(id,{steerSign:Number($('control-capture-direction').value)});
+      if(controlCapture.getState().active){meter.startCapture({warmupMs:5000,durationMs:120000,metadata:{...visualConditions(),controlCaptureProtocol:id}});closePanels();ensureRunning();}
+    }catch(error){toast(error.message,7000);}syncControlCapture();
+  };
+  $('control-capture-stop').onclick=()=>controlCapture.cancel();
+  $('control-capture-stop-top').onclick=()=>controlCapture.cancel();
+  $('control-capture-export').onclick=()=>{const result=controlCapture.getResult();if(result?.record)download(JSON.stringify(result.record,null,2),'roadster-'+result.protocolId+'-'+result.record.id+'.json','application/json');};
+  syncControlCapture();
   function captureSample(data){
     researchConsole?.captureSample?.(data);
     samples.push({time:data.simTime,y:data.heightWorld,target:data.targetAltitude,demand:data.desiredWrench[1]/1000,delivered:data.achievedWrench[1]/1000,pressure:data.pressureBar,temperature:data.gasTemperatureK});
@@ -446,7 +550,7 @@ export async function boot(shell){
     fields.forEach(([field,color],j)=>{c.strokeStyle=color;c.lineWidth=2;c.setLineDash(j?[7,5]:[]);c.beginPath();series.forEach((sample,i)=>{const x=left+(sample.time-start)/20*(right-left),y=bottom-sample[field]/(Array.isArray(maximum)?maximum[j]:maximum)*(bottom-top);i?c.lineTo(x,y):c.moveTo(x,y);});c.stroke();});c.restore();c.setLineDash([]);c.fillStyle='#759781';c.textAlign='left';c.fillText(format(Math.max(0,start),1)+' s',left,h-6);c.textAlign='right';c.fillText(format(end,1)+' s',right,h-6);
   }
   function syncUi(data){
-    syncVerticalResponse(data);
+    syncVerticalResponse(data);syncControlCapture();
     const groundSpeed=Math.hypot(data.velocity.x,data.velocity.z)*3.6;
     $('speed-value').textContent=format(groundSpeed,0);$('altitude-value').textContent=format(data.heightWorld,2);$('vertical-value').textContent=format(data.verticalSpeed,2);$('thrust-value').textContent=format(data.thrustN/1000,1);$('suction-value').textContent=format(data.suctionN/1000,1);$('pressure-value').textContent=format(data.pressureBar,0);$('contacts-value').textContent=data.contactCount+' / 4';
     $('gas-meter').style.width=clamp(data.gasFraction*100,0,100)+'%';$('gas-meter').style.background=data.gasFraction<.2?'#d9a576':'#bddda7';$('thrust-meter').style.width=clamp(data.thrustN/100000*100,0,100)+'%';
@@ -456,7 +560,7 @@ export async function boot(shell){
     if(document.activeElement!==$('wing-command'))$('wing-command').value=Math.round(sim.params.wingDeployment*100);$('wing-command-label').textContent=Math.round(sim.params.wingDeployment*100)+'%';$('wing-command').disabled=sim.params.wingMode!=='fixed'||graphicsStopped;
     const wing=data.wing;$('wing-feedback').textContent=wing?'实际展开 '+format(wing.deployment*100,0)+'% / 指令 '+format(wing.command*100,0)+'% · 阻力 '+format(wing.dragN,0)+' N · 下压力 '+format(wing.downforceN,0)+' N':'—';
     $('wheel-feedback').innerHTML=data.wheelStates.map(w=>'<tr><td>'+escapeHtml(w.id)+'</td><td>'+format(w.angularVelocityRadS*60/(2*Math.PI),0)+'</td><td>'+(w.slipRatio===null?'离地':format(w.slipRatio*100,1)+'%')+'</td><td>'+([w.absActive?'ABS调压':'',w.tcsActive?'TCS限矩':''].filter(Boolean).join(' / ')||(w.contact?'滚动':'离地'))+'</td></tr>').join('');
-    $('weather-preset').disabled=activeContext!=='city'||graphicsStopped;
+    $('weather-preset').disabled=activeContext!=='city'||graphicsStopped;syncExposureControls();
 
     const authority=data.controlAuthority;
     if(authority&&activeDrawer==='about'){
@@ -509,8 +613,8 @@ export async function boot(shell){
   onLanguageChange(()=>{syncUi(sim.telemetry());syncPerformanceUi();cityMap.update(sim.telemetry());});
   function syncPerformanceUi(){
     if(graphicsStopped){$('render-stat-chip').textContent='三维未运行 · 无帧率数据';return;}
-    const report=meter.snapshot(),cpu=report.cpuSubmission,physics=cpu.physics?.medianMs,gpu=report.gpuMs;
-    $('render-stat-chip').textContent=(report.medianFps?Math.round(report.medianFps):'—')+' FPS · '+renderProfile.label+' · '+renderSize.width+'×'+renderSize.height;
+    const report=meter.snapshot(meter.frames.filter(frame=>frame.active===!(paused||menuOpen))),cpu=report.cpuSubmission,physics=cpu.physics?.medianMs,gpu=report.gpuMs;
+    $('render-stat-chip').textContent=((paused||menuOpen)?tr('暂停预览')+' · ':'')+(report.medianFps?Math.round(report.medianFps):'—')+' FPS · '+renderProfile.label+' · '+renderSize.width+'×'+renderSize.height;
     if(activeDrawer!=='engineering'||$('engineering-render').classList.contains('hidden'))return;
     $('perf-fps').textContent=report.medianFps?Math.round(report.medianFps)+' FPS':'正在采样';
     $('perf-p95').textContent=format(report.frameP95Ms,1)+' ms';$('perf-p99').textContent=format(report.frameP99Ms,1)+' ms';$('perf-long-frames').textContent=report.longFrames.over50Ms+' / '+report.samples;$('perf-resolution').textContent=renderSize.width+' × '+renderSize.height;
@@ -538,8 +642,9 @@ export async function boot(shell){
     afterStudy:()=>{if(studyWasRunning&&!menuOpen&&shell.graphics.status==='available')setPaused(false);studyWasRunning=false;viewport.focus({preventScroll:true});},
     onStart:()=>{keys.clear();closePanels();if(menuOpen)closeGameMenu();else ensureRunning();},
     onCancel:reason=>logEvent('program_cancel',{reason}),
-    suspendGraphics:()=>{graphicsStopped=true;setPaused(true);keys.clear();sound?.silence();meter.endGpu();},
+    suspendGraphics:()=>{controlCapture?.cancel('图形运行中断；已保留采集区间。','Graphics stopped; captured interval retained.');graphicsStopped=true;captureImageRequested=false;captureBundleRequested=false;setPaused(true);keys.clear();sound?.silence();meter.endGpu();},
     restoreExperiment:({snapshot,context,sceneConfiguration:recordedScene,allowVersionMismatch=false})=>{
+      controlCapture?.cancel('进入记录重放，操纵采集结束。','Record replay started; pilot capture ended.');
       const name=context==='lab'||snapshot.worldType==='windlab'?'lab':'city';
       switchContext(name,{run:false,openConsole:false});
       sim.importState(snapshot,{allowVersionMismatch});t=sim.telemetry();scenario=sim.scenario;contexts[name].scenario=scenario;
@@ -550,6 +655,7 @@ export async function boot(shell){
         if(RENDER_PROFILES[recordedScene.quality]&&quality!==recordedScene.quality)setQuality(recordedScene.quality);
         if(name==='city'&&CITY_WEATHER_PRESETS[recordedScene.weatherPreset])setCityWeather(recordedScene.weatherPreset,{record:false});
         activeBenchmarkRoute=name==='city'&&recordedScene.routeId===CITY_BENCHMARK_ROUTE.id?recordedScene.routeId:null;
+        exposureLock=Number.isFinite(recordedScene.exposureLock)?clamp(recordedScene.exposureLock,.25,3):null;syncExposureControls();
         if(typeof recordedScene.autoExposure==='boolean')$('auto-exposure').checked=recordedScene.autoExposure;
         if(Number.isFinite(recordedScene.exposure)&&recordedScene.exposure>0)renderer.toneMappingExposure=recordedScene.exposure;
         const view=recordedScene.camera,vector=(value,length)=>Array.isArray(value)&&value.length===length&&value.every(Number.isFinite);
@@ -581,7 +687,7 @@ export async function boot(shell){
   $('loading-screen').style.opacity='0';setTimeout(()=>$('loading-screen').style.display='none',700);
   $('sim-state').textContent='系统就绪';$('solver-label').textContent='6DOF · 120 Hz / 遥测 20 Hz';syncUi(t);
   // A small read-only diagnostics surface makes the numerical state inspectable.
-  window.roadsterLab={getState:()=>({...sim.telemetry(),paused,quality,cameraMode,context:activeContext,graphics:shell.graphics,research:researchConsole.getState()}),getParameters:()=>({...sim.params}),getGeometry:()=>sim.getWorldGeometry(),getPerformance:()=>meter.export({version:MODEL_VERSION,quality,profile:renderProfile,resolution:renderSize,scene:environment.stats}),version:MODEL_VERSION};
+  window.roadsterLab={getControlCapture:()=>controlCapture.getState(),getState:()=>({...sim.telemetry(),paused,quality,cameraMode,context:activeContext,graphics:shell.graphics,research:researchConsole.getState()}),getParameters:()=>({...sim.params}),getGeometry:()=>sim.getWorldGeometry(),getPerformance:()=>meter.export({version:MODEL_VERSION,quality,profile:renderProfile,resolution:renderSize,scene:environment.stats}),version:MODEL_VERSION};
   let lastRendered=0,captureNotice=false;
   function frame(now){
     if(graphicsStopped)return;requestAnimationFrame(frame);if(document.hidden){lastTime=now;return;}if(paused&&now-lastRendered<1000/30)return;
@@ -589,7 +695,7 @@ export async function boot(shell){
     try{
       renderer.info.reset();meter.begin(now,wallDelta*1000);let physicalDelta=0;
       meter.measure('physics',()=>{
-        if(!paused){const input=inputs(dt*scale),before=sim.simTime;let fixedInput=input;t=sim.step(dt*scale,(_simTime,fixedDt)=>{fixedInput=researchConsole.beforeFixedStep?researchConsole.beforeFixedStep(fixedDt,input):researchConsole.stepInput(fixedDt,input);return fixedInput;},captureSample,researchConsole.needsFixedStep?.()?(data,appliedInput,fixedDt)=>researchConsole.afterFixedStep(data,appliedInput,fixedDt):undefined);physicalDelta=Math.max(0,t.simTime-before);if(t.fault){researchConsole.stopRecording?.(t.fault,'failed');researchConsole.cancel?.(t.fault,'failed');exhaust.reset();setPaused(true);toast(t.fault+'。已暂停，请重置并检查参数。',9000);}}
+        if(!paused){const input=inputs(dt*scale),before=sim.simTime;let fixedInput=input;t=sim.step(dt*scale,(_simTime,fixedDt)=>{const captureInput=controlCapture.beforeStep(fixedDt,input);fixedInput=researchConsole.beforeFixedStep?researchConsole.beforeFixedStep(fixedDt,captureInput):researchConsole.stepInput(fixedDt,captureInput);return fixedInput;},captureSample,researchConsole.needsFixedStep?.()||controlCapture.getState().active?(data,appliedInput,fixedDt)=>{researchConsole.afterFixedStep(data,appliedInput,fixedDt);controlCapture.afterStep(data,fixedDt);}:undefined);physicalDelta=Math.max(0,t.simTime-before);if(t.fault){researchConsole.stopRecording?.(t.fault,'failed');researchConsole.cancel?.(t.fault,'failed');exhaust.reset();setPaused(true);toast(t.fault+'。已暂停，请重置并检查参数。',9000);}}
         else t=sim.telemetry();
       });
       meter.measure('sceneUpdate',()=>{
@@ -600,7 +706,7 @@ export async function boot(shell){
         updateCamera(dt,display);camera.updateMatrixWorld();car.setViewBudget?.(camera,renderSize.height,{inspection:cameraMode==='orbit'});
         // Meter the viewing camera: an orbit camera outside a covered street
         // must not inherit the vehicle's deep-shade exposure and bleach the city.
-        if(now-lastExposureSample>350){const p=camera.position,sunVisible=activeContext==='city'?!sim.traceSurface({x:p.x,y:p.y,z:p.z},{x:SUN_DIRECTION[0],y:SUN_DIRECTION[1],z:SUN_DIRECTION[2]},1800):true;exposureTarget=$('auto-exposure').checked?environment.exposureAt(p,sunVisible):(activeContext==='city'?CITY_WEATHER_PRESETS[weatherPreset].exposure:environment.exposureAt(p));lastExposureSample=now;}
+        if(now-lastExposureSample>350){const p=camera.position,sunVisible=activeContext==='city'?!sim.traceSurface({x:p.x,y:p.y,z:p.z},{x:SUN_DIRECTION[0],y:SUN_DIRECTION[1],z:SUN_DIRECTION[2]},1800):true;exposureTarget=exposureLock??($('auto-exposure').checked?environment.exposureAt(p,sunVisible):(activeContext==='city'?CITY_WEATHER_PRESETS[weatherPreset].exposure:environment.exposureAt(p)));lastExposureSample=now;}
         renderer.toneMappingExposure+=(exposureTarget-renderer.toneMappingExposure)*(1-Math.exp(-dt/1.1));
         updateForces(display);updateEnvironment(now,t,physicalDelta);researchConsole.update(t,physicalDelta);
         const refreshShadows=environment.wantsShadowUpdate?.(now/1000,t.position)===true;renderer.shadowMap.needsUpdate=renderer.shadowMap.needsUpdate||refreshShadows;
@@ -611,7 +717,22 @@ export async function boot(shell){
       meter.measure('reflections',()=>environment.updateReflections(now/1000,t.position,[car.group,exhaust.mesh,forcesRoot,trail,targetGroup]));
       if(ssao.enabled){ssao.ssaoMaterial.uniforms.cameraProjectionMatrix.value.copy(camera.projectionMatrix);ssao.ssaoMaterial.uniforms.cameraInverseProjectionMatrix.value.copy(camera.projectionMatrixInverse);}
       if(paused)sound?.silence();else sound?.update(t);composer.render();
-      if(captureImageRequested){captureImageRequested=false;renderer.domElement.toBlob(blob=>{if(blob)download(blob,'roadster-'+(fixedCameraId||cameraMode)+'-'+weatherPreset+'.png','image/png');else toast('当前浏览器未能导出画面。');},'image/png');}
+      if(captureImageRequested||captureBundleRequested){
+        const bundle=captureBundleRequested;captureImageRequested=false;captureBundleRequested=false;
+        const stem='roadster-'+MODEL_VERSION+'-'+(fixedCameraId||cameraMode)+'-'+weatherPreset;
+        // Freeze conditions on this rendered frame, before toBlob's async callback.
+        const metadata=JSON.parse(JSON.stringify({...visualConditions(),capture:{capturedAt:new Date().toISOString(),frameNumber:meter.frameNumber,renderTimeS:now/1000,source:'actual-webgl-composer-frame',postprocessAA:renderProfile.antialias,fxaaRevision:'explicit-lod0-single-return-310',imageFile:stem+'.png',conditionsFile:stem+'.json',pixelsEdited:false}}));
+        renderer.domElement.toBlob(async blob=>{
+          if(!blob){toast('当前浏览器未能导出画面。');return;}
+          try{
+            if(bundle){
+              const archive=await captureArchive([{name:stem+'.png',data:blob},{name:stem+'.json',data:JSON.stringify(metadata,null,2)},
+                {name:'READ-ME.txt',data:'Actual WebGL frame and its same-frame conditions. PNG pixels have not been edited.\nMatch viewport, drawing buffer, quality, camera, physical state and exposure before A/B comparison.\nA paused preview is not a driving FPS measurement. New lighting preset comparisons must be labelled separately.\n'}]);
+              download(archive,stem+'.zip','application/zip');toast('真实画面与同帧条件已合并导出；暂停帧不代表驾驶性能。');
+            }else download(blob,stem+'.png','image/png');
+          }catch(error){toast('画面采集包导出失败：'+error.message,6500);}
+        },'image/png');
+      }
       const sample=meter.end({active:!paused&&!menuOpen,resolution:{width:renderSize.width,height:renderSize.height},physicsSteps:Math.round(physicalDelta*120),quality,context:activeContext,weatherPreset:activeContext==='city'?weatherPreset:null,cameraMode,simTime:t.simTime,vehiclePosition:{...t.position},cameraPosition:{x:camera.position.x,y:camera.position.y,z:camera.position.z}});
       if(governor.update(wallDelta*1000,{active:!paused&&!menuOpen,cpuMs:sample.cpu.total,gpuMs:meter.gpuMs}))resize();
       if(meter.capture?.complete&&!captureNotice){toast('性能采样完成。预热、稳态、长帧和 GPU 计时可用性已分别记录，可导出报告。');captureNotice=true;}if(meter.capture&&!meter.capture.complete)captureNotice=false;

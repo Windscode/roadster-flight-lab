@@ -70,22 +70,33 @@ check('Independent tire/wheel integration dissipates slip and brake energy, obey
 
 function roadTrial(surface,assist,launch){
   const sim=fixture({roadSurface:surface,absEnabled:assist,tractionAssist:assist});if(!launch)roadInitialSpeed(sim,80/3.6);
-  const z0=sim.body.position.z;let sumSlip=0,sampleCount=0,peakSlip=0,lockedWheelSamples=0,regulatedWheelSamples=0,maxGrip=0,time=0,peakYawRate=0;
+  const z0=sim.body.position.z;let sumSlip=0,sampleCount=0,peakSlip=0,lockedWheelSamples=0,regulatedWheelSamples=0,regulatedWheelSamplesAbove3Mps=0,minimumTcsFactor=1,minimumCorneringDriveScale=1,peakDriveRequestReductionNm=0,maxGrip=0,time=0,peakYawRate=0;
   for(let i=0;i<120*(launch?3:8);i++){
     const t=sim.advanceFixed(launch?{throttle:1}:{brake:1});time=(i+1)/120;assert.equal(t.fault,null);assert.equal(t.contactCount,4);
     peakYawRate=Math.max(peakYawRate,Math.abs(t.angularVelocity.y));
-    for(const w of t.wheelStates){assert.ok(w.gripUse<=1+1e-10);maxGrip=Math.max(maxGrip,w.gripUse);if(Math.abs(w.contactSpeedMps)>3){sumSlip+=Math.abs(w.slipRatio);sampleCount++;peakSlip=Math.max(peakSlip,Math.abs(w.slipRatio));if(Math.abs(w.angularVelocityRadS)<1)lockedWheelSamples++;if(w.absActive||w.tcsActive)regulatedWheelSamples++;}}
+    const accounting=t.driveAccounting;
+    assert.ok(accounting.postTcsTorqueNm<=accounting.torqueBudgetNm+1e-8,'TCS cannot create a larger torque request');
+    minimumCorneringDriveScale=Math.min(minimumCorneringDriveScale,accounting.corneringDriveScale);
+    peakDriveRequestReductionNm=Math.max(peakDriveRequestReductionNm,accounting.torqueBudgetNm-accounting.postTcsTorqueNm);
+    // Slip-ratio statistics exclude the regularized crawling range. Actual
+    // control intervention does not: predictive/load-aware TCS can act before
+    // 3 m/s and leave no further spin for the reactive regulator to suppress.
+    for(const w of t.wheelStates){
+      assert.ok(w.gripUse<=1+1e-10);maxGrip=Math.max(maxGrip,w.gripUse);minimumTcsFactor=Math.min(minimumTcsFactor,w.tcsFactor);
+      if(w.absActive||w.tcsActive)regulatedWheelSamples++;
+      if(Math.abs(w.contactSpeedMps)>3){sumSlip+=Math.abs(w.slipRatio);sampleCount++;peakSlip=Math.max(peakSlip,Math.abs(w.slipRatio));if(Math.abs(w.angularVelocityRadS)<1)lockedWheelSamples++;if(w.absActive||w.tcsActive)regulatedWheelSamplesAbove3Mps++;}
+    }
     if(!launch&&t.speedKmh<.36)break;
   }
   if(!launch)assert.ok(sim.telemetry().speedKmh<.36,'braking must reach a measured stop');
-  return{surface,assistance:assist,trial:launch?'full-throttle-3s':'80kmh-service-brake',distanceM:sim.body.position.z-z0,elapsedS:time,finalSpeedKmh:sim.telemetry().speedKmh,meanAbsoluteSlip:sumSlip/sampleCount,peakSlip,lockedWheelSamples,regulatedWheelSamples,peakYawRateRadS:peakYawRate,maxGrip};
+  return{surface,assistance:assist,trial:launch?'full-throttle-3s':'80kmh-service-brake',distanceM:sim.body.position.z-z0,elapsedS:time,finalSpeedKmh:sim.telemetry().speedKmh,meanAbsoluteSlip:sumSlip/sampleCount,peakSlip,lockedWheelSamples,regulatedWheelSamples,regulatedWheelSamplesAbove3Mps,minimumTcsFactor,minimumCorneringDriveScale,peakDriveRequestReductionNm,peakYawRateRadS:peakYawRate,maxGrip};
 }
 check('Dry/wet/split-mu braking and launch pairs show actual lock/spin without assists and measured slip regulation with ABS/TCS, without guaranteeing shorter stops',()=>{
   const rows=[];
   for(const surface of ['dry','wet','split'])for(const launch of [false,true]){
     const off=roadTrial(surface,false,launch),on=roadTrial(surface,true,launch);rows.push(off,on);
     assert.ok(on.meanAbsoluteSlip<off.meanAbsoluteSlip*.6);assert.ok(on.regulatedWheelSamples>0);assert.equal(off.regulatedWheelSamples,0);
-    if(!launch){assert.ok(off.lockedWheelSamples>20);assert.equal(on.lockedWheelSamples,0);}else assert.ok(off.peakSlip>.5);
+    if(!launch){assert.ok(off.lockedWheelSamples>20);assert.equal(on.lockedWheelSamples,0);}else{assert.ok(off.peakSlip>.5);assert.ok(on.minimumTcsFactor<1);assert.ok(on.peakDriveRequestReductionNm>1,'Assisted launch must reduce the actual motor request');}
   }
   const wet=rows.find(r=>r.surface==='wet'&&!r.assistance&&r.trial==='80kmh-service-brake'),dry=rows.find(r=>r.surface==='dry'&&!r.assistance&&r.trial==='80kmh-service-brake');assert.ok(wet.distanceM>dry.distanceM*1.5);
   evidence.roadComparison=rows;
@@ -130,7 +141,7 @@ check('Seeded delay/noise changes the actual feedback solution, nozzle derating 
 
 const paths=['dist/physics.js','dist/vehicle-models.js','dist/tire-dynamics.js','dist/simulation-snapshot.js','dist/control-observation.js'];
 const report={modelVersion:MODEL_VERSION,generatedAt:new Date().toISOString(),status:'passed',checks:checks.length,sourceSha256:Object.fromEntries(paths.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')])),acceptance:checks,evidence,
-  regressionFixtureChanges:[{test:'tests/handling-controls.test.mjs',change:'The former exact load-proportional EBD-force assertion is replaced by total axle brake-request balance, delivered brake torque bounded by demand, independent finite wheel speed and the unchanged friction/yaw/contact/stop requirements.',reason:'Independent rotating wheels and ABS pressure modulation intentionally supersede ideal longitudinal force assignment.'},{tests:['tests/braking.test.mjs','tests/handling-controls.test.mjs','tests/research-dynamics.test.mjs','tests/flight-controls-3.7.test.mjs'],change:'Authored initial road speeds now initialize omega=v/r for all wheels. Waterfront approach/stop observation is12s instead of9s with unchanged marker, controls, collision and complete-stop assertions.',reason:'A stationary wheel on a vehicle initialized at300km/h is a locked-slide initial condition. Finite brake/wheel transients require a stopping interval after the approach marker.'}],
+  regressionFixtureChanges:[{test:'tests/physics-research-3.8.test.mjs',change:'Control-intervention counts cover every actual contact sample; slip-ratio statistics and a separate intervention count above 3 m/s retain the existing speed filter. The assisted launch must reduce the actual motor request, while combined friction, measured stop, wheel lock and slip-reduction assertions remain.',reason:'The 3.11 dry launch regulates below 3 m/s and has no later >3 m/s active-flag sample. A slip-statistics speed gate must not erase earlier physical TCS intervention.'},{test:'tests/handling-controls.test.mjs',change:'The former exact load-proportional EBD-force assertion is replaced by total axle brake-request balance, delivered brake torque bounded by demand, independent finite wheel speed and the unchanged friction/yaw/contact/stop requirements.',reason:'Independent rotating wheels and ABS pressure modulation intentionally supersede ideal longitudinal force assignment.'},{tests:['tests/braking.test.mjs','tests/handling-controls.test.mjs','tests/research-dynamics.test.mjs','tests/flight-controls-3.7.test.mjs'],change:'Authored initial road speeds now initialize omega=v/r for all wheels. Waterfront approach/stop observation is12s instead of9s with unchanged marker, controls, collision and complete-stop assertions.',reason:'A stationary wheel on a vehicle initialized at300km/h is a locked-slide initial condition. Finite brake/wheel transients require a stopping interval after the approach marker.'}],
   assumptions:['Four independent lumped spin inertias; brush/sliding longitudinal law with regularized slip and a combined friction circle. Existing tire lateral relaxation and suspension contact remain.','ABS/TCS are finite-rate pressure/torque modulation from slip, with ideal wheel-speed sensing. No universal stopping-distance improvement is asserted.','Relative wheel spin acceleration reacts on the chassis. Steering-axis gyroscopic cross terms, full driveline dynamics, tire carcass thermodynamics and multi-body suspension are outside scope.','Wing area .38 m², Cd .75, downforce coefficient1.1, moving wing-origin[0,.325+.30u,-2.065]m, incidence-.25u rad, a point.05m forward on the wing and1.5/s travel rate are engineering assumptions, not Tesla calibration.','Delay/noise acts on flight position, velocity, attitude and angular-rate feedback. Wind is analytic; no CFD.'],limits:['These are numerical tests, not physical Tesla validation, GPU rendering or browser FPS measurements.','JSON exact replay is supported only for the same model version and static world geometry; the recording layer must additionally enforce build/protocol identity.']};
-writeFileSync(new URL('../qa/physics-research-3.9.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL('../qa/physics-research-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(`Physics research3.8: ${checks.length} integrated acceptance groups passed.`);

@@ -1,0 +1,17 @@
+export const entries={
+  '当前 3.11 外观':'Current 3.11 exterior',
+  '粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。':'Rough damp asphalt and local puddles; nearby live lighting complements distant static direct light, with a separate bounced-light field. Wet-night exposure is fixed.',
+  '条纹与曲面隔离':'Stripe and surface isolation',
+  '显示内容':'Surface display',
+  '完整材质与阴影':'Full materials and shadows',
+  '关闭车身接收阴影':'Disable vehicle shadow reception',
+  '关闭环境反射':'Disable environment reflections',
+  '纯漫反射灰模':'Diffuse clay',
+  '表面法线':'Surface normals',
+  '三角网格':'Triangle wireframe',
+  'PCF 接收平面深度校正':'PCF receiver-plane depth correction',
+  '导出同机位七项隔离 ZIP':'Capture seven matching diagnostic frames',
+  '正在冻结当前模型与机位，采集七项隔离画面…':'Freezing the current model and view for seven diagnostic frames…',
+  '七项原始隔离帧与同次条件已导出。':'Seven original diagnostic frames and matching conditions exported.',
+  '保持机位与光照，逐项隔离阴影、反射和几何。默认保留完整材质、真实阴影与反射；隔离状态写入同次导出条件。关闭校正可复核旧的阴影比较方式。':'Keep the view and lights fixed while isolating shadows, reflections and geometry. The default retains full materials, real shadows and reflections. Each export records its diagnostic state. Disable correction to compare the previous shadow depth test.',
+};

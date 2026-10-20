@@ -12,11 +12,12 @@ export const CONTROLLER_FIELDS = Object.freeze([
   ['velocityGain','水平速度阻尼',.3,8,.1,'s⁻¹',3.1],
   ['altitudeGain','高度位置增益',.3,10,.1,'s⁻²',3.2],
   ['verticalDamping','垂直速度阻尼',.5,10,.1,'s⁻¹',3.6],
-  ['attitudeResponse','姿态响应',1,7,.1,'rad/s',3.6],
-  ['rollRateDegS','滚转指令上限',15,180,5,'°/s',120],
-  ['pitchRateDegS','俯仰指令上限',5,90,1,'°/s',32],
+  ['attitudeResponse','姿态响应',1,7,.1,'rad/s',4.5],
+  ['rollRateDegS','滚转指令上限',15,360,5,'°/s',180],
+  ['pitchRateDegS','俯仰指令上限',5,120,1,'°/s',60],
   ['yawRateDegS','偏航指令上限',5,100,1,'°/s',46],
-  ['angularAccelerationDegS2','角加速度上限',20,300,10,'°/s²',160],
+  ['angularAccelerationDegS2','角加速度上限',20,720,10,'°/s²',360],
+  ['verticalAccelerationMps2','升降加速度参考',1,10,.5,'m/s²',5],
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 const rad=Math.PI/180;
@@ -53,7 +54,7 @@ export function validateStage(value,path='阶段'){
   if(type==='pose'&&out.exit==='settled'&&out.settleS>out.durationS)fail(path,'稳定保持时间不能超过阶段超时');
   if(type==='rate'){
     out.axis=choose(value.axis,['roll','pitch','yaw'],`${path}.旋转轴`);
-    out.rateDegS=number(value.rateDegS,out.axis==='roll'?-180:out.axis==='pitch'?-90:-100,out.axis==='roll'?180:out.axis==='pitch'?90:100,`${path}.角速度`);
+    out.rateDegS=number(value.rateDegS,out.axis==='roll'?-360:out.axis==='pitch'?-120:-100,out.axis==='roll'?360:out.axis==='pitch'?120:100,`${path}.角速度`);
     if(Math.abs(out.rateDegS)<1)fail(path,'角速度绝对值至少为 1°/s');
   }
   if(type==='wind')out.wind=validateWind(value.wind,`${path}.风场`);

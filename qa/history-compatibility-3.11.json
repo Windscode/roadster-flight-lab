@@ -1,0 +1,93 @@
+{
+  "status": "passed",
+  "modelVersion": "3.11.0",
+  "modelBuildId": "cd2e0dbd848ef6b14c21b3fb0cb509fd1cfb9c0aa8240fe082f734bc87821522",
+  "scope": "Actual 3.9 and local unpublished 3.10 source-generated records are immutably viewed and explicitly migrated for current-model numerical recomputation; the old solvers are not executed by the current application.",
+  "fixtureProvenance": {
+    "3.9": "6083bbf0e01f4eef5447f2c1b951d8b41e691f46",
+    "3.10": "6d2b897bc928ae0e44fa258a7184719cd660e48b (local unpublished source)"
+  },
+  "sourceHashes": {
+    "dist/experiment-records.js": "88fd6eddca7c7496d8f267be0ebad74b1b1d2e5eca8939ac9a3fbb35f894d229",
+    "dist/simulation-snapshot.js": "e3a5ea6a8e5d0b298843a8d3200ce3bf4a11596dfe8c993af386dcc4da6e379f",
+    "dist/physics.js": "4b184524ce21e60cd1d8ec31252ded2ba668234bedc89b9568261a83df95067b",
+    "dist/vehicle-models.js": "20f0e89bc99ba8d4372d8dec3222eee1267f809b226798ef311f4d50ae0985fb",
+    "tests/history-compatibility-3.11.test.mjs": "a338963e453400b76c9ff17192bfa9bc4e959b20b513c174938aa2280323d149",
+    "qa/fixtures/live-record-3.9.json": "ec85dfa49f6f454ce002d73ef2ae78703d28561ddc4f925afdf4a9dc7c8d76ad",
+    "qa/fixtures/live-record-3.10.json": "89417a1f58d183e4f7ec6a103d8f5ebb9e75e7e11c862001fe5405232b5ba92c"
+  },
+  "evidence": [
+    {
+      "sourceIdentity": {
+        "modelVersion": "3.9.0",
+        "modelBuildId": "b353a90366f128bcf4c188fee0c4a3aad38e6a9f83baf27272c8b5828369ad70",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "sourceSteps": 42,
+      "executionIdentity": {
+        "modelVersion": "3.11.0",
+        "modelBuildId": "cd2e0dbd848ef6b14c21b3fb0cb509fd1cfb9c0aa8240fe082f734bc87821522",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "status": "completed",
+      "reproduction": "not_applicable",
+      "migration": {
+        "from": "3.9.0",
+        "to": "3.11.0",
+        "addedDefaultState": [],
+        "parameterMapping": {
+          "verticalAccelerationMps2": {
+            "value": 3,
+            "meaning": "Historical E/Q acceleration envelope; not the stronger new-session default."
+          }
+        },
+        "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+        "changed": [
+          "modelVersion",
+          "params.verticalAccelerationMps2"
+        ],
+        "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+        "limitation": "The 3.9.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+      },
+      "sourceUnchanged": true
+    },
+    {
+      "sourceIdentity": {
+        "modelVersion": "3.10.0",
+        "modelBuildId": "a6b126a29a3e6702f28ef4921d04798c9f9b80b0285ca89c614e103231b9fd8c",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "sourceSteps": 180,
+      "executionIdentity": {
+        "modelVersion": "3.11.0",
+        "modelBuildId": "cd2e0dbd848ef6b14c21b3fb0cb509fd1cfb9c0aa8240fe082f734bc87821522",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "status": "completed",
+      "reproduction": "not_applicable",
+      "migration": {
+        "from": "3.10.0",
+        "to": "3.11.0",
+        "addedDefaultState": [],
+        "parameterMapping": {
+          "verticalAccelerationMps2": {
+            "value": 3,
+            "meaning": "Historical E/Q acceleration envelope; not the stronger new-session default."
+          }
+        },
+        "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+        "changed": [
+          "modelVersion",
+          "params.verticalAccelerationMps2"
+        ],
+        "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+        "limitation": "The 3.10.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+      },
+      "sourceUnchanged": true
+    }
+  ]
+}

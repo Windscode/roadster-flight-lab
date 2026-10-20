@@ -138,7 +138,8 @@ test('Exhausted gas removes all thrust; prolonged finite hover loses support',()
 test('A full roll is a six-DOF actuator maneuver with inversion, ballistic descent and recovery',()=>{
   const s=new RoadsterSim({supplyMode:'bench'});s.reset('hover');s.startManeuver('roll');
   let inverted=false,minY=Infinity,rotating=false;
-  const t=run(s,10,{},frame=>{
+  // Shared 180/360 references require a longer physical prelaunch and return.
+  const t=run(s,15,{},frame=>{
     const up=s.body.quaternion.vmult({x:0,y:1,z:0});if(up.y<-.9)inverted=true;
     if(frame.maneuver?.phase==='rotate') {rotating=true;minY=Math.min(minY,frame.heightWorld);}
   });
@@ -203,13 +204,15 @@ test('Adiabatic blowdown cools the tank and has lower pressure than the equal-ma
 });
 
 test('After a roll, hover does not retain opposing side jets in the allocator null space',()=>{
-  const s=new RoadsterSim({supplyMode:'bench'});s.reset('hover');s.startManeuver('roll');const t=run(s,11);
+  const s=new RoadsterSim({supplyMode:'bench'});s.reset('hover');s.startManeuver('roll');const t=run(s,15);
   const side=t.nozzles.filter(n=>n.kind==='roll').reduce((a,n)=>a+n.force,0);
   assert.ok(side<10,`idle side thrust ${side}`);assert.ok(Math.abs(t.thrustN-t.mass*9.81)<30);
 });
 
 test('A ground-origin automatic roll with adequate finite impulse returns to a gentle landing before fuel loses support',()=>{
-  const s=new RoadsterSim({supplyMode:'finite',tankLitres:900});s.reset('free');assert.equal(s.startManeuver('roll'),true);let minimum=99,inverted=false,firstContact=null;
+  // The positive finite case declares the feasible 360/720/10 profile;
+  // vehicle-dynamics-3.11 separately requires the calmer 900 L default to decline.
+  const s=new RoadsterSim({supplyMode:'finite',tankLitres:900,rollRateDegS:360,angularAccelerationDegS2:720,verticalAccelerationMps2:10});s.reset('free');assert.equal(s.startManeuver('roll'),true);let minimum=99,inverted=false,firstContact=null;
   const t=run(s,10,{},frame=>{
     if(frame.maneuver?.phase==='rotate'){minimum=Math.min(minimum,frame.heightWorld);assert.equal(frame.contactCount,0);}
     if(s.body.quaternion.vmult({x:0,y:1,z:0}).y<-.9)inverted=true;

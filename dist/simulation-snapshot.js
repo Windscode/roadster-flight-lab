@@ -89,6 +89,7 @@ export function importSimulationState(sim,snapshot,{allowVersionMismatch=false}=
   if(!['drive','hover','manual'].includes(state.mode)||!['off','level','hold'].includes(state.stabilizationMode)||state._nozzles?.length!==10||state.wheelStates?.length!==4||body.shapeOrientations.length!==sim.body.shapes.length)fail('执行器状态不完整');
   if(Math.abs(body.invMass-1/body.mass)>1e-10||['x','y','z'].some(k=>body.inertia[k]<=0||body.invInertia[k]<=0))fail('质量／惯量状态无效');
   const currentParams=Object.keys(sim.params);if(Object.keys(params).length!==currentParams.length||currentParams.some(k=>!(k in params)))fail('参数契约不匹配');
+  if(!Number.isFinite(params.verticalAccelerationMps2)||params.verticalAccelerationMps2<1||params.verticalAccelerationMps2>10)fail('升降加速度参数无效');
   for(const [key,value]of Object.entries(params))if(typeof value!==typeof sim.params[key])fail(`参数 ${key} 类型不同`);
   if(!['dry','wet','split'].includes(params.roadSurface)||!['active','fixed'].includes(params.wingMode)||!['bench','finite'].includes(params.supplyMode)||!['adiabatic','isothermal'].includes(params.gasModel)||!['constant','isentropic'].includes(params.nozzleModel)||params.wheelRadius<=0||params.wheelInertia<=0||params.tankLitres<=0||params.gasTemperatureK<=0||params.tireMu<=0||params.valveRiseTime<=0||params.valveFallTime<=0)fail('参数取值无效');
   for(const key of ['_lastVelocity','_manualCommandInput','_manualReferenceRate','_positionTarget'])if(!(state[key] instanceof CANNON.Vec3))fail(`向量 ${key} 无效`);
@@ -99,6 +100,11 @@ export function importSimulationState(sim,snapshot,{allowVersionMismatch=false}=
   const drive=state._driveAccounting,vertical=state._verticalControl,recovery=state._levelRecovery;
   if(!drive||!['torqueBudgetNm','requestedTorqueNm','postTcsTorqueNm','actualTorqueNm','mechanicalPowerLimitW','mechanicalPowerW','electricalPowerW','mechanicalWorkJ','electricalWorkJ'].every(k=>Number.isFinite(drive[k])&&drive[k]>=0)||typeof drive.powerLimited!=='boolean'||!['unloaded-drive-cut','equal-four-wheel-shares'].includes(drive.airbornePolicy)||!Array.isArray(drive.shares)||drive.shares.length!==4||drive.shares.some(v=>!Number.isFinite(v)||v<0||v>1)||drive.shares.reduce((a,v)=>a+v,0)>1+1e-10)fail('驱动预算状态无效');
   if(!vertical||!['commandMps','targetMps','accelerationLimitMps2'].every(k=>Number.isFinite(vertical[k]))||vertical.accelerationLimitMps2<=0||typeof vertical.braking!=='boolean'||typeof vertical.pilotActive!=='boolean')fail('升降控制状态无效');
+  const maneuver=state._maneuver;
+  if(maneuver?.name==='roll'&&maneuver.profile){
+    const q=maneuver.profile;
+    if(q.kind!=='pilot-rate-envelope'||!['angleRad','rateRadS','accelerationRadS2','rampS','cruiseS','durationS'].every(k=>Number.isFinite(q[k]))||q.angleRad<=0||q.rateRadS<=0||q.rateRadS>2*Math.PI+1e-10||q.accelerationRadS2<=0||q.accelerationRadS2>4*Math.PI+1e-10||q.rampS<=0||q.cruiseS<0||Math.abs(q.durationS-2*q.rampS-q.cruiseS)>1e-8||Math.abs(q.angleRad-q.rateRadS*(q.rampS+q.cruiseS))>1e-8||!Number.isFinite(maneuver.launchAccelerationMps2)||maneuver.launchAccelerationMps2<=0||maneuver.launchAccelerationMps2>10||!Number.isFinite(maneuver.actualRollRad))fail('滚转指令轨迹状态无效');
+  }
   if(!recovery||!['inactive','armed','surface','recovering','limited','level'].includes(recovery.status)||!['active','verticalSupportFeasible','torqueSaturated'].every(k=>typeof recovery[k]==='boolean')||!Number.isFinite(recovery.tiltErrorDeg)||recovery.tiltErrorDeg<0||recovery.tiltErrorDeg>180||!Number.isFinite(recovery.headingTargetRad))fail('自动回正状态无效');
   if(!state._wing||![state._wing.deployment,state._wing.command].every(v=>Number.isFinite(v)&&v>=0&&v<=1)||!Number.isFinite(state._wing.incidenceRad)||!['position','applicationPoint','forceBody'].every(k=>state._wing[k]&&['x','y','z'].every(a=>Number.isFinite(state._wing[k][a])))||!Number.isInteger(state._stepCount)||state._stepCount<0)fail('执行器或固定步相位无效');
   try{observationConfiguration(state._observationConfig);}catch{fail('观测配置无效');}

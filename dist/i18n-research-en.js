@@ -304,6 +304,7 @@ export const entries={
   "轮速、滑移和起步距离": "Wheel speed, slip & launch distance",
   "试验定义": "Experiment definition",
   "待运行试验": "Next experiment",
+  "此配置在当前模型 / 构建下尚未执行。": "This configuration has not run with the current model / build. ",
   "试验项目": "Experiment",
   "运行方式": "Run mode",
   "单次实验": "Single experiment",
@@ -410,6 +411,15 @@ export const entries={
   "普通E升降输入持续2秒后释放，观察实际高度参考、上升速度与耗气。": "Hold the normal E vertical command for 2 s, then release. Observe the height reference, climb speed and gas use.",
   "4米空中初态保持高度，分别记录推力能力不足、持续高度失守及触地。": "Start at 4 m and hold height. Log insufficient thrust authority, sustained height loss and ground contact separately.",
   "平地静置后短脉冲起跳；独立判断纵轴旋转、首次轮胎承载和持续稳定着陆。": "From settled flat ground, make a short thrust launch. Detect roll rotation, first tire support and sustained stable landing independently.",
+  "平地静置后按所选响应建立弹道余量；默认观察20秒，独立判断完整旋转、首次轮胎承载和持续稳定着陆。极慢响应或供气不足仍可能拒绝或未完成。": "From settled flat ground, build launch margin using the selected response. The standard 20-second window checks full rotation, first tire support and sustained stable landing independently. Very slow response or insufficient gas can still cause refusal or an incomplete maneuver.",
+  "滚转观察窗口": "Roll observation window",
+  "表单显示第1条冻结方案；每条观察窗口分别保留。": "The form shows the first frozen request. Each request retains its own observation window.",
+  "20秒 · 标准窗口": "20 s · Standard window",
+  "8秒 · 历史窗口": "8 s · Historical window",
+  "载入旧记录会保留8秒窗口；可在此明确改为20秒再运行。只延长观察，不改变旋转、稳定着陆或碰撞判据。": "Loading an old record retains its 8-second window. Select 20 seconds here to run a longer observation. Rotation, stable-landing and collision criteria stay the same.",
+  "滚转观察窗口只支持8秒历史窗口或20秒标准窗口": "The roll observation window must be the historical 8 seconds or standard 20 seconds",
+  "保存的滚转请求与记录观察窗口不一致": "The saved roll request and recorded observation window disagree",
+  "保存的滚转方案缺少有效观察窗口，不能推断重算时长": "The saved roll request has no valid observation window; recomputation duration cannot be inferred",
   "路面摩擦系数": "Road friction coefficient",
   "前轮标称角刚度": "Front nominal cornering stiffness",
   "后轮标称角刚度": "Rear nominal cornering stiffness",
@@ -747,6 +757,36 @@ Object.assign(entries,{
   '部分结果仅保留在本会话，请导出全部记录。':'Some results remain in this session only. Export all records.','参数与原始数据已保存在本机':'Parameters and raw data saved locally','请导出全部记录 JSON 后再清理。':'Export all records as JSON before clearing.','新增执行证据仍可随全部记录 JSON 导出。':'New execution evidence remains available in the all-records JSON export.','请导出流程结果整库。':'Export all procedure results.','失败条件已留证。':'Failed conditions were retained.','历史结果仍可查看。':'Historical results remain available.','无有效样本':'No valid samples','平路有限储气标准工况':'Flat-road, finite-gas standard condition'
 });
 const translatedParts=(text,separator=' · ')=>text.split(separator).map(part=>tr(part)).join(separator);
+Object.assign(entries,{
+ '五种子控制器对照':'Five-seed controller comparison',
+ '噪声与延迟会使控制失败吗？':'When do noise and delay destabilize control?',
+ '五种子 × 双延迟 × A / B':'Five seeds × two delays × A / B',
+ '研究定姿定点控制器：恢复水平姿态及原位置。A 使用当前基线，B 只改变姿态响应；G 回正仍是独立的原试验。':'Research pose controller: recover level attitude and the original position. A uses the current baseline; B changes only attitude response. The G levelling test remains separate.',
+ 'B 姿态响应':'B attitude response','对照延迟':'Comparison delay','平均侧风':'Mean crosswind','右前主喷口可用':'Front-right lift nozzle availability',
+ '100% · 正常':'100% · healthy','75% · 降额':'75% · derated','50% · 降额':'50% · derated',
+ '种子 37、101、271、509、997；每个种子在 0 ms 和对照延迟下各运行 A / B，共20次，每次12秒。风向65°，阵风幅值为平均风速的1/3，周期5秒。':'Seeds 37, 101, 271, 509 and 997. Each runs A / B at 0 ms and the comparison delay: 20 cases, 12 seconds each. Wind direction is 65°, with a five-second gust period and amplitude equal to one third of mean wind speed.',
+ '噪声、判据与采样':'Noise, criteria and sampling',
+ '观测采用每步有界均匀噪声：位置±0.02 m、速度±0.04 m/s、姿态各轴±0.35°、角速率±0.02 rad/s。同种子的 A / B 使用相同随机序列和风场相位。':'Bounded uniform observation noise at each physics step: position ±0.02 m, velocity ±0.04 m/s, attitude ±0.35° per axis and angular rate ±0.02 rad/s. Paired A / B cases use the same random sequence and wind phase.',
+ '成功需末段持续0.5秒满足姿态误差<2°、角速率<0.15 rad/s、高度及水平位置误差<0.75 m，且全程未触地或车身碰撞。失败保留；五个种子不代表总体可靠性。':'Success requires the final 0.5 seconds to maintain attitude error below 2°, angular rate below 0.15 rad/s, and height and horizontal position errors below 0.75 m, with no ground or hull contact throughout. Failures remain visible; five seeds do not establish population reliability.',
+ '指标统计每个120 Hz物理步，曲线保存10 Hz。默认采用当前供气设置；有限气源耗尽也会使试验失败。':'Metrics use every 120 Hz physics step; curves retain 10 Hz samples. The current supply setting is preserved. Depleting a finite gas supply can also fail a case.',
+ '研究定姿定点恢复：同种子配对，比较姿态响应与观测延迟；每个案例12秒。':'Research pose recovery: paired seeds compare attitude response and observation delay over 12 seconds per case.',
+ '多种子控制器结果':'Multi-seed controller results','导出本组完整对照':'Export this complete comparison',
+ '控制器 / 延迟':'Controller / delay','恢复 / 已返回':'Recovered / returned','平均高度 RMSE · m':'Mean height RMSE · m','最大掉高 · m':'Maximum height loss · m','平均实际耗气 · kg':'Mean gas throughput · kg','最长饱和 · s':'Maximum saturation time · s',
+ '逐种子结果与配对曲线':'Per-seed results and paired curves',
+ '点击任一行查看该种子的 A / B 曲线；未返回的案例不计为成功。下表及导出保留全部已返回结果。':'Click a row to inspect its paired A / B curves. Unreturned cases do not count as successes. The table and export retain every returned result.',
+ '控制器 / 种子 / 延迟':'Controller / seed / delay','恢复':'Recovery','姿态 RMSE · °':'Attitude RMSE · °','高度 RMSE · m':'Height RMSE · m','实际耗气 · kg':'Gas throughput · kg','电耗 · kWh':'Electric use · kWh','成功':'Success','未恢复':'Not recovered','计算失败':'Computation failed','上次执行中断':'Previous execution interrupted',
+ '这是指定工况下的五种子对照。物理判据成功、计算完成和历史复现是不同结论；这里不推断总体成功率或置信区间。':'This is a five-seed comparison under declared conditions. Physical success, completed computation and historical reproduction are distinct conclusions. No population success rate or confidence interval is inferred.',
+ '多种子协议使用研究定姿定点控制器：水平姿态与原位置目标；不是 G 回正。每次12秒，120Hz统计，10Hz保存曲线。':'The multi-seed protocol uses the research pose controller with level attitude and the original position target. It does not use G levelling. Each case runs for 12 seconds, with 120 Hz metrics and 10 Hz retained curves.',
+ '鲁棒试验条件格式无效':'Invalid robustness-case structure','鲁棒试验条件超出支持范围':'Robustness conditions exceed supported bounds','多种子对照仅用于空中稳姿恢复':'Multi-seed comparison applies only to attitude recovery','鲁棒对照参数超出允许范围':'Robustness parameters exceed allowed bounds','A 与 B 的姿态响应相同，请修改 B 后再运行':'A and B have the same attitude response. Change B before running.','鲁棒试验要求启用研究姿态控制':'The robustness experiment requires research attitude control','鲁棒试验条件未被实际控制器接受':'The physical controller rejected the robustness conditions',
+ '需要本工作区导出的1–12条实验方案，或最多20条鲁棒对照方案':'Import 1–12 experiment requests or up to 20 robustness cases exported by this workspace',
+ '普通研究包最多12条；鲁棒对照包最多20条。也可导出全部记录作完整归档。':'Ordinary study bundles hold up to 12 requests; robustness bundles hold up to 20. The complete library remains exportable.',
+ '同模型、同构建与同协议的同类试验可勾选叠加；历史版本单独标记，可按当前模型重算。本机最多64项 / 4 MiB，达到上限后保留旧记录，新结果可在本会话导出。普通研究包支持1–12条方案，鲁棒对照包支持最多20条方案重算，标准实验整库 JSON 含本面板的标准报告及运行 / 失败 / 取消尝试；现场驾驶记录使用“记录与重放”中的现场整库导出。CSV 仅导出当前激活的单条记录，保留它原来的版本与采样说明。':'Overlay experiments of the same kind, model, build and protocol. Historical versions are marked separately and may be recomputed with the current model. The browser stores up to 64 records / 4 MiB; old records remain at the limit and new results remain exportable in this session. Ordinary study bundles contain 1–12 requests; robustness bundles support up to 20 cases. Standard-library JSON retains reports and execution attempts. Export live records from Record & replay. CSV contains only the active record with its original identity and sampling metadata.'
+});
+patterns.unshift(
+ [/^([AB]) \/ 种子 (\d+) \/ 延迟 ([\d.]+) ms$/u,(_,group,seed,delay)=>`${group} / seed ${seed} / delay ${delay} ms`],
+ [/^A 姿态响应 ([\d.]+) rad\/s；其余增益、质量、气源与喷口上限保持相同。$/u,(_,response)=>`A attitude response ${response} rad/s. All other gains, mass, supply and nozzle limits stay identical.`],
+ [/^已返回 (\d+) \/ (\d+) 个案例；有效 A \/ B 配对 (\d+) 组。$/u,(_,returned,total,pairs)=>`${returned} / ${total} cases returned; ${pairs} valid A / B pairs.`]
+);
 patterns.push(
   [/^([AB]) · (.+) \/ (.+)$/u,(_,group,label,unit)=>`${group} · ${tr(label)} / ${unit}`],
   [/^(水平位置增益|水平速度阻尼|高度位置增益|垂直速度阻尼|姿态响应|滚转指令上限|俯仰指令上限|偏航指令上限|角加速度上限) · (.+)$/u,(_,label,unit)=>`${tr(label)} · ${unit}`],
@@ -809,8 +849,11 @@ patterns.push(
   [/^(当前模型结果|历史结果) · (.+) · (.+) · 模型 (.+) · (.+)$/u,(_,kind,run,protocol,version,build)=>`${tr(kind)} · ${run} · ${protocol} · Model ${version} · ${build}`],
   [/^历史结果：基于模型 (.+) \/ (.+)。此处回看原响应，不代表当前模型；可按当前模型重算方案。$/u,(_,version,build)=>`Historical result from model ${version} / ${build}. This is the original response, not the current model. Recompute the request explicitly to obtain a current-model result.`],
   [/^方案已载入：(.+)，点击运行开始。$/u,(_,title)=>`Request loaded: ${tr(title)}. Select Run to start.`],
-  [/^当前查看的是已保存结果：(.+)。左侧是另一个待运行配置；查看或切换结果不会替换它。$/u,(_,description)=>`Viewing a saved result: ${translatedParts(description)}. The left-hand next-run configuration is separate; viewing or switching results does not replace it.`],
-  [/^待运行：(.+) · 当前模型 ([^ ]+)(.*?)。此处配置尚未执行，右侧所选结果独立保留。$/u,(_,description,version,source)=>`Next run: ${translatedParts(description)} · Current model ${version}${source?tr(source):''}. This configuration has not run; the selected saved result remains separate.`],
+  [/^当前查看的是已保存结果：(.+)。左侧配置用于下一次运行；查看或切换结果不会替换它。$/u,(_,description)=>`Viewing a saved result: ${translatedParts(description)}. The left-hand configuration is used for the next execution; viewing or switching results does not replace it.`],
+  [/^待运行：(.+) · 当前模型 ([^。\s]+)(.*?)。(.+)右侧所选结果独立保留。$/u,(_,description,version,source,state)=>`Next run: ${translatedParts(description)} · Current model ${version}${source?tr(source):''}. ${tr(state)}The selected saved result remains separate.`],
+  [/^此配置已执行完成 (\d+) \/ (\d+)；记录库中保留 (\d+) 条结果。计算完成不等于物理判据通过。$/u,(_,completed,total,retained)=>`This configuration completed ${completed} / ${total} executions; ${retained} results remain in the library. Completion does not mean that a physical criterion passed. `],
+  [/^此配置正在执行，已返回 (\d+) \/ (\d+) 条结果。$/u,(_,completed,total)=>`This configuration is running; ${completed} / ${total} results returned. `],
+  [/^此配置上次执行(失败|取消|中断)，已返回 (\d+) \/ (\d+) 条结果；完整尝试条件与原因已留证。$/u,(_,state,completed,total)=>`The last execution of this configuration ${({失败:'failed',取消:'was cancelled',中断:'was interrupted'})[state]}; ${completed} / ${total} results returned. The frozen attempt and reason are retained. `],
   [/^· 来源历史 ([^ ]+) \/ ([^，]+)(，配置已修改)?$/u,(_,version,run,edited)=>` · From historical ${version} / ${run}${edited?', configuration edited':''}`],
   [/^待运行配置尚未有效：(.+)。已保存的历史结果没有改变。$/u,(_,reason)=>`Next-run configuration is not yet valid: ${tr(reason)}. Saved historical results are unchanged.`],
   [/^(.+)；(请导出全部记录 JSON 后再清理。|新增执行证据仍可随全部记录 JSON 导出。|请导出流程结果整库。|失败条件已留证。)$/u,(_,reason,note)=>`${tr(reason)}; ${tr(note)}`],
@@ -831,3 +874,7 @@ Object.assign(entries,{
 Object.assign(entries,{'控制状态尚未到原记录终点，未作终态比较。':'The recorded endpoint has not been reached; terminal control state has not been compared.'});
 Object.assign(entries,{'3.8 城市记录的道路与碰撞几何已经改变，不能安全迁移完整现场状态；仍可查看与导出历史。请在当前城市重新建立实验。3.8 实验室 / 标准平地记录仍可选择明确的当前模型重算。':'Road and collision geometry have changed since the 3.8 city. Its complete live state cannot be safely migrated; historical viewing and export remain available. Create a new experiment in the current city. Historical 3.8 laboratory / standard flat-road records can still use explicit current-model recomputation.'});
 patterns.push([/^控制状态：(\d+) 个数值、(\d+) 个离散值；最大连续误差 \/ 容差 ([^；]+)；缺失 (\d+) 项。$/u,(_,numbers,discrete,ratio,missing)=>`Control state: ${numbers} numeric and ${discrete} discrete values; maximum continuous error / tolerance ${ratio}; ${missing} missing fields.`]);
+
+patterns.unshift([/^原 (3\.(?:9|10)\.0) 模型未安装，不能精确重放。可显式按当前模型重算；执行前核对完整状态字段与碰撞几何签名，保留原参数并声明新增参数映射。轮速、气源、控制器和扰动相位保持。$/u,(_,version)=>`The original ${version} model is unavailable, so exact replay is blocked. Explicit current-model recomputation checks the full state and collision signature, preserves original parameters and declares any new parameter mappings. Wheels, gas, controller memory and disturbance phase are retained.`]);
+
+Object.assign(entries,{'升降加速度参考':'Vertical acceleration reference','升降加速度参考 · m/s²':'Vertical acceleration reference · m/s²'});

@@ -1,0 +1,4931 @@
+{
+  "schema": "roadster.steady-circle-comparison",
+  "version": 1,
+  "generatedAt": "2026-10-20T02:19:18.321Z",
+  "sourceSha256": {
+    "dist/physics.js": "4b184524ce21e60cd1d8ec31252ded2ba668234bedc89b9568261a83df95067b",
+    "dist/tire-dynamics.js": "7ffbafa4bb7d4ab89fffd7b66c7b9e448c7e0cf02610c7def9d5ee3118000c93",
+    "dist/vehicle-models.js": "20f0e89bc99ba8d4372d8dec3222eee1267f809b226798ef311f4d50ae0985fb",
+    "qa/fixtures/baseline-3.10/physics.js": "f6cf061c85d4895b642fbbb553e28f9347e51e2ec3fc780ef78e99361a5a2432",
+    "qa/fixtures/baseline-3.10/tire-dynamics.js": "026425f3aedd162637bfa184cd279424f4a7604ee27db398bebd8834aca4dccd",
+    "qa/fixtures/baseline-3.10/vehicle-models.js": "33e7bc7d7d5f4158a78b15705cceed99fee181db5b48f44bf6c796541eed7269",
+    "qa/check-steady-circles-3.11.mjs": "1701bc471376e43dbab67b9f116c2fd841d20e71b4466b79ecb49bf6a4f4f83e"
+  },
+  "baselineCommit": "6d2b897bc928ae0e44fa258a7184719cd660e48b",
+  "reproductionCommand": "node qa/check-steady-circles-3.11.mjs",
+  "protocol": {
+    "world": "Original flat city floor/contact material only; city obstacles removed for this isolated numerical fixture. The application city is unchanged.",
+    "initial": "2 s physical rest settling at [-320,0.62,0], then one declared forward rolling state v=target and wheel omega=v/r. No measured state assignments.",
+    "physicsHz": 120,
+    "durationS": 40,
+    "straightSeconds": 5,
+    "steerRampSeconds": 1,
+    "steering": "Fixed road-wheel centre 2 deg at 54 km/h and 0.8 deg at 90 km/h; steeringAssist=false, ABS/TCS=true. This is not a keyboard turn or a test of the speed-sensitive steering map.",
+    "longitudinal": "Same PI ordinary-pedal driver: ground-plane speed feedback, Kp=1.6, Ki=0.6, integral +/-6; drag+rolling feed-forward. Uses actual throttle/brake, without assigning velocity.",
+    "referenceLateralG": {
+      "at54": 0.28201939439646373,
+      "at90": 0.31324795788066695
+    },
+    "steadyWindow": [
+      35,
+      40
+    ],
+    "steadyThresholds": {
+      "windowS": 5,
+      "maxAbsoluteSpeedErrorKmh": 0.5,
+      "speedRangeKmh": 0.5,
+      "wheelCentreRangeDeg": 0.05,
+      "yawRateRangeDegS": 0.1,
+      "bodyBetaRangeDeg": 0.1,
+      "maxAbsoluteYawSlopeDegS2": 0.02,
+      "maxAbsoluteBetaSlopeDegS": 0.02,
+      "maxCircleRadialResidualRmsM": 0.25,
+      "minimumWheelContacts": 4,
+      "maximumRigidContactSteps": 0
+    }
+  },
+  "results": [
+    {
+      "id": "dry-54-3.10",
+      "version": "3.10",
+      "surface": "dry",
+      "targetSpeedKmh": 54,
+      "targetWheelCentreDeg": 2,
+      "appliedParams": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": false,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 3,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 3.6,
+        "rollRateDegS": 120,
+        "pitchRateDegS": 32,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 160
+      },
+      "initial": {
+        "position": {
+          "x": -320,
+          "y": 0.5970093908740407,
+          "z": 0
+        },
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 15
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "massKg": 2199.5582002848946,
+        "wheelAngularSpeedsRadS": [
+          40.54054054054054,
+          40.54054054054054,
+          40.54054054054054,
+          40.54054054054054
+        ]
+      },
+      "steady": true,
+      "checks": {
+        "completeWindow": true,
+        "noFault": true,
+        "fourWheelContact": true,
+        "noRigidContact": true,
+        "speedError": true,
+        "speedVariation": true,
+        "wheelAngleVariation": true,
+        "yawVariation": true,
+        "betaVariation": true,
+        "yawTrend": true,
+        "betaTrend": true,
+        "circularArc": true
+      },
+      "metrics": {
+        "windowStartS": 35,
+        "windowEndS": 40,
+        "windowSamples": 600,
+        "speedKmh": {
+          "mean": 53.9999999958254,
+          "min": 53.999999775237995,
+          "max": 54.00000020814456,
+          "range": 4.329065674824051e-7,
+          "rms": 53.999999995825355
+        },
+        "speedErrorKmh": {
+          "mean": -4.174623526864707e-9,
+          "min": -2.2476200456367224e-7,
+          "max": 2.0814456291873284e-7,
+          "range": 4.329065674824051e-7,
+          "rms": 8.087393023385863e-8
+        },
+        "yawRateDegS": {
+          "mean": 10.044711340958926,
+          "min": 10.044709392789905,
+          "max": 10.044713042313512,
+          "range": 0.000003649523607762717,
+          "rms": 10.044711340958937
+        },
+        "bodyBetaDeg": {
+          "mean": -0.04095257216314005,
+          "min": -0.04095260275837743,
+          "max": -0.0409525500565419,
+          "range": 5.27018355275799e-8,
+          "rms": 0.04095257216314142
+        },
+        "wheelCentreDeg": {
+          "mean": 1.9999999999999996,
+          "min": 1.9999999999999978,
+          "max": 1.9999999999999978,
+          "range": 0,
+          "rms": 1.9999999999999998
+        },
+        "yawSlopeDegS2": 7.637833508520246e-10,
+        "betaSlopeDegS": -2.933238227090903e-11,
+        "lateralAccelerationMps2": {
+          "mean": 2.628540425429671,
+          "min": 2.628540192407839,
+          "max": 2.628540592657891,
+          "range": 4.002500517685803e-7,
+          "rms": 2.62854042542967
+        },
+        "throttle": {
+          "mean": 0.022908634665110256,
+          "min": 0.022908625967818484,
+          "max": 0.022908643701710432,
+          "range": 1.7733891948673586e-8,
+          "rms": 0.022908634665110512
+        },
+        "brake": {
+          "mean": 0,
+          "min": 0,
+          "max": 0,
+          "range": 0,
+          "rms": 0
+        },
+        "circleFit": {
+          "centreXM": -234.32315921553115,
+          "centreZM": 85.23040928431561,
+          "radiusM": 85.58508194100763,
+          "radialResidualRmsM": 1.033056718784076e-10
+        },
+        "curvatureRadiusM": 85.56111404867374,
+        "tcsActiveWheelSeconds": 0,
+        "corneringTcsActiveWheelSeconds": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "minimumWheelContacts": 4,
+        "rigidContactSteps": 0,
+        "wheels": {
+          "FR": {
+            "normalLoadN": {
+              "mean": 6405.540567612614,
+              "min": 6405.540496091676,
+              "max": 6405.5406391633205,
+              "range": 0.00014307164474303136,
+              "rms": 6405.540567612615
+            },
+            "alphaDeg": {
+              "mean": -1.0360813332384844,
+              "min": -1.0360815110334116,
+              "max": -1.0360811860541241,
+              "range": 3.2497928748043137e-7,
+              "rms": 1.0360813332384868
+            },
+            "longitudinalSlip": {
+              "mean": 0.0008479239789497509,
+              "min": 0.0008476649842608624,
+              "max": 0.0008481868685162967,
+              "range": 5.21884255434246e-7,
+              "rms": 0.0008479239923097424
+            },
+            "frictionUtilization": {
+              "mean": 0.20968230858222325,
+              "min": 0.20968222312008664,
+              "max": 0.20968234379086279,
+              "range": 1.2067077614918986e-7,
+              "rms": 0.20968230858222742
+            },
+            "longitudinalForceN": {
+              "mean": 103.87754981367172,
+              "min": 103.86791711334874,
+              "max": 103.8801370324824,
+              "range": 0.012219919133656276,
+              "rms": 103.87754993356947
+            },
+            "lateralForceN": {
+              "mean": 1675.694030480684,
+              "min": 1675.6939370954271,
+              "max": 1675.6941579468935,
+              "range": 0.00022085146633799013,
+              "rms": 1675.6940304806842
+            },
+            "roadWheelAngleDeg": {
+              "mean": 1.9783672637017609,
+              "min": 1.9783672637017358,
+              "max": 1.9783672637017358,
+              "range": 0,
+              "rms": 1.9783672637017502
+            },
+            "angularSpeedRadS": {
+              "mean": 40.99408077141258,
+              "min": 40.99407030440378,
+              "max": 40.99409122440455,
+              "range": 0.000020920000771695868,
+              "rms": 40.994080771413
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "FL": {
+            "normalLoadN": {
+              "mean": 4337.635034140767,
+              "min": 4337.6349346089,
+              "max": 4337.63511411024,
+              "range": 0.00017950133951671887,
+              "rms": 4337.635034140763
+            },
+            "alphaDeg": {
+              "mean": -1.0590835245052088,
+              "min": -1.05908370959799,
+              "max": -1.059083371133798,
+              "range": 3.3846419200678213e-7,
+              "rms": 1.0590835245052104
+            },
+            "longitudinalSlip": {
+              "mean": 0.0006185078544853924,
+              "min": 0.0006183267230034706,
+              "max": 0.0006186879294934949,
+              "range": 3.612064900243442e-7,
+              "rms": 0.000618507863341303
+            },
+            "frictionUtilization": {
+              "mean": 0.2222080373739591,
+              "min": 0.22220800268001611,
+              "max": 0.22220809009121933,
+              "range": 8.74112032200891e-8,
+              "rms": 0.22220803737396133
+            },
+            "longitudinalForceN": {
+              "mean": 51.186354242460496,
+              "min": 51.18327812759011,
+              "max": 51.191553628076754,
+              "range": 0.008275500486647047,
+              "rms": 51.186354398614164
+            },
+            "lateralForceN": {
+              "mean": 1203.7339030495607,
+              "min": 1203.733834189255,
+              "max": 1203.7339909529128,
+              "range": 0.0001567636577419762,
+              "rms": 1203.7339030495607
+            },
+            "roadWheelAngleDeg": {
+              "mean": 2.022110860399452,
+              "min": 2.0221108603994433,
+              "max": 2.0221108603994433,
+              "range": 0,
+              "rms": 2.0221108603994478
+            },
+            "angularSpeedRadS": {
+              "mean": 40.13838037091995,
+              "min": 40.13837334601464,
+              "max": 40.13838748717309,
+              "range": 0.00001414115845221886,
+              "rms": 40.13838037092016
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RR": {
+            "normalLoadN": {
+              "mean": 6451.166217485715,
+              "min": 6451.166137698429,
+              "max": 6451.16631674374,
+              "range": 0.0001790453106877976,
+              "rms": 6451.166217485722
+            },
+            "alphaDeg": {
+              "mean": -0.9439561047551396,
+              "min": -0.9439562569422997,
+              "max": -0.9439559374129011,
+              "range": 3.195293986069103e-7,
+              "rms": 0.943956104755142
+            },
+            "longitudinalSlip": {
+              "mean": 0.0008513459460759793,
+              "min": 0.0008510803117450315,
+              "max": 0.0008516061657840171,
+              "range": 5.258540389856082e-7,
+              "rms": 0.0008513459594275616
+            },
+            "frictionUtilization": {
+              "mean": 0.20953547262517275,
+              "min": 0.2095354462596013,
+              "max": 0.20953556260540937,
+              "range": 1.163458080710722e-7,
+              "rms": 0.20953547262517513
+            },
+            "longitudinalForceN": {
+              "mean": 105.04009642590822,
+              "min": 105.03841351116833,
+              "max": 105.05072045678735,
+              "range": 0.012306945619016574,
+              "rms": 105.04009651093598
+            },
+            "lateralForceN": {
+              "mean": 1686.4171083133267,
+              "min": 1686.41697111256,
+              "max": 1686.4172434436075,
+              "range": 0.0002723310474266327,
+              "rms": 1686.4171083133253
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 40.99645023409544,
+              "min": 40.996439687134924,
+              "max": 40.99646072532201,
+              "range": 0.000021038187085764548,
+              "rms": 40.99645023409586
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RL": {
+            "normalLoadN": {
+              "mean": 4383.260684013867,
+              "min": 4383.260612372558,
+              "max": 4383.26075571483,
+              "range": 0.0001433422721675015,
+              "rms": 4383.260684013869
+            },
+            "alphaDeg": {
+              "mean": -0.9630313161803301,
+              "min": -0.9630314746631083,
+              "max": -0.9630311417449573,
+              "range": 3.329181510469681e-7,
+              "rms": 0.9630313161803323
+            },
+            "longitudinalSlip": {
+              "mean": 0.0006259627532796481,
+              "min": 0.0006257775768608153,
+              "max": 0.0006261408044534628,
+              "range": 3.6322759264749687e-7,
+              "rms": 0.0006259627618731493
+            },
+            "frictionUtilization": {
+              "mean": 0.22156420414866573,
+              "min": 0.22156418428198618,
+              "max": 0.22156428355266578,
+              "range": 9.92706795932552e-8,
+              "rms": 0.2215642041486663
+            },
+            "longitudinalForceN": {
+              "mean": 52.34892075603154,
+              "min": 52.34868302225259,
+              "max": 52.35704458232063,
+              "range": 0.008361560068046003,
+              "rms": 52.34892077440991
+            },
+            "lateralForceN": {
+              "mean": 1212.8378559982573,
+              "min": 1212.8377516096439,
+              "max": 1212.8379531959129,
+              "range": 0.00020158626898592047,
+              "rms": 1212.837855998256
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 40.14098298957548,
+              "min": 40.14097580183581,
+              "max": 40.14099011194216,
+              "range": 0.000014310106351445029,
+              "rms": 40.14098298957568
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          }
+        }
+      },
+      "wholeRun": {
+        "durationS": 40,
+        "pathLengthM": 599.8238118495294,
+        "peakMotorPowerW": 8459.324853433205,
+        "peakMotorTorqueBudgetExcessNm": 5.684341886080802e-14,
+        "peakFrictionUtilization": 0.22220809049229356,
+        "contactLossSteps": 0,
+        "rigidContactSteps": 0,
+        "fault": null
+      },
+      "curveFile": "qa/steady-circles-3.11/dry-54-3.10.json"
+    },
+    {
+      "id": "dry-54-3.11",
+      "version": "3.11",
+      "surface": "dry",
+      "targetSpeedKmh": 54,
+      "targetWheelCentreDeg": 2,
+      "appliedParams": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": false,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      },
+      "initial": {
+        "position": {
+          "x": -320,
+          "y": 0.5970093908740407,
+          "z": 0
+        },
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 15
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "massKg": 2199.5582002848946,
+        "wheelAngularSpeedsRadS": [
+          40.54054054054054,
+          40.54054054054054,
+          40.54054054054054,
+          40.54054054054054
+        ]
+      },
+      "steady": true,
+      "checks": {
+        "completeWindow": true,
+        "noFault": true,
+        "fourWheelContact": true,
+        "noRigidContact": true,
+        "speedError": true,
+        "speedVariation": true,
+        "wheelAngleVariation": true,
+        "yawVariation": true,
+        "betaVariation": true,
+        "yawTrend": true,
+        "betaTrend": true,
+        "circularArc": true
+      },
+      "metrics": {
+        "windowStartS": 35,
+        "windowEndS": 40,
+        "windowSamples": 600,
+        "speedKmh": {
+          "mean": 53.99999999635092,
+          "min": 53.999999787552476,
+          "max": 54.00000021343171,
+          "range": 4.2587923587689147e-7,
+          "rms": 53.999999996350894
+        },
+        "speedErrorKmh": {
+          "mean": -3.6490852413824845e-9,
+          "min": -2.1244752446136772e-7,
+          "max": 2.1343171141552375e-7,
+          "range": 4.2587923587689147e-7,
+          "rms": 1.0867518624487947e-7
+        },
+        "yawRateDegS": {
+          "mean": 9.991960981559716,
+          "min": 9.991960024981163,
+          "max": 9.991962423349301,
+          "range": 0.0000023983681387562683,
+          "rms": 9.991960981559743
+        },
+        "bodyBetaDeg": {
+          "mean": -0.03554803824321554,
+          "min": -0.03554808799715546,
+          "max": -0.03554799103316841,
+          "range": 9.696398704794884e-8,
+          "rms": 0.03554803824323477
+        },
+        "wheelCentreDeg": {
+          "mean": 1.9999999999999996,
+          "min": 1.9999999999999978,
+          "max": 1.9999999999999978,
+          "range": 0,
+          "rms": 1.9999999999999998
+        },
+        "yawSlopeDegS2": 2.0215772053364817e-8,
+        "betaSlopeDegS": -1.7349278231996233e-10,
+        "lateralAccelerationMps2": {
+          "mean": 2.6147412239801477,
+          "min": 2.614741133632138,
+          "max": 2.614741319592094,
+          "range": 1.8595995632253448e-7,
+          "rms": 2.614741223980149
+        },
+        "throttle": {
+          "mean": 0.022885635920939573,
+          "min": 0.02288562735010958,
+          "max": 0.02288564444794082,
+          "range": 1.7097831241097428e-8,
+          "rms": 0.02288563592093997
+        },
+        "brake": {
+          "mean": 0,
+          "min": 0,
+          "max": 0,
+          "range": 0,
+          "rms": 0
+        },
+        "circleFit": {
+          "centreXM": -233.8721848234971,
+          "centreZM": 85.20728629483779,
+          "radiusM": 86.03690939740707,
+          "radialResidualRmsM": 2.41728115559904e-10
+        },
+        "curvatureRadiusM": 86.01281512450443,
+        "tcsActiveWheelSeconds": 0,
+        "corneringTcsActiveWheelSeconds": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "minimumWheelContacts": 4,
+        "rigidContactSteps": 0,
+        "wheels": {
+          "FR": {
+            "normalLoadN": {
+              "mean": 6400.1761305812,
+              "min": 6400.17597463621,
+              "max": 6400.176214705317,
+              "range": 0.00024006910643947776,
+              "rms": 6400.176130581202
+            },
+            "alphaDeg": {
+              "mean": -1.0356473197237013,
+              "min": -1.035647420724582,
+              "max": -1.0356471780925816,
+              "range": 2.4263200049112754e-7,
+              "rms": 1.0356473197237017
+            },
+            "longitudinalSlip": {
+              "mean": 0.0007558403637043549,
+              "min": 0.0007555922146196696,
+              "max": 0.0007561108056229393,
+              "range": 5.185910032696767e-7,
+              "rms": 0.0007558403782650474
+            },
+            "frictionUtilization": {
+              "mean": 0.20953184682198903,
+              "min": 0.209531825627676,
+              "max": 0.20953192765090756,
+              "range": 1.0202323155739101e-7,
+              "rms": 0.20953184682198947
+            },
+            "longitudinalForceN": {
+              "mean": 92.51377641512296,
+              "min": 92.51353001361947,
+              "max": 92.52573949476202,
+              "range": 0.012209481142548384,
+              "rms": 92.5137764309083
+            },
+            "lateralForceN": {
+              "mean": 1673.7460762913297,
+              "min": 1673.7458814313923,
+              "max": 1673.7461975906226,
+              "range": 0.00031615923035133164,
+              "rms": 1673.746076291333
+            },
+            "roadWheelAngleDeg": {
+              "mean": 1.9783672637017609,
+              "min": 1.9783672637017358,
+              "max": 1.9783672637017358,
+              "range": 0,
+              "rms": 1.9783672637017502
+            },
+            "angularSpeedRadS": {
+              "mean": 40.987686674002504,
+              "min": 40.98767682891748,
+              "max": 40.98769759801801,
+              "range": 0.000020769100530060314,
+              "rms": 40.98768667400298
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "FL": {
+            "normalLoadN": {
+              "mean": 4343.110582196474,
+              "min": 4343.110498630778,
+              "max": 4343.110656059859,
+              "range": 0.0001574290809003287,
+              "rms": 4343.110582196477
+            },
+            "alphaDeg": {
+              "mean": -1.058741913887125,
+              "min": -1.0587420187527223,
+              "max": -1.0587417667396093,
+              "range": 2.520131130445691e-7,
+              "rms": 1.0587419138871266
+            },
+            "longitudinalSlip": {
+              "mean": 0.00075759564607522,
+              "min": 0.0007574250426632191,
+              "max": 0.0007577851027382832,
+              "range": 3.600600750640944e-7,
+              "rms": 0.0007575956532749048
+            },
+            "frictionUtilization": {
+              "mean": 0.22221220515631976,
+              "min": 0.22221218267367074,
+              "max": 0.2222122684270428,
+              "range": 8.575337206995215e-8,
+              "rms": 0.22221220515631993
+            },
+            "longitudinalForceN": {
+              "mean": 62.77914125325756,
+              "min": 62.7789743688075,
+              "max": 62.787259643324525,
+              "range": 0.008285274517021435,
+              "rms": 62.77914126397024
+            },
+            "lateralForceN": {
+              "mean": 1204.7306066626213,
+              "min": 1204.7304717012926,
+              "max": 1204.7306839361177,
+              "range": 0.00021223482508503366,
+              "rms": 1204.730606662623
+            },
+            "roadWheelAngleDeg": {
+              "mean": 2.022110860399452,
+              "min": 2.0221108603994433,
+              "max": 2.0221108603994433,
+              "range": 0,
+              "rms": 2.0221108603994478
+            },
+            "angularSpeedRadS": {
+              "mean": 40.146724113322534,
+              "min": 40.14671751983325,
+              "max": 40.146731647793324,
+              "range": 0.000014127960071164125,
+              "rms": 40.146724113322726
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RR": {
+            "normalLoadN": {
+              "mean": 6445.690616833642,
+              "min": 6445.690543483768,
+              "max": 6445.690700345925,
+              "range": 0.00015686215647292556,
+              "rms": 6445.690616833643
+            },
+            "alphaDeg": {
+              "mean": -0.9341073842795449,
+              "min": -0.9341074967878115,
+              "max": -0.9341072992891233,
+              "range": 1.9749868818141891e-7,
+              "rms": 0.9341073842795475
+            },
+            "longitudinalSlip": {
+              "mean": 0.0007558409213755377,
+              "min": 0.0007555900066081501,
+              "max": 0.000756113425639141,
+              "range": 5.234190309908902e-7,
+              "rms": 0.0007558409366506526
+            },
+            "frictionUtilization": {
+              "mean": 0.20735124005450006,
+              "min": 0.2073512216320335,
+              "max": 0.20735133015863455,
+              "range": 1.0852660103921608e-7,
+              "rms": 0.20735124005450078
+            },
+            "longitudinalForceN": {
+              "mean": 93.17168284127378,
+              "min": 93.1714358974299,
+              "max": 93.18373094235345,
+              "range": 0.012295044923547493,
+              "rms": 93.17168285717129
+            },
+            "lateralForceN": {
+              "mean": 1668.0523291341142,
+              "min": 1668.052187171451,
+              "max": 1668.0525117228615,
+              "range": 0.0003245514105856273,
+              "rms": 1668.052329134119
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 40.989883543449366,
+              "min": 40.98987375793025,
+              "max": 40.98989472549642,
+              "range": 0.000020967566172203078,
+              "rms": 40.98988354344979
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RL": {
+            "normalLoadN": {
+              "mean": 4388.625068448922,
+              "min": 4388.624984317601,
+              "max": 4388.625224378504,
+              "range": 0.00024006090279726777,
+              "rms": 4388.625068448919
+            },
+            "alphaDeg": {
+              "mean": -0.9528834662464672,
+              "min": -0.9528835832788553,
+              "max": -0.952883377972121,
+              "range": 2.0530673427998636e-7,
+              "rms": 0.9528834662464701
+            },
+            "longitudinalSlip": {
+              "mean": 0.0007575744523097228,
+              "min": 0.0007573874126050829,
+              "max": 0.0007577521992093746,
+              "range": 3.647866042916703e-7,
+              "rms": 0.0007575744593256564
+            },
+            "frictionUtilization": {
+              "mean": 0.21938040197415418,
+              "min": 0.21938038255725129,
+              "max": 0.21938048565629617,
+              "range": 1.0309904488470245e-7,
+              "rms": 0.21938040197415526
+            },
+            "longitudinalForceN": {
+              "mean": 63.437047679404955,
+              "min": 63.4368790570433,
+              "max": 63.44524974448856,
+              "range": 0.008370687445257374,
+              "rms": 63.43704769022612
+            },
+            "lateralForceN": {
+              "mean": 1201.7998156957187,
+              "min": 1201.799709226439,
+              "max": 1201.7999632950239,
+              "range": 0.0002540685848089197,
+              "rms": 1201.7998156957224
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 40.14899724797713,
+              "min": 40.14899002870116,
+              "max": 40.14900434222944,
+              "range": 0.000014313528282627885,
+              "rms": 40.148997247977356
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          }
+        }
+      },
+      "wholeRun": {
+        "durationS": 40,
+        "pathLengthM": 599.8242300934078,
+        "peakMotorPowerW": 8430.453283945022,
+        "peakMotorTorqueBudgetExcessNm": 5.684341886080802e-14,
+        "peakFrictionUtilization": 0.22222844150828738,
+        "contactLossSteps": 0,
+        "rigidContactSteps": 0,
+        "fault": null
+      },
+      "curveFile": "qa/steady-circles-3.11/dry-54-3.11.json"
+    },
+    {
+      "id": "wet-54-3.10",
+      "version": "3.10",
+      "surface": "wet",
+      "targetSpeedKmh": 54,
+      "targetWheelCentreDeg": 2,
+      "appliedParams": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": false,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "wet",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 3,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 3.6,
+        "rollRateDegS": 120,
+        "pitchRateDegS": 32,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 160
+      },
+      "initial": {
+        "position": {
+          "x": -320,
+          "y": 0.5970093908740407,
+          "z": 0
+        },
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 15
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "massKg": 2199.5582002848946,
+        "wheelAngularSpeedsRadS": [
+          40.54054054054054,
+          40.54054054054054,
+          40.54054054054054,
+          40.54054054054054
+        ]
+      },
+      "steady": true,
+      "checks": {
+        "completeWindow": true,
+        "noFault": true,
+        "fourWheelContact": true,
+        "noRigidContact": true,
+        "speedError": true,
+        "speedVariation": true,
+        "wheelAngleVariation": true,
+        "yawVariation": true,
+        "betaVariation": true,
+        "yawTrend": true,
+        "betaTrend": true,
+        "circularArc": true
+      },
+      "metrics": {
+        "windowStartS": 35,
+        "windowEndS": 40,
+        "windowSamples": 600,
+        "speedKmh": {
+          "mean": 53.999999994856196,
+          "min": 53.99999987615626,
+          "max": 54.000000099775896,
+          "range": 2.236196365856813e-7,
+          "rms": 53.99999999485618
+        },
+        "speedErrorKmh": {
+          "mean": -5.1438180885080934e-9,
+          "min": -1.2384374059593029e-7,
+          "max": 9.977589598975101e-8,
+          "range": 2.236196365856813e-7,
+          "rms": 4.0793608171933774e-8
+        },
+        "yawRateDegS": {
+          "mean": 10.021010266036855,
+          "min": 10.021009172734452,
+          "max": 10.021010984059485,
+          "range": 0.0000018113250330742403,
+          "rms": 10.021010266036859
+        },
+        "bodyBetaDeg": {
+          "mean": -0.08665842917710011,
+          "min": -0.08665843930663517,
+          "max": -0.08665839243686377,
+          "range": 4.686977139733983e-8,
+          "rms": 0.0866584291771005
+        },
+        "wheelCentreDeg": {
+          "mean": 1.9999999999999996,
+          "min": 1.9999999999999978,
+          "max": 1.9999999999999978,
+          "range": 0,
+          "rms": 1.9999999999999998
+        },
+        "yawSlopeDegS2": -3.439660202652202e-9,
+        "betaSlopeDegS": 1.5543019581813427e-10,
+        "lateralAccelerationMps2": {
+          "mean": 2.6223363953135617,
+          "min": 2.6223362664915792,
+          "max": 2.622336503122207,
+          "range": 2.3663062753698227e-7,
+          "rms": 2.6223363953135657
+        },
+        "throttle": {
+          "mean": 0.02309031805612139,
+          "min": 0.023090313542748122,
+          "max": 0.02309032277037638,
+          "range": 9.227628258723364e-9,
+          "rms": 0.023090318056121446
+        },
+        "brake": {
+          "mean": 0,
+          "min": 0,
+          "max": 0,
+          "range": 0,
+          "rms": 0
+        },
+        "circleFit": {
+          "centreXM": -234.11370286253378,
+          "centreZM": 85.34468395635434,
+          "radiusM": 85.78750246310885,
+          "radialResidualRmsM": 2.118531756651757e-9
+        },
+        "curvatureRadiusM": 85.7634779127177,
+        "tcsActiveWheelSeconds": 0,
+        "corneringTcsActiveWheelSeconds": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "minimumWheelContacts": 4,
+        "rigidContactSteps": 0,
+        "wheels": {
+          "FR": {
+            "normalLoadN": {
+              "mean": 6402.55944020045,
+              "min": 6402.559383338964,
+              "max": 6402.55949058854,
+              "range": 0.00010724957610364072,
+              "rms": 6402.559440200448
+            },
+            "alphaDeg": {
+              "mean": -1.0817053875276756,
+              "min": -1.0817054752049702,
+              "max": -1.0817053225023237,
+              "range": 1.5270264652755827e-7,
+              "rms": 1.0817053875276763
+            },
+            "longitudinalSlip": {
+              "mean": 0.0016585271309151142,
+              "min": 0.001658391755558208,
+              "max": 0.0016586621810013844,
+              "range": 2.704254431764794e-7,
+              "rms": 0.0016585271327792938
+            },
+            "frictionUtilization": {
+              "mean": 0.4031887626117975,
+              "min": 0.40318871104759485,
+              "max": 0.40318882939588446,
+              "range": 1.1834828961276855e-7,
+              "rms": 0.4031887626118001
+            },
+            "longitudinalForceN": {
+              "mean": 105.09540572323101,
+              "min": 105.09254720225422,
+              "max": 105.09889915747169,
+              "range": 0.00635195521746823,
+              "rms": 105.09540577071704
+            },
+            "lateralForceN": {
+              "mean": 1674.6415185273145,
+              "min": 1674.6414758264152,
+              "max": 1674.641586468315,
+              "range": 0.00011064189970966254,
+              "rms": 1674.6415185273163
+            },
+            "roadWheelAngleDeg": {
+              "mean": 1.9783672637017609,
+              "min": 1.9783672637017358,
+              "max": 1.9783672637017358,
+              "range": 0,
+              "rms": 1.9783672637017502
+            },
+            "angularSpeedRadS": {
+              "mean": 41.02523435920133,
+              "min": 41.025228930494954,
+              "max": 41.025239801074136,
+              "range": 0.000010870579181698758,
+              "rms": 41.02523435920148
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "FL": {
+            "normalLoadN": {
+              "mean": 4339.6225074750955,
+              "min": 4339.622473168457,
+              "max": 4339.622555375171,
+              "range": 0.00008220671406888869,
+              "rms": 4339.622507475094
+            },
+            "alphaDeg": {
+              "mean": -1.1056724667017237,
+              "min": -1.1056725581063904,
+              "max": -1.1056723991302273,
+              "range": 1.5897616312265939e-7,
+              "rms": 1.1056724667017237
+            },
+            "longitudinalSlip": {
+              "mean": 0.0012167705233066758,
+              "min": 0.0012166756776863014,
+              "max": 0.0012168630709504492,
+              "range": 1.8739326414782612e-7,
+              "rms": 0.0012167705245270239
+            },
+            "frictionUtilization": {
+              "mean": 0.42496429494455,
+              "min": 0.42496425998658405,
+              "max": 0.42496434917996245,
+              "range": 8.919337840529451e-8,
+              "rms": 0.42496429494455124
+            },
+            "longitudinalForceN": {
+              "mean": 52.11393963101288,
+              "min": 52.11225343479402,
+              "max": 52.1165585520083,
+              "range": 0.004305117214279619,
+              "rms": 52.11393967336467
+            },
+            "lateralForceN": {
+              "mean": 1197.5866489153157,
+              "min": 1197.586619578595,
+              "max": 1197.5866988575592,
+              "range": 0.00007927896422188496,
+              "rms": 1197.5866489153177
+            },
+            "roadWheelAngleDeg": {
+              "mean": 2.022110860399452,
+              "min": 2.0221108603994433,
+              "max": 2.0221108603994433,
+              "range": 0,
+              "rms": 2.0221108603994478
+            },
+            "angularSpeedRadS": {
+              "mean": 40.16224671895889,
+              "min": 40.16224295199068,
+              "max": 40.162250379878266,
+              "range": 0.000007427887588562498,
+              "rms": 40.16224671895896
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RR": {
+            "normalLoadN": {
+              "mean": 6449.179107381473,
+              "min": 6449.179059499139,
+              "max": 6449.179141618438,
+              "range": 0.00008211929889512248,
+              "rms": 6449.179107381468
+            },
+            "alphaDeg": {
+              "mean": -0.985349601507948,
+              "min": -0.9853496678228573,
+              "max": -0.9853494972542708,
+              "range": 1.7056858647723772e-7,
+              "rms": 0.9853496015079481
+            },
+            "longitudinalSlip": {
+              "mean": 0.0016651848778730643,
+              "min": 0.0016650056887459143,
+              "max": 0.0016652764529600146,
+              "range": 2.7076421410033615e-7,
+              "rms": 0.001665184879518034
+            },
+            "frictionUtilization": {
+              "mean": 0.4028626004087765,
+              "min": 0.40286251062982026,
+              "max": 0.40286261196695117,
+              "range": 1.0133713090887397e-7,
+              "rms": 0.4028626004087768
+            },
+            "longitudinalForceN": {
+              "mean": 106.29271697140778,
+              "min": 106.28633127008813,
+              "max": 106.29272819640939,
+              "range": 0.006396926321258434,
+              "rms": 106.29271697172798
+            },
+            "lateralForceN": {
+              "mean": 1685.4381259082895,
+              "min": 1685.438003582878,
+              "max": 1685.4381749539248,
+              "range": 0.000171371046690183,
+              "rms": 1685.4381259082913
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 41.02891280354561,
+              "min": 41.02890543495017,
+              "max": 41.028916388774306,
+              "range": 0.000010953824137516222,
+              "rms": 41.028912803545694
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RL": {
+            "normalLoadN": {
+              "mean": 4386.24217465612,
+              "min": 4386.242124291453,
+              "max": 4386.242231589357,
+              "range": 0.00010729790392360883,
+              "rms": 4386.242174656115
+            },
+            "alphaDeg": {
+              "mean": -1.0052134836977809,
+              "min": -1.0052135527908805,
+              "max": -1.0052133751876045,
+              "range": 1.7760327608584703e-7,
+              "rms": 1.005213483697781
+            },
+            "longitudinalSlip": {
+              "mean": 0.0012315239102343805,
+              "min": 0.0012314295893955645,
+              "max": 0.0012316191127041739,
+              "range": 1.8952330860938504e-7,
+              "rms": 0.001231523911436963
+            },
+            "frictionUtilization": {
+              "mean": 0.4237756331846413,
+              "min": 0.42377554158469816,
+              "max": 0.423775650406987,
+              "range": 1.0882228884678824e-7,
+              "rms": 0.4237756331846418
+            },
+            "longitudinalForceN": {
+              "mean": 53.311248384443616,
+              "min": 53.30723859778314,
+              "max": 53.31158985528207,
+              "range": 0.004351257498932171,
+              "rms": 53.31124839725804
+            },
+            "lateralForceN": {
+              "mean": 1207.0319293603134,
+              "min": 1207.0318456140237,
+              "max": 1207.031963558037,
+              "range": 0.00011794401325460058,
+              "rms": 1207.031929360315
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 40.16634517090944,
+              "min": 40.16634141683096,
+              "max": 40.16634890705153,
+              "range": 0.000007490220568229233,
+              "rms": 40.16634517090954
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          }
+        }
+      },
+      "wholeRun": {
+        "durationS": 40,
+        "pathLengthM": 599.8205078523865,
+        "peakMotorPowerW": 8537.475414347324,
+        "peakMotorTorqueBudgetExcessNm": 5.684341886080802e-14,
+        "peakFrictionUtilization": 0.42496434917996245,
+        "contactLossSteps": 0,
+        "rigidContactSteps": 0,
+        "fault": null
+      },
+      "curveFile": "qa/steady-circles-3.11/wet-54-3.10.json"
+    },
+    {
+      "id": "wet-54-3.11",
+      "version": "3.11",
+      "surface": "wet",
+      "targetSpeedKmh": 54,
+      "targetWheelCentreDeg": 2,
+      "appliedParams": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": false,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "wet",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      },
+      "initial": {
+        "position": {
+          "x": -320,
+          "y": 0.5970093908740407,
+          "z": 0
+        },
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 15
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "massKg": 2199.5582002848946,
+        "wheelAngularSpeedsRadS": [
+          40.54054054054054,
+          40.54054054054054,
+          40.54054054054054,
+          40.54054054054054
+        ]
+      },
+      "steady": true,
+      "checks": {
+        "completeWindow": true,
+        "noFault": true,
+        "fourWheelContact": true,
+        "noRigidContact": true,
+        "speedError": true,
+        "speedVariation": true,
+        "wheelAngleVariation": true,
+        "yawVariation": true,
+        "betaVariation": true,
+        "yawTrend": true,
+        "betaTrend": true,
+        "circularArc": true
+      },
+      "metrics": {
+        "windowStartS": 35,
+        "windowEndS": 40,
+        "windowSamples": 600,
+        "speedKmh": {
+          "mean": 53.99999999726331,
+          "min": 53.99999988579791,
+          "max": 54.00000011854872,
+          "range": 2.3275080707207962e-7,
+          "rms": 53.99999999726327
+        },
+        "speedErrorKmh": {
+          "mean": -2.736717329791342e-9,
+          "min": -1.1420208778645247e-7,
+          "max": 1.1854871928562716e-7,
+          "range": 2.3275080707207962e-7,
+          "rms": 6.207488213002459e-8
+        },
+        "yawRateDegS": {
+          "mean": 9.96119647025192,
+          "min": 9.961195888035268,
+          "max": 9.96119694759347,
+          "range": 0.000001059558201177424,
+          "rms": 9.961196470251922
+        },
+        "bodyBetaDeg": {
+          "mean": -0.07959682840916571,
+          "min": -0.07959683359535745,
+          "max": -0.0795968199137609,
+          "range": 1.3681596550130237e-8,
+          "rms": 0.07959682840916579
+        },
+        "wheelCentreDeg": {
+          "mean": 1.9999999999999996,
+          "min": 1.9999999999999978,
+          "max": 1.9999999999999978,
+          "range": 0,
+          "rms": 1.9999999999999998
+        },
+        "yawSlopeDegS2": -3.00632668331782e-10,
+        "betaSlopeDegS": 7.359685512823632e-11,
+        "lateralAccelerationMps2": {
+          "mean": 2.606689737183047,
+          "min": 2.60668969812754,
+          "max": 2.6066898799183544,
+          "range": 1.8179081440194977e-7,
+          "rms": 2.606689737183052
+        },
+        "throttle": {
+          "mean": 0.023056479867313982,
+          "min": 0.023056475011199694,
+          "max": 0.023056484336770895,
+          "range": 9.325571200674565e-9,
+          "rms": 0.02305647986731409
+        },
+        "brake": {
+          "mean": 0,
+          "min": 0,
+          "max": 0,
+          "range": 0,
+          "rms": 0
+        },
+        "circleFit": {
+          "centreXM": -233.60002969789136,
+          "centreZM": 85.3143569643469,
+          "radiusM": 86.30262878550951,
+          "radialResidualRmsM": 4.710021626732038e-10
+        },
+        "curvatureRadiusM": 86.27846014475232,
+        "tcsActiveWheelSeconds": 0,
+        "corneringTcsActiveWheelSeconds": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "minimumWheelContacts": 4,
+        "rigidContactSteps": 0,
+        "wheels": {
+          "FR": {
+            "normalLoadN": {
+              "mean": 6396.490512660943,
+              "min": 6396.490475302504,
+              "max": 6396.490553738295,
+              "range": 0.00007843579078326002,
+              "rms": 6396.490512660945
+            },
+            "alphaDeg": {
+              "mean": -1.080327375044012,
+              "min": -1.0803274275069783,
+              "max": -1.08032733302672,
+              "range": 9.448025828362461e-8,
+              "rms": 1.080327375044013
+            },
+            "longitudinalSlip": {
+              "mean": 0.0014798363672459142,
+              "min": 0.001479700095696635,
+              "max": 0.0014799692322963562,
+              "range": 2.6913659972112487e-7,
+              "rms": 0.001479836369314943
+            },
+            "frictionUtilization": {
+              "mean": 0.40260646905247555,
+              "min": 0.4026064507309296,
+              "max": 0.40260654688105474,
+              "range": 9.615012513952692e-8,
+              "rms": 0.4026064690524769
+            },
+            "longitudinalForceN": {
+              "mean": 93.67596962838694,
+              "min": 93.67492229233005,
+              "max": 93.68126726881205,
+              "range": 0.006344976481997833,
+              "rms": 93.67596965798558
+            },
+            "lateralForceN": {
+              "mean": 1671.3013014582598,
+              "min": 1671.3012806130241,
+              "max": 1671.3013250515064,
+              "range": 0.00004443848229129799,
+              "rms": 1671.3013014582607
+            },
+            "roadWheelAngleDeg": {
+              "mean": 1.9783672637017609,
+              "min": 1.9783672637017358,
+              "max": 1.9783672637017358,
+              "range": 0,
+              "rms": 1.9783672637017502
+            },
+            "angularSpeedRadS": {
+              "mean": 41.015010972647374,
+              "min": 41.015005576940396,
+              "max": 41.015016374874875,
+              "range": 0.000010797934479001015,
+              "rms": 41.015010972647545
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "FL": {
+            "normalLoadN": {
+              "mean": 4345.843076750017,
+              "min": 4345.843032065274,
+              "max": 4345.8431189952125,
+              "range": 0.00008692993833392393,
+              "rms": 4345.843076750019
+            },
+            "alphaDeg": {
+              "mean": -1.104375963804234,
+              "min": -1.1043760183945686,
+              "max": -1.104375920083704,
+              "range": 9.831086456024707e-8,
+              "rms": 1.1043759638042343
+            },
+            "longitudinalSlip": {
+              "mean": 0.0014842420518985562,
+              "min": 0.0014841483194622783,
+              "max": 0.001484335685845676,
+              "range": 1.8736638339781307e-7,
+              "rms": 0.0014842420528927806
+            },
+            "frictionUtilization": {
+              "mean": 0.4246716473632256,
+              "min": 0.42467163082934445,
+              "max": 0.424671717660895,
+              "range": 8.68315505608841e-8,
+              "rms": 0.4246716473632266
+            },
+            "longitudinalForceN": {
+              "mean": 63.64444116060064,
+              "min": 63.64372930675334,
+              "max": 63.648040879543785,
+              "range": 0.004311572790442142,
+              "rms": 63.64444118071321
+            },
+            "lateralForceN": {
+              "mean": 1197.922127744181,
+              "min": 1197.9221091011113,
+              "max": 1197.9221462703622,
+              "range": 0.00003716925084518152,
+              "rms": 1197.92212774418
+            },
+            "roadWheelAngleDeg": {
+              "mean": 2.022110860399452,
+              "min": 2.0221108603994433,
+              "max": 2.0221108603994433,
+              "range": 0,
+              "rms": 2.0221108603994478
+            },
+            "angularSpeedRadS": {
+              "mean": 40.176094393075836,
+              "min": 40.17609069475628,
+              "max": 40.176098057524676,
+              "range": 0.000007362768393193164,
+              "rms": 40.176094393075886
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RR": {
+            "normalLoadN": {
+              "mean": 6442.958468981289,
+              "min": 6442.9584268292665,
+              "max": 6442.9585136206615,
+              "range": 0.00008679139500600286,
+              "rms": 6442.958468981283
+            },
+            "alphaDeg": {
+              "mean": -0.9732958199581744,
+              "min": -0.9732958667322159,
+              "max": -0.9732957671631177,
+              "range": 9.956909818864546e-8,
+              "rms": 0.9732958199581746
+            },
+            "longitudinalSlip": {
+              "mean": 0.0014797580911813698,
+              "min": 0.0014796157357678513,
+              "max": 0.001479887741546765,
+              "range": 2.720057789137517e-7,
+              "rms": 0.0014797580932201485
+            },
+            "frictionUtilization": {
+              "mean": 0.39835662224586565,
+              "min": 0.3983566012249098,
+              "max": 0.39835669428374115,
+              "range": 9.305883136301318e-8,
+              "rms": 0.3983566222458671
+            },
+            "longitudinalForceN": {
+              "mean": 94.35648824344725,
+              "min": 94.35543346807212,
+              "max": 94.36182373098289,
+              "range": 0.006390262910770161,
+              "rms": 94.35648827325511
+            },
+            "lateralForceN": {
+              "mean": 1665.6163749456705,
+              "min": 1665.6163487626432,
+              "max": 1665.6164032374695,
+              "range": 0.00005447482635645429,
+              "rms": 1665.6163749456707
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 41.01835510753583,
+              "min": 41.01834942317126,
+              "max": 41.018360333151435,
+              "range": 0.000010909980176165845,
+              "rms": 41.01835510753595
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RL": {
+            "normalLoadN": {
+              "mean": 4392.311033070359,
+              "min": 4392.3109920498755,
+              "max": 4392.31107035115,
+              "range": 0.0000783012746978784,
+              "rms": 4392.31103307036
+            },
+            "alphaDeg": {
+              "mean": -0.9927984483806286,
+              "min": -0.9927984970435042,
+              "max": -0.9927983933634211,
+              "range": 1.0368008307448662e-7,
+              "rms": 0.9927984483806289
+            },
+            "longitudinalSlip": {
+              "mean": 0.001484052131179994,
+              "min": 0.0014839547347916733,
+              "max": 0.0014841444853239331,
+              "range": 1.8975053225987054e-7,
+              "rms": 0.001484052132199079
+            },
+            "frictionUtilization": {
+              "mean": 0.41932725587546316,
+              "min": 0.41932723518327314,
+              "max": 0.4193273293874107,
+              "range": 9.42041375462388e-8,
+              "rms": 0.4193272558754646
+            },
+            "longitudinalForceN": {
+              "mean": 64.32495977566126,
+              "min": 64.32424042399501,
+              "max": 64.32859741573817,
+              "range": 0.004356991743165395,
+              "rms": 64.32495979598372
+            },
+            "lateralForceN": {
+              "mean": 1195.4508744789352,
+              "min": 1195.4508539533958,
+              "max": 1195.4508961463407,
+              "range": 0.00004219294487484149,
+              "rms": 1195.4508744789368
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 40.17953827253531,
+              "min": 40.17953442377947,
+              "max": 40.17954190063556,
+              "range": 0.000007476856090704587,
+              "rms": 40.17953827253538
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          }
+        }
+      },
+      "wholeRun": {
+        "durationS": 40,
+        "pathLengthM": 599.8211232140371,
+        "peakMotorPowerW": 8504.28499727859,
+        "peakMotorTorqueBudgetExcessNm": 8.526512829121202e-14,
+        "peakFrictionUtilization": 0.424671717660895,
+        "contactLossSteps": 0,
+        "rigidContactSteps": 0,
+        "fault": null
+      },
+      "curveFile": "qa/steady-circles-3.11/wet-54-3.11.json"
+    },
+    {
+      "id": "dry-90-3.10",
+      "version": "3.10",
+      "surface": "dry",
+      "targetSpeedKmh": 90,
+      "targetWheelCentreDeg": 0.8,
+      "appliedParams": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": false,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 3,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 3.6,
+        "rollRateDegS": 120,
+        "pitchRateDegS": 32,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 160
+      },
+      "initial": {
+        "position": {
+          "x": -320,
+          "y": 0.5970093908740407,
+          "z": 0
+        },
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 25
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "massKg": 2199.5582002848946,
+        "wheelAngularSpeedsRadS": [
+          67.56756756756756,
+          67.56756756756756,
+          67.56756756756756,
+          67.56756756756756
+        ]
+      },
+      "steady": true,
+      "checks": {
+        "completeWindow": true,
+        "noFault": true,
+        "fourWheelContact": true,
+        "noRigidContact": true,
+        "speedError": true,
+        "speedVariation": true,
+        "wheelAngleVariation": true,
+        "yawVariation": true,
+        "betaVariation": true,
+        "yawTrend": true,
+        "betaTrend": true,
+        "circularArc": true
+      },
+      "metrics": {
+        "windowStartS": 35,
+        "windowEndS": 40,
+        "windowSamples": 600,
+        "speedKmh": {
+          "mean": 89.99999999628118,
+          "min": 89.99999975033495,
+          "max": 90.00000022025846,
+          "range": 4.6992350632990565e-7,
+          "rms": 89.99999999628102
+        },
+        "speedErrorKmh": {
+          "mean": -3.718879166096182e-9,
+          "min": -2.4966504952317337e-7,
+          "max": 2.2025845680673228e-7,
+          "range": 4.6992350632990565e-7,
+          "rms": 8.166090114910053e-8
+        },
+        "yawRateDegS": {
+          "mean": 6.205001960983873,
+          "min": 6.205000404664014,
+          "max": 6.205003740197807,
+          "range": 0.0000033355337922813533,
+          "rms": 6.205001960983909
+        },
+        "bodyBetaDeg": {
+          "mean": -0.6529394241508195,
+          "min": -0.652939460737464,
+          "max": -0.6529393909813526,
+          "range": 6.97561114426648e-8,
+          "rms": 0.6529394241508186
+        },
+        "wheelCentreDeg": {
+          "mean": 0.8000000000000078,
+          "min": 0.7999999999999995,
+          "max": 0.7999999999999995,
+          "range": 0,
+          "rms": 0.7999999999999944
+        },
+        "yawSlopeDegS2": 5.478627858760508e-9,
+        "betaSlopeDegS": -3.3265126306494753e-10,
+        "lateralAccelerationMps2": {
+          "mean": 2.706038255852373,
+          "min": 2.706038121309245,
+          "max": 2.706038356007567,
+          "range": 2.3469832211020503e-7,
+          "rms": 2.7060382558523766
+        },
+        "throttle": {
+          "mean": 0.033282659258783195,
+          "min": 0.03328265029923588,
+          "max": 0.033282669265193895,
+          "range": 1.8965958012429063e-8,
+          "rms": 0.03328265925878335
+        },
+        "brake": {
+          "mean": 0,
+          "min": 0,
+          "max": 0,
+          "range": 0,
+          "rms": 0
+        },
+        "circleFit": {
+          "centreXM": -88.96456215587804,
+          "centreZM": 145.4713429566142,
+          "radiusM": 230.90978351908382,
+          "radialResidualRmsM": 9.381834949762441e-10
+        },
+        "curvatureRadiusM": 230.84513055347202,
+        "tcsActiveWheelSeconds": 0,
+        "corneringTcsActiveWheelSeconds": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "minimumWheelContacts": 4,
+        "rigidContactSteps": 0,
+        "wheels": {
+          "FR": {
+            "normalLoadN": {
+              "mean": 6398.121708432368,
+              "min": 6398.121615272804,
+              "max": 6398.121797992592,
+              "range": 0.00018271978842676617,
+              "rms": 6398.121708432369
+            },
+            "alphaDeg": {
+              "mean": -1.0694522196329237,
+              "min": -1.0694523081871765,
+              "max": -1.0694521017720586,
+              "range": 2.0641511788710432e-7,
+              "rms": 1.0694522196329235
+            },
+            "longitudinalSlip": {
+              "mean": 0.001454272853997054,
+              "min": 0.0014541177778610583,
+              "max": 0.0014544305008660963,
+              "range": 3.127230050379258e-7,
+              "rms": 0.0014542728567733803
+            },
+            "frictionUtilization": {
+              "mean": 0.21697307342148206,
+              "min": 0.2169729164577636,
+              "max": 0.21697309589909272,
+              "range": 1.7944132912894872e-7,
+              "rms": 0.21697307342148633
+            },
+            "longitudinalForceN": {
+              "mean": 177.30911286750413,
+              "min": 177.29780199287495,
+              "max": 177.31001026903795,
+              "range": 0.012208276162994025,
+              "rms": 177.3091128960459
+            },
+            "lateralForceN": {
+              "mean": 1726.1927393236165,
+              "min": 1726.1926226028183,
+              "max": 1726.1928325780295,
+              "range": 0.00020997521119170415,
+              "rms": 1726.1927393236176
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0.796514983240062,
+              "min": 0.7965149832400694,
+              "max": 0.7965149832400694,
+              "range": 0,
+              "rms": 0.7965149832400683
+            },
+            "angularSpeedRadS": {
+              "mean": 67.91508275892511,
+              "min": 67.9150722675395,
+              "max": 67.9150930606774,
+              "range": 0.000020793137906593984,
+              "rms": 67.91508275892534
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "FL": {
+            "normalLoadN": {
+              "mean": 4272.381857766717,
+              "min": 4272.381784003696,
+              "max": 4272.381937228994,
+              "range": 0.00015322529725381173,
+              "rms": 4272.381857766716
+            },
+            "alphaDeg": {
+              "mean": -1.0783516151637589,
+              "min": -1.078351703981892,
+              "max": -1.078351496978193,
+              "range": 2.0700369884885106e-7,
+              "rms": 1.0783516151637604
+            },
+            "longitudinalSlip": {
+              "mean": 0.001216029407268652,
+              "min": 0.0012159226097969895,
+              "max": 0.001216134373376215,
+              "range": 2.1176357922541786e-7,
+              "rms": 0.0012160294088334595
+            },
+            "frictionUtilization": {
+              "mean": 0.22699305966803485,
+              "min": 0.22699297235932572,
+              "max": 0.2269931204912378,
+              "range": 1.481319120699709e-7,
+              "rms": 0.2269930596680426
+            },
+            "longitudinalForceN": {
+              "mean": 98.68424304029334,
+              "min": 98.67936556509545,
+              "max": 98.68751802599283,
+              "range": 0.008152460897377978,
+              "rms": 98.68424312116242
+            },
+            "lateralForceN": {
+              "mean": 1208.2278775537516,
+              "min": 1208.2277981088914,
+              "max": 1208.2279378266744,
+              "range": 0.0001397177829858265,
+              "rms": 1208.2278775537516
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0.8035156449735035,
+              "min": 0.8035156449734969,
+              "max": 0.8035156449734969,
+              "range": 0,
+              "rms": 0.803515644973496
+            },
+            "angularSpeedRadS": {
+              "mean": 67.37382858378616,
+              "min": 67.37382146996485,
+              "max": 67.37383550868599,
+              "range": 0.000014038721133147192,
+              "rms": 67.37382858378632
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RR": {
+            "normalLoadN": {
+              "mean": 6525.771422448671,
+              "min": 6525.771343233095,
+              "max": 6525.771496412961,
+              "range": 0.00015317986617446877,
+              "rms": 6525.771422448667
+            },
+            "alphaDeg": {
+              "mean": -0.977434426011474,
+              "min": -0.9774345244650138,
+              "max": -0.9774343361160073,
+              "range": 1.883490065024418e-7,
+              "rms": 0.9774344260114748
+            },
+            "longitudinalSlip": {
+              "mean": 0.0014635524266195781,
+              "min": 0.0014633925340991683,
+              "max": 0.0014637133066932968,
+              "range": 3.207725941284812e-7,
+              "rms": 0.001463552429475854
+            },
+            "frictionUtilization": {
+              "mean": 0.21722604767502052,
+              "min": 0.2172260271049292,
+              "max": 0.21722619903264292,
+              "range": 1.7192771373242266e-7,
+              "rms": 0.2172260476750227
+            },
+            "longitudinalForceN": {
+              "mean": 182.03049697581622,
+              "min": 182.02999688932877,
+              "max": 182.04244660647777,
+              "range": 0.012449717148996342,
+              "rms": 182.03049699215597
+            },
+            "lateralForceN": {
+              "mean": 1762.5847712957727,
+              "min": 1762.5846467935467,
+              "max": 1762.5849006657327,
+              "range": 0.0002538721860219084,
+              "rms": 1762.584771295775
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 67.9273994635952,
+              "min": 67.92738896700149,
+              "max": 67.92741032070693,
+              "range": 0.000021353705434989934,
+              "rms": 67.92739946359556
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RL": {
+            "normalLoadN": {
+              "mean": 4400.031571783007,
+              "min": 4400.031482469525,
+              "max": 4400.031665143859,
+              "range": 0.00018267433370056096,
+              "rms": 4400.031571783009
+            },
+            "alphaDeg": {
+              "mean": -0.9848230110925084,
+              "min": -0.9848231124103469,
+              "max": -0.9848229187500027,
+              "range": 1.9366034420542633e-7,
+              "rms": 0.9848230110925086
+            },
+            "longitudinalSlip": {
+              "mean": 0.001236786776319206,
+              "min": 0.0012366793009534838,
+              "max": 0.001236897054699563,
+              "range": 2.177537460792793e-7,
+              "rms": 0.0012367867779062133
+            },
+            "frictionUtilization": {
+              "mean": 0.22689318602579925,
+              "min": 0.22689306319312127,
+              "max": 0.22689322080121815,
+              "range": 1.576080968790361e-7,
+              "rms": 0.22689318602580394
+            },
+            "longitudinalForceN": {
+              "mean": 103.40564029764555,
+              "min": 103.39849171957415,
+              "max": 103.40688716370504,
+              "range": 0.008395444130883334,
+              "rms": 103.40564034066439
+            },
+            "lateralForceN": {
+              "mean": 1243.6298835874616,
+              "min": 1243.629793444978,
+              "max": 1243.6299829128454,
+              "range": 0.00018946786735796195,
+              "rms": 1243.6298835874616
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 67.38701947754733,
+              "min": 67.38701227335704,
+              "max": 67.38702674807105,
+              "range": 0.000014474714006951217,
+              "rms": 67.38701947754743
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          }
+        }
+      },
+      "wholeRun": {
+        "durationS": 40,
+        "pathLengthM": 999.7428284728741,
+        "peakMotorPowerW": 20366.357754083932,
+        "peakMotorTorqueBudgetExcessNm": 5.684341886080802e-14,
+        "peakFrictionUtilization": 0.2269931204912378,
+        "contactLossSteps": 0,
+        "rigidContactSteps": 0,
+        "fault": null
+      },
+      "curveFile": "qa/steady-circles-3.11/dry-90-3.10.json"
+    },
+    {
+      "id": "dry-90-3.11",
+      "version": "3.11",
+      "surface": "dry",
+      "targetSpeedKmh": 90,
+      "targetWheelCentreDeg": 0.8,
+      "appliedParams": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": false,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      },
+      "initial": {
+        "position": {
+          "x": -320,
+          "y": 0.5970093908740407,
+          "z": 0
+        },
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 25
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "massKg": 2199.5582002848946,
+        "wheelAngularSpeedsRadS": [
+          67.56756756756756,
+          67.56756756756756,
+          67.56756756756756,
+          67.56756756756756
+        ]
+      },
+      "steady": true,
+      "checks": {
+        "completeWindow": true,
+        "noFault": true,
+        "fourWheelContact": true,
+        "noRigidContact": true,
+        "speedError": true,
+        "speedVariation": true,
+        "wheelAngleVariation": true,
+        "yawVariation": true,
+        "betaVariation": true,
+        "yawTrend": true,
+        "betaTrend": true,
+        "circularArc": true
+      },
+      "metrics": {
+        "windowStartS": 35,
+        "windowEndS": 40,
+        "windowSamples": 600,
+        "speedKmh": {
+          "mean": 89.99999999609474,
+          "min": 89.9999997831821,
+          "max": 90.00000018785123,
+          "range": 4.0466912309966574e-7,
+          "rms": 89.99999999609479
+        },
+        "speedErrorKmh": {
+          "mean": -3.905245099152429e-9,
+          "min": -2.1681789519334416e-7,
+          "max": 1.8785122790632158e-7,
+          "range": 4.0466912309966574e-7,
+          "rms": 1.0444659948246254e-7
+        },
+        "yawRateDegS": {
+          "mean": 6.123440979341799,
+          "min": 6.123439911831096,
+          "max": 6.123441493613688,
+          "range": 0.000001581782592019465,
+          "rms": 6.123440979341814
+        },
+        "bodyBetaDeg": {
+          "mean": -0.638887958170031,
+          "min": -0.6388879685243617,
+          "max": -0.6388879436482638,
+          "range": 2.4876097848292034e-8,
+          "rms": 0.638887958170031
+        },
+        "wheelCentreDeg": {
+          "mean": 0.8000000000000078,
+          "min": 0.7999999999999995,
+          "max": 0.7999999999999995,
+          "range": 0,
+          "rms": 0.7999999999999944
+        },
+        "yawSlopeDegS2": 6.971305110001401e-10,
+        "betaSlopeDegS": -1.8959820507369702e-10,
+        "lateralAccelerationMps2": {
+          "mean": 2.6704886339501965,
+          "min": 2.6704885816247734,
+          "max": 2.670488739444268,
+          "range": 1.5781949436188825e-7,
+          "rms": 2.6704886339501983
+        },
+        "throttle": {
+          "mean": 0.03318313312165534,
+          "min": 0.03318312545509798,
+          "max": 0.0331831416762663,
+          "range": 1.6221168318286683e-8,
+          "rms": 0.033183133121655634
+        },
+        "brake": {
+          "mean": 0,
+          "min": 0,
+          "max": 0,
+          "range": 0,
+          "rms": 0
+        },
+        "circleFit": {
+          "centreXM": -85.89313785446876,
+          "centreZM": 145.36934597062168,
+          "radiusM": 233.98537891548196,
+          "radialResidualRmsM": 2.3902580204779516e-10
+        },
+        "curvatureRadiusM": 233.91986508847992,
+        "tcsActiveWheelSeconds": 0,
+        "corneringTcsActiveWheelSeconds": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "minimumWheelContacts": 4,
+        "rigidContactSteps": 0,
+        "wheels": {
+          "FR": {
+            "normalLoadN": {
+              "mean": 6384.419284097238,
+              "min": 6384.419213794833,
+              "max": 6384.419357924856,
+              "range": 0.0001441300228179898,
+              "rms": 6384.41928409724
+            },
+            "alphaDeg": {
+              "mean": -1.0603127056665616,
+              "min": -1.0603127660757408,
+              "max": -1.0603126709963038,
+              "range": 9.507943699027521e-8,
+              "rms": 1.0603127056665624
+            },
+            "longitudinalSlip": {
+              "mean": 0.0013577921355619922,
+              "min": 0.0013576348149614787,
+              "max": 0.001357947265192082,
+              "range": 3.124502306033755e-7,
+              "rms": 0.0013577921386680875
+            },
+            "frictionUtilization": {
+              "mean": 0.21509297269124508,
+              "min": 0.2150929372746823,
+              "max": 0.21509309431582377,
+              "range": 1.5704114147974124e-7,
+              "rms": 0.21509297269125366
+            },
+            "longitudinalForceN": {
+              "mean": 165.20611997060487,
+              "min": 165.20352032460704,
+              "max": 165.21569948311088,
+              "range": 0.012179158503840881,
+              "rms": 165.20612004591473
+            },
+            "lateralForceN": {
+              "mean": 1708.5862038612634,
+              "min": 1708.5861522797347,
+              "max": 1708.5862557343642,
+              "range": 0.00010345462942495942,
+              "rms": 1708.5862038612652
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0.796514983240062,
+              "min": 0.7965149832400694,
+              "max": 0.7965149832400694,
+              "range": 0,
+              "rms": 0.7965149832400683
+            },
+            "angularSpeedRadS": {
+              "mean": 67.90501990312231,
+              "min": 67.90500963361079,
+              "max": 67.9050303852867,
+              "range": 0.000020751675904762124,
+              "rms": 67.90501990312254
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "FL": {
+            "normalLoadN": {
+              "mean": 4286.568712106127,
+              "min": 4286.568639761717,
+              "max": 4286.568785669932,
+              "range": 0.00014590821501769824,
+              "rms": 4286.568712106127
+            },
+            "alphaDeg": {
+              "mean": -1.0691166720760077,
+              "min": -1.0691167326017137,
+              "max": -1.0691166372714342,
+              "range": 9.533027944819139e-8,
+              "rms": 1.0691166720760072
+            },
+            "longitudinalSlip": {
+              "mean": 0.0013622886143442744,
+              "min": 0.00136218461211341,
+              "max": 0.00136239684677233,
+              "range": 2.1223465891998493e-7,
+              "rms": 0.001362288615735819
+            },
+            "frictionUtilization": {
+              "mean": 0.22524957007291999,
+              "min": 0.2252495357505018,
+              "max": 0.22524968555129915,
+              "range": 1.4980079734994156e-7,
+              "rms": 0.22524957007292745
+            },
+            "longitudinalForceN": {
+              "mean": 110.92120369923887,
+              "min": 110.91944399133172,
+              "max": 110.92762374797213,
+              "range": 0.008179756640416258,
+              "rms": 110.92120375010582
+            },
+            "lateralForceN": {
+              "mean": 1201.8268823269775,
+              "min": 1201.826843271802,
+              "max": 1201.8269207078356,
+              "range": 0.00007743603350718331,
+              "rms": 1201.826882326977
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0.8035156449735035,
+              "min": 0.8035156449734969,
+              "max": 0.8035156449734969,
+              "range": 0,
+              "rms": 0.803515644973496
+            },
+            "angularSpeedRadS": {
+              "mean": 67.3880545601317,
+              "min": 67.38804767174126,
+              "max": 67.3880616524868,
+              "range": 0.000013980745535491224,
+              "rms": 67.3880545601319
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RR": {
+            "normalLoadN": {
+              "mean": 6511.584167011953,
+              "min": 6511.584093501037,
+              "max": 6511.584239258508,
+              "range": 0.00014575747081835289,
+              "rms": 6511.584167011962
+            },
+            "alphaDeg": {
+              "mean": -0.9593128885796587,
+              "min": -0.959312914671883,
+              "max": -0.9593128298811622,
+              "range": 8.479072077793859e-8,
+              "rms": 0.95931288857966
+            },
+            "longitudinalSlip": {
+              "mean": 0.0013577113258084889,
+              "min": 0.0013575512090171714,
+              "max": 0.0013578702217515758,
+              "range": 3.190127344043867e-7,
+              "rms": 0.0013577113288997752
+            },
+            "frictionUtilization": {
+              "mean": 0.21324521309549666,
+              "min": 0.21324517313369215,
+              "max": 0.21324533159034023,
+              "range": 1.584566480805627e-7,
+              "rms": 0.21324521309550518
+            },
+            "longitudinalForceN": {
+              "mean": 168.49671667547665,
+              "min": 168.49404525593246,
+              "max": 168.50646555799293,
+              "range": 0.012420302060462518,
+              "rms": 168.4967167527087
+            },
+            "lateralForceN": {
+              "mean": 1727.5072702038472,
+              "min": 1727.5072073278586,
+              "max": 1727.5073138489913,
+              "range": 0.00010652113269316033,
+              "rms": 1727.5072702038476
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 67.91648507186709,
+              "min": 67.91647448747233,
+              "max": 67.91649567899887,
+              "range": 0.000021191526542452266,
+              "rms": 67.9164850718674
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RL": {
+            "normalLoadN": {
+              "mean": 4413.733595020846,
+              "min": 4413.733521274183,
+              "max": 4413.733665333121,
+              "range": 0.00014405893853108864,
+              "rms": 4413.733595020848
+            },
+            "alphaDeg": {
+              "mean": -0.9664688087314872,
+              "min": -0.966468835526136,
+              "max": -0.9664687483825416,
+              "range": 8.71435944516108e-8,
+              "rms": 0.9664688087314872
+            },
+            "longitudinalSlip": {
+              "mean": 0.0013618480573930744,
+              "min": 0.0013617394939138968,
+              "max": 0.0013619580308049516,
+              "range": 2.1853689105479773e-7,
+              "rms": 0.0013618480588258224
+            },
+            "frictionUtilization": {
+              "mean": 0.2229365024238998,
+              "min": 0.2229364633261564,
+              "max": 0.2229366163598802,
+              "range": 1.530337238042634e-7,
+              "rms": 0.22293650242390758
+            },
+            "longitudinalForceN": {
+              "mean": 114.21178010857024,
+              "min": 114.20996911513588,
+              "max": 114.21838790614471,
+              "range": 0.008418791008836024,
+              "rms": 114.21178016091389
+            },
+            "lateralForceN": {
+              "mean": 1224.6637642421344,
+              "min": 1224.6637217400767,
+              "max": 1224.6637993071927,
+              "range": 0.00007756711602269206,
+              "rms": 1224.6637642421344
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 67.3996026208711,
+              "min": 67.39959548840578,
+              "max": 67.39960989338493,
+              "range": 0.000014404979154392095,
+              "rms": 67.39960262087119
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          }
+        }
+      },
+      "wholeRun": {
+        "durationS": 40,
+        "pathLengthM": 999.744638401963,
+        "peakMotorPowerW": 20299.20093210802,
+        "peakMotorTorqueBudgetExcessNm": 5.684341886080802e-14,
+        "peakFrictionUtilization": 0.22524968562813835,
+        "contactLossSteps": 0,
+        "rigidContactSteps": 0,
+        "fault": null
+      },
+      "curveFile": "qa/steady-circles-3.11/dry-90-3.11.json"
+    },
+    {
+      "id": "wet-90-3.10",
+      "version": "3.10",
+      "surface": "wet",
+      "targetSpeedKmh": 90,
+      "targetWheelCentreDeg": 0.8,
+      "appliedParams": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": false,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "wet",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 3,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 3.6,
+        "rollRateDegS": 120,
+        "pitchRateDegS": 32,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 160
+      },
+      "initial": {
+        "position": {
+          "x": -320,
+          "y": 0.5970093908740407,
+          "z": 0
+        },
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 25
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "massKg": 2199.5582002848946,
+        "wheelAngularSpeedsRadS": [
+          67.56756756756756,
+          67.56756756756756,
+          67.56756756756756,
+          67.56756756756756
+        ]
+      },
+      "steady": true,
+      "checks": {
+        "completeWindow": true,
+        "noFault": true,
+        "fourWheelContact": true,
+        "noRigidContact": true,
+        "speedError": true,
+        "speedVariation": true,
+        "wheelAngleVariation": true,
+        "yawVariation": true,
+        "betaVariation": true,
+        "yawTrend": true,
+        "betaTrend": true,
+        "circularArc": true
+      },
+      "metrics": {
+        "windowStartS": 35,
+        "windowEndS": 40,
+        "windowSamples": 600,
+        "speedKmh": {
+          "mean": 89.99999999613402,
+          "min": 89.99999988425147,
+          "max": 90.00000011634684,
+          "range": 2.3209537403090508e-7,
+          "rms": 89.99999999613394
+        },
+        "speedErrorKmh": {
+          "mean": -3.866021316412116e-9,
+          "min": -1.1574853431284282e-7,
+          "max": 1.1634683971806226e-7,
+          "range": 2.3209537403090508e-7,
+          "rms": 4.155854853060659e-8
+        },
+        "yawRateDegS": {
+          "mean": 6.169980922005929,
+          "min": 6.169979969823524,
+          "max": 6.169981924977544,
+          "range": 0.0000019551540200168915,
+          "rms": 6.169980922005927
+        },
+        "bodyBetaDeg": {
+          "mean": -0.6979213748745575,
+          "min": -0.6979213849543641,
+          "max": -0.697921365582274,
+          "range": 1.937209004321261e-8,
+          "rms": 0.6979213748745576
+        },
+        "wheelCentreDeg": {
+          "mean": 0.8000000000000078,
+          "min": 0.7999999999999995,
+          "max": 0.7999999999999995,
+          "range": 0,
+          "rms": 0.7999999999999944
+        },
+        "yawSlopeDegS2": 2.922764293064773e-9,
+        "betaSlopeDegS": -4.2779963611342984e-11,
+        "lateralAccelerationMps2": {
+          "mean": 2.690744802944601,
+          "min": 2.690744761237734,
+          "max": 2.69074485366565,
+          "range": 9.24279159875141e-8,
+          "rms": 2.6907448029446015
+        },
+        "throttle": {
+          "mean": 0.03345145742318307,
+          "min": 0.03345145261125341,
+          "max": 0.03345146190657103,
+          "range": 9.295317619784083e-9,
+          "rms": 0.03345145742318312
+        },
+        "brake": {
+          "mean": 0,
+          "min": 0,
+          "max": 0,
+          "range": 0,
+          "rms": 0
+        },
+        "circleFit": {
+          "centreXM": -87.64455229550188,
+          "centreZM": 145.68318721584552,
+          "radiusM": 232.22043580298097,
+          "radialResidualRmsM": 2.7752018776833005e-10
+        },
+        "curvatureRadiusM": 232.1554160170466,
+        "tcsActiveWheelSeconds": 0,
+        "corneringTcsActiveWheelSeconds": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "minimumWheelContacts": 4,
+        "rigidContactSteps": 0,
+        "wheels": {
+          "FR": {
+            "normalLoadN": {
+              "mean": 6391.541268797396,
+              "min": 6391.541228336081,
+              "max": 6391.541306059057,
+              "range": 0.00007772297612973489,
+              "rms": 6391.541268797398
+            },
+            "alphaDeg": {
+              "mean": -1.1151670831668563,
+              "min": -1.1151671388638433,
+              "max": -1.1151670281392028,
+              "range": 1.107246405673834e-7,
+              "rms": 1.115167083166856
+            },
+            "longitudinalSlip": {
+              "mean": 0.002830976919012563,
+              "min": 0.002830895440193214,
+              "max": 0.002831057586488214,
+              "range": 1.621462950001512e-7,
+              "rms": 0.002830976919402781
+            },
+            "frictionUtilization": {
+              "mean": 0.41567874394385884,
+              "min": 0.4156787034078397,
+              "max": 0.4156788780867895,
+              "range": 1.7467894980471854e-7,
+              "rms": 0.4156787439438637
+            },
+            "longitudinalForceN": {
+              "mean": 178.26466992676723,
+              "min": 178.26334811771568,
+              "max": 178.26968955218635,
+              "range": 0.006341434470670038,
+              "rms": 178.26466994535983
+            },
+            "lateralForceN": {
+              "mean": 1717.7126969930155,
+              "min": 1717.712660035165,
+              "max": 1717.7127405856163,
+              "range": 0.00008055045123001037,
+              "rms": 1717.7126969930155
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0.796514983240062,
+              "min": 0.7965149832400694,
+              "max": 0.7965149832400694,
+              "range": 0,
+              "rms": 0.7965149832400683
+            },
+            "angularSpeedRadS": {
+              "mean": 68.00604928750722,
+              "min": 68.00604388533448,
+              "max": 68.00605472865148,
+              "range": 0.000010843316999853414,
+              "rms": 68.00604928750727
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "FL": {
+            "normalLoadN": {
+              "mean": 4278.038392993715,
+              "min": 4278.038347769087,
+              "max": 4278.038437698723,
+              "range": 0.0000899296364877955,
+              "rms": 4278.03839299372
+            },
+            "alphaDeg": {
+              "mean": -1.1243984632854722,
+              "min": -1.1243985190310075,
+              "max": -1.1243984082344192,
+              "range": 1.1079658834844963e-7,
+              "rms": 1.1243984632854735
+            },
+            "longitudinalSlip": {
+              "mean": 0.002371598649712175,
+              "min": 0.0023715438089922706,
+              "max": 0.002371654050754142,
+              "range": 1.1024176187158716e-7,
+              "rms": 0.0023715986499251857
+            },
+            "frictionUtilization": {
+              "mean": 0.4328586214477383,
+              "min": 0.43285851515770085,
+              "max": 0.4328586551561835,
+              "range": 1.3999848264001358e-7,
+              "rms": 0.43285862144774134
+            },
+            "longitudinalForceN": {
+              "mean": 99.69595815445447,
+              "min": 99.69256973267453,
+              "max": 99.69681487793308,
+              "range": 0.00424514525855102,
+              "rms": 99.69595816899236
+            },
+            "lateralForceN": {
+              "mean": 1199.524892273215,
+              "min": 1199.5248663725633,
+              "max": 1199.5249208550722,
+              "range": 0.00005448250885820016,
+              "rms": 1199.5248922732155
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0.8035156449735035,
+              "min": 0.8035156449734969,
+              "max": 0.8035156449734969,
+              "range": 0,
+              "rms": 0.803515644973496
+            },
+            "angularSpeedRadS": {
+              "mean": 67.45201644222568,
+              "min": 67.4520128114661,
+              "max": 67.45202003264797,
+              "range": 0.000007221181860472825,
+              "rms": 67.4520164422257
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RR": {
+            "normalLoadN": {
+              "mean": 6520.115443363569,
+              "min": 6520.115398705651,
+              "max": 6520.1154886243885,
+              "range": 0.00008991873710328946,
+              "rms": 6520.115443363566
+            },
+            "alphaDeg": {
+              "mean": -1.0192859668303722,
+              "min": -1.019286022012974,
+              "max": -1.0192859180010596,
+              "range": 1.0401191441467006e-7,
+              "rms": 1.019285966830374
+            },
+            "longitudinalSlip": {
+              "mean": 0.002849087559798496,
+              "min": 0.002849005552067862,
+              "max": 0.002849171402468948,
+              "range": 1.6585040108624272e-7,
+              "rms": 0.002849087560201135
+            },
+            "frictionUtilization": {
+              "mean": 0.41614209133836355,
+              "min": 0.4161419621036878,
+              "max": 0.41614213082885365,
+              "range": 1.6872516583887887e-7,
+              "rms": 0.41614209133836844
+            },
+            "longitudinalForceN": {
+              "mean": 183.0443681709898,
+              "min": 183.03923730557347,
+              "max": 183.04570569488774,
+              "range": 0.006468389314278511,
+              "rms": 183.04436818971678
+            },
+            "lateralForceN": {
+              "mean": 1754.1168094144266,
+              "min": 1754.1167680325996,
+              "max": 1754.1168545531132,
+              "range": 0.00008652051360513724,
+              "rms": 1754.1168094144293
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 68.01976054775405,
+              "min": 68.01975500295885,
+              "max": 68.01976606928896,
+              "range": 0.00001106633011715985,
+              "rms": 68.0197605477541
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RL": {
+            "normalLoadN": {
+              "mean": 4406.61256755989,
+              "min": 4406.612530335734,
+              "max": 4406.612607969505,
+              "range": 0.0000776337710703956,
+              "rms": 4406.612567559885
+            },
+            "alphaDeg": {
+              "mean": -1.0269471834060888,
+              "min": -1.0269472402510267,
+              "max": -1.0269471330265223,
+              "range": 1.0722450438649389e-7,
+              "rms": 1.0269471834060901
+            },
+            "longitudinalSlip": {
+              "mean": 0.002412449575976873,
+              "min": 0.0024123936091087145,
+              "max": 0.0024125063664411947,
+              "range": 1.1275733248017686e-7,
+              "rms": 0.0024124495761972346
+            },
+            "frictionUtilization": {
+              "mean": 0.4327128464260902,
+              "min": 0.4327127280960287,
+              "max": 0.432712876553622,
+              "range": 1.4845759332970943e-7,
+              "rms": 0.4327128464260933
+            },
+            "longitudinalForceN": {
+              "mean": 104.47565740776929,
+              "min": 104.47197095238874,
+              "max": 104.4763429910033,
+              "range": 0.004372038614562257,
+              "rms": 104.47565741984639
+            },
+            "lateralForceN": {
+              "mean": 1235.0074238451123,
+              "min": 1235.0073942393121,
+              "max": 1235.007456210538,
+              "range": 0.00006197122593221138,
+              "rms": 1235.0074238451136
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 67.4673641802513,
+              "min": 67.46736038642788,
+              "max": 67.4673679296039,
+              "range": 0.0000075431760109268,
+              "rms": 67.46736418025128
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          }
+        }
+      },
+      "wholeRun": {
+        "durationS": 40,
+        "pathLengthM": 999.7397587988271,
+        "peakMotorPowerW": 20504.625541021698,
+        "peakMotorTorqueBudgetExcessNm": 5.684341886080802e-14,
+        "peakFrictionUtilization": 0.4328586551561835,
+        "contactLossSteps": 0,
+        "rigidContactSteps": 0,
+        "fault": null
+      },
+      "curveFile": "qa/steady-circles-3.11/wet-90-3.10.json"
+    },
+    {
+      "id": "wet-90-3.11",
+      "version": "3.11",
+      "surface": "wet",
+      "targetSpeedKmh": 90,
+      "targetWheelCentreDeg": 0.8,
+      "appliedParams": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": false,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "wet",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      },
+      "initial": {
+        "position": {
+          "x": -320,
+          "y": 0.5970093908740407,
+          "z": 0
+        },
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 25
+        },
+        "quaternion": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "massKg": 2199.5582002848946,
+        "wheelAngularSpeedsRadS": [
+          67.56756756756756,
+          67.56756756756756,
+          67.56756756756756,
+          67.56756756756756
+        ]
+      },
+      "steady": true,
+      "checks": {
+        "completeWindow": true,
+        "noFault": true,
+        "fourWheelContact": true,
+        "noRigidContact": true,
+        "speedError": true,
+        "speedVariation": true,
+        "wheelAngleVariation": true,
+        "yawVariation": true,
+        "betaVariation": true,
+        "yawTrend": true,
+        "betaTrend": true,
+        "circularArc": true
+      },
+      "metrics": {
+        "windowStartS": 35,
+        "windowEndS": 40,
+        "windowSamples": 600,
+        "speedKmh": {
+          "mean": 89.99999999593585,
+          "min": 89.99999991429657,
+          "max": 90.00000009394661,
+          "range": 1.796500441741955e-7,
+          "rms": 89.99999999593595
+        },
+        "speedErrorKmh": {
+          "mean": -4.0640489136952356e-9,
+          "min": -8.5703433683193e-8,
+          "max": 9.39466104910025e-8,
+          "range": 1.796500441741955e-7,
+          "rms": 4.9928654003692976e-8
+        },
+        "yawRateDegS": {
+          "mean": 6.078513456200432,
+          "min": 6.07851285899493,
+          "max": 6.0785142536834,
+          "range": 0.0000013946884696025563,
+          "rms": 6.078513456200442
+        },
+        "bodyBetaDeg": {
+          "mean": -0.6797185367328377,
+          "min": -0.6797185463566823,
+          "max": -0.6797185280420014,
+          "range": 1.8314680882980383e-8,
+          "rms": 0.6797185367328376
+        },
+        "wheelCentreDeg": {
+          "mean": 0.8000000000000078,
+          "min": 0.7999999999999995,
+          "max": 0.7999999999999995,
+          "range": 0,
+          "rms": 0.7999999999999944
+        },
+        "yawSlopeDegS2": 1.0343147842525468e-9,
+        "betaSlopeDegS": -1.8691973008092124e-10,
+        "lateralAccelerationMps2": {
+          "mean": 2.6508793061966274,
+          "min": 2.650879268981383,
+          "max": 2.6508793679483103,
+          "range": 9.896692709787658e-8,
+          "rms": 2.650879306196625
+        },
+        "throttle": {
+          "mean": 0.033324995239105204,
+          "min": 0.033324991371602664,
+          "max": 0.033324998508280676,
+          "range": 7.1366780124426654e-9,
+          "rms": 0.033324995239105266
+        },
+        "brake": {
+          "mean": 0,
+          "min": 0,
+          "max": 0,
+          "range": 0,
+          "rms": 0
+        },
+        "circleFit": {
+          "centreXM": -84.1565379836886,
+          "centreZM": 145.54169028880327,
+          "radiusM": 235.7148118776243,
+          "radialResidualRmsM": 1.3911086705661723e-9
+        },
+        "curvatureRadiusM": 235.64881415229112,
+        "tcsActiveWheelSeconds": 0,
+        "corneringTcsActiveWheelSeconds": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "minimumWheelContacts": 4,
+        "rigidContactSteps": 0,
+        "wheels": {
+          "FR": {
+            "normalLoadN": {
+              "mean": 6376.213831274415,
+              "min": 6376.213793291569,
+              "max": 6376.213863699887,
+              "range": 0.00007040831769700162,
+              "rms": 6376.213831274419
+            },
+            "alphaDeg": {
+              "mean": -1.1025407152320899,
+              "min": -1.102540751770482,
+              "max": -1.1025406684084573,
+              "range": 8.336202461656228e-8,
+              "rms": 1.1025407152320903
+            },
+            "longitudinalSlip": {
+              "mean": 0.0026421953585061262,
+              "min": 0.0026421133543090454,
+              "max": 0.002642275410548167,
+              "range": 1.6205623912159822e-7,
+              "rms": 0.0026421953589195026
+            },
+            "frictionUtilization": {
+              "mean": 0.4113629839160294,
+              "min": 0.41136293541207725,
+              "max": 0.41136309647240193,
+              "range": 1.610603246882114e-7,
+              "rms": 0.4113629839160353
+            },
+            "longitudinalForceN": {
+              "mean": 165.99901257514935,
+              "min": 165.99720922788842,
+              "max": 166.0035351255396,
+              "range": 0.006325897651180412,
+              "rms": 165.99901259970196
+            },
+            "lateralForceN": {
+              "mean": 1696.8094128835028,
+              "min": 1696.8093803177253,
+              "max": 1696.8094453409767,
+              "range": 0.00006502325140900211,
+              "rms": 1696.8094128835019
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0.796514983240062,
+              "min": 0.7965149832400694,
+              "max": 0.7965149832400694,
+              "range": 0,
+              "rms": 0.7965149832400683
+            },
+            "angularSpeedRadS": {
+              "mean": 67.98938710808692,
+              "min": 67.98938165719167,
+              "max": 67.98939244516883,
+              "range": 0.000010787977160475748,
+              "rms": 67.98938710808696
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "FL": {
+            "normalLoadN": {
+              "mean": 4293.97494780554,
+              "min": 4293.974910897935,
+              "max": 4293.974978870197,
+              "range": 0.00006797226251364918,
+              "rms": 4293.974947805544
+            },
+            "alphaDeg": {
+              "mean": -1.1116429216262709,
+              "min": -1.1116429582194303,
+              "max": -1.1116428747504044,
+              "range": 8.346902591327421e-8,
+              "rms": 1.1116429216262695
+            },
+            "longitudinalSlip": {
+              "mean": 0.0026496757951963647,
+              "min": 0.0026496216531694985,
+              "max": 0.0026497316505626266,
+              "range": 1.099973931280307e-7,
+              "rms": 0.0026496757953865502
+            },
+            "frictionUtilization": {
+              "mean": 0.4288355351741899,
+              "min": 0.42883548806538846,
+              "max": 0.42883563865860885,
+              "range": 1.5059322039379097e-7,
+              "rms": 0.4288355351741946
+            },
+            "longitudinalForceN": {
+              "mean": 111.78979649662094,
+              "min": 111.78857466378462,
+              "max": 111.79283528916109,
+              "range": 0.004260625376474536,
+              "rms": 111.78979651321362
+            },
+            "lateralForceN": {
+              "mean": 1191.6839610540355,
+              "min": 1191.6839378930626,
+              "max": 1191.6839828195416,
+              "range": 0.000044926478949491866,
+              "rms": 1191.6839610540362
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0.8035156449735035,
+              "min": 0.8035156449734969,
+              "max": 0.8035156449734969,
+              "range": 0,
+              "rms": 0.803515644973496
+            },
+            "angularSpeedRadS": {
+              "mean": 67.4757389395578,
+              "min": 67.47573539965238,
+              "max": 67.47574267364452,
+              "range": 0.000007273992139289476,
+              "rms": 67.47573893955791
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RR": {
+            "normalLoadN": {
+              "mean": 6504.178401576294,
+              "min": 6504.17837053473,
+              "max": 6504.178438447002,
+              "range": 0.00006791227224312024,
+              "rms": 6504.178401576296
+            },
+            "alphaDeg": {
+              "mean": -0.9965866841798469,
+              "min": -0.9965867283685828,
+              "max": -0.9965866486653636,
+              "range": 7.970321913575162e-8,
+              "rms": 0.9965866841798467
+            },
+            "longitudinalSlip": {
+              "mean": 0.002642135936679874,
+              "min": 0.002642053328844767,
+              "max": 0.0026422192463907423,
+              "range": 1.6591754597528388e-7,
+              "rms": 0.002642135937119916
+            },
+            "frictionUtilization": {
+              "mean": 0.40779587940325085,
+              "min": 0.40779583092005084,
+              "max": 0.4077959895921813,
+              "range": 1.5867213043474493e-7,
+              "rms": 0.4077958794032559
+            },
+            "longitudinalForceN": {
+              "mean": 169.330455477906,
+              "min": 169.32861613973625,
+              "max": 169.3350680807727,
+              "range": 0.006451941036431208,
+              "rms": 169.3304555029426
+            },
+            "lateralForceN": {
+              "mean": 1715.7094363113154,
+              "min": 1715.7094042613953,
+              "max": 1715.7094686782139,
+              "range": 0.00006441681853175396,
+              "rms": 1715.7094363113167
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 68.001582910735,
+              "min": 68.00157743049652,
+              "max": 68.0015884779274,
+              "range": 0.000011047430874100428,
+              "rms": 68.00158291073508
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          },
+          "RL": {
+            "normalLoadN": {
+              "mean": 4421.9395181074215,
+              "min": 4421.9394857595325,
+              "max": 4421.939556051594,
+              "range": 0.0000702920615367475,
+              "rms": 4421.939518107418
+            },
+            "alphaDeg": {
+              "mean": -1.003965826531513,
+              "min": -1.0039658719635047,
+              "max": -1.003965790066373,
+              "range": 8.189713174289182e-8,
+              "rms": 1.0039658265315123
+            },
+            "longitudinalSlip": {
+              "mean": 0.002649238607800604,
+              "min": 0.0026491835448072725,
+              "max": 0.0026492967300546463,
+              "range": 1.1318524737380029e-7,
+              "rms": 0.0026492386080059246
+            },
+            "frictionUtilization": {
+              "mean": 0.4244960552775935,
+              "min": 0.42449600794870557,
+              "max": 0.4244961643464685,
+              "range": 1.5639776290710117e-7,
+              "rms": 0.4244960552775985
+            },
+            "longitudinalForceN": {
+              "mean": 115.12123961091194,
+              "min": 115.1199816082805,
+              "max": 115.12436880368429,
+              "range": 0.004387195403793953,
+              "rms": 115.12123962799431
+            },
+            "lateralForceN": {
+              "mean": 1214.6691655894754,
+              "min": 1214.66914318005,
+              "max": 1214.6691882732775,
+              "range": 0.00004509322752710432,
+              "rms": 1214.6691655894756
+            },
+            "roadWheelAngleDeg": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "angularSpeedRadS": {
+              "mean": 67.48802315413442,
+              "min": 67.48801953175892,
+              "max": 67.48802701877031,
+              "range": 0.000007487011387752318,
+              "rms": 67.48802315413438
+            },
+            "tcsFactor": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "tcsActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "corneringDriveScale": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "corneringTractionActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            },
+            "absPressure": {
+              "mean": 1,
+              "min": 1,
+              "max": 1,
+              "range": 0,
+              "rms": 1
+            },
+            "absActive": {
+              "mean": 0,
+              "min": 0,
+              "max": 0,
+              "range": 0,
+              "rms": 0
+            }
+          }
+        }
+      },
+      "wholeRun": {
+        "durationS": 40,
+        "pathLengthM": 999.7420585729966,
+        "peakMotorPowerW": 20419.572530753878,
+        "peakMotorTorqueBudgetExcessNm": 5.684341886080802e-14,
+        "peakFrictionUtilization": 0.42883563865860885,
+        "contactLossSteps": 0,
+        "rigidContactSteps": 0,
+        "fault": null
+      },
+      "curveFile": "qa/steady-circles-3.11/wet-90-3.11.json"
+    }
+  ],
+  "limitations": [
+    "Numerical sustained-turn regression, not real keyboard/camera feel, rendered pixels, GPU performance or Tesla calibration.",
+    "The fixed final 5 s window is evaluated without searching for a favorable interval; failure remains a failure.",
+    "A stable circular arc does not imply a complete lap. Radius is fitted to actual last-window trajectory and also reported from speed/yaw.",
+    "All physical parameters stay at their declared version defaults except the explicit identical road/supply/steering protocol. Both models use the same dry mu=1.25, wet multiplier=0.52, 700 kW motor ceiling and 600 L bench mass."
+  ]
+}

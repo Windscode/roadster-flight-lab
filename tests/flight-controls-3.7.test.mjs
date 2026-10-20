@@ -8,9 +8,10 @@ const dt=1/PHYSICS_HZ,checks=[],values={steering:[],ascent:[],roll:[],manualRoll
 const pass=name=>{checks.push(name);console.log('PASS: '+name);};
 const close=(a,b,tol,label)=>assert.ok(Math.abs(a-b)<=tol,`${label}: ${a} vs ${b} (±${tol})`);
 const flat=(height=.62,params={})=>{
-  // Keep the original 3.7 input-envelope regression explicit; 3.9 defaults
-  // are independently measured in physics-controls-3.9.
-  const sim=new RoadsterSim({steeringAccelG:.9,climbRateMps:1.5,...params});
+  // Retain the named 3.7 manual-input regression profile. Current defaults
+  // and the complete 3.10/3.11 comparison live in vehicle-dynamics-3.11.
+  // X cases below explicitly select their common manual/X actuator profile.
+  const sim=new RoadsterSim({steeringAccelG:.9,climbRateMps:1.5,rollRateDegS:120,pitchRateDegS:32,angularAccelerationDegS2:160,verticalAccelerationMps2:3,attitudeResponse:3.6,...params});
   for(const body of [...sim.world.bodies])if(body!==sim.body&&body.userData?.id!=='ground')sim.world.removeBody(body);
   sim.body.position.set(0,height,-350);
   if(height<1)for(let i=0;i<240;i++)sim._advance(dt,{});
@@ -69,9 +70,11 @@ for(const level of [false,true]){
 pass('Continuing Q on supported wheels completes touchdown in either city stabilization state and closes valves without a hover re-launch');
 
 for(const height of [.62,4,18]){
-  const s=flat(height),origin=s.body.position.y,ground=height<1;assert.equal(s.startManeuver('roll'),true);
+  const s=flat(height,{rollRateDegS:180,angularAccelerationDegS2:360,verticalAccelerationMps2:5,attitudeResponse:4.5}),origin=s.body.position.y,ground=height<1;assert.equal(s.startManeuver('roll'),true);
   const plan={...s._maneuver};let inverted=false,airContacts=0,minRotate=Infinity,peak=origin;
-  const t=run(s,13,{},sim=>{
+  // The calmer common 180/360 profile completes around 12.7 s and then uses
+  // real force to settle the remaining vertical velocity; compare a 15 s hold.
+  const t=run(s,15,{},sim=>{
     const up=sim.body.quaternion.vmult(new Vec3(0,1,0));inverted ||= up.y<-.9;
     if(sim._maneuver?.phase==='rotate')minRotate=Math.min(minRotate,sim.body.position.y);
     if(!ground&&sim._contactCount)airContacts++;
@@ -86,10 +89,12 @@ for(const height of [.62,4,18]){
 pass('X latches ground/air origin, completes a genuine inversion, respects its planned headroom and returns airborne starts without any touchdown');
 
 {
-  const low=flat(4,{supplyMode:'finite'}),state=snapshot(low);assert.equal(low.startManeuver('roll'),false);assert.equal(snapshot(low),state);assert.equal(low._maneuver,null);assert.match(low.status,/冲量/);
+  const low=flat(4,{supplyMode:'finite',rollRateDegS:180,angularAccelerationDegS2:360,verticalAccelerationMps2:5,attitudeResponse:4.5}),state=snapshot(low);assert.equal(low.startManeuver('roll'),false);assert.equal(snapshot(low),state);assert.equal(low._maneuver,null);assert.match(low.status,/冲量/);
   const roof=new RoadsterSim({}, {world:'windlab'});roof.body.position.y=14;roof.setMode('hover');const before=snapshot(roof);assert.equal(roof.startManeuver('roll'),false);assert.equal(snapshot(roof),before);assert.match(roof.status,/净空/);
   for(const [tankLitres,height]of [[900,.62],[1100,4]]){
-    const s=flat(height,{supplyMode:'finite',tankLitres});assert.equal(s.startManeuver('roll'),true);let inverted=false,completion=null;
+    // A finite positive case must declare a feasible faster profile: at the
+    // calmer 180/360 default, 900 L now correctly fails the impulse preflight.
+    const s=flat(height,{supplyMode:'finite',tankLitres,rollRateDegS:360,angularAccelerationDegS2:720,verticalAccelerationMps2:10,attitudeResponse:4.5});assert.equal(s.startManeuver('roll'),true);let inverted=false,completion=null;
     for(let i=0;i<12*PHYSICS_HZ;i++){
       s._advance(dt,{});assert.equal(s._fault,null);inverted ||= s.body.quaternion.vmult(new Vec3(0,1,0)).y<-.9;
       if(height>1)assert.equal(s._contactCount,0);
@@ -178,7 +183,7 @@ pass('Normalized 1/2 pitch requests change supported attitude smoothly while wor
   const t=run(s,10);assert.equal(t.holdStatus,'holding');assert.equal(t.holdFeasible,true);assert.ok(t.holdPositionError<.02&&t.holdAttitudeErrorDeg<.1);
   const inverted=flat(100);inverted.body.quaternion.setFromEuler(0,0,Math.PI);inverted.setPoseTarget({position:{x:0,y:100,z:-350},quaternion:{x:0,y:0,z:1,w:0}});
   const fall=run(inverted,1);assert.equal(fall.holdFeasible,false);assert.equal(fall.holdStatus,'limited');assert.ok(fall.verticalSpeed< -9.5);assert.ok(fall.thrustN<.01);
-  for(const [key,badValue,limit]of [['positionGain',100,8],['rollRateDegS',1000,180],['pitchRateDegS',0,5]]){s.setParam(key,badValue);assert.equal(s.params[key],limit);}
+  for(const [key,badValue,limit]of [['positionGain',100,8],['rollRateDegS',1000,360],['pitchRateDegS',0,5]]){s.setParam(key,badValue);assert.equal(s.params[key],limit);}
 }
 pass('Research pose targets validate atomically, can take off through real force from supported wheels, expose bounded tuning and report unsupported inversion honestly');
 
@@ -205,6 +210,6 @@ pass('Program input providers and wind advance at exactly 120 Hz independently o
 }
 pass('Prescribed lab wind acts through relative-airflow aerodynamic force with deterministic gust timing, validated parameters and a true calm reset');
 
-writeFileSync('qa/flight-controls-3.9.json',JSON.stringify({status:'passed',physicsHz:PHYSICS_HZ,checks,values,
+writeFileSync('qa/flight-controls-3.11.json',JSON.stringify({status:'passed',physicsHz:PHYSICS_HZ,checks,values,
   limits:'Deterministic reduced-order engineering model, not OEM identification. Flat-ground and authored lab fixtures are numerical acceptance checks. They do not certify arbitrary obstacles, all finite-tank parameters or real vehicle operation. One-way lift and bounded side jets cannot statically support every attitude; no inverse lift or pose freeze is introduced.'},null,2)+'\n');
 console.log(`Flight controls 3.7: ${checks.length} acceptance groups passed.`);

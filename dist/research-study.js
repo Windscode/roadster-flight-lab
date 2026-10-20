@@ -1,6 +1,7 @@
 import {MODEL_VERSION} from './vehicle-models.js';
 import {MODEL_BUILD_ID} from './model-build.js';
-import {normalizeResearchRequest,RESEARCH_PARAMETERS,PROTOCOL_VERSION} from './research-protocol.js';
+import {normalizeResearchRequest,savedResearchRequest,RESEARCH_PARAMETERS,PROTOCOL_VERSION} from './research-protocol.js';
+import {buildRobustnessJobs,robustnessCaseLabel} from './research-robustness.js';
 export const SWEEP_KEYS={steer:['tireMu','cornerStiffnessFront','cornerStiffnessRear','dryMass'],brake:['tireMu','dryMass'],launch:['tireMu','dryMass'],attitude:['dryMass','liftNozzleMax','valveRiseTime'],rise:['climbRateMps','dryMass','liftNozzleMax','valveRiseTime'],hover:['tankLitres','initialPressureBar','nozzleVelocityEfficiency','dryMass','liftNozzleMax'],roll:['tankLitres','initialPressureBar','dryMass','liftNozzleMax','valveRiseTime']};
 export const PAIRS={
  supplyMode:{label:'有限储气 / 恒压试验台',key:'supplyMode',values:['finite','bench'],labels:['有限储气','恒压外供气']},
@@ -19,8 +20,9 @@ export function researchConditionLabel(request){
  return[({dry:'干地',wet:'湿地',split:'左右分离附着'})[p.roadSurface]||p.roadSurface,`ABS${p.absEnabled?'开启':'关闭'}`,`TCS${p.tractionAssist?'开启':'关闭'}`].join(' · ');
 }
 const namedJob=(label,request,extra={})=>({label:label+(researchConditionLabel(request)?' · '+researchConditionLabel(request):''),request,...extra});
-export function buildStudyRequests(base,{mode='single',pairKey,sweepKey,from,to,count=3}={}){
+export function buildStudyRequests(base,{mode='single',pairKey,sweepKey,from,to,count=3,robustness}={}){
  const request=normalizeResearchRequest(base);
+ if(mode==='robustness')return buildRobustnessJobs(request,robustness).map(job=>({...job,request:normalizeResearchRequest(job.request)}));
  if(mode==='single')return[namedJob('单次实验',request)];
  if(mode==='pair'){
   if(!PAIR_KEYS[request.kind].includes(pairKey))throw Error('该对照因素不适用于本试验');
@@ -34,9 +36,9 @@ export function buildStudyRequests(base,{mode='single',pairKey,sweepKey,from,to,
  throw Error('未知运行方式');
 }
 export function studyArchive(entries,note=''){
- return{schemaVersion:1,application:'Roadster Research Study',modelVersion:entries[0]?.report.modelVersion??MODEL_VERSION,modelBuildId:entries[0]?.report.modelBuildId??MODEL_BUILD_ID,protocolVersion:entries[0]?.report.protocolVersion??PROTOCOL_VERSION,exporterIdentity:{modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,protocolVersion:PROTOCOL_VERSION},createdAt:new Date().toISOString(),note,requests:entries.map(e=>({label:e.label,request:e.report.request,note:e.note||'',factor:e.factor||null})),results:entries.map(e=>({label:e.label,note:e.note||'',report:e.report}))};
+ return{schemaVersion:1,application:'Roadster Research Study',modelVersion:entries[0]?.report.modelVersion??MODEL_VERSION,modelBuildId:entries[0]?.report.modelBuildId??MODEL_BUILD_ID,protocolVersion:entries[0]?.report.protocolVersion??PROTOCOL_VERSION,exporterIdentity:{modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,protocolVersion:PROTOCOL_VERSION},createdAt:new Date().toISOString(),note,requests:entries.map(e=>({label:e.label,request:savedResearchRequest(e.report.request,{protocolVersion:e.report.protocolVersion,durationS:e.report.input?.duration}),note:e.note||'',factor:e.factor||null})),results:entries.map(e=>({label:e.label,note:e.note||'',report:e.report}))};
 }
 export function importStudy(value){
- if(value?.schemaVersion!==1||value.application!=='Roadster Research Study'||!Array.isArray(value.requests)||value.requests.length<1||value.requests.length>12)throw Error('需要本工作区导出的1–12条实验方案');
- return value.requests.map((e,i)=>({label:'导入 / '+(i+1),request:normalizeResearchRequest(e.request)}));
+ if(value?.schemaVersion!==1||value.application!=='Roadster Research Study'||!Array.isArray(value.requests)||value.requests.length<1||value.requests.length>20||value.requests.length>12&&!value.requests.every(e=>e?.request?.robustness))throw Error('需要本工作区导出的1–12条实验方案，或最多20条鲁棒对照方案');
+ return value.requests.map((e,i)=>{const report=value.results?.[i]?.report,request=normalizeResearchRequest(savedResearchRequest(e.request,{protocolVersion:report?.protocolVersion??value.protocolVersion,durationS:report?.kind==='roll'?report.input?.duration:undefined}));return{label:request.robustness?robustnessCaseLabel(request.robustness):'导入 / '+(i+1),request};});
 }

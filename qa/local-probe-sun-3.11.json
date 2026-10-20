@@ -1,0 +1,55 @@
+{
+  "status": "passed",
+  "checks": [
+    "Display and city profiles agree on probe scheduling; balanced allocates no local cube or sunlight map",
+    "Dedicated sunlight capture uses 512/768 physical pixels at DPR 1.35/1.5, with exactly one depth submission per call",
+    "The local map follows the baked sun and contains all eight cube-volume corners plus 240 m of sunward blocker margin",
+    "Opaque mass remains eligible beyond the main-view shadow-distance gate; transparent, cutout, decal and hidden geometry do not become false opaque blockers",
+    "Render target, viewport, scissor, clear state, override, background, XR, shadow flags and visibility recover after success and injected failure",
+    "Returning to balanced releases the local sunlight target and disables its shader branch"
+  ],
+  "cases": [
+    {
+      "pixelRatio": 1.35,
+      "previousTarget": "screen",
+      "mapSize": 512,
+      "cubeFaceFarMetres": 125,
+      "testedCornersAndBlockerPoints": 16,
+      "shadowPasses": 1,
+      "drawCalls": 2,
+      "triangles": 24
+    },
+    {
+      "pixelRatio": 1.35,
+      "previousTarget": "offscreen with custom physical viewport",
+      "mapSize": 512,
+      "cubeFaceFarMetres": 125,
+      "testedCornersAndBlockerPoints": 16,
+      "shadowPasses": 1,
+      "drawCalls": 2,
+      "triangles": 24
+    },
+    {
+      "pixelRatio": 1.5,
+      "previousTarget": "screen",
+      "mapSize": 768,
+      "cubeFaceFarMetres": 180,
+      "testedCornersAndBlockerPoints": 16,
+      "shadowPasses": 1,
+      "drawCalls": 2,
+      "triangles": 24
+    },
+    {
+      "pixelRatio": 1.5,
+      "previousTarget": "offscreen with custom physical viewport",
+      "mapSize": 768,
+      "cubeFaceFarMetres": 180,
+      "testedCornersAndBlockerPoints": 16,
+      "shadowPasses": 1,
+      "drawCalls": 2,
+      "triangles": 24
+    }
+  ],
+  "scope": "Deterministic resource, camera projection, HiDPI viewport and renderer-state regression tests with a stateful renderer double. No browser, graphics driver or rendered image is exercised.",
+  "limits": "Shadow rasterization, packed-depth GPU filtering and visual quality require actual browser/GPU acceptance."
+}

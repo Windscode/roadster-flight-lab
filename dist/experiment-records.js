@@ -11,7 +11,7 @@ export const EXPERIMENT_LIMITS=Object.freeze({durationS:300,steps:36000,records:
 export const FIXED_HZ=120;
 export const COMMAND_METHODS=Object.freeze(['reset','setMode','setSuction','setStabilizationMode','setAirStabilization','setPoseTarget','setWind','clearWind','setSupplyMode','refillGas','setParam','startManeuver','setRoadSurface','setWing','setObservation','setNozzleFault','clearNozzleFault']);
 const INPUT_KEYS=['throttle','steer','lift','roll','pitch','brake','frontJets','rearJets','boost'];
-const CONTROLLER_KEYS=['positionGain','velocityGain','altitudeGain','verticalDamping','attitudeResponse','rollRateDegS','pitchRateDegS','yawRateDegS','angularAccelerationDegS2'];
+const CONTROLLER_KEYS=['positionGain','velocityGain','altitudeGain','verticalDamping','attitudeResponse','rollRateDegS','pitchRateDegS','yawRateDegS','angularAccelerationDegS2','verticalAccelerationMps2'];
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const clone=v=>JSON.parse(JSON.stringify(v));
 const norm=v=>v?Math.hypot(v.x||0,v.y||0,v.z||0):0;
@@ -46,21 +46,28 @@ export function captureExperimentSnapshot(sim,context='city',sceneConfiguration=
 export function replayEligibility(record){
   if(!record?.initialSnapshot?.physical)return{exact:false,recompute:false,reason:'这是旧曲线记录，没有完整初态与固定步输入；只能查看，不能按原条件重放'};
   if(record.schema!==EXPERIMENT_SCHEMA||record.version!==1||record.identity?.protocolVersion!==LIVE_PROTOCOL_VERSION)return{exact:false,recompute:false,reason:'此记录协议没有安装执行器；历史数据可以查看与导出'};
-  if(record.identity.modelVersion==='3.8.0'&&MODEL_VERSION==='3.9.0'&&record.initialSnapshot.physical.worldType==='city')return{exact:false,recompute:false,migrationRequired:false,reason:'3.8 城市记录的道路与碰撞几何已经改变，不能安全迁移完整现场状态；仍可查看与导出历史。请在当前城市重新建立实验。3.8 实验室 / 标准平地记录仍可选择明确的当前模型重算。'};
-  const current=currentExperimentIdentity();if(record.identity.modelVersion!==current.modelVersion){const migration=record.identity.modelVersion==='3.8.0'&&current.modelVersion==='3.9.0'&&record.initialSnapshot.physical.schemaVersion===1;return{exact:false,recompute:migration,migrationRequired:migration,reason:migration?'原 3.8 模型未安装，不能精确重放。可显式按当前模型重算历史初态：保留原参数、刚体、气源和控制状态，并补充当前模型新增的驱动诊断、升降制动与回正状态；迁移与差异单独留证。':'原模型 '+record.identity.modelVersion+' 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。'};}const exact=record.identity.modelVersion===current.modelVersion&&record.identity.modelBuildId===current.modelBuildId;
+  if(record.identity.modelVersion==='3.8.0'&&['3.9.0','3.10.0','3.11.0'].includes(MODEL_VERSION)&&record.initialSnapshot.physical.worldType==='city')return{exact:false,recompute:false,migrationRequired:false,reason:'3.8 城市记录的道路与碰撞几何已经改变，不能安全迁移完整现场状态；仍可查看与导出历史。请在当前城市重新建立实验。3.8 实验室 / 标准平地记录仍可选择明确的当前模型重算。'};
+  const current=currentExperimentIdentity();if(record.identity.modelVersion!==current.modelVersion){const migration=canMigrateRecordedState(record.identity.modelVersion,current.modelVersion)&&record.initialSnapshot.physical.schemaVersion===1;return{exact:false,recompute:migration,migrationRequired:migration,reason:migration?(record.identity.modelVersion==='3.8.0'?'原 3.8 模型未安装，不能精确重放。可显式按当前模型重算历史初态：保留原参数、刚体、气源和控制状态，并补充当前模型新增的驱动诊断、升降制动与回正状态；迁移与差异单独留证。':`原 ${record.identity.modelVersion} 模型未安装，不能精确重放。可显式按当前模型重算；执行前核对完整状态字段与碰撞几何签名，保留原参数并声明新增参数映射。轮速、气源、控制器和扰动相位保持。`):'原模型 '+record.identity.modelVersion+' 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。'};}const exact=record.identity.modelVersion===current.modelVersion&&record.identity.modelBuildId===current.modelBuildId;
   return{exact,recompute:true,reason:exact?'可按原始条件执行当前相同模型 / 构建':'原始模型 / 构建未安装；不能精确重放。可明确选择按当前模型重新计算，并保留来源身份'};
+}
+function canMigrateRecordedState(from,to){
+  return from==='3.8.0'&&['3.9.0','3.10.0','3.11.0'].includes(to)||from==='3.9.0'&&['3.10.0','3.11.0'].includes(to)||from==='3.10.0'&&to==='3.11.0';
 }
 export function prepareRecordedStateForCurrentModel(record,sim,{recompute=false}={}){
   const physical=clone(record.initialSnapshot.physical),current=currentExperimentIdentity(),source=record.identity;
   const compatibility={model:source.modelVersion===current.modelVersion&&source.modelBuildId===current.modelBuildId?'exact':'current-model-recompute',sourceIdentity:clone(source),executionIdentity:current,conditions:'original-complete-snapshot',migration:null};
   if(physical.modelVersion!==current.modelVersion){
-    if(!recompute||source.modelVersion!=='3.8.0'||current.modelVersion!=='3.9.0'||physical.schemaVersion!==1)throw Error('没有此历史模型的显式状态迁移器');
-    const template=sim.exportState(),added=['_driveAccounting','_verticalControl','_levelRecovery'];
+    if(!recompute||!canMigrateRecordedState(source.modelVersion,current.modelVersion)||physical.schemaVersion!==1)throw Error('没有此历史模型的显式状态迁移器');
+    const template=sim.exportState(),added=source.modelVersion==='3.8.0'?['_driveAccounting','_verticalControl','_levelRecovery']:[];
     if(physical.worldType!==template.worldType||physical.geometrySignature!==template.geometrySignature)throw Error('历史场景几何与当前模型不同；不能把不同碰撞世界标作同一原始条件');
+    const parameterMapping={};
+    // Older E/Q commands used an explicit 3 m/s² acceleration envelope. A new
+    // session's stronger default must not silently accelerate an old input log.
+    if(current.modelVersion==='3.11.0'&&'verticalAccelerationMps2' in template.params&&!('verticalAccelerationMps2' in physical.params)){physical.params.verticalAccelerationMps2=3;parameterMapping.verticalAccelerationMps2={value:3,meaning:'Historical E/Q acceleration envelope; not the stronger new-session default.'};}
     if(canonicalJSON(Object.keys(physical.params).sort())!==canonicalJSON(Object.keys(template.params).sort()))throw Error('历史参数契约不兼容，当前模型重算未开始');
-    const migrated=[];for(const key of added)if(!(key in physical.state)&&key in template.state){physical.state[key]=clone(template.state[key]);migrated.push('state.'+key);}
+    const migrated=[];for(const key of added)if(!(key in physical.state)&&key in template.state){physical.state[key]=clone(template.state[key]);if(key==='_verticalControl')physical.state[key].accelerationLimitMps2=3;migrated.push('state.'+key);}
     const unexpected=Object.keys(template.state).filter(key=>!(key in physical.state)&&!['_poseTakeoffOriginHeight','_poseTakeoffQuaternion'].includes(key));if(unexpected.length)throw Error('当前模型增加了尚未声明迁移的状态：'+unexpected.join(', '));
-    physical.modelVersion=current.modelVersion;compatibility.conditions='explicitly-migrated-historical-initial-state';compatibility.migration={from:'3.8.0',to:'3.9.0',addedDefaultState:migrated,defaultStateMeaning:'Current drive accounting, vertical braking/pilot-active control memory and level-recovery defaults. These control laws did not exist in 3.8; this is an explicit new-model condition mapping.',changed:['modelVersion'],preserved:'All historical parameters (including climbRateMps), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.',limitation:'The 3.8 solver is not executed. Current dynamics and controllers recalculate from the explicitly migrated initial state.'};
+    physical.modelVersion=current.modelVersion;compatibility.conditions='explicitly-migrated-historical-initial-state';compatibility.migration={from:source.modelVersion,to:current.modelVersion,addedDefaultState:migrated,parameterMapping,defaultStateMeaning:added.length?'Current drive accounting, vertical braking/pilot-active control memory and level-recovery defaults. These control laws did not exist in 3.8; this is an explicit new-model condition mapping.':'No default physical or controller state was added. Full historical state and collision signature must match the current contract.',changed:['modelVersion',...Object.keys(parameterMapping).map(key=>'params.'+key)],preserved:'All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.',limitation:'The '+source.modelVersion+' solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay.'};
   }
   return{physical,compatibility};
 }

@@ -12,6 +12,7 @@ import {buildingMassing,buildingStoreys} from './city-data.js';
 import {buildingExtras,CITY_STREETS} from './city-plan.js';
 import {architectureDetailLevel,createCityVisibility} from './city-render-budget.js';
 import {createCityExteriorMaterials} from './city-exterior-materials.js';
+import {streetFrontageDesign,buildStreetGroundOrder,buildStreetStoreyOrder} from './city-frontage-design.js';
 
 // The offline bounce-light baker imports this same palette. These are authored
 // sRGB material tints, not measurements of a real district or extracted assets.
@@ -140,9 +141,12 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   const palette=URBAN_MATERIAL_PALETTE;
   const accentColours=[0x78c4bd,0xd3a074,0xb7b597,0xb08e9d];
   let sector='';
-  function add(kind,geometry,size,position,rotation=[0,0,0],tint=white,variation=1,tile=-1){
+  function add(kind,geometry,size,position,rotation=[0,0,0],tint=white,variation=1,tile=-1,levelOverride=null){
     if(size.some(n=>!Number.isFinite(n)||n<=0))return;
-    const level=kind==='shutter'||kind==='litGlass'?'facade':architectureDetailLevel(kind,geometry,size),cellSize=level==='detail'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
+    // Mineral returns and tile trim share the 160 m facade-sector grid even
+    // when their visibility is detail-limited. Material keys remain separate;
+    // this avoids a new sparse batch for every small street-facing return.
+    const level=levelOverride||(kind==='shutter'||kind==='litGlass'?'facade':architectureDetailLevel(kind,geometry,size)),cellSize=level==='detail'&&kind!=='concrete'&&kind!=='ceramic'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
     const key=cell+'|'+kind+'|'+geometry+'|'+level;
     let batch=batches.get(key);if(!batch){batch={sector:cell,kind,geometry,level,instances:[]};batches.set(key,batch);}
     transform.position.set(...position);transform.rotation.set(...rotation,'YXZ');transform.scale.set(...size);transform.updateMatrix();
@@ -168,7 +172,8 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       const yaw=localYaw+frame.yaw,c=Math.cos(yaw),s=Math.sin(yaw),span=Math.abs(Math.cos(localYaw))>.5?w:d,depth=(Math.abs(Math.cos(localYaw))>.5?d:w)/2-.50;
       const point=(along,y,out)=>[b.x+frame.x+c*along+s*(depth+out),b.baseY+y,b.z+frame.z-s*along+c*(depth+out)];
       const put=(kind,size,along,y,out,tint=p.wall,variance=1,geometry='box',tile=-1,rotation=[0,0,0])=>add(kind,geometry,size,point(along,y,out),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile);
-      return {span,point,put};
+      const putDetail=(kind,size,along,y,out,tint=p.wall,variance=1)=>add(kind,'box',size,point(along,y,out),[0,yaw,0],tint,variance,-1,'detail');
+      return {span,point,put,putDetail};
     }
     function brace(f,a,c,width=.30){
       const aa=new THREE.Vector3(...f.point(...a)),bb=new THREE.Vector3(...f.point(...c)),delta=bb.clone().sub(aa);
@@ -217,29 +222,9 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       const frontage=routeFacingFacade(b,side),f=face(side*Math.PI/2,b.w,b.d),weaveFront=weaveStreet&&side===(b.x<-200?1:3),count=Math.max(1,Math.floor((f.span-.8)/(weaveFront?(weaveBand==='arrival'?8.0:6.4):b.archetype==='civic'?10.5:hero?5.3:8.8))),bay=(f.span-.8)/count;
       if(frontage){
         stats.routeFacingFrontages++;
-        const ceramic=frontage.family==='canal'?0x8d705d:frontage.family==='industrial'?0x5d7777:frontage.family==='civic'?0xb2a88e:weaveBand==='arrival'?0x809b93:weaveBand==='exchange'?0xa47d61:0x748b94;
-        // A substantial two-storey entrance order replaces the same narrow
-        // grid at every street face. All returns stay inside the massing box.
-        f.put('ceramic',[f.span-.12,1.40,.20],0,1.04,.35,ceramic,.96);
-        f.put('concrete',[f.span-.10,.34,.46],0,shopH+.08,.24,p.wall,plasterShade*.95);
-        for(const end of [-1,1]){
-          f.put('concrete',[.78,shopH+.62,.68],end*(f.span/2-.57),(shopH+.62)/2,.15,p.wall,plasterShade*1.04);
-          f.put('metal',[.045,shopH-.40,.09],end*(f.span/2-.84),shopH/2,.405,p.trim,.82);
-        }
-        const portal=Math.max(1.6,Math.min(3.3,bay-.52)),portalX=-f.span/2+.4+(.5+Math.floor(count/2))*bay;
-        for(const end of [-1,1])f.put('concrete',[.24,3.18,.64],portalX+end*(portal/2+.11),1.81,.14,p.wall,plasterShade*.93);
-        f.put('concrete',[portal+.46,.31,.64],portalX,3.37,.14,p.wall,plasterShade*.95);stats.facadePortals++;
-        f.put('metal',[portal+.14,.12,.24],portalX,3.11,.28,p.trim,.90);
-        f.put('lamp',[portal-.12,.035,.13],portalX,3.035,.39,0xffffff,.85);
-        lightAnchors.push({position:f.point(portalX,3.02,.68),target:f.point(portalX,.12,3.3),color:frontage.family==='industrial'?0xc9e0e5:0xf0c798,intensity:180,range:10,practical:true,role:'door',building:b.id});
-      }
-      if(weaveFront){
-        stats.curatedWeaveFrontages++;
-        // Coherent frontage datum, deep tiled entrance aprons and complete
-        // service bays replace the former identical small shop at every bay.
-        f.put('ceramic',[f.span-.15,1.12,.12],0,.89,.34,weaveBand==='arrival'?0x7c938f:weaveBand==='exchange'?0x9c7259:0x82949a,.91);
-        f.put('metal',[f.span-.15,.075,.22],0,1.48,.33,p.trim,.87);
-        f.put('ceramic',[f.span-.15,.46,.14],0,shopH-.62,.35,p.paint,.90);
+        if(weaveFront)stats.curatedWeaveFrontages++;
+        buildStreetGroundOrder(f,streetFrontageDesign(b,frontage),{shopH,side,building:b,stats,lights:lightAnchors});
+        continue;
       }
       // Ground-floor frames are thick enough to cast real street-level shadows.
       f.put('concrete',[f.span-.04,.6,.78],0,shopH-.30,-.02,p.wall,plasterShade);
@@ -309,6 +294,10 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       const baseDetailed=floor<(b.archetype==='civic'?4:hero?Math.min(floorCount,8):detail?2:0);
       for(let side=0;side<4;side++){
         const frontage=routeFacingFacade(b,side),detailed=baseDetailed||!!frontage&&floor<5,f=face(side*Math.PI/2,w,d),count=Math.max(1,Math.floor((f.span-.65)/(b.style===4?4.4:3.35))),bay=(f.span-.65)/count;
+        if(frontage){
+          buildStreetStoreyOrder(f,streetFrontageDesign(b,frontage),{bottom,centre,floorH,floor,stats});
+          continue;
+        }
         f.put('concrete',[f.span-.02,.49,.66],0,bottom+.34,-.03,p.wall,plasterShade);
         const structuralBelt=floor%3===2;
         if(frontage&&floor<5){

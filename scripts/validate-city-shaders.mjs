@@ -10,6 +10,9 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import * as THREE from '../dist/vendor/three.module.js';
 import {CSM} from '../dist/vendor/addons/csm/CSM.js';
 import {createIndirectLighting} from '../dist/indirect-lighting.js';
+import {createNightCityLighting} from '../dist/night-city-lighting.js';
+import {createNightDirectLighting} from '../dist/night-direct-lighting.js';
+import {injectReceiverPlaneShadows} from '../dist/receiver-plane-shadows.js';
 import {CITY_RENDER_PRESETS} from '../dist/city-render-budget.js';
 import {attachRoadSurface} from '../dist/road-surface-material.js';
 import {attachPavementSurface} from '../dist/pavement-surface-material.js';
@@ -19,14 +22,14 @@ import {createCityExteriorMaterials} from '../dist/city-exterior-materials.js';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const dist=new URL('../dist/',import.meta.url);
 let validator=process.env.GLSLANG_VALIDATOR||'glslangValidator';
-let reportPath=path.join(root,'qa/render-shaders-3.9.json');
+let reportPath=path.join(root,'qa/city-shaders-3.11.json');
 const args=process.argv.slice(2);
 for(let i=0;i<args.length;i++){
   if(args[i]==='--validatorPath')validator=args[++i];
   else if(args[i].startsWith('--validatorPath='))validator=args[i].slice(16);
   else if(args[i]==='--report')reportPath=path.resolve(args[++i]);
   else if(args[i]==='--help'){
-    console.log('Usage: node scripts/validate-city-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/render-shaders-3.9.json]\nRequires an existing glslangValidator; no compiler is downloaded or installed.');
+    console.log('Usage: node scripts/validate-city-shaders.mjs --validatorPath /path/to/glslangValidator [--report qa/city-shaders-3.11.json]\nRequires an existing glslangValidator; no compiler is downloaded or installed.');
     process.exit(0);
   }else throw Error('Unknown argument: '+args[i]);
 }
@@ -46,7 +49,7 @@ const sourceFiles=['scripts/validate-city-shaders.mjs','dist/vendor/three.module
   'dist/vendor/addons/csm/CSM.js','dist/vendor/addons/csm/CSMShader.js','dist/indirect-lighting.js',
   'dist/irradiance-math.js','dist/city-render-budget.js','dist/city-environment.js',
   'dist/local-probe-sun.js','dist/pavement-surface-material.js','dist/road-surface-material.js','dist/city-exterior-materials.js','dist/wind-laboratory.js',
-  'dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/visual-presets.js'];
+  'dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/visual-presets.js','dist/night-city-lighting.js','dist/city-night-transport.js','dist/night-direct-lighting.js','dist/night-direct-transport.js','dist/receiver-plane-shadows.js'];
 
 try{
   const version=await run(validator,['--version']);
@@ -78,6 +81,13 @@ try{
   const results=[],clean=s=>s.split(temporary+path.sep).join('');
   async function compile(name,shader,extra,coverage){
     const shaders=assemble(shader,extra),files=[];
+    const fragment=shaders.find(s=>s.stage==='frag').source;
+    if(fragment.includes('roadsterPlaneCompare')){
+      const count=varying=>(fragment.match(new RegExp('roadsterGetShadow\\([^\\n;]*'+varying+'\\[\\s*\\d+\\s*\\]','g'))||[]).length;
+      coverage.receiverPlaneCalls={directional:count('vDirectionalShadowCoord'),spot:count('vSpotLightCoord')};
+      if((extra.numSpotLightShadows||0)>0&&coverage.receiverPlaneCalls.spot<(extra.numSpotLightShadows||0))throw Error(name+': actual emitted spot shadow calls do not use receiver-plane correction');
+      if((extra.numDirLightShadows||0)>0&&coverage.receiverPlaneCalls.directional<(extra.numDirLightShadows||0))throw Error(name+': actual emitted directional shadow calls do not use receiver-plane correction');
+    }
     for(const stage of shaders){const file=path.join(temporary,name+'.'+stage.stage);files.push(file);await fs.writeFile(file,stage.source);}
     const raw=await run(validator,['-l',...files]);
     const item={name,coverage,status:raw.code===0?'exact-pass':'fail',exitCode:raw.code,
@@ -101,12 +111,14 @@ try{
     return{ok:true,json:async()=>JSON.parse(bytes.toString('utf8')),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};
   }});
   await gi.ready;
+  const nightGI=createNightCityLighting({fetchAsset:async url=>{const bytes=await fs.readFile(url);return {ok:true,json:async()=>JSON.parse(bytes.toString('utf8')),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};}});await nightGI.ready;
+  const nightDirect=createNightDirectLighting({fetchAsset:async url=>{const bytes=await fs.readFile(url);return {ok:true,json:async()=>JSON.parse(bytes.toString('utf8')),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};}});await nightDirect.ready;
   const probeSun=createLocalProbeSun(new THREE.Scene(),{}),exterior=createCityExteriorMaterials(THREE);
   const dummyTextures={albedo:new THREE.Texture(),normal:new THREE.Texture(),roughness:new THREE.Texture()};
   for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const night of [false,true])for(const kind of ['standard','physical','asphalt','pavement','exterior-concrete','exterior-glass','exterior-enamel']){
-    if(night&&!['standard','physical','asphalt','pavement'].includes(kind))continue;
+    // Exterior/night material variants are required by the stationary field.
     const physical=kind==='physical',spots=night?({balanced:3,high:5,ultra:6}[quality]):0;
-    gi.setEnabled(!night);
+    gi.setEnabled(!night);nightGI.setEnabled(night);nightGI.setQuality(quality);
     const profile=CITY_RENDER_PRESETS[quality],count=profile.shadowCascades;
     const csm=new CSM({camera:new THREE.PerspectiveCamera(52,16/9,.1,1800),parent:new THREE.Scene(),
       cascades:count,maxFar:profile.shadowFar,shadowMapSize:profile.shadowSize});
@@ -118,13 +130,13 @@ try{
       const surfaceCompile=material.onBeforeCompile;
       csm.fade=true;csm.setupMaterial(material);gi.setQuality(quality,profile);
       const shader={vertexShader:THREE.ShaderLib.physical.vertexShader,fragmentShader:THREE.ShaderLib.physical.fragmentShader,uniforms:{}};
-      surfaceCompile.call(material,shader);material.onBeforeCompile(shader);gi.inject(shader);probeSun.inject(shader);
+      surfaceCompile.call(material,shader);material.onBeforeCompile(shader);gi.inject(shader);nightGI.inject(shader);probeSun.inject(shader);if(!physical)nightDirect.inject(shader);injectReceiverPlaneShadows(shader);
       // CSM mutates the original module's ShaderChunk object. The temporary
       // emitter owns a separate object and must receive those actual mutations.
       Object.assign(emittedTHREE.ShaderChunk,THREE.ShaderChunk);
       const name=quality+'-'+(night?'wet-night-':'clear-day-')+(instanced?'instanced':'single')+'-'+kind;
       const defines={...material.defines};if(physical)defines.PHYSICAL='';
-      const coverage={quality,weather:night?'wet-night':'clear-day',cascades:count,giEvaluation:night?'disabled (daytime bake excluded)':profile.giMode,spotLights:spots,spotShadows:spots,instanced,
+      const coverage={quality,weather:night?'wet-night':'clear-day',cascades:count,giEvaluation:night?'stationary fixture bounce / six-direction 3D field (daytime bake excluded)':profile.giMode,nightFieldReads:night?nightGI.stats.runtimeTextureReadsPerFragment:0,spotLights:spots,spotShadows:spots,instanced,
         material:physical?'Physical with clearcoat, albedo, normal and roughness maps':kind,
         shadowMap:'PCF soft main view; dedicated local sun depth branch in cube capture',environment:'CubeUV IBL',fade:true};
       await compile(name,{...shader,defines},{shaderType:physical?'MeshPhysicalMaterial':'MeshStandardMaterial',shaderName:name,
@@ -149,6 +161,19 @@ try{
       clearcoat:physical,opaque:true,map:true,mapUv:'uv',roughnessMap:false,
     },{context:'windlab',cityCSM:false,cityGI:false,globalCityShaderChunksStillPresent:true,
       lights:'One shadowed key, one unshadowed fill, hemisphere',environment:'Static indoor CubeUV PMREM'});
+  }
+  // The inspection page has no city material injector. Exercise the actual
+  // standalone correction used by body/clearcoat and the diffuse isolation.
+  for(const kind of ['standard','physical','lambert']){
+    const physical=kind==='physical',base=kind==='lambert'?THREE.ShaderLib.lambert:THREE.ShaderLib.physical,
+      shader={vertexShader:base.vertexShader,fragmentShader:base.fragmentShader,uniforms:{},defines:physical?{PHYSICAL:''}:{}};
+    injectReceiverPlaneShadows(shader);
+    await compile('inspection-'+kind+'-receiver-plane',shader,{
+      shaderType:kind==='lambert'?'MeshLambertMaterial':physical?'MeshPhysicalMaterial':'MeshStandardMaterial',shaderName:'InspectionReceiverPlane',
+      shadowMapEnabled:true,shadowMapType:THREE.PCFSoftShadowMap,numDirLights:2,numDirLightShadows:1,numHemiLights:1,
+      envMap:kind!=='lambert',envMapMode:THREE.CubeUVReflectionMapping,envMapCubeUVHeight:512,combine:THREE.MultiplyOperation,
+      clearcoat:physical,opaque:true,doubleSided:kind==='lambert'
+    },{context:'vehicle-inspection',cityCSM:false,cityGI:false,material:kind,standaloneReceiverPlaneCorrection:true});
   }
   const depthShader=THREE.ShaderLib.depth;
   await compile('probe-packed-depth-opaque',{...depthShader,defines:{}},{shaderType:'MeshDepthMaterial',shaderName:'ProbeSunDepth',

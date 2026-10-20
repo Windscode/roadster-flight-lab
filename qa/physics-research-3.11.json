@@ -1,0 +1,546 @@
+{
+  "modelVersion": "3.11.0",
+  "generatedAt": "2026-10-20T03:13:54.314Z",
+  "status": "passed",
+  "checks": 7,
+  "sourceSha256": {
+    "dist/physics.js": "4b184524ce21e60cd1d8ec31252ded2ba668234bedc89b9568261a83df95067b",
+    "dist/vehicle-models.js": "20f0e89bc99ba8d4372d8dec3222eee1267f809b226798ef311f4d50ae0985fb",
+    "dist/tire-dynamics.js": "7ffbafa4bb7d4ab89fffd7b66c7b9e448c7e0cf02610c7def9d5ee3118000c93",
+    "dist/simulation-snapshot.js": "e3a5ea6a8e5d0b298843a8d3200ce3bf4a11596dfe8c993af386dcc4da6e379f",
+    "dist/control-observation.js": "8920e824d32dbece63aade3f0ab4da5c294225aa46419d6e556e603f2ed75cc8"
+  },
+  "acceptance": [
+    {
+      "name": "Complete snapshots restore ground contact, active flight/valves, delayed seeded observation and maneuver continuation; invalid/version-mixed imports are atomic",
+      "status": "PASS"
+    },
+    {
+      "name": "A fixed-step observation/input/reference sequence is bitwise repeatable at 60/120/240 display Hz, and failed substeps remain observable",
+      "status": "PASS"
+    },
+    {
+      "name": "Independent tire/wheel integration dissipates slip and brake energy, obeys combined friction and settles forward/reverse low-speed contact",
+      "status": "PASS"
+    },
+    {
+      "name": "Dry/wet/split-mu braking and launch pairs show actual lock/spin without assists and measured slip regulation with ABS/TCS, without guaranteeing shorter stops",
+      "status": "PASS"
+    },
+    {
+      "name": "The physical road integration converges at 60/120/240 Hz and preserves steering/contact transitions instead of changing the display rate",
+      "status": "PASS"
+    },
+    {
+      "name": "The finite-rate wing actuator generates no zero-q force and fixed/active choices change drag and rear wheel load in the physical state",
+      "status": "PASS"
+    },
+    {
+      "name": "Seeded delay/noise changes the actual feedback solution, nozzle derating changes allocation, and onboard/external gas accounting stays distinct",
+      "status": "PASS"
+    }
+  ],
+  "evidence": {
+    "snapshotCases": [
+      {
+        "world": "windlab",
+        "maneuver": null,
+        "initialSimTime": 2.2999999999999945,
+        "initialPhase": 0,
+        "historySamples": 0,
+        "maxPositionDifferenceM": 0,
+        "comparedPhysicalSteps": 180
+      },
+      {
+        "world": "city",
+        "maneuver": null,
+        "initialSimTime": 0.05833333333333333,
+        "initialPhase": 0.004166666666666676,
+        "historySamples": 6,
+        "maxPositionDifferenceM": 0,
+        "comparedPhysicalSteps": 180
+      },
+      {
+        "world": "city",
+        "maneuver": "roll",
+        "initialSimTime": 1.0999999999999985,
+        "initialPhase": 0,
+        "historySamples": 0,
+        "maxPositionDifferenceM": 0,
+        "comparedPhysicalSteps": 180
+      },
+      {
+        "world": "city",
+        "maneuver": null,
+        "initialSimTime": 0.008333333333333333,
+        "initialPhase": 0,
+        "historySamples": 0,
+        "maxPositionDifferenceM": 0,
+        "comparedPhysicalSteps": 180
+      }
+    ],
+    "displayRateRepeatability": {
+      "displayHz": [
+        60,
+        120,
+        240
+      ],
+      "fixedSteps": 360,
+      "samples20Hz": 60,
+      "bitwiseEqual": true,
+      "failureCallbackObserved": true
+    },
+    "wheelEnergy": [
+      {
+        "hz": 60,
+        "direction": -1,
+        "maxEnergyGainJ": 0,
+        "finalSpeedMps": -1.970926752539627e-8,
+        "finalOmegaRadS": 0,
+        "maxGrip": 0.9725418090820312
+      },
+      {
+        "hz": 60,
+        "direction": 1,
+        "maxEnergyGainJ": 0,
+        "finalSpeedMps": 1.970926752539627e-8,
+        "finalOmegaRadS": 0,
+        "maxGrip": 0.9725418090820312
+      },
+      {
+        "hz": 120,
+        "direction": -1,
+        "maxEnergyGainJ": 6.864162598290857e-14,
+        "finalSpeedMps": -1.9709267457286536e-8,
+        "finalOmegaRadS": 0,
+        "maxGrip": 0.9816093444824218
+      },
+      {
+        "hz": 120,
+        "direction": 1,
+        "maxEnergyGainJ": 6.864162598290857e-14,
+        "finalSpeedMps": 1.9709267457286536e-8,
+        "finalOmegaRadS": 0,
+        "maxGrip": 0.9816093444824218
+      },
+      {
+        "hz": 240,
+        "direction": -1,
+        "maxEnergyGainJ": 1.5805633441633534e-13,
+        "finalSpeedMps": 1.0596378637468015e-8,
+        "finalOmegaRadS": 0,
+        "maxGrip": 0.9844729105631511
+      },
+      {
+        "hz": 240,
+        "direction": 1,
+        "maxEnergyGainJ": 1.5805633441633534e-13,
+        "finalSpeedMps": -1.0596378637468015e-8,
+        "finalOmegaRadS": 0,
+        "maxGrip": 0.9844729105631511
+      }
+    ],
+    "freeWheel": {
+      "initialOmegaRadS": 50,
+      "airborneCoastSeconds": 0.4,
+      "brakeSeconds": 0.2,
+      "bodySpeedDidNotDefineWheelSpin": true
+    },
+    "roadComparison": [
+      {
+        "surface": "dry",
+        "assistance": false,
+        "trial": "80kmh-service-brake",
+        "distanceM": 25.236945611251127,
+        "elapsedS": 2.283333333333333,
+        "finalSpeedKmh": 0.17297286145698074,
+        "meanAbsoluteSlip": 0.9851779562940743,
+        "peakSlip": 1,
+        "lockedWheelSamples": 924,
+        "regulatedWheelSamples": 0,
+        "regulatedWheelSamplesAbove3Mps": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 0,
+        "peakYawRateRadS": 0,
+        "maxGrip": 0.9811195373535156
+      },
+      {
+        "surface": "dry",
+        "assistance": true,
+        "trial": "80kmh-service-brake",
+        "distanceM": 25.140625832884815,
+        "elapsedS": 2.1083333333333334,
+        "finalSpeedKmh": 0.2569880197266161,
+        "meanAbsoluteSlip": 0.11842521493759264,
+        "peakSlip": 0.5543118673182669,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 952,
+        "regulatedWheelSamplesAbove3Mps": 880,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 0,
+        "peakYawRateRadS": 0,
+        "maxGrip": 0.9837287902832028
+      },
+      {
+        "surface": "dry",
+        "assistance": false,
+        "trial": "full-throttle-3s",
+        "distanceM": 31.46091458357498,
+        "elapsedS": 3,
+        "finalSpeedKmh": 75.2317165657429,
+        "meanAbsoluteSlip": 0.3795011001503768,
+        "peakSlip": 0.9328133429886738,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 0,
+        "regulatedWheelSamplesAbove3Mps": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 9.094947017729282e-13,
+        "peakYawRateRadS": 0,
+        "maxGrip": 0.9686073303222658
+      },
+      {
+        "surface": "dry",
+        "assistance": true,
+        "trial": "full-throttle-3s",
+        "distanceM": 47.067421822504514,
+        "elapsedS": 3,
+        "finalSpeedKmh": 110.95085334537734,
+        "meanAbsoluteSlip": 0.08305147844178422,
+        "peakSlip": 0.12822527460915892,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 12,
+        "regulatedWheelSamplesAbove3Mps": 0,
+        "minimumTcsFactor": 0.986833194470078,
+        "minimumCorneringDriveScale": 0.9577627427547323,
+        "peakDriveRequestReductionNm": 387.76125486424644,
+        "peakYawRateRadS": 0,
+        "maxGrip": 0.9687782287597654
+      },
+      {
+        "surface": "wet",
+        "assistance": false,
+        "trial": "80kmh-service-brake",
+        "distanceM": 48.27078273804509,
+        "elapsedS": 4.358333333333333,
+        "finalSpeedKmh": 0.2586344342986978,
+        "meanAbsoluteSlip": 0.9955388480077736,
+        "peakSlip": 1,
+        "lockedWheelSamples": 1804,
+        "regulatedWheelSamples": 0,
+        "regulatedWheelSamplesAbove3Mps": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 0,
+        "peakYawRateRadS": 0,
+        "maxGrip": 0.9840263366699219
+      },
+      {
+        "surface": "wet",
+        "assistance": true,
+        "trial": "80kmh-service-brake",
+        "distanceM": 42.912682722444984,
+        "elapsedS": 3.7416666666666667,
+        "finalSpeedKmh": 0.26552673955878947,
+        "meanAbsoluteSlip": 0.1393731808120156,
+        "peakSlip": 0.8508017367733302,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 1692,
+        "regulatedWheelSamplesAbove3Mps": 1552,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 0,
+        "peakYawRateRadS": 0,
+        "maxGrip": 0.9824424743652342
+      },
+      {
+        "surface": "wet",
+        "assistance": false,
+        "trial": "full-throttle-3s",
+        "distanceM": 19.799482779116367,
+        "elapsedS": 3,
+        "finalSpeedKmh": 45.60729182398623,
+        "meanAbsoluteSlip": 0.46746235022939964,
+        "peakSlip": 0.9562683645093503,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 0,
+        "regulatedWheelSamplesAbove3Mps": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 1.8189894035458565e-12,
+        "peakYawRateRadS": 0,
+        "maxGrip": 0.9567314147949219
+      },
+      {
+        "surface": "wet",
+        "assistance": true,
+        "trial": "full-throttle-3s",
+        "distanceM": 27.30883558224391,
+        "elapsedS": 3,
+        "finalSpeedKmh": 65.16336562321759,
+        "meanAbsoluteSlip": 0.12490495455655314,
+        "peakSlip": 0.1294156512796087,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 1440,
+        "regulatedWheelSamplesAbove3Mps": 1200,
+        "minimumTcsFactor": 0.9893416894884496,
+        "minimumCorneringDriveScale": 0.5840965254535114,
+        "peakDriveRequestReductionNm": 3726.4277625159057,
+        "peakYawRateRadS": 0,
+        "maxGrip": 0.9638633728027343
+      },
+      {
+        "surface": "split",
+        "assistance": false,
+        "trial": "80kmh-service-brake",
+        "distanceM": 30.33053639888716,
+        "elapsedS": 2.566666666666667,
+        "finalSpeedKmh": 0.2393979649940859,
+        "meanAbsoluteSlip": 0.9897730109918567,
+        "peakSlip": 1,
+        "lockedWheelSamples": 1070,
+        "regulatedWheelSamples": 0,
+        "regulatedWheelSamplesAbove3Mps": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 0,
+        "peakYawRateRadS": 0.15862469402802018,
+        "maxGrip": 1.0000000000000002
+      },
+      {
+        "surface": "split",
+        "assistance": true,
+        "trial": "80kmh-service-brake",
+        "distanceM": 31.02915307705559,
+        "elapsedS": 2.5083333333333333,
+        "finalSpeedKmh": 0.2486079687753904,
+        "meanAbsoluteSlip": 0.11386510889244338,
+        "peakSlip": 0.8464530572777076,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 1146,
+        "regulatedWheelSamplesAbove3Mps": 1070,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 0,
+        "peakYawRateRadS": 0.2999712573346461,
+        "maxGrip": 0.9999999530808366
+      },
+      {
+        "surface": "split",
+        "assistance": false,
+        "trial": "full-throttle-3s",
+        "distanceM": 20.89252213106531,
+        "elapsedS": 3,
+        "finalSpeedKmh": 46.89379741624372,
+        "meanAbsoluteSlip": 0.24555127544628308,
+        "peakSlip": 0.9552939901595202,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 0,
+        "regulatedWheelSamplesAbove3Mps": 0,
+        "minimumTcsFactor": 1,
+        "minimumCorneringDriveScale": 1,
+        "peakDriveRequestReductionNm": 9.094947017729282e-13,
+        "peakYawRateRadS": 0.035243001236693855,
+        "maxGrip": 0.9850156105918545
+      },
+      {
+        "surface": "split",
+        "assistance": true,
+        "trial": "full-throttle-3s",
+        "distanceM": 27.381605338649123,
+        "elapsedS": 3,
+        "finalSpeedKmh": 65.32378231271589,
+        "meanAbsoluteSlip": 0.08067779076336895,
+        "peakSlip": 0.12942129977394154,
+        "lockedWheelSamples": 0,
+        "regulatedWheelSamples": 1440,
+        "regulatedWheelSamplesAbove3Mps": 1200,
+        "minimumTcsFactor": 0.9894841541431427,
+        "minimumCorneringDriveScale": 0.5840946594704766,
+        "peakDriveRequestReductionNm": 3708.217366160763,
+        "peakYawRateRadS": 0.000726211454960794,
+        "maxGrip": 0.963860341948886
+      }
+    ],
+    "physicalStepConvergence": {
+      "rows": [
+        {
+          "hz": 60,
+          "distanceM": 33.669695085547325,
+          "speedMps": 10.720096138203067,
+          "wheelOmegaRadS": [
+            24.8993125790185,
+            24.8993125790185,
+            24.96060648571923,
+            24.96060648571923
+          ],
+          "pitchDeg": -0.9158766952221834
+        },
+        {
+          "hz": 120,
+          "distanceM": 33.714537329943425,
+          "speedMps": 10.71761837697941,
+          "wheelOmegaRadS": [
+            24.904192889616144,
+            24.904192889616144,
+            24.929453211079245,
+            24.929453211079245
+          ],
+          "pitchDeg": -0.9160778087059106
+        },
+        {
+          "hz": 240,
+          "distanceM": 33.73796931437083,
+          "speedMps": 10.716926081225742,
+          "wheelOmegaRadS": [
+            24.90737129171257,
+            24.90737129171257,
+            24.916133425269404,
+            24.916133425269404
+          ],
+          "pitchDeg": -0.9161733215825825
+        }
+      ],
+      "coarseDistanceDifferenceM": 0.04484224439610074,
+      "fineDistanceDifferenceM": 0.023431984427404018,
+      "method": "Cannon chassis first-order translation + implicit substepped wheel contact; this is physical dt, not display FPS"
+    },
+    "wing": {
+      "fixedComparison": [
+        {
+          "deployment": 0,
+          "speedKmh": 104.89458469483813,
+          "wing": {
+            "deployment": 0,
+            "command": 0,
+            "dragN": 0,
+            "downforceN": 0,
+            "dynamicPressurePa": 520.3474885723613,
+            "forceBody": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "position": {
+              "x": 0,
+              "y": 0.325,
+              "z": -2.065
+            },
+            "incidenceRad": 0,
+            "applicationPoint": {
+              "x": 0,
+              "y": 0.325,
+              "z": -2.015
+            },
+            "mode": "fixed",
+            "actuatorRatePerS": 1.5
+          },
+          "wheelLoadsN": [
+            5614.970271761099,
+            5614.970271761099,
+            5174.943868135908,
+            5174.943868135908
+          ],
+          "totalWheelLoadN": 21579.828279794012
+        },
+        {
+          "deployment": 1,
+          "speedKmh": 104.71014845495239,
+          "wing": {
+            "deployment": 1,
+            "command": 1,
+            "dragN": 147.78436642767784,
+            "downforceN": 216.7504040939275,
+            "dynamicPressurePa": 518.5416365883433,
+            "forceBody": {
+              "x": 0,
+              "y": -216.7504040939275,
+              "z": -147.78436642767784
+            },
+            "position": {
+              "x": 0,
+              "y": 0.625,
+              "z": -2.065
+            },
+            "incidenceRad": -0.25,
+            "applicationPoint": {
+              "x": 0,
+              "y": 0.6373701979627262,
+              "z": -2.0165543789144675
+            },
+            "mode": "fixed",
+            "actuatorRatePerS": 1.5
+          },
+          "wheelLoadsN": [
+            5572.439194537044,
+            5572.439194537044,
+            5324.994785603005,
+            5324.994785603005
+          ],
+          "totalWheelLoadN": 21794.8679602801
+        }
+      ],
+      "activeDeploymentAfterPoint2Seconds": 0.3000000000000001,
+      "zeroDynamicPressureForcesN": [
+        0,
+        0
+      ]
+    },
+    "observation": {
+      "seeds": [
+        77,
+        77,
+        78
+      ],
+      "sameSeedBitwiseEqual": true,
+      "differentSeedChangesRealActuatorCommand": true,
+      "noiseDistribution": "independent bounded uniform per axis, not Gaussian",
+      "delayMs": 35,
+      "idealChannels": "wheel speed and contact switches",
+      "nozzleFault": {
+        "id": "lift-FR",
+        "scale": 0.6
+      },
+      "preflightUsesKnownFaultAvailability": {
+        "ratedLiftN": 9000,
+        "healthyAccepted": true,
+        "oneFailedRejected": true
+      }
+    }
+  },
+  "regressionFixtureChanges": [
+    {
+      "test": "tests/physics-research-3.8.test.mjs",
+      "change": "Control-intervention counts cover every actual contact sample; slip-ratio statistics and a separate intervention count above 3 m/s retain the existing speed filter. The assisted launch must reduce the actual motor request, while combined friction, measured stop, wheel lock and slip-reduction assertions remain.",
+      "reason": "The 3.11 dry launch regulates below 3 m/s and has no later >3 m/s active-flag sample. A slip-statistics speed gate must not erase earlier physical TCS intervention."
+    },
+    {
+      "test": "tests/handling-controls.test.mjs",
+      "change": "The former exact load-proportional EBD-force assertion is replaced by total axle brake-request balance, delivered brake torque bounded by demand, independent finite wheel speed and the unchanged friction/yaw/contact/stop requirements.",
+      "reason": "Independent rotating wheels and ABS pressure modulation intentionally supersede ideal longitudinal force assignment."
+    },
+    {
+      "tests": [
+        "tests/braking.test.mjs",
+        "tests/handling-controls.test.mjs",
+        "tests/research-dynamics.test.mjs",
+        "tests/flight-controls-3.7.test.mjs"
+      ],
+      "change": "Authored initial road speeds now initialize omega=v/r for all wheels. Waterfront approach/stop observation is12s instead of9s with unchanged marker, controls, collision and complete-stop assertions.",
+      "reason": "A stationary wheel on a vehicle initialized at300km/h is a locked-slide initial condition. Finite brake/wheel transients require a stopping interval after the approach marker."
+    }
+  ],
+  "assumptions": [
+    "Four independent lumped spin inertias; brush/sliding longitudinal law with regularized slip and a combined friction circle. Existing tire lateral relaxation and suspension contact remain.",
+    "ABS/TCS are finite-rate pressure/torque modulation from slip, with ideal wheel-speed sensing. No universal stopping-distance improvement is asserted.",
+    "Relative wheel spin acceleration reacts on the chassis. Steering-axis gyroscopic cross terms, full driveline dynamics, tire carcass thermodynamics and multi-body suspension are outside scope.",
+    "Wing area .38 m², Cd .75, downforce coefficient1.1, moving wing-origin[0,.325+.30u,-2.065]m, incidence-.25u rad, a point.05m forward on the wing and1.5/s travel rate are engineering assumptions, not Tesla calibration.",
+    "Delay/noise acts on flight position, velocity, attitude and angular-rate feedback. Wind is analytic; no CFD."
+  ],
+  "limits": [
+    "These are numerical tests, not physical Tesla validation, GPU rendering or browser FPS measurements.",
+    "JSON exact replay is supported only for the same model version and static world geometry; the recording layer must additionally enforce build/protocol identity."
+  ]
+}

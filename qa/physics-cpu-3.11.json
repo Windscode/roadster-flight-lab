@@ -1,0 +1,94 @@
+{
+  "status": "passed",
+  "referenceCommit": "4a5cae1",
+  "runtime": "v24.19.0",
+  "physicsHz": 120,
+  "checks": [
+    "Native sparse contact history retains symmetric get/set/reset semantics and is the production default",
+    "Actual-city AABB candidates, ordering, closest rays and collision pairs match both old grid and full reference scan",
+    "Cached dynamic body membership handles add/remove, movement, explicit static/type invalidation and query counter rollover",
+    "Dense/sparse worlds have identical contact equations, matrix history, begin/end/collide events and trajectories through separation and dynamic add/remove",
+    "Old-grid/dense and optimized/sparse Roadster trajectories match exactly for tires, ceiling adhesion, six-DOF hold and hull contacts",
+    "Warm-up CPU benchmark records relative cost with unchanged physical rate, collider set and numerical output"
+  ],
+  "cityBodies": 2113,
+  "densePairsPerMatrix": 2231328,
+  "cityQueries": {
+    "aabb": 240,
+    "rays": 240,
+    "rayHits": 240,
+    "collisionPoses": 24,
+    "reference": "Frozen 3.4 grid and independent Cannon NaiveBroadphase"
+  },
+  "contactEvents": {
+    "steps": 480,
+    "contactFrames": 339,
+    "events": 29,
+    "exactContactEquationAgreement": true,
+    "exactBeginEndCollideAgreement": true
+  },
+  "trajectoryEquivalence": [
+    {
+      "scenario": "ground-driving-and-braking",
+      "fixedSteps": 240,
+      "contactFrames": 0,
+      "maximumStateDifference": 0,
+      "entireTelemetryExact": true
+    },
+    {
+      "scenario": "inverted-ceiling-adhesion",
+      "fixedSteps": 150,
+      "contactFrames": 0,
+      "maximumStateDifference": 0,
+      "entireTelemetryExact": true
+    },
+    {
+      "scenario": "captured-pose-and-position",
+      "fixedSteps": 240,
+      "contactFrames": 0,
+      "maximumStateDifference": 0,
+      "entireTelemetryExact": true
+    },
+    {
+      "scenario": "hull-ground-contact",
+      "fixedSteps": 120,
+      "contactFrames": 120,
+      "maximumStateDifference": 0,
+      "entireTelemetryExact": true
+    }
+  ],
+  "benchmark": {
+    "scope": "Node CPU only; 60 warm-up frames followed by 180 timed 60 Hz frames, two unchanged 120 Hz physics steps per frame. Alternating execution order; same process and input. Shared-machine timing is comparative and is not browser FPS.",
+    "legacy": {
+      "frames": 180,
+      "medianMs": 2.5644029999998565,
+      "p95Ms": 3.165046000000075,
+      "meanMs": 2.6251175999999963,
+      "matrixMs": 302.34287100000256,
+      "rayBroadphaseMs": 23.24184899997681,
+      "totalMs": 472.5211679999993,
+      "matrixShare": 0.6398504267643794,
+      "rayBroadphaseShare": 0.04918689483976058
+    },
+    "optimized": {
+      "frames": 180,
+      "medianMs": 0.8400959999999031,
+      "p95Ms": 1.5764639999997598,
+      "meanMs": 0.9789073611110931,
+      "matrixMs": 0.3861570000044594,
+      "rayBroadphaseMs": 13.625339999991866,
+      "totalMs": 176.20332499999677,
+      "matrixShare": 0.002191542072230853,
+      "rayBroadphaseShare": 0.07732737165993954
+    },
+    "medianReduction": 0.6724009447813194,
+    "p95Reduction": 0.5019143481643797,
+    "densePairSlotsClearedPerSecond": 267759360,
+    "optimizedContactEntriesAtEnd": 0
+  },
+  "sourceHashes": {
+    "dist/physics.js": "4b184524ce21e60cd1d8ec31252ded2ba668234bedc89b9568261a83df95067b",
+    "dist/static-city-broadphase.js": "02e290e83ffd4d341211b75a70f2408010006001fb600a2d0a279fb8d8c45a14",
+    "dist/vendor/cannon-es.js": "f0700cbd3a482954949b9d58c1b0f76dcc74767750297647a39d8c40dd63d37c"
+  }
+}

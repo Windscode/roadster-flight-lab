@@ -1,0 +1,125 @@
+{
+  "status": "passed",
+  "checks": 14,
+  "modelVersion": "3.10.0",
+  "scope": "Actual fixed-step physical snapshot/input replay, seeded measurements, controller A/B, historical metadata and bounded persistence. No browser GPU/pixel/FPS acceptance.",
+  "sourceHashes": {
+    "dist/experiment-records.js": "3f2c7d4347bf0377ca8dc0b8d56e0d51abea5a3ca194845889f30743d91dfb2c",
+    "dist/experiment-console.js": "75c883e65c7b0c531557f970d487ddfc043ad7754692bd137cb97880f2b8e4f8",
+    "dist/experiment-replay-worker.js": "8bed7be5c1a0ea4fefab0a9c0c967af0ffde054314a01702857b59064e395262",
+    "dist/flight-programs.js": "8da398cf6333c6f0be073705434704a245ec5963cfb6eb759da756b3f330ba96",
+    "dist/research-console.js": "ff976e05a8d4d9cc08d1029329327ec40ceb34c8e8ffa697b810cda204103cf1",
+    "dist/research-lab.js": "060a183e0574ce56d75b64cf7c5ab4abac8998552c1707767e737ccdc6df6bfc",
+    "dist/physics.js": "2124f9d40a0cfcc7b6cad1b019ba6959235a77edf8ff1b8b3f3d2283496cd8de",
+    "dist/simulation-snapshot.js": "45566a5605c8e48a72e7a0e4c515e3b3cdb0660ab8bc5df84b730a5d80cd8a40",
+    "dist/control-observation.js": "8920e824d32dbece63aade3f0ab4da5c294225aa46419d6e556e603f2ed75cc8",
+    "dist/tire-dynamics.js": "026425f3aedd162637bfa184cd279424f4a7604ee27db398bebd8834aca4dccd"
+  },
+  "evidence": [
+    {
+      "name": "Presentation captures initial and final weather / camera without changing physical identity or numerical A/B conditions",
+      "status": "PASS",
+      "samePhysicalLabel": "fnv1a32-7844e12d",
+      "initialWeather": "clear-day",
+      "finalWeather": "wet-night"
+    },
+    {
+      "name": "Complete live snapshot and command journal continue bitwise-identically with actual seeded delayed observation, inherited wind phase, nozzle fault and wing commands",
+      "status": "PASS",
+      "steps": 720,
+      "initialSimTime": 5.308333333333387,
+      "stateLabel": "fnv1a32-0d8d47a4"
+    },
+    {
+      "name": "30 / 60 / 120 display-frame grouping yields identical physical responses, exact input journals and raw statistics",
+      "status": "PASS",
+      "groups": [
+        30,
+        60,
+        120
+      ],
+      "position": {
+        "x": 4.389712050074794,
+        "y": 0.5970092408829918,
+        "z": 27.120404884685218
+      }
+    },
+    {
+      "name": "Driving record replays at the fixed solver step and captures raw wheel speed, slip and separate applied inputs",
+      "status": "PASS",
+      "rawSamples": 121,
+      "inputRuns": 5
+    },
+    {
+      "name": "Display decimation never changes physical snapshots, command inputs, peaks, integrals or statistic source",
+      "status": "PASS",
+      "raw": 121,
+      "stored": 31,
+      "sampling": {
+        "source": "simulation time",
+        "rawHz": 20,
+        "rawCount": 121,
+        "storedCount": 31,
+        "decimated": true,
+        "uniform": true,
+        "storedIntervalS": 0.2,
+        "minIntervalS": 0.1999999999999993,
+        "maxIntervalS": 0.20000000000000018,
+        "note": "展示曲线已经抽稀；请使用每行 timeS。汇总量保留原始固定步统计，不由此曲线重算。"
+      }
+    },
+    {
+      "name": "Historical model/build identities are preserved: exact replay refuses wrong build, explicit same-schema current-build recompute is labelled",
+      "status": "PASS",
+      "sourceBuild": "historical-build",
+      "execution": "current-model-recompute"
+    },
+    {
+      "name": "Fair controller A/B imports the same full initial conditions and seed, changing only declared gains",
+      "status": "PASS",
+      "changed": [
+        "positionGain",
+        "velocityGain"
+      ],
+      "A": 0.014904682844020026,
+      "B": 0.014845949046500257
+    },
+    {
+      "name": "A/B rejects undeclared factors and in-run changes that would overwrite the compared constant controller gain",
+      "status": "PASS"
+    },
+    {
+      "name": "Cancelled numerical execution retains identity, source, actual completed duration and partial measured statistics",
+      "status": "cancelled",
+      "completedSteps": 120,
+      "requestedSteps": 720,
+      "pairCancelHasIdentity": true,
+      "baselineFailureCannotSucceed": true
+    },
+    {
+      "name": "Physical solver faults and rejected API interventions remain recorded, not reported as successful completion",
+      "status": "PASS"
+    },
+    {
+      "name": "Program automation is captured as actual commands / fixed inputs; pilot takeover finishes the auto record with a cancellation outcome",
+      "status": "cancelled",
+      "recordedSteps": 120
+    },
+    {
+      "name": "Bounded persistence refuses silent eviction, keeps exact replay conditions after refresh, and protects corrupt old archives",
+      "status": "PASS",
+      "maxRecords": 32,
+      "storageMiB": 4
+    },
+    {
+      "name": "Imported replay validates finite state, command allowlist and exact step totals without executing content",
+      "status": "PASS"
+    },
+    {
+      "name": "Program compressed CSV and standard historical CSV identify the stored report and truthful sample interval",
+      "status": "PASS",
+      "compressedSamples": 135,
+      "standardRows": 200
+    }
+  ]
+}

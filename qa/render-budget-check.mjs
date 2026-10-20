@@ -25,7 +25,15 @@ for(const quality of ['balanced','high','ultra','balanced']){
   assert.equal(scene.children.filter(o=>o.isDirectionalLight).length,profile.shadowCascades);
   assert.equal(scene.children.filter(o=>o.type==='CubeCamera').length,quality==='balanced'?0:1);
   assert.equal(environment.stats.indirectLighting.evaluation,profile.giMode);
-  for(const material of environmentMaterials){assert.equal(material.defines.CSM_CASCADES,profile.shadowCascades);const shader={vertexShader:THREE.ShaderLib.physical.vertexShader,fragmentShader:THREE.ShaderLib.physical.fragmentShader,uniforms:{}};material.onBeforeCompile(shader,renderer);assert.ok(shader.uniforms.CSM_cascades&&shader.uniforms.giReady);assert.equal(shader.fragmentShader.includes('textureLod(field'),quality!=='balanced');}
+  for(const material of environmentMaterials){
+    assert.equal(material.defines.CSM_CASCADES,profile.shadowCascades);const shader={vertexShader:THREE.ShaderLib.physical.vertexShader,fragmentShader:THREE.ShaderLib.physical.fragmentShader,uniforms:{}};material.onBeforeCompile(shader,renderer);
+    assert.ok(shader.uniforms.CSM_cascades&&shader.uniforms.giReady);
+    assert.equal(shader.fragmentShader.includes('vec3 giField('),quality!=='balanced','Daytime SH field must stay out of balanced fragments');
+    assert.equal(shader.vertexShader.includes('vec3 giField('),quality==='balanced','Balanced must still evaluate the same daytime SH field at vertices');
+    assert.ok(shader.uniforms.nightFieldReady&&shader.fragmentShader.includes('vec3 nightReadField('),'Night fixture bounce has an explicit, separate fragment budget');
+  }
+  assert.equal(environment.stats.nightIndirectLighting.routeSpacingMetres,quality==='balanced'?8:4);
+  assert.equal(environment.stats.nightIndirectLighting.runtimeTextureReadsPerFragment,3);assert.equal(environment.stats.nightIndirectLighting.maximumTransitionReads,6);
   const rows=[];
   for(const view of comparison.views){
     camera.position.set(...view.position);camera.lookAt(...view.lookAt);camera.updateMatrixWorld(true);environment.update(time+=1,camera.position);assert.equal(environment.wantsShadowUpdate(time,camera.position),true);
@@ -41,7 +49,7 @@ for(const quality of ['balanced','high','ultra','balanced']){
 }
 assert.ok(disposedPrograms>=environmentMaterials.size*4,'CSM program properties survive a quality round trip');
 record('Repeated quality round trip replaces 1 / 2 / 3 cascade systems and invalidates disposed CSM uniform caches',{disposedMaterialProgramStates:disposedPrograms});
-record('Balanced allocates no cube camera and moves baked irradiance reads out of the fragment stage');
+record('Balanced allocates no cube camera and evaluates daytime SH at vertices; wet-night fixture bounce has a separate 3-read / 6-transition-read fragment budget');
 record('Five authored city views halve baseline triangles with fewer than 400 beauty submissions',{views:actual.balanced});
 camera.position.set(-200,3,-385);camera.lookAt(-200,4,-280);time+=1;environment.update(time,camera.position);
 assert.equal(environment.wantsShadowUpdate(time,camera.position),true);
@@ -58,9 +66,9 @@ record('Tessellated ground remains visible at 500 m and exactly matches the exis
 const geometrySHA256=createHash('sha256').update(JSON.stringify(geometry)).digest('hex');
 const canonicalSHA256=createHash('sha256').update(canonicalGeometryJSON(geometry)).digest('hex');
 const geometryScope=partitionCityGeometry(geometry),retainedGeometryCanonicalSHA256=createHash('sha256').update(canonicalGeometryJSON(geometryScope.legacy)).digest('hex');
-assert.equal(retainedGeometryCanonicalSHA256,JSON.parse(readFileSync(new URL('../dist/assets/irradiance/manifest.json',import.meta.url))).geometryCanonicalSHA256);
+assert.equal(canonicalSHA256,JSON.parse(readFileSync(new URL('../dist/assets/irradiance/manifest.json',import.meta.url))).geometryCanonicalSHA256,'The current daylight bake must match the complete current city');
 assert.equal(retainedGeometryCanonicalSHA256,JSON.parse(readFileSync(new URL('./city-3.4-browser-assets.json',import.meta.url))).stats.roundedGeometryHash);
-record('Original physical city retains its exact canonical identity; explicit new roadside entities match their shared plan',{geometrySHA256,canonicalSHA256,retainedGeometryCanonicalSHA256,newSharedEntities:geometryScope.added.length,newSharedEntityIds:geometryScope.addedIds});
-const result={status:'passed',method:'Real Three geometry/frustum and material lifecycle; no GPU context or browser timing',checks,profiles:CITY_RENDER_PRESETS,views:actual,coldStart,limits:['Beauty submission estimates omit the vehicle, externally loaded shrubs and canvas label meshes.','Shadow counts in comparison files are visible casting candidates, not draws measured inside each light frustum.','More spatial batches can increase draws in sparse views while removing many vertices; the total allocated batch count is not a performance gate.','Actual browser FPS, GPU shader execution and visual appearance need a supported browser on target hardware.','The retained static diffuse bake matches the exact old city subset. New 3.9 roadside entities affect real-time direct shadows but are excluded from that historical indirect-light field.']};
-writeFileSync(new URL('./render-budget-3.9.json',import.meta.url),JSON.stringify(result,null,2)+'\n');globalThis.fetch=originalFetch;
+record('Original physical city retains its exact canonical identity and the new daylight bake matches the complete current city including retained roadside fixtures',{geometrySHA256,canonicalSHA256,retainedGeometryCanonicalSHA256,newSharedEntities:geometryScope.added.length,newSharedEntityIds:geometryScope.addedIds});
+const result={status:'passed',method:'Real Three geometry/frustum and material lifecycle; no GPU context or browser timing',checks,profiles:CITY_RENDER_PRESETS,views:actual,coldStart,limits:['Beauty submission estimates omit the vehicle, externally loaded shrubs and canvas label meshes.','Shadow counts in comparison files are visible casting candidates, not draws measured inside each light frustum.','More spatial batches can increase draws in sparse views while removing many vertices; the total allocated batch count is not a performance gate.','Actual browser FPS, GPU shader execution and visual appearance need a supported browser on target hardware.','The 3.10 daylight field was rebaked against the full current static geometry including the retained 3.9 roadside fixtures. Fine facade details still use averaged closed envelopes; the separate night field is one stationary diffuse surface bounce.']};
+writeFileSync(new URL('./render-budget-3.11.json',import.meta.url),JSON.stringify(result,null,2)+'\n');globalThis.fetch=originalFetch;
 console.log(JSON.stringify({status:result.status,checks:checks.map(c=>c.name),balanced:actual.balanced},null,2));

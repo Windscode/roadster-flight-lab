@@ -12,6 +12,7 @@
  */
 import {CITY_BUILDINGS} from './city-data.js';
 import {createCityVisibility} from './city-render-budget.js';
+import {attachPavementSurface} from './pavement-surface-material.js';
 
 // Shared placement plan is deliberately independent of Three, Canvas and the
 // browser. The physics world and the asset factory consume identical records.
@@ -110,7 +111,8 @@ export function buildStreetLife(THREE,root){
     food:mat('fruit vegetables and meals',{roughness:.56}),leaf:mat('living foliage',{roughness:.91,side:THREE.DoubleSide}),
     cloth:mat('woven canvas bindings',{roughness:.91}),awning:mat('tensioned woven canvas',{roughness:.94,side:THREE.DoubleSide,vertexColors:true}),
     sign:mat('painted market sign'),lamp:mat('small practical lamps',{color:0xe9dbb4,emissive:0xffdaa1,emissiveIntensity:1.8,roughness:.4}),
-    glass:mat('sealed exterior display glazing',{color:0x88a6a1,roughness:.15,metalness:0}),stone:mat('planter stone',{roughness:.94})};
+    glass:mat('sealed exterior display glazing',{color:0x88a6a1,roughness:.15,metalness:0}),stone:mat('planter stone',{roughness:.94}),paving:mat('cut mineral paving',{roughness:.87})};
+  const pavement=attachPavementSurface(m.paving);
   function paintTexture(w,h,paint){
     if(typeof document==='undefined')return null;const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');if(!g)return null;paint(g,w,h);
     const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;textures.push(t);stats.originalAtlases++;return t;
@@ -341,12 +343,12 @@ export function buildStreetLife(THREE,root){
   // receive outdoor kiosks; the continuous street wall remains the main scene.
   for(const s of sections.filter(s=>s.district==='lower')){
     const {b,bi,count,spacing}=s,f=surface(s.x,s.z,s.y,s.yaw),span=b.d;if(count)stats.marketSections++;
-    f.cube(m.stone,[span+3,.12,5],0,-.06,2.5,0x92978a);
+    f.cube(m.paving,[span+3,.12,5],0,-.06,2.5,0x999c91);
     f.cube(m.stone,[span+3,.10,.16],0,-.015,4.93,0xb3b6a4);
-    // Paving slabs are 0.8 m, with seams and a dark utility channel along the
-    // wall. The five-metre strip leaves a 10 m clear driving carriageway.
-    for(let uu=-span/2;uu<span/2;uu+=.8)f.cube(m.stone,[.012,.004,4.65],uu,.002,2.49,0x686f62);
-    for(let vv=.9;vv<4.9;vv+=.8)f.cube(m.stone,[span+2.8,.004,.012],0,.003,vv,0x686f62);
+    // Joints now come from the derivative-filtered metre-scale material.
+    // The former 4 mm raised 12 mm line boxes shimmered in the supplied
+    // long perspective and generated a second disconnected paving surface.
+    f.cube(m.stone,[span+2.8,.006,.13],0,.003,.22,0x777d72);
     const shifted=f.point(0,0,1.7),shopF=surface(shifted[0],shifted[2],shifted[1],s.yaw);
     for(let k=0;k<count;k++){
       const u=(k-(count-1)/2)*spacing,type=(bi*3+k)%shopTypes.length;
@@ -412,7 +414,7 @@ export function buildStreetLife(THREE,root){
   const ready=Promise.resolve([]);
   stats.collisionProxies=colliders.length;
   let last=-1;
-  return{group,lightAnchors,colliders,stats,ready,
+  return{group,lightAnchors,colliders,stats,ready,setWetness:value=>pavement.setWetness(value),
     setQuality(q,profile){visibility.setQuality(q,profile);},
     update(time,vehiclePosition){
       if(!Number.isFinite(time)||time===last)return;last=time;visibility.update(time,vehiclePosition);

@@ -1,0 +1,85 @@
+{
+  "version": "3.11",
+  "generatedAt": "2026-10-20T03:13:51.435Z",
+  "scope": "Node geometry, actual static physics raycasts, passive tracer math and render-state failure handling. No browser images, real GPU compilation, reflection success-path image validation or FPS measurement.",
+  "tests": [
+    {
+      "name": "The rendered collision solids match actual laboratory physics transforms",
+      "status": "PASS",
+      "ms": 1.18
+    },
+    {
+      "name": "The physical floor, roof and clear test volume use one metre-based datum",
+      "status": "PASS",
+      "ms": 1.68
+    },
+    {
+      "name": "All qualities keep finite geometry and a bounded scene budget without reallocating meshes",
+      "status": "PASS",
+      "ms": 2.96
+    },
+    {
+      "name": "Flow is passive advection of the given velocity and stops at zero physical time",
+      "status": "PASS",
+      "ms": 1.53
+    },
+    {
+      "name": "Commanded pose display reads target position/quaternion without modifying simulation state",
+      "status": "PASS",
+      "ms": 0.6
+    },
+    {
+      "name": "A single stable-direction studio shadow obeys profile cadence and quality changes",
+      "status": "PASS",
+      "ms": 0.36
+    },
+    {
+      "name": "Failed indoor reflection capture restores renderer and foreign visibility state",
+      "status": "PASS",
+      "ms": 10.63
+    },
+    {
+      "name": "Disposal releases owned GPU resources once and leaves shared arrow geometry untouched",
+      "status": "PASS",
+      "ms": 0.32
+    }
+  ],
+  "sourceHashes": {
+    "dist/wind-lab-data.js": "27ce72f8053b99037462be6c4b62d37d371021d6e02fca96d4392587d9f2ab41",
+    "dist/wind-laboratory.js": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d",
+    "tests/wind-laboratory.test.mjs": "9c3a7e307ad00ad47104e379205f2545e2a7f6aa916aa4e8e5a91b21304ea66f"
+  },
+  "physicalSolids": 24,
+  "profiles": {
+    "balanced": {
+      "scope": "visible scene objects before camera culling; vehicle excluded",
+      "allocatedBatches": 32,
+      "activeDistanceBatches": 27,
+      "activeDistanceTriangles": 25642,
+      "shadowDistanceBatches": 4,
+      "shadowDistanceTriangles": 276,
+      "shadowSize": 1024,
+      "tracers": 44
+    },
+    "high": {
+      "scope": "visible scene objects before camera culling; vehicle excluded",
+      "allocatedBatches": 32,
+      "activeDistanceBatches": 29,
+      "activeDistanceTriangles": 25990,
+      "shadowDistanceBatches": 4,
+      "shadowDistanceTriangles": 276,
+      "shadowSize": 1536,
+      "tracers": 100
+    },
+    "ultra": {
+      "scope": "visible scene objects before camera culling; vehicle excluded",
+      "allocatedBatches": 32,
+      "activeDistanceBatches": 29,
+      "activeDistanceTriangles": 25990,
+      "shadowDistanceBatches": 4,
+      "shadowDistanceTriangles": 276,
+      "shadowSize": 2048,
+      "tracers": 160
+    }
+  }
+}

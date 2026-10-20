@@ -100,14 +100,19 @@ test('bounded result persistence retains honest outcome and compact samples',()=
 });
 const physicalResults=[];
 function runPhysicalPreset(preset,airborne=false){
-  const sim=new RoadsterSim({}, {world:'windlab'});for(let i=0;i<240;i++)sim.step(dt,{});
-  if(airborne){const t=sim.telemetry();assert.equal(sim.setPoseTarget({position:{...t.position,y:4},quaternion:t.quaternion}),true);for(let i=0;i<1200;i++)sim.step(dt,{});}
-  const initial=sim.telemetry();let result;const runner=new FlightProgramRunner({getSim:()=>sim,getContext:()=> 'lab',now:()=> '2026-10-19T03:00:00.000Z',onFinish:r=>result=r});runner.start(preset);
+  // The slower, pilot-bounded roll needs an open sky. The wind laboratory's
+  // 24.1 m beam is a real obstacle, not an unlimited numerical fixture.
+  const world=preset.id==='roll-return'?'city':'windlab';
+  const sim=new RoadsterSim({}, {world});
+  if(world==='city'&&airborne){sim.reset('hover');const t=sim.telemetry();assert.equal(sim.setPoseTarget({position:t.position,quaternion:t.quaternion}),true);}
+  for(let i=0;i<240;i++)sim.step(dt,{});
+  if(airborne&&world==='windlab'){const t=sim.telemetry();assert.equal(sim.setPoseTarget({position:{...t.position,y:4},quaternion:t.quaternion}),true);for(let i=0;i<1200;i++)sim.step(dt,{});}
+  const initial=sim.telemetry();let result;const runner=new FlightProgramRunner({getSim:()=>sim,getContext:()=> world==='city'?'city':'lab',now:()=> '2026-10-19T03:00:00.000Z',onFinish:r=>result=r});runner.start(preset);
   let minHeight=initial.heightWorld,maxHeight=initial.heightWorld,samples=0;
   const maxSteps=Math.ceil(preset.stages.reduce((n,s)=>n+s.durationS,0)/dt)+120;
   for(let i=0;i<maxSteps&&runner.active;i++){const t=sim.step(dt,(_,fixed)=>runner.stepInput(fixed,{}),()=>samples++);minHeight=Math.min(minHeight,t.heightWorld);maxHeight=Math.max(maxHeight,t.heightWorld);assert.equal(t.fault,null);}
   assert.ok(result,'program produced an outcome');assert.equal(result.status,'completed',result.reason);const end=sim.telemetry();
-  physicalResults.push({preset:preset.id,initialState:airborne?'airborne':'ground',status:result.status,durationS:result.durationS,positionStart:initial.position,positionEnd:end.position,minHeightM:minHeight,maxHeightM:maxHeight,finalMode:end.mode,finalContacts:end.contactCount,finalThrustN:end.thrustN,sampleCallbacks:samples,summary:result.summary,stages:result.stages});
+  physicalResults.push({preset:preset.id,world,scenario:sim.scenario,initialState:airborne?'airborne':'ground',status:result.status,durationS:result.durationS,positionStart:initial.position,positionEnd:end.position,minHeightM:minHeight,maxHeightM:maxHeight,finalMode:end.mode,finalContacts:end.contactCount,finalThrustN:end.thrustN,sampleCallbacks:samples,summary:result.summary,stages:result.stages});
   return{sim,result,initial,end};
 }
 test('actual rigid-body pose-step preset reaches its target without state assignment',()=>{
@@ -117,6 +122,15 @@ test('actual rigid-body pose-step preset reaches its target without state assign
 test('actual gust-rejection preset measures crosswind response and restores calm',()=>{
   const {sim,result,end}=runPhysicalPreset(defaultProgramLibrary().programs.find(p=>p.id==='gust-rejection'));
   assert.equal(sim.getWind(),null);assert.ok(result.summary.finalPositionErrorM<.1);assert.equal(end.mode,'hover');assert.ok(result.stages[1].peakPositionErrorM>0);assert.equal(result.stages[1].type,'wind');
+});
+test('actual wind-laboratory beam rejects a default roll without changing rigid-body state',()=>{
+  const sim=new RoadsterSim({}, {world:'windlab'});for(let i=0;i<240;i++)sim.step(dt,{});
+  const state=()=>JSON.stringify([sim.body.position,sim.body.quaternion,sim.body.velocity,sim.body.angularVelocity]);
+  const before=state(),initial=sim.telemetry();let result;
+  const runner=new FlightProgramRunner({getSim:()=>sim,getContext:()=> 'lab',onFinish:r=>result=r});
+  assert.throws(()=>runner.start(defaultProgramLibrary().programs.find(p=>p.id==='roll-return')),/上方净空不足/);
+  assert.equal(state(),before);assert.equal(runner.active,null);assert.equal(sim.telemetry().maneuver,null);assert.equal(result.status,'failed');
+  physicalResults.push({preset:'roll-return',world:'windlab',scenario:'windlab',initialState:'ground',status:result.status,reason:result.reason,positionStart:initial.position,positionEnd:sim.telemetry().position,rigidBodyUnchanged:true});
 });
 test('actual ground-start roll preset only completes after physically returning to ground',()=>{
   const {sim,result,initial,end}=runPhysicalPreset(defaultProgramLibrary().programs.find(p=>p.id==='roll-return'));
@@ -132,6 +146,6 @@ test('actual finite-tank preset lands and preserves measured consumption when su
 });
 const sourceFiles=['dist/flight-programs.js','dist/research-console.js','dist/research-console.css','dist/physics.js','dist/wind-lab-data.js','tests/flight-programs.test.mjs'];
 const hashes=Object.fromEntries(sourceFiles.map(file=>[file,crypto.createHash('sha256').update(fs.readFileSync(new URL(`../${file}`,import.meta.url))).digest('hex')]));
-const report={version:'3.9',pass:true,groups:count,schedulerAndSchemaGroups:16,actualPhysicsGroups:5,physicsHz:120,metricsHz:20,sourceHashes:hashes,physicalResults,limitations:'Deterministic analytic-wind and rigid-body model. Interface-fixture schedule tests are listed separately from actual physics preset runs. Authored lab geometry and default parameters are covered; arbitrary obstacles, user-defined controls and unsupported sustained attitudes are not certified. No browser rendering or real vehicle validity claim.'};
-fs.writeFileSync(new URL('../qa/flight-programs-3.9.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
-console.log(`Flight program regression complete: ${count} groups; 16 scheduler/schema interface groups and 5 actual 120 Hz rigid-body preset integrations.`);
+const report={version:'3.11',pass:true,groups:count,schedulerAndSchemaGroups:16,actualPhysicsGroups:6,physicsHz:120,metricsHz:20,sourceHashes:hashes,physicalResults,limitations:'Deterministic analytic-wind and rigid-body model. Interface-fixture schedule tests are listed separately from actual physics preset runs. Authored wind-lab geometry, its real roll refusal, open-city roll starts and default parameters are covered; arbitrary obstacles, user-defined controls and unsupported sustained attitudes are not certified. No browser rendering or real vehicle validity claim.'};
+fs.writeFileSync(new URL('../qa/flight-programs-3.11.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+console.log(`Flight program regression complete: ${count} groups; 16 scheduler/schema interface groups and 6 actual 120 Hz rigid-body preset / refusal checks.`);

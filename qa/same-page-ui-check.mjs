@@ -9,6 +9,8 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {resolve,dirname,relative} from 'node:path';
 import * as NativeThree from '../dist/vendor/three.module.js';
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
+import {CONTROL_CAPTURE_STARTS} from '../dist/driving-capture.js';
 
 if(typeof vm.SourceTextModule!=='function')throw new Error('Use node --experimental-vm-modules qa/same-page-ui-check.mjs');
 const jsdomPath=process.env.JSDOM_MODULE_PATH||'/tmp/roadster-dom-qa/node_modules/jsdom/lib/api.js';
@@ -141,8 +143,15 @@ pass('Actual main.js boots the city through the primary entry and advances the r
 const initialResponseState=numerical(state());
 $('vertical-speed-command').value='6.4';$('vertical-speed-command').dispatchEvent(new window.Event('input',{bubbles:true}));$('vertical-speed-command').dispatchEvent(new window.Event('change',{bubbles:true}));
 assert.equal(window.roadsterLab.getParameters().climbRateMps,6.4);assert.equal(window.localStorage.getItem('roadster-vertical-speed'),'6.4');assert.equal(numerical(state()),initialResponseState,'Response preference must not reset or advance the vehicle');
-click('#vertical-speed-reset');assert.equal(window.roadsterLab.getParameters().climbRateMps,3);assert.equal(window.localStorage.getItem('roadster-vertical-speed'),'3');assert.equal(numerical(state()),initialResponseState);
-pass('Visible E/Q response changes the active target-speed parameter and persists without resetting physical state; reset restores 3 m/s');
+click('#vertical-speed-reset');assert.equal(window.roadsterLab.getParameters().climbRateMps,5);assert.equal(window.localStorage.getItem('roadster-vertical-speed'),'5');assert.equal(numerical(state()),initialResponseState);
+pass('Visible E/Q response changes the active target-speed parameter and persists without resetting physical state; reset restores 5 m/s');
+
+for(const [key,value] of Object.entries({verticalAccelerationMps2:7.5,rollRateDegS:275,pitchRateDegS:85,angularAccelerationDegS2:550})){
+  const control=$('response-'+key);assert.ok(control,'Visible slider '+key);control.value=String(value);control.dispatchEvent(new window.Event('input',{bubbles:true}));assert.equal(window.roadsterLab.getParameters()[key],value);assert.equal(JSON.parse(window.localStorage.getItem('roadster-control-response-v1'))[key],value);assert.equal(numerical(state()),initialResponseState);
+}
+click('[data-response-preset="maneuver"]');assert.equal(window.roadsterLab.getParameters().climbRateMps,14);assert.equal(window.roadsterLab.getParameters().rollRateDegS,240);assert.equal(window.roadsterLab.getParameters().angularAccelerationDegS2,480);assert.equal(window.roadsterLab.getParameters().verticalAccelerationMps2,6);assert.equal(numerical(state()),initialResponseState);
+click('[data-response-preset="standard"]');assert.equal(window.roadsterLab.getParameters().climbRateMps,5);assert.equal(window.roadsterLab.getParameters().rollRateDegS,180);assert.equal(window.roadsterLab.getParameters().angularAccelerationDegS2,360);assert.equal(numerical(state()),initialResponseState);
+pass('All four manual-response sliders save on input and presets alter bounded reference limits without resetting, advancing or replacing physical state');
 
 for(const expected of ['level','off','level','off']){tap('KeyG');tick(1);assert.equal(state().stabilizationMode,expected);assert.notEqual(state().stabilizationMode,'hold');}
 key('Digit1');tick(1);assert.equal(state().driverInput.pitch,1);assert.equal(state().driverInput.frontJets,0);assert.equal(state().driverInput.rearJets,0);key('Digit1',{type:'keyup'});
@@ -234,6 +243,21 @@ $('benchmark-camera').value='weave-entry';$('benchmark-camera').dispatchEvent(ne
 click('#visual-capture-metadata');const conditions=JSON.parse(await lastBlob.text());assert.equal(conditions.camera.id,'weave-entry');assert.equal(conditions.weatherPreset,'wet-night');assert.equal(conditions.simState.schema,'roadster-sim-state');
 pass('Road adhesion, actual ABS and wing controls route to physics; weather, screen-size LOD and fixed route camera metadata route to the active presentation');
 
+// Validate collection semantics with a renderer facade, never pixel quality.
+click('#exposure-baseline-39');tick(2);assert.equal($('exposure-lock').checked,true);assert.equal($('auto-exposure').disabled,true);
+click('#visual-capture-metadata');const locked=JSON.parse(await lastBlob.text());assert.equal(locked.exposureLock,1.02);assert.equal(locked.exposure,1.02);
+$('weather-preset').value='clear-day';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));tick(2);
+click('#visual-capture-metadata');const dayLocked=JSON.parse(await lastBlob.text());assert.equal(dayLocked.exposureLock,1.02);assert.equal(dayLocked.exposure,1.02);
+$('weather-preset').value='wet-night';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));
+click('#visual-capture-bundle');tick(2);await settle(()=>lastBlob?.type==='application/zip','Same-frame archive must finish');
+const zip=new Uint8Array(await lastBlob.arrayBuffer()),zipView=new DataView(zip.buffer),zipEntries={};let zipOffset=0;
+while(zipView.getUint32(zipOffset,true)===0x04034b50){const size=zipView.getUint32(zipOffset+18,true),nameLength=zipView.getUint16(zipOffset+26,true),extraLength=zipView.getUint16(zipOffset+28,true),name=new TextDecoder().decode(zip.slice(zipOffset+30,zipOffset+30+nameLength));const start=zipOffset+30+nameLength+extraLength;zipEntries[name]=zip.slice(start,start+size);zipOffset=start+size;}
+const metadataName=Object.keys(zipEntries).find(name=>name.endsWith('.json')),sameFrame=JSON.parse(new TextDecoder().decode(zipEntries[metadataName]));
+assert.equal(sameFrame.camera.id,'weave-entry');assert.equal(sameFrame.exposureLock,1.02);assert.equal(sameFrame.paused,true);assert.equal(sameFrame.renderState,'paused-preview');assert.ok(zipEntries[sameFrame.capture.imageFile]);assert.equal(sameFrame.capture.conditionsFile,metadataName);
+assert.equal(new TextDecoder().decode(zipEntries[sameFrame.capture.imageFile]),'DOM facade: no pixels');
+values.captureArchive={scope:'DOM renderer facade and ZIP structure only; no rendered pixels',entries:Object.keys(zipEntries),sameFrameConditions:true,exposureLockPersistsAcrossWeather:true};
+pass('Image archive pairs the rendered-frame callback with frozen conditions, and an explicit exposure lock survives weather changes; no pixel assertion is made');
+
 click('#record-btn');tick(60);assert.equal(state().research.experiment.recording,true);click('#record-btn');
 $('weather-preset').value='clear-day';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));
 $('benchmark-camera').value='canal';$('benchmark-camera').dispatchEvent(new window.Event('change',{bubbles:true}));
@@ -243,6 +267,19 @@ assert.equal(graphics.environments[0].weatherPreset,'wet-night');assert.equal($(
 click('[data-ex-action="record"]');tick(6);click('[data-ex-action="return-before-replay"]');assert.equal(state().research.experiment.recording,false);assert.equal(graphics.environments[0].weatherPreset,'clear-day');assert.equal($('benchmark-camera').value,'canal');
 values.liveReplay={terminalPositionErrorM:0,initialWeatherRestored:true,initialFixedCameraRestored:true,returnStateConfigurationRestored:true,recordingEndedBeforeReturn:true};
 pass('Actual main adapter replays the recorded fixed-step state with zero terminal position error, restores weather/camera, and ends a new recording before returning to the previous scene state');
+
+$('road-surface').value='dry';$('road-surface').dispatchEvent(new window.Event('change',{bubbles:true}));
+$('abs-enabled').checked=true;$('abs-enabled').dispatchEvent(new window.Event('change',{bubbles:true}));
+$('control-capture-kind').value='steer-54';$('control-capture-kind').dispatchEvent(new window.Event('change',{bubbles:true}));
+const captureStart=CONTROL_CAPTURE_STARTS[$('control-capture-kind').value];assert.equal(captureStart.protocolId,'steer-54');
+click('#control-capture-reset');assert.deepEqual([state().position.x,state().position.y,state().position.z],captureStart.position);assert.equal(state().speedKmh,0);assert.equal(state().paused,true);assert.equal(state().research.experiment.recording,false);assert.equal($('control-capture-direction').value,String(captureStart.steerSign));
+click('#control-capture-start');assert.equal(window.roadsterLab.getControlCapture().active,true,JSON.stringify(window.roadsterLab.getControlCapture())+' / '+$('toast').textContent);tick(30);assert.equal(state().research.experiment.recording,true);assert.equal($('control-capture-chip').classList.contains('hidden'),false);
+key('KeyW');tick(2);key('KeyW',{type:'keyup'});assert.equal(window.roadsterLab.getControlCapture().active,false);assert.equal(state().research.experiment.recording,false);
+click('#control-capture-export');const capturedInputs=JSON.parse(await lastBlob.text());assert.equal(capturedInputs.status,'cancelled');assert.ok(capturedInputs.stepCount>0);assert.deepEqual(capturedInputs.initialSnapshot.physical.body.position.values,captureStart.position);assert.ok(capturedInputs.events.some(event=>event.type==='control_capture_start'));assert.ok(capturedInputs.inputRuns.some(run=>run.input.brake>0||run.input.throttle>0));
+const beforeRejected=numerical(state());$('control-capture-kind').value='vertical-8-release';$('control-capture-kind').dispatchEvent(new window.Event('change',{bubbles:true}));assert.equal($('control-capture-reset').disabled,true);click('#control-capture-start');assert.equal(window.roadsterLab.getControlCapture().active,false);assert.equal(numerical(state()),beforeRejected);
+click('#control-capture-export');const rejected=JSON.parse(await lastBlob.text());assert.equal(rejected.status,'failed');assert.equal(rejected.stepCount,0);assert.ok(rejected.events.some(event=>event.type==='control_capture_clearance'));
+values.controlCapture={scope:'Actual main input/recorder integration with numerical physics; renderer is stubbed',resetBeforeRecording:true,initialSpeedMps:0,manualTakeover:'cancelled',capturedSteps:capturedInputs.stepCount,invalidFlightCondition:'zero-step failed record'};
+pass('The main capture controls reset only before recording, accelerate through ordinary inputs, preserve manual takeover, and retain failed preflight evidence without repositioning');
 click('#record-btn');tick(60);assert.equal(state().research.experiment.recording,true);
 const physicalBeforeLoss=numerical(state());const canvas=$('viewport').querySelector('canvas');canvas.dispatchEvent(new window.Event('webglcontextlost',{cancelable:true}));
 assert.equal(window.roadsterApp.getState().graphics.status,'context_lost');assert.equal(state().research.experiment.recording,false);tick(60);assert.equal(numerical(state()),physicalBeforeLoss);
@@ -266,7 +303,7 @@ const field=id=>study().querySelector('[data-study-id="'+id+'"]'),change=element
 field('lab-kind').value='brake';change(field('lab-kind'));field('lab-mode').value='single';change(field('lab-mode'));field('protocol-form').dispatchEvent(new window.Event('submit',{bubbles:true,cancelable:true}));
 await settle(()=>workerRequests.length>0&&!field('lab-run').disabled,'Actual numerical worker facade must finish a standard braking study without graphics');
 assert.ok(field('record-table').children.length>0);assert.equal(field('analysis-content').hidden,false);
-field('export-rows').click();const exported=await lastBlob.text();assert.match(exported,/model=3\.9\.0/);assert.match(exported,/run_id,case,/);
+field('export-rows').click();const exported=await lastBlob.text();assert.ok(exported.includes('model='+MODEL_VERSION));assert.match(exported,/run_id,case,/);
 field('export-library').click();const library=JSON.parse(await lastBlob.text());assert.ok(library.entries.length>0);assert.ok(library.entries.at(-1).report.metrics.stop.distanceM>0);
 values.noGraphicsResearch={actualSolver:true,workerRequests:workerRequests.length,records:library.entries.length,csvSelectedRecord:true,jsonLibrary:true,graphicsStatus:window.roadsterApp.getState().graphics.status};
 pass('Without graphics, the same-page standard study executes the actual solver and keeps visible history, selected-record CSV and complete-library JSON usable');
@@ -298,7 +335,7 @@ const report={status:'passed',generatedAt:new Date().toISOString(),checks,values
   environment:{node:process.version,jsdom:'26.1.0',moduleEvaluation:'Actual app.js / app-shell.js / main.js and its non-visual dependency graph in vm.SourceTextModule',physics:'Actual RoadsterSim, no rigid-body/control mock',context:'JSDOM document only'},
   excluded:{browser:false,webgl:false,gpuTiming:false,pixelVisualQA:false,independentWorkerExecution:false,actualSolverThroughWorkerFacade:true},
   mocks:[...mocks.keys()],limits:'DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.'};
-await writeFile(resolve(root,noGraphics?'qa/no-webgl-research-3.9.json':'qa/same-page-ui-3.9.json'),JSON.stringify(report,null,2)+'\n');
+await writeFile(resolve(root,noGraphics?'qa/no-webgl-research-3.11.json':'qa/same-page-ui-3.11.json'),JSON.stringify(report,null,2)+'\n');
 dom.window.close();console.log(`Same-page UI: ${checks.length} DOM integration groups passed; no browser or visual acceptance performed.`);
 
 dom.window.close();

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync}from'node:fs';
 import {createHash}from'node:crypto';
-import {RoadsterSim}from'../dist/physics.js';
+import {RoadsterSim,DEFAULT_PARAMS}from'../dist/physics.js';
 import {nozzleExhaustVelocity}from'../dist/vehicle-models.js';
 import {runExperiment}from'../dist/experiment-worker.js';
 const dt=1/120,checks=[],values={};const pass=s=>{checks.push(s);console.log('PASS: '+s);};
@@ -28,26 +28,54 @@ pass('Normal E enters a bounded climb-rate controller, release brakes the rise; 
 }
 pass('Temperature-pressure exhaust stays below the ideal energy limit, cools, and conserves actual mass flow and delivered impulse');
 {
- values.rolls=[];
- for(const [scenario,tankLitres]of [['free',900],['hover',1100]]){
-  const s=flat({tankLitres});s.reset(scenario);const origin=s.body.position.y;
-  assert.equal(s.startManeuver('roll'),true);let inverted=false,touch=null,air=false;
-  for(let k=0;k<1440;k++){
+ // Other historical tests keep flat()'s original input settings. Roll acceptance
+ // exercises the current default response explicitly, with declared bench supply.
+ const rollFixture=(scenario,supplyMode,tankLitres)=>{const s=flat({supplyMode,tankLitres,climbRateMps:DEFAULT_PARAMS.climbRateMps,steeringAccelG:DEFAULT_PARAMS.steeringAccelG});s.reset(scenario);return s;};
+ const physicalState=s=>{const state=s.exportState();delete state.state.status;return state;};
+ const pose=s=>({position:{...s.body.position},quaternion:{...s.body.quaternion},velocity:{...s.body.velocity},angularVelocity:{...s.body.angularVelocity},mode:s.mode,gasMassKg:s.gasMass});
+ values.rolls=[];values.rollPrechecks=[];
+ for(const scenario of ['free','hover']){
+  const tankLitres=600,s=rollFixture(scenario,'bench',tankLitres),origin=s.body.position.y,initialGas=s.gasMass;
+  assert.equal(s.startManeuver('roll'),true);const plan=s.getReference().maneuver;
+  // The planned launch and rotation precede a return from the predicted peak.
+  // Budget a 4 m/s descent plus four seconds of braking/settling, instead of an
+  // unrelated 12-second cutoff. Success criteria below are unchanged.
+  const returnCruiseMps=4,convergenceBudgetS=4,returnTravelS=(plan.plannedPeakHeight-origin)/returnCruiseMps;
+  const limitS=plan.launchTime+plan.duration+returnTravelS+convergenceBudgetS;
+  let inverted=false,touch=null,air=false,maxHeight=origin;
+  for(let k=0;k<Math.ceil(limitS/dt);k++){
    const t=s.step(dt);inverted ||= s.body.quaternion.vmult({x:0,y:1,z:0}).y<-.9;
+   maxHeight=Math.max(maxHeight,t.heightWorld);
    if(!t.contactCount)air=true;
    if(k>180&&air&&t.contactCount&&!touch)touch={time:t.simTime,speed:Math.abs(t.verticalSpeed),gas:t.gasMass};
    assert.equal(s.world.contacts.filter(c=>c.bi===s.body||c.bj===s.body).length,0);
    if(scenario==='hover')assert.equal(t.contactCount,0,'Air-origin roll must not land and re-launch');
-   if(!t.maneuver)break; // Assess the completed maneuver before subsequent finite hover depletes its reserve.
+   if(!t.maneuver)break;
   }
   assert.ok(inverted);assert.equal(s.telemetry().maneuver,null);
   if(scenario==='free'){assert.ok(touch&&touch.speed<.65&&touch.gas>10);assert.equal(s.mode,'drive');}
   else{assert.equal(touch,null);assert.equal(s.mode,'hover');assert.ok(Math.abs(s.body.position.y-origin)<.1);}
-  values.rolls.push({scenario,tankLitres,originHeightM:origin,finalHeightM:s.body.position.y,touchdown:touch,gasRemaining:s.gasMass});
+  assert.equal(s.gasMass,initialGas);assert.equal(s.telemetry().onboardGasConsumedKg,0);assert.ok(s.telemetry().externalGasSuppliedKg>0);
+  values.rolls.push({scenario,supplyMode:s.params.supplyMode,tankLitres,originHeightM:origin,finalHeightM:s.body.position.y,durationS:s.simTime,maxHeightM:maxHeight,touchdown:touch,gasRemaining:s.gasMass,onboardGasUsedKg:initialGas-s.gasMass,externalGasSuppliedKg:s.telemetry().externalGasSuppliedKg,window:{limitS,launchS:plan.launchTime,rotationS:plan.duration,returnTravelS,returnCruiseMps,convergenceBudgetS},response:{climbRateMps:s.params.climbRateMps,rollRateDegS:s.params.rollRateDegS,angularAccelerationDegS2:s.params.angularAccelerationDegS2}});
  }
- const blocked=new RoadsterSim();blocked.reset('ceiling');const mode=blocked.mode;assert.equal(blocked.startManeuver('roll'),false);assert.equal(blocked.mode,mode);const low=flat();low.gasMass*=.5;assert.equal(low.startManeuver('roll'),false);assert.equal(low.mode,'drive');
+ pass('Default bench 600 L ground rolls land softly and airborne rolls recover their original height without hull impacts; external gas throughput is not onboard depletion');
+ for(const [scenario,tankLitres]of [['free',900],['hover',1100]]){
+  const s=rollFixture(scenario,'finite',tankLitres),planner=rollFixture(scenario,'bench',tankLitres);
+  // The diagnostic bench plan changes only supply mode and is never stepped.
+  // It exposes the same mass/inertia-dependent required impulse without
+  // bypassing the finite simulation's actual preflight decision.
+  assert.deepEqual({...s.params,supplyMode:'bench'},planner.params);assert.equal(s.body.mass,planner.body.mass);assert.deepEqual(s.body.inertia,planner.body.inertia);
+  assert.equal(planner.startManeuver('roll'),true);const requiredImpulseNs=planner.getReference().maneuver.requiredImpulseNs,availableImpulseNs=s.telemetry().usableHoverImpulseNs;
+  assert.ok(availableImpulseNs<requiredImpulseNs);
+  const before=physicalState(s),beforePose=pose(s);assert.equal(s.startManeuver('roll'),false);assert.match(s.status,/剩余冲量不足/);
+  assert.deepEqual(physicalState(s),before,'Rejected finite launch changes only its status explanation');
+  values.rollPrechecks.push({scenario,supplyMode:'finite',tankLitres,initialPressureBar:s.pressureBar(),availableImpulseNs,requiredImpulseNs,marginNs:availableImpulseNs-requiredImpulseNs,reason:s.status,before:beforePose,after:pose(s),physicalStateUnchanged:true});
+ }
+ const blocked=new RoadsterSim();blocked.reset('ceiling');const blockedBefore=physicalState(blocked);assert.equal(blocked.startManeuver('roll'),false);assert.deepEqual(physicalState(blocked),blockedBefore);assert.match(blocked.status,/先回正/);
+ const low=flat();low.gasMass*=.5;const lowBefore=physicalState(low);assert.equal(low.startManeuver('roll'),false);assert.deepEqual(physicalState(low),lowBefore);assert.equal(low.mode,'drive');assert.match(low.status,/剩余冲量不足/);
+ values.additionalRollRejections={inverted:{reason:blocked.status,physicalStateUnchanged:true},halfRemainingGas:{reason:low.status,gasMassKg:low.gasMass,physicalStateUnchanged:true}};
 }
-pass('Sufficient finite ground rolls land softly and airborne rolls recover their original height without hull impacts; gas and attitude prechecks reject infeasible launches atomically');
+pass('Finite 900 L ground and 1100 L airborne defaults are rejected by their measured impulse shortfalls; gas and attitude rejections preserve the full physical state');
 {
  const a=runExperiment({kind:'steer',speedKmh:80,angleDeg:2}),b=runExperiment({kind:'steer',speedKmh:80,angleDeg:2});assert.deepEqual(a.metrics,b.metrics);assert.equal(a.rows.length,80);assert.equal(a.appliedParams.steeringAssist,false);assert.ok(a.metrics.maxBetaDeg<5);assert.ok(a.rows.every((r,i)=>Math.abs(r.time-(i+1)/20)<1e-8));assert.ok(a.assumptions.length>=3);
  const rise=runExperiment({kind:'rise',params:{climbRateMps:1.5}});assert.ok(rise.metrics.maxVerticalMps<1.7);values.experiments={steer:a.metrics,rise:rise.metrics};
@@ -58,4 +86,4 @@ pass('Independent research fixtures are deterministic, retain applied parameters
  for(const t of m.tracks){const data=readFileSync('dist/'+t.src);assert.equal(data.length,t.bytes);assert.equal(createHash('sha256').update(data).digest('hex'),t.sha256);assert.ok(['CC-BY-4.0','CC0-1.0'].includes(t.license)&&t.attribution&&t.licenseEvidenceUrl);}
 }
 pass('The local radio includes instrumental, English and Chinese recordings with explicit attribution licenses and matching asset hashes');
-writeFileSync('qa/research-dynamics-3.9.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');
+writeFileSync('qa/research-dynamics-3.11.json',JSON.stringify({status:'passed',checks,values,scope:'Internal engineering-model acceptance; not Tesla calibration'},null,2)+'\n');

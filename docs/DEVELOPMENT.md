@@ -6,6 +6,8 @@ The [project introduction](../README.md) is for playing and understanding the pr
 
 Use Node.js 22 or newer. `npm start` serves `dist/` on port 8080; edit the source modules there and refresh. Dependencies such as Three.js and cannon-es are vendored. Do not run the application as a `file://` URL: ES modules and research workers need HTTP. No package installation or bundler is needed.
 
+Large reviewed binary assets and complete curve evidence are stored as lossless gzip segments in [`repository-payloads/`](../repository-payloads/README.md). Local serving, validation and Pages preparation restore the original paths and verify their content hashes. Runtime rendering uses the same original bytes. Restoration preserves local edits; publication rejects a mismatch until the edited payload has been reviewed and repacked.
+
 ## Shared simulation and data contracts
 
 | Area | Main source |
@@ -36,15 +38,27 @@ Locale must never rewrite raw state, protocol fields, stored user names or ident
 - Offline GLSL checks require an existing `glslangValidator`. They establish syntax/interface compatibility only, not driver behavior, framebuffer correctness or visual quality.
 - `qa/` retains earlier release reports. A report whose source hashes do not match this build must never be cited as current release acceptance.
 
-For exact commands and measured outcomes, see [3.9 release evidence](../3.9-UPDATE-NOTES.md), [physical assumptions and results](../dist/physics-3.9-notes.md), and the release-specific JSON reports under `qa/`.
+The 3.11 dynamics gate compares the retained 3.10 source against the current solver with 30 stated road protocols and 14 flight cases. It records 120 Hz extrema and 20 Hz curves, with actual speed, wheel load, tire slip, force usage, quaternion, angular speed and delivered nozzle force. These deterministic cases do not establish human steering feel. `npm test` and `npm run validate` now run the same complete numerical/integration gate.
+
+To include the optional interface and compiler checks in that run, supply paths to tools that are already installed:
+
+```sh
+JSDOM_MODULE_PATH=/absolute/path/to/jsdom/lib/api.js \
+GLSLANG_VALIDATOR=/absolute/path/to/glslangValidator \
+npm run validate
+```
+
+The compiler reports exact passes separately from the documented temporary-input normalization of the stock Three `average` identifier. Production vendor code is unchanged. Raw 3.11 curve JSON and its plotting script are retained; `python scripts/plot-dynamics-3.11.py` regenerates the numerical figures when matplotlib is available.
+
+For exact commands and measured outcomes, see [3.11 release evidence](release-3.11.md), [matched driving and flight comparisons](vehicle-dynamics-3.11.md), [seeded controller protocol](research-robustness-3.11.md), [continuous capture protocols](control-capture-3.11.md), [physical assumptions and results](../dist/physics-3.9-notes.md), and the release-specific JSON reports under `qa/`.
 
 ## Actual graphics acceptance
 
-The graphics panel supports fixed route cameras, PNG capture and conditions JSON. Test clear day and wet night at the same model state, camera, focal length, device, browser, resolution, quality and exposure settings. Compare the immutable 3.8 commit `a25b228a6d56f358cba24106ce897e1cb5c99bc1` with the current release. The vehicle studio also loads the frozen 3.8 vehicle under the same studio lighting for paired image capture on a graphics-capable device.
+The graphics panel supports fixed route cameras and a ZIP containing an original rendered PNG with conditions captured synchronously from that frame. Test clear day and wet night at the same model state, camera, focal length, device, browser, resolution, quality and exposure settings. Compare the immutable 3.9 commit `6083bbf0e01f4eef5447f2c1b951d8b41e691f46` with the current release. The vehicle studio defaults to the frozen 3.9 vehicle under the same 50 mm camera and lighting; its capture ZIP preserves both original rendered PNGs, a separately annotated comparison and their same-frame conditions. Frozen 3.8 remains available as an older reference. Standalone conditions exports are explicitly unbound to a frame.
 
 Capture five active seconds of warm-up followed by 30 seconds or the 150-second route. Export rAF p50/p95/p99, long frames, CPU stages and GPU timings where supported. Retain resolution-governor changes and separate menu/pause/loading from steady driving. A reduced draw-call count, a DOM canvas facade or offline shader compilation cannot substitute for these observations.
 
-This release’s cloud browser reports `GL_VENDOR=Disabled / GL_RENDERER=Disabled`. That is an environment limitation, not evidence of a website renderer regression. The available browser can validate the same-page numerical UI and exports; it cannot accept the 3D visuals or driving.
+The user’s computer supplied actual WebGL 3.9 city and vehicle images, which were retrieved and inspected for 3.10. The development cloud browser has no usable WebGL; this is a separate environment limitation, not evidence of a website rendering fault. Matched 3.11 after-images, motion and route GPU timings remain pending. Use the [current isolation and light-field handoff](visual-3.11.md) alongside the [original same-frame conditions](visual-evidence-3.10.md); keep paused preview, loading, warmup and steady driving separate. The cloud browser can validate the same-page numerical UI and exports, not current 3D pixels or driving feel.
 
 ## Existing Pages delivery
 
@@ -63,3 +77,7 @@ Do not use a previous release’s successful deployment as evidence for a new on
 ## Historical development notes
 
 [3.8 notes](../3.8-UPDATE-NOTES.md), [3.7 notes](../3.7-UPDATE-NOTES.md), [3.6 notes](../3.6-UPDATE-NOTES.md), [3.5 notes](../3.5-UPDATE-NOTES.md), and the [archived 3.8 README](history/README-3.8.md) preserve earlier architecture, tuning and release context. The archived instructions describe their own release.
+
+### 验证输出与当前环境
+
+完整整合命令的实际退出码、模型构建身份、先前失败与最终运行证据保存在 `qa/validation-final-run-3.11.json`。本次开发环境的 Node 管道捕获曾返回 `EPERM` 且丢失子进程输出，导致明细汇总低计数；`scripts/validate.mjs` 改用临时常规文件描述符保存 stdout/stderr，任何执行错误或非零退出仍使门禁失败。成功和退出码 7 的独立探针见 `qa/validation-subprocess-output-diagnostic-3.11.json`。该修正仅涉及报告收集，物理判据与实际调用的子测试保持原样。

@@ -63,14 +63,21 @@ await test('Projected footprint and inspection context change actual geometry wh
 await test('Street/headlight pool uses finite shadowed lights at real anchors, with bounded update rate',()=>{
   const scene=new THREE.Scene(),vehicle=new THREE.Group();scene.add(vehicle);vehicle.position.set(-200,.7,-300);
   const anchors=Array.from({length:8},(_,i)=>({position:[-209+i%2*18,7.3,-320+Math.floor(i/2)*14],color:0xffccaa,intensity:1600,range:28}));
-  const lights=createCityPracticalLights(scene,anchors);lights.setVehicleRoot(vehicle);lights.setEnabled(true);
+  const lights=createCityPracticalLights(scene,anchors);lights.setVehicleRoot(vehicle);lights.setEnabled(true);let time=0;const cadence=[];
   for(const quality of ['balanced','high','ultra']){
-    lights.configure(quality);for(let i=0;i<80;i++)lights.update(i/60,{x:-200,y:2,z:-300});
+    lights.configure(quality);for(let i=0;i<80;i++)lights.update(time+=1/60,{x:-200,y:2,z:-300});
     const budget=CITY_PRACTICAL_LIGHT_BUDGET[quality];assert.ok(lights.stats.streetSpots<=budget.street);assert.equal(lights.stats.headlightSpots,budget.heads);assert.ok(lights.stats.shadowMaps<=budget.street+budget.heads);
     for(const light of lights.getLights()){assert.equal(light.isSpotLight,true);assert.equal(light.castShadow,true);assert.equal(light.shadow.autoUpdate,false);assert.ok(light.distance<=66&&light.angle<1);}
-    assert.equal(lights.wantsShadowUpdate(10),true);assert.equal(lights.wantsShadowUpdate(10+1/240),false);
+    // The old test reused t=10 for every profile. Keep a monotonic rendering
+    // clock, then distinguish a pending movement update from an idle scene.
+    time+=.1;assert.equal(lights.wantsShadowUpdate(time),true);
+    vehicle.position.x+=.05;lights.update(time+1/240,{x:-200,y:2,z:-300});
+    const early=lights.wantsShadowUpdate(time+1/240);assert.equal(early,false,'Motion must not bypass the configured shadow-rate cap');
+    time+=1/budget.hz+1e-6;const moved=lights.wantsShadowUpdate(time);assert.equal(moved,true,'Pending motion must update at the next permitted interval');
+    const beforeIdle=lights.stats.updates;time+=1;lights.update(time,{x:-200,y:2,z:-300});assert.equal(lights.wantsShadowUpdate(time),false,'An unchanged scene must not regenerate the same shadow map');
+    cadence.push({quality,minimumIntervalS:1/budget.hz,motionUpdated:moved,prematureUpdate:early,idleAdditionalUpdates:lights.stats.updates-beforeIdle});
   }
-  lights.setEnabled(false);assert.equal(lights.getLights().length,0);evidence.lightBudgets=CITY_PRACTICAL_LIGHT_BUDGET;lights.dispose();
+  lights.setEnabled(false);assert.equal(lights.getLights().length,0);evidence.lightBudgets=CITY_PRACTICAL_LIGHT_BUDGET;evidence.lightCadence=cadence;lights.dispose();
 });
 function fakeRenderer(){
   let target={id:'original'},face=2,mip=1,viewport=new THREE.Vector4(7,8,600,350),scissor=new THREE.Vector4(1,2,500,300),scissorTest=true;
@@ -117,9 +124,9 @@ await test('Inspection retains six calibrated views, adds two close-ups and free
   assert.equal(createHash('sha256').update(original).digest('hex'),'3f532f879f1a86af187a7f89a8f860de61175bdef27d78a783e2ba7fb62763f7');
   assert.equal(createHash('sha256').update(readFileSync(new URL('../dist/vehicle-reference-layout-3.8.js',import.meta.url))).digest('hex'),'d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec');
   const inspection=readFileSync(new URL('../dist/vehicle-inspection.js',import.meta.url),'utf8');assert.ok(inspection.includes("import('./vehicle-reference-3.8.js')"));assert.ok(inspection.includes("$('capture-pair').onclick"));
-  evidence.inspection={rig:VEHICLE_INSPECTION_RIG.id,focalLengthMm:50,cameras:ids,baseline:'Original 3.8 mesh/material, verified source SHA-256 after import rewiring, under current renderer and lighting; not a complete old pipeline capture',actualScreenshots:'Not captured in this graphics-disabled environment'};
+  evidence.inspection={rig:VEHICLE_INSPECTION_RIG.id,focalLengthMm:50,cameras:ids,baseline:'Original 3.8 mesh/material, verified source SHA-256 after import rewiring, under current renderer and lighting; not a complete old pipeline capture',actualScreenshots:'User-supplied 3.9 IAB images were inspected separately; these Node checks provide no 3.11 after-images.'};
 });
 const paths=['dist/visual-presets.js','dist/vehicle.js','dist/vehicle-inspection.js','dist/vehicle-inspection.html','dist/vehicle-inspection.css','dist/vehicle-reference-3.8.js','dist/vehicle-reference-layout-3.8.js','dist/city-corridor-plan.js','dist/pavement-surface-material.js','dist/i18n-visual-en.js','dist/city-environment.js','dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/road-surface-material.js','dist/indirect-lighting.js','dist/urban-architecture.js','dist/city-map.js','qa/visual-upgrade-check.mjs'];
 const sourceHashes=Object.fromEntries(paths.map(p=>[p,createHash('sha256').update(readFileSync(new URL('../'+p,import.meta.url))).digest('hex')]));
 const result={format:'roadster-visual-structure-acceptance-1',status:'passed',createdAt:new Date().toISOString(),checks,evidence,sourceHashes,limits:['Geometry, API state and renderer-contract tests only. No real WebGL frame, browser graphics driver, pixel/shadow-leak inspection, GPU performance or real driving experience is certified.','The reflection renderer is exercised through a state-recording stub; its real framebuffer needs target-device validation.','A 50 mm rig makes future comparison repeatable. Official image focal lengths and dimensions are not published.','Additional street facade surfaces remain within the existing conservative building envelopes; no buildings or city routes were removed.']};
-writeFileSync(new URL('./visual-upgrade-3.9.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:result.status,checks:checks.length,evidence},null,2));car.dispose();
+writeFileSync(new URL('./visual-upgrade-3.11.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:result.status,checks:checks.length,evidence},null,2));car.dispose();
