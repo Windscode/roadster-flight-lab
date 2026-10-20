@@ -46,6 +46,7 @@ export class PerformanceMeter{
   }
   end(extra={}){
     this.endGpu();const frame=this.current;frame.cpu.total=performance.now()-this.started;frame.calls=this.renderer.info.render.calls;frame.triangles=this.renderer.info.render.triangles;Object.assign(frame,extra);this.last=frame;
+    if(frame.diagnosticFrame)frame.active=false;
     this.frames.push(frame);if(this.frames.length>this.capacity)this.frames.shift();
     const capture=this.capture;
     if(capture&&!capture.complete&&!capture.stopped&&frame.active){
@@ -66,7 +67,7 @@ export class PerformanceMeter{
   stopCapture(reason='用户停止采样'){if(this.capture&&!this.capture.complete){this.capture.stopped=true;this.capture.stopReason=reason;this.capture.endedAt=new Date().toISOString();}}
   markEvent(type,detail={}){if(this.capture&&!this.capture.complete&&!this.capture.stopped)this.capture.events.push({type,frameNumber:this.frameNumber,elapsedMs:this.capture.elapsedMs,phase:this.capture.warmupElapsedMs<this.capture.warmupMs?'warmup':'steady',...detail});}
   snapshot(frames=this.frames,gpuSamples=this.gpuSamples){
-    const active=frames.filter(frame=>frame.active),use=active.length?active:frames;
+    const eligible=frames.filter(frame=>!frame.diagnosticFrame),active=eligible.filter(frame=>frame.active),use=active.length?active:eligible;
     // Long frames remain in percentiles. Hidden/paused intervals are excluded
     // only through the explicit active flag, never through a duration cutoff.
     const intervals=use.map(frame=>frame.frameMs).filter(value=>Number.isFinite(value)&&value>0);
@@ -74,9 +75,9 @@ export class PerformanceMeter{
     const cpu=Object.fromEntries([...cpuNames].map(name=>{const d=distribution(use.map(frame=>frame.cpu[name]||0));return[name,{...d,medianMs:d.p50Ms}];}));
     const gpu=gpuSamples.filter(sample=>frameNumbers.has(sample.frameNumber));
     const raf=distribution(intervals),resolutions=use.map(frame=>frame.resolution).filter(Boolean),pixels=resolutions.map(size=>size.width*size.height);
-    return{samples:use.length,activeDriving:active.length>0,population:active.length?'active-driving':use.length?'paused-preview':'no-frames',medianFps:round(raf.p50Ms?1000/raf.p50Ms:null),frameMedianMs:raf.p50Ms,frameP95Ms:raf.p95Ms,frameP99Ms:raf.p99Ms,onePercentLowFps:round(raf.p99Ms?1000/raf.p99Ms:null),rafFrameTime:raf,
+    return{samples:use.length,diagnosticFramesExcluded:frames.length-eligible.length,activeDriving:active.length>0,population:active.length?'active-driving':use.length?'paused-preview':'no-frames',medianFps:round(raf.p50Ms?1000/raf.p50Ms:null),frameMedianMs:raf.p50Ms,frameP95Ms:raf.p95Ms,frameP99Ms:raf.p99Ms,onePercentLowFps:round(raf.p99Ms?1000/raf.p99Ms:null),rafFrameTime:raf,
       longFrames:{over50Ms:intervals.filter(ms=>ms>50).length,over100Ms:intervals.filter(ms=>ms>100).length,over250Ms:intervals.filter(ms=>ms>250).length,maxMs:raf.maxMs},
-      cpuSubmission:cpu,gpuExecution:distribution(gpu.map(sample=>sample.gpuMs)),gpuMs:round(this.gpuMs),gpuTimerSupported:!!this.ext,
+      cpuSubmission:cpu,gpuExecution:distribution(gpu.map(sample=>sample.gpuMs)),gpuMs:round(gpu.at(-1)?.gpuMs??null),gpuTimerSupported:!!this.ext,
       renderPixels:pixels.length?{min:Math.min(...pixels),max:Math.max(...pixels),changed:Math.min(...pixels)!==Math.max(...pixels)}:null,
       lastFrame:use.length?{calls:use.at(-1).calls,triangles:use.at(-1).triangles,passes:use.at(-1).passes,resolution:use.at(-1).resolution,physicsSteps:use.at(-1).physicsSteps}:null};
   }

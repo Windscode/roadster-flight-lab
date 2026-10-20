@@ -1,0 +1,180 @@
+{
+  "status": "passed",
+  "date": "2026-10-20",
+  "geometrySHA256": "2dba61c7784a22bcf1f29ce9dfe2af28607ed600a4d5a5e2d8c1fa03fd382c67",
+  "checks": [
+    {
+      "name": "three district identities, three architectural nodes and a street hierarchy",
+      "count": 3,
+      "status": "passed"
+    },
+    {
+      "name": "independent pairwise building footprint overlap audit",
+      "count": 5793,
+      "status": "passed"
+    },
+    {
+      "name": "all planned street centrelines support a 2.1 m wide vehicle with 1.75 m clearance",
+      "count": 4254,
+      "status": "passed"
+    },
+    {
+      "name": "elevated roads retain visible/physical height parity and remain within city bounds",
+      "count": 113,
+      "status": "passed"
+    },
+    {
+      "name": "all six exploration spawn points retain a road/support surface",
+      "count": 6,
+      "status": "passed"
+    },
+    {
+      "name": "upper asphalt union has no coplanar overlap at intersections",
+      "count": 105,
+      "status": "passed"
+    },
+    {
+      "name": "all node/walkway solids are physical; both access stairs retain 1.75 m headroom",
+      "count": 362,
+      "status": "passed"
+    },
+    {
+      "name": "outer ridge is separated from the civic court and its roof",
+      "count": 7,
+      "status": "passed"
+    },
+    {
+      "name": "geometry remains finite; The current release uses a visible draw/triangle budget rather than a global allocated batch limit",
+      "count": 151418,
+      "status": "passed"
+    }
+  ],
+  "plan": {
+    "districts": 3,
+    "nodes": 3,
+    "streets": 12,
+    "roadSegments": 113,
+    "buildingCount": 114,
+    "cityColliders": 1937
+  },
+  "architecture": {
+    "buildings": 114,
+    "heroBuildings": 39,
+    "shopfronts": 2131,
+    "recessedWindows": 10761,
+    "balconies": 424,
+    "mechanicalUnits": 559,
+    "instances": 132334,
+    "drawBatches": 1003,
+    "triangles": 1585784,
+    "textureCount": 0,
+    "sectorSizeM": 160,
+    "sectorCount": 196,
+    "lightAnchors": 208,
+    "massingTiers": 534,
+    "setbackTerraces": 315,
+    "structuralBraces": 168,
+    "rotatedTowers": 26,
+    "industrialHalls": 9,
+    "sawtoothRoofs": 45,
+    "civicBuildings": 6,
+    "entrancePortals": 32,
+    "continuousPlinths": 380,
+    "shutterPanels": 404,
+    "curatedWeaveFrontages": 8,
+    "routeFacingFrontages": 40,
+    "facadePortals": 16,
+    "backlitWindowPanels": 185,
+    "serviceBays": 8,
+    "interiorAtlases": 0,
+    "surfaces": {
+      "quality": "balanced",
+      "materialKinds": [
+        "concrete",
+        "enamel",
+        "metal",
+        "frame",
+        "glass",
+        "shutter"
+      ],
+      "textureCount": 0,
+      "scanLoaded": false,
+      "scanTileMetres": 2.5,
+      "uvContract": "Local face UV multiplied by each instance metre dimensions; independent of world yaw.",
+      "normalContract": "Cotangent frame with UV determinant, tangent length and normal length guards.",
+      "fineDetail": "Derivative-filtered, with an additional distance fade; no displacement.",
+      "interiorTextures": 0,
+      "transparentMaterials": 0
+    },
+    "renderBudget": {
+      "quality": "balanced",
+      "allocatedBatches": 1003,
+      "allocatedTriangles": 1585784,
+      "activeBatches": 255,
+      "activeTriangles": 502094,
+      "shadowBatches": 39,
+      "shadowTriangles": 136896,
+      "culledBatches": 748,
+      "updates": 1,
+      "updateMs": 1.347340000000031
+    },
+    "designedGroundOrders": {
+      "southbank": 12,
+      "service": 2,
+      "gallery": 3,
+      "market": 4,
+      "exchange": 4,
+      "crosstown": 7,
+      "residential": 6,
+      "workshop": 2
+    },
+    "geometryMiB": 11.61
+  },
+  "streetLife": {
+    "marketSections": 7,
+    "stalls": 14,
+    "cafes": 5,
+    "repairShops": 1,
+    "flowerStalls": 3,
+    "produceStalls": 2,
+    "bookStalls": 1,
+    "foodStalls": 2,
+    "pedestrians": 0,
+    "bicycles": 2,
+    "benches": 8,
+    "goods": 234,
+    "trees": 8,
+    "instances": 19084,
+    "drawBatches": 169,
+    "triangles": 184108,
+    "collisionProxies": 108,
+    "originalAtlases": 0,
+    "sectorSizeM": 80,
+    "animals": 0,
+    "animalTriangles": 0,
+    "animatedAnimals": 0,
+    "animalAssetErrors": [],
+    "activeAnimations": 0,
+    "animationHz": 0,
+    "crowdsEnabled": false,
+    "externalCharacterLoads": 0,
+    "renderBudget": {
+      "quality": "balanced",
+      "allocatedBatches": 169,
+      "allocatedTriangles": 184108,
+      "activeBatches": 49,
+      "activeTriangles": 33048,
+      "shadowBatches": 0,
+      "shadowTriangles": 0,
+      "culledBatches": 120,
+      "updates": 1,
+      "updateMs": 0.11441199999990204
+    }
+  },
+  "limits": [
+    "Road clearance checks sample a 2.1 m vehicle corridor; they are not a traffic/navigation solver.",
+    "Wide street paint sits on the existing continuous ground/terrace support.",
+    "Decorative facade details use conservative building envelopes; no interiors are promised.",
+    "Indirect light is verified separately against canonical static geometry and the current shared material palette."
+  ]
+}

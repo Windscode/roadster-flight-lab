@@ -149,8 +149,8 @@ check('Manual full rotation, X and G recovery use bounded actual nozzles; the ne
       if(option.automatic||option.gestureSeconds===undefined){assert.ok(r.metrics.rotationDeg>=355&&r.metrics.rotationDeg<370);assert.ok(r.metrics.minimumUpDot<-.99);}
       if(!option.automatic){assert.ok(r.metrics.recoveredAtS!==null);assert.ok(Math.abs(r.metrics.finalRollDeg)<.8&&Math.abs(r.metrics.finalPitchDeg)<.8);}
       if(option.automatic&&Sim===RoadsterSim){
-        assert.ok(r.plan.launchVelocity<=14);assert.ok(r.plan.launchAccelerationMps2<=simParam(params,'verticalAccelerationMps2'));
-        for(let k=0;k<=200;k++){const s=sampleRollManeuver(r.plan.profile,r.plan.duration*k/200);assert.ok(Math.abs(s.rateRadS)*DEG<=simParam(params,'rollRateDegS')+1e-8);assert.ok(Math.abs(s.accelerationRadS2)*DEG<=simParam(params,'angularAccelerationDegS2')+1e-8);}
+        assert.equal(r.plan.profile.kind,'quick-roll-1');assert.ok(r.plan.launchVelocity<5);assert.ok(r.plan.launchAccelerationMps2<=.88*r.plan.preflight.availableAccelMps2+1e-10);
+        for(let k=0;k<=200;k++){const s=sampleRollManeuver(r.plan.profile,r.plan.duration*k/200);assert.ok(Math.abs(s.rateRadS)*DEG<=360+1e-8);assert.ok(Math.abs(s.accelerationRadS2)*DEG<=720+1e-8);}
         assert.ok(r.metrics.maxHeightM<r.plan.plannedPeakHeight);assert.ok(Math.abs(r.metrics.finalHeightM-80)<.2);
       }
       evidence.flight.push({id,...summarize(r)});curves.flight.runs.push({id:id+'-'+(option.automatic?'X':option.prelaunch?'E14-roll-G':option.gestureSeconds?option.axis+'-release-G':'full-manual-roll-G'),...r});
@@ -158,29 +158,29 @@ check('Manual full rotation, X and G recovery use bounded actual nozzles; the ne
   }
   const before=evidence.flight.find(r=>r.id==='3.10'&&!r.configuration.automatic&&r.configuration.gestureSeconds===null),after=evidence.flight.find(r=>r.id===`${REPORT_VERSION}-default`&&!r.configuration.automatic&&!r.configuration.prelaunch&&r.configuration.gestureSeconds===null);
   assert.ok(after.metrics.release.timeS<before.metrics.release.timeS*.75);assert.ok(after.metrics.heightLossM<before.metrics.heightLossM*.55);
-  evidence.defaultRationale='180 deg/s and 360 deg/s2 retain a less severe partial-roll/G recovery than the 240/480 maneuver preset. Both are references, not hard clips on actual body rates. X shares the selected reference limits and preflight accounts for its greater time, headroom and gas cost.';
+  evidence.defaultRationale='180 deg/s and 360 deg/s2 retain a less severe partial-roll/G recovery than the 240/480 maneuver preset. Both are references, not hard clips on actual body rates. X has an independent declared 360/720 quick-roll reference; preflight still accounts for actual pressure, available torque, finite impulse and clearance. The fourth quick-roll practice preset is tested in x-flip-3.13.';
 });
 function simParam(params,key){return params[key]??DEFAULT_PARAMS[key];}
 
 check('Finite gas, overhead clearance, low altitude and G key semantics remain physical; mid-roll snapshots continue exactly',()=>{
-  const finite=flatDynamics(RoadsterSim,{params:{supplyMode:'finite',tankLitres:900}}),before=physical(finite);
+  const finite=flatDynamics(RoadsterSim,{params:{supplyMode:'finite',tankLitres:150}}),before=physical(finite);
   assert.equal(finite.startManeuver('roll'),false);assert.equal(physical(finite),before);assert.match(finite.status,/冲量/);
   const agile=flatDynamics(RoadsterSim,{params:{supplyMode:'finite',tankLitres:900,rollRateDegS:360,angularAccelerationDegS2:720,verticalAccelerationMps2:10}});assert.equal(agile.startManeuver('roll'),true);let inversion=false;
   for(let k=0;k<15/DT;k++){const t=agile.advanceFixed({},DT);inversion||=Math.abs(t.rollDeg)>175;if(!t.maneuver&&t.mode==='drive'&&t.verticalSpeed<.1)break;}
   assert.ok(inversion);assert.equal(agile.mode,'drive');assert.ok(agile.gasMass>20);assert.ok(Math.abs(agile.body.velocity.y)<.8);
   const low=rotationRun(RoadsterSim,{height:5});assert.ok(low.metrics.firstContact,'A full manual roll without prelaunch cannot be guaranteed from 5 m');
-  const roof=new RoadsterSim({}, {world:'windlab'});roof.body.position.y=14;roof.setMode('hover');const roofBefore=physical(roof);assert.equal(roof.startManeuver('roll'),false);assert.equal(physical(roof),roofBefore);assert.match(roof.status,/净空/);
+  const roof=new RoadsterSim({}, {world:'windlab'});roof.body.position.y=22;roof.setMode('hover');const roofBefore=physical(roof);assert.equal(roof.startManeuver('roll'),false);assert.equal(physical(roof),roofBefore);assert.match(roof.status,/净空/);
   const level=flatDynamics(RoadsterSim,{height:40});level.setAirStabilization(true);let maxTilt=0;
   for(let k=0;k<120;k++){const t=level.advanceFixed({roll:1,pitch:1},DT);maxTilt=Math.max(maxTilt,Math.abs(t.rollDeg),Math.abs(t.pitchDeg));}
   assert.ok(maxTilt<5,'With G enabled Z/B are translation, not the off-G roll mapping');assert.ok(Math.abs(level.body.position.x)>1);
-  const source=flatDynamics(RoadsterSim,{height:40});assert.equal(source.startManeuver('roll'),true);for(let k=0;k<4/DT;k++)source.advanceFixed({},DT);assert.equal(source._maneuver.phase,'rotate');
+  const source=flatDynamics(RoadsterSim,{height:40});assert.equal(source.startManeuver('roll'),true);for(let k=0;k<100;k++)source.advanceFixed({},DT);assert.equal(source._maneuver.phase,'rotate');
   const snapshot=source.exportState(),replay=flatDynamics(RoadsterSim,{height:40});replay.importState(snapshot);
   for(let k=0;k<240;k++){source.advanceFixed({},DT);replay.advanceFixed({},DT);}assert.deepEqual(replay.exportState(),source.exportState());
   const bad=structuredClone(snapshot);bad.params.verticalAccelerationMps2=0;assert.throws(()=>replay.importState(bad),/升降加速度/);
-  evidence.bounds={finite900DefaultRejected:true,finite900AgileGasRemainingKg:agile.gasMass,finite900AgileHeightM:agile.body.position.y,low5mFirstContact:low.metrics.firstContact,overheadDeclinedWithoutMovement:true,GonPeakTiltDeg:maxTilt,GonLateralTranslationM:level.body.position.x,midRollReplay:'exact full snapshot',ratedPowerW:DEFAULT_PARAMS.motorPower,dryMu:DEFAULT_PARAMS.tireMu,mainNozzleN:DEFAULT_PARAMS.liftNozzleMax};
+  evidence.bounds={finite150InsufficientImpulseRejected:true,finite900AgileGasRemainingKg:agile.gasMass,finite900AgileHeightM:agile.body.position.y,low5mFirstContact:low.metrics.firstContact,overheadDeclinedWithoutMovement:true,GonPeakTiltDeg:maxTilt,GonLateralTranslationM:level.body.position.x,midRollReplay:'exact full snapshot',ratedPowerW:DEFAULT_PARAMS.motorPower,dryMu:DEFAULT_PARAMS.tireMu,mainNozzleN:DEFAULT_PARAMS.liftNozzleMax};
 });
 
 const sourceSha256=Object.fromEntries(['dist/physics.js','dist/tire-dynamics.js','dist/vehicle-models.js','dist/simulation-snapshot.js','dist/flight-programs.js'].map(path=>[path,hash(path)]));
 writeFileSync(new URL(`../qa/vehicle-dynamics-curves-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({schema:'roadster.numerical-control-curves',version:1,modelVersion:MODEL_VERSION,sampleHz:20,solverHz:120,sourceSha256,scope:'Flat numerical fixtures; same stated initial conditions and pedal/steer protocols. No WebGL, device input, camera feel, FPS or Tesla calibration acceptance.',...curves})+'\n');
-writeFileSync(new URL(`../qa/vehicle-dynamics-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,generatedAt:new Date().toISOString(),baselineCommit:'6d2b897bc928ae0e44fa258a7184719cd660e48b',sourceSha256,checks,evidence,curveFile:`qa/vehicle-dynamics-curves-${REPORT_VERSION}.json`,limits:['Numerical dynamics only. Real keyboard/camera road feel still requires the matched live capture.','Large CG body beta on a tight low-speed turn can be kinematic; per-wheel slip and contact use are reported separately.','The raw tire capacity is unchanged. TCS reduces driver torque under combined demand; disabling it retains slide risk.','X shares reference limits, not a guarantee of zero height loss. Slower profiles need more headroom and gas.','Engineering assumptions remain mu=1.25, 700 kW mechanical drive and 20 kN per main nozzle.']},null,2)+'\n');
+writeFileSync(new URL(`../qa/vehicle-dynamics-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,generatedAt:new Date().toISOString(),baselineCommit:'6d2b897bc928ae0e44fa258a7184719cd660e48b',sourceSha256,checks,evidence,curveFile:`qa/vehicle-dynamics-curves-${REPORT_VERSION}.json`,limits:['Numerical dynamics only. Real keyboard/camera road feel still requires the matched live capture.','Large CG body beta on a tight low-speed turn can be kinematic; per-wheel slip and contact use are reported separately.','The raw tire capacity is unchanged. TCS reduces driver torque under combined demand; disabling it retains slide risk.','X uses an independent quick-roll reference. Force bounds and actual drop remain physical; manual comfort settings no longer slow X.','Engineering assumptions remain mu=1.25, 700 kW mechanical drive and 20 kN per main nozzle.']},null,2)+'\n');
 console.log(JSON.stringify({status:'passed',checks:checks.length,handlingCases:evidence.handling.length,flightCases:evidence.flight.length,primary:evidence.primaryHandlingComparisons}));

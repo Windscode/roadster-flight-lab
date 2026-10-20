@@ -57,6 +57,11 @@ const braking312=run('tests/braking-corner-3.12.test.mjs');
 const chase312=run('tests/chase-camera-3.12.test.mjs');
 const reflection312=run('tests/reflection-stability-3.12.test.mjs');
 const recovery312=run('tests/research-recovery-grid-3.12.test.mjs');
+const sampler313=run('tests/sampler-budget-3.13.test.mjs');
+const renderPrograms313=run('tests/render-program-diagnostics-3.13.test.mjs');
+const flip313=run('tests/x-flip-3.13.test.mjs');
+const surfaces313=run('tests/visual-quality-3.13.test.mjs');
+const history313=run('tests/history-compatibility-3.13.test.mjs');
 const visualStructure=run('qa/visual-upgrade-check.mjs');
 const render=run('tests/render-performance.test.mjs');
 const probeSun=run('tests/local-probe-sun.test.mjs');
@@ -77,17 +82,22 @@ if(process.env.JSDOM_MODULE_PATH){
   for(const path of ['qa/research-panel-dom-check.mjs','qa/experiment-console-dom-check.mjs','qa/research-workflow-3.10-check.mjs','qa/research-robustness-3.11-dom-check.mjs','qa/research-recovery-grid-3.12-dom-check.mjs','qa/vehicle-inspection-3.10-dom-check.mjs'])run(path,[process.env.JSDOM_MODULE_PATH]);
 }
 if(process.env.GLSLANG_VALIDATOR){
-  run('scripts/validate-city-shaders.mjs',['--validatorPath',process.env.GLSLANG_VALIDATOR]);
+  run('scripts/validate-city-shaders.mjs',['--validatorPath',process.env.GLSLANG_VALIDATOR,'--compareBaseline']);
   run('scripts/validate-render-shaders.mjs',['--validatorPath',process.env.GLSLANG_VALIDATOR]);
 }
 const report=read('dist/validation.json'),vehicle=read(`qa/vehicle-geometry-${REPORT_VERSION}.json`);
 const passChecks=text=>[...text.matchAll(/PASS: (.+)/g)].map(m=>m[1]);
 report.regressions={flightControls:{status:'passed',checks:passChecks(flight)},flightPrograms:{status:'passed',checks:passChecks(programs)},windLaboratory:{status:'passed',checks:passChecks(windlab)},localReflectionSun:{status:'passed',checks:[...probeSun.matchAll(/PASS: (.+)/g)].map(m=>m[1])},exteriorMaterials:{status:'passed',checks:[...exterior.matchAll(/PASS: (.+)/g)].map(m=>m[1])},physicsCpu:{status:'passed',checks:[...physicsCpu.matchAll(/PASS: (.+)/g)].map(m=>m[1])},cityRenderBudget:{status:'passed',checks:read(`qa/render-budget-${REPORT_VERSION}.json`).checks},poseHold:{status:'passed',checks:[...hold.matchAll(/PASS: (.+)/g)].map(m=>m[1])},renderPerformance:{status:'passed',checks:[...render.matchAll(/PASS: (.+)/g)].map(m=>m[1])},researchStudy:{status:'passed',checks:[...study.matchAll(/PASS: (.+)/g)].map(m=>m[1])},researchDynamics:{status:'passed',checks:[...research.matchAll(/PASS: (.+)/g)].map(m=>m[1])},cityArchitecture:{status:'passed',checks:read(`qa/city-architecture-${REPORT_VERSION}.json`).checks},airStabilization:{status:'passed',checks:[...air.matchAll(/PASS: (.+)/g)].map(m=>m[1])},indirectLighting:{status:'passed',checks:[...indirect.matchAll(/PASS: (.+)/g)].map(m=>m[1])},handlingControlsAudioAndBroadphase:{status:'passed',checks:[...handling.matchAll(/PASS: (.+)/g)].map(m=>m[1])},braking:{status:'passed',checks:[...brakes.matchAll(/PASS: (.+)/g)].map(m=>m[1])},vehicleGeometry:{status:vehicle.status,checks:vehicle.tests,sweep:vehicle.sweep},cityAndSeal:{status:'passed',checks:[...city.matchAll(/PASS: (.+)/g)].map(m=>m[1])}};
 Object.assign(report.regressions,{
-  cornerBraking312:{status:'passed',checks:passChecks(braking312),report:'qa/braking-controls-3.12.json',curves:'qa/braking-controls-curves-3.12.json',scope:'Three matched actual-solver stages, per-wheel loads/slip/force demand and passive work. No human driving acceptance.'},
-  chaseCamera312:{status:'passed',checks:passChecks(chase312),report:'qa/chase-camera-3.12.json',scope:'Deterministic camera kinematics, not rendered driving feel or measured FPS.'},
-  reflectionStability312:{status:'passed',checks:passChecks(reflection312),report:'qa/reflection-stability-3.12.json',scope:'CPU pass submission, shader weighting and state restoration. Matched WebGL motion and GPU cost remain open.'},
-  gRecoveryGrid312:{status:'passed',checks:passChecks(recovery312),report:'qa/research-recovery-grid-3.12.json',scope:'Ordinary G levelling under actual wind/nozzle conditions at sixteen sampled initial attitudes/heights. No interpolated safety boundary.'},
+  samplerBudget313:{status:'passed',checks:passChecks(sampler313),report:`qa/sampler-budget-${REPORT_VERSION}.json`,scope:'Exact final source and offline active sampler reflection, never target-GPU acceptance.'},
+  actualProgramCapture313:{status:'passed',checks:passChecks(renderPrograms313),report:`qa/render-program-diagnostics-${REPORT_VERSION}.json`,scope:'GL-interface contract tests, not a real GPU run.'},
+  quickRoll313:{status:'passed',checks:passChecks(flip313),report:`qa/x-flip-${REPORT_VERSION}.json`,curves:`qa/x-flip-curves-${REPORT_VERSION}.json`,scope:'Frozen 3.9/3.12 and current actual-solver traces, finite/bench, real manual input and failure boundaries.'},
+  opticalSurfacesAndQuay313:{status:'passed',checks:passChecks(surfaces313),report:`qa/visual-quality-${REPORT_VERSION}.json`,scope:'Actual geometry, material sorting and shared collision/bake identities; after-pixels still pending.'},
+  historicalRecompute313:{status:'passed',checks:passChecks(history313),report:`qa/history-compatibility-3.12-to-${REPORT_VERSION}.json`},
+  cornerBraking312:{status:'passed',checks:passChecks(braking312),report:`qa/braking-controls-${REPORT_VERSION}.json`,curves:`qa/braking-controls-curves-${REPORT_VERSION}.json`,scope:'Three matched actual-solver stages, per-wheel loads/slip/force demand and passive work. No human driving acceptance.'},
+  chaseCamera312:{status:'passed',checks:passChecks(chase312),report:`qa/chase-camera-${REPORT_VERSION}.json`,scope:'Deterministic camera kinematics, not rendered driving feel or measured FPS.'},
+  reflectionStability312:{status:'passed',checks:passChecks(reflection312),report:`qa/reflection-stability-${REPORT_VERSION}.json`,scope:'CPU pass submission, shader weighting and state restoration. Matched WebGL motion and GPU cost remain open.'},
+  gRecoveryGrid312:{status:'passed',checks:passChecks(recovery312),report:`qa/research-recovery-grid-${REPORT_VERSION}.json`,scope:'Ordinary G levelling under actual wind/nozzle conditions at sixteen sampled initial attitudes/heights. No interpolated safety boundary.'},
   repositoryPayloads311:{status:'passed',checks:passChecks(payloads311),report:`qa/repository-payloads-${REPORT_VERSION}.json`,scope:'Byte-identical source/archive restoration, not physical or graphical acceptance.'},
   vehicleDynamics311:{status:'passed',checks:passChecks(dynamics311),report:`qa/vehicle-dynamics-${REPORT_VERSION}.json`,curves:`qa/vehicle-dynamics-curves-${REPORT_VERSION}.json`,scope:'120 Hz actual solver, matched baseline source, causal ablations, per-wheel and flight traces. Real keyboard/camera experience remains open.'},
   controlPreferences311:{status:'passed',checks:passChecks(response311),scope:'Persisted independent response limits and retained earlier preferences; actual DOM interactions are reported separately.'},
@@ -95,7 +105,7 @@ Object.assign(report.regressions,{
   controllerRobustness311:{status:'passed',checks:passChecks(robustness311),report:`qa/research-robustness-${REPORT_VERSION}.json`,scope:'Twenty paired seeded numerical experiments, bounded success and preserved failures; not a population reliability estimate.'},
   historicalRecompute311:{status:'passed',checks:passChecks(history311),report:`qa/history-compatibility-${REPORT_VERSION}.json`},
   visualMechanisms311:{status:'passed',checks:passChecks(visual311),report:`qa/visual-regressions-${REPORT_VERSION}.json`,scope:'Shadow-plane and light-transport oracles plus capture-state fixtures; matched rendered after-images remain pending.'},
-  cityLighting310:{status:'passed',checks:passChecks(cityLighting310),report:`qa/city-lighting-${REPORT_VERSION}.json`,scope:'Light selection, transitions, baked-field sampling and unchanged collision world; actual after-pixels and GPU timing pending'},
+  cityLighting310:{status:'passed',checks:passChecks(cityLighting310),report:`qa/city-lighting-${REPORT_VERSION}.json`,scope:'Light selection, transitions, baked-field sampling and shared authored collision identity; actual after-pixels and GPU timing pending'},
   vehicleSurface310:{status:'passed',checks:read(`qa/vehicle-surface-${REPORT_VERSION}.json`).checks.map(check=>check.name),report:`qa/vehicle-surface-${REPORT_VERSION}.json`,scope:'Frozen reference identity, surface normals, material state and physical motion envelope; not a rendered-image verdict'},
   inspectionCapture310:{status:'passed',checks:read(`qa/inspection-capture-${REPORT_VERSION}.json`).checks,report:`qa/inspection-capture-${REPORT_VERSION}.json`,scope:'Canvas and ZIP transaction fixture; no actual WebGL pixels'},
   history310:{status:'passed',checks:passChecks(history310),report:`qa/history-original-3.9-to-${REPORT_VERSION}.json`},

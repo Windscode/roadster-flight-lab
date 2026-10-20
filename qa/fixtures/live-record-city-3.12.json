@@ -1,0 +1,2979 @@
+{
+  "schema": "roadster.live-experiment",
+  "version": 1,
+  "id": "live-20261020100100000-1",
+  "name": "Published 3.12 full-city collision identity",
+  "kind": "manual",
+  "identity": {
+    "modelVersion": "3.12.0",
+    "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+    "protocolVersion": "live-fixed-inputs-1",
+    "fixedHz": 120
+  },
+  "context": "city",
+  "startedAt": "2026-10-20T10:01:00.000Z",
+  "status": "completed",
+  "reason": "现场记录结束",
+  "durationS": 0.2,
+  "stepCount": 24,
+  "initialSnapshot": {
+    "identity": {
+      "modelVersion": "3.12.0",
+      "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "context": "city",
+    "physical": {
+      "schema": "roadster-sim-state",
+      "schemaVersion": 1,
+      "modelVersion": "3.12.0",
+      "worldType": "city",
+      "geometrySignature": "fb61cc31",
+      "params": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "finite",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      },
+      "state": {
+        "_wind": null,
+        "_observationConfig": {
+          "enabled": false,
+          "delayMs": 0,
+          "seed": 1,
+          "positionNoiseM": 0,
+          "velocityNoiseMps": 0,
+          "attitudeNoiseDeg": 0,
+          "angularRateNoiseRadS": 0
+        },
+        "_nozzleFault": null,
+        "_nozzles": [
+          {
+            "id": "lift-FR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.59,
+                -0.32,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              -1.42,
+              0,
+              -0.59
+            ]
+          },
+          {
+            "id": "lift-FL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.59,
+                -0.32,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              -1.42,
+              0,
+              0.59
+            ]
+          },
+          {
+            "id": "lift-RR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.59,
+                -0.32,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              1.42,
+              0,
+              -0.59
+            ]
+          },
+          {
+            "id": "lift-RL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.59,
+                -0.32,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              1.42,
+              {
+                "$type": "NegativeZero"
+              },
+              0.59
+            ]
+          },
+          {
+            "id": "roll-FR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.89,
+                -0.22,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              1,
+              0,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              1.42,
+              0.22
+            ]
+          },
+          {
+            "id": "roll-FL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.89,
+                -0.22,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                -1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              -1,
+              0,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              -1.42,
+              -0.22
+            ]
+          },
+          {
+            "id": "roll-RR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.89,
+                -0.22,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              1,
+              0,
+              0,
+              0,
+              -1.42,
+              0.22
+            ]
+          },
+          {
+            "id": "roll-RL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.89,
+                -0.22,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                -1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              -1,
+              0,
+              0,
+              0,
+              1.42,
+              -0.22
+            ]
+          },
+          {
+            "id": "rear-boost",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                -2.07
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                1
+              ]
+            },
+            "kind": "longitudinal",
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "column": [
+              0,
+              0,
+              1,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              0
+            ]
+          },
+          {
+            "id": "front-brake",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                2.07
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                -1
+              ]
+            },
+            "kind": "longitudinal",
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "column": [
+              0,
+              0,
+              -1,
+              {
+                "$type": "NegativeZero"
+              },
+              0,
+              0
+            ]
+          }
+        ],
+        "wheelStates": [
+          {
+            "id": "FR",
+            "steer": 0,
+            "rotation": 0,
+            "suspensionLength": 0.28509148026677067,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.22509148026677067,
+              "z": 1.42
+            },
+            "normalLoadN": 5844.269368092688,
+            "slipAngle": 0,
+            "angularVelocityRadS": 0,
+            "relaxedSlip": 0,
+            "slipRatio": 0,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 0,
+            "brakeDemandN": 12600,
+            "serviceBrakeDemandN": 11950,
+            "regenBrakeDemandN": 650,
+            "brakeTorqueNm": 0,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": -0.89,
+              "y": 0,
+              "z": -26.58
+            },
+            "longitudinalForceN": 0,
+            "lateralForceN": 0,
+            "gripUse": 0,
+            "lateralSpeedMps": 0,
+            "longitudinalSpeedMps": 0,
+            "lateralDemandN": 0,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 175000,
+            "contactSpeedMps": 0,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": {
+              "$type": "NegativeZero"
+            },
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "FL",
+            "steer": 0,
+            "rotation": 0,
+            "suspensionLength": 0.28509148026677067,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.22509148026677067,
+              "z": 1.42
+            },
+            "normalLoadN": 5844.269368092688,
+            "slipAngle": 0,
+            "angularVelocityRadS": 0,
+            "relaxedSlip": 0,
+            "slipRatio": 0,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 0,
+            "brakeDemandN": 12600,
+            "serviceBrakeDemandN": 11950,
+            "regenBrakeDemandN": 650,
+            "brakeTorqueNm": 0,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 0.89,
+              "y": 0,
+              "z": -26.58
+            },
+            "longitudinalForceN": 0,
+            "lateralForceN": 0,
+            "gripUse": 0,
+            "lateralSpeedMps": 0,
+            "longitudinalSpeedMps": 0,
+            "lateralDemandN": 0,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 175000,
+            "contactSpeedMps": 0,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": {
+              "$type": "NegativeZero"
+            },
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "RR",
+            "steer": 0,
+            "rotation": 0,
+            "suspensionLength": 0.28509148026677067,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.22509148026677067,
+              "z": -1.42
+            },
+            "normalLoadN": 5844.269368092688,
+            "slipAngle": 0,
+            "angularVelocityRadS": 0,
+            "relaxedSlip": 0,
+            "slipRatio": 0,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 0,
+            "brakeDemandN": 8400,
+            "serviceBrakeDemandN": 7750,
+            "regenBrakeDemandN": 650,
+            "brakeTorqueNm": 0,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": -0.89,
+              "y": 0,
+              "z": -29.42
+            },
+            "longitudinalForceN": 0,
+            "lateralForceN": 0,
+            "gripUse": 0,
+            "lateralSpeedMps": 0,
+            "longitudinalSpeedMps": 0,
+            "lateralDemandN": 0,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 175000,
+            "contactSpeedMps": 0,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": {
+              "$type": "NegativeZero"
+            },
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "RL",
+            "steer": 0,
+            "rotation": 0,
+            "suspensionLength": 0.28509148026677067,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.22509148026677067,
+              "z": -1.42
+            },
+            "normalLoadN": 5844.269368092688,
+            "slipAngle": 0,
+            "angularVelocityRadS": 0,
+            "relaxedSlip": 0,
+            "slipRatio": 0,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 0,
+            "brakeDemandN": 8400,
+            "serviceBrakeDemandN": 7750,
+            "regenBrakeDemandN": 650,
+            "brakeTorqueNm": 0,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 0.89,
+              "y": 0,
+              "z": -29.42
+            },
+            "longitudinalForceN": 0,
+            "lateralForceN": 0,
+            "gripUse": 0,
+            "lateralSpeedMps": 0,
+            "longitudinalSpeedMps": 0,
+            "lateralDemandN": 0,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 175000,
+            "contactSpeedMps": 0,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": {
+              "$type": "NegativeZero"
+            },
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          }
+        ],
+        "stabilizationMode": "off",
+        "airStabilization": false,
+        "scenario": "free",
+        "gasInitialMass": 249.55820028489444,
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "mode": "drive",
+        "suctionEnabled": false,
+        "_fanLevel": 0,
+        "_sealLipExtensions": [
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074
+        ],
+        "_sealLipContacts": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "simTime": 0.24999999999999997,
+        "_accumulator": 0,
+        "_energyUsed": 0.00005555555555555558,
+        "_motorWork": 0,
+        "_stepCount": 30,
+        "_heightTarget": 0.62,
+        "_headingTarget": 0,
+        "_holdPositionTarget": null,
+        "_holdQuaternionTarget": null,
+        "_holdActive": false,
+        "_holdFeasible": null,
+        "_holdStatus": "inactive",
+        "_poseTargetExplicit": false,
+        "_poseTakeoffActive": false,
+        "_stabilizationActive": false,
+        "_heightJogging": false,
+        "_stableJogging": false,
+        "_stableHeight": 0.62,
+        "_stableHeading": 0,
+        "_positionTarget": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.62,
+            -28
+          ]
+        },
+        "_manualQuaternionTarget": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "_manualReferenceRate": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_manualCommandInput": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_manualPoseFeasible": null,
+        "_landingContactTime": 0,
+        "_manualTranslationActive": false,
+        "_maneuver": null,
+        "_rollReference": 0,
+        "_lastVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_heightIntegral": 0,
+        "_desiredWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "_achievedWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "_allocationError": 0,
+        "_gLoad": 1.0297591255355591,
+        "_contactCount": 4,
+        "_suctionForce": 0,
+        "_thrustN": 0,
+        "_pressureLimited": false,
+        "_motorForceN": 0,
+        "_regenForceN": 0,
+        "_longitudinalAcceleration": 0,
+        "_steerCentre": 0,
+        "_massFlowKgS": 0,
+        "_impulseNs": 0,
+        "_effectiveExhaustVelocity": 566.6500769168936,
+        "status": "轮胎接地",
+        "_fault": null,
+        "_thrustWanted": 0,
+        "_lastInput": {
+          "throttle": 0,
+          "steer": 0,
+          "brake": 0,
+          "lift": 0,
+          "roll": 0,
+          "pitch": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "_fallReset": false,
+        "_wing": {
+          "deployment": 0,
+          "command": 0,
+          "dragN": 0,
+          "downforceN": 0,
+          "dynamicPressurePa": 0,
+          "forceBody": {
+            "x": 0,
+            "y": {
+              "$type": "NegativeZero"
+            },
+            "z": {
+              "$type": "NegativeZero"
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0.325,
+            "z": -2.065
+          },
+          "incidenceRad": {
+            "$type": "NegativeZero"
+          },
+          "applicationPoint": {
+            "x": 0,
+            "y": 0.325,
+            "z": -2.015
+          }
+        },
+        "_observationSeed": 1,
+        "_observationHistory": [],
+        "_observation": {
+          "simTime": 0.24166666666666664,
+          "position": {
+            "x": 0,
+            "y": 0.5950914802667706,
+            "z": -28
+          },
+          "velocity": {
+            "x": 0,
+            "y": -0.05607165266082435,
+            "z": 0
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "_gasConsumedKg": 0,
+        "_externalGasKg": 0,
+        "_brakeDissipationJ": 0,
+        "_tireDissipationJ": 0,
+        "_driveAccounting": {
+          "torqueBudgetNm": 0,
+          "requestedTorqueNm": 0,
+          "postTcsTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerLimitW": 700000,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "mechanicalWorkJ": 0,
+          "electricalWorkJ": 0,
+          "powerLimited": false,
+          "airbornePolicy": "unloaded-drive-cut",
+          "shares": [
+            0.25,
+            0.25,
+            0.25,
+            0.25
+          ],
+          "corneringDriveScale": 1,
+          "corneringTractionActive": false,
+          "steeringSurfaceMu": 1.25,
+          "steeringSpeedMps": 0,
+          "brakeMechanicalWorkJ": 0,
+          "liftOffBrakeMechanicalWorkJ": 0,
+          "electricalRecoveredWorkJ": 0
+        },
+        "_verticalControl": {
+          "commandMps": 0,
+          "targetMps": 0,
+          "accelerationLimitMps2": 5,
+          "braking": false,
+          "pilotActive": false
+        },
+        "_levelRecovery": {
+          "active": false,
+          "status": "inactive",
+          "tiltErrorDeg": 0,
+          "headingTargetRad": 0,
+          "verticalSupportFeasible": true,
+          "torqueSaturated": false
+        },
+        "_hasPower": true,
+        "_sealQuality": 0,
+        "_sealDistanceSum": 0,
+        "_sealDistanceCount": 0
+      },
+      "body": {
+        "position": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.5946810432680039,
+            -28
+          ]
+        },
+        "previousPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.5950914802667706,
+            -28
+          ]
+        },
+        "interpolatedPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.62,
+            -28
+          ]
+        },
+        "initPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "velocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            -0.049252439852014364,
+            0
+          ]
+        },
+        "initVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "force": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "mass": 2199.5582002848946,
+        "invMass": 0.00045463675381286864,
+        "linearDamping": 0.004,
+        "type": 1,
+        "allowSleep": false,
+        "sleepState": 0,
+        "sleepSpeedLimit": 0.1,
+        "sleepTimeLimit": 1,
+        "timeLastSleepy": 0,
+        "wakeUpAfterNarrowphase": false,
+        "torque": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "quaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "initQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "previousQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "interpolatedQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "angularVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "initAngularVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "shapeOffsets": [
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.05,
+              1.84
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.02,
+              -1.81
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.37,
+              -0.28
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              -0.89,
+              -0.18,
+              1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0.89,
+              -0.18,
+              1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              -0.89,
+              -0.18,
+              -1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0.89,
+              -0.18,
+              -1.42
+            ]
+          }
+        ],
+        "shapeOrientations": [
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          }
+        ],
+        "inertia": {
+          "$type": "Vec3",
+          "values": [
+            3497.2975384529827,
+            4135.169416535602,
+            945.8100261225047
+          ]
+        },
+        "invInertia": {
+          "$type": "Vec3",
+          "values": [
+            0.0002859350652911123,
+            0.00024182806053875988,
+            0.0010572947763089968
+          ]
+        },
+        "invMassSolve": 0,
+        "invInertiaSolve": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "fixedRotation": false,
+        "angularDamping": 0.065,
+        "linearFactor": {
+          "$type": "Vec3",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        "angularFactor": {
+          "$type": "Vec3",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        "vlambda": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "wlambda": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "collisionFilterGroup": 2,
+        "collisionFilterMask": 1,
+        "collisionResponse": true,
+        "isTrigger": false
+      },
+      "world": {
+        "time": 0.24999999999999997,
+        "stepnumber": 30,
+        "dt": 0.008333333333333333,
+        "accumulator": 0,
+        "default_dt": 0.016666666666666666,
+        "quatNormalizeSkip": 0,
+        "quatNormalizeFast": false,
+        "allowSleep": false,
+        "hasActiveBodies": true,
+        "gravity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            -9.81,
+            0
+          ]
+        },
+        "solver": {
+          "iterations": 16,
+          "tolerance": 1e-7
+        },
+        "contacts": [],
+        "collisionPairs": [],
+        "previousCollisionPairs": [],
+        "bodyOverlaps": {
+          "current": [],
+          "previous": []
+        },
+        "shapeOverlaps": {
+          "current": [],
+          "previous": []
+        }
+      }
+    },
+    "sceneConfiguration": null,
+    "sceneConfigurationScope": "Presentation preset and camera at capture time only; camera motion during the recorded run is not replayed. Physical stateLabel excludes presentation.",
+    "initialSimTime": 0.24999999999999997,
+    "disturbancePhase": "absolute simulation time and observer RNG state are in physical snapshot",
+    "stateLabel": "fnv1a32-0a1400c2"
+  },
+  "finalSnapshot": {
+    "identity": {
+      "modelVersion": "3.12.0",
+      "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "context": "city",
+    "physical": {
+      "schema": "roadster-sim-state",
+      "schemaVersion": 1,
+      "modelVersion": "3.12.0",
+      "worldType": "city",
+      "geometrySignature": "fb61cc31",
+      "params": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "finite",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      },
+      "state": {
+        "_wind": null,
+        "_observationConfig": {
+          "enabled": false,
+          "delayMs": 0,
+          "seed": 1,
+          "positionNoiseM": 0,
+          "velocityNoiseMps": 0,
+          "attitudeNoiseDeg": 0,
+          "angularRateNoiseRadS": 0
+        },
+        "_nozzleFault": null,
+        "_nozzles": [
+          {
+            "id": "lift-FR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.59,
+                -0.32,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              -1.42,
+              0,
+              -0.59
+            ]
+          },
+          {
+            "id": "lift-FL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.59,
+                -0.32,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              -1.42,
+              0,
+              0.59
+            ]
+          },
+          {
+            "id": "lift-RR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.59,
+                -0.32,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              1.42,
+              0,
+              -0.59
+            ]
+          },
+          {
+            "id": "lift-RL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.59,
+                -0.32,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              1.42,
+              {
+                "$type": "NegativeZero"
+              },
+              0.59
+            ]
+          },
+          {
+            "id": "roll-FR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.89,
+                -0.22,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              1,
+              0,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              1.42,
+              0.22
+            ]
+          },
+          {
+            "id": "roll-FL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.89,
+                -0.22,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                -1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              -1,
+              0,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              -1.42,
+              -0.22
+            ]
+          },
+          {
+            "id": "roll-RR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.89,
+                -0.22,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              1,
+              0,
+              0,
+              0,
+              -1.42,
+              0.22
+            ]
+          },
+          {
+            "id": "roll-RL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.89,
+                -0.22,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                -1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              -1,
+              0,
+              0,
+              0,
+              1.42,
+              -0.22
+            ]
+          },
+          {
+            "id": "rear-boost",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                -2.07
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                1
+              ]
+            },
+            "kind": "longitudinal",
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "column": [
+              0,
+              0,
+              1,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              0
+            ]
+          },
+          {
+            "id": "front-brake",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                2.07
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                -1
+              ]
+            },
+            "kind": "longitudinal",
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "column": [
+              0,
+              0,
+              -1,
+              {
+                "$type": "NegativeZero"
+              },
+              0,
+              0
+            ]
+          }
+        ],
+        "wheelStates": [
+          {
+            "id": "FR",
+            "steer": 0,
+            "rotation": 0.12087516891963863,
+            "suspensionLength": 0.2922820380742346,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.2322820380742346,
+              "z": 1.42
+            },
+            "normalLoadN": 4756.892601080365,
+            "slipAngle": 0,
+            "angularVelocityRadS": 1.1398702941089585,
+            "relaxedSlip": 0,
+            "slipRatio": 0.011156745384861999,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 1.1693738586528393,
+            "brakeDemandN": 0,
+            "serviceBrakeDemandN": 0,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 19.360552886397024,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 19.360552886397024,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": -0.89,
+              "y": 0,
+              "z": -26.53840754730055
+            },
+            "longitudinalForceN": 984.3309399507681,
+            "lateralForceN": 0,
+            "gripUse": 0.16554183959960939,
+            "lateralSpeedMps": 0,
+            "longitudinalSpeedMps": 0.39846734900777525,
+            "lateralDemandN": 0,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 392.801426606268,
+            "allocatedDrivePowerW": 154820.38210832636,
+            "contactSpeedMps": 0.39846734900777525,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 392.801426606268,
+            "tireReactionTorqueNm": -364.2024477817842,
+            "postTcsTorqueRequestNm": 392.801426606268,
+            "driveMechanicalPowerW": 439.70515047806225
+          },
+          {
+            "id": "FL",
+            "steer": 0,
+            "rotation": 0.12087516891963863,
+            "suspensionLength": 0.2922820380742346,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.2322820380742346,
+              "z": 1.42
+            },
+            "normalLoadN": 4756.892601080365,
+            "slipAngle": 0,
+            "angularVelocityRadS": 1.1398702941089585,
+            "relaxedSlip": 0,
+            "slipRatio": 0.011156745384861999,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 1.1693738586528393,
+            "brakeDemandN": 0,
+            "serviceBrakeDemandN": 0,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 19.360552886397024,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 19.360552886397024,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 0.89,
+              "y": 0,
+              "z": -26.53840754730055
+            },
+            "longitudinalForceN": 984.3309399507681,
+            "lateralForceN": 0,
+            "gripUse": 0.16554183959960939,
+            "lateralSpeedMps": 0,
+            "longitudinalSpeedMps": 0.39846734900777525,
+            "lateralDemandN": 0,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 392.801426606268,
+            "allocatedDrivePowerW": 154820.38210832636,
+            "contactSpeedMps": 0.39846734900777525,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 392.801426606268,
+            "tireReactionTorqueNm": -364.2024477817842,
+            "postTcsTorqueRequestNm": 392.801426606268,
+            "driveMechanicalPowerW": 439.70515047806225
+          },
+          {
+            "id": "RR",
+            "steer": 0,
+            "rotation": 0.12174686627770868,
+            "suspensionLength": 0.27813398894523467,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.21813398894523467,
+              "z": -1.42
+            },
+            "normalLoadN": 5996.939599212256,
+            "slipAngle": 0,
+            "angularVelocityRadS": 1.150640976583256,
+            "relaxedSlip": 0,
+            "slipRatio": 0.011154364703580036,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 1.191577191293222,
+            "brakeDemandN": 0,
+            "serviceBrakeDemandN": 0,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 24.407544168793944,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 24.407544168793944,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": -0.89,
+              "y": 0,
+              "z": -29.378442787802708
+            },
+            "longitudinalForceN": 1247.4160068540411,
+            "lateralForceN": 0,
+            "gripUse": 0.16640701293945315,
+            "lateralSpeedMps": 0,
+            "longitudinalSpeedMps": 0.39846734900777525,
+            "lateralDemandN": 0,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 495.1985733937319,
+            "allocatedDrivePowerW": 195179.6178916736,
+            "contactSpeedMps": 0.39846734900777525,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 495.1985733937319,
+            "tireReactionTorqueNm": -461.5439225359952,
+            "postTcsTorqueRequestNm": 495.1985733937319,
+            "driveMechanicalPowerW": 557.6376425537889
+          },
+          {
+            "id": "RL",
+            "steer": 0,
+            "rotation": 0.12174686627770868,
+            "suspensionLength": 0.27813398894523467,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.21813398894523467,
+              "z": -1.42
+            },
+            "normalLoadN": 5996.939599212256,
+            "slipAngle": 0,
+            "angularVelocityRadS": 1.150640976583256,
+            "relaxedSlip": 0,
+            "slipRatio": 0.011154364703580036,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 1.191577191293222,
+            "brakeDemandN": 0,
+            "serviceBrakeDemandN": 0,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 24.407544168793944,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 24.407544168793944,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 0.89,
+              "y": 0,
+              "z": -29.378442787802708
+            },
+            "longitudinalForceN": 1247.4160068540411,
+            "lateralForceN": 0,
+            "gripUse": 0.16640701293945315,
+            "lateralSpeedMps": 0,
+            "longitudinalSpeedMps": 0.39846734900777525,
+            "lateralDemandN": 0,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 495.1985733937319,
+            "allocatedDrivePowerW": 195179.6178916736,
+            "contactSpeedMps": 0.39846734900777525,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 495.1985733937319,
+            "tireReactionTorqueNm": -461.5439225359952,
+            "postTcsTorqueRequestNm": 495.1985733937319,
+            "driveMechanicalPowerW": 557.6376425537889
+          }
+        ],
+        "stabilizationMode": "off",
+        "airStabilization": false,
+        "scenario": "free",
+        "gasInitialMass": 249.55820028489444,
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "mode": "drive",
+        "suctionEnabled": false,
+        "_fanLevel": 0,
+        "_sealLipExtensions": [
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074
+        ],
+        "_sealLipContacts": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "simTime": 0.45000000000000057,
+        "_accumulator": 0,
+        "_energyUsed": 0.00016651884716497553,
+        "_motorWork": 18.469310982071317,
+        "_stepCount": 54,
+        "_heightTarget": 0.62,
+        "_headingTarget": 0,
+        "_holdPositionTarget": null,
+        "_holdQuaternionTarget": null,
+        "_holdActive": false,
+        "_holdFeasible": null,
+        "_holdStatus": "inactive",
+        "_poseTargetExplicit": false,
+        "_poseTakeoffActive": false,
+        "_stabilizationActive": false,
+        "_heightJogging": false,
+        "_stableJogging": false,
+        "_stableHeight": 0.62,
+        "_stableHeading": 0,
+        "_positionTarget": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.62,
+            -28
+          ]
+        },
+        "_manualQuaternionTarget": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "_manualReferenceRate": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_manualCommandInput": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_manualPoseFeasible": null,
+        "_landingContactTime": 0,
+        "_manualTranslationActive": false,
+        "_maneuver": null,
+        "_rollReference": 0,
+        "_lastVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_heightIntegral": 0,
+        "_desiredWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "_achievedWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "_allocationError": 0,
+        "_gLoad": 1.042211066476104,
+        "_contactCount": 4,
+        "_suctionForce": 0,
+        "_thrustN": 0,
+        "_pressureLimited": false,
+        "_motorForceN": 4800,
+        "_regenForceN": 0,
+        "_longitudinalAcceleration": 2.027502833217171,
+        "_steerCentre": 0,
+        "_massFlowKgS": 0,
+        "_impulseNs": 0,
+        "_effectiveExhaustVelocity": 566.6500769168936,
+        "status": "轮胎接地",
+        "_fault": null,
+        "_thrustWanted": 0,
+        "_lastInput": {
+          "throttle": 0.2,
+          "steer": 0,
+          "brake": 0,
+          "lift": 0,
+          "roll": 0,
+          "pitch": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "_fallReset": false,
+        "_wing": {
+          "deployment": 0,
+          "command": 0,
+          "dragN": 0,
+          "downforceN": 0,
+          "dynamicPressurePa": 0.09173368985668386,
+          "forceBody": {
+            "x": 0,
+            "y": {
+              "$type": "NegativeZero"
+            },
+            "z": {
+              "$type": "NegativeZero"
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0.325,
+            "z": -2.065
+          },
+          "incidenceRad": {
+            "$type": "NegativeZero"
+          },
+          "applicationPoint": {
+            "x": 0,
+            "y": 0.325,
+            "z": -2.015
+          }
+        },
+        "_observationSeed": 1,
+        "_observationHistory": [],
+        "_observation": {
+          "simTime": 0.4416666666666672,
+          "position": {
+            "x": 0,
+            "y": 0.595200627886843,
+            "z": -27.96139028294774
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0.0231543484953913,
+            "z": 0.3868898280641733
+          },
+          "quaternion": {
+            "x": -0.002490830539065051,
+            "y": 0,
+            "z": 0,
+            "w": 0.9999968978768012
+          },
+          "angularVelocity": {
+            "x": -0.019451459560292986,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "_gasConsumedKg": 0,
+        "_externalGasKg": 0,
+        "_brakeDissipationJ": 10.896524189813938,
+        "_tireDissipationJ": 7.125075588269626,
+        "_driveAccounting": {
+          "torqueBudgetNm": 1776,
+          "requestedTorqueNm": 1776,
+          "postTcsTorqueNm": 1776,
+          "actualTorqueNm": 1776,
+          "mechanicalPowerLimitW": 700000,
+          "mechanicalPowerW": 1994.6855860637022,
+          "electricalPowerW": 2216.317317848558,
+          "mechanicalWorkJ": 16.622379883864184,
+          "electricalWorkJ": 18.469310982071317,
+          "powerLimited": false,
+          "airbornePolicy": "unloaded-drive-cut",
+          "shares": [
+            0.22117197444046624,
+            0.22117197444046624,
+            0.27882802555953373,
+            0.27882802555953373
+          ],
+          "corneringDriveScale": 1,
+          "corneringTractionActive": false,
+          "steeringSurfaceMu": 1.25,
+          "steeringSpeedMps": 0.3870003741108435,
+          "brakeMechanicalWorkJ": 0.8192904685193936,
+          "liftOffBrakeMechanicalWorkJ": 0,
+          "electricalRecoveredWorkJ": 0
+        },
+        "_verticalControl": {
+          "commandMps": 0,
+          "targetMps": 0,
+          "accelerationLimitMps2": 5,
+          "braking": false,
+          "pilotActive": false
+        },
+        "_levelRecovery": {
+          "active": false,
+          "status": "inactive",
+          "tiltErrorDeg": 0.2854284498860833,
+          "headingTargetRad": 0,
+          "verticalSupportFeasible": true,
+          "torqueSaturated": false
+        },
+        "_hasPower": true,
+        "_sealQuality": 0,
+        "_sealDistanceSum": 0,
+        "_sealDistanceCount": 0
+      },
+      "body": {
+        "position": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.5953913638517767,
+            -27.95802538899575
+          ]
+        },
+        "previousPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.595200627886843,
+            -27.96139028294774
+          ]
+        },
+        "interpolatedPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.62,
+            -28
+          ]
+        },
+        "initPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "velocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.022888315792041303,
+            0.40378727423851113
+          ]
+        },
+        "initVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "force": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "mass": 2199.5582002848946,
+        "invMass": 0.00045463675381286864,
+        "linearDamping": 0.004,
+        "type": 1,
+        "allowSleep": false,
+        "sleepState": 0,
+        "sleepSpeedLimit": 0.1,
+        "sleepTimeLimit": 1,
+        "timeLastSleepy": 0,
+        "wakeUpAfterNarrowphase": false,
+        "torque": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "quaternion": {
+          "$type": "Quaternion",
+          "values": [
+            -0.0025680379717607305,
+            0,
+            0,
+            0.9999967025850515
+          ]
+        },
+        "initQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "previousQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            -0.002490830539065051,
+            0,
+            0,
+            0.9999968978768012
+          ]
+        },
+        "interpolatedQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "angularVelocity": {
+          "$type": "Vec3",
+          "values": [
+            -0.01761911788308744,
+            0,
+            0
+          ]
+        },
+        "initAngularVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "shapeOffsets": [
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.05,
+              1.84
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.02,
+              -1.81
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.37,
+              -0.28
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              -0.89,
+              -0.18,
+              1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0.89,
+              -0.18,
+              1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              -0.89,
+              -0.18,
+              -1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0.89,
+              -0.18,
+              -1.42
+            ]
+          }
+        ],
+        "shapeOrientations": [
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          }
+        ],
+        "inertia": {
+          "$type": "Vec3",
+          "values": [
+            3497.2975384529827,
+            4135.169416535602,
+            945.8100261225047
+          ]
+        },
+        "invInertia": {
+          "$type": "Vec3",
+          "values": [
+            0.0002859350652911123,
+            0.00024182806053875988,
+            0.0010572947763089968
+          ]
+        },
+        "invMassSolve": 0,
+        "invInertiaSolve": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "fixedRotation": false,
+        "angularDamping": 0.065,
+        "linearFactor": {
+          "$type": "Vec3",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        "angularFactor": {
+          "$type": "Vec3",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        "vlambda": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "wlambda": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "collisionFilterGroup": 2,
+        "collisionFilterMask": 1,
+        "collisionResponse": true,
+        "isTrigger": false
+      },
+      "world": {
+        "time": 0.45000000000000057,
+        "stepnumber": 54,
+        "dt": 0.008333333333333333,
+        "accumulator": 0,
+        "default_dt": 0.016666666666666666,
+        "quatNormalizeSkip": 0,
+        "quatNormalizeFast": false,
+        "allowSleep": false,
+        "hasActiveBodies": true,
+        "gravity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            -9.81,
+            0
+          ]
+        },
+        "solver": {
+          "iterations": 16,
+          "tolerance": 1e-7
+        },
+        "contacts": [],
+        "collisionPairs": [],
+        "previousCollisionPairs": [],
+        "bodyOverlaps": {
+          "current": [],
+          "previous": []
+        },
+        "shapeOverlaps": {
+          "current": [],
+          "previous": []
+        }
+      }
+    },
+    "sceneConfiguration": null,
+    "sceneConfigurationScope": "Presentation preset and camera at capture time only; camera motion during the recorded run is not replayed. Physical stateLabel excludes presentation.",
+    "initialSimTime": 0.45000000000000057,
+    "disturbancePhase": "absolute simulation time and observer RNG state are in physical snapshot",
+    "stateLabel": "fnv1a32-5e84ca9c"
+  },
+  "program": null,
+  "lineage": null,
+  "inputRuns": [
+    {
+      "steps": 24,
+      "input": {
+        "throttle": 0.2
+      }
+    }
+  ],
+  "appliedInputRuns": [
+    {
+      "steps": 24,
+      "input": {
+        "throttle": 0.2
+      }
+    }
+  ],
+  "inputDefinition": "inputRuns are effective pre-solver driver commands; appliedInputRuns are solver-applied commands after deterministic internal interlocks; playback feeds only inputRuns",
+  "events": [
+    {
+      "step": 0,
+      "simTime": 0.24999999999999997,
+      "kind": "event",
+      "type": "record_start",
+      "detail": {
+        "kind": "manual",
+        "context": "city"
+      }
+    },
+    {
+      "step": 24,
+      "simTime": 0.45000000000000057,
+      "kind": "event",
+      "type": "record_finish",
+      "detail": {
+        "status": "completed",
+        "reason": "现场记录结束"
+      }
+    }
+  ],
+  "summary": {
+    "source": "all fixed 120 Hz post-integration states; independent of stored display curve",
+    "version": 1,
+    "count": 24,
+    "positionCount": 0,
+    "sumPositionSquared": 0,
+    "peakPositionErrorM": null,
+    "peakAttitudeErrorDeg": 0.294275798275902,
+    "allocationCount": 24,
+    "saturatedCount": 0,
+    "gasThroughputKg": 0,
+    "onboardDischargedKg": 0,
+    "externalSupplyKg": 0,
+    "energyUsedKWh": 0.00011096329160941995,
+    "peakSpeedMps": 0.40443545571173994,
+    "minimumHeightM": 0.5931924676363419,
+    "maximumHeightM": 0.5953913638517767,
+    "rmsPositionErrorM": null,
+    "saturationFraction": 0,
+    "gasRemainingKg": 249.55820028489444,
+    "finalPosition": {
+      "x": 0,
+      "y": 0.5953913638517767,
+      "z": -27.95802538899575
+    },
+    "finalVelocity": {
+      "x": 0,
+      "y": 0.022888315792041303,
+      "z": 0.40378727423851113
+    },
+    "finalQuaternion": {
+      "x": -0.0025680379717607305,
+      "y": 0,
+      "z": 0,
+      "w": 0.9999967025850515
+    },
+    "finalAngularVelocity": {
+      "x": -0.01761911788308744,
+      "y": 0,
+      "z": 0
+    },
+    "finalFault": null
+  },
+  "sampling": {
+    "source": "simulation time",
+    "rawHz": 20,
+    "rawCount": 5,
+    "storedCount": 5,
+    "decimated": false,
+    "uniform": true,
+    "storedIntervalS": 0.05,
+    "minIntervalS": 0.04999999999999999,
+    "maxIntervalS": 0.05000000000000002,
+    "note": "原始 20 Hz 样本含初态和必要的最后端点；非整采样终止时最后间隔可能缩短。"
+  },
+  "samples": [
+    {
+      "step": 0,
+      "timeS": 0,
+      "simTime": 0.24999999999999997,
+      "position": {
+        "x": 0,
+        "y": 0.5946810432680039,
+        "z": -28
+      },
+      "velocity": {
+        "x": 0,
+        "y": -0.049252439852014364,
+        "z": 0
+      },
+      "quaternion": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      },
+      "angularVelocity": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "heightM": 0.5946810432680039,
+      "targetHeightM": 0.62,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 0,
+      "speedMps": 0.049252439852014364,
+      "rollDeg": 0,
+      "pitchDeg": 0,
+      "pressureBar": 350,
+      "gasMassKg": 249.55820028489444,
+      "tankTemperatureK": 293.15,
+      "massFlowKgS": 0,
+      "supplyMode": "finite",
+      "allocationError": 0,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "wheelSlip": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 6,
+      "timeS": 0.05,
+      "simTime": 0.3000000000000001,
+      "position": {
+        "x": 0,
+        "y": 0.5933012862693803,
+        "z": -27.997075723963242
+      },
+      "velocity": {
+        "x": 0,
+        "y": -0.013565135624154318,
+        "z": 0.10038025736251839
+      },
+      "quaternion": {
+        "x": -0.00039437974035270177,
+        "y": 0,
+        "z": 0,
+        "w": 0.9999999222323073
+      },
+      "angularVelocity": {
+        "x": -0.027532353295477062,
+        "y": 0,
+        "z": 0
+      },
+      "heightM": 0.5933012862693803,
+      "targetHeightM": 0.62,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 0.04519259050397447,
+      "speedMps": 0.10129268963092612,
+      "rollDeg": 0,
+      "pitchDeg": 0.04519259046685795,
+      "pressureBar": 350,
+      "gasMassKg": 249.55820028489444,
+      "tankTemperatureK": 293.15,
+      "massFlowKgS": 0,
+      "supplyMode": "finite",
+      "allocationError": 0,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        0.3298281628630817,
+        0.3298281628630817,
+        0.33394300403731375,
+        0.33394300403731375
+      ],
+      "wheelSlip": [
+        0.010410576820372571,
+        0.010410576820372571,
+        0.010403098759115456,
+        0.010403098759115456
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 12,
+      "timeS": 0.1,
+      "simTime": 0.35000000000000026,
+      "position": {
+        "x": 0,
+        "y": 0.5933660949919032,
+        "z": -27.989115968365006
+      },
+      "velocity": {
+        "x": 0,
+        "y": 0.010109796898521284,
+        "z": 0.20125727863769027
+      },
+      "quaternion": {
+        "x": -0.0011980736431446415,
+        "y": 0,
+        "z": 0,
+        "w": 0.9999992823095154
+      },
+      "angularVelocity": {
+        "x": -0.03405938835129455,
+        "y": 0,
+        "z": 0
+      },
+      "heightM": 0.5933660949919032,
+      "targetHeightM": 0.62,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 0.1372891594262865,
+      "speedMps": 0.2015110423723183,
+      "rollDeg": 0,
+      "pitchDeg": 0.1372891594398107,
+      "pressureBar": 350,
+      "gasMassKg": 249.55820028489444,
+      "tankTemperatureK": 293.15,
+      "massFlowKgS": 0,
+      "supplyMode": "finite",
+      "allocationError": 0,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        0.6162952572382197,
+        0.6162952572382197,
+        0.6242096752510403,
+        0.6242096752510403
+      ],
+      "wheelSlip": [
+        0.010690241874600806,
+        0.010690241874600806,
+        0.01069065386240268,
+        0.01069065386240268
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 18,
+      "timeS": 0.15,
+      "simTime": 0.4000000000000004,
+      "position": {
+        "x": 0,
+        "y": 0.5942464818621231,
+        "z": -27.97610292169885
+      },
+      "velocity": {
+        "x": 0,
+        "y": 0.021373239484759846,
+        "z": 0.3024390573432855
+      },
+      "quaternion": {
+        "x": -0.0019924377993250364,
+        "y": 0,
+        "z": 0,
+        "w": 0.999998015093838
+      },
+      "angularVelocity": {
+        "x": -0.028185615847476395,
+        "y": 0,
+        "z": 0
+      },
+      "heightM": 0.5942464818621231,
+      "targetHeightM": 0.62,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 0.2283167047482166,
+      "speedMps": 0.3031933356338296,
+      "rollDeg": 0,
+      "pitchDeg": 0.22831670474974788,
+      "pressureBar": 350,
+      "gasMassKg": 249.55820028489444,
+      "tankTemperatureK": 293.15,
+      "massFlowKgS": 0,
+      "supplyMode": "finite",
+      "allocationError": 0,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        0.8822434319923721,
+        0.8822434319923721,
+        0.8923069388755042,
+        0.8923069388755042
+      ],
+      "wheelSlip": [
+        0.010956498708088644,
+        0.010956498708088644,
+        0.010953592106604034,
+        0.010953592106604034
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 24,
+      "timeS": 0.2,
+      "simTime": 0.45000000000000057,
+      "position": {
+        "x": 0,
+        "y": 0.5953913638517767,
+        "z": -27.95802538899575
+      },
+      "velocity": {
+        "x": 0,
+        "y": 0.022888315792041303,
+        "z": 0.40378727423851113
+      },
+      "quaternion": {
+        "x": -0.0025680379717607305,
+        "y": 0,
+        "z": 0,
+        "w": 0.9999967025850515
+      },
+      "angularVelocity": {
+        "x": -0.01761911788308744,
+        "y": 0,
+        "z": 0
+      },
+      "heightM": 0.5953913638517767,
+      "targetHeightM": 0.62,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 0.294275798275902,
+      "speedMps": 0.40443545571173994,
+      "rollDeg": 0,
+      "pitchDeg": 0.29427579827232847,
+      "pressureBar": 350,
+      "gasMassKg": 249.55820028489444,
+      "tankTemperatureK": 293.15,
+      "massFlowKgS": 0,
+      "supplyMode": "finite",
+      "allocationError": 0,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        1.1398702941089585,
+        1.1398702941089585,
+        1.150640976583256,
+        1.150640976583256
+      ],
+      "wheelSlip": [
+        0.011156745384861999,
+        0.011156745384861999,
+        0.011154364703580036,
+        0.011154364703580036
+      ],
+      "wingDeployment": 0
+    }
+  ]
+}

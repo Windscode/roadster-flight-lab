@@ -123,6 +123,34 @@ for(const [x,tag] of [[-546,'west'],[-322,'east']])solid('quay-'+tag,[11,1.6,114
 // therefore necessary here; an apparent water boundary must stop the car.
 for(const [i,a,b] of [[0,[-536,-480.6],[-501,-480.6]],[1,[-497,-480.6],[-413,-480.6]],[2,[-409,-480.6],[-332,-480.6]],[3,[-536.4,-481],[-536.4,-573]],[4,[-331.6,-481],[-331.6,-573]],[5,[-536,-573.4],[-332,-573.4]]])rail('quay-water-rail-'+i,a,b,1.1,1.7);
 deckSegment('quay-access-ramp',[-430,0,-431],[-430,1.6,-468],12,.30,'limestone');
+// South Quay arrival: one low, open canopy ties the arterial to the existing
+// 12 m ramp and the retained pump crane. Every solid has the same authoring
+// record in rendering, collision and the rebaked daylight/night occluders.
+const entrySolid=(id,size,position,material)=>solid('quay-entry-'+id,size,position,material,[0,0,0],{project:'south-quay-entry-3.13'});
+for(const side of [-1,1]){
+  entrySolid('pier-'+side,[.60,6.40,1.0],[-430+side*9.6,3.20,-438],'steel');
+  entrySolid('seat-plinth-'+side,[1.4,.64,4.6],[-430+side*11,.32,-438.8],'limestone');
+  box('quay-entry-seat-cap-'+side,[1.38,.055,4.55],[-430+side*11,.6675,-438.8],'timber');
+  // Recessed coffer: small ribs remain within the roof envelope, never across
+  // the vehicle clearance. This is structure and drainage detail, not signage.
+  for(let i=0;i<5;i++)box('quay-entry-roof-rib-'+side+'-'+i,[.09,.22,5.9],[-430+side*(1.8+i*1.7),6.25,-438],'copper');
+}
+entrySolid('crossbeam',[20.4,.60,1.0],[-430,6.10,-438],'steel');
+entrySolid('roof',[20.6,.16,6.8],[-430,6.48,-438],'copper');
+entrySolid('front-fascia',[20.6,.52,.16],[-430,6.14,-434.58],'steel');
+entrySolid('wayfinding-fin',[1.20,8.60,.65],[-443,4.30,-433],'limestone');
+box('quay-entry-fin-inlay',[.24,7.1,.025],[-443,4.5,-432.66],'copper');
+box('quay-entry-drain-west',[.12,.10,6.2],[-440.10,6.35,-438],'steel');
+box('quay-entry-drain-east',[.12,.10,6.2],[-419.90,6.35,-438],'steel');
+label('南 岸 水 庭    /    SOUTH QUAY',-430,6.12,-434.489,17.8,.42,0);
+label('03',-443,6.85,-432.669,.85,1.05,0);
+// Two visible, directed fixtures share the existing global light pool. Their
+// actual anchors also enter the static direct/bounce bake outside the live pool.
+export const SOUTH_QUAY_ENTRY_LIGHTS=[-1,1].map(side=>({
+  id:'quay-entry-downlight-'+side,position:[-430+side*7.3,5.77,-436.7],target:[-430+side*3.5,.25,-430.5],
+  color:0xf0d4af,intensity:430,range:22,angle:.82,practical:true,role:'soffit',lensSize:[1.15,.045,.27]
+}));
+
 // The approach sides are explicit rather than hidden stairs under a ramp.
 for(const side of [-1,1]){
   const x=-430+side*5.9,a=[x,.043,-432],b=[x,1.47,-465];
@@ -212,6 +240,7 @@ for(const t of CITY_STREET_TREES)tree(t.x,t.z,t.height,t.spread,t.y);
 trees.forEach((t,i)=>solid('tree-'+i,[.45,t.height*.46,.45],[t.x,t.y+t.height*.23,t.z],'bark',[0,0,0],{hidden:true,structure:'tree trunk'}));
 
 export const LANDMARK_COLLIDERS=solids;
+export const SOUTH_QUAY_ENTRY_SOLIDS=solids.filter(g=>g.data.project==='south-quay-entry-3.13');
 
 export function buildCityLandmarks(THREE,root,roadMaterial=null){
   const group=new THREE.Group();group.name='Destinations / botanical · south quay · tidal plaza';root.add(group);
@@ -227,6 +256,7 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
   for(const t of [soilMap,soilNormal,soilRough,grassMap,grassNormal,gravelMap,gravelNormal,gravelRough,pavingNormal,pavingRough]){t.wrapS=t.wrapT=THREE.RepeatWrapping;}
   const mats={
     limestone:new THREE.MeshStandardMaterial({color:0xb7b4a5,roughness:.79}),
+    entryLens:new THREE.MeshStandardMaterial({color:0xf2dfbc,roughness:.62,metalness:0,emissive:0xf2d7ad,emissiveIntensity:1.25}),
     poolRim:new THREE.MeshStandardMaterial({color:0x9a9e94,roughness:.57}),
     paving:new THREE.MeshStandardMaterial({color:0x999d95,normalMap:pavingNormal,normalScale:new THREE.Vector2(.17,.17),roughnessMap:pavingRough,roughness:.86}),
     concrete:new THREE.MeshStandardMaterial({color:0x848880,roughness:.87}),
@@ -260,6 +290,7 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
     vRoughnessMapUv=metreUv;
     #endif`);}
   for(const key of ['soil','lawn','gravel']){const material=mats[key];material.onBeforeCompile=worldUv;material.customProgramCacheKey=()=>key+'|landmark-world-uv-v1';}
+  for(const [key,mat] of Object.entries(mats))mat.name='Landmark / '+key;
   // World-space grain avoids stretched UVs on metre-scale instanced blocks.
   for(const key of ['limestone','paving','concrete','timber','bark','asphalt']){
     const mat=mats[key];mat.onBeforeCompile=shader=>{
@@ -322,6 +353,8 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
   // Tensioned sails use curved, nonplanar fabric with stitched panel strips.
   const fabric=new THREE.MeshStandardMaterial({color:0xd9d3bf,roughness:.95,side:THREE.DoubleSide}),parasolFabric=new THREE.MeshStandardMaterial({color:0xab7857,roughness:.96,side:THREE.DoubleSide});
   const boatShell=new THREE.MeshPhysicalMaterial({color:0xbfc6be,roughness:.35,metalness:.25,clearcoat:.8}),boatGlass=new THREE.MeshPhysicalMaterial({color:0x466f75,metalness:.35,roughness:.16,transparent:true,opacity:.68});
+  fabric.name='Landmark / tensioned sail fabric';parasolFabric.name='Landmark / cafe parasol fabric';
+  boatShell.name='Landmark / moored launch hull';boatGlass.name='Landmark / moored launch glass';
   for(const b of boats){
     const vessel=new THREE.Group();vessel.position.set(b.x,1.05,b.z);vessel.rotation.y=b.yaw;vessel.name='moored electric water taxi';
     const positions=[],indices=[],sections=[[-7,1.2],[-5.3,1.65],[2.4,1.80],[5.5,1.25],[7,.08]];
@@ -343,6 +376,7 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
   }
   const waterUniforms=[];
   const waterMat=new THREE.MeshPhysicalMaterial({color:0x3c7069,roughness:.17,metalness:.22,clearcoat:1,clearcoatRoughness:.12,transparent:true,opacity:.91,envMapIntensity:1.7});
+  waterMat.name='Landmark / canal and garden water';
   waterMat.onBeforeCompile=shader=>{
     const clock={value:0};waterUniforms.push(clock);shader.uniforms.waterTime=clock;
     shader.vertexShader='varying vec3 landmarkWaterWorld;varying vec2 landmarkWaterUv;\n'+shader.vertexShader;
@@ -353,12 +387,17 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
   };waterMat.customProgramCacheKey=()=> 'landmark-water-v1';
   for(const w of LANDMARK_WATER_VOLUMES){const m=new THREE.Mesh(new THREE.PlaneGeometry(w.maxX-w.minX,w.maxZ-w.minZ),waterMat);m.name=w.id+' / non-colliding water surface';m.rotation.x=-Math.PI/2;m.position.set((w.minX+w.maxX)/2,w.surfaceY,(w.minZ+w.maxZ)/2);m.receiveShadow=true;group.add(m);}
   const fallMat=new THREE.MeshPhysicalMaterial({color:0xc5e3d7,roughness:.15,transparent:true,opacity:.34,depthWrite:false,side:THREE.DoubleSide});
+  fallMat.name='Landmark / falling water';
   for(const f of waterfalls){const mesh=new THREE.Mesh(new THREE.BoxGeometry(f.w,f.h,f.d),fallMat);mesh.position.set(f.x,f.y-f.h/2,f.z);group.add(mesh);}
   const lightAnchors=[];
+  for(const anchor of SOUTH_QUAY_ENTRY_LIGHTS){
+    const mesh=new THREE.Mesh(new THREE.BoxGeometry(...anchor.lensSize),mats.entryLens);mesh.name=anchor.id+' / actual luminaire';mesh.position.set(...anchor.position);mesh.castShadow=false;mesh.receiveShadow=true;group.add(mesh);
+    lightAnchors.push({...anchor});
+  }
   for(const s of signs){
     if(typeof document==='undefined')continue;
     const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=Math.max(128,Math.round(2048*s.h/s.w));const ctx=canvas.getContext('2d');ctx.fillStyle='#263832';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#d4d9c9';ctx.font=`500 ${Math.round(canvas.height*.52)}px Arial,Microsoft YaHei`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s.text,canvas.width/2,canvas.height*.51,canvas.width*.94);ctx.fillStyle='#a89664';ctx.fillRect(canvas.width*.03,canvas.height*.85,canvas.width*.94,3);
-    const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;textures.push(map);const material=new THREE.MeshStandardMaterial({map,roughness:.76,metalness:.05});const mesh=new THREE.Mesh(new THREE.PlaneGeometry(s.w,s.h),material);mesh.position.set(s.x,s.y,s.z);mesh.rotation.y=s.rotation;group.add(mesh);
+    const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;textures.push(map);const material=new THREE.MeshStandardMaterial({map,roughness:.76,metalness:.05});material.name='Landmark / wayfinding sign';const mesh=new THREE.Mesh(new THREE.PlaneGeometry(s.w,s.h),material);mesh.position.set(s.x,s.y,s.z);mesh.rotation.y=s.rotation;group.add(mesh);
   }
   for(const pos of [[-416,4,176],[-438,4,-462],[0,3,193],[-324,4,280],[-560,4,280],[-550,4,-530],[-322,4,-530]]){
     instance(unitBox,mats.steel,[pos[0],pos[1]/2,pos[2]],[.12,pos[1],.12]);lightAnchors.push({position:pos,color:0xffe4bc,intensity:240,range:18});
@@ -384,6 +423,7 @@ export function buildCityLandmarks(THREE,root,roadMaterial=null){
     const [gltf,buffer]=await Promise.all([jsonResponse.json(),bufferResponse.arrayBuffer()]);
     const map=texture('shrub_03/textures/shrub_03_diff_1k.jpg',true),normal=texture('shrub_03/textures/shrub_03_nor_gl_1k.jpg'),arm=texture('shrub_03/textures/shrub_03_arm_1k.jpg');for(const t of [map,normal,arm])t.flipY=false;
     const material=new THREE.MeshStandardMaterial({map,normalMap:normal,normalScale:new THREE.Vector2(.4,.4),roughnessMap:arm,roughness:.9,metalness:0,side:THREE.DoubleSide});
+    material.name='Landmark / photographed shrub foliage';
     function attribute(index){const a=gltf.accessors[index],view=gltf.bufferViews[a.bufferView],size={SCALAR:1,VEC2:2,VEC3:3,VEC4:4}[a.type],Type={5126:Float32Array,5123:Uint16Array,5125:Uint32Array}[a.componentType];if(!Type||view.byteStride)throw new Error('Unsupported local shrub accessor');return new THREE.BufferAttribute(new Type(buffer,(view.byteOffset||0)+(a.byteOffset||0),a.count*size),size);}
     const variants=gltf.meshes.map(m=>{const p=m.primitives[0],g=new THREE.BufferGeometry();g.setAttribute('position',attribute(p.attributes.POSITION));g.setAttribute('normal',attribute(p.attributes.NORMAL));g.setAttribute('uv',attribute(p.attributes.TEXCOORD_0));g.setIndex(attribute(p.indices));return g;});
     const placements=variants.map(()=>[]);let n=593921;const r=()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};

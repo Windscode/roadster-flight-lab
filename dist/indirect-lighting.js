@@ -17,8 +17,7 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
   })().catch(error=>{stats.error=error.message;console.warn('Indirect-light field:',error.message);return false;});
   const glsl=`
     uniform highp sampler2DArray giCity,giStreet;
-    uniform vec3 giSky[9];uniform float giReady,giAOEnabled;
-    uniform sampler2D giAO;uniform vec2 giViewport;varying vec3 giWorld;
+    uniform vec3 giSky[9];uniform float giReady;varying vec3 giWorld;
     void giBasis(vec3 n,out float b[9]){
       b[0]=.886227;b[1]=1.023328*n.y;b[2]=1.023328*n.z;b[3]=1.023328*n.x;
       b[4]=.858086*n.x*n.y;b[5]=.858086*n.y*n.z;b[6]=.743125*n.z*n.z-.247708;b[7]=.858086*n.x*n.z;b[8]=.429043*(n.x*n.x-n.y*n.y);
@@ -54,7 +53,7 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
       return E;
     }
   `;
-  function inject(shader){
+  function inject(shader,{contactAO=true}={}){
     Object.assign(shader.uniforms,uniforms);
     const vertex=evaluation==='vertex';
     // The smooth preset evaluates the same physical baked SH coefficients at
@@ -62,7 +61,7 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
     // per shaded pixel; it changes interpolation resolution, not light energy.
     if(vertex){
       shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\n'+glsl+'\nvarying vec3 giVertexIrradiance;');
-      shader.fragmentShader='uniform float giReady,giAOEnabled;uniform sampler2D giAO;uniform vec2 giViewport;varying vec3 giVertexIrradiance;\n'+shader.fragmentShader;
+      shader.fragmentShader='uniform float giReady;varying vec3 giVertexIrradiance;\n'+shader.fragmentShader;
     }else shader.vertexShader='varying vec3 giWorld;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`
       vec4 giPosition=vec4(transformed,1.);
@@ -74,6 +73,11 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
       #include <project_vertex>`);
     if(!vertex)shader.fragmentShader=glsl+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_maps>',THREE.ShaderChunk.lights_fragment_maps.replace('iblIrradiance += getIBLIrradiance( geometryNormal );',`if(giReady>.5)iblIrradiance+=${vertex?'giVertexIrradiance':'giIrradiance(giWorld,inverseTransformDirection(geometryNormal,viewMatrix))'};else iblIrradiance+=getIBLIrradiance(geometryNormal);`));
+    if(contactAO)injectContactAO(shader);
+  }
+  function injectContactAO(shader){
+    Object.assign(shader.uniforms,{giAO:uniforms.giAO,giAOEnabled:uniforms.giAOEnabled,giViewport:uniforms.giViewport});
+    shader.fragmentShader='uniform float giAOEnabled;uniform sampler2D giAO;uniform vec2 giViewport;\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <aomap_fragment>',`#include <aomap_fragment>
       if(giAOEnabled>.5){float contactAO=texture2D(giAO,gl_FragCoord.xy/giViewport).r;reflectedLight.indirectDiffuse*=mix(.78,1.,contactAO);}`);
   }
@@ -106,7 +110,7 @@ export function createIndirectLighting(renderer,{fetchAsset=fetch}={}){
     return .90*Math.max(1,Math.min(3,Math.sqrt(reference/Math.max(.025,metered))));
   }
 
-  return{ready,stats,inject,uniforms,exposureAt,setEnabled(value){enabled=!!value;uniforms.giReady.value=enabled&&stats.loaded?1:0;stats.enabled=enabled;},get metadata(){return metadata;},get shaderKey(){return 'gi-'+evaluation+'-v3';},
+  return{ready,stats,inject,injectContactAO,uniforms,exposureAt,setEnabled(value){enabled=!!value;uniforms.giReady.value=enabled&&stats.loaded?1:0;stats.enabled=enabled;},get metadata(){return metadata;},get shaderKey(){return 'gi-'+evaluation+'-separate-ao-3.13';},
     setQuality(q,profile={}){evaluation=profile.giMode||(q==='balanced'?'vertex':'fragment');stats.evaluation=evaluation;stats.maximumFieldTextureReadsPerFragment=evaluation==='vertex'?0:36;},
     setContactAO(t){uniforms.giAO.value=t;},setAOEnabled(v){uniforms.giAOEnabled.value=v?1:0;},resize(){renderer.getDrawingBufferSize(uniforms.giViewport.value);}};
 }

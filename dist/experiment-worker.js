@@ -117,7 +117,7 @@ export function runExperiment(raw={}){
  if(kind==='steer'&&speedRmse>speedKmh*.05)warnings.push('实际速度RMSE超过初速5%，不宜解释为定速转向响应');
  if(kind==='steer'&&betaSamples<steps*.9)warnings.push('前进/接地/姿态门限有效侧偏样本不足90%');
  if(hullContacts)warnings.push('出现刚体接触，当前响应含接触/机械止挡作用');
- if(heightLoss!==null&&['hover','attitude'].includes(kind))warnings.push('高度误差持续超限；不应只依据额定推重比判断控制成功');
+ if(heightLoss!==null&&['hover','attitude'].includes(kind))warnings.push('过程中曾持续超过高度误差限值；最终是否恢复请看末段判据');
  let outcome='completed';
  if(!accepted)outcome='rejected';
  else if(kind==='roll')outcome=completeRotation&&stableLanding&&hullContacts===0?'stable_landing':'window_ended_without_stable_landing';

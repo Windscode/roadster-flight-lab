@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -56,5 +57,5 @@ const sourcePaths=['dist/chase-camera.js','dist/main.js'];
 const sourceHashes=Object.fromEntries(sourcePaths.map(path=>[path,createHash('sha256').update(readFileSync(new URL('../'+path,import.meta.url))).digest('hex')]));
 const report={status:'passed',version:MODEL_VERSION,scope:'Deterministic camera kinematics in Node at specified update rates. Not WebGL frames, measured GPU performance, tyre handling or human driving acceptance.',publishedBaseline:{commit:'ab9372b56a01c2a47b18d32baf48162f3cd8f86c',file:'dist/main.js',algorithm:'World-space position.lerp(vehicle + heading offset, 1-exp(-4*dt))'},protocol:{durationS:5,constantSpeedsKmh:[54,90,-54],updateRatesHz:[30,60,144],verticalSignal:'0.62 + 0.08 sin(20t) metres; previous vertical filtering retained',zeroDtScope:'A zero-time/no-translation function call only; actual UI pause keeps calling the camera with wall-clock dt and can continue settling.',physicalStateMutated:false},comparisons,transport,sourceHashes};
 mkdirSync(new URL('../qa/',import.meta.url),{recursive:true});
-writeFileSync(new URL('../qa/chase-camera-3.12.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL(`../qa/chase-camera-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log('PASS: chase framing preserves its specified distance across speed and update rate; horizontal transport is invariant, vertical filtering and physical state are retained.');

@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "algorithm": "Offline diffuse path tracing / explicit sun next-event estimation / cosine hemisphere / order-2 real SH",
+  "bounces": 3,
+  "samplesPerProbe": 768,
+  "sunDirection": [
+    0.5539084360319664,
+    0.7428390925897081,
+    0.3759993710275591
+  ],
+  "sunIntensity": 2.7,
+  "skyIntensity": 0.8,
+  "skySH": [
+    0.8120958110944165,
+    0.9516294830507933,
+    1.3801036604573576,
+    0.29592686291264214,
+    0.3439290247043658,
+    0.5039552694628727,
+    0.1917962547373791,
+    0.22924280072389594,
+    0.3115732371307141,
+    0.2977812473459807,
+    0.3659114837698838,
+    0.517938876469592,
+    0.1314458475516053,
+    0.15815063977667418,
+    0.23068352225205055,
+    0.08713467722966352,
+    0.09946252140008534,
+    0.1369051385140571,
+    -0.02240655955357405,
+    -0.02854335827858903,
+    -0.05305597253715145,
+    0.17830689870301075,
+    0.20453054345406993,
+    0.27624522613311175,
+    0.008245752695483999,
+    0.03400937736060717,
+    0.07059320779697004
+  ],
+  "sunFill": [
+    2.3529412746429443,
+    2.5568628311157227,
+    3.4509804248809814
+  ],
+  "skyUpIrradiance": [
+    1.0245443815910946,
+    1.187791356783281,
+    1.7216522401301166
+  ],
+  "volumes": [
+    {
+      "id": "city",
+      "min": [
+        -624,
+        -624
+      ],
+      "step": [
+        32,
+        32
+      ],
+      "size": [
+        40,
+        40
+      ],
+      "heights": [
+        0.8,
+        2.6,
+        6,
+        14,
+        32,
+        64
+      ],
+      "file": "city.bin",
+      "validProbes": 8323,
+      "bytes": 691200,
+      "sha256": "2957c30cc8174ba9b6bb63651d30fd1328f2f0c01d9870504bfa1ef447ab8611"
+    },
+    {
+      "id": "lower-market",
+      "min": [
+        -224,
+        -416
+      ],
+      "step": [
+        4,
+        8
+      ],
+      "size": [
+        13,
+        59
+      ],
+      "heights": [
+        0.8,
+        2.6,
+        6,
+        14,
+        32,
+        64
+      ],
+      "file": "lower-market.bin",
+      "validProbes": 3590,
+      "bytes": 331344,
+      "sha256": "41782ded95856e80b2b99d6b7c8fd94bb7f6ef2da6b62ce02ac8467c4229d23b"
+    }
+  ],
+  "totalProbes": 14202,
+  "validProbes": 11913,
+  "staticEnvelopes": 2120,
+  "seconds": 150.718553899,
+  "geometrySHA256": "2dba61c7784a22bcf1f29ce9dfe2af28607ed600a4d5a5e2d8c1fa03fd382c67",
+  "geometryCanonicalSHA256": "ad28b4192e8367ac32491a5c3d0e08667b9946d667aa2c2405c375c0a15e8e4b",
+  "geometryHashQuantization": 1e-9,
+  "materialModel": {
+    "version": "3.10",
+    "source": "dist/urban-architecture.js / URBAN_MATERIAL_PALETTE",
+    "wallTintSRGB": [
+      9477021,
+      11773332,
+      9214364,
+      11050644,
+      9542039
+    ],
+    "wallDiffuseScale": 0.76,
+    "roadTintSRGB": 9607324,
+    "roadAverageLinear": [
+      0.06496923446555924,
+      0.06984488376582869,
+      0.07376618803434053
+    ],
+    "assumption": "Static envelope averages; scanned asphalt baseline average is rescaled by the current linear material tint. Individual windows, metal, shop interiors and textured facade variation are averaged."
+  },
+  "materialModelSHA256": "0da6642456a8a9971b5ade64cc9750b27d5aea4893e9cae76fa761ae5ac65e3c",
+  "limitations": [
+    "Static shared solid envelopes and average diffuse reflectances; fine facade, foliage and animated people are not path-traced.",
+    "Three surface events; not an unlimited-bounce solution, hardware ray tracing or DDGI.",
+    "Invalid solid probes are rejected; finite probe spacing may leak or blur lighting near thin geometry.",
+    "Specular reflections remain rasterized local probes; transparent transport and participating media are excluded.",
+    "Rebaked with the current physical geometry, including the retained corridor and 3.13 South Quay entrance; fine facade articulation remains an averaged envelope, not a facade-detail lightmap."
+  ]
+}

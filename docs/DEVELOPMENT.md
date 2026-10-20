@@ -60,7 +60,7 @@ The graphics panel supports fixed route cameras and a ZIP containing an original
 
 Capture five active seconds of warm-up followed by 30 seconds or the 150-second route. Export rAF p50/p95/p99, long frames, CPU stages and GPU timings where supported. Retain resolution-governor changes and separate menu/pause/loading from steady driving. A reduced draw-call count, a DOM canvas facade or offline shader compilation cannot substitute for these observations.
 
-The user’s computer supplied actual WebGL 3.9 city and vehicle images, which were retrieved and inspected for 3.10. The development cloud browser has no usable WebGL; this is a separate environment limitation, not evidence of a website rendering fault. Matched current-release after-images, motion and route GPU timings remain pending. Use the [current graphics protocol](visual-3.12.md) and [inherited isolation and light-field handoff](visual-3.11.md) alongside the [original same-frame conditions](visual-evidence-3.10.md); keep paused preview, loading, warmup and steady driving separate. The cloud browser can validate the same-page numerical UI and exports, not current 3D pixels or driving feel.
+The user’s computer supplied actual WebGL 3.9 city and vehicle images, which were retrieved and inspected for 3.10. The development cloud browser has no usable WebGL; this is a separate environment limitation, not evidence of a website rendering fault. Matched current-release after-images, motion and route GPU timings remain pending. Use the [current graphics protocol](visual-3.13.md) and [inherited isolation and light-field handoff](visual-3.11.md) alongside the [original same-frame conditions](visual-evidence-3.10.md); keep paused preview, loading, warmup and steady driving separate. The cloud browser can validate the same-page numerical UI and exports, not current 3D pixels or driving feel.
 
 ## Existing Pages delivery
 
@@ -83,3 +83,12 @@ Do not use a previous release’s successful deployment as evidence for a new on
 ### 验证输出与当前环境
 
 3.11 完整整合命令的实际退出码、模型构建身份、先前失败与最终运行证据保存在 `qa/validation-final-run-3.11.json`；3.12 的独立最终运行记录使用 `qa/validation-final-run-3.12.json`。本次开发环境的 Node 管道捕获曾返回 `EPERM` 且丢失子进程输出，导致明细汇总低计数；`scripts/validate.mjs` 改用临时常规文件描述符保存 stdout/stderr，任何执行错误或非零退出仍使门禁失败。成功和退出码 7 的独立探针见 `qa/validation-subprocess-output-diagnostic-3.11.json`。该修正仅涉及报告收集，物理判据与实际调用的子测试保持原样。
+
+
+## 3.13 release gates
+
+The original plan continues in `AUDIT-AND-CHANGES.md`. This release adds offline active sampler-array reflection against a 16-unit fragment budget, frozen 3.12 overflow reproduction, byte-identical night-field atlas sampling, actual-device program/draw capture, frozen 3.9/3.12 versus current X curves, manual input and fault boundaries, 3.12 complete-state compatibility, and shared car/quay geometry checks. These are distinct from current-device WebGL pixel and route frame-time acceptance.
+
+`node scripts/validate.mjs` includes the new gates and preserves all inherited braking, camera, continuous-input, history, G-grid and budget checks. Reports use the current release suffix; 3.12 historical reports remain unchanged. `GLSLANG_VALIDATOR` enables offline final-source checks including `--compareBaseline`. `JSDOM_MODULE_PATH` enables DOM/event contracts with explicitly declared non-GPU facades. Diagnostic frames and their following interval are excluded from timing populations.
+
+The user supplied real 3.12 high/balanced/high PNGs and console identifying a sampler-limit material failure. They also supplied seven real 3.11 isolations confirming the receiver-plane stripe correction at one camera. See [3.13 graphics evidence and device steps](visual-3.13.md), [sampler budget](sampler-budget-3.13.md), [X actual-solver comparisons](x-flip-3.13.md) and [car/quay changes](visual-quality-3.13.md). The development cloud browser's Disabled WebGL is not evidence about the user's GPU. No current 3.13 GPU acceptance is inferred from offline or DOM results.

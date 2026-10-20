@@ -19,22 +19,46 @@ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(52,16/9,.1,1800
 const environment=createEnvironment(scene,renderer,geometry,camera);await environment.ready;
 const environmentMaterials=new Set();scene.traverse(o=>{if(o.isMesh)for(const m of Array.isArray(o.material)?o.material:[o.material])if(m?.isMeshStandardMaterial)environmentMaterials.add(m);});
 let disposedPrograms=0;environmentMaterials.forEach(m=>m.addEventListener('dispose',()=>disposedPrograms++));
-const actual={};let time=1,coldStart=null;
+const actual={},lightingVariants=[];let time=1,coldStart=null;
+function checkLightingVariant(quality,night){
+  let staticMaterials=0;
+  for(const material of environmentMaterials){
+    assert.equal(material.defines.CSM_CASCADES,CITY_RENDER_PRESETS[quality].shadowCascades);
+    const variant=material.userData.cityLightingVariant,shader={vertexShader:THREE.ShaderLib.physical.vertexShader,fragmentShader:THREE.ShaderLib.physical.fragmentShader,uniforms:{}};
+    assert.equal(variant.quality,quality);assert.equal(variant.night,night);material.onBeforeCompile(shader,renderer);
+    const source=shader.vertexShader+'\n'+shader.fragmentShader;
+    assert.ok(shader.uniforms.CSM_cascades);
+    assert.equal(shader.fragmentShader.includes('vec3 giField('),!night&&quality!=='balanced','Daytime SH must use only the selected daytime fragment variant');
+    assert.equal(shader.vertexShader.includes('vec3 giField('),!night&&quality==='balanced','Balanced daytime still evaluates the unchanged SH field at vertices');
+    assert.equal(source.includes('uniform highp sampler2DArray giCity,giStreet'),!night,'Disabled daytime transport must have no night-program sampler declarations');
+    assert.equal(shader.fragmentShader.includes('uniform sampler2D probeSunDepth'),!night&&quality!=='balanced');
+    assert.equal(shader.fragmentShader.includes('uniform sampler2D giAO'),quality!=='balanced','High and ultra retain contact AO in both weather variants');
+    assert.equal(shader.fragmentShader.includes('uniform highp sampler3D nightFieldAtlas'),night,'The retained night bounce uses one city/route atlas sampler only at night');
+    assert.equal(shader.fragmentShader.includes('uniform highp sampler3D stationaryFieldAtlas'),night&&variant.isStatic,'Static night direct light has its separate one-atlas sampler');
+    assert.equal(source.includes('vec3 nightReadField('),night);assert.equal(source.includes('vec3 stationaryReadField('),night&&variant.isStatic);
+    for(const oldName of ['nightCityField','nightRouteField','stationaryCityField','stationaryRouteField']){assert.ok(!(oldName in shader.uniforms));assert.ok(!source.includes(oldName),'Old two-texture bindings must not survive atlas compilation');}
+    if(night){
+      assert.equal(shader.uniforms.nightFieldReady.value,1);assert.ok(shader.uniforms.nightFieldAtlas.value.isData3DTexture);
+      if(variant.isStatic){staticMaterials++;assert.equal(shader.uniforms.stationaryFieldReady.value,1);assert.ok(shader.uniforms.stationaryFieldAtlas.value.isData3DTexture);}
+    }else assert.equal(shader.uniforms.giReady.value,1);
+  }
+  if(night)assert.ok(staticMaterials>0,'This scene must exercise the stationary direct-light variant');
+  lightingVariants.push({quality,weather:night?'wet-night':'clear-day',materialCount:environmentMaterials.size,staticNightMaterials:staticMaterials,scope:'Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately'});
+}
 for(const quality of ['balanced','high','ultra','balanced']){
-  environment.setQuality(quality);const profile=CITY_RENDER_PRESETS[quality];
+  const disposedBeforeQuality=disposedPrograms;environment.setQuality(quality);const profile=CITY_RENDER_PRESETS[quality];
+  assert.ok(disposedPrograms-disposedBeforeQuality>=environmentMaterials.size,'Each quality switch must independently retire old CSM program states');
   assert.equal(environment.stats.shadowCascades,profile.shadowCascades);
   assert.equal(scene.children.filter(o=>o.isDirectionalLight).length,profile.shadowCascades);
   assert.equal(scene.children.filter(o=>o.type==='CubeCamera').length,quality==='balanced'?0:1);
   assert.equal(environment.stats.indirectLighting.evaluation,profile.giMode);
-  for(const material of environmentMaterials){
-    assert.equal(material.defines.CSM_CASCADES,profile.shadowCascades);const shader={vertexShader:THREE.ShaderLib.physical.vertexShader,fragmentShader:THREE.ShaderLib.physical.fragmentShader,uniforms:{}};material.onBeforeCompile(shader,renderer);
-    assert.ok(shader.uniforms.CSM_cascades&&shader.uniforms.giReady);
-    assert.equal(shader.fragmentShader.includes('vec3 giField('),quality!=='balanced','Daytime SH field must stay out of balanced fragments');
-    assert.equal(shader.vertexShader.includes('vec3 giField('),quality==='balanced','Balanced must still evaluate the same daytime SH field at vertices');
-    assert.ok(shader.uniforms.nightFieldReady&&shader.fragmentShader.includes('vec3 nightReadField('),'Night fixture bounce has an explicit, separate fragment budget');
-  }
+  checkLightingVariant(quality,false);
+  for(const night of [true,false]){const before=disposedPrograms;environment.setWeatherPreset(night?'wet-night':'clear-day');assert.ok(disposedPrograms-before>=environmentMaterials.size,'Changing weather transport must independently retire cached uniform tables');checkLightingVariant(quality,night);}
   assert.equal(environment.stats.nightIndirectLighting.routeSpacingMetres,quality==='balanced'?8:4);
   assert.equal(environment.stats.nightIndirectLighting.runtimeTextureReadsPerFragment,3);assert.equal(environment.stats.nightIndirectLighting.maximumTransitionReads,6);
+  assert.equal(environment.stats.nightDirectLighting.routeSpacingMetres,quality==='balanced'?8:4);
+  assert.equal(environment.stats.nightDirectLighting.maximumAdditionalTextureReads,3);assert.equal(environment.stats.nightDirectLighting.maximumTransitionTextureReads,6);
+  for(const field of [environment.stats.nightIndirectLighting,environment.stats.nightDirectLighting]){assert.equal(field.activeFieldSamplers,1);assert.equal(field.realTimeLightsAdded,0);assert.equal(field.atlasGPUBytes,quality==='balanced'?1373760:3149280);assert.ok(field.atlasCacheBytes<=4523040,'Only coarse and fine atlas copies may be cached per field');}
   const rows=[];
   for(const view of comparison.views){
     camera.position.set(...view.position);camera.lookAt(...view.lookAt);camera.updateMatrixWorld(true);environment.update(time+=1,camera.position);assert.equal(environment.wantsShadowUpdate(time,camera.position),true);
@@ -50,7 +74,7 @@ for(const quality of ['balanced','high','ultra','balanced']){
 }
 assert.ok(disposedPrograms>=environmentMaterials.size*4,'CSM program properties survive a quality round trip');
 record('Repeated quality round trip replaces 1 / 2 / 3 cascade systems and invalidates disposed CSM uniform caches',{disposedMaterialProgramStates:disposedPrograms});
-record('Balanced allocates no cube camera and evaluates daytime SH at vertices; wet-night fixture bounce has a separate 3-read / 6-transition-read fragment budget');
+record('Balanced allocates no cube camera and evaluates daytime SH at vertices; mutually exclusive weather programs retain contact AO and one atlas each for night bounce/direct, with unchanged 3-read / 6-transition-read budgets',{variants:lightingVariants,sourceBindingChecksOnly:true,activeSamplerAndGpuDrawGate:'Separate exact-source/offline reflection and actual browser program diagnostics'});
 record('Five authored city views halve baseline triangles with fewer than 400 beauty submissions',{views:actual.balanced});
 camera.position.set(-200,3,-385);camera.lookAt(-200,4,-280);time+=1;environment.update(time,camera.position);
 assert.equal(environment.wantsShadowUpdate(time,camera.position),true);

@@ -16,7 +16,13 @@ Roadster Flight Lab 是一个独立、可玩的车辆与飞行仿真研究项目
 
 ![3.9 实际 WebGL 历史画面：Roadster 前四分之三检视](qa/screenshots/3.9-evidence/39-studio-front-three-quarter.jpg)
 
-*以上为实际渲染的 **3.9 历史画面**，用于展示项目的城市与车模基础；不代表当前 3.12 的同条件验收结果。[画面来源与对照条件](docs/visual-evidence-3.10.md)。*
+*以上为实际渲染的 **3.9 历史画面**，用于展示项目的城市与车模基础；不代表当前 3.13 的同条件验收结果。[画面来源与对照条件](docs/visual-evidence-3.10.md)。*
+
+## 快翻，也保留真实惯性
+
+X 采用短起跳和独立快翻轨迹。从水平地面或水平飞行开始，旋转后靠实际推力制动，落地或返回原空中高度；压力、气量、初始角速度或上方净空不合适时会给出具体原因。
+
+想手动练习，可选 **快翻练习**，H 开启辅助飞行、关闭 G，先 E 起升再 Z / B 滚转；约转过四分之三圈时松键并开 G 制动回正。G 会回正到当前高度参考附近，不自动回到起跳高度。时序和气耗见[自动与手动实测对照](docs/x-flip-3.13.md)。
 
 ## 第一次怎么玩
 
@@ -72,7 +78,7 @@ Roadster Flight Lab 是一个独立、可玩的车辆与飞行仿真研究项目
 
 这是依据公开图像和工程假设制作的非官方仿真，未取得 Tesla 原厂 CAD、轮胎数据库或实车标定。额定机械功率 **700 kW**、干地摩擦系数 **μ = 1.25**、单主喷口 **20 kN** 等为当前模型假设。实验喷口、吸附系统和内部构造包含原创研究设计，不能当作官方车辆技术资料。
 
-物理采用独立轮速、联合附着、悬架接触、有限响应阀门、气源与控制分配；不含工业 CFD、柔性车身或完整多体悬架。城市为持续制作的浏览器实时场景，保留完整街区并按画质分配照明、阴影和反射预算。画质、实际驾驶帧时和数值正确性各有独立验证要求。当前车身条纹、夜间照明、材质与反射运动仍待同条件 WebGL 对照验收；进度与条件见[图形验证记录](docs/visual-3.12.md)。松油电机制动按机械耗散建模，未计电池回充。
+物理采用独立轮速、联合附着、悬架接触、有限响应阀门、气源与控制分配；不含工业 CFD、柔性车身或完整多体悬架。城市为持续制作的浏览器实时场景，保留完整街区并按画质分配照明、阴影和反射预算。画质、实际驾驶帧时和数值正确性各有独立验证要求。当前车身条纹、夜间照明、材质与反射运动仍待同条件 WebGL 对照验收；进度与条件见[图形验证记录](docs/visual-3.13.md)。松油电机制动按机械耗散建模，未计电池回充。
 
 记录存于当前浏览器。达到存储上限后，已有历史保留，新结果会明确提示仅存于当前会话；请用完整 JSON 导出保存。语言切换不会改写实验字段、用户命名或历史数据。五个指定种子的结果只解释这些工况，不构成真实车辆可靠性保证。
 
@@ -88,6 +94,6 @@ npm start
 
 打开 `http://127.0.0.1:8080/`。Windows 也可双击 `启动试验场.cmd`。三维需要 WebGL 2 和图形加速；数值研究无需 GPU。
 
-[本轮发布说明](docs/release-3.12.md) · [制动转弯对照](docs/braking-controls-3.12.md) · [驾驶与飞行基础](docs/vehicle-dynamics-3.11.md) · [开发与验证](docs/DEVELOPMENT.md) · [G 恢复网格](docs/g-recovery-grid-3.12.md) · [研究对照协议](docs/research-robustness-3.11.md) · [物理假设](dist/physics-3.9-notes.md) · [历史版本](3.9-UPDATE-NOTES.md) · [部署身份](https://windscode.github.io/roadster-flight-lab/deployment.json)
+[本轮发布说明](docs/release-3.13.md) · [制动转弯对照](docs/braking-controls-3.12.md) · [驾驶与飞行基础](docs/vehicle-dynamics-3.11.md) · [开发与验证](docs/DEVELOPMENT.md) · [G 恢复网格](docs/g-recovery-grid-3.12.md) · [研究对照协议](docs/research-robustness-3.11.md) · [物理假设](dist/physics-3.9-notes.md) · [历史版本](3.9-UPDATE-NOTES.md) · [部署身份](https://windscode.github.io/roadster-flight-lab/deployment.json)
 
 Three.js · cannon-es · Poly Haven CC0 环境素材。第三方素材许可随仓库保留。Tesla 品牌仅用于识别研究对象，本项目非官方，不用于车辆设计、安全评估或性能认证。

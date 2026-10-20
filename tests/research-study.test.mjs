@@ -19,11 +19,12 @@ values.finiteHover=finite.metrics;pass('Finite hover distinguishes capacity loss
 const attitudeJobs=buildStudyRequests({kind:'attitude'},{mode:'pair',pairKey:'stabilization'}),attitude=attitudeJobs.map(j=>runExperiment(j.request));
 assert.notEqual(attitude[0].outcome,'recovered');assert.equal(attitude[1].outcome,'recovered');assert.ok(attitude[1].metrics.recoveredAtSeconds>.5&&attitude[1].metrics.recoveryMaintainedToEnd);assert.equal(attitude[1].metrics.groundTouchSeconds,null);
 values.attitude=attitude.map(r=>({outcome:r.outcome,metrics:r.metrics}));pass('Matched attitude A/B changes only the real stabilizer and requires a sustained low-error low-angular-rate recovery');
-// The current pilot-bounded roll requires more return impulse than the former
-// finite 900 L fixture. Completion uses explicit bench supply; insufficient
-// finite launches retain their original atomic-rejection requirements.
+// Current quick X has a separate reference and a smaller measured budget.
+// Successful finite runs and genuinely insufficient finite starts are both
+// exercised; rejected inputs must still preserve the complete initial state.
 const roll=runExperiment({kind:'roll',params:{supplyMode:'bench',tankLitres:600}});
-const rejectedRolls=[runExperiment({kind:'roll'}),runExperiment({kind:'roll',params:{supplyMode:'finite',tankLitres:200}}),runExperiment({kind:'roll',params:{supplyMode:'finite',tankLitres:900}})];
+const rejectedRolls=[200,300,400].map(tankLitres=>runExperiment({kind:'roll',params:{supplyMode:'finite',tankLitres}}));
+const finiteRolls=[600,900].map(tankLitres=>runExperiment({kind:'roll',params:{supplyMode:'finite',tankLitres}}));
 assert.equal(roll.appliedParams.supplyMode,'bench');assert.equal(roll.appliedParams.tankLitres,600);
 assert.equal(roll.protocolVersion,PROTOCOL_VERSION);assert.equal(roll.request.durationS,20);assert.equal(roll.input.duration,20);assert.equal(roll.rows.length,400);assert.equal(roll.metrics.statisticsSteps,2400);
 assert.equal(roll.outcome,'stable_landing');assert.ok(roll.metrics.completeRotation&&roll.metrics.inverted&&Math.abs(roll.metrics.rollTravelDeg)>350);
@@ -33,7 +34,9 @@ assert.ok(roll.metrics.stableLanding.time-roll.metrics.touchdown.time>=.5-1e-12)
 assert.equal(roll.finalState.mode,'drive');assert.equal(roll.finalState.contacts,4);assert.ok(Math.abs(roll.finalState.position.y-roll.initialState.position.y)<.15);assert.equal(roll.metrics.hullContactSamples,0);
 assert.equal(roll.metrics.gasUsedKg,0);assert.equal(roll.metrics.remainingGasKg,roll.initialState.gasKg);assert.ok(roll.metrics.remainingGasKg>30&&roll.metrics.deliveredImpulseNs>0);assert.ok(Math.abs(roll.metrics.massBalanceErrorKg)<1e-8);assert.ok(roll.metrics.throughputKg>0);assert.equal(roll.metrics.externalSupplyKg,roll.metrics.throughputKg);
 assert.equal(roll.metrics.heightHoldLostSeconds,null);assert.equal(roll.metrics.maxBetaDeg,null);
-assert.deepEqual(rejectedRolls.map(r=>r.appliedParams.tankLitres),[600,200,900]);
+assert.deepEqual(rejectedRolls.map(r=>r.appliedParams.tankLitres),[200,300,400]);
+for(const finite of finiteRolls){assert.equal(finite.outcome,'stable_landing');assert.ok(finite.metrics.completeRotation&&finite.metrics.inverted);assert.equal(finite.metrics.hullContactSamples,0);assert.equal(finite.finalState.mode,'drive');assert.ok(finite.metrics.stableLanding.time-finite.metrics.touchdown.time>=.5-1e-12);assert.ok(finite.metrics.gasUsedKg>0);assert.equal(finite.metrics.externalSupplyKg,0);assert.ok(Math.abs(finite.metrics.massBalanceErrorKg)<1e-8);}
+values.finiteRolls=finiteRolls.map(r=>({tankLitres:r.appliedParams.tankLitres,outcome:r.outcome,metrics:r.metrics}));
 for(const rejected of rejectedRolls){
   assert.equal(rejected.appliedParams.supplyMode,'finite');assert.equal(rejected.outcome,'rejected');assert.equal(rejected.rows.length,0);assert.deepEqual(rejected.phases,[]);
   assert.deepEqual(rejected.finalState,rejected.initialState);assert.deepEqual(rejected.events.map(e=>({time:e.time,type:e.type})),[{time:0,type:'maneuver_rejected'}]);
@@ -43,12 +46,13 @@ for(const rejected of rejectedRolls){
 }
 values.roll=roll.metrics;values.rollFixture={supplyMode:roll.appliedParams.supplyMode,tankLitres:roll.appliedParams.tankLitres,outcome:roll.outcome,initialState:roll.initialState,finalState:roll.finalState};
 values.rejectedRolls=rejectedRolls.map(r=>({supplyMode:r.appliedParams.supplyMode,tankLitres:r.appliedParams.tankLitres,outcome:r.outcome,reason:r.events[0].note,sampleCount:r.rows.length,initialState:r.initialState,finalState:r.finalState,metrics:r.metrics}));
-pass('Default bench 600 L ground roll completes a full rotation and confirmed stable landing with external gas accounting; finite 600 L, 200 L and 900 L impulse rejections leave state unchanged with no samples, impulse or gas use');
+pass('Bench and finite 600/900 L quick rolls complete full rotation and confirmed stable landing; insufficient finite 200/300/400 L starts preserve state with no samples, impulse or gas use');
 // The only changed experimental factor here is the observation window. Keep
-// the old 8-second outcome as evidence instead of labelling it a stable landing.
+// the old 8-second duration and distinct identity. The faster current model
+// now lands within 8 s; archived old outcomes are never rewritten.
 const shortRoll=runExperiment({kind:'roll',params:{supplyMode:'bench',tankLitres:600},durationS:8});
 assert.deepEqual(shortRoll.initialState,roll.initialState);assert.equal(shortRoll.input.duration,8);assert.equal(shortRoll.rows.length,160);assert.equal(shortRoll.metrics.statisticsSteps,960);
-assert.equal(shortRoll.outcome,'window_ended_without_stable_landing');assert.ok(shortRoll.metrics.completeRotation&&shortRoll.metrics.inverted);assert.equal(shortRoll.metrics.touchdown,null);assert.equal(shortRoll.metrics.stableLanding,null);assert.equal(shortRoll.metrics.hullContactSamples,0);assert.notEqual(shortRoll.runId,roll.runId);
+assert.equal(shortRoll.outcome,'stable_landing');assert.ok(shortRoll.metrics.completeRotation&&shortRoll.metrics.inverted);assert.ok(shortRoll.metrics.touchdown&&shortRoll.metrics.stableLanding);assert.ok(shortRoll.metrics.stableLanding.time<=8);assert.equal(shortRoll.metrics.hullContactSamples,0);assert.notEqual(shortRoll.runId,roll.runId);
 const legacy=structuredClone(shortRoll);legacy.protocolVersion='flat-lab-3';delete legacy.request.durationS;
 const untouched=structuredClone(legacy),legacyArchive=studyArchive([{label:'Explicit old-request-format fixture; current solver 8-second data',report:legacy}]);
 assert.deepEqual(legacy,untouched);assert.deepEqual(legacyArchive.results[0].report,untouched);assert.equal(legacyArchive.requests[0].request.durationS,8);assert.equal(importStudy(legacyArchive)[0].request.durationS,8);

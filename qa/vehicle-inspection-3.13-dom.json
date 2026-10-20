@@ -1,0 +1,70 @@
+{
+  "status": "passed",
+  "asOf": "2026-10-20T07:11:37.495Z",
+  "modelVersion": "3.13.0",
+  "rendererBuildId": "461466391bff8e9907d95c157ba2f8ce52b76eae0a202aaed6aac31a768fe2d0",
+  "scope": "JSDOM interface and metadata regression, plus actual inspection matrix state handling through a no-draw renderer facade. Not a real-browser, GPU, image or performance result.",
+  "checks": [
+    "3D failure leaves truthful metadata export and language selection available while disabling PNG/ZIP frame capture and reference rendering",
+    "3.9 default / 3.8 retained options",
+    "Original-frame ZIP and independent-state JSON labels translate to English and back without storage identity changes",
+    "No-GPU metadata has null camera/resolution/device, separate surface protocol, and the actual chosen frozen reference identity",
+    "Independent JSON explicitly has current-state-unbound scope and null captureId/frameAssociation",
+    "A normals or no-environment starting mode still exercises full PBR materials for all ten matrix cases, then restores the original mode, authored environment, camera, controls and physical state",
+    "Context loss aborts the matrix without another draw, export or reenabled controls"
+  ],
+  "matrixState": {
+    "scope": "Actual inspection entry, original geometry and surface-diagnostic handlers with real rigid-body state and a declared no-draw renderer facade. No GPU or PNG pixel evidence.",
+    "cases": [
+      {
+        "initialMode": "normals",
+        "cases": 10,
+        "reportedStatus": "failed",
+        "physicsUnchanged": true,
+        "modeAndAuthoredEnvironmentRestored": true
+      },
+      {
+        "initialMode": "no-environment",
+        "cases": 10,
+        "reportedStatus": "failed",
+        "physicsUnchanged": true,
+        "modeAndAuthoredEnvironmentRestored": true
+      }
+    ],
+    "contextLoss": {
+      "stopsAfterFirstCase": true,
+      "controlsRemainDisabled": true,
+      "noFinalRender": true,
+      "physicsUnchanged": true
+    }
+  },
+  "sourceHashes": {
+    "dist/vehicle-inspection.js": "996342f8cbb19a9d2333158bee006d573fa07b434a9421a10f956da35ae9e5f5",
+    "dist/vehicle-inspection.html": "c899e1f3eb3ea3b038ea9423c591afee1e35b0f7f549f151412bbc50220b9964",
+    "dist/inspection-capture.js": "eb9c412e11b81c54bbcafd62e8de29930d003790e410bbd9194778138db5168e",
+    "dist/inspection-diagnostics-capture.js": "f9bb86d2bc10544ddfb09e4546690a58fd7200a45db0dcb6df733cff59a20baa",
+    "dist/vehicle-surface-diagnostics.js": "d612c5f281ac80332a634e16631d124cc23ce1713f51caee62b4f78909515ff3",
+    "dist/i18n-visual-311-en.js": "511d5dbc6c59c1d0e53618b6d8426cad218954cc7cab54be9f90b64ca2fd9154",
+    "dist/i18n-vehicle-310-en.js": "2f33aa6393043244ff73a9f3a2fa0e654bed7a2427c99b9c150e89203e55e4d6",
+    "qa/vehicle-inspection-3.10-dom-check.mjs": "6efb2345cc163ff04199fd1afde801504f7d5e90afa7cc5f393f007556f636ea",
+    "dist/vehicle.js": "70515d7eec676d7a36f121701d0a7be17be6b19c0b4a826bfc794c279ccbb5b2",
+    "dist/vehicle-models.js": "44147032c3b9c2f510f73b63712a1ea7116ad81d6a7c4070fcf654cec5cf1eaa",
+    "dist/model-build.js": "ebdcfac86bdfd2b6ab1a4d75be7a0a75f38ce06ad45e3ac93c670682481d7fe5",
+    "dist/visual-presets.js": "0476d3ab39adb6d38bc8a6904f4c630f87109f38bd7cf426c14355cd2bb24a06",
+    "dist/capture-archive.js": "ff0bcf04e26dbc506eabb4569edd8be1b3e167e6e567d84a38c7ca61db1160c2",
+    "dist/render-program-diagnostics.js": "1a9f80d7f6a33481cf160d304aaf276c7c0f5578297a994de5a4db3f13c607b7",
+    "dist/i18n-render-313-en.js": "68f1219d1b228f681978dc0432e08439607505b2d07a08b292fd82cc5b087405",
+    "dist/receiver-plane-shadows.js": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741",
+    "dist/i18n.js": "6735cf85a82021768a89d1dec541c7b2f16eeb426decab129c53257f9135ef4b",
+    "dist/i18n-visual-en.js": "da4952997fd47df297b8ccbfcebc394bd7c7bdb5caba127e53830f2a9b14ee73",
+    "dist/vehicle-layout.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "dist/physics.js": "d6fbfe7e3ed5c3503c91334d40672cd855ab5169437371a5bdda47f644ca27d8"
+  },
+  "expectedRendererErrors": [
+    "THREE.WebGLRenderer: Error creating WebGL context.",
+    "Error: Error creating WebGL context."
+  ],
+  "limits": [
+    "A real WebGL device must check baseline loading, PNG/ZIP pixels, geometry/material appearance and motion."
+  ]
+}

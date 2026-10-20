@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -30,7 +31,7 @@ const oldShare='const serviceBrake=input.brake*p.brakeForce*(i<2?.30:.20);';
 assert.equal(baselineText.split(oldShare).length,2,'Ablation target must occur exactly once');
 const axleSource=baselineText.replace(oldShare,'const axleLoad=this.wheelStates.slice(i<2?0:2,i<2?2:4).reduce((sum,w)=>sum+w.normalLoadN,0);const serviceBrake=input.brake*p.brakeForce*(i<2?.6:.4)*w.normalLoadN/Math.max(1,axleLoad);');
 const {RoadsterSim:AxleOnly}=await import('data:text/javascript;base64,'+Buffer.from(axleSource).toString('base64'));
-const stages=[['published-3.11',Before],['axle-only-ablation',AxleOnly],['production-3.12',RoadsterSim]];
+const stages=[['published-3.11',Before],['axle-only-ablation',AxleOnly],['production-'+REPORT_VERSION,RoadsterSim]];
 
 function rolling(Sim,speedKmh,params={}){
   const sim=flatDynamics(Sim,{params});
@@ -97,17 +98,17 @@ check('The service-brake/load-transfer cause is isolated before adding the conti
 check('Gentle inputs, opposite turns, straight full braking and split-friction limits are retained under actual wheel integration',()=>{
   evidence.gentle=[];evidence.stopping=[];evidence.split=[];
   for(const speedKmh of [54,90])for(const surface of ['dry','wet']){
-    const runs=[['published-3.11',Before],['production-3.12',RoadsterSim]].map(([stage,Sim])=>retain(stage,runCorner(Sim,{speedKmh,surface,steer:.2})));
+    const runs=[['published-3.11',Before],['production-'+REPORT_VERSION,RoadsterSim]].map(([stage,Sim])=>retain(stage,runCorner(Sim,{speedKmh,surface,steer:.2})));
     for(const r of runs)assert.ok(r.metrics.peakBodySlipAbove30KmhDeg<2&&r.metrics.peakTireSlipDeg<3,'Gentle-turn cases were already stable and must stay so');
     assert.ok(runs[1].metrics.peakBodySlipAbove30KmhDeg<runs[0].metrics.peakBodySlipAbove30KmhDeg+.1);
     evidence.gentle.push({speedKmh,surface,results:runs});
   }
   for(const surface of ['dry','wet']){
-    const mirror=retain('production-3.12',runCorner(RoadsterSim,{surface,steer:-1}));
+    const mirror=retain('production-'+REPORT_VERSION,runCorner(RoadsterSim,{surface,steer:-1}));
     const positive=evidence.primary.find(r=>r.surface===surface).results.at(-1);
     close(mirror.metrics.peakBodySlipAbove30KmhDeg,positive.metrics.peakBodySlipAbove30KmhDeg,1e-6,'Mirror turn symmetry');
     evidence.gentle.push({surface,mirror});
-    const results=[['published-3.11',Before],['production-3.12',RoadsterSim]].map(([stage,Sim])=>retain(stage,runCorner(Sim,{surface,steer:0,brake:1,seconds:6,stopAtRest:true})));
+    const results=[['published-3.11',Before],['production-'+REPORT_VERSION,RoadsterSim]].map(([stage,Sim])=>retain(stage,runCorner(Sim,{surface,steer:0,brake:1,seconds:6,stopAtRest:true})));
     const [before,after]=results.map(r=>r.metrics);assert.notEqual(after.stopTimeSeconds,null);
     close(after.pathLengthM,before.pathLengthM,1e-6,'The 60/40 straight-line stopping budget is retained');
     close(after.stopTimeSeconds,before.stopTimeSeconds,DT,'Straight stopping duration');
@@ -116,7 +117,7 @@ check('Gentle inputs, opposite turns, straight full braking and split-friction l
     evidence.stopping.push({surface,results});
   }
   for(const steer of [0,1]){
-    const results=[['published-3.11',Before],['production-3.12',RoadsterSim]].map(([stage,Sim])=>retain(stage,runCorner(Sim,{surface:'split',steer,brake:1,seconds:6,stopAtRest:true})));
+    const results=[['published-3.11',Before],['production-'+REPORT_VERSION,RoadsterSim]].map(([stage,Sim])=>retain(stage,runCorner(Sim,{surface:'split',steer,brake:1,seconds:6,stopAtRest:true})));
     const after=results.at(-1).metrics;assert.notEqual(after.stopTimeSeconds,null);assert.ok(after.peakGrip<=1+1e-9);assert.equal(after.minimumContacts,4);
     evidence.split.push({steer,results});
   }
@@ -164,7 +165,7 @@ check('Contact loss cannot duplicate an axle budget and low-speed brake input ca
     evidence.contactBudgets.push({contactMaskFR_FL_RR_RL:mask,brake,frontRequestN:front,rearRequestN:rear,wheels:w.map(w=>({id:w.id,contact:w.contact,loadN:w.normalLoadN,requestN:w.brakeDemandN,actualBrakeNm:w.brakeTorqueNm}))});
   }
   evidence.parking=[];
-  for(const [stage,Sim]of [['published-3.11',Before],['production-3.12',RoadsterSim]])for(const brake of [0,.009,.011,.2,1]){
+  for(const [stage,Sim]of [['published-3.11',Before],['production-'+REPORT_VERSION,RoadsterSim]])for(const brake of [0,.009,.011,.2,1]){
     const sim=flatDynamics(Sim),start=sim.body.position.clone();let maxSpeed=0,maxRequest=0;
     for(let k=0;k<360;k++){
       // Explicit 1 kN longitudinal external disturbance on level ground. It
@@ -176,7 +177,7 @@ check('Contact loss cannot duplicate an axle budget and low-speed brake input ca
     if(Sim===RoadsterSim){assert.ok(distance<.04&&maxSpeed<.1,'Static-friction approximation retains a small compliant hold');assert.ok(maxRequest<=42000+1e-8);}
     evidence.parking.push({stage,brake,disturbanceN:1000,durationSeconds:3,displacementM:distance,peakSpeedKmh:maxSpeed,maxRequestN:maxRequest});
   }
-  const old=evidence.parking.find(r=>r.stage==='published-3.11'&&r.brake===.011),fixed=evidence.parking.find(r=>r.stage==='production-3.12'&&r.brake===.011);
+  const old=evidence.parking.find(r=>r.stage==='published-3.11'&&r.brake===.011),fixed=evidence.parking.find(r=>r.stage==='production-'+REPORT_VERSION&&r.brake===.011);
   assert.ok(old.displacementM>fixed.displacementM*10,'The formerly released hold is reproduced under a physical disturbance');
 });
 
@@ -247,6 +248,6 @@ check('Blended braking snapshots replay exactly and reset clears the new brake d
 assert.equal(DEFAULT_PARAMS.tireMu,1.25);assert.equal(DEFAULT_PARAMS.motorPower,700000);assert.equal(DEFAULT_PARAMS.brakeForce,42000);assert.equal(DEFAULT_PARAMS.liftNozzleMax,20000);
 const sourceSha256=Object.fromEntries(['dist/physics.js','dist/tire-dynamics.js','dist/vehicle-models.js','dist/controls.js','dist/driving-capture.js','dist/simulation-snapshot.js'].map(path=>[path,hash(path)]));
 const common={modelVersion:MODEL_VERSION,solverHz:120,sourceSha256,baselinePublishedCommit:fixtureManifest.publishedCommit,scope:'Flat numerical fixtures and command-mapper tests. Same declared initial conditions and protocols within each comparison. No WebGL, GPU/FPS, keyboard/device latency, camera feel, city collision route or Tesla calibration acceptance.'};
-writeFileSync(new URL('../qa/braking-controls-curves-3.12.json',import.meta.url),JSON.stringify({schema:'roadster.numerical-braking-curves',version:1,...common,sampleHz:20,columns,runs:curves})+'\n');
-writeFileSync(new URL('../qa/braking-controls-3.12.json',import.meta.url),JSON.stringify({status:'passed',generatedAt:new Date().toISOString(),...common,checks,evidence,curveFile:'qa/braking-controls-curves-3.12.json',limits:['The primary 15% braking/full mapped-steering case is a reproduced remaining nonlinear combined-demand fault; 20% steering was already stable.','Service allocation retains a fixed 60/40 axle split; it is a simplified within-axle load-aware distribution, not a calibrated OEM EBD/ESC.','Split-friction hard corner braking still produces a real slide; no yaw/velocity override or friction increase is used.','The low-speed hold remains a compliant tire/static-friction approximation with small creep, not a pose clamp.','Equivalent motor retardation removes mechanical energy; no electrical energy is returned to the battery.','The selected limits remain engineering assumptions: dry mu 1.25, 700 kW traction, 42 kN brake request and 20 kN per main nozzle.']},null,2)+'\n');
+writeFileSync(new URL(`../qa/braking-controls-curves-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({schema:'roadster.numerical-braking-curves',version:1,...common,sampleHz:20,columns,runs:curves})+'\n');
+writeFileSync(new URL(`../qa/braking-controls-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',generatedAt:new Date().toISOString(),...common,checks,evidence,curveFile:`qa/braking-controls-curves-${REPORT_VERSION}.json`,limits:['The primary 15% braking/full mapped-steering case is a reproduced remaining nonlinear combined-demand fault; 20% steering was already stable.','Service allocation retains a fixed 60/40 axle split; it is a simplified within-axle load-aware distribution, not a calibrated OEM EBD/ESC.','Split-friction hard corner braking still produces a real slide; no yaw/velocity override or friction increase is used.','The low-speed hold remains a compliant tire/static-friction approximation with small creep, not a pose clamp.','Equivalent motor retardation removes mechanical energy; no electrical energy is returned to the battery.','The selected limits remain engineering assumptions: dry mu 1.25, 700 kW traction, 42 kN brake request and 20 kN per main nozzle.']},null,2)+'\n');
 console.log(JSON.stringify({status:'passed',modelVersion:MODEL_VERSION,checks:checks.length,curveRuns:curves.length,primary:evidence.primary.map(({surface,results})=>({surface,results:results.map(r=>({stage:r.stage,betaAbove30Deg:r.metrics.peakBodySlipAbove30KmhDeg,endSpeedKmh:r.metrics.endSpeedKmh}))}))}));

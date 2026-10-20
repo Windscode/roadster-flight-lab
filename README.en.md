@@ -16,7 +16,13 @@ Drive connected streets, leave the road for an attitude maneuver, then turn thos
 
 ![Actual 3.9 WebGL historical frame: Roadster front three-quarter inspection](qa/screenshots/3.9-evidence/39-studio-front-three-quarter.jpg)
 
-*These are actual **3.9 historical frames**, showing the project's city and vehicle foundation. They are not matched-condition acceptance images of the current 3.12 release. [Image provenance and comparison conditions](docs/visual-evidence-3.10.md).*
+*These are actual **3.9 historical frames**, showing the project's city and vehicle foundation. They are not matched-condition acceptance images of the current 3.13 release. [Image provenance and comparison conditions](docs/visual-evidence-3.10.md).*
+
+## Quick roll, with real momentum
+
+X now uses a short launch and an independent quick-roll trajectory. Start from level ground or level flight: it returns to the ground or the original airborne height through actual thrust and braking. Low pressure, insufficient gas, excess initial angular speed or obstructed clearance produce a specific refusal.
+
+For manual practice, choose **Quick-roll practice**, enable assisted flight with H and turn G off. Climb with E, then roll with Z / B; release after roughly three-quarters of a turn and enable G to brake and level. G uses the current height reference; it does not automatically return you to the launch height. [Measured X and manual comparisons](docs/x-flip-3.13.md).
 
 ## Your first drive and flight
 
@@ -72,7 +78,7 @@ Driving and procedure shortcuts are suspended while editing forms. Holding Q thr
 
 This unofficial simulation combines public imagery with engineering assumptions. It has no Tesla CAD, tire database or vehicle calibration. The **700 kW** mechanical power rating, dry-road **μ = 1.25**, and **20 kN** per main nozzle are model assumptions. Experimental nozzles, suction hardware and internal construction include original research designs and should not be read as official vehicle specifications.
 
-The model includes independent wheel rotation, combined tire grip, suspension contact, finite-response valves, gas supply and constrained control allocation. It has no industrial CFD, flexible body or full multibody suspension. The complete browser city remains in active production, with quality-dependent lighting, shadow and reflection budgets. Graphics, real driving frame times and numerical correctness have separate acceptance criteria. Matched-condition WebGL acceptance for current body stripes, night lighting, materials and moving reflections is still pending; see the [visual validation record](docs/visual-3.12.md). Lift-off motor retardation is modeled as mechanical dissipation, without battery recharge.
+The model includes independent wheel rotation, combined tire grip, suspension contact, finite-response valves, gas supply and constrained control allocation. It has no industrial CFD, flexible body or full multibody suspension. The complete browser city remains in active production, with quality-dependent lighting, shadow and reflection budgets. Graphics, real driving frame times and numerical correctness have separate acceptance criteria. Matched-condition WebGL acceptance for current body stripes, night lighting, materials and moving reflections is still pending; see the [visual validation record](docs/visual-3.13.md). Lift-off motor retardation is modeled as mechanical dissipation, without battery recharge.
 
 Records stay in the current browser. At the storage limit, existing history is preserved and new results are explicitly marked as session-only; use full JSON exports to retain them. Language switching does not rewrite experiment fields, custom names or history. Five selected seeds explain only the declared conditions; they do not establish real-vehicle reliability.
 
@@ -88,6 +94,6 @@ npm start
 
 Open `http://127.0.0.1:8080/`. Windows users can also run `启动试验场.cmd`. 3D requires WebGL 2 and graphics acceleration; numerical research requires no GPU.
 
-[Release evidence](docs/release-3.12.md) · [Braking in corners](docs/braking-controls-3.12.md) · [Driving and flight foundation](docs/vehicle-dynamics-3.11.md) · [Development and validation](docs/DEVELOPMENT.md) · [G recovery grid](docs/g-recovery-grid-3.12.md) · [Robustness protocol](docs/research-robustness-3.11.md) · [Physical assumptions](dist/physics-3.9-notes.md) · [Historical release](3.9-UPDATE-NOTES.md) · [Deployment identity](https://windscode.github.io/roadster-flight-lab/deployment.json)
+[Release evidence](docs/release-3.13.md) · [Braking in corners](docs/braking-controls-3.12.md) · [Driving and flight foundation](docs/vehicle-dynamics-3.11.md) · [Development and validation](docs/DEVELOPMENT.md) · [G recovery grid](docs/g-recovery-grid-3.12.md) · [Robustness protocol](docs/research-robustness-3.11.md) · [Physical assumptions](dist/physics-3.9-notes.md) · [Historical release](3.9-UPDATE-NOTES.md) · [Deployment identity](https://windscode.github.io/roadster-flight-lab/deployment.json)
 
 Three.js · cannon-es · Poly Haven CC0 environment assets. Third-party licenses remain with the repository. Tesla branding identifies the research subject; this is an unofficial project, not a tool for vehicle design, safety assessment or performance certification.

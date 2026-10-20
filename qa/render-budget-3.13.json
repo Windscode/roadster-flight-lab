@@ -1,0 +1,564 @@
+{
+  "status": "passed",
+  "method": "Real Three geometry/frustum and material lifecycle; no GPU context or browser timing",
+  "checks": [
+    {
+      "name": "Repeated quality round trip replaces 1 / 2 / 3 cascade systems and invalidates disposed CSM uniform caches",
+      "status": "passed",
+      "disposedMaterialProgramStates": 744
+    },
+    {
+      "name": "Balanced allocates no cube camera and evaluates daytime SH at vertices; mutually exclusive weather programs retain contact AO and one atlas each for night bounce/direct, with unchanged 3-read / 6-transition-read budgets",
+      "status": "passed",
+      "variants": [
+        {
+          "quality": "balanced",
+          "weather": "clear-day",
+          "materialCount": 62,
+          "staticNightMaterials": 0,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "balanced",
+          "weather": "wet-night",
+          "materialCount": 62,
+          "staticNightMaterials": 62,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "balanced",
+          "weather": "clear-day",
+          "materialCount": 62,
+          "staticNightMaterials": 0,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "high",
+          "weather": "clear-day",
+          "materialCount": 62,
+          "staticNightMaterials": 0,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "high",
+          "weather": "wet-night",
+          "materialCount": 62,
+          "staticNightMaterials": 62,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "high",
+          "weather": "clear-day",
+          "materialCount": 62,
+          "staticNightMaterials": 0,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "ultra",
+          "weather": "clear-day",
+          "materialCount": 62,
+          "staticNightMaterials": 0,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "ultra",
+          "weather": "wet-night",
+          "materialCount": 62,
+          "staticNightMaterials": 62,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "ultra",
+          "weather": "clear-day",
+          "materialCount": 62,
+          "staticNightMaterials": 0,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "balanced",
+          "weather": "clear-day",
+          "materialCount": 62,
+          "staticNightMaterials": 0,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "balanced",
+          "weather": "wet-night",
+          "materialCount": 62,
+          "staticNightMaterials": 62,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        },
+        {
+          "quality": "balanced",
+          "weather": "clear-day",
+          "materialCount": 62,
+          "staticNightMaterials": 0,
+          "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
+        }
+      ],
+      "sourceBindingChecksOnly": true,
+      "activeSamplerAndGpuDrawGate": "Separate exact-source/offline reflection and actual browser program diagnostics"
+    },
+    {
+      "name": "Five authored city views halve baseline triangles with fewer than 400 beauty submissions",
+      "status": "passed",
+      "views": [
+        {
+          "view": "weave-street",
+          "drawCalls": 290,
+          "triangles": 462052,
+          "instances": 36033,
+          "shadowDrawCalls": 47,
+          "shadowTriangles": 133800
+        },
+        {
+          "view": "foundry-avenue",
+          "drawCalls": 80,
+          "triangles": 71196,
+          "instances": 5430,
+          "shadowDrawCalls": 28,
+          "shadowTriangles": 7764
+        },
+        {
+          "view": "civic-terrace",
+          "drawCalls": 97,
+          "triangles": 177942,
+          "instances": 15217,
+          "shadowDrawCalls": 45,
+          "shadowTriangles": 60816
+        },
+        {
+          "view": "aerial",
+          "drawCalls": 120,
+          "triangles": 323230,
+          "instances": 26491,
+          "shadowDrawCalls": 35,
+          "shadowTriangles": 58392
+        },
+        {
+          "view": "botanical",
+          "drawCalls": 122,
+          "triangles": 262024,
+          "instances": 25082,
+          "shadowDrawCalls": 76,
+          "shadowTriangles": 103152
+        }
+      ]
+    },
+    {
+      "name": "Balanced shadow cadence caps at 30 Hz and refreshes immediately after a teleport",
+      "status": "passed"
+    },
+    {
+      "name": "Tessellated ground remains visible at 500 m and exactly matches the existing physical floor top",
+      "status": "passed"
+    },
+    {
+      "name": "Original physical city retains its exact canonical identity and the new daylight bake matches the complete current city including retained roadside fixtures",
+      "status": "passed",
+      "geometrySHA256": "2dba61c7784a22bcf1f29ce9dfe2af28607ed600a4d5a5e2d8c1fa03fd382c67",
+      "canonicalSHA256": "ad28b4192e8367ac32491a5c3d0e08667b9946d667aa2c2405c375c0a15e8e4b",
+      "retainedGeometryCanonicalSHA256": "77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146",
+      "newSharedEntities": 158,
+      "newSharedEntityIds": [
+        "landmark-quay-entry-pier--1",
+        "landmark-quay-entry-seat-plinth--1",
+        "landmark-quay-entry-pier-1",
+        "landmark-quay-entry-seat-plinth-1",
+        "landmark-quay-entry-crossbeam",
+        "landmark-quay-entry-roof",
+        "landmark-quay-entry-front-fascia",
+        "landmark-quay-entry-wayfinding-fin",
+        "corridor-crosstown-link-walk--1",
+        "corridor-crosstown-link-lamp--1-0",
+        "corridor-crosstown-link-lamp--1-0-arm",
+        "corridor-crosstown-link-lamp--1-0-head",
+        "corridor-crosstown-link-lamp--1-1",
+        "corridor-crosstown-link-lamp--1-1-arm",
+        "corridor-crosstown-link-lamp--1-1-head",
+        "corridor-crosstown-link-lamp--1-2",
+        "corridor-crosstown-link-lamp--1-2-arm",
+        "corridor-crosstown-link-lamp--1-2-head",
+        "corridor-crosstown-link-lamp--1-3",
+        "corridor-crosstown-link-lamp--1-3-arm",
+        "corridor-crosstown-link-lamp--1-3-head",
+        "corridor-crosstown-link-lamp--1-4",
+        "corridor-crosstown-link-lamp--1-4-arm",
+        "corridor-crosstown-link-lamp--1-4-head",
+        "corridor-crosstown-link-lamp--1-5",
+        "corridor-crosstown-link-lamp--1-5-arm",
+        "corridor-crosstown-link-lamp--1-5-head",
+        "corridor-crosstown-link-lamp--1-6",
+        "corridor-crosstown-link-lamp--1-6-arm",
+        "corridor-crosstown-link-lamp--1-6-head",
+        "corridor-crosstown-link-lamp--1-7",
+        "corridor-crosstown-link-lamp--1-7-arm",
+        "corridor-crosstown-link-lamp--1-7-head",
+        "corridor-crosstown-link-cabinet--1",
+        "corridor-crosstown-link-walk-1",
+        "corridor-crosstown-link-lamp-1-0",
+        "corridor-crosstown-link-lamp-1-0-arm",
+        "corridor-crosstown-link-lamp-1-0-head",
+        "corridor-crosstown-link-lamp-1-1",
+        "corridor-crosstown-link-lamp-1-1-arm",
+        "corridor-crosstown-link-lamp-1-1-head",
+        "corridor-crosstown-link-lamp-1-2",
+        "corridor-crosstown-link-lamp-1-2-arm",
+        "corridor-crosstown-link-lamp-1-2-head",
+        "corridor-crosstown-link-lamp-1-3",
+        "corridor-crosstown-link-lamp-1-3-arm",
+        "corridor-crosstown-link-lamp-1-3-head",
+        "corridor-crosstown-link-lamp-1-4",
+        "corridor-crosstown-link-lamp-1-4-arm",
+        "corridor-crosstown-link-lamp-1-4-head",
+        "corridor-crosstown-link-lamp-1-5",
+        "corridor-crosstown-link-lamp-1-5-arm",
+        "corridor-crosstown-link-lamp-1-5-head",
+        "corridor-crosstown-link-lamp-1-6",
+        "corridor-crosstown-link-lamp-1-6-arm",
+        "corridor-crosstown-link-lamp-1-6-head",
+        "corridor-crosstown-link-lamp-1-7",
+        "corridor-crosstown-link-lamp-1-7-arm",
+        "corridor-crosstown-link-lamp-1-7-head",
+        "corridor-crosstown-link-cabinet-1",
+        "corridor-foundry-main-walk--1",
+        "corridor-foundry-main-lamp--1-0",
+        "corridor-foundry-main-lamp--1-0-arm",
+        "corridor-foundry-main-lamp--1-0-head",
+        "corridor-foundry-main-lamp--1-1",
+        "corridor-foundry-main-lamp--1-1-arm",
+        "corridor-foundry-main-lamp--1-1-head",
+        "corridor-foundry-main-lamp--1-2",
+        "corridor-foundry-main-lamp--1-2-arm",
+        "corridor-foundry-main-lamp--1-2-head",
+        "corridor-foundry-main-lamp--1-3",
+        "corridor-foundry-main-lamp--1-3-arm",
+        "corridor-foundry-main-lamp--1-3-head",
+        "corridor-foundry-main-lamp--1-4",
+        "corridor-foundry-main-lamp--1-4-arm",
+        "corridor-foundry-main-lamp--1-4-head",
+        "corridor-foundry-main-lamp--1-5",
+        "corridor-foundry-main-lamp--1-5-arm",
+        "corridor-foundry-main-lamp--1-5-head",
+        "corridor-foundry-main-lamp--1-6",
+        "corridor-foundry-main-lamp--1-6-arm",
+        "corridor-foundry-main-lamp--1-6-head",
+        "corridor-foundry-main-cabinet--1",
+        "corridor-foundry-main-walk-1",
+        "corridor-foundry-main-lamp-1-0",
+        "corridor-foundry-main-lamp-1-0-arm",
+        "corridor-foundry-main-lamp-1-0-head",
+        "corridor-foundry-main-lamp-1-1",
+        "corridor-foundry-main-lamp-1-1-arm",
+        "corridor-foundry-main-lamp-1-1-head",
+        "corridor-foundry-main-lamp-1-2",
+        "corridor-foundry-main-lamp-1-2-arm",
+        "corridor-foundry-main-lamp-1-2-head",
+        "corridor-foundry-main-lamp-1-3",
+        "corridor-foundry-main-lamp-1-3-arm",
+        "corridor-foundry-main-lamp-1-3-head",
+        "corridor-foundry-main-lamp-1-4",
+        "corridor-foundry-main-lamp-1-4-arm",
+        "corridor-foundry-main-lamp-1-4-head",
+        "corridor-foundry-main-lamp-1-5",
+        "corridor-foundry-main-lamp-1-5-arm",
+        "corridor-foundry-main-lamp-1-5-head",
+        "corridor-foundry-main-lamp-1-6",
+        "corridor-foundry-main-lamp-1-6-arm",
+        "corridor-foundry-main-lamp-1-6-head",
+        "corridor-foundry-main-cabinet-1",
+        "corridor-canal-link-walk--1",
+        "corridor-canal-link-lamp--1-0",
+        "corridor-canal-link-lamp--1-0-arm",
+        "corridor-canal-link-lamp--1-0-head",
+        "corridor-canal-link-lamp--1-1",
+        "corridor-canal-link-lamp--1-1-arm",
+        "corridor-canal-link-lamp--1-1-head",
+        "corridor-canal-link-lamp--1-2",
+        "corridor-canal-link-lamp--1-2-arm",
+        "corridor-canal-link-lamp--1-2-head",
+        "corridor-canal-link-lamp--1-3",
+        "corridor-canal-link-lamp--1-3-arm",
+        "corridor-canal-link-lamp--1-3-head",
+        "corridor-canal-link-lamp--1-4",
+        "corridor-canal-link-lamp--1-4-arm",
+        "corridor-canal-link-lamp--1-4-head",
+        "corridor-canal-link-lamp--1-5",
+        "corridor-canal-link-lamp--1-5-arm",
+        "corridor-canal-link-lamp--1-5-head",
+        "corridor-canal-link-lamp--1-6",
+        "corridor-canal-link-lamp--1-6-arm",
+        "corridor-canal-link-lamp--1-6-head",
+        "corridor-canal-link-cabinet--1",
+        "corridor-canal-seat--1--139",
+        "corridor-canal-seat--1--27",
+        "corridor-canal-seat--1-59",
+        "corridor-canal-link-walk-1",
+        "corridor-canal-link-lamp-1-0",
+        "corridor-canal-link-lamp-1-0-arm",
+        "corridor-canal-link-lamp-1-0-head",
+        "corridor-canal-link-lamp-1-1",
+        "corridor-canal-link-lamp-1-1-arm",
+        "corridor-canal-link-lamp-1-1-head",
+        "corridor-canal-link-lamp-1-2",
+        "corridor-canal-link-lamp-1-2-arm",
+        "corridor-canal-link-lamp-1-2-head",
+        "corridor-canal-link-lamp-1-3",
+        "corridor-canal-link-lamp-1-3-arm",
+        "corridor-canal-link-lamp-1-3-head",
+        "corridor-canal-link-lamp-1-4",
+        "corridor-canal-link-lamp-1-4-arm",
+        "corridor-canal-link-lamp-1-4-head",
+        "corridor-canal-link-lamp-1-5",
+        "corridor-canal-link-lamp-1-5-arm",
+        "corridor-canal-link-lamp-1-5-head",
+        "corridor-canal-link-lamp-1-6",
+        "corridor-canal-link-lamp-1-6-arm",
+        "corridor-canal-link-lamp-1-6-head",
+        "corridor-canal-link-cabinet-1",
+        "corridor-canal-seat-1--139",
+        "corridor-canal-seat-1--27",
+        "corridor-canal-seat-1-59"
+      ]
+    }
+  ],
+  "profiles": {
+    "balanced": {
+      "massDistance": 1800,
+      "facadeDistance": 210,
+      "detailDistance": 70,
+      "streetDistance": 95,
+      "vegetationDistance": 115,
+      "actorDistance": 45,
+      "actorHz": 15,
+      "shadowCascades": 1,
+      "shadowSize": 1024,
+      "shadowHz": 30,
+      "shadowFar": 105,
+      "probeSize": 0,
+      "probeInterval": 0,
+      "probeDistance": 0,
+      "probeMaxAge": 0,
+      "probeShadowSize": 0,
+      "probeFar": 0,
+      "giMode": "vertex"
+    },
+    "high": {
+      "massDistance": 1800,
+      "facadeDistance": 380,
+      "detailDistance": 135,
+      "streetDistance": 165,
+      "vegetationDistance": 210,
+      "actorDistance": 80,
+      "actorHz": 24,
+      "shadowCascades": 2,
+      "shadowSize": 1536,
+      "shadowHz": 45,
+      "shadowFar": 195,
+      "probeSize": 128,
+      "probeInterval": 1.5,
+      "probeDistance": 5,
+      "probeMaxAge": 7,
+      "probeShadowSize": 512,
+      "probeFar": 125,
+      "giMode": "fragment"
+    },
+    "ultra": {
+      "massDistance": 1800,
+      "facadeDistance": 560,
+      "detailDistance": 205,
+      "streetDistance": 225,
+      "vegetationDistance": 285,
+      "actorDistance": 110,
+      "actorHz": 30,
+      "shadowCascades": 3,
+      "shadowSize": 2048,
+      "shadowHz": 60,
+      "shadowFar": 265,
+      "probeSize": 256,
+      "probeInterval": 0.9,
+      "probeDistance": 3.5,
+      "probeMaxAge": 5,
+      "probeShadowSize": 768,
+      "probeFar": 180,
+      "giMode": "fragment"
+    }
+  },
+  "views": {
+    "balanced": [
+      {
+        "view": "weave-street",
+        "drawCalls": 290,
+        "triangles": 462052,
+        "instances": 36033,
+        "shadowDrawCalls": 47,
+        "shadowTriangles": 133800
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 80,
+        "triangles": 71196,
+        "instances": 5430,
+        "shadowDrawCalls": 28,
+        "shadowTriangles": 7764
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 97,
+        "triangles": 177942,
+        "instances": 15217,
+        "shadowDrawCalls": 45,
+        "shadowTriangles": 60816
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 120,
+        "triangles": 323230,
+        "instances": 26491,
+        "shadowDrawCalls": 35,
+        "shadowTriangles": 58392
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 122,
+        "triangles": 262024,
+        "instances": 25082,
+        "shadowDrawCalls": 76,
+        "shadowTriangles": 103152
+      }
+    ],
+    "high": [
+      {
+        "view": "weave-street",
+        "drawCalls": 469,
+        "triangles": 790898,
+        "instances": 54151,
+        "shadowDrawCalls": 93,
+        "shadowTriangles": 224000
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 101,
+        "triangles": 105080,
+        "instances": 8243,
+        "shadowDrawCalls": 38,
+        "shadowTriangles": 38616
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 184,
+        "triangles": 392246,
+        "instances": 45507,
+        "shadowDrawCalls": 53,
+        "shadowTriangles": 107904
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 236,
+        "triangles": 506846,
+        "instances": 38421,
+        "shadowDrawCalls": 81,
+        "shadowTriangles": 185976
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 158,
+        "triangles": 430626,
+        "instances": 50382,
+        "shadowDrawCalls": 80,
+        "shadowTriangles": 125268
+      }
+    ],
+    "ultra": [
+      {
+        "view": "weave-street",
+        "drawCalls": 538,
+        "triangles": 953408,
+        "instances": 66545,
+        "shadowDrawCalls": 121,
+        "shadowTriangles": 275228
+      },
+      {
+        "view": "foundry-avenue",
+        "drawCalls": 116,
+        "triangles": 110708,
+        "instances": 8712,
+        "shadowDrawCalls": 41,
+        "shadowTriangles": 40044
+      },
+      {
+        "view": "civic-terrace",
+        "drawCalls": 221,
+        "triangles": 456946,
+        "instances": 53090,
+        "shadowDrawCalls": 59,
+        "shadowTriangles": 143328
+      },
+      {
+        "view": "aerial",
+        "drawCalls": 354,
+        "triangles": 690288,
+        "instances": 52096,
+        "shadowDrawCalls": 113,
+        "shadowTriangles": 264720
+      },
+      {
+        "view": "botanical",
+        "drawCalls": 172,
+        "triangles": 520102,
+        "instances": 63996,
+        "shadowDrawCalls": 81,
+        "shadowTriangles": 269760
+      }
+    ]
+  },
+  "coldStart": [
+    {
+      "view": "weave-street",
+      "drawCalls": 303,
+      "triangles": 503772,
+      "instances": 39480,
+      "shadowDrawCalls": 47,
+      "shadowTriangles": 133800
+    },
+    {
+      "view": "foundry-avenue",
+      "drawCalls": 80,
+      "triangles": 71196,
+      "instances": 5430,
+      "shadowDrawCalls": 28,
+      "shadowTriangles": 7764
+    },
+    {
+      "view": "civic-terrace",
+      "drawCalls": 97,
+      "triangles": 177942,
+      "instances": 15217,
+      "shadowDrawCalls": 45,
+      "shadowTriangles": 60816
+    },
+    {
+      "view": "aerial",
+      "drawCalls": 120,
+      "triangles": 323230,
+      "instances": 26491,
+      "shadowDrawCalls": 35,
+      "shadowTriangles": 58392
+    },
+    {
+      "view": "botanical",
+      "drawCalls": 122,
+      "triangles": 262024,
+      "instances": 25082,
+      "shadowDrawCalls": 76,
+      "shadowTriangles": 103152
+    }
+  ],
+  "limits": [
+    "Beauty submission estimates omit the vehicle, externally loaded shrubs and canvas label meshes.",
+    "Shadow counts in comparison files are visible casting candidates, not draws measured inside each light frustum.",
+    "More spatial batches can increase draws in sparse views while removing many vertices; the total allocated batch count is not a performance gate.",
+    "Actual browser FPS, GPU shader execution and visual appearance need a supported browser on target hardware.",
+    "The 3.10 daylight field was rebaked against the full current static geometry including the retained 3.9 roadside fixtures. Fine facade details still use averaged closed envelopes; the separate night field is one stationary diffuse surface bounce."
+  ]
+}

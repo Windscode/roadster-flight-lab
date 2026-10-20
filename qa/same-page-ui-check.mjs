@@ -12,6 +12,7 @@ import {resolve,dirname,relative} from 'node:path';
 import * as NativeThree from '../dist/vendor/three.module.js';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {CONTROL_CAPTURE_STARTS} from '../dist/driving-capture.js';
+import {CITY_BENCHMARK_ROUTE} from '../dist/visual-presets.js';
 
 if(typeof vm.SourceTextModule!=='function')throw new Error('Use node --experimental-vm-modules qa/same-page-ui-check.mjs');
 const jsdomPath=process.env.JSDOM_MODULE_PATH||'/tmp/roadster-dom-qa/node_modules/jsdom/lib/api.js';
@@ -53,11 +54,11 @@ window.Worker=class{
 };
 
 class MockRenderer{
-  constructor(){if(noGraphics)throw graphicsFailure;this.domElement=document.createElement('canvas');this.shadowMap={};this.info={autoReset:false,render:{calls:0,triangles:0},programs:[],reset(){this.render.calls=0;this.render.triangles=0;}};this.ratio=1;}
+  constructor(){if(noGraphics)throw graphicsFailure;this.domElement=document.createElement('canvas');this.shadowMap={};this.debug={checkShaderErrors:true,onShaderError:null};this.properties={get:()=>({})};this.renderBufferDirect=()=>{};this.info={autoReset:false,render:{calls:0,triangles:0},programs:[],reset(){this.render.calls=0;this.render.triangles=0;}};this.ratio=1;}
   setPixelRatio(value){this.ratio=value;}getPixelRatio(){return this.ratio;}
   setSize(width,height){this.width=width;this.height=height;this.domElement.width=Math.floor(width*this.ratio);this.domElement.height=Math.floor(height*this.ratio);}
   getSize(value){return value.set(this.width,this.height);}getDrawingBufferSize(value){return value.set(this.domElement.width,this.domElement.height);}
-  getContext(){return{getExtension:()=>null};}
+  getContext(){return{getExtension:()=>null,getParameter:()=>16,getError:()=>0,NO_ERROR:0,isContextLost:()=>false};}
   render(scene){this.info.render.calls++;graphics.rendered.push(scene.uuid);}
   async compileAsync(){}compile(){}
 }
@@ -127,7 +128,7 @@ const assertHealthy=()=>{assert.equal(errors.length,0,errors.join('\n'));assert.
 assertHealthy();assert.equal(window.roadsterApplicationReady,true,'Application and numerical research shell must initialize independently of WebGL');
 if(!noGraphics)assert.equal(window.roadsterReady,true,'Actual main.js boot must complete');
 const state=()=>window.roadsterLab?.getState()||window.roadsterApp.getState();
-const tick=(frames=1)=>{for(let i=0;i<frames;i++){nowMs+=1000/60;const callbacks=raf;raf=[];for(const callback of callbacks)callback(nowMs);for(const[id,timer]of [...timers])if(timer.due<=nowMs){timers.delete(id);timer.callback();}assertHealthy();}};
+const tick=(frames=1,frameMs=1000/60)=>{for(let i=0;i<frames;i++){nowMs+=frameMs;const callbacks=raf;raf=[];for(const callback of callbacks)callback(nowMs);for(const[id,timer]of [...timers])if(timer.due<=nowMs){timers.delete(id);timer.callback();}assertHealthy();}};
 const click=selector=>{const element=selector.startsWith('#')?$(selector.slice(1)):q(selector);assert.ok(element,'Missing DOM control '+selector);element.click();assertHealthy();return element;};
 const key=(code,{type='keydown',target=$('viewport'),repeat=false,...init}={})=>{const event=new window.KeyboardEvent(type,{code,bubbles:true,cancelable:true,repeat,...init});target.dispatchEvent(event);assertHealthy();return event;};
 const tap=code=>{key(code);key(code,{type:'keyup'});};
@@ -135,6 +136,11 @@ const pass=name=>{checks.push(name);console.log('PASS: '+name);};
 const settle=async(predicate,label)=>{for(let turn=0;turn<3000&&!predicate();turn++)await new Promise(resolve=>setTimeout(resolve,1));assertHealthy();assert.ok(predicate(),label+'; last UI toast: '+$('toast').textContent);};
 const study=()=>q('.research-study-panel');
 const numerical=telemetry=>JSON.stringify({position:telemetry.position,quaternion:telemetry.quaternion,velocity:telemetry.velocity,angularVelocity:telemetry.angularVelocity,gasMass:telemetry.gasMass,time:telemetry.simTime});
+const storedZipEntries=async blob=>{
+  const bytes=new Uint8Array(await blob.arrayBuffer()),view=new DataView(bytes.buffer),entries={};let offset=0;
+  while(view.getUint32(offset,true)===0x04034b50){const size=view.getUint32(offset+18,true),nameLength=view.getUint16(offset+26,true),extraLength=view.getUint16(offset+28,true),name=new TextDecoder().decode(bytes.slice(offset+30,offset+30+nameLength)),start=offset+30+nameLength+extraLength;entries[name]=bytes.slice(start,start+size);offset=start+size;}
+  return entries;
+};
 
 if(!noGraphics){
 assert.equal(state().context,'city');assert.equal(state().scenario,'city');assert.equal(state().paused,true);
@@ -151,6 +157,7 @@ for(const [key,value] of Object.entries({verticalAccelerationMps2:7.5,rollRateDe
   const control=$('response-'+key);assert.ok(control,'Visible slider '+key);control.value=String(value);control.dispatchEvent(new window.Event('input',{bubbles:true}));assert.equal(window.roadsterLab.getParameters()[key],value);assert.equal(JSON.parse(window.localStorage.getItem('roadster-control-response-v1'))[key],value);assert.equal(numerical(state()),initialResponseState);
 }
 click('[data-response-preset="maneuver"]');assert.equal(window.roadsterLab.getParameters().climbRateMps,14);assert.equal(window.roadsterLab.getParameters().rollRateDegS,240);assert.equal(window.roadsterLab.getParameters().angularAccelerationDegS2,480);assert.equal(window.roadsterLab.getParameters().verticalAccelerationMps2,6);assert.equal(numerical(state()),initialResponseState);
+click('[data-response-preset="quickroll"]');assert.equal(window.roadsterLab.getParameters().climbRateMps,4);assert.equal(window.roadsterLab.getParameters().rollRateDegS,360);assert.equal(window.roadsterLab.getParameters().pitchRateDegS,90);assert.equal(window.roadsterLab.getParameters().verticalAccelerationMps2,10);assert.equal(window.roadsterLab.getParameters().angularAccelerationDegS2,720);assert.equal(numerical(state()),initialResponseState);
 click('[data-response-preset="standard"]');assert.equal(window.roadsterLab.getParameters().climbRateMps,5);assert.equal(window.roadsterLab.getParameters().rollRateDegS,180);assert.equal(window.roadsterLab.getParameters().angularAccelerationDegS2,360);assert.equal(numerical(state()),initialResponseState);
 pass('All four manual-response sliders save on input and presets alter bounded reference limits without resetting, advancing or replacing physical state');
 
@@ -242,6 +249,7 @@ assert.equal(graphics.environments[0].weatherPreset,'wet-night');assert.equal(gr
 click('#benchmark-route-start');assert.ok(Math.abs(state().position.x+200)<1e-12);assert.ok(Math.abs(state().position.z+390)<1e-12);assert.equal(state().paused,true);
 $('benchmark-camera').value='weave-entry';$('benchmark-camera').dispatchEvent(new window.Event('change',{bubbles:true}));tick(2);assert.equal(state().cameraMode,'fixed');
 click('#visual-capture-metadata');const conditions=JSON.parse(await lastBlob.text());assert.equal(conditions.camera.id,'weave-entry');assert.equal(conditions.weatherPreset,'wet-night');assert.equal(conditions.simState.schema,'roadster-sim-state');
+assert.deepEqual(conditions.camera.target,CITY_BENCHMARK_ROUTE.cameras.find(c=>c.id==='weave-entry').target);assert.equal(conditions.camera.targetMeaning,'fixed preset look-at');
 pass('Road adhesion, actual ABS and wing controls route to physics; weather, screen-size LOD and fixed route camera metadata route to the active presentation');
 
 // Validate collection semantics with a renderer facade, never pixel quality.
@@ -259,10 +267,83 @@ assert.equal(new TextDecoder().decode(zipEntries[sameFrame.capture.imageFile]),'
 values.captureArchive={scope:'DOM renderer facade and ZIP structure only; no rendered pixels',entries:Object.keys(zipEntries),sameFrameConditions:true,exposureLockPersistsAcrossWeather:true};
 pass('Image archive pairs the rendered-frame callback with frozen conditions, and an explicit exposure lock survives weather changes; no pixel assertion is made');
 
+// Exercise the actual main.js matrix with real physics and a deliberately
+// non-drawing renderer. Advancing the fake clock must not cost 15 real seconds
+// or turn the mock's ordinary render callback into a claimed WebGL draw.
+const readVisualConditions=async()=>{click('#visual-capture-metadata');return JSON.parse(await lastBlob.text());};
+const mutationFingerprint=()=>JSON.stringify({numerical:numerical(state()),mode:state().mode,maneuver:state().maneuver,suctionEnabled:state().suctionEnabled,stabilizationMode:state().stabilizationMode,params:window.roadsterLab.getParameters()});
+async function checkProgramMatrix(label){
+  const before=await readVisualConditions(),beforeFingerprint=mutationFingerprint(),qualityPreference=window.localStorage.getItem('roadster-quality'),menuBefore=document.body.classList.contains('body-menu');
+  const criticalControls=['pause-btn','reset-btn','context-switch','render-program-matrix','render-program-capture','render-program-driving'].map(id=>[id,$(id).disabled]);
+  const startedAt=nowMs,wallStart=performance.now();lastBlob=null;click('#render-program-matrix');assert.equal($('render-program-matrix').disabled,true,'Matrix must enter its exclusive capture interval');
+  let frames=0,attempts=0;
+  const attemptMutations=()=>{
+    for(const code of ['KeyP','KeyH','KeyX','KeyR','KeyG','KeyW','KeyE','KeyZ','Digit1','KeyC']){const event=key(code);assert.equal(event.defaultPrevented,true,'Capture did not intercept '+code);key(code,{type:'keyup'});attempts++;}
+    for(const id of ['pause-btn','reset-btn','roll-btn','refill-btn','suction-btn','context-switch']){const event=new window.MouseEvent('click',{bubbles:true,cancelable:true});$(id).dispatchEvent(event);assert.equal(event.defaultPrevented,true,'Capture-phase guard did not intercept '+id);attempts++;}
+    for(const [id,type] of [['quality','change'],['vertical-speed-command','input']]){const event=new window.Event(type,{bubbles:true,cancelable:true});$(id).dispatchEvent(event);assert.equal(event.defaultPrevented,true);attempts++;}
+    const pointer=new window.Event('pointerdown',{bubbles:true,cancelable:true});$('viewport').querySelector('canvas').dispatchEvent(pointer);assert.equal(pointer.defaultPrevented,true);attempts++;
+    assert.equal(mutationFingerprint(),beforeFingerprint,'An input or click mutated the physical/controller state during a matrix');assert.equal(state().paused,true);
+  };
+  attemptMutations();
+  for(;frames<300&&$('render-program-matrix').disabled;frames++){
+    // One virtual 250 ms slice services RAF, fade timers and then every queued
+    // promise/blob continuation. No wall-clock sleep and no physics mock.
+    tick(1,250);await new Promise(resolve=>setImmediate(resolve));
+    if($('render-program-matrix').disabled){assert.equal(mutationFingerprint(),beforeFingerprint);assert.equal(state().paused,true);if(frames%9===0)attemptMutations();}
+  }
+  assert.equal($('render-program-matrix').disabled,false,'Matrix did not restore controls after its frames/archive completed');assert.equal(mutationFingerprint(),beforeFingerprint);
+  assert.equal(lastBlob?.type,'application/zip');const entries=await storedZipEntries(lastBlob),matrix=JSON.parse(new TextDecoder().decode(entries['gpu-switch-matrix.json']));
+  assert.equal(matrix.status,'failed','A renderer facade without linked draws must never pass a GPU gate');assert.equal(matrix.physicsUnchanged,true);assert.equal(matrix.cases.length,14);assert.equal(Object.keys(entries).length,30);
+  const expected=[['high','clear-day'],['high','wet-night'],['ultra','wet-night'],['ultra','clear-day'],['balanced','wet-night'],['high','wet-night'],['ultra','wet-night']];
+  for(let i=0;i<matrix.cases.length;i++){
+    const item=matrix.cases[i],condition=JSON.parse(new TextDecoder().decode(entries[item.conditionsFile]));
+    assert.deepEqual([condition.quality,condition.weatherPreset],expected[Math.floor(i/2)]);assert.equal(condition.paused,true);assert.equal(condition.renderState,'paused-preview');assert.deepEqual(condition.simState,before.simState);
+    assert.equal(condition.camera.viewOffset,null,'Diagnostic frames must use an uncropped camera');
+    for(const report of [item.paused,item.export]){assert.equal(report.status,'failed');assert.equal(report.drawCalls,0);assert.equal(report.programCount,0);assert.ok(report.failures.includes('no-observed-draw-calls'));assert.ok(report.failures.some(f=>f.startsWith('required-category-not-drawn:')));}
+    assert.equal(new TextDecoder().decode(entries[item.imageFile]),'DOM facade: no pixels');
+  }
+  assert.match($('render-program-status').textContent,/失败/);assert.equal(state().paused,before.paused);assert.equal(document.body.classList.contains('body-menu'),menuBefore);
+  assert.equal(window.localStorage.getItem('roadster-quality'),qualityPreference,'Temporary quality changes must not overwrite the saved preference');
+  for(const [id,disabled] of criticalControls)assert.equal($(id).disabled,disabled,id+' was not restored');
+  const after=await readVisualConditions();for(const key of ['quality','weatherPreset','exposureLock','exposure','autoExposure','route','camera','simState'])assert.deepEqual(after[key],before[key],label+' failed to restore '+key);
+  return{label,scope:'Actual main DOM handlers with real physics and a non-drawing renderer facade; no GPU/pixel validation',virtualElapsedMs:nowMs-startedAt,wallElapsedMs:performance.now()-wallStart,virtualFrames:frames,interceptedMutationAttempts:attempts,cases:matrix.cases.length,reportedStatus:matrix.status,physicsUnchanged:matrix.physicsUnchanged,failures:[...new Set(matrix.cases.flatMap(c=>c.paused.failures))],restoredCameraMode:after.camera.mode,restoredViewOffset:after.camera.viewOffset,restoredPaused:after.paused};
+}
+$('exposure-lock-value').value='1.17';$('exposure-lock-value').dispatchEvent(new window.Event('change',{bubbles:true}));
+const fixedMatrix=await checkProgramMatrix('paused fixed camera with a custom exposure lock');
+click('#pause-btn');assert.equal(state().paused,false);click('#camera-btn');assert.equal(state().cameraMode,'orbit');click('[data-research-console]');tick(2);
+const beforeOffsetMatrix=await readVisualConditions();assert.ok(beforeOffsetMatrix.camera.viewOffset?.enabled,'The actual open research sidebar must create the offset fixture');
+const offsetMatrix=await checkProgramMatrix('running orbit camera with the research sidebar offset');
+values.programMatrix={scope:'DOM state and negative gate semantics only; no WebGL implementation',runs:[fixedMatrix,offsetMatrix],mockDrawsNeverPass:true,originalPhysicalStatePreserved:true,keyboardAndCapturePhaseClickGuards:true};
+pass('Actual GPU-matrix UI freezes real physics against P/H/X/R, driving and synthetic click events, restores fixed/offset cameras and presentation, and reports failed for no draws');
+
+// A resource request can remain pending. Its wait must time out before the
+// first diagnostic draw and release the real UI/physics capture transaction.
+const cityEnvironment=graphics.environments.find(e=>e.scene.userData.qaContext==='city'),savedReady=cityEnvironment.ready;
+const timeoutBefore=await readVisualConditions(),timeoutFingerprint=mutationFingerprint(),timeoutBlob=lastBlob;
+try{
+  cityEnvironment.ready=new Promise(()=>{});click('#render-program-matrix');
+  assert.equal($('render-program-matrix').disabled,true);assert.equal(state().paused,true);
+  await new Promise(resolve=>setImmediate(resolve));tick(1,20001);
+  await settle(()=>!$('render-program-matrix').disabled,'A pending resource wait must restore the UI after its bounded timeout');
+  assert.match($('render-program-status').textContent,/20 秒内未就绪/);assert.equal(mutationFingerprint(),timeoutFingerprint);assert.equal(lastBlob,timeoutBlob,'No fake success archive may be emitted before resources become ready');
+  const timeoutAfter=await readVisualConditions();for(const key of ['quality','weatherPreset','exposureLock','exposure','autoExposure','route','camera','simState'])assert.deepEqual(timeoutAfter[key],timeoutBefore[key],'Readiness timeout failed to restore '+key);
+  assert.equal(state().paused,timeoutBefore.paused);
+  values.programMatrix.readinessTimeout={boundedMs:20000,physicalStateUnchanged:true,presentationRestored:true,noArchiveEmitted:true};
+}finally{cityEnvironment.ready=savedReady;}
+pass('A genuinely pending environment-ready promise times out, restores controls, presentation and real physics, and emits no passing capture');
+
+// Return the established fixture used by the following recorder/replay checks.
+click('[data-rc-action="close"]');if(!state().paused)click('#pause-btn');
+$('benchmark-camera').value='weave-entry';$('benchmark-camera').dispatchEvent(new window.Event('change',{bubbles:true}));click('#exposure-baseline-39');tick(2);
+
 click('#record-btn');tick(60);assert.equal(state().research.experiment.recording,true);click('#record-btn');
 $('weather-preset').value='clear-day';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));
 $('benchmark-camera').value='canal';$('benchmark-camera').dispatchEvent(new window.Event('change',{bubbles:true}));
-click('#csv-btn');click('[data-ex-action="replay"]');tick(60);
+click('#csv-btn');click('[data-ex-action="replay"]');
+// Wait for the recorded fixed-step protocol, not exactly 60 floating-point RAF
+// deltas. The deliberately advanced matrix clock can shift a 120 Hz boundary
+// by one callback without changing the saved inputs or replay result.
+for(let frame=0;frame<72&&state().research.experiment.replaying;frame++)tick(1);
 assert.equal(state().research.experiment.replaying,false);assert.equal(state().research.experiment.lastReplay.status,'completed');assert.equal(state().research.experiment.lastReplay.finalPositionErrorM,0);
 assert.equal(graphics.environments[0].weatherPreset,'wet-night');assert.equal($('benchmark-camera').value,'weave-entry');assert.equal(state().cameraMode,'fixed');
 click('[data-ex-action="record"]');tick(6);click('[data-ex-action="return-before-replay"]');assert.equal(state().research.experiment.recording,false);assert.equal(graphics.environments[0].weatherPreset,'clear-day');assert.equal($('benchmark-camera').value,'canal');

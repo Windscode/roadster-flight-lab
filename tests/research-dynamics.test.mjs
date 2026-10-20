@@ -60,7 +60,7 @@ pass('Temperature-pressure exhaust stays below the ideal energy limit, cools, an
   values.rolls.push({scenario,supplyMode:s.params.supplyMode,tankLitres,originHeightM:origin,finalHeightM:s.body.position.y,durationS:s.simTime,maxHeightM:maxHeight,touchdown:touch,gasRemaining:s.gasMass,onboardGasUsedKg:initialGas-s.gasMass,externalGasSuppliedKg:s.telemetry().externalGasSuppliedKg,window:{limitS,launchS:plan.launchTime,rotationS:plan.duration,returnTravelS,returnCruiseMps,convergenceBudgetS},response:{climbRateMps:s.params.climbRateMps,rollRateDegS:s.params.rollRateDegS,angularAccelerationDegS2:s.params.angularAccelerationDegS2}});
  }
  pass('Default bench 600 L ground rolls land softly and airborne rolls recover their original height without hull impacts; external gas throughput is not onboard depletion');
- for(const [scenario,tankLitres]of [['free',900],['hover',1100]]){
+ for(const [scenario,tankLitres]of [['free',150],['hover',150]]){
   const s=rollFixture(scenario,'finite',tankLitres),planner=rollFixture(scenario,'bench',tankLitres);
   // The diagnostic bench plan changes only supply mode and is never stepped.
   // It exposes the same mass/inertia-dependent required impulse without
@@ -76,7 +76,7 @@ pass('Temperature-pressure exhaust stays below the ideal energy limit, cools, an
  const low=flat();low.gasMass*=.5;const lowBefore=physicalState(low);assert.equal(low.startManeuver('roll'),false);assert.deepEqual(physicalState(low),lowBefore);assert.equal(low.mode,'drive');assert.match(low.status,/剩余冲量不足/);
  values.additionalRollRejections={inverted:{reason:blocked.status,physicalStateUnchanged:true},halfRemainingGas:{reason:low.status,gasMassKg:low.gasMass,physicalStateUnchanged:true}};
 }
-pass('Finite 900 L ground and 1100 L airborne defaults are rejected by their measured impulse shortfalls; gas and attitude rejections preserve the full physical state');
+pass('Finite 150 L ground and airborne rolls are rejected by their measured impulse shortfalls; gas and attitude rejections preserve the full physical state');
 {
  const a=runExperiment({kind:'steer',speedKmh:80,angleDeg:2}),b=runExperiment({kind:'steer',speedKmh:80,angleDeg:2});assert.deepEqual(a.metrics,b.metrics);assert.equal(a.rows.length,80);assert.equal(a.appliedParams.steeringAssist,false);assert.ok(a.metrics.maxBetaDeg<5);assert.ok(a.rows.every((r,i)=>Math.abs(r.time-(i+1)/20)<1e-8));assert.ok(a.assumptions.length>=3);
  const rise=runExperiment({kind:'rise',params:{climbRateMps:1.5}});assert.ok(rise.metrics.maxVerticalMps<1.7);values.experiments={steer:a.metrics,rise:rise.metrics};

@@ -124,14 +124,16 @@ test('actual gust-rejection preset measures crosswind response and restores calm
   const {sim,result,end}=runPhysicalPreset(defaultProgramLibrary().programs.find(p=>p.id==='gust-rejection'));
   assert.equal(sim.getWind(),null);assert.ok(result.summary.finalPositionErrorM<.1);assert.equal(end.mode,'hover');assert.ok(result.stages[1].peakPositionErrorM>0);assert.equal(result.stages[1].type,'wind');
 });
-test('actual wind-laboratory beam rejects a default roll without changing rigid-body state',()=>{
-  const sim=new RoadsterSim({}, {world:'windlab'});for(let i=0;i<240;i++)sim.step(dt,{});
+test('actual wind-laboratory beam rejects a roll with insufficient overhead clearance without changing rigid-body state',()=>{
+  // The quick roll fits below this beam from the ground. Test its real
+  // 2.1 m clearance at a declared airborne initial CG height instead.
+  const sim=new RoadsterSim({}, {world:'windlab'});sim.body.position.y=22;sim.setMode('hover');
   const state=()=>JSON.stringify([sim.body.position,sim.body.quaternion,sim.body.velocity,sim.body.angularVelocity]);
   const before=state(),initial=sim.telemetry();let result;
   const runner=new FlightProgramRunner({getSim:()=>sim,getContext:()=> 'lab',onFinish:r=>result=r});
   assert.throws(()=>runner.start(defaultProgramLibrary().programs.find(p=>p.id==='roll-return')),/上方净空不足/);
   assert.equal(state(),before);assert.equal(runner.active,null);assert.equal(sim.telemetry().maneuver,null);assert.equal(result.status,'failed');
-  physicalResults.push({preset:'roll-return',world:'windlab',scenario:'windlab',initialState:'ground',status:result.status,reason:result.reason,positionStart:initial.position,positionEnd:sim.telemetry().position,rigidBodyUnchanged:true});
+  physicalResults.push({preset:'roll-return',world:'windlab',scenario:'windlab',initialState:'airborne-CG-22m',status:result.status,reason:result.reason,positionStart:initial.position,positionEnd:sim.telemetry().position,rigidBodyUnchanged:true});
 });
 test('actual ground-start roll preset only completes after physically returning to ground',()=>{
   const {sim,result,initial,end}=runPhysicalPreset(defaultProgramLibrary().programs.find(p=>p.id==='roll-return'));

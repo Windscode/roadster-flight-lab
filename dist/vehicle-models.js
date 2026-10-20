@@ -1,4 +1,4 @@
-export const MODEL_VERSION='3.12.0';
+export const MODEL_VERSION='3.13.0';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 // Reduced engineering models. Parameters are explicit hypotheses, not OEM data.
 export function rearWingPose(deployment){
@@ -22,14 +22,20 @@ export function roadWheelAngle(input,speed,p,surfaceMu=p.tireMu*(p.roadSurface==
  const max=p.steeringAssist?Math.min(.49,Math.atan(2.84*lateralG*p.gravity/(speed*speed+4))+slip):.49;
  return clamp(input,-1,1)*max;
 }
-// The automatic roll uses the same pilot rate / acceleration envelope. A
-// trapezoidal reference makes the limits explicit rather than hiding the
-// 1.875x peak of a quintic trajectory behind an advertised mean roll rate.
+// Preserve the 3.11/3.12 pilot-envelope profile for explicit historical
+// recomputation. New X actions use the separately declared quick-roll profile
+// below; comfort sliders must not silently slow the automatic maneuver.
 export function rollManeuverProfile(p,angleRad=2*Math.PI){
  const acceleration=p.angularAccelerationDegS2*Math.PI/180;
  const rate=Math.min(p.rollRateDegS*Math.PI/180,Math.sqrt(angleRad*acceleration));
  const ramp=rate/acceleration,cruise=Math.max(0,(angleRad-rate*ramp)/rate);
  return{kind:'pilot-rate-envelope',angleRad,rateRadS:rate,accelerationRadS2:acceleration,rampS:ramp,cruiseS:cruise,durationS:2*ramp+cruise};
+}
+// Acceleration occupies the upright quarter-turns; the inverted half-turn
+// is a 0.5 s constant-rate coast. These are reference commands, never a body
+// state override. The existing pressure/valve/nozzle allocator remains binding.
+export function quickRollManeuverProfile(){
+ return{...rollManeuverProfile({rollRateDegS:360,angularAccelerationDegS2:720}),kind:'quick-roll-1'};
 }
 export function sampleRollManeuver(profile,timeS){
  const t=clamp(timeS,0,profile.durationS),a=profile.accelerationRadS2,r=profile.rampS,w=profile.rateRadS;

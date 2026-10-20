@@ -1,5 +1,5 @@
 import * as CANNON from './vendor/cannon-es.js';
-import {roadWheelAngle,nozzleExhaustVelocity,hoverBudget,rearWingPose,rollManeuverProfile,sampleRollManeuver} from './vehicle-models.js';
+import {roadWheelAngle,nozzleExhaustVelocity,hoverBudget,rearWingPose,quickRollManeuverProfile,sampleRollManeuver} from './vehicle-models.js';
 import {exportSimulationState,importSimulationState} from './simulation-snapshot.js';
 import {DEFAULT_OBSERVATION,observationConfiguration,measureControlState,controllerBody} from './control-observation.js';
 import {integrateWheel,regularizedSlip,lateralTireForce} from './tire-dynamics.js';
@@ -394,49 +394,62 @@ export class RoadsterSim {
       this.setMode('hover');this._maneuver={name:'land',phase:'descent',time:0};return;
     }
     if(name==='roll') {
-      if(this.body.quaternion.vmult(Y).y<.8){this.status='滚转预检：请先回正车身';return false;}
-      const below=this.traceSurface(this.body.position,{x:0,y:-1,z:0},220);
-      const p=this.params,b=this.body,profile=rollManeuverProfile(p),duration=profile.durationS,origin=plain(b.position);
+      if(this._maneuver?.name==='roll'){this.status='滚转预检：快翻正在执行，请等待完成或先取消';return false;}
+      const p=this.params,b=this.body,profile=quickRollManeuverProfile(),duration=profile.durationS,origin=plain(b.position);
+      if(b.quaternion.vmult(Y).y<Math.cos(10*Math.PI/180)){this.status='滚转预检：快翻要求初始倾角不超过 10°，请先回正车身（G）';return false;}
+      if(b.angularVelocity.length()>.5){this.status='滚转预检：初始角速度过大，请先松键制动或用 G 回正';return false;}
+      const below=this.traceSurface(b.position,{x:0,y:-1,z:0},220);
       const grounded=this._contactCount>=2||(below?.distance<.8&&Math.abs(b.velocity.y)<.7);
-      const availableAccel=this._availableLiftForce()/b.mass-p.gravity,netAccel=Math.min(availableAccel,p.verticalAccelerationMps2);
-      if(availableAccel<6||this._energyUsed>=p.batteryKWh){this.status='滚转预检：可用推力不足以建立旋转与制动余量';return false;}
-      // A complete inversion has an unsupported interval. Plan an upward
-      // velocity from the whole rotation duration, then include valve lag,
-      // an upright braking reserve and the vehicle's swept roll envelope.
-      const launchVelocity=p.gravity*duration*.5+1.4;
-      // A slower selected roll needs more ballistic headroom. Decline when
-      // its planned launch speed exceeds the manual E/Q range instead of
-      // silently granting X an inaccessible vertical command.
-      if(launchVelocity>14){this.status='滚转预检：当前滚转速率 / 角加速度需要超过 14 m/s 预升，请提高机动响应或手动高空试验';return false;}
+      const availableAccel=this._availableLiftForce()/b.mass-p.gravity,netAccel=availableAccel*.88;
+      if(availableAccel<6||this._energyUsed>=p.batteryKWh){this.status='滚转预检：当前压力 / 供电下的起跳与制动推力不足';return false;}
+      const authority=this.getControlAuthority(),rollTorque=Math.min(authority.positiveTorqueUpperNm.z,-authority.negativeTorqueLowerNm.z);
+      const referenceTorque=b.inertia.z*profile.accelerationRadS2,torqueMargin=rollTorque/Math.max(1,referenceTorque);
+      // The geometric torque upper bound is not simultaneous full-wrench
+      // authority. Leave 40% for tracking, valve response and pitch/yaw control.
+      if(torqueMargin<1.65){this.status='滚转预检：快翻的双向滚转 / 制动力矩余量不足，请检查压力、喷口或惯量';return false;}
+      // The old g*T/2 launch assumed an unsupported entire rotation. The fast
+      // profile accelerates only through upright quarter-turns; its inverted
+      // constant-rate coast lasts 0.5 s. Keep an explicit 1.55 m/s valve/tracking
+      // reserve, instead of binding takeoff to the pilot's comfort acceleration.
+      const launchVelocity=p.gravity*profile.cruiseS*.5+1.55;
       const launchTime=Math.max(0,launchVelocity-b.velocity.y)/netAccel+4*p.valveRiseTime+.15;
-      const launchRise=Math.max(0,(b.velocity.y+launchVelocity)*launchTime*.5);
-      // Differential main jets also create a real common lift component while
-      // generating roll torque. Include its nominal upward contribution; a
-      // gravity-only apex underestimated the ceiling clearance by several m.
-      let estimatedY=0,estimatedVy=launchVelocity,rotationPeak=0;
+      const minimumRotationClearanceM=1.55;
+      const launchRise=Math.max(0,minimumRotationClearanceM-(below?.distance??origin.y),(b.velocity.y+launchVelocity)*launchTime*.5);
+      const arrestDistance=Math.max(0,-b.velocity.y)**2/(2*netAccel)+Math.max(0,-b.velocity.y)*4*p.valveRiseTime;
+      if(!grounded&&below&&below.distance<1.1+arrestDistance){this.status='滚转预检：当前下降速度下没有足够起跳制动净空';return false;}
+      // Nominal vertical contribution of real differential main jets, with its
+      // signed world-up direction. The maximum-positive version separately
+      // bounds ceiling headroom; it is not granted as fictitious lift.
+      let estimatedY=0,estimatedVy=launchVelocity,peakY=0,peakVy=launchVelocity,rotationPeak=0;
       for(let i=0;i<200;i++){
         const sample=sampleRollManeuver(profile,(i+.5)/200*duration),angle=sample.angleRad,alpha=sample.accelerationRadS2;
-        const upwardRollAccel=b.inertia.z/b.mass/.59*Math.abs(alpha)*Math.max(0,Math.cos(angle));
-        estimatedVy+=(upwardRollAccel-p.gravity)*duration/200;estimatedY+=estimatedVy*duration/200;rotationPeak=Math.max(rotationPeak,estimatedY);
+        const rollAccel=b.inertia.z/b.mass/.59*Math.abs(alpha),step=duration/200;
+        estimatedVy+=(rollAccel*Math.cos(angle)-p.gravity)*step;estimatedY+=estimatedVy*step;
+        peakVy+=(rollAccel*Math.max(0,Math.cos(angle))-p.gravity)*step;peakY+=peakVy*step;rotationPeak=Math.max(rotationPeak,peakY);
       }
       const peakRise=launchRise+rotationPeak+1.8;
       for(const [x,z]of [[0,0],[-1.2,-2.2],[1.2,-2.2],[-1.2,2.2],[1.2,2.2]]){
         const above=this.traceSurface({x:b.position.x+x,y:b.position.y,z:b.position.z+z},{x:0,y:1,z:0},peakRise+1.5);
-        if(above&&above.distance<peakRise+1.2){this.status='滚转预检：旋转 / 制动包络上方净空不足';return false;}
+        if(above&&above.distance<peakRise+1.2){this.status='滚转预检：快翻旋转 / 制动包络上方净空不足';return false;}
       }
-      // Conservative impulse budget: launch + minimum roll torque impulse +
-      // upright arrest + a settling/landing reserve. A finite tank may decline
-      // this maneuver; changing the origin into a forced landing is not a fix.
+      // Account for takeoff, actual reference angular impulse, the predicted
+      // remaining downward speed, then 1.5 s settling and 16% explicit margin.
+      // Counting half of g*T again for arrest double-counted the fast profile's
+      // differential-jet support and rejected otherwise feasible finite runs.
       const launchImpulse=b.mass*(Math.max(0,launchVelocity-b.velocity.y)+p.gravity*launchTime);
       const rotationImpulse=2*b.inertia.z*profile.rateRadS/.59;
-      const arrestImpulse=b.mass*(p.gravity*duration*.5+p.gravity*.5);
-      const reserveImpulse=b.mass*p.gravity*(grounded?1.5:2);
-      const requiredImpulse=1.16*(launchImpulse+rotationImpulse+arrestImpulse+reserveImpulse);
-      if(p.supplyMode==='finite'&&this._hoverBudget().impulseNs<requiredImpulse){this.status='滚转预检：剩余冲量不足以完成旋转并返回起点状态';return false;}
+      const arrestSpeed=Math.max(0,-estimatedVy),arrestTime=arrestSpeed/netAccel+4*p.valveRiseTime+.15;
+      const arrestImpulse=b.mass*(arrestSpeed+p.gravity*arrestTime),reserveImpulse=b.mass*p.gravity*1.5;
+      const requiredImpulse=1.16*(launchImpulse+rotationImpulse+arrestImpulse+reserveImpulse),availableImpulse=this._hoverBudget().impulseNs;
+      if(p.supplyMode==='finite'&&availableImpulse<requiredImpulse){this.status=`滚转预检：剩余冲量不足：可用 ${(availableImpulse/1000).toFixed(1)} kN·s，快翻 / 回稳预算 ${(requiredImpulse/1000).toFixed(1)} kN·s`;return false;}
       this.setMode('hover');
       this._maneuver={name:'roll',phase:'climb',time:0,angle:0,duration,origin,originGrounded:grounded,returnHeight:origin.y,
-        launchVelocity,launchTime,launchAccelerationMps2:netAccel,profile,actualRollRad:0,requiredImpulseNs:requiredImpulse,plannedPeakHeight:origin.y+peakRise,autoLand:grounded};
-      this._heightTarget=origin.y;this.status=grounded?'滚转：地面起步，完成后着陆':'滚转：空中起步，完成后返回原高度';return true;
+        launchVelocity,launchTime,launchAccelerationMps2:netAccel,minimumRotationClearanceM,profile,actualRollRad:0,
+        requiredImpulseNs:requiredImpulse,plannedPeakHeight:origin.y+peakRise,autoLand:grounded,
+        preflight:{policy:'quick-roll-1',referenceTorqueNm:referenceTorque,rollTorqueUpperNm:rollTorque,torqueMargin,availableAccelMps2:availableAccel,
+          launchImpulseNs:launchImpulse,rotationImpulseNs:rotationImpulse,arrestImpulseNs:arrestImpulse,settlingImpulseNs:reserveImpulse,impulseMargin:1.16,
+          predictedRotationEndVerticalMps:estimatedVy,predictedRotationDisplacementM:estimatedY,availableImpulseNs:Number.isFinite(availableImpulse)?availableImpulse:null}};
+      this._heightTarget=origin.y;this.status=grounded?'快翻：短起跳，完成一周后着陆':'快翻：完成一周并返回起始高度';return true;
     }
     if(name==='ramp') {
       this.setMode('drive');this.suctionEnabled=true;
@@ -913,15 +926,15 @@ export class RoadsterSim {
         }
       } else if(a.name==='roll') {
         if(a.phase==='climb') {
-          this.status='滚转：建立完整弹道旋转与制动余量';
+          this.status=a.profile?.kind==='quick-roll-1'?'快翻：建立短起跳与轮廓净空':'滚转：建立完整弹道旋转与制动余量';
           const hit=this.traceSurface(b.position,{x:0,y:-1,z:0},220),height=hit?.distance??b.position.y;
-          if(height>=1.55&&b.velocity.y>=a.launchVelocity-.25){a.phase='rotate';a.time=0;}
-          else if(a.time>Math.max(1,a.launchTime*2+.4)){a.phase=a.originGrounded?'land':'recover';a.time=0;this._heightTarget=a.returnHeight;this.status='滚转中止：起跳余量未建立，恢复起点状态';}
+          if(height>=(a.minimumRotationClearanceM??1.55)&&b.velocity.y>=a.launchVelocity-.25){a.phase='rotate';a.time=0;}
+          else if(a.time>Math.max(1,a.launchTime*2+.4)){a.abortReason='起跳速度 / 轮廓净空未在预定窗口建立';a.phase=a.originGrounded?'land':'recover';a.time=0;this._heightTarget=a.returnHeight;this.status='滚转中止：'+a.abortReason+'，尝试物理回稳';}
           const launchTarget=new CANNON.Quaternion();launchTarget.setFromEuler(0,heading,0,'YXZ');
           this._manualQuaternionTarget=launchTarget;
-          // Current maneuvers use the same vertical request envelope as E/Q.
-          // A migrated historical mid-maneuver keeps its declared old launch
-          // plan; it is an explicit recomputation, never exact old replay.
+          // X uses its declared short-takeoff envelope within real available thrust.
+          // A migrated historical mid-maneuver retains its stored comfort cap;
+          // it is explicit current-model recomputation, never old-solver replay.
           const launchLimit=a.launchAccelerationMps2??Infinity;
           const thrust=Math.min(4*p.liftNozzleMax,m*(p.gravity+clamp((a.launchVelocity-b.velocity.y)*8,0,launchLimit)));
           return[0,thrust,0,...this._attitudeTorque(launchTarget,p.attitudeResponse)];
@@ -940,15 +953,23 @@ export class RoadsterSim {
           pitchRef=0;
           liftAccel=0;
           this.status='滚转：喷口力矩闭环';
-          if((a.time>=duration&&Math.abs(angles.roll)<.35&&upBefore>.8)||a.time>duration+.5) {a.phase=a.originGrounded?'land':'recover';a.time=0;this._positionTarget.set(a.origin.x,a.origin.y,a.origin.z);this._heightTarget=a.returnHeight;this._heightIntegral=0;}
+          const rotationReached=a.time>=duration&&Math.abs(angles.roll)<.35&&upBefore>.8&&(!a.profile||a.actualRollRad>=2*Math.PI-.12);
+          if(rotationReached||a.time>duration+.5) {
+            if(!rotationReached)a.abortReason=Number.isFinite(a.actualRollRad)?`旋转窗口结束：实际累计 ${(a.actualRollRad*180/Math.PI).toFixed(1)}°，未满足完整一周 / 回正判据`:'旋转窗口结束：未满足回正判据';
+            a.phase=a.originGrounded?'land':'recover';a.time=0;this._positionTarget.set(a.origin.x,a.origin.y,a.origin.z);this._heightTarget=a.returnHeight;this._heightIntegral=0;
+          }
         } else {
-          this.status='滚转：制动并返回起始空中高度';
+          this.status=a.abortReason?'滚转中止：'+a.abortReason+'，尝试物理回稳':'滚转：制动并返回起始空中高度';
           this._heightTarget=a.returnHeight;
           const vertical=clamp((a.returnHeight-b.position.y)*1.6,-4,3);
           const available=this._availableLiftForce()/m-p.gravity;
           liftAccel=clamp((vertical-b.velocity.y)*4.5,-p.gravity*.85,Math.max(0,available*.88));
-          if(a.time>.5 && Math.abs(angles.roll)<.08&&Math.abs(angles.pitch)<.08&&b.angularVelocity.length()<.35&&Math.abs(b.velocity.y)<.3&&Math.abs(b.position.y-a.returnHeight)<.20) {
-            this._maneuver=null;this._manualQuaternionTarget=new CANNON.Quaternion();this._manualQuaternionTarget.setFromEuler(0,heading,0,'YXZ');this._manualReferenceRate=V();this.status='滚转结束：已返回起始空中高度';
+          if(a.time>.5 && Math.abs(angles.roll)<.025&&Math.abs(angles.pitch)<.025&&b.angularVelocity.length()<.2&&Math.abs(b.velocity.y)<.2&&Math.abs(b.position.y-a.returnHeight)<.10) {
+            // The position loop computed a bank earlier in this step. Clear it
+            // before the shared output below, so it cannot overwrite the
+            // horizontal handoff reference on the completion frame.
+            rollRef=0;pitchRef=0;rollRate=0;rollAccel=0;
+            this._maneuver=null;this._manualQuaternionTarget=new CANNON.Quaternion();this._manualQuaternionTarget.setFromEuler(0,heading,0,'YXZ');this._manualReferenceRate=V();this.status=a.abortReason?'滚转未完成：'+a.abortReason+'；已返回起始空中高度':'滚转结束：已返回起始空中高度';
           }
         }
       }

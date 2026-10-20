@@ -210,8 +210,8 @@ test('After a roll, hover does not retain opposing side jets in the allocator nu
 });
 
 test('A ground-origin automatic roll with adequate finite impulse returns to a gentle landing before fuel loses support',()=>{
-  // The positive finite case declares the feasible 360/720/10 profile;
-  // vehicle-dynamics-3.11 separately requires the calmer 900 L default to decline.
+  // X uses the independent quick-roll profile; the manual controls below do
+  // not expand its nozzle limits. Finite shortfalls are tested separately.
   const s=new RoadsterSim({supplyMode:'finite',tankLitres:900,rollRateDegS:360,angularAccelerationDegS2:720,verticalAccelerationMps2:10});s.reset('free');assert.equal(s.startManeuver('roll'),true);let minimum=99,inverted=false,firstContact=null;
   const t=run(s,10,{},frame=>{
     if(frame.maneuver?.phase==='rotate'){minimum=Math.min(minimum,frame.heightWorld);assert.equal(frame.contactCount,0);}

@@ -17,10 +17,11 @@ import {createWetRoadReflection} from './wet-road-reflection.js';
 import {attachPavementSurface} from './pavement-surface-material.js';
 import {createNightCityLighting} from './night-city-lighting.js';
 import {createNightDirectLighting} from './night-direct-lighting.js';
-import {injectReceiverPlaneShadows} from './receiver-plane-shadows.js';
+import {cityLightingVariant,injectCityMaterialLighting} from './city-material-lighting.js';
 
 export function createEnvironment(scene,renderer,geometry,camera){
-  const indirect=createIndirectLighting(renderer),nightIndirect=createNightCityLighting(),nightDirect=createNightDirectLighting();
+  const context=renderer.getContext?.(),max3DTextureSize=context?.getParameter?.(context.MAX_3D_TEXTURE_SIZE)??256;
+  const indirect=createIndirectLighting(renderer),nightIndirect=createNightCityLighting({max3DTextureSize}),nightDirect=createNightDirectLighting({max3DTextureSize});
   const probeSun=createLocalProbeSun(scene,renderer);
   const root=new THREE.Group();root.name='Vesper / Weave commerce, Exchange and Southbank';scene.add(root);
   const unit=new THREE.BoxGeometry(),temp=new THREE.Object3D(),loader=new THREE.TextureLoader(),buckets=new Map();
@@ -37,6 +38,8 @@ export function createEnvironment(scene,renderer,geometry,camera){
   mats['corridor-pale']=new THREE.MeshStandardMaterial({color:0xb3b0a4,roughness:.86});
   mats['corridor-basalt']=new THREE.MeshStandardMaterial({color:0x737f7d,roughness:.89});
   mats['corridor-wood']=new THREE.MeshStandardMaterial({color:0x60533d,roughness:.75});
+  for(const [key,material]of Object.entries(mats))if(!material.name)material.name='City / '+key;
+  mats.road.name='City / scanned asphalt + local puddles';
   const pavementSurfaces=[mats['corridor-pale'],mats['corridor-basalt']].map(attachPavementSurface);
   const plannedGeometry=new Map(CITY_PLAN_SOLIDS.map(g=>[g.id,g]));
   const roadSurface=attachRoadSurface(mats.road,{albedo,normal,roughness:rough});
@@ -244,11 +247,13 @@ export function createEnvironment(scene,renderer,geometry,camera){
   function bindMaterial(mat){
     if(!originalMaterials.has(mat))originalMaterials.set(mat,{compile:mat.onBeforeCompile,key:mat.customProgramCacheKey()});
     const base=originalMaterials.get(mat);csm.setupMaterial(mat);const shadowCompile=mat.onBeforeCompile;
-    mat.onBeforeCompile=function(shader,r){base.compile?.call(this,shader,r);shadowCompile.call(this,shader,r);indirect.inject(shader);nightIndirect.inject(shader);probeSun.inject(shader);if(staticMaterials.has(mat))nightDirect.inject(shader);injectReceiverPlaneShadows(shader);};
-    mat.customProgramCacheKey=()=>base.key+'|vesper-csm-'+profile.shadowCascades+'|'+indirect.shaderKey+'|local-probe-sun-3.6|'+nightIndirect.shaderKey+'|'+(staticMaterials.has(mat)?nightDirect.shaderKey:'dynamic')+'|receiver-plane-pcf-3.11';
+    const variant=cityLightingVariant({quality,night:presentation.night,isStatic:staticMaterials.has(mat)});
+    mat.userData.cityLightingVariant=variant;
+    mat.onBeforeCompile=function(shader,r){base.compile?.call(this,shader,r);shadowCompile.call(this,shader,r);injectCityMaterialLighting(shader,{variant,indirect,nightIndirect,nightDirect,probeSun});};
+    mat.customProgramCacheKey=()=>base.key+'|vesper-csm-'+profile.shadowCascades+'|'+variant.key+'|'+indirect.shaderKey+'|'+nightIndirect.shaderKey+'|'+nightDirect.shaderKey+'|receiver-plane-pcf-3.11';
     mat.needsUpdate=true;
   }
-  function setupMaterials(){root.traverse(o=>{if(o.isMesh)for(const mat of Array.isArray(o.material)?o.material:[o.material])if(mat?.isMeshStandardMaterial)staticMaterials.add(mat);});scene.traverse(o=>{if(!o.isMesh)return;for(const mat of Array.isArray(o.material)?o.material:[o.material])if(mat?.isMeshStandardMaterial&&!originalMaterials.has(mat))bindMaterial(mat);});probeSun.refreshCasters();}
+  function setupMaterials(){root.traverse(o=>{if(o.isMesh)for(const mat of Array.isArray(o.material)?o.material:[o.material])if(mat?.isMeshStandardMaterial)staticMaterials.add(mat);});scene.traverse(o=>{if(!o.isMesh)return;for(const mat of Array.isArray(o.material)?o.material:[o.material])if(mat?.isMeshStandardMaterial&&(!originalMaterials.has(mat)||mat.userData.cityLightingVariant?.isStatic!==staticMaterials.has(mat)))bindMaterial(mat);});probeSun.refreshCasters();}
   function createShadows(){
     if(csm){
       csm.remove();csm.lights.forEach(l=>{l.shadow.map?.dispose();l.shadow.mapPass?.dispose();});csm.dispose();
@@ -300,6 +305,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
   }
   function setWeatherPreset(value){
     if(!Object.hasOwn(CITY_WEATHER_PRESETS,value))return false;
+    const previousNight=presentation.night;
     weatherPreset=value;presentation=CITY_WEATHER_PRESETS[value];const night=presentation.night;
     // An offline daylight transport field is not a night solution. Disable it
     // and use the low energy night environment plus actual selected fixtures.
@@ -319,7 +325,14 @@ export function createEnvironment(scene,renderer,geometry,camera){
     collectEmissives();for(const [m,base]of emissiveBases)m.emissiveIntensity=m.userData?.windowBacklight?(night?base*2.1:0):night?Math.min(2.1,Math.max(.18,base*3.0)):base;
     particleAmbient.set(night?0x3a506c:0xb3bdc2);
     stats.weatherPreset=value;stats.wetReflections=night&&quality!=='balanced';stats.daylight=night?'Night sky; static visible fixture direct + bounce; complementary near live diffuse, dynamic vehicle/headlamps; daylight GI disabled':'CC0 measured midday sky / calibrated sun + baked diffuse';
-    lastShadowTime=-Infinity;configureProbe();return true;
+    lastShadowTime=-Infinity;configureProbe();
+    if(previousNight!==night){
+      // CSM tracks the last compiled shader per material. Retire its program
+      // tables together with the transport variant so returning to a cached
+      // weather cannot skip onBeforeCompile and leave stale CSM uniforms.
+      for(const mat of originalMaterials.keys()){mat.dispose();bindMaterial(mat);}
+    }
+    return true;
   }
   const setDay=value=>setWeatherPreset(value===false?'wet-night':'clear-day');
   setQuality('balanced');setWeatherPreset('clear-day');

@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -229,5 +230,5 @@ const report={schema:'roadster.reflection-stability',version:1,modelVersion:MODE
   verificationType:'CPU submission cadence, material composition and pass-state verification; no WebGL context or framebuffer',
   sourceSha256:sources,checks,evidence,actualScreenshots:null,actualGpuFrameTimes:null,
   remainingAcceptance:'Same camera/resolution/quality/weather WebGL captures of moving reflected car, wheel/wing and light fades; continuous boundary crossings; actual driven p50/p95/p99 frame times after warmup. The cap and target dimensions are unchanged, but previously stale fixed views can now consume more of that existing budget.'};
-writeFileSync(new URL('../qa/reflection-stability-3.12.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({modelVersion:MODEL_VERSION,checks:checks.length,status:'passed',report:'qa/reflection-stability-3.12.json',webglPixels:false,gpuFrameTimes:false}));
+writeFileSync(new URL(`../qa/reflection-stability-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify({modelVersion:MODEL_VERSION,checks:checks.length,status:'passed',report:`qa/reflection-stability-${REPORT_VERSION}.json`,webglPixels:false,gpuFrameTimes:false}));

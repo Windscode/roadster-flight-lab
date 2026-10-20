@@ -11,7 +11,7 @@ const close=(a,b,tol,label)=>assert.ok(Math.abs(a-b)<=tol,`${label}: ${a} vs ${b
 const flat=(height=.62,params={})=>{
   // Retain the named 3.7 manual-input regression profile. Current defaults
   // and the complete 3.10/3.11 comparison live in vehicle-dynamics-3.11.
-  // X cases below explicitly select their common manual/X actuator profile.
+  // X uses its independent quick-roll profile; these manual settings stay frozen.
   const sim=new RoadsterSim({steeringAccelG:.9,climbRateMps:1.5,rollRateDegS:120,pitchRateDegS:32,angularAccelerationDegS2:160,verticalAccelerationMps2:3,attitudeResponse:3.6,...params});
   for(const body of [...sim.world.bodies])if(body!==sim.body&&body.userData?.id!=='ground')sim.world.removeBody(body);
   sim.body.position.set(0,height,-350);
@@ -73,8 +73,8 @@ pass('Continuing Q on supported wheels completes touchdown in either city stabil
 for(const height of [.62,4,18]){
   const s=flat(height,{rollRateDegS:180,angularAccelerationDegS2:360,verticalAccelerationMps2:5,attitudeResponse:4.5}),origin=s.body.position.y,ground=height<1;assert.equal(s.startManeuver('roll'),true);
   const plan={...s._maneuver};let inverted=false,airContacts=0,minRotate=Infinity,peak=origin;
-  // The calmer common 180/360 profile completes around 12.7 s and then uses
-  // real force to settle the remaining vertical velocity; compare a 15 s hold.
+  // Retain the full 15 s return/hold observation. X no longer inherits the
+  // comfort manual profile; its faster completion must not shorten this gate.
   const t=run(s,15,{},sim=>{
     const up=sim.body.quaternion.vmult(new Vec3(0,1,0));inverted ||= up.y<-.9;
     if(sim._maneuver?.phase==='rotate')minRotate=Math.min(minRotate,sim.body.position.y);
@@ -90,11 +90,11 @@ for(const height of [.62,4,18]){
 pass('X latches ground/air origin, completes a genuine inversion, respects its planned headroom and returns airborne starts without any touchdown');
 
 {
-  const low=flat(4,{supplyMode:'finite',rollRateDegS:180,angularAccelerationDegS2:360,verticalAccelerationMps2:5,attitudeResponse:4.5}),state=snapshot(low);assert.equal(low.startManeuver('roll'),false);assert.equal(snapshot(low),state);assert.equal(low._maneuver,null);assert.match(low.status,/冲量/);
-  const roof=new RoadsterSim({}, {world:'windlab'});roof.body.position.y=14;roof.setMode('hover');const before=snapshot(roof);assert.equal(roof.startManeuver('roll'),false);assert.equal(snapshot(roof),before);assert.match(roof.status,/净空/);
+  const low=flat(4,{supplyMode:'finite',tankLitres:150,rollRateDegS:180,angularAccelerationDegS2:360,verticalAccelerationMps2:5,attitudeResponse:4.5}),state=snapshot(low);assert.equal(low.startManeuver('roll'),false);assert.equal(snapshot(low),state);assert.equal(low._maneuver,null);assert.match(low.status,/冲量/);
+  const roof=new RoadsterSim({}, {world:'windlab'});roof.body.position.y=22;roof.setMode('hover');const before=snapshot(roof);assert.equal(roof.startManeuver('roll'),false);assert.equal(snapshot(roof),before);assert.match(roof.status,/净空/);
   for(const [tankLitres,height]of [[900,.62],[1100,4]]){
-    // A finite positive case must declare a feasible faster profile: at the
-    // calmer 180/360 default, 900 L now correctly fails the impulse preflight.
+    // The independent quick profile still uses the actual finite pressure,
+    // actuator bounds and declared return state in this historical fixture.
     const s=flat(height,{supplyMode:'finite',tankLitres,rollRateDegS:360,angularAccelerationDegS2:720,verticalAccelerationMps2:10,attitudeResponse:4.5});assert.equal(s.startManeuver('roll'),true);let inverted=false,completion=null;
     for(let i=0;i<12*PHYSICS_HZ;i++){
       s._advance(dt,{});assert.equal(s._fault,null);inverted ||= s.body.quaternion.vmult(new Vec3(0,1,0)).y<-.9;

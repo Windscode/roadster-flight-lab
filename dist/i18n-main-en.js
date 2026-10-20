@@ -1,3 +1,4 @@
+import {entries as flight313Entries,patterns as flight313Patterns} from './i18n-flight-313-en.js';
 import {t as tr} from './i18n.js';
 // English UI copy. Canonical keys never enter physics or record identity.
 export const entries={
@@ -722,7 +723,7 @@ Object.assign(entries,{
   "默认": "Default",
   "关闭辅助": "Assists off",
   "开启辅助": "Assists on",
-  "按 H 进入辅助飞行，E 升高。屏幕升降响应滑条设置 E/Q 的目标垂直速度，范围 0.5–8 m/s，默认 3 m/s；按键立即使用设定值，受实际推力限制。G 仅开关自动回正；开启时恢复水平滚转与俯仰，保留切换瞬间的航向参考；关闭回正后，Z / B 可连续完整滚转，1 / 2 平滑改变俯仰。松键后控制器用实际喷力与力矩稳住新姿态，并尽量维持位置；WASD 与 E / Q 仍可移动。过大的倾角或倒置可能超出喷口承重能力，车辆会真实下落。X 从地面启动会返回地面，从空中启动会恢复起始高度附近；Q 接地后继续按住会完成降落，喷口按关阀时间衰减。默认外部持续供气，有限储气的自动翻转需通过余量与净空预检。风场实验室与城市可同页往返，捕获姿态、定点目标和自定义流程在研究控制台中设置；保存的 3–9 快捷键两处通用。倒悬与弧桥仍可用于吸附接触研究。": "H enables assisted flight; E climbs. The visible E/Q slider sets a target vertical speed from 0.5–8 m/s, default 3 m/s. Keys immediately use that value, within actual thrust limits. G toggles auto-level: it restores horizontal roll and pitch while retaining the heading at the switch. With auto-level off, Z / B command continuous rolls and 1 / 2 adjust pitch. On release, real forces and torques hold the reached attitude and, when feasible, position. WASD and E / Q still move. Large tilts or inversion can exceed support authority and cause descent. X returns a ground start to the ground and an airborne start near its original height. Keep Q after contact to finish landing; valve closing takes time. External supply is the default; finite-air rolls require reserve and clearance checks. Switch between city and wind lab on this page. Set arbitrary poses, position targets and sequences in the research console; saved 3–9 shortcuts work in both. Ceiling and arch tests remain available."
+  "按 H 进入辅助飞行，E 升高。屏幕升降响应滑条设置 E/Q 的目标垂直速度，范围 0.5–14 m/s，默认 5 m/s；按键立即使用设定值，受实际推力限制。G 仅开关自动回正；开启时恢复水平滚转与俯仰，保留切换瞬间的航向参考；关闭回正后，Z / B 可连续完整滚转，1 / 2 平滑改变俯仰。松键后控制器用实际喷力与力矩稳住新姿态，并尽量维持位置；WASD 与 E / Q 仍可移动。过大的倾角或倒置可能超出喷口承重能力，车辆会真实下落。X 从地面启动会返回地面，从空中启动会恢复起始高度附近；Q 接地后继续按住会完成降落，喷口按关阀时间衰减。默认外部持续供气，有限储气的自动翻转需通过余量与净空预检。风场实验室与城市可同页往返，捕获姿态、定点目标和自定义流程在研究控制台中设置；保存的 3–9 快捷键两处通用。倒悬与弧桥仍可用于吸附接触研究。": "H enables assisted flight; E climbs. The visible E/Q slider sets a target vertical speed from 0.5–14 m/s, default 5 m/s. Keys immediately use that value, within actual thrust limits. G toggles auto-level: it restores horizontal roll and pitch while retaining the heading at the switch. With auto-level off, Z / B command continuous rolls and 1 / 2 adjust pitch. On release, real forces and torques hold the reached attitude and, when feasible, position. WASD and E / Q still move. Large tilts or inversion can exceed support authority and cause descent. X returns a ground start to the ground and an airborne start near its original height. Keep Q after contact to finish landing; valve closing takes time. External supply is the default; finite-air rolls require reserve and clearance checks. Switch between city and wind lab on this page. Set arbitrary poses, position targets and sequences in the research console; saved 3–9 shortcuts work in both. Ceiling and arch tests remain available."
 });
 
 Object.assign(entries,{'车载累计耗气':'Cumulative onboard air used','外部累计供气':'Cumulative external air supplied','实际轴功率':'Actual shaft power','电驱输入功率':'Electric drive input power'});
@@ -757,3 +758,5 @@ export const patterns=[
   [/^单轴正向力矩上界 X\/Y\/Z (.+) kN·m$/,'Independent positive torque bounds X/Y/Z $1 kN·m'],
   [/^当前姿态可配平：(是|否) · 水平目标可配平：(是|否)$/,(_,a,b)=>'Current pose trimmable: '+tr(a)+' · Level target trimmable: '+tr(b)],
 ];
+
+Object.assign(entries,flight313Entries);patterns.unshift(...flight313Patterns);

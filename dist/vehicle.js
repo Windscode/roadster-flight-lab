@@ -68,7 +68,7 @@ export const VEHICLE_GEOMETRY = Object.freeze({
   suspensionMinimum:.24,suspensionMaximum:.41,maxSteer:.49,
   archCentreY:-.22,archLongRadius:.452,archVerticalRadius:.435,
   linerInnerX:.54,linerOuterX:1.040,
-  model:'v8 / 3.10: station-controlled wedge sections, integrated arch hems, recessed projector optics and dished wheel sectors; independent current official-photo reconstruction, not OEM CAD',
+  model:'v9 / 3.13: preserved wedge sections, recessed service-lid joints, independently sorted glazing and layered projector covers; independent official-photo reconstruction, not OEM CAD',
   surfaceConstruction:'Shape-preserving longitudinal stations; feature-aligned transverse strips; no per-vertex wheel-arch uplift; analytic derivative normals',
   referenceRig:VEHICLE_INSPECTION_RIG.id
 });
@@ -204,10 +204,41 @@ function bonnetTriangle(parent,points,mat,offset,name){
     const a=lookup.get(`${i},${j}`),b=lookup.get(`${i+1},${j}`),c=lookup.get(`${i},${j+1}`);indices.push(a,b,c);
     if(i+j<n-1)indices.push(b,lookup.get(`${i+1},${j+1}`),c);
   }
+  // Mirroring the footprint reverses its geometric winding. Correct the
+  // indices as well as the authored normals, so both outer covers face out.
+  const footprintArea=(points[1][0]-points[0][0])*(points[2][1]-points[0][1])-(points[1][1]-points[0][1])*(points[2][0]-points[0][0]);
+  if(footprintArea>0)for(let i=0;i<indices.length;i+=3)[indices[i+1],indices[i+2]]=[indices[i+2],indices[i+1]];
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setIndex(indices);geometry.computeVertexNormals();const mesh=addMesh(parent,geometry,mat,name);setGraphNormals(mesh);return mesh;
 }
 
 const HEADLIGHTS=[-1,1].map(side=>[[side*.679,2.120],[side*.886,1.793],[side*.749,1.746]]);
+// A 3.2 mm cut and 2.6 mm recess are authored scale assumptions, not OEM data.
+// The painted mesh is really split at these slots; a dark raised tube no longer
+// has to sit over unbroken paint to imitate a shut line.
+export const BONNET_JOINT_SPEC=Object.freeze({widthM:.0032,depthM:.0026,longitudinalZM:[.8,2.30],transverseZM:1.0});
+const jointHalf=BONNET_JOINT_SPEC.widthM/2;
+const BONNET_JOINT_OPENINGS=[...[-1,1].map(side=>{
+  const a=side*bonnetHalfWidthAt(.8),b=side*bonnetHalfWidthAt(2.3);
+  return[[a-jointHalf,.7999],[b-jointHalf,2.3001],[b+jointHalf,2.3001],[a+jointHalf,.7999]];
+}),[[-bonnetHalfWidthAt(1)-jointHalf,1-jointHalf],[bonnetHalfWidthAt(1)+jointHalf,1-jointHalf],
+[bonnetHalfWidthAt(1)+jointHalf,1+jointHalf],[-bonnetHalfWidthAt(1)-jointHalf,1+jointHalf]]];
+
+function independentTransparentPanel(mesh){
+  // This Three revision sorts transparent objects by their transformed bounding
+  // sphere centre, never by individual triangles. Preserve each optical panel
+  // as one object so opposite views can reverse the pane order independently.
+  mesh.geometry.computeBoundingSphere();mesh.userData.independentOpticalPanel=true;
+  mesh.userData.sortAnchor='authored panel bounding sphere centre';return mesh;
+}
+function recessedBonnetJoint(parent,point,name,paint,seam,segments=64){
+  const depth=BONNET_JOINT_SPEC.depthM;
+  const sample=(t,offset,yDepth)=>{const [x,z,axis]=point(t),px=x+(axis==='x'?offset:0),pz=z+(axis==='z'?offset:0);return[px,bodySurfaceY(px,pz)-yDepth,pz];};
+  const floor=grid(parent,seam,(u,v)=>sample(v,lerp(-jointHalf,jointHalf,u),depth),2,segments,false,name+' recessed floor');floor.castShadow=false;
+  for(const side of [-1,1]){
+    const wall=grid(parent,paint,(u,v)=>sample(v,side*(jointHalf-.00035*u),depth*u),2,segments,side<0,name+' painted edge return');wall.castShadow=false;
+  }
+}
+
 function cutSurfaceOpenings(mesh,openings){
   // Clip the actual body mesh at each lamp perimeter. A black triangle resting
   // on top of paint cannot show a recessed housing / edge thickness correctly.
@@ -233,8 +264,8 @@ function cutSurfaceOpenings(mesh,openings){
     for(const hole of openings){
       const sign=Math.sign((hole[1][0]-hole[0][0])*(hole[2][1]-hole[0][1])-(hole[1][1]-hole[0][1])*(hole[2][0]-hole[0][0]));
       const output=[];
-      for(const polygon of polygons){let remaining=polygon;for(let edge=0;edge<3&&remaining.length>=3;edge++){
-        const pieces=split(remaining,hole[edge],hole[(edge+1)%3],sign);if(pieces.outside.length>=3)output.push(pieces.outside);remaining=pieces.inside;
+      for(const polygon of polygons){let remaining=polygon;for(let edge=0;edge<hole.length&&remaining.length>=3;edge++){
+        const pieces=split(remaining,hole[edge],hole[(edge+1)%hole.length],sign);if(pieces.outside.length>=3)output.push(pieces.outside);remaining=pieces.inside;
       }}
       polygons=output;
     }
@@ -275,7 +306,13 @@ function recessedLamp(parent,outline,materials){
     const dome=addMesh(cell,new THREE.SphereGeometry(.012,16,6,0,TAU,0,PI/2),materials.lens,'convex projector optic');
     dome.rotation.x=PI/2;dome.scale.y=.22;dome.position.z=.008;dome.castShadow=false;
   }
-  const lens=bonnetTriangle(parent,outline,materials.lens,.0025,'flush clear headlamp cover');lens.castShadow=false;
+  // A thin clear cover meets a narrow dark perimeter land. It is separately
+  // sorted from the six internal optics and sits flush instead of 2.5 mm proud.
+  for(let edge=0;edge<3;edge++){
+    const a=outline[edge],b=outline[(edge+1)%3];
+    const lip=grid(parent,materials.seam,(u,v)=>{const x=lerp(a[0],b[0],v),z=lerp(a[1],b[1],v),k=u*.012;return[lerp(x,cx,k),bodySurfaceY(x,z)+.0002,lerp(z,cz,k)];},2,24,false,'headlamp cover perimeter land');lip.castShadow=false;
+  }
+  const lens=independentTransparentPanel(bonnetTriangle(parent,outline,materials.coverLens,.0004,'flush clear headlamp cover'));lens.castShadow=false;
 }
 
 function curve(parent, points, radius, mat, name = '', smooth = true) {
@@ -393,7 +430,7 @@ function mergeStaticMeshes(parent,recursive=true,keep=new Set()) {
   parent.updateWorldMatrix(true,true);
   const inverse=parent.matrixWorld.clone().invert(),byMaterial=new Map();
   const visit=obj=>{
-    if(!obj.isMesh||Array.isArray(obj.material)||keep.has(obj))return;
+    if(!obj.isMesh||Array.isArray(obj.material)||keep.has(obj)||obj.userData.independentOpticalPanel)return;
     if(!byMaterial.has(obj.material))byMaterial.set(obj.material,[]);
     byMaterial.get(obj.material).push(obj);
   };
@@ -716,6 +753,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     damper:material(0xb18b4f,.77,.23),
     liner:material(0x111518,.05,.92,{side:THREE.DoubleSide}),
     lens:new THREE.MeshPhysicalMaterial({color:0xcad5da,metalness:0,roughness:.085,ior:1.49,clearcoat:0,transparent:true,opacity:.18,depthWrite:false,side:THREE.DoubleSide}),
+    coverLens:new THREE.MeshPhysicalMaterial({color:0xd5dfe3,metalness:0,roughness:.065,ior:1.49,clearcoat:0,transparent:true,opacity:.18,depthWrite:false,side:THREE.FrontSide}),
     lampEmitter:material(0xd9e5e9,.10,.23,{emissive:0xc5e3ef,emissiveIntensity:1.35,toneMapped:true,side:THREE.DoubleSide}),
     frontPanel:new THREE.MeshPhysicalMaterial({color:0x242b33,metalness:.03,roughness:.22,clearcoat:.82,clearcoatRoughness:.08,envMapIntensity:1.1,side:THREE.DoubleSide}),
   };
@@ -726,7 +764,8 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   mats.balancedGlass=material(mats.glass.color.clone(),0,.095,{envMapIntensity:1.0,transparent:true,opacity:mats.glass.opacity,depthWrite:false,side:THREE.DoubleSide});
   transparentMaterials.push(mats.paint,mats.glass,mats.balancedPaint,mats.balancedGlass);
   for(const mat of transparentMaterials)mat.userData.exteriorOpacity=mat.opacity;
-  for(const mat of Object.values(mats))mat.forceSinglePass=true;
+  for(const [name,mat] of Object.entries(mats)){mat.forceSinglePass=true;mat.name='Roadster / '+name.replace(/[A-Z]/g,c=>' '+c.toLowerCase());}
+  mats.coverLens.userData.opticalAssumption='Illustrative clear polycarbonate cover; one-sided outward surface, ior 1.49, alpha approximation without refraction.';
   mats.paint.userData.opticalAssumption='Satin silver metallic base + dielectric clearcoat; visual estimate, not Tesla measured reflectance.';
   mats.glass.userData.opticalAssumption='Neutral smoked dielectric glazing with .94 exterior opacity; alpha surface approximation, no optical refraction pass. Cabin is an illustrative dark cockpit, not a measured Tesla interior.';
   // The weave map modulates the carbon base colour around a light neutral.
@@ -753,7 +792,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
         return[x,bodySurfaceY(x,z),z];
       },columns,panel.n,side<0,panel.name);
       setGraphNormals(panelMesh);
-      if(panel.name==='front clamshell')cutSurfaceOpenings(panelMesh,HEADLIGHTS);
+      if(panel.name==='front clamshell')cutSurfaceOpenings(panelMesh,[...HEADLIGHTS,...BONNET_JOINT_OPENINGS]);
     }
   }
 
@@ -833,7 +872,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
     return[side*lerp(w,lowerX,u),lerp(top,lowerY,u)+.008*Math.sin(u*PI),z];
   };
   for(const [front,back,name] of [[.8,.04,'compound curved windscreen'],[.04,-.76,'panoramic roof glazing'],[-.76,-1.57,'curved rear backlight']]){
-    grid(shell,mats.glass,(u,v)=>canopySurface(lerp(-1,1,u),lerp(front,back,v)),48,40,false,name);
+    independentTransparentPanel(grid(shell,mats.glass,(u,v)=>canopySurface(lerp(-1,1,u),lerp(front,back,v)),48,40,false,name));
   }
   for(const z of [.04,-.76])grid(shell,mats.seam,(u,v)=>{
     const p=canopySurface(lerp(-1,1,u),z+lerp(-.0025,.0025,v));p[1]+=.0017;return p;
@@ -847,7 +886,10 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   grid(shell,mats.black,(u,v)=>{const p=canopySurface(lerp(-1,1,u),.778),z=lerp(.778,.812,v);return[p[0],lerp(p[1]+.002,bodySurfaceY(p[0],.812)+.0015,v),z];},36,6,false,'windscreen black frit and cowl');
   curve(shell,[[-.49,.286,.786],[-.20,.289,.788],[.12,.290,.788]],.003,mats.black,'concealed windscreen wiper',false).castShadow=false;
   for(const side of [-1,1]) {
-    grid(shell,mats.glass,(u,v)=>sideGlassSurface(side,u,lerp(.8,-1.48,v)),14,72,side<0,'frameless side glazing');
+    independentTransparentPanel(grid(shell,mats.glass,(u,v)=>sideGlassSurface(side,u,lerp(.8,-1.48,v)),14,72,side<0,(side<0?'right':'left')+' frameless side glazing'));
+    // A narrow ceramic frit covers the adhesive landing inside the glazing.
+    // It follows the existing pane, without altering canopy shape or opacity.
+    for(const edge of [0,1]){const frit=grid(shell,mats.seam,(u,v)=>{const z=lerp(.80,-1.48,v),p=sideGlassSurface(side,edge===0?u*.035:1-u*.035,z);p[0]+=side*.00035;p[1]+=.00035;return p;},2,72,side<0,'side glazing ceramic edge frit');frit.castShadow=false;}
     grid(shell,mats.black,(u,v)=>{
       const z=lerp(.80,-1.53,v),w=interpolate(canopyW,z),h=canopyEdge(z);
       return[side*(w+lerp(-.012,.019,u)),h+.003-lerp(0,.015,u),z];
@@ -872,15 +914,12 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   }
   // Panel lines on the front service lid and rear deck.
   for(const side of [-1,1]) {
-    const line=[];
-    for(let i=0;i<=64;i++){const z=lerp(2.29,.80,i/64),x=side*bonnetHalfWidthAt(z);line.push([x,bodySurfaceY(x,z)+.0019,z]);}
-    curve(shell,line,.0011,mats.seam,'bonnet joint');
+    recessedBonnetJoint(shell,t=>{const z=lerp(2.30,.80,t);return[side*bonnetHalfWidthAt(z),z,'x'];},'bonnet joint',mats.paint,mats.seam);
     curve(shell,[[side*.87,.237,-2.30],[side*.884,.297,-2.025]],.0022,mats.seam,'rear bumper joint',false);
   }
   const rearSeam=[];for(let i=0;i<=20;i++){const x=lerp(-.925,.925,i/20);rearSeam.push([x,.299,-2.04]);}
   curve(shell,rearSeam,.0023,mats.seam,'rear deck trailing joint');
-  const lidJoint=[];for(let i=0;i<=32;i++){const x=lerp(-bonnetHalfWidthAt(1.0),bonnetHalfWidthAt(1.0),i/32);lidJoint.push([x,bodySurfaceY(x,1.0)+.0019,1.0]);}
-  curve(shell,lidJoint,.0011,mats.seam,'service lid transverse joint');
+  recessedBonnetJoint(shell,t=>[lerp(-bonnetHalfWidthAt(1.0),bonnetHalfWidthAt(1.0),t),1.0,'z'],'service lid transverse joint',mats.paint,mats.seam,40);
 
   // Front fascia: a very thin horizontal DRL and recessed triangular projectors.
   grid(shell,mats.black,(u,v)=>{
@@ -1015,7 +1054,7 @@ export function createRoadster({quality:initialQuality='high'}={}) {
   mergeStaticMeshes(underbody,false);
   // Tiny gaps and luminous lenses do not cast extra stair-stepped shadows onto
   // the adjacent body. The actual surrounding body still casts full shadows.
-  shell.traverse(o=>{if(o.isMesh&&[mats.seam,mats.black,mats.whiteLight,mats.lampEmitter,mats.tailLight,mats.lens].includes(o.material))o.castShadow=false;});
+  shell.traverse(o=>{if(o.isMesh&&[mats.seam,mats.black,mats.whiteLight,mats.lampEmitter,mats.tailLight,mats.lens,mats.coverLens].includes(o.material))o.castShadow=false;});
   const jets=[];
   const jetsRoot=new THREE.Group();jetsRoot.name='simulated force application nozzles';group.add(jetsRoot);
   const jetExhaust=new THREE.Vector3(),shadowDefaults=new WeakMap();

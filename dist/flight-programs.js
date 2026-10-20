@@ -211,6 +211,9 @@ export class FlightProgramRunner{
     const timedOut=a.stageElapsedS>=s.durationS-1e-9;
     let complete=false;
     if(s.type==='roll'||s.type==='land'){
+      if(s.type==='roll'&&t.maneuver?.abortReason){
+        this._finish('failed',`自动翻转中止：${t.maneuver.abortReason}`,{preservePhysicalRecovery:true});return pilotInput;
+      }
       if(t.maneuver)a.hasSeenManeuver=true;
       if(a.stageElapsedS>0&&a.hasSeenManeuver&&!t.maneuver){
         complete=s.type==='roll'||(t.mode==='drive'&&t.contactCount>0&&Math.abs(t.verticalSpeed||0)<.6);
@@ -252,15 +255,15 @@ export class FlightProgramRunner{
     }
   }
   cancel(reason='已停止流程'){if(!this.active)return false;this._finish('cancelled',reason);return true;}
-  _finish(status,reason){
+  _finish(status,reason,{preservePhysicalRecovery=false}={}){
     const a=this.active;if(!a)return;const sim=a.sim,t=sim.telemetry();this._sample(t);
     const lastStage=a.stages.at(-1);if(lastStage?.outcome==='running'){lastStage.outcome=status;lastStage.durationS=a.stageElapsedS;}
     if(status!=='completed'){
       // Keep finite authority and actual momentum. Cancelling an automatic
       // maneuver releases it; airborne motion is handed to the ordinary pilot
       // controller with its current measured references.
-      if(t.maneuver)sim.startManeuver('cancel');
-      if(sim.stabilizationMode==='hold')sim.setStabilizationMode('off');
+      if(t.maneuver&&!preservePhysicalRecovery)sim.startManeuver('cancel');
+      if(sim.stabilizationMode==='hold'&&!preservePhysicalRecovery)sim.setStabilizationMode('off');
     }
     if(a.windChanged)setWind(sim,a.previousWind);
     if(a.supplyChanged)sim.setSupplyMode(a.previousSupply);

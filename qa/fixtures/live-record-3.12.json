@@ -1,0 +1,5386 @@
+{
+  "schema": "roadster.live-experiment",
+  "version": 1,
+  "id": "live-20261020100000000-1",
+  "name": "Published 3.12 rolling finite-supply history",
+  "kind": "manual",
+  "identity": {
+    "modelVersion": "3.12.0",
+    "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+    "protocolVersion": "live-fixed-inputs-1",
+    "fixedHz": 120
+  },
+  "context": "lab",
+  "startedAt": "2026-10-20T10:00:00.000Z",
+  "status": "completed",
+  "reason": "现场记录结束",
+  "durationS": 2,
+  "stepCount": 240,
+  "initialSnapshot": {
+    "identity": {
+      "modelVersion": "3.12.0",
+      "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "context": "lab",
+    "physical": {
+      "schema": "roadster-sim-state",
+      "schemaVersion": 1,
+      "modelVersion": "3.12.0",
+      "worldType": "windlab",
+      "geometrySignature": "08604efb",
+      "params": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 650,
+        "initialPressureBar": 330,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 4.6,
+        "verticalAccelerationMps2": 4.5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "finite",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 220,
+        "pitchRateDegS": 78,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 420
+      },
+      "state": {
+        "_wind": {
+          "speedMps": 2.2,
+          "directionDeg": 78,
+          "gustMps": 0.8,
+          "gustPeriodS": 4.3
+        },
+        "_observationConfig": {
+          "enabled": true,
+          "delayMs": 50,
+          "seed": 312,
+          "positionNoiseM": 0.008,
+          "velocityNoiseMps": 0.015,
+          "attitudeNoiseDeg": 0.1,
+          "angularRateNoiseRadS": 0.003
+        },
+        "_nozzleFault": null,
+        "_nozzles": [
+          {
+            "id": "lift-FR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.59,
+                -0.32,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              -1.42,
+              0,
+              -0.59
+            ]
+          },
+          {
+            "id": "lift-FL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.59,
+                -0.32,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 0,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              -1.42,
+              0,
+              0.59
+            ]
+          },
+          {
+            "id": "lift-RR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.59,
+                -0.32,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 1599.999999642619,
+            "command": 1600,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              1.42,
+              0,
+              -0.59
+            ]
+          },
+          {
+            "id": "lift-RL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.59,
+                -0.32,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 1599.999999642619,
+            "command": 1600,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              1.42,
+              {
+                "$type": "NegativeZero"
+              },
+              0.59
+            ]
+          },
+          {
+            "id": "roll-FR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.89,
+                -0.22,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              1,
+              0,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              1.42,
+              0.22
+            ]
+          },
+          {
+            "id": "roll-FL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.89,
+                -0.22,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                -1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              -1,
+              0,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              -1.42,
+              -0.22
+            ]
+          },
+          {
+            "id": "roll-RR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.89,
+                -0.22,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              1,
+              0,
+              0,
+              0,
+              -1.42,
+              0.22
+            ]
+          },
+          {
+            "id": "roll-RL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.89,
+                -0.22,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                -1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              -1,
+              0,
+              0,
+              0,
+              1.42,
+              -0.22
+            ]
+          },
+          {
+            "id": "rear-boost",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                -2.07
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                1
+              ]
+            },
+            "kind": "longitudinal",
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "column": [
+              0,
+              0,
+              1,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              0
+            ]
+          },
+          {
+            "id": "front-brake",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                2.07
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                -1
+              ]
+            },
+            "kind": "longitudinal",
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "column": [
+              0,
+              0,
+              -1,
+              {
+                "$type": "NegativeZero"
+              },
+              0,
+              0
+            ]
+          }
+        ],
+        "wheelStates": [
+          {
+            "id": "FR",
+            "steer": 0.029130364900712136,
+            "rotation": 4.6150452952625285,
+            "suspensionLength": 0.29841844024098063,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.23841844024098063,
+              "z": 1.42
+            },
+            "normalLoadN": 4657.370625780635,
+            "slipAngle": -0.0007475086295659676,
+            "angularVelocityRadS": 9.225216402318663,
+            "relaxedSlip": -0.0006503538554272888,
+            "slipRatio": 0.021965060186345003,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 76.59415590264837,
+            "brakeDemandN": 0,
+            "serviceBrakeDemandN": 0,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 18.955498446926814,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 18.955498446926814,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": -0.8302491005101184,
+              "y": 0,
+              "z": 3.073413999395232
+            },
+            "longitudinalForceN": 1852.006776542543,
+            "lateralForceN": 43.368399596274585,
+            "gripUse": 0.31820778446939085,
+            "lateralSpeedMps": -0.002922976899516261,
+            "longitudinalSpeedMps": 3.3102911183651837,
+            "lateralDemandN": 43.368399596274585,
+            "rollingContactWeight": 0.6529325956072761,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 720.7971409422516,
+            "allocatedDrivePowerW": 177561.23263639366,
+            "contactSpeedMps": 3.3102911183651837,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 720.7971409422516,
+            "tireReactionTorqueNm": -685.242507320741,
+            "postTcsTorqueRequestNm": 720.7971409422516,
+            "driveMechanicalPowerW": 6621.647037475511
+          },
+          {
+            "id": "FL",
+            "steer": 0.029671952333142744,
+            "rotation": 4.531478877863379,
+            "suspensionLength": 0.3000702263987022,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.24007022639870218,
+              "z": 1.42
+            },
+            "normalLoadN": 4535.653640849027,
+            "slipAngle": -0.0007518792714121785,
+            "angularVelocityRadS": 9.053546953954937,
+            "relaxedSlip": -0.0006515608762065207,
+            "slipRatio": 0.021965180668834933,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 73.77004120272005,
+            "brakeDemandN": 0,
+            "serviceBrakeDemandN": 0,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 18.460110318254912,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 18.460110318254912,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 0.9495016451641685,
+              "y": 0,
+              "z": 3.0435809360370762
+            },
+            "longitudinalForceN": 1803.2858403153166,
+            "lateralForceN": 42.38437972380858,
+            "gripUse": 0.3181519604463398,
+            "lateralSpeedMps": -0.0028939135576319663,
+            "longitudinalSpeedMps": 3.2489064964714074,
+            "lateralDemandN": 42.38437972380858,
+            "rollingContactWeight": 0.6233109620436068,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 701.9596333028186,
+            "allocatedDrivePowerW": 172920.79930742295,
+            "contactSpeedMps": 3.2489064964714074,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 701.9596333028185,
+            "tireReactionTorqueNm": -667.2157609166671,
+            "postTcsTorqueRequestNm": 701.9596333028185,
+            "driveMechanicalPowerW": 6328.735781618639
+          },
+          {
+            "id": "RR",
+            "steer": 0,
+            "rotation": 4.613710006002513,
+            "suspensionLength": 0.29861042116568104,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.23861042116568104,
+              "z": -1.42
+            },
+            "normalLoadN": 4644.727092152911,
+            "slipAngle": -0.0011472891178674856,
+            "angularVelocityRadS": 9.221355321314977,
+            "relaxedSlip": -0.0010482675169378411,
+            "slipRatio": 0.02196502206516745,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 76.53005456574964,
+            "brakeDemandN": 0,
+            "serviceBrakeDemandN": 0,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 18.904039265063624,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 18.904039265063624,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": -0.8778477221865754,
+              "y": 0,
+              "z": 0.23381289922795995
+            },
+            "longitudinalForceN": 1846.8727569422826,
+            "lateralForceN": 73.43341125504398,
+            "gripUse": 0.31835361428032477,
+            "lateralSpeedMps": -0.004484722807650381,
+            "longitudinalSpeedMps": 3.3089718276772713,
+            "lateralDemandN": 73.43341125504398,
+            "rollingContactWeight": 0.6523010575444816,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 718.840366697182,
+            "allocatedDrivePowerW": 177079.20069257723,
+            "contactSpeedMps": 3.3089718276772713,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 718.840366697182,
+            "tireReactionTorqueNm": -683.3429200686446,
+            "postTcsTorqueRequestNm": 718.840366697182,
+            "driveMechanicalPowerW": 6600.951308897713
+          },
+          {
+            "id": "RL",
+            "steer": 0,
+            "rotation": 4.530109849369924,
+            "suspensionLength": 0.3002622073234027,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.2402622073234027,
+              "z": -1.42
+            },
+            "normalLoadN": 4523.010107221296,
+            "slipAngle": -0.0011656005785797823,
+            "angularVelocityRadS": 9.049617665938241,
+            "relaxedSlip": -0.0010632387182313628,
+            "slipRatio": 0.021965248031742386,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 73.70602190969535,
+            "brakeDemandN": 0,
+            "serviceBrakeDemandN": 0,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 18.408651136391427,
+            "serviceBrakeTorqueNm": 0,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 18.408651136391427,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 0.9019030234877115,
+              "y": 0,
+              "z": 0.20397983586980506
+            },
+            "longitudinalForceN": 1798.1468719167897,
+            "lateralForceN": 72.29804006097056,
+            "gripUse": 0.31830125247389446,
+            "lateralSpeedMps": -0.004484722807650381,
+            "longitudinalSpeedMps": 3.2475622430594244,
+            "lateralDemandN": 72.29804006097056,
+            "rollingContactWeight": 0.622657242782967,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 700.0028590577479,
+            "allocatedDrivePowerW": 172438.76736360625,
+            "contactSpeedMps": 3.2475622430594244,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 700.0028590577477,
+            "tireReactionTorqueNm": -665.3143426092122,
+            "postTcsTorqueRequestNm": 700.0028590577477,
+            "driveMechanicalPowerW": 6308.393202571683
+          }
+        ],
+        "stabilizationMode": "off",
+        "airStabilization": false,
+        "scenario": "windlab",
+        "gasInitialMass": 254.90587600528502,
+        "gasMass": 249.47849087582568,
+        "gasTemperature": 290.6506102180102,
+        "mode": "drive",
+        "suctionEnabled": false,
+        "_fanLevel": 0,
+        "_sealLipExtensions": [
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074
+        ],
+        "_sealLipContacts": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "simTime": 2.999999999999992,
+        "_accumulator": 0,
+        "_energyUsed": 0.00467733404090004,
+        "_motorWork": 239.44191972744022,
+        "_stepCount": 360,
+        "_heightTarget": 0.6093400600301735,
+        "_headingTarget": 0.01676092549730744,
+        "_holdPositionTarget": null,
+        "_holdQuaternionTarget": null,
+        "_holdActive": false,
+        "_holdFeasible": null,
+        "_holdStatus": "inactive",
+        "_poseTargetExplicit": false,
+        "_poseTakeoffActive": false,
+        "_stabilizationActive": false,
+        "_heightJogging": false,
+        "_stableJogging": false,
+        "_stableHeight": 0.74,
+        "_stableHeading": 0,
+        "_positionTarget": {
+          "$type": "Vec3",
+          "values": [
+            0.03526228212907247,
+            0.6093400600301735,
+            1.6387475795645836
+          ]
+        },
+        "_manualQuaternionTarget": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "_manualReferenceRate": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_manualCommandInput": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_manualPoseFeasible": null,
+        "_landingContactTime": 0,
+        "_manualTranslationActive": false,
+        "_maneuver": null,
+        "_rollReference": 0,
+        "_lastVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_heightIntegral": 0,
+        "_desiredWrench": [
+          0,
+          3200,
+          0,
+          4544,
+          0,
+          0
+        ],
+        "_achievedWrench": [
+          0,
+          3199.999999285238,
+          0,
+          4543.999998985038,
+          0,
+          0
+        ],
+        "_allocationError": 1.7031152296750907e-11,
+        "_gLoad": 1.0548861450287494,
+        "_contactCount": 4,
+        "_suctionForce": 0,
+        "_thrustN": 3199.999999285238,
+        "_pressureLimited": false,
+        "_motorForceN": 7680,
+        "_regenForceN": 0,
+        "_longitudinalAcceleration": 3.302412819838723,
+        "_steerCentre": 0.029398665242064984,
+        "_massFlowKgS": 5.671240647844646,
+        "_impulseNs": 3068.922045746532,
+        "_effectiveExhaustVelocity": 564.2504344267946,
+        "status": "轮胎接地",
+        "_fault": null,
+        "_thrustWanted": 0,
+        "_lastInput": {
+          "throttle": 0.32,
+          "steer": 0.06,
+          "brake": 0,
+          "lift": 0,
+          "roll": 0,
+          "pitch": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0.08
+        },
+        "_fallReset": false,
+        "_wing": {
+          "deployment": 0,
+          "command": 0,
+          "dragN": 0,
+          "downforceN": 0,
+          "dynamicPressurePa": 5.344665898670385,
+          "forceBody": {
+            "x": 0,
+            "y": {
+              "$type": "NegativeZero"
+            },
+            "z": {
+              "$type": "NegativeZero"
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0.325,
+            "z": -2.065
+          },
+          "incidenceRad": {
+            "$type": "NegativeZero"
+          },
+          "applicationPoint": {
+            "x": 0,
+            "y": 0.325,
+            "z": -2.015
+          }
+        },
+        "_observationSeed": 848804564,
+        "_observationHistory": [
+          {
+            "simTime": 2.941666666666659,
+            "position": {
+              "x": 0.030477501454197958,
+              "y": 0.6079133711927466,
+              "z": 1.4712741392072262
+            },
+            "velocity": {
+              "x": 0.08039497947335071,
+              "y": -0.008337917789898987,
+              "z": 3.122500539207137
+            },
+            "quaternion": {
+              "x": 0.0003836037800901789,
+              "y": 0.007085174853468523,
+              "z": 0.0009023098957806649,
+              "w": 0.9999744191639542
+            },
+            "angularVelocity": {
+              "x": 0.0017954735645321857,
+              "y": 0.03214177567827485,
+              "z": 0.0005448126770812247
+            }
+          },
+          {
+            "simTime": 2.949999999999992,
+            "position": {
+              "x": 0.03290127777299272,
+              "y": 0.6137096924527784,
+              "z": 1.5058660149453325
+            },
+            "velocity": {
+              "x": 0.10402656391149658,
+              "y": -0.005857546314694074,
+              "z": 3.130279425616732
+            },
+            "quaternion": {
+              "x": 0.0006427133697860776,
+              "y": 0.006853310964249568,
+              "z": -0.00004757041666671753,
+              "w": 0.9999763081120508
+            },
+            "angularVelocity": {
+              "x": -0.0005439441913620549,
+              "y": 0.03097804836773539,
+              "z": 0.003135538175962985
+            }
+          },
+          {
+            "simTime": 2.9583333333333255,
+            "position": {
+              "x": 0.03351438835977217,
+              "y": 0.6092987998388184,
+              "z": 1.524688929013849
+            },
+            "velocity": {
+              "x": 0.09635431749883466,
+              "y": 0.0008853485842354172,
+              "z": 3.1820084985842723
+            },
+            "quaternion": {
+              "x": 0.0001376284077652983,
+              "y": 0.007948538766828108,
+              "z": 0.0005590024830479401,
+              "w": 0.9999682441488418
+            },
+            "angularVelocity": {
+              "x": 0.00046604311552326264,
+              "y": 0.03171743219490227,
+              "z": -0.00015962533594334372
+            }
+          },
+          {
+            "simTime": 2.966666666666659,
+            "position": {
+              "x": 0.040255417605218155,
+              "y": 0.6046431462459881,
+              "z": 1.5581632986499945
+            },
+            "velocity": {
+              "x": 0.08376014198837971,
+              "y": 0.008750434549230758,
+              "z": 3.1817499740154616
+            },
+            "quaternion": {
+              "x": 0.00023193720738028716,
+              "y": 0.008450072452061273,
+              "z": 0.00011573260952185714,
+              "w": 0.9999642639047909
+            },
+            "angularVelocity": {
+              "x": 0.0020439100744102617,
+              "y": 0.03576877688518868,
+              "z": 0.004196250154370159
+            }
+          },
+          {
+            "simTime": 2.974999999999992,
+            "position": {
+              "x": 0.036092341919286994,
+              "y": 0.6164005576704468,
+              "z": 1.5795540038080331
+            },
+            "velocity": {
+              "x": 0.1046127428483101,
+              "y": -0.011743569341498446,
+              "z": 3.210543306397379
+            },
+            "quaternion": {
+              "x": -0.00021878544262507086,
+              "y": 0.00839449516986005,
+              "z": -0.0002122775520232747,
+              "w": 0.9999647191386376
+            },
+            "angularVelocity": {
+              "x": -0.0022121538915564234,
+              "y": 0.03647168487612558,
+              "z": 0.003776231086622504
+            }
+          },
+          {
+            "simTime": 2.9833333333333254,
+            "position": {
+              "x": 0.027481849135841917,
+              "y": 0.6068382906625058,
+              "z": 1.6084242272032354
+            },
+            "velocity": {
+              "x": 0.08825417047578954,
+              "y": -0.0084828645217089,
+              "z": 3.2382680927177363
+            },
+            "quaternion": {
+              "x": 0.0007592524292757522,
+              "y": 0.008722498964819657,
+              "z": 0.0011642108209019607,
+              "w": 0.9999609923195614
+            },
+            "angularVelocity": {
+              "x": -0.00039585439347907664,
+              "y": 0.03622178443780834,
+              "z": 0.0009150346016719021
+            }
+          },
+          {
+            "simTime": 2.9916666666666587,
+            "position": {
+              "x": 0.034177750393443625,
+              "y": 0.6060828716317825,
+              "z": 1.6330840008792105
+            },
+            "velocity": {
+              "x": 0.09909064734758616,
+              "y": -0.003471745624654444,
+              "z": 3.2635222038624314
+            },
+            "quaternion": {
+              "x": 0.00007100416169067695,
+              "y": 0.008832886071349962,
+              "z": 0.000306889342697268,
+              "w": 0.9999609396876415
+            },
+            "angularVelocity": {
+              "x": 0.0002814095520191466,
+              "y": 0.037168890829719255,
+              "z": 0.0023745565979346158
+            }
+          }
+        ],
+        "_observation": {
+          "simTime": 2.941666666666659,
+          "position": {
+            "x": 0.030477501454197958,
+            "y": 0.6079133711927466,
+            "z": 1.4712741392072262
+          },
+          "velocity": {
+            "x": 0.08039497947335071,
+            "y": -0.008337917789898987,
+            "z": 3.122500539207137
+          },
+          "quaternion": {
+            "x": 0.0003836037800901789,
+            "y": 0.007085174853468523,
+            "z": 0.0009023098957806649,
+            "w": 0.9999744191639542
+          },
+          "angularVelocity": {
+            "x": 0.0017954735645321857,
+            "y": 0.03214177567827485,
+            "z": 0.0005448126770812247
+          }
+        },
+        "_gasConsumedKg": 5.42738512945943,
+        "_externalGasKg": 0,
+        "_brakeDissipationJ": 341.68669888516376,
+        "_tireDissipationJ": 283.71442780228597,
+        "_driveAccounting": {
+          "torqueBudgetNm": 2841.6,
+          "requestedTorqueNm": 2841.6000000000004,
+          "postTcsTorqueNm": 2841.6,
+          "actualTorqueNm": 2841.6,
+          "mechanicalPowerLimitW": 700000,
+          "mechanicalPowerW": 25859.727330563546,
+          "electricalPowerW": 28733.03036729283,
+          "mechanicalWorkJ": 215.49772775469623,
+          "electricalWorkJ": 239.44191972744025,
+          "powerLimited": false,
+          "airbornePolicy": "unloaded-drive-cut",
+          "shares": [
+            0.25365890376627664,
+            0.24702971329631848,
+            0.25297028670368177,
+            0.24634109623372322
+          ],
+          "corneringDriveScale": 1,
+          "corneringTractionActive": false,
+          "steeringSurfaceMu": 1.2500000000000002,
+          "steeringSpeedMps": 3.2785833190371423,
+          "brakeMechanicalWorkJ": 5.667151840295392,
+          "liftOffBrakeMechanicalWorkJ": 0,
+          "electricalRecoveredWorkJ": 0
+        },
+        "_verticalControl": {
+          "commandMps": 0,
+          "targetMps": 0,
+          "accelerationLimitMps2": 4.5,
+          "braking": false,
+          "pilotActive": false
+        },
+        "_levelRecovery": {
+          "active": false,
+          "status": "inactive",
+          "tiltErrorDeg": 0.053309619404534936,
+          "headingTargetRad": 0,
+          "verticalSupportFeasible": true,
+          "torqueSaturated": false
+        },
+        "_hasPower": true,
+        "_sealQuality": 0,
+        "_sealDistanceSum": 0,
+        "_sealDistanceCount": 0
+      },
+      "body": {
+        "position": {
+          "$type": "Vec3",
+          "values": [
+            0.03609848624429286,
+            0.60934335134829,
+            1.6662858691705458
+          ]
+        },
+        "previousPosition": {
+          "$type": "Vec3",
+          "values": [
+            0.03526228212907247,
+            0.6093400600301735,
+            1.6387475795645836
+          ]
+        },
+        "interpolatedPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.74,
+            0
+          ]
+        },
+        "initPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "velocity": {
+          "$type": "Vec3",
+          "values": [
+            0.10034449382644742,
+            0.0003949581739844561,
+            3.304594752715456
+          ]
+        },
+        "initVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "force": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "mass": 2199.667521604122,
+        "invMass": 0.0004546141588119387,
+        "linearDamping": 0.004,
+        "type": 1,
+        "allowSleep": false,
+        "sleepState": 0,
+        "sleepSpeedLimit": 0.1,
+        "sleepTimeLimit": 1,
+        "timeLastSleepy": 0,
+        "wakeUpAfterNarrowphase": false,
+        "torque": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "quaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0.00003783100164159569,
+            0.008524657289745798,
+            0.00046948955293407295,
+            0.9999635535190607
+          ]
+        },
+        "initQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "previousQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0.00003768661462262123,
+            0.008380348063938442,
+            0.0004636851808047791,
+            0.9999647760506865
+          ]
+        },
+        "interpolatedQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "angularVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0.00002727641934504788,
+            0.0347903987511394,
+            0.0013993955749005095
+          ]
+        },
+        "initAngularVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "shapeOffsets": [
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.05,
+              1.84
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.02,
+              -1.81
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.37,
+              -0.28
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              -0.89,
+              -0.18,
+              1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0.89,
+              -0.18,
+              1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              -0.89,
+              -0.18,
+              -1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0.89,
+              -0.18,
+              -1.42
+            ]
+          }
+        ],
+        "shapeOrientations": [
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0.010298775132701518,
+              0.01029877513270152,
+              0.7070317780911732,
+              0.7070317780911733
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0.01049023451543255,
+              0.010490234515432552,
+              0.7070289633245664,
+              0.7070289633245666
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          }
+        ],
+        "inertia": {
+          "$type": "Vec3",
+          "values": [
+            3497.4713593505544,
+            4135.374940615749,
+            945.8570342897725
+          ]
+        },
+        "invInertia": {
+          "$type": "Vec3",
+          "values": [
+            0.0002859208545987036,
+            0.000241816041921244,
+            0.0010572422297952062
+          ]
+        },
+        "invMassSolve": 0,
+        "invInertiaSolve": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "fixedRotation": false,
+        "angularDamping": 0.065,
+        "linearFactor": {
+          "$type": "Vec3",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        "angularFactor": {
+          "$type": "Vec3",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        "vlambda": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "wlambda": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "collisionFilterGroup": 2,
+        "collisionFilterMask": 1,
+        "collisionResponse": true,
+        "isTrigger": false
+      },
+      "world": {
+        "time": 2.999999999999992,
+        "stepnumber": 360,
+        "dt": 0.008333333333333333,
+        "accumulator": 0,
+        "default_dt": 0.016666666666666666,
+        "quatNormalizeSkip": 0,
+        "quatNormalizeFast": false,
+        "allowSleep": false,
+        "hasActiveBodies": true,
+        "gravity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            -9.81,
+            0
+          ]
+        },
+        "solver": {
+          "iterations": 16,
+          "tolerance": 1e-7
+        },
+        "contacts": [],
+        "collisionPairs": [],
+        "previousCollisionPairs": [],
+        "bodyOverlaps": {
+          "current": [],
+          "previous": []
+        },
+        "shapeOverlaps": {
+          "current": [],
+          "previous": []
+        }
+      }
+    },
+    "sceneConfiguration": null,
+    "sceneConfigurationScope": "Presentation preset and camera at capture time only; camera motion during the recorded run is not replayed. Physical stateLabel excludes presentation.",
+    "initialSimTime": 2.999999999999992,
+    "disturbancePhase": "absolute simulation time and observer RNG state are in physical snapshot",
+    "stateLabel": "fnv1a32-9b7e9932"
+  },
+  "finalSnapshot": {
+    "identity": {
+      "modelVersion": "3.12.0",
+      "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "context": "lab",
+    "physical": {
+      "schema": "roadster-sim-state",
+      "schemaVersion": 1,
+      "modelVersion": "3.12.0",
+      "worldType": "windlab",
+      "geometrySignature": "08604efb",
+      "params": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 2600,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "fixed",
+        "wingDeployment": 0.4,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 650,
+        "initialPressureBar": 330,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 4.6,
+        "verticalAccelerationMps2": 4.5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "finite",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 220,
+        "pitchRateDegS": 78,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 420
+      },
+      "state": {
+        "_wind": {
+          "speedMps": 2.2,
+          "directionDeg": 78,
+          "gustMps": 0.8,
+          "gustPeriodS": 4.3
+        },
+        "_observationConfig": {
+          "enabled": true,
+          "delayMs": 50,
+          "seed": 312,
+          "positionNoiseM": 0.008,
+          "velocityNoiseMps": 0.015,
+          "attitudeNoiseDeg": 0.1,
+          "angularRateNoiseRadS": 0.003
+        },
+        "_nozzleFault": null,
+        "_nozzles": [
+          {
+            "id": "lift-FR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.59,
+                -0.32,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 799.9880437291802,
+            "command": 800,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              -1.42,
+              0,
+              -0.59
+            ]
+          },
+          {
+            "id": "lift-FL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.59,
+                -0.32,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 799.9880437291802,
+            "command": 800,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              -1.42,
+              0,
+              0.59
+            ]
+          },
+          {
+            "id": "lift-RR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.59,
+                -0.32,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 8.756510773525685e-24,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              1.42,
+              0,
+              -0.59
+            ]
+          },
+          {
+            "id": "lift-RL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.59,
+                -0.32,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                1,
+                0
+              ]
+            },
+            "kind": "lift",
+            "force": 8.756510773525685e-24,
+            "command": 0,
+            "maxForce": 20000,
+            "column": [
+              0,
+              1,
+              0,
+              1.42,
+              {
+                "$type": "NegativeZero"
+              },
+              0.59
+            ]
+          },
+          {
+            "id": "roll-FR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.89,
+                -0.22,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              1,
+              0,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              1.42,
+              0.22
+            ]
+          },
+          {
+            "id": "roll-FL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.89,
+                -0.22,
+                1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                -1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              -1,
+              0,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              -1.42,
+              -0.22
+            ]
+          },
+          {
+            "id": "roll-RR",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                -0.89,
+                -0.22,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              1,
+              0,
+              0,
+              0,
+              -1.42,
+              0.22
+            ]
+          },
+          {
+            "id": "roll-RL",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0.89,
+                -0.22,
+                -1.42
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                -1,
+                0,
+                0
+              ]
+            },
+            "kind": "roll",
+            "force": 0,
+            "command": 0,
+            "maxForce": 5500,
+            "column": [
+              -1,
+              0,
+              0,
+              0,
+              1.42,
+              -0.22
+            ]
+          },
+          {
+            "id": "rear-boost",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                -2.07
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                1
+              ]
+            },
+            "kind": "longitudinal",
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "column": [
+              0,
+              0,
+              1,
+              0,
+              {
+                "$type": "NegativeZero"
+              },
+              0
+            ]
+          },
+          {
+            "id": "front-brake",
+            "position": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                2.07
+              ]
+            },
+            "direction": {
+              "$type": "Vec3",
+              "values": [
+                0,
+                0,
+                -1
+              ]
+            },
+            "kind": "longitudinal",
+            "force": 0,
+            "command": 0,
+            "maxForce": 11000,
+            "column": [
+              0,
+              0,
+              -1,
+              {
+                "$type": "NegativeZero"
+              },
+              0,
+              0
+            ]
+          }
+        ],
+        "wheelStates": [
+          {
+            "id": "FR",
+            "steer": 0.000032519613681408965,
+            "rotation": 28.60321514712769,
+            "suspensionLength": 0.27565847252098996,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.21565847252098996,
+              "z": 1.42
+            },
+            "normalLoadN": 6189.8139936772795,
+            "slipAngle": -0.0005084425872141727,
+            "angularVelocityRadS": 2.462779913714458,
+            "relaxedSlip": -0.0005945173255257944,
+            "slipRatio": -0.041978648191837886,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 5.458756413055855,
+            "brakeDemandN": 4415.116921064738,
+            "serviceBrakeDemandN": 4415.116921064738,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 1633.5932607939526,
+            "serviceBrakeTorqueNm": 1633.5932607939526,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 0.18816219120738079,
+              "y": 0,
+              "z": 11.925347974267293
+            },
+            "longitudinalForceN": -4333.057513092901,
+            "lateralForceN": 10.834550989751456,
+            "gripUse": 0.5600260121639847,
+            "lateralSpeedMps": -0.0008221079606701154,
+            "longitudinalSpeedMps": 1.0169139063123236,
+            "lateralDemandN": 10.834550989751456,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 217048.96066968027,
+            "contactSpeedMps": 1.0169139063123236,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": 1603.2312798443734,
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "FL",
+            "steer": 0.000032520276510055027,
+            "rotation": 27.95119027398741,
+            "suspensionLength": 0.2760722395284264,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.2160722395284264,
+              "z": 1.42
+            },
+            "normalLoadN": 6175.466564072438,
+            "slipAngle": -0.0005082989382438611,
+            "angularVelocityRadS": 2.4644452145437237,
+            "relaxedSlip": -0.0005937902569812492,
+            "slipRatio": -0.04198218182518047,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 5.466141193938714,
+            "brakeDemandN": 4404.8830789352605,
+            "serviceBrakeDemandN": 4404.8830789352605,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 1629.8067392060464,
+            "serviceBrakeTorqueNm": 1629.8067392060464,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 1.9522375490309793,
+              "y": 0,
+              "z": 11.687780503592794
+            },
+            "longitudinalForceN": -4322.707629296857,
+            "lateralForceN": 10.834769727002799,
+            "gripUse": 0.5599863476522243,
+            "lateralSpeedMps": -0.0008221245580940229,
+            "longitudinalSpeedMps": 1.017403510876689,
+            "lateralDemandN": 10.834769727002799,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 216545.86078861874,
+            "contactSpeedMps": 1.017403510876689,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": 1599.401822839837,
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "RR",
+            "steer": 0,
+            "rotation": 28.567020205658395,
+            "suspensionLength": 0.31132639015711505,
+            "contact": true,
+            "position": {
+              "x": -0.89,
+              "y": -0.25132639015711505,
+              "z": -1.42
+            },
+            "normalLoadN": 3805.8523563349954,
+            "slipAngle": -0.0000048285115781266135,
+            "angularVelocityRadS": 2.5079061869617068,
+            "relaxedSlip": -0.00012241174043246873,
+            "slipRatio": -0.04676892643395416,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 5.660634098340727,
+            "brakeDemandN": 2945.5521204896177,
+            "serviceBrakeDemandN": 2945.5521204896177,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 1089.8542845811583,
+            "serviceBrakeTorqueNm": 1089.8542845811583,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": -0.19089970784898835,
+              "y": 0,
+              "z": 9.110532833439699
+            },
+            "longitudinalForceN": -2863.880523881015,
+            "lateralForceN": 0.10289215071121374,
+            "gripUse": 0.6019950870584456,
+            "lateralSpeedMps": -0.000007807287655037243,
+            "longitudinalSpeedMps": 1.016913934791821,
+            "lateralDemandN": 0.10289215071121374,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 133454.1392113814,
+            "contactSpeedMps": 1.016913934791821,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": 1059.6357938359756,
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          },
+          {
+            "id": "RL",
+            "steer": 0,
+            "rotation": 27.91345335234145,
+            "suspensionLength": 0.3117401571645516,
+            "contact": true,
+            "position": {
+              "x": 0.89,
+              "y": -0.2517401571645516,
+              "z": -1.42
+            },
+            "normalLoadN": 3791.504926730147,
+            "slipAngle": -0.000004827049938338168,
+            "angularVelocityRadS": 2.509601625785086,
+            "relaxedSlip": -0.00012255283687925868,
+            "slipRatio": -0.046770610738210414,
+            "absPressure": 1,
+            "tcsFactor": 1,
+            "absActive": false,
+            "tcsActive": false,
+            "corneringTractionActive": false,
+            "corneringDriveScale": 1,
+            "wheelEnergyJ": 5.668290288128832,
+            "brakeDemandN": 2934.4478795103814,
+            "serviceBrakeDemandN": 2934.4478795103814,
+            "regenBrakeDemandN": 0,
+            "brakeTorqueNm": 1085.7457154188414,
+            "serviceBrakeTorqueNm": 1085.7457154188414,
+            "regenBrakeTorqueNm": 0,
+            "rollingBrakeTorqueNm": 0,
+            "contactNormalWorld": {
+              "x": 0,
+              "y": 1,
+              "z": 0
+            },
+            "contactPointWorld": {
+              "x": 1.5731756499746101,
+              "y": 0,
+              "z": 8.872965362765198
+            },
+            "longitudinalForceN": -2852.664731359616,
+            "lateralForceN": 0.10289215071048216,
+            "gripUse": 0.6019065860848865,
+            "lateralSpeedMps": -0.000007807287654981732,
+            "longitudinalSpeedMps": 1.01740353935699,
+            "lateralDemandN": 0.10289215071048216,
+            "rollingContactWeight": 0,
+            "drivePowerLimited": false,
+            "requestedDriveTorqueNm": 0,
+            "allocatedDrivePowerW": 132951.03933031962,
+            "contactSpeedMps": 1.01740353935699,
+            "surfaceMu": 1.25,
+            "driveTorqueNm": 0,
+            "tireReactionTorqueNm": 1055.485950603058,
+            "postTcsTorqueRequestNm": 0,
+            "driveMechanicalPowerW": 0
+          }
+        ],
+        "stabilizationMode": "off",
+        "airStabilization": false,
+        "scenario": "windlab",
+        "gasInitialMass": 254.90587600528502,
+        "gasMass": 246.35589064796733,
+        "gasTemperature": 289.24453107790504,
+        "mode": "drive",
+        "suctionEnabled": false,
+        "_fanLevel": 0,
+        "_sealLipExtensions": [
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074,
+          0.074
+        ],
+        "_sealLipContacts": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "simTime": 5.000000000000038,
+        "_accumulator": 0,
+        "_energyUsed": 0.015134645551144472,
+        "_motorWork": 0,
+        "_stepCount": 600,
+        "_heightTarget": 0.6036516929251919,
+        "_headingTarget": 0.1338643098384495,
+        "_holdPositionTarget": null,
+        "_holdQuaternionTarget": null,
+        "_holdActive": false,
+        "_holdFeasible": null,
+        "_holdStatus": "inactive",
+        "_poseTargetExplicit": false,
+        "_poseTakeoffActive": false,
+        "_stabilizationActive": false,
+        "_heightJogging": false,
+        "_stableJogging": false,
+        "_stableHeight": 0.74,
+        "_stableHeading": 0,
+        "_positionTarget": {
+          "$type": "Vec3",
+          "values": [
+            0.8815416863201024,
+            0.6036516929251919,
+            10.406688909229523
+          ]
+        },
+        "_manualQuaternionTarget": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "_manualReferenceRate": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_manualCommandInput": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_manualPoseFeasible": null,
+        "_landingContactTime": 0,
+        "_manualTranslationActive": false,
+        "_maneuver": null,
+        "_rollReference": 0,
+        "_lastVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "_heightIntegral": 0,
+        "_desiredWrench": [
+          0,
+          1600,
+          0,
+          -2272,
+          0,
+          0
+        ],
+        "_achievedWrench": [
+          0,
+          1599.9760874583603,
+          0,
+          -2271.9660441908713,
+          0,
+          0
+        ],
+        "_allocationError": 5.697813284593549e-7,
+        "_gLoad": 1.1963270424999242,
+        "_contactCount": 4,
+        "_suctionForce": 0,
+        "_thrustN": 1599.9760874583603,
+        "_pressureLimited": false,
+        "_motorForceN": 0,
+        "_regenForceN": 0,
+        "_longitudinalAcceleration": -6.537812659464829,
+        "_steerCentre": 0.00003251994509235451,
+        "_massFlowKgS": 2.842515432673621,
+        "_impulseNs": 4870.790087376489,
+        "_effectiveExhaustVelocity": 562.8733160310234,
+        "status": "轮胎接地",
+        "_fault": null,
+        "_thrustWanted": 0,
+        "_lastInput": {
+          "throttle": 0,
+          "steer": 0,
+          "brake": 0.35,
+          "lift": 0,
+          "roll": 0,
+          "pitch": 0,
+          "boost": false,
+          "frontJets": 0.04,
+          "rearJets": 0
+        },
+        "_fallReset": false,
+        "_wing": {
+          "deployment": 0.4,
+          "command": 0.4,
+          "dragN": 0.00018137499009330453,
+          "downforceN": 0.00026601665213684664,
+          "dynamicPressurePa": 0.001591008685028987,
+          "forceBody": {
+            "x": 0,
+            "y": -0.00026601665213684664,
+            "z": -0.00018137499009330453
+          },
+          "position": {
+            "x": 0,
+            "y": 0.445,
+            "z": -2.065
+          },
+          "incidenceRad": -0.1,
+          "applicationPoint": {
+            "x": 0,
+            "y": 0.44999167083234143,
+            "z": -2.0152497917360988
+          }
+        },
+        "_observationSeed": 1538506516,
+        "_observationHistory": [
+          {
+            "simTime": 4.941666666666702,
+            "position": {
+              "x": 0.8753626820200432,
+              "y": 0.6074981640370328,
+              "z": 10.35629636372345
+            },
+            "velocity": {
+              "x": 0.1644009455204214,
+              "y": -0.0027397209388169237,
+              "z": 1.3243135186330892
+            },
+            "quaternion": {
+              "x": 0.006901382172015759,
+              "y": 0.06704728172433443,
+              "z": -0.0011248070024934967,
+              "w": 0.9977252967358805
+            },
+            "angularVelocity": {
+              "x": 0.003466995606309352,
+              "y": -0.003341386355944077,
+              "z": -0.0016064861999718892
+            }
+          },
+          {
+            "simTime": 4.950000000000036,
+            "position": {
+              "x": 0.878678136171845,
+              "y": 0.5959267352968931,
+              "z": 10.358491068165101
+            },
+            "velocity": {
+              "x": 0.16195425711923267,
+              "y": -0.017602476297725943,
+              "z": 1.2940165393178777
+            },
+            "quaternion": {
+              "x": 0.0061213008373495635,
+              "y": 0.0668358033850481,
+              "z": -0.0004818142491787448,
+              "w": 0.9977450941583043
+            },
+            "angularVelocity": {
+              "x": 0.002625782147981774,
+              "y": 0.0014310467233984011,
+              "z": -0.0014638162117965035
+            }
+          },
+          {
+            "simTime": 4.9583333333333695,
+            "position": {
+              "x": 0.8843555610148631,
+              "y": 0.6089854609689519,
+              "z": 10.365558787236377
+            },
+            "velocity": {
+              "x": 0.16212183943980288,
+              "y": -0.01758567011884463,
+              "z": 1.2183481224565211
+            },
+            "quaternion": {
+              "x": 0.006405496626027023,
+              "y": 0.06603012881256826,
+              "z": -0.0006785018014220018,
+              "w": 0.9977968387088001
+            },
+            "angularVelocity": {
+              "x": 0.004107999123637542,
+              "y": -0.001041060319917222,
+              "z": -0.003923070369637773
+            }
+          },
+          {
+            "simTime": 4.966666666666703,
+            "position": {
+              "x": 0.8771518618420516,
+              "y": 0.6113432937816663,
+              "z": 10.387112431971403
+            },
+            "velocity": {
+              "x": 0.16242650255940005,
+              "y": -0.0006830208782793454,
+              "z": 1.1600863257968141
+            },
+            "quaternion": {
+              "x": 0.005750209315965306,
+              "y": 0.06775125412413412,
+              "z": -0.000623083872612246,
+              "w": 0.9976854787075522
+            },
+            "angularVelocity": {
+              "x": 0.0039156495451366175,
+              "y": 0.0007839266518136709,
+              "z": 0.0006973515359189814
+            }
+          },
+          {
+            "simTime": 4.975000000000037,
+            "position": {
+              "x": 0.8855137097165662,
+              "y": 0.606024895295887,
+              "z": 10.386019276818065
+            },
+            "velocity": {
+              "x": 0.14474694560982118,
+              "y": -0.011716205995102038,
+              "z": 1.1179766400380282
+            },
+            "quaternion": {
+              "x": 0.006269286232832973,
+              "y": 0.066734741076008,
+              "z": -0.0009863138962065614,
+              "w": 0.9977505688139432
+            },
+            "angularVelocity": {
+              "x": 0.004875044716270535,
+              "y": -0.002189180363056823,
+              "z": -0.004116421803587647
+            }
+          },
+          {
+            "simTime": 4.983333333333371,
+            "position": {
+              "x": 0.8840957453272228,
+              "y": 0.6029695926093653,
+              "z": 10.405691582301028
+            },
+            "velocity": {
+              "x": 0.15798758778611574,
+              "y": -0.012541102717859685,
+              "z": 1.0509944064587935
+            },
+            "quaternion": {
+              "x": 0.0059025765686631605,
+              "y": 0.06649801968170137,
+              "z": -0.0010230609571556357,
+              "w": 0.9977685735252145
+            },
+            "angularVelocity": {
+              "x": 0.005617527136237664,
+              "y": 0.0023188132746079886,
+              "z": -0.0021576546785377613
+            }
+          },
+          {
+            "simTime": 4.991666666666704,
+            "position": {
+              "x": 0.8841049761524262,
+              "y": 0.5971421257054279,
+              "z": 10.413111232259011
+            },
+            "velocity": {
+              "x": 0.13075978907609903,
+              "y": -0.019945812575046674,
+              "z": 1.0213680773896414
+            },
+            "quaternion": {
+              "x": 0.00555784223984852,
+              "y": 0.06650446729771321,
+              "z": -0.0007846029650697684,
+              "w": 0.9977703396159217
+            },
+            "angularVelocity": {
+              "x": 0.0017554427821984673,
+              "y": 0.00011947745222350061,
+              "z": 0.0004782523600747211
+            }
+          }
+        ],
+        "_observation": {
+          "simTime": 4.941666666666702,
+          "position": {
+            "x": 0.8753626820200432,
+            "y": 0.6074981640370328,
+            "z": 10.35629636372345
+          },
+          "velocity": {
+            "x": 0.1644009455204214,
+            "y": -0.0027397209388169237,
+            "z": 1.3243135186330892
+          },
+          "quaternion": {
+            "x": 0.006901382172015759,
+            "y": 0.06704728172433443,
+            "z": -0.0011248070024934967,
+            "w": 0.9977252967358805
+          },
+          "angularVelocity": {
+            "x": 0.003466995606309352,
+            "y": -0.003341386355944077,
+            "z": -0.0016064861999718892
+          }
+        },
+        "_gasConsumedKg": 8.549985357318043,
+        "_externalGasKg": 0.07477328036012386,
+        "_brakeDissipationJ": 41348.70176692813,
+        "_tireDissipationJ": 2416.280839956773,
+        "_driveAccounting": {
+          "torqueBudgetNm": 0,
+          "requestedTorqueNm": 0,
+          "postTcsTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerLimitW": 700000,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "mechanicalWorkJ": 0,
+          "electricalWorkJ": 0,
+          "powerLimited": false,
+          "airbornePolicy": "unloaded-drive-cut",
+          "shares": [
+            0.31006994381382896,
+            0.30935122969802675,
+            0.19064877030197344,
+            0.18993005618617087
+          ],
+          "corneringDriveScale": 1,
+          "corneringTractionActive": false,
+          "steeringSurfaceMu": 1.25,
+          "steeringSpeedMps": 1.0195402783794747,
+          "brakeMechanicalWorkJ": 115.77753597385743,
+          "liftOffBrakeMechanicalWorkJ": 0,
+          "electricalRecoveredWorkJ": 0
+        },
+        "_verticalControl": {
+          "commandMps": 0,
+          "targetMps": 0,
+          "accelerationLimitMps2": 4.5,
+          "braking": false,
+          "pilotActive": false
+        },
+        "_levelRecovery": {
+          "active": false,
+          "status": "inactive",
+          "tiltErrorDeg": 0.7196703049859058,
+          "headingTargetRad": 0,
+          "verticalSupportFeasible": true,
+          "torqueSaturated": false
+        },
+        "_hasPower": true,
+        "_sealQuality": 0,
+        "_sealDistanceSum": 0,
+        "_sealDistanceCount": 0
+      },
+      "body": {
+        "position": {
+          "$type": "Vec3",
+          "values": [
+            0.8826186564102911,
+            0.6036077752900157,
+            10.414658709268924
+          ]
+        },
+        "previousPosition": {
+          "$type": "Vec3",
+          "values": [
+            0.8815416863201024,
+            0.6036516929251919,
+            10.406688909229523
+          ]
+        },
+        "interpolatedPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0.74,
+            0
+          ]
+        },
+        "initPosition": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "velocity": {
+          "$type": "Vec3",
+          "values": [
+            0.12923641082264326,
+            -0.00527011622114027,
+            0.9563760047280357
+          ]
+        },
+        "initVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "force": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "mass": 2196.4980083880982,
+        "invMass": 0.0004552701601281445,
+        "linearDamping": 0.004,
+        "type": 1,
+        "allowSleep": false,
+        "sleepState": 0,
+        "sleepSpeedLimit": 0.1,
+        "sleepTimeLimit": 1,
+        "timeLastSleepy": 0,
+        "wakeUpAfterNarrowphase": false,
+        "torque": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "quaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0.00628857082511271,
+            0.06687901272588383,
+            -0.00031029947645715253,
+            0.997741226595365
+          ]
+        },
+        "initQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "previousQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0.006272904833300257,
+            0.0668801439057963,
+            -0.0003040019227845108,
+            0.997741251326677
+          ]
+        },
+        "interpolatedQuaternion": {
+          "$type": "Quaternion",
+          "values": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        "angularVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0.003532691339782421,
+            -0.00024936409873636443,
+            -0.00178916453403798
+          ]
+        },
+        "initAngularVelocity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "shapeOffsets": [
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.05,
+              1.84
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.02,
+              -1.81
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0,
+              0.37,
+              -0.28
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              -0.89,
+              -0.18,
+              1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0.89,
+              -0.18,
+              1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              -0.89,
+              -0.18,
+              -1.42
+            ]
+          },
+          {
+            "$type": "Vec3",
+            "values": [
+              0.89,
+              -0.18,
+              -1.42
+            ]
+          }
+        ],
+        "shapeOrientations": [
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0.000011497419677338936,
+              0.000011497419677338937,
+              0.7071067810930746,
+              0.7071067810930747
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0.000011497654022654102,
+              0.000011497654022654104,
+              0.7071067810930708,
+              0.7071067810930709
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          },
+          {
+            "$type": "Quaternion",
+            "values": [
+              0,
+              0,
+              0.7071067811865475,
+              0.7071067811865476
+            ]
+          }
+        ],
+        "inertia": {
+          "$type": "Vec3",
+          "values": [
+            3492.4318333370766,
+            4129.4162557696245,
+            944.4941436068822
+          ]
+        },
+        "invInertia": {
+          "$type": "Vec3",
+          "values": [
+            0.00028633343404285813,
+            0.00024216497879156625,
+            0.0010587678142514989
+          ]
+        },
+        "invMassSolve": 0,
+        "invInertiaSolve": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "fixedRotation": false,
+        "angularDamping": 0.065,
+        "linearFactor": {
+          "$type": "Vec3",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        "angularFactor": {
+          "$type": "Vec3",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        "vlambda": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "wlambda": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            0,
+            0
+          ]
+        },
+        "collisionFilterGroup": 2,
+        "collisionFilterMask": 1,
+        "collisionResponse": true,
+        "isTrigger": false
+      },
+      "world": {
+        "time": 5.000000000000038,
+        "stepnumber": 600,
+        "dt": 0.008333333333333333,
+        "accumulator": 0,
+        "default_dt": 0.016666666666666666,
+        "quatNormalizeSkip": 0,
+        "quatNormalizeFast": false,
+        "allowSleep": false,
+        "hasActiveBodies": true,
+        "gravity": {
+          "$type": "Vec3",
+          "values": [
+            0,
+            -9.81,
+            0
+          ]
+        },
+        "solver": {
+          "iterations": 16,
+          "tolerance": 1e-7
+        },
+        "contacts": [],
+        "collisionPairs": [],
+        "previousCollisionPairs": [],
+        "bodyOverlaps": {
+          "current": [],
+          "previous": []
+        },
+        "shapeOverlaps": {
+          "current": [],
+          "previous": []
+        }
+      }
+    },
+    "sceneConfiguration": null,
+    "sceneConfigurationScope": "Presentation preset and camera at capture time only; camera motion during the recorded run is not replayed. Physical stateLabel excludes presentation.",
+    "initialSimTime": 5.000000000000038,
+    "disturbancePhase": "absolute simulation time and observer RNG state are in physical snapshot",
+    "stateLabel": "fnv1a32-c6190bb4"
+  },
+  "program": null,
+  "lineage": null,
+  "inputRuns": [
+    {
+      "steps": 30,
+      "input": {
+        "throttle": 0.28,
+        "rearJets": 0.05
+      }
+    },
+    {
+      "steps": 30,
+      "input": {
+        "throttle": 0.28,
+        "steer": 0.12,
+        "rearJets": 0.05
+      }
+    },
+    {
+      "steps": 60,
+      "input": {
+        "throttle": 0.28,
+        "steer": 0.12
+      }
+    },
+    {
+      "steps": 30,
+      "input": {
+        "steer": 0.12
+      }
+    },
+    {
+      "steps": 30,
+      "input": {
+        "brake": 0.35
+      }
+    },
+    {
+      "steps": 60,
+      "input": {
+        "brake": 0.35,
+        "frontJets": 0.04
+      }
+    }
+  ],
+  "appliedInputRuns": [
+    {
+      "steps": 30,
+      "input": {
+        "throttle": 0.28,
+        "rearJets": 0.05
+      }
+    },
+    {
+      "steps": 30,
+      "input": {
+        "throttle": 0.28,
+        "steer": 0.12,
+        "rearJets": 0.05
+      }
+    },
+    {
+      "steps": 60,
+      "input": {
+        "throttle": 0.28,
+        "steer": 0.12
+      }
+    },
+    {
+      "steps": 30,
+      "input": {
+        "steer": 0.12
+      }
+    },
+    {
+      "steps": 30,
+      "input": {
+        "brake": 0.35
+      }
+    },
+    {
+      "steps": 60,
+      "input": {
+        "brake": 0.35,
+        "frontJets": 0.04
+      }
+    }
+  ],
+  "inputDefinition": "inputRuns are effective pre-solver driver commands; appliedInputRuns are solver-applied commands after deterministic internal interlocks; playback feeds only inputRuns",
+  "events": [
+    {
+      "step": 0,
+      "simTime": 2.999999999999992,
+      "kind": "event",
+      "type": "record_start",
+      "detail": {
+        "kind": "manual",
+        "context": "lab"
+      }
+    },
+    {
+      "step": 30,
+      "simTime": 3.249999999999991,
+      "kind": "command",
+      "method": "setNozzleFault",
+      "args": [
+        {
+          "id": "rear-boost",
+          "scale": 0.8
+        }
+      ],
+      "accepted": true,
+      "error": null
+    },
+    {
+      "step": 60,
+      "simTime": 3.4999999999999902,
+      "kind": "command",
+      "method": "setSupplyMode",
+      "args": [
+        "bench"
+      ],
+      "accepted": true,
+      "error": null
+    },
+    {
+      "step": 90,
+      "simTime": 3.7499999999999893,
+      "kind": "command",
+      "method": "clearNozzleFault",
+      "args": [],
+      "accepted": true,
+      "error": null
+    },
+    {
+      "step": 120,
+      "simTime": 3.9999999999999885,
+      "kind": "command",
+      "method": "setSupplyMode",
+      "args": [
+        "finite"
+      ],
+      "accepted": true,
+      "error": null
+    },
+    {
+      "step": 150,
+      "simTime": 4.250000000000001,
+      "kind": "command",
+      "method": "setWing",
+      "args": [
+        {
+          "mode": "fixed",
+          "deployment": 0.4
+        }
+      ],
+      "accepted": true,
+      "error": null
+    },
+    {
+      "step": 240,
+      "simTime": 5.000000000000038,
+      "kind": "event",
+      "type": "record_finish",
+      "detail": {
+        "status": "completed",
+        "reason": "现场记录结束"
+      }
+    }
+  ],
+  "summary": {
+    "source": "all fixed 120 Hz post-integration states; independent of stored display curve",
+    "version": 1,
+    "count": 240,
+    "positionCount": 0,
+    "sumPositionSquared": 0,
+    "peakPositionErrorM": null,
+    "peakAttitudeErrorDeg": 7.7242810805783275,
+    "allocationCount": 240,
+    "saturatedCount": 0,
+    "gasThroughputKg": 3.197373508218737,
+    "onboardDischargedKg": 3.1226002278586145,
+    "externalSupplyKg": 0.07477328036012386,
+    "energyUsedKWh": 0.010457311510244432,
+    "peakSpeedMps": 6.164674331365949,
+    "minimumHeightM": 0.595854103257132,
+    "maximumHeightM": 0.6093353585660101,
+    "rmsPositionErrorM": null,
+    "saturationFraction": 0,
+    "gasRemainingKg": 246.35589064796733,
+    "finalPosition": {
+      "x": 0.8826186564102911,
+      "y": 0.6036077752900157,
+      "z": 10.414658709268924
+    },
+    "finalVelocity": {
+      "x": 0.12923641082264326,
+      "y": -0.00527011622114027,
+      "z": 0.9563760047280357
+    },
+    "finalQuaternion": {
+      "x": 0.00628857082511271,
+      "y": 0.06687901272588383,
+      "z": -0.00031029947645715253,
+      "w": 0.997741226595365
+    },
+    "finalAngularVelocity": {
+      "x": 0.003532691339782421,
+      "y": -0.00024936409873636443,
+      "z": -0.00178916453403798
+    },
+    "finalFault": null
+  },
+  "sampling": {
+    "source": "simulation time",
+    "rawHz": 20,
+    "rawCount": 41,
+    "storedCount": 41,
+    "decimated": false,
+    "uniform": true,
+    "storedIntervalS": 0.05,
+    "minIntervalS": 0.04999999999999982,
+    "maxIntervalS": 0.050000000000000044,
+    "note": "原始 20 Hz 样本含初态和必要的最后端点；非整采样终止时最后间隔可能缩短。"
+  },
+  "samples": [
+    {
+      "step": 0,
+      "timeS": 0,
+      "simTime": 2.999999999999992,
+      "position": {
+        "x": 0.03609848624429286,
+        "y": 0.60934335134829,
+        "z": 1.6662858691705458
+      },
+      "velocity": {
+        "x": 0.10034449382644742,
+        "y": 0.0003949581739844561,
+        "z": 3.304594752715456
+      },
+      "quaternion": {
+        "x": 0.00003783100164159569,
+        "y": 0.008524657289745798,
+        "z": 0.00046948955293407295,
+        "w": 0.9999635535190607
+      },
+      "angularVelocity": {
+        "x": 0.00002727641934504788,
+        "y": 0.0347903987511394,
+        "z": 0.0013993955749005095
+      },
+      "heightM": 0.60934335134829,
+      "targetHeightM": 0.6093400600301735,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 0.978355623909959,
+      "speedMps": 3.306117912765328,
+      "rollDeg": 0.05383454241417241,
+      "pitchDeg": -0.003876332821671176,
+      "pressureBar": 320.2200654408818,
+      "gasMassKg": 249.47849087582568,
+      "tankTemperatureK": 290.6506102180102,
+      "massFlowKgS": 5.671240647844646,
+      "supplyMode": "finite",
+      "allocationError": 1.7031152296750907e-11,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        9.225216402318663,
+        9.053546953954937,
+        9.221355321314977,
+        9.049617665938241
+      ],
+      "wheelSlip": [
+        0.021965060186345003,
+        0.021965180668834933,
+        0.02196502206516745,
+        0.021965248031742386
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 6,
+      "timeS": 0.05,
+      "simTime": 3.049999999999992,
+      "position": {
+        "x": 0.041265785876616584,
+        "y": 0.6089804454101488,
+        "z": 1.8357231995201257
+      },
+      "velocity": {
+        "x": 0.10433443293090283,
+        "y": -0.01400809371468956,
+        "z": 3.4486939024247203
+      },
+      "quaternion": {
+        "x": -0.000014259006817734948,
+        "y": 0.009361232835583228,
+        "z": 0.0004320985635072638,
+        "w": 0.9999560892395778
+      },
+      "angularVelocity": {
+        "x": -0.00622670159839223,
+        "y": 0.03073782981653721,
+        "z": -0.0051737911159493895
+      },
+      "heightM": 0.6089804454101488,
+      "targetHeightM": 0.6090971795244379,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.073877378924766,
+      "speedMps": 3.4503002091420942,
+      "rollDeg": 0.04949738410347501,
+      "pitchDeg": 0.002097410094741555,
+      "pressureBar": 319.8335772970371,
+      "gasMassKg": 249.26250594891783,
+      "tankTemperatureK": 290.55135437418744,
+      "massFlowKgS": 3.8330465861745178,
+      "supplyMode": "finite",
+      "allocationError": 0.0038696773560324233,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        9.59015877147411,
+        9.432317104396477,
+        9.588608516530451,
+        9.430736248974217
+      ],
+      "wheelSlip": [
+        0.01860901379352743,
+        0.018608879810461224,
+        0.018608602165299564,
+        0.018609207164548218
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 12,
+      "timeS": 0.1,
+      "simTime": 3.0999999999999917,
+      "position": {
+        "x": 0.04645485659072185,
+        "y": 0.6079119918049115,
+        "z": 2.0123533387469035
+      },
+      "velocity": {
+        "x": 0.10299278729390177,
+        "y": -0.025241899092485913,
+        "z": 3.5925266603092214
+      },
+      "quaternion": {
+        "x": -0.00026286519331019254,
+        "y": 0.010007610179426148,
+        "z": 0.00022360631966157236,
+        "w": 0.9999498630634441
+      },
+      "angularVelocity": {
+        "x": -0.012844579950798832,
+        "y": 0.020432777743950553,
+        "z": -0.010434205057742669
+      },
+      "heightM": 0.6079119918049115,
+      "targetHeightM": 0.6081223409640155,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.1474884890171635,
+      "speedMps": 3.594091327823611,
+      "rollDeg": 0.02532066592441158,
+      "pitchDeg": 0.030377052473236736,
+      "pressureBar": 319.5073748691195,
+      "gasMassKg": 249.07998848358744,
+      "tankTemperatureK": 290.46770641257734,
+      "massFlowKgS": 3.5846555404003966,
+      "supplyMode": "finite",
+      "allocationError": 0.0005237038810129564,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        9.965618423795961,
+        9.856591758559812,
+        9.968362405368131,
+        9.859320511444185
+      ],
+      "wheelSlip": [
+        0.018033141287273666,
+        0.018032856145823815,
+        0.01803395144990742,
+        0.018033195882619212
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 18,
+      "timeS": 0.15,
+      "simTime": 3.1499999999999915,
+      "position": {
+        "x": 0.05152228674833183,
+        "y": 0.606573780523461,
+        "z": 2.1961726866552023
+      },
+      "velocity": {
+        "x": 0.10008364289655797,
+        "y": -0.026646162161840424,
+        "z": 3.736268990569634
+      },
+      "quaternion": {
+        "x": -0.0005975162505791357,
+        "y": 0.010379981243664743,
+        "z": -0.00004741847068810771,
+        "w": 0.9999459468967312
+      },
+      "angularVelocity": {
+        "x": -0.01328244186284764,
+        "y": 0.009737321007991078,
+        "z": -0.010243515422028008
+      },
+      "heightM": 0.606573780523461,
+      "targetHeightM": 0.6067958318748097,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.1914611844477152,
+      "speedMps": 3.7377042049131757,
+      "rollDeg": -0.006144187786556633,
+      "pitchDeg": 0.06841023162798908,
+      "pressureBar": 319.18941032373067,
+      "gasMassKg": 248.9019796568357,
+      "tankTemperatureK": 290.3861702314605,
+      "massFlowKgS": 3.551463189585419,
+      "supplyMode": "finite",
+      "allocationError": 0.00007087561306900396,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        10.329870095345074,
+        10.275777152986288,
+        10.335277769981797,
+        10.281193616831356
+      ],
+      "wheelSlip": [
+        0.017624819571291837,
+        0.017623354735200467,
+        0.017625148196080704,
+        0.017624746508000673
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 24,
+      "timeS": 0.2,
+      "simTime": 3.1999999999999913,
+      "position": {
+        "x": 0.05643286218660306,
+        "y": 0.6053761635977948,
+        "z": 2.3871754172000372
+      },
+      "velocity": {
+        "x": 0.09687193497355981,
+        "y": -0.021382404182706666,
+        "z": 3.879887292548522
+      },
+      "quaternion": {
+        "x": -0.0008891033142522243,
+        "y": 0.010528559089817565,
+        "z": -0.00026940016649037237,
+        "w": 0.9999441416210904
+      },
+      "angularVelocity": {
+        "x": -0.009856866084309447,
+        "y": 0.0029386062985004074,
+        "z": -0.007037494773453666
+      },
+      "heightM": 0.6053761635977948,
+      "targetHeightM": 0.6055543502993174,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.2111942805591376,
+      "speedMps": 3.8811553411160515,
+      "rollDeg": -0.03194200142811548,
+      "pitchDeg": 0.10155307003659665,
+      "pressureBar": 318.87264081684384,
+      "gasMassKg": 248.72455965746047,
+      "tankTemperatureK": 290.30491805341705,
+      "massFlowKgS": 3.5473992952407944,
+      "supplyMode": "finite",
+      "allocationError": 0.000009591971169260977,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        10.698058465273151,
+        10.681574575176645,
+        10.704554762451684,
+        10.688077843442558
+      ],
+      "wheelSlip": [
+        0.017413363584847984,
+        0.017412772517897395,
+        0.01741438640154448,
+        0.017414456089284432
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 30,
+      "timeS": 0.25,
+      "simTime": 3.249999999999991,
+      "position": {
+        "x": 0.06118890263393569,
+        "y": 0.6045369804292658,
+        "z": 2.585356340970911
+      },
+      "velocity": {
+        "x": 0.09396196266862486,
+        "y": -0.01336755623402014,
+        "z": 4.023412573158921
+      },
+      "quaternion": {
+        "x": -0.0010778051494758898,
+        "y": 0.010566321127033264,
+        "z": -0.0003992641298280068,
+        "w": 0.99994351429571
+      },
+      "angularVelocity": {
+        "x": -0.005355968856366082,
+        "y": 0.0007020757717566382,
+        "z": -0.003205564383505701
+      },
+      "heightM": 0.6045369804292658,
+      "targetHeightM": 0.604648376731216,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.2179765989867115,
+      "speedMps": 4.024531808278013,
+      "rollDeg": -0.04705484705478008,
+      "pitchDeg": 0.12301705703406757,
+      "pressureBar": 318.55611328528283,
+      "gasMassKg": 248.5471979110887,
+      "tankTemperatureK": 290.22370230831444,
+      "massFlowKgS": 3.547278255923339,
+      "supplyMode": "finite",
+      "allocationError": 0.0000012981321349833834,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        11.077509360682297,
+        11.075244976423546,
+        11.084122694311073,
+        11.081854631157395
+      ],
+      "wheelSlip": [
+        0.017361540450632935,
+        0.017361674854635866,
+        0.01736338035521551,
+        0.017363163283375425
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 36,
+      "timeS": 0.3,
+      "simTime": 3.299999999999991,
+      "position": {
+        "x": 0.06606897613672409,
+        "y": 0.604099359105784,
+        "z": 2.790702560496408
+      },
+      "velocity": {
+        "x": 0.10348385775895041,
+        "y": -0.00563288477887031,
+        "z": 4.166422676355938
+      },
+      "quaternion": {
+        "x": -0.001159702927344277,
+        "y": 0.010663252945125578,
+        "z": -0.0003218121853085865,
+        "w": 0.9999424216236984
+      },
+      "angularVelocity": {
+        "x": -0.001230670220975086,
+        "y": 0.01037381211205828,
+        "z": 0.012464520303245004
+      },
+      "heightM": 0.604099359105784,
+      "targetHeightM": 0.6041462998122746,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.2297006896729508,
+      "speedMps": 4.167711429101177,
+      "rollDeg": -0.03829200472681606,
+      "pitchDeg": 0.13249140446111096,
+      "pressureBar": 318.2396987105601,
+      "gasMassKg": 248.36982259258878,
+      "tankTemperatureK": 290.14248940905395,
+      "massFlowKgS": 3.5476910914715662,
+      "supplyMode": "finite",
+      "allocationError": 1.7568308016033052e-7,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        11.480822177787262,
+        11.44528150171715,
+        11.488612464553867,
+        11.453131812265841
+      ],
+      "wheelSlip": [
+        0.01741134555296161,
+        0.017413907150999386,
+        0.017412230641718207,
+        0.01741425811671708
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 42,
+      "timeS": 0.35,
+      "simTime": 3.3499999999999908,
+      "position": {
+        "x": 0.07205645016138769,
+        "y": 0.6039965789556274,
+        "z": 3.003162146262107
+      },
+      "velocity": {
+        "x": 0.13336956738010752,
+        "y": 0.0001609231943404581,
+        "z": 4.3081428580361685
+      },
+      "quaternion": {
+        "x": -0.0011557754839219728,
+        "y": 0.011245574025980294,
+        "z": 0.00025651806063787787,
+        "w": 0.9999360656793721
+      },
+      "angularVelocity": {
+        "x": 0.0018007970798843325,
+        "y": 0.038413498742004545,
+        "z": 0.03195112098074287
+      },
+      "heightM": 0.6039965789556274,
+      "targetHeightM": 0.6039952379290079,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.295796991026548,
+      "speedMps": 4.310206764489086,
+      "rollDeg": 0.027903613560663905,
+      "pitchDeg": 0.1327643272485708,
+      "pressureBar": 317.9233795809337,
+      "gasMassKg": 248.19242397047086,
+      "tankTemperatureK": 290.06127474450744,
+      "massFlowKgS": 3.5481763825667456,
+      "supplyMode": "finite",
+      "allocationError": 2.3776119409102175e-8,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        11.937661861841798,
+        11.77233279287597,
+        11.941781290370345,
+        11.776476916161094
+      ],
+      "wheelSlip": [
+        0.017509158966640414,
+        0.01751317861023351,
+        0.017511956312069796,
+        0.01751400729648672
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 48,
+      "timeS": 0.4,
+      "simTime": 3.3999999999999906,
+      "position": {
+        "x": 0.07982138930600662,
+        "y": 0.6041109837020984,
+        "z": 3.2226817440090496
+      },
+      "velocity": {
+        "x": 0.1714321088404852,
+        "y": 0.0034773579019423953,
+        "z": 4.449101172030488
+      },
+      "quaternion": {
+        "x": -0.0011002485796679487,
+        "y": 0.01261377767387481,
+        "z": 0.001129260909064664,
+        "w": 0.9999192001535206
+      },
+      "angularVelocity": {
+        "x": 0.003102053223153369,
+        "y": 0.07029781987120193,
+        "z": 0.034831282926127125
+      },
+      "heightM": 0.6041109837020984,
+      "targetHeightM": 0.6040820057195821,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.4567191114555635,
+      "speedMps": 4.452404103282017,
+      "rollDeg": 0.1278034007324197,
+      "pitchDeg": 0.12770138896970848,
+      "pressureBar": 317.60715347340823,
+      "gasMassKg": 248.01500071785455,
+      "tankTemperatureK": 289.98005762715655,
+      "massFlowKgS": 3.548671674692148,
+      "supplyMode": "finite",
+      "allocationError": 3.217747854083854e-9,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        12.415581185269179,
+        12.087656665774805,
+        12.412340098362531,
+        12.084193427983614
+      ],
+      "wheelSlip": [
+        0.017615683260387618,
+        0.017619287971878603,
+        0.017617110423047585,
+        0.0176201307597564
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 54,
+      "timeS": 0.45,
+      "simTime": 3.4499999999999904,
+      "position": {
+        "x": 0.08956320645236211,
+        "y": 0.6043249772479757,
+        "z": 3.4492463181430315
+      },
+      "velocity": {
+        "x": 0.21185465087624705,
+        "y": 0.004584131037816767,
+        "z": 4.590014418225772
+      },
+      "quaternion": {
+        "x": -0.0010302318723686827,
+        "y": 0.014660266726759866,
+        "z": 0.0019017957518519203,
+        "w": 0.9998901931585826
+      },
+      "angularVelocity": {
+        "x": 0.00289177362135449,
+        "y": 0.09117621477813559,
+        "z": 0.025842634910190374
+      },
+      "heightM": 0.6043249772479757,
+      "targetHeightM": 0.6042867761559939,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.698190080218338,
+      "speedMps": 4.5949032380318675,
+      "rollDeg": 0.2161760761913607,
+      "pitchDeg": 0.12123791166156937,
+      "pressureBar": 317.2910200068019,
+      "gasMassKg": 247.8375526454322,
+      "tankTemperatureK": 289.89883790068103,
+      "massFlowKgS": 3.5491685148962913,
+      "supplyMode": "finite",
+      "allocationError": 4.3547481351438945e-10,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        12.870703186459744,
+        12.427373497804155,
+        12.861813784121278,
+        12.417993686670004
+      ],
+      "wheelSlip": [
+        0.017701859018499775,
+        0.017703617180147593,
+        0.017702770959141446,
+        0.017704738909649038
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 60,
+      "timeS": 0.5,
+      "simTime": 3.4999999999999902,
+      "position": {
+        "x": 0.10139504974399484,
+        "y": 0.6045469858100763,
+        "z": 3.682859572575136
+      },
+      "velocity": {
+        "x": 0.25465138646952445,
+        "y": 0.00418825155933325,
+        "z": 4.731021057413332
+      },
+      "quaternion": {
+        "x": -0.0009721864484652288,
+        "y": 0.017053913234694924,
+        "z": 0.002418685138876915,
+        "w": 0.999851173354861
+      },
+      "angularVelocity": {
+        "x": 0.0019209260952841292,
+        "y": 0.09871463475706997,
+        "z": 0.015495382596802913
+      },
+      "heightM": 0.6045469858100763,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 1.977030449694395,
+      "speedMps": 4.737871369694447,
+      "rollDeg": 0.27522139519565275,
+      "pitchDeg": 0.11611453829271705,
+      "pressureBar": 316.97497907628457,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 3.549665759568282,
+      "supplyMode": "finite",
+      "allocationError": 5.89351062402125e-11,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        13.290771611294641,
+        12.800836537264695,
+        13.279173930034661,
+        12.788626150084749
+      ],
+      "wheelSlip": [
+        0.017756988489710093,
+        0.01775456368871732,
+        0.017756786033332323,
+        0.01775562418478882
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 66,
+      "timeS": 0.55,
+      "simTime": 3.54999999999999,
+      "position": {
+        "x": 0.11542178083481769,
+        "y": 0.604101514118901,
+        "z": 3.9235180499410465
+      },
+      "velocity": {
+        "x": 0.2991978679393208,
+        "y": -0.02051547562920403,
+        "z": 4.871769781395971
+      },
+      "quaternion": {
+        "x": -0.001163509465694084,
+        "y": 0.019534442581668428,
+        "z": 0.0027054478545006167,
+        "w": 0.9998048471330059
+      },
+      "angularVelocity": {
+        "x": -0.019151591935951374,
+        "y": 0.09918999133068489,
+        "z": 0.008085951683573726
+      },
+      "heightM": 0.604101514118901,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 2.2639256339251292,
+      "speedMps": 4.880991810261791,
+      "rollDeg": 0.307358873960441,
+      "pitchDeg": 0.13935857855566,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 0.48040624036127977,
+      "supplyMode": "bench",
+      "allocationError": 0.0064494622718715595,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        13.706658761202524,
+        13.211557456746261,
+        13.69830276612785,
+        13.202576862773395
+      ],
+      "wheelSlip": [
+        0.017249587338382597,
+        0.01724536790648792,
+        0.01725136623766978,
+        0.017249315767358653
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 72,
+      "timeS": 0.6,
+      "simTime": 3.59999999999999,
+      "position": {
+        "x": 0.13168151185968724,
+        "y": 0.6024307730022439,
+        "z": 4.171202729371795
+      },
+      "velocity": {
+        "x": 0.34349898343890045,
+        "y": -0.040336253968677516,
+        "z": 5.012184307471216
+      },
+      "quaternion": {
+        "x": -0.0018457854112684676,
+        "y": 0.02200809056650209,
+        "z": 0.002823614843577453,
+        "w": 0.9997521013856623
+      },
+      "angularVelocity": {
+        "x": -0.03314099349793899,
+        "y": 0.09899421228663208,
+        "z": 0.0022107522836700773
+      },
+      "heightM": 0.6024307730022439,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 2.5516061937155396,
+      "speedMps": 5.024102914657352,
+      "rollDeg": 0.31883121922356233,
+      "pitchDeg": 0.2185805159100688,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 0.06501591460793006,
+      "supplyMode": "bench",
+      "allocationError": 0.0008728398032875852,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        14.110706314384819,
+        13.619239239807824,
+        14.107640643079547,
+        13.615550183818419
+      ],
+      "wheelSlip": [
+        0.016443772726288462,
+        0.01644062359677937,
+        0.01644530009030426,
+        0.016444174352482275
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 78,
+      "timeS": 0.65,
+      "simTime": 3.6499999999999897,
+      "position": {
+        "x": 0.15008269960398823,
+        "y": 0.6002530681998554,
+        "z": 4.425903478493839
+      },
+      "velocity": {
+        "x": 0.38515283214873675,
+        "y": -0.04380680564868306,
+        "z": 5.152445334891079
+      },
+      "quaternion": {
+        "x": -0.002680660064450966,
+        "y": 0.024512092631442117,
+        "z": 0.002792006183909057,
+        "w": 0.9996920406194678
+      },
+      "angularVelocity": {
+        "x": -0.032337056121499834,
+        "y": 0.10175548730365494,
+        "z": -0.003418878527863384
+      },
+      "heightM": 0.6002530681998554,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 2.8439731417674996,
+      "speedMps": 5.167006354686839,
+      "rollDeg": 0.31231842783478975,
+      "pitchDeg": 0.31493040980822035,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 0.00879894721835164,
+      "supplyMode": "bench",
+      "allocationError": 0.00011812602199811466,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        14.49982280329395,
+        13.9989960558402,
+        14.499490649616964,
+        13.998003067329547
+      ],
+      "wheelSlip": [
+        0.015874024409867255,
+        0.01587233100280197,
+        0.015876800997571897,
+        0.015876178723962856
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 84,
+      "timeS": 0.7,
+      "simTime": 3.6999999999999895,
+      "position": {
+        "x": 0.1705056700996167,
+        "y": 0.5982623590873083,
+        "z": 4.6876122373407725
+      },
+      "velocity": {
+        "x": 0.42501687204340227,
+        "y": -0.03584679781281443,
+        "z": 5.292521755967146
+      },
+      "quaternion": {
+        "x": -0.0033737123332294255,
+        "y": 0.027115521684331234,
+        "z": 0.002652561329519727,
+        "w": 0.999623094204647
+      },
+      "angularVelocity": {
+        "x": -0.023210327654108385,
+        "y": 0.10659970828186893,
+        "z": -0.006304180101360504
+      },
+      "heightM": 0.5982623590873083,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 3.1462822136097492,
+      "speedMps": 5.309680863462563,
+      "rollDeg": 0.29337198397053543,
+      "pitchDeg": 0.3946984311704491,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 0.0011908080139796248,
+      "supplyMode": "bench",
+      "allocationError": 0.000015986618644729194,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        14.88433055784803,
+        14.361927427661726,
+        14.884275402114236,
+        14.361161689014436
+      ],
+      "wheelSlip": [
+        0.015577454539880348,
+        0.015576746825224256,
+        0.015580647642856197,
+        0.015581113629150989
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 90,
+      "timeS": 0.75,
+      "simTime": 3.7499999999999893,
+      "position": {
+        "x": 0.1929224604897766,
+        "y": 0.5968371623122091,
+        "z": 4.956317365809001
+      },
+      "velocity": {
+        "x": 0.46512087931107426,
+        "y": -0.02298024699039645,
+        "z": 5.432334174057502
+      },
+      "quaternion": {
+        "x": -0.003803098575983821,
+        "y": 0.02984076743869325,
+        "z": 0.0024948730251081737,
+        "w": 0.9995443165005141
+      },
+      "angularVelocity": {
+        "x": -0.012168953105164011,
+        "y": 0.11128458199801554,
+        "z": -0.005645774934274494
+      },
+      "heightM": 0.5968371623122091,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 3.4595194008165495,
+      "speedMps": 5.452258257158757,
+      "rollDeg": 0.2727656430581385,
+      "pitchDeg": 0.4441400731578712,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 0.00016115833985236078,
+      "supplyMode": "bench",
+      "allocationError": 0.0000021635535622801386,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        15.268996853274798,
+        14.723576712167478,
+        15.267774442059649,
+        14.72159222432796
+      ],
+      "wheelSlip": [
+        0.015494483471106997,
+        0.015493071041287039,
+        0.015497325310530236,
+        0.015497151503753727
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 96,
+      "timeS": 0.8,
+      "simTime": 3.799999999999989,
+      "position": {
+        "x": 0.21737756074538933,
+        "y": 0.5960676023620057,
+        "z": 5.232004282614652
+      },
+      "velocity": {
+        "x": 0.5064288044198173,
+        "y": -0.010244360666920194,
+        "z": 5.571838973700439
+      },
+      "quaternion": {
+        "x": -0.0039777569081188525,
+        "y": 0.032668913519826134,
+        "z": 0.002387557379543334,
+        "w": 0.9994554612933854
+      },
+      "angularVelocity": {
+        "x": -0.0031603081877280012,
+        "y": 0.11490790203172162,
+        "z": -0.0032519548570571267
+      },
+      "heightM": 0.5960676023620057,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 3.781827478952185,
+      "speedMps": 5.594815870939697,
+      "rollDeg": 0.2585632567458819,
+      "pitchDeg": 0.4645122600645238,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 0.00002181040956986154,
+      "supplyMode": "bench",
+      "allocationError": 2.9280513414876505e-7,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        15.656420638433785,
+        15.092438794393958,
+        15.653643624834343,
+        15.088877317805743
+      ],
+      "wheelSlip": [
+        0.015550695182242454,
+        0.01554874065505867,
+        0.015553075336053244,
+        0.015553115884735848
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 102,
+      "timeS": 0.85,
+      "simTime": 3.849999999999989,
+      "position": {
+        "x": 0.24394414909113282,
+        "y": 0.595854103257132,
+        "z": 5.514656330123599
+      },
+      "velocity": {
+        "x": 0.5493842831982337,
+        "y": -0.0005325763312191455,
+        "z": 5.710988051697265
+      },
+      "quaternion": {
+        "x": -0.0039720936207220696,
+        "y": 0.03557653408778008,
+        "z": 0.0023506078998594047,
+        "w": 0.9993562964914319
+      },
+      "angularVelocity": {
+        "x": 0.0023478879342234958,
+        "y": 0.11782763573654793,
+        "z": -0.000654355885634514
+      },
+      "heightM": 0.595854103257132,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 4.1118178090117965,
+      "speedMps": 5.737351993811405,
+      "rollDeg": 0.25300225693725037,
+      "pitchDeg": 0.464463382995639,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 0.0000029517179566437403,
+      "supplyMode": "bench",
+      "allocationError": 3.96268657631575e-8,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        16.048476172538876,
+        15.469557253271532,
+        16.044387218172208,
+        15.464645124029365
+      ],
+      "wheelSlip": [
+        0.01567380683440631,
+        0.015672378156347203,
+        0.015677957583410614,
+        0.015677001161932567
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 108,
+      "timeS": 0.9,
+      "simTime": 3.899999999999989,
+      "position": {
+        "x": 0.27272048867460796,
+        "y": 0.5960104065144554,
+        "z": 5.8042535526013195
+      },
+      "velocity": {
+        "x": 0.594547322564244,
+        "y": 0.005184403563588045,
+        "z": 5.8497046900648915
+      },
+      "quaternion": {
+        "x": -0.0038731815850403485,
+        "y": 0.03855380847869493,
+        "z": 0.0023793120883233753,
+        "w": 0.9992461864776787
+      },
+      "angularVelocity": {
+        "x": 0.004594373260818827,
+        "y": 0.12062080406851441,
+        "z": 0.0016887160506687806
+      },
+      "heightM": 0.5960104065144554,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 4.449660464465675,
+      "speedMps": 5.8798433956846,
+      "rollDeg": 0.25534092892608845,
+      "pitchDeg": 0.454015760014655,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 3.994715856969764e-7,
+      "supplyMode": "bench",
+      "allocationError": 5.362913101836153e-9,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        16.445568734094643,
+        15.85253350230834,
+        16.440478823902012,
+        15.846650419183407
+      ],
+      "wheelSlip": [
+        0.01581061429821521,
+        0.015808484572792863,
+        0.01581357211895205,
+        0.015814280393661593
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 114,
+      "timeS": 0.95,
+      "simTime": 3.9499999999999886,
+      "position": {
+        "x": 0.303832691183372,
+        "y": 0.5963433861259477,
+        "z": 6.100772065762231
+      },
+      "velocity": {
+        "x": 0.6424309256779959,
+        "y": 0.007272629072454713,
+        "z": 5.987913694194904
+      },
+      "quaternion": {
+        "x": -0.0037503769563802416,
+        "y": 0.041601701325544756,
+        "z": 0.0024632046718871857,
+        "w": 0.9991241993577423
+      },
+      "angularVelocity": {
+        "x": 0.004599990418005894,
+        "y": 0.12354505297243006,
+        "z": 0.0036445745070414165
+      },
+      "heightM": 0.5963433861259477,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 4.7962515984962595,
+      "speedMps": 6.022282025489007,
+      "rollDeg": 0.2641452111740901,
+      "pitchDeg": 0.4411321138473975,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 5.406260019527911e-8,
+      "supplyMode": "bench",
+      "allocationError": 7.25791363610337e-10,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        16.846300665614805,
+        16.23851778305769,
+        16.840556923811864,
+        16.231966477306887
+      ],
+      "wheelSlip": [
+        0.015923224415328213,
+        0.015920804982835546,
+        0.015926383122863343,
+        0.015926360111198228
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 120,
+      "timeS": 1,
+      "simTime": 3.9999999999999885,
+      "position": {
+        "x": 0.3374259310339403,
+        "y": 0.5967007416464049,
+        "z": 6.4041847885859395
+      },
+      "velocity": {
+        "x": 0.6933155167602792,
+        "y": 0.006784935600647505,
+        "z": 6.125559335331797
+      },
+      "quaternion": {
+        "x": -0.0036450291695461884,
+        "y": 0.04472354036998489,
+        "z": 0.0025891870434421155,
+        "w": 0.9989893967453216
+      },
+      "angularVelocity": {
+        "x": 0.0034875150301850446,
+        "y": 0.12656684283126754,
+        "z": 0.005073893257636012
+      },
+      "heightM": 0.5967007416464049,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 5.152221836185814,
+      "speedMps": 6.164674331365949,
+      "rollDeg": 0.2777275069116169,
+      "pitchDeg": 0.43054093737382554,
+      "pressureBar": 330,
+      "gasMassKg": 247.66007971784487,
+      "tankTemperatureK": 289.81761548058284,
+      "massFlowKgS": 7.316577309935852e-9,
+      "supplyMode": "bench",
+      "allocationError": 9.822517976489233e-11,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        17.24850935683125,
+        16.625394499398727,
+        17.242376432697142,
+        16.61844928026249
+      ],
+      "wheelSlip": [
+        0.015995625499011585,
+        0.015992321671953406,
+        0.01599913716409526,
+        0.015998461126733296
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 126,
+      "timeS": 1.05,
+      "simTime": 4.049999999999991,
+      "position": {
+        "x": 0.37299120401352115,
+        "y": 0.5969903197395002,
+        "z": 6.70879852189949
+      },
+      "velocity": {
+        "x": 0.7241741026441398,
+        "y": 0.004986331929897175,
+        "z": 6.066154640268715
+      },
+      "quaternion": {
+        "x": -0.002792895854784605,
+        "y": 0.047819617556610065,
+        "z": 0.002636693286952824,
+        "w": 0.9988486030214961
+      },
+      "angularVelocity": {
+        "x": 0.056544884726982735,
+        "y": 0.12220161320281955,
+        "z": -0.003723942036284521
+      },
+      "heightM": 0.5969903197395002,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 5.499482797121627,
+      "speedMps": 6.109229502490493,
+      "rollDeg": 0.2864966735217744,
+      "pitchDeg": 0.33412404111276667,
+      "pressureBar": 316.9770033168469,
+      "gasMassKg": 247.66007971771165,
+      "tankTemperatureK": 289.81946629109177,
+      "massFlowKgS": 9.901884276677782e-10,
+      "supplyMode": "finite",
+      "allocationError": 1.3293332524448903e-11,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        16.634624747194366,
+        16.05193076412167,
+        16.611580589385735,
+        16.02810079816693
+      ],
+      "wheelSlip": [
+        -0.006324928476511748,
+        -0.0063237463104585815,
+        -0.006326399932486486,
+        -0.006325911325844634
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 132,
+      "timeS": 1.1,
+      "simTime": 4.099999999999993,
+      "position": {
+        "x": 0.41012209030411206,
+        "y": 0.5971772880537144,
+        "z": 7.010255705183114
+      },
+      "velocity": {
+        "x": 0.7557958942467199,
+        "y": 0.002844878896486104,
+        "z": 6.002587708471991
+      },
+      "quaternion": {
+        "x": -0.0011501952350006978,
+        "y": 0.05085103571529347,
+        "z": 0.002596180990354719,
+        "w": 0.9987022124046131
+      },
+      "angularVelocity": {
+        "x": 0.0685323681364463,
+        "y": 0.12147164841669866,
+        "z": -0.005860737974258432
+      },
+      "heightM": 0.5971772880537144,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 5.838703411337008,
+      "speedMps": 6.049983035099782,
+      "rollDeg": 0.29041422903139547,
+      "pitchDeg": 0.14675997863008686,
+      "pressureBar": 316.97902643334976,
+      "gasMassKg": 247.6600797176936,
+      "tankTemperatureK": 289.8213160737122,
+      "massFlowKgS": 1.3400700362453014e-10,
+      "supplyMode": "finite",
+      "allocationError": 1.7990569223547677e-12,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        16.441445236510162,
+        15.864771193142909,
+        16.422723569845527,
+        15.845283374581403
+      ],
+      "wheelSlip": [
+        -0.006328202988462896,
+        -0.0063280082848850535,
+        -0.006328046197921827,
+        -0.0063270853859312545
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 138,
+      "timeS": 1.15,
+      "simTime": 4.149999999999996,
+      "position": {
+        "x": 0.4488162523714075,
+        "y": 0.5972616443535678,
+        "z": 7.308515803329336
+      },
+      "velocity": {
+        "x": 0.78661348308616,
+        "y": 0.0009205135411415219,
+        "z": 5.938454839175664
+      },
+      "quaternion": {
+        "x": 0.00045140650186609074,
+        "y": 0.05388789931525885,
+        "z": 0.0025306355033821535,
+        "w": 0.9985436827818338
+      },
+      "angularVelocity": {
+        "x": 0.055943167215538256,
+        "y": 0.12222121599880234,
+        "z": -0.005965629532642485
+      },
+      "heightM": 0.5972616443535678,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 6.185122962488254,
+      "speedMps": 5.990326159404594,
+      "rollDeg": 0.2923559570000585,
+      "pitchDeg": -0.03602512247475144,
+      "pressureBar": 316.98104842623917,
+      "gasMassKg": 247.66007971769122,
+      "tankTemperatureK": 289.8231648289683,
+      "massFlowKgS": 1.8135817942165643e-11,
+      "supplyMode": "finite",
+      "allocationError": 2.434758781456712e-13,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        16.297493151178944,
+        15.717531055623308,
+        16.28058131910683,
+        15.69980811477497
+      ],
+      "wheelSlip": [
+        -0.006324895790099973,
+        -0.006324359546686842,
+        -0.006324161997628828,
+        -0.006323774474186802
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 144,
+      "timeS": 1.2,
+      "simTime": 4.199999999999998,
+      "position": {
+        "x": 0.4890124577666155,
+        "y": 0.597265343017367,
+        "z": 7.6035631912490045
+      },
+      "velocity": {
+        "x": 0.8161325572947309,
+        "y": -0.0004388690235897502,
+        "z": 5.874146427254508
+      },
+      "quaternion": {
+        "x": 0.0015978790096148983,
+        "y": 0.056938156174376725,
+        "z": 0.002450211438167079,
+        "w": 0.9983734219309132
+      },
+      "angularVelocity": {
+        "x": 0.03425407254426413,
+        "y": 0.12228334836903886,
+        "z": -0.005079887198036829
+      },
+      "heightM": 0.597265343017367,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 6.536781487202614,
+      "speedMps": 5.930570697033243,
+      "rollDeg": 0.2907449013109369,
+      "pitchDeg": -0.16681912232345777,
+      "pressureBar": 316.9830692961149,
+      "gasMassKg": 247.66007971769088,
+      "tankTemperatureK": 289.8250125574244,
+      "massFlowKgS": 2.454408233336168e-12,
+      "supplyMode": "finite",
+      "allocationError": 3.295087693012743e-14,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        16.17128678108661,
+        15.590010972610349,
+        16.154754312286297,
+        15.572659224061999
+      ],
+      "wheelSlip": [
+        -0.0063163915725984445,
+        -0.0063161820213067,
+        -0.006316089709079611,
+        -0.006315581766722404
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 150,
+      "timeS": 1.25,
+      "simTime": 4.250000000000001,
+      "position": {
+        "x": 0.5306553518923558,
+        "y": 0.5972205975435579,
+        "z": 7.895393944528987
+      },
+      "velocity": {
+        "x": 0.8446795242199897,
+        "y": -0.001131079854331666,
+        "z": 5.809808810291099
+      },
+      "quaternion": {
+        "x": 0.0022025479535798223,
+        "y": 0.05997550107194172,
+        "z": 0.0023717420519503386,
+        "w": 0.9981946017151769
+      },
+      "angularVelocity": {
+        "x": 0.013885735681177958,
+        "y": 0.1211591002739297,
+        "z": -0.003450587098652284
+      },
+      "heightM": 0.5972205975435579,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 6.886832175731106,
+      "speedMps": 5.8708911751210495,
+      "rollDeg": 0.28643198154753113,
+      "pitchDeg": -0.2356381586729813,
+      "pressureBar": 316.98508904359744,
+      "gasMassKg": 247.66007971769085,
+      "tankTemperatureK": 289.82685925964984,
+      "massFlowKgS": 3.3216697509137454e-13,
+      "supplyMode": "finite",
+      "allocationError": 4.4594162622335635e-15,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        16.0428769974388,
+        15.466031281563115,
+        16.02594946864608,
+        15.44829084649861
+      ],
+      "wheelSlip": [
+        -0.0063069328880403,
+        -0.006306913756084018,
+        -0.006307290692473222,
+        -0.00630677303718431
+      ],
+      "wingDeployment": 0
+    },
+    {
+      "step": 156,
+      "timeS": 1.3,
+      "simTime": 4.300000000000003,
+      "position": {
+        "x": 0.5722524477325528,
+        "y": 0.5971573316328564,
+        "z": 8.176555299857249
+      },
+      "velocity": {
+        "x": 0.8179006481837051,
+        "y": -0.0013132255190578073,
+        "z": 5.487607591108714
+      },
+      "quaternion": {
+        "x": 0.003394196347120773,
+        "y": 0.0627567613562462,
+        "z": 0.0020023794135980077,
+        "w": 0.998021071326611
+      },
+      "angularVelocity": {
+        "x": 0.06953698739477565,
+        "y": 0.09945843860010553,
+        "z": -0.03304529599214823
+      },
+      "heightM": 0.5971573316328564,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.2103167263365435,
+      "speedMps": 5.548224965595264,
+      "rollDeg": 0.25341692792339593,
+      "pitchDeg": -0.37377930385456426,
+      "pressureBar": 316.9871076693099,
+      "gasMassKg": 247.66007971769085,
+      "tankTemperatureK": 289.8287049362147,
+      "massFlowKgS": 4.495376850527768e-14,
+      "supplyMode": "finite",
+      "allocationError": 6.035163629193362e-16,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        14.51745179998213,
+        14.044551792826962,
+        14.554835256845344,
+        14.081750406337626
+      ],
+      "wheelSlip": [
+        -0.03946778146120561,
+        -0.039470370502078814,
+        -0.039863861018978854,
+        -0.03986538319250693
+      ],
+      "wingDeployment": 0.075
+    },
+    {
+      "step": 162,
+      "timeS": 1.35,
+      "simTime": 4.350000000000006,
+      "position": {
+        "x": 0.6115754817081,
+        "y": 0.597092827247697,
+        "z": 8.441523108396652
+      },
+      "velocity": {
+        "x": 0.7613295473806421,
+        "y": -0.0012536311331895276,
+        "z": 5.165202591173388
+      },
+      "quaternion": {
+        "x": 0.0053654996226441334,
+        "y": 0.06480179424636412,
+        "z": 0.0009282660022359259,
+        "w": 0.9978832983863797
+      },
+      "angularVelocity": {
+        "x": 0.07638822680268517,
+        "y": 0.06413040257754503,
+        "z": -0.058182693519898354
+      },
+      "heightM": 0.597092827247697,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.457170658052625,
+      "speedMps": 5.221009678134116,
+      "rollDeg": 0.1459974313456733,
+      "pitchDeg": -0.6066578064190714,
+      "pressureBar": 316.989125173875,
+      "gasMassKg": 247.66007971769085,
+      "tankTemperatureK": 289.8305495876884,
+      "massFlowKgS": 6.0838116308378605e-15,
+      "supplyMode": "finite",
+      "allocationError": 8.167705791361871e-17,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        13.611839128724187,
+        13.28205442011759,
+        13.510299137733192,
+        13.182563995467195
+      ],
+      "wheelSlip": [
+        -0.03599104036760671,
+        -0.03599331175867872,
+        -0.04687781789578857,
+        -0.046939787954465594
+      ],
+      "wingDeployment": 0.15
+    },
+    {
+      "step": 168,
+      "timeS": 1.4,
+      "simTime": 4.400000000000008,
+      "position": {
+        "x": 0.6477977422942424,
+        "y": 0.5970343094785155,
+        "z": 8.690392110300474
+      },
+      "velocity": {
+        "x": 0.6986950804857484,
+        "y": -0.0011017455675521085,
+        "z": 4.843050200514029
+      },
+      "quaternion": {
+        "x": 0.007181930281286305,
+        "y": 0.06596707269422163,
+        "z": -0.0003972333581979558,
+        "w": 0.9977958746172733
+      },
+      "angularVelocity": {
+        "x": 0.059593793048608026,
+        "y": 0.03182503304845758,
+        "z": -0.05142649923478516
+      },
+      "heightM": 0.5970343094785155,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.609665662694445,
+      "speedMps": 4.89319029611942,
+      "rollDeg": 0.008871807011554237,
+      "pitchDeg": -0.8242058371690228,
+      "pressureBar": 316.99114155791557,
+      "gasMassKg": 247.66007971769085,
+      "tankTemperatureK": 289.8323932146403,
+      "massFlowKgS": 8.23351751285242e-16,
+      "supplyMode": "finite",
+      "allocationError": 1.105378776667281e-17,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        12.72123125414631,
+        12.541707053708599,
+        12.555132692309767,
+        12.37387403920727
+      ],
+      "wheelSlip": [
+        -0.03452943580265754,
+        -0.03453196083470775,
+        -0.051487753255008234,
+        -0.0515924381654314
+      ],
+      "wingDeployment": 0.22500000000000006
+    },
+    {
+      "step": 174,
+      "timeS": 1.45,
+      "simTime": 4.450000000000011,
+      "position": {
+        "x": 0.6810497583716242,
+        "y": 0.5969857055256818,
+        "z": 8.923115690806755
+      },
+      "velocity": {
+        "x": 0.6416257573419487,
+        "y": -0.0008646158512375272,
+        "z": 4.5196442856872805
+      },
+      "quaternion": {
+        "x": 0.008441292130386408,
+        "y": 0.06648252328011621,
+        "z": -0.0013027759161165571,
+        "w": 0.9977510318012158
+      },
+      "angularVelocity": {
+        "x": 0.03596582103486217,
+        "y": 0.012130852316039773,
+        "z": -0.02670499060216645
+      },
+      "heightM": 0.5969857055256818,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.686713770041183,
+      "speedMps": 4.564960988791787,
+      "rollDeg": -0.08465507168101433,
+      "pitchDeg": -0.9750974509521868,
+      "pressureBar": 316.9931568220537,
+      "gasMassKg": 247.66007971769085,
+      "tankTemperatureK": 289.83423581763947,
+      "massFlowKgS": 1.1142818822982376e-16,
+      "supplyMode": "finite",
+      "allocationError": 1.4959674982400695e-18,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        11.857437188746426,
+        11.779744230182507,
+        11.69114278227071,
+        11.610232105969175
+      ],
+      "wheelSlip": [
+        -0.034250770138270374,
+        -0.03425257202608829,
+        -0.05254898459836067,
+        -0.05262616688650319
+      ],
+      "wingDeployment": 0.3000000000000001
+    },
+    {
+      "step": 180,
+      "timeS": 1.5,
+      "simTime": 4.500000000000013,
+      "position": {
+        "x": 0.7115150237185217,
+        "y": 0.5969520309496784,
+        "z": 9.139654702309237
+      },
+      "velocity": {
+        "x": 0.5861166264803777,
+        "y": -0.0005255110856958187,
+        "z": 4.195895203398014
+      },
+      "quaternion": {
+        "x": 0.009083252995097343,
+        "y": 0.06665603446694962,
+        "z": -0.0016696106730812238,
+        "w": 0.9977332709619181
+      },
+      "angularVelocity": {
+        "x": 0.014143075534097065,
+        "y": 0.003485561574821397,
+        "z": -0.007718717408943642
+      },
+      "heightM": 0.5969520309496784,
+      "targetHeightM": 0.6045120837137485,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.717017760819628,
+      "speedMps": 4.236634222339368,
+      "rollDeg": -0.12153028632268083,
+      "pitchDeg": -1.0513166091132242,
+      "pressureBar": 316.99517096691187,
+      "gasMassKg": 247.66007971769085,
+      "tankTemperatureK": 289.8360773972547,
+      "massFlowKgS": 1.508011750138715e-17,
+      "supplyMode": "finite",
+      "allocationError": 2.0245718508708676e-19,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        11.01047166951189,
+        10.982623851395047,
+        10.879736217505378,
+        10.849270173062566
+      ],
+      "wheelSlip": [
+        -0.0346106689014154,
+        -0.034610290855800516,
+        -0.05117214971471844,
+        -0.051208622849525515
+      ],
+      "wingDeployment": 0.37500000000000017
+    },
+    {
+      "step": 186,
+      "timeS": 1.55,
+      "simTime": 4.550000000000016,
+      "position": {
+        "x": 0.7391903162383884,
+        "y": 0.5972773566858918,
+        "z": 9.340016242940214
+      },
+      "velocity": {
+        "x": 0.530365212430658,
+        "y": 0.013388375661965927,
+        "z": 3.87250969780104
+      },
+      "quaternion": {
+        "x": 0.009111105996918207,
+        "y": 0.06671471504455506,
+        "z": -0.0017135997150668674,
+        "w": 0.9977290203858227
+      },
+      "angularVelocity": {
+        "x": -0.012530026944017414,
+        "y": 0.002072737241420942,
+        "z": 0.0033002291707265935
+      },
+      "heightM": 0.5972773566858918,
+      "targetHeightM": 0.5971657868887087,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.72425259604833,
+      "speedMps": 3.908682369638467,
+      "rollDeg": -0.12628573993134298,
+      "pitchDeg": -1.0548447720193233,
+      "pressureBar": 316.8825877247277,
+      "gasMassKg": 247.59612116336686,
+      "tankTemperatureK": 289.8079832214457,
+      "massFlowKgS": 1.9049652791104823,
+      "supplyMode": "finite",
+      "allocationError": 0.012550268941731491,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        10.173205569695442,
+        10.157688445309157,
+        10.097840908575936,
+        10.080769752350974
+      ],
+      "wheelSlip": [
+        -0.036234206874486946,
+        -0.036235729543620664,
+        -0.04885053697773116,
+        -0.048865940896918245
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 192,
+      "timeS": 1.6,
+      "simTime": 4.600000000000018,
+      "position": {
+        "x": 0.7641499180837164,
+        "y": 0.5984162516062632,
+        "z": 9.524211754776125
+      },
+      "velocity": {
+        "x": 0.4775320015926189,
+        "y": 0.02845354267350925,
+        "z": 3.5491725922158484
+      },
+      "quaternion": {
+        "x": 0.008529033506817123,
+        "y": 0.06678008613970483,
+        "z": -0.0015718374274554029,
+        "w": 0.9977300261141362
+      },
+      "angularVelocity": {
+        "x": -0.030691400670286778,
+        "y": 0.003109730332125053,
+        "z": 0.010732714383011249
+      },
+      "heightM": 0.5984162516062632,
+      "targetHeightM": 0.5981791387506507,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.722541373737262,
+      "speedMps": 3.5812668856107184,
+      "rollDeg": -0.11445963362811404,
+      "pitchDeg": -0.9872139043102606,
+      "pressureBar": 316.6762550093469,
+      "gasMassKg": 247.47981201989433,
+      "tankTemperatureK": 289.7553932839124,
+      "massFlowKgS": 2.5322855715427592,
+      "supplyMode": "finite",
+      "allocationError": 0.0041314605307213505,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        9.326455982032416,
+        9.308005453976522,
+        9.309400138165612,
+        9.290331479414219
+      ],
+      "wheelSlip": [
+        -0.0391716114689958,
+        -0.03917216125840109,
+        -0.04685810142406987,
+        -0.046865761644396424
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 198,
+      "timeS": 1.65,
+      "simTime": 4.650000000000021,
+      "position": {
+        "x": 0.7865982377275449,
+        "y": 0.6000421186164894,
+        "z": 9.692232456524875
+      },
+      "velocity": {
+        "x": 0.4291303014689962,
+        "y": 0.033976069466164056,
+        "z": 3.2255405203840315
+      },
+      "quaternion": {
+        "x": 0.007676372189004472,
+        "y": 0.06685969564191334,
+        "z": -0.0013004436017450647,
+        "w": 0.9977320097376478
+      },
+      "angularVelocity": {
+        "x": -0.03372858612354829,
+        "y": 0.0028467242744088924,
+        "z": 0.014895894687996722
+      },
+      "heightM": 0.6000421186164894,
+      "targetHeightM": 0.5997589847042714,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.719165176214528,
+      "speedMps": 3.2541387243899926,
+      "rollDeg": -0.08987974584061335,
+      "pitchDeg": -0.8876513553489125,
+      "pressureBar": 316.43910704709987,
+      "gasMassKg": 247.34625793542847,
+      "tankTemperatureK": 289.69474107418307,
+      "massFlowKgS": 2.7390236255122997,
+      "supplyMode": "finite",
+      "allocationError": 0.001360047836118604,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        8.460144067249075,
+        8.443690174679292,
+        8.483723771754278,
+        8.46712376277333
+      ],
+      "wheelSlip": [
+        -0.04199959411442963,
+        -0.04199906164699798,
+        -0.04583607659076671,
+        -0.04583989614744699
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 204,
+      "timeS": 1.7,
+      "simTime": 4.700000000000023,
+      "position": {
+        "x": 0.8067284895162037,
+        "y": 0.6016667866705881,
+        "z": 9.844063316137849
+      },
+      "velocity": {
+        "x": 0.3840034222298437,
+        "y": 0.030414003365715297,
+        "z": 2.901641107634747
+      },
+      "quaternion": {
+        "x": 0.0068859493425029675,
+        "y": 0.06691431532513342,
+        "z": -0.0009734121839336178,
+        "w": 0.9977344890174648
+      },
+      "angularVelocity": {
+        "x": -0.02652410979303567,
+        "y": 0.001314519981791331,
+        "z": 0.014817028924488513
+      },
+      "heightM": 0.6016667866705881,
+      "targetHeightM": 0.6014133366425405,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.714943279849185,
+      "speedMps": 2.9270983511663498,
+      "rollDeg": -0.0584975611500817,
+      "pitchDeg": -0.7947734528621349,
+      "pressureBar": 316.1918603937242,
+      "gasMassKg": 247.20701579405525,
+      "tankTemperatureK": 289.6314372117893,
+      "massFlowKgS": 2.8072996924725535,
+      "supplyMode": "finite",
+      "allocationError": 0.0004477182107335591,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        7.5854381667333435,
+        7.577728967318618,
+        7.62866115904879,
+        7.620936589638056
+      ],
+      "wheelSlip": [
+        -0.043840837260920494,
+        -0.0438408198731081,
+        -0.04563736130451472,
+        -0.04563958266774323
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 210,
+      "timeS": 1.75,
+      "simTime": 4.750000000000026,
+      "position": {
+        "x": 0.8246622641647607,
+        "y": 0.6029454433860508,
+        "z": 9.97969305722099
+      },
+      "velocity": {
+        "x": 0.340775721604655,
+        "y": 0.02170750577337685,
+        "z": 2.57753044510102
+      },
+      "quaternion": {
+        "x": 0.006336420581565318,
+        "y": 0.06693153018549,
+        "z": -0.0006751874730556934,
+        "w": 0.9977372219994194
+      },
+      "angularVelocity": {
+        "x": -0.015607489630782933,
+        "y": 0.000045457119665935034,
+        "z": 0.011610138922789504
+      },
+      "heightM": 0.6029454433860508,
+      "targetHeightM": 0.6027645475046061,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.71028668653425,
+      "speedMps": 2.6000504809839247,
+      "rollDeg": -0.028599027453957614,
+      "pitchDeg": -0.7296555764394353,
+      "pressureBar": 315.9413341528023,
+      "gasMassKg": 247.06589036086785,
+      "tankTemperatureK": 289.5672634511413,
+      "massFlowKgS": 2.82999068237432,
+      "supplyMode": "finite",
+      "allocationError": 0.0001473856954873907,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        6.715145322594811,
+        6.715195017900529,
+        6.762410636754234,
+        6.762493129197175
+      ],
+      "wheelSlip": [
+        -0.04446531269401085,
+        -0.04446559536472381,
+        -0.04592130073182202,
+        -0.045920409717854334
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 216,
+      "timeS": 1.8,
+      "simTime": 4.800000000000028,
+      "position": {
+        "x": 0.8404664771247896,
+        "y": 0.6037400911948412,
+        "z": 10.09911261002119
+      },
+      "velocity": {
+        "x": 0.29853217581675157,
+        "y": 0.011794939023319665,
+        "z": 2.253281142975917
+      },
+      "quaternion": {
+        "x": 0.006060292592723728,
+        "y": 0.066926095851958,
+        "z": -0.000456234815341399,
+        "w": 0.9977394261015742
+      },
+      "angularVelocity": {
+        "x": -0.005680623787450432,
+        "y": -0.0004855851179605896,
+        "z": 0.007314107059526539
+      },
+      "heightM": 0.6037400911948412,
+      "targetHeightM": 0.6036418000363135,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.706529178917448,
+      "speedMps": 2.2730016475742607,
+      "rollDeg": -0.005685506591331373,
+      "pitchDeg": -0.696404589137608,
+      "pressureBar": 315.6897728597409,
+      "gasMassKg": 246.92413426370845,
+      "tankTemperatureK": 289.5028065566762,
+      "massFlowKgS": 2.8376738388024543,
+      "supplyMode": "finite",
+      "allocationError": 0.00004851833745764349,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        5.853800670492525,
+        5.857382338579459,
+        5.8979940896212835,
+        5.901635652753836
+      ],
+      "wheelSlip": [
+        -0.044192051818033165,
+        -0.04419239064192364,
+        -0.0463596986217052,
+        -0.046358336989205745
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 222,
+      "timeS": 1.85,
+      "simTime": 4.850000000000031,
+      "position": {
+        "x": 0.8541697604465069,
+        "y": 0.6040749498036132,
+        "z": 10.202318243276464
+      },
+      "velocity": {
+        "x": 0.25659341040592154,
+        "y": 0.0034007992622339615,
+        "z": 1.9289851779139813
+      },
+      "quaternion": {
+        "x": 0.006000580066803576,
+        "y": 0.06691297639611314,
+        "z": -0.0003278761772039839,
+        "w": 0.9977407173839743
+      },
+      "angularVelocity": {
+        "x": 0.0010039312444033526,
+        "y": -0.0005875998328474707,
+        "z": 0.003383323861394768
+      },
+      "heightM": 0.6040749498036132,
+      "targetHeightM": 0.6040466098097612,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.704326977450547,
+      "speedMps": 1.9459793319332035,
+      "rollDeg": 0.008524080181356336,
+      "pitchDeg": -0.6885929265505841,
+      "pressureBar": 315.43791528754673,
+      "gasMassKg": 246.78215990090547,
+      "tankTemperatureK": 289.43825974596444,
+      "massFlowKgS": 2.840416033658702,
+      "supplyMode": "finite",
+      "allocationError": 0.0000159718964711573,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        5.000156527329652,
+        5.004408456776194,
+        5.040861908512299,
+        5.045193253987346
+      ],
+      "wheelSlip": [
+        -0.04351487562425201,
+        -0.04351742984406296,
+        -0.04671531228618695,
+        -0.04671625729162987
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 228,
+      "timeS": 1.9,
+      "simTime": 4.900000000000033,
+      "position": {
+        "x": 0.8657731316218288,
+        "y": 0.6040699203812803,
+        "z": 10.289308939966723
+      },
+      "velocity": {
+        "x": 0.21450936931238407,
+        "y": -0.002186670869005927,
+        "z": 1.6047014091557474
+      },
+      "quaternion": {
+        "x": 0.006068384652857512,
+        "y": 0.06689915340162587,
+        "z": -0.00027687305452713407,
+        "w": 0.9977412496850887
+      },
+      "angularVelocity": {
+        "x": 0.004156384531742572,
+        "y": -0.0005302493225691989,
+        "z": 0.0005173280386913618
+      },
+      "heightM": 0.6040699203812803,
+      "targetHeightM": 0.604088142638522,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.703418988180436,
+      "speedMps": 1.6189767334951817,
+      "rollDeg": 0.01486615777624513,
+      "pitchDeg": -0.6959545997426586,
+      "pressureBar": 315.18600457652934,
+      "gasMassKg": 246.6401030433545,
+      "tankTemperatureK": 289.3736866256549,
+      "massFlowKgS": 2.8415315731118027,
+      "supplyMode": "finite",
+      "allocationError": 0.000005257836320296448,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        4.151713715159754,
+        4.15545811699772,
+        4.191464177304899,
+        4.195291937399864
+      ],
+      "wheelSlip": [
+        -0.04281851392405608,
+        -0.04281988437908333,
+        -0.04689067080109522,
+        -0.04688920967912171
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 234,
+      "timeS": 1.95,
+      "simTime": 4.950000000000036,
+      "position": {
+        "x": 0.8752626327295575,
+        "y": 0.6038707436137378,
+        "z": 10.360087842135973
+      },
+      "velocity": {
+        "x": 0.17207867641120206,
+        "y": -0.004888358308781889,
+        "z": 1.2804991139083595
+      },
+      "quaternion": {
+        "x": 0.0061826042273026675,
+        "y": 0.06688737237870632,
+        "z": -0.0002791955958855581,
+        "w": 0.997741337657742
+      },
+      "angularVelocity": {
+        "x": 0.004606973774266046,
+        "y": -0.0004037575162844521,
+        "z": -0.0011322379766545705
+      },
+      "heightM": 0.6038707436137378,
+      "targetHeightM": 0.6039114799329777,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.7032689157866745,
+      "speedMps": 1.2920189424472381,
+      "rollDeg": 0.015467969829161717,
+      "pitchDeg": -0.7090321081391635,
+      "pressureBar": 314.9341207262457,
+      "gasMassKg": 246.49800838809807,
+      "tankTemperatureK": 289.3091081158224,
+      "massFlowKgS": 2.8421116245271563,
+      "supplyMode": "finite",
+      "allocationError": 0.0000017308428476838077,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        3.3065188191883235,
+        3.3092870044076195,
+        3.3480723562552157,
+        3.3509021050820746
+      ],
+      "wheelSlip": [
+        -0.042287391043829434,
+        -0.04229068927484884,
+        -0.046881681998245626,
+        -0.046881944581241515
+      ],
+      "wingDeployment": 0.4
+    },
+    {
+      "step": 240,
+      "timeS": 2,
+      "simTime": 5.000000000000038,
+      "position": {
+        "x": 0.8826186564102911,
+        "y": 0.6036077752900157,
+        "z": 10.414658709268924
+      },
+      "velocity": {
+        "x": 0.12923641082264326,
+        "y": -0.00527011622114027,
+        "z": 0.9563760047280357
+      },
+      "quaternion": {
+        "x": 0.00628857082511271,
+        "y": 0.06687901272588383,
+        "z": -0.00031029947645715253,
+        "w": 0.997741226595365
+      },
+      "angularVelocity": {
+        "x": 0.003532691339782421,
+        "y": -0.00024936409873636443,
+        "z": -0.00178916453403798
+      },
+      "heightM": 0.6036077752900157,
+      "targetHeightM": 0.6036516929251919,
+      "positionErrorM": null,
+      "attitudeErrorDeg": 7.703458376415547,
+      "speedMps": 0.9650828391526104,
+      "rollDeg": 0.012717786670360566,
+      "pitchDeg": -0.721386547177065,
+      "pressureBar": 314.682290037461,
+      "gasMassKg": 246.35589064796733,
+      "tankTemperatureK": 289.24453107790504,
+      "massFlowKgS": 2.842515432673621,
+      "supplyMode": "finite",
+      "allocationError": 5.697813284593549e-7,
+      "feasible": null,
+      "contactCount": 4,
+      "wheelOmegaRadS": [
+        2.462779913714458,
+        2.4644452145437237,
+        2.5079061869617068,
+        2.509601625785086
+      ],
+      "wheelSlip": [
+        -0.041978648191837886,
+        -0.04198218182518047,
+        -0.04676892643395416,
+        -0.046770610738210414
+      ],
+      "wingDeployment": 0.4
+    }
+  ]
+}

@@ -130,16 +130,17 @@ test('Render profiles reduce actual geometry and preserve articulated object ide
 });
 test('Separate glazing panels share continuous derivative normals at every quality',()=>{
   for(const quality of ['balanced','high','ultra']){
-    car.setQuality(quality);let pairs=0,maximumAngleDeg=0;
+    car.setQuality(quality);car.group.updateMatrixWorld(true);let pairs=0,maximumAngleDeg=0;const seen=new Map();
     car.group.traverse(o=>{
       if(!o.isMesh||![car.materials.glass,car.materials.balancedGlass].includes(o.material))return;
-      const p=o.geometry.attributes.position,n=o.geometry.attributes.normal,seen=new Map();
+      const p=o.geometry.attributes.position,n=o.geometry.attributes.normal,normalMatrix=new THREE.Matrix3().getNormalMatrix(o.matrixWorld);
       for(let i=0;i<p.count;i++){
-        const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
+        const point=new THREE.Vector3().fromBufferAttribute(p,i).applyMatrix4(o.matrixWorld),{x,y,z}=point;
         if(Math.abs(x)>.5||![.04,-.76].some(v=>Math.abs(z-v)<1e-6))continue;
         const key=[x,y,z].map(v=>v.toFixed(6)).join(':');
-        if(seen.has(key)){const j=seen.get(key),dot=n.getX(i)*n.getX(j)+n.getY(i)*n.getY(j)+n.getZ(i)*n.getZ(j);maximumAngleDeg=Math.max(maximumAngleDeg,Math.acos(Math.min(1,Math.max(-1,dot)))*180/Math.PI);pairs++;}
-        else seen.set(key,i);
+        const normal=new THREE.Vector3().fromBufferAttribute(n,i).applyMatrix3(normalMatrix).normalize();
+        if(seen.has(key)){const dot=normal.dot(seen.get(key));maximumAngleDeg=Math.max(maximumAngleDeg,Math.acos(Math.min(1,Math.max(-1,dot)))*180/Math.PI);pairs++;}
+        else seen.set(key,normal);
       }
     });
     assert.ok(pairs>20,quality+' is missing adjoining glazing samples');
@@ -174,7 +175,7 @@ test('Late-created force nozzles use the selected profile and switching back reu
 const renderBaseline=JSON.parse(readFileSync(fileURLToPath(new URL('../qa/vehicle-3.4-render-cost.json',import.meta.url)),'utf8'));
 const renderAudit={status:'passed',asOf:new Date().toISOString(),method:renderBaseline.method,baselineCommit:renderBaseline.commit,baseline:{atRest:renderBaseline.atRest,forceNozzles:renderBaseline.forceNozzles,cutaway:renderBaseline.cutaway},profiles,glazingBoundaryNormals:glassSeams,balancedReductionAtRest:{visibleDrawables:1-profiles.balanced.atRest.drawables/renderBaseline.atRest.drawables,triangles:1-profiles.balanced.atRest.triangles/renderBaseline.atRest.triangles},limitations:['Static scene-graph budgets do not establish frame rate. Driver overhead, shadows, culling, reflections, resolution and GPU throughput require browser profiling.','The ten-visible-actuator comparison fixture is a conservative hardware visibility budget; it does not simulate a flight maneuver.']};
 writeFileSync(fileURLToPath(new URL(`../qa/vehicle-${REPORT_VERSION}-render-cost.json`,import.meta.url)),JSON.stringify(renderAudit,null,2)+'\n');
-const report={status:'passed',asOf:new Date().toISOString(),model:'Roadster photograph reconstruction v8 / 3.10',geometry:{meshes,vertices},profiles,glazingBoundaryNormals:glassSeams,sweep:{samples:sweepSamples,lengthRangeM:[.24,.41],frontSteerRangeRad:[-.49,.49],tyreRadiusM:.372,minimumArchLinerMarginM:minArchMargin,minimumRoofMarginM:minRoofMargin,minimumInnerWallMarginM:minWheelhouseWall,minimumLiftDuctMarginM:minJetMargin},pressureChamber:car.chamber.root.userData,tests:results,limitations:['A sampled geometric clearance test, not a tolerance stack-up or deformable tyre contact analysis.','Suspension links and pressure chamber are independently authored layouts, not OEM CAD or measured suspension kinematics.','Full tyre travel envelope is guaranteed only for the stated suspension and steering range.']};
+const report={status:'passed',asOf:new Date().toISOString(),model:G.model,geometry:{meshes,vertices},profiles,glazingBoundaryNormals:glassSeams,sweep:{samples:sweepSamples,lengthRangeM:[.24,.41],frontSteerRangeRad:[-.49,.49],tyreRadiusM:.372,minimumArchLinerMarginM:minArchMargin,minimumRoofMarginM:minRoofMargin,minimumInnerWallMarginM:minWheelhouseWall,minimumLiftDuctMarginM:minJetMargin},pressureChamber:car.chamber.root.userData,tests:results,limitations:['A sampled geometric clearance test, not a tolerance stack-up or deformable tyre contact analysis.','Suspension links and pressure chamber are independently authored layouts, not OEM CAD or measured suspension kinematics.','Full tyre travel envelope is guaranteed only for the stated suspension and steering range.']};
 writeFileSync(fileURLToPath(new URL(`../qa/vehicle-geometry-${REPORT_VERSION}.json`,import.meta.url)),JSON.stringify(report,null,2)+'\n');
 car.dispose();
 console.log(JSON.stringify(report,null,2));

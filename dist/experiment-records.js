@@ -46,12 +46,12 @@ export function captureExperimentSnapshot(sim,context='city',sceneConfiguration=
 export function replayEligibility(record){
   if(!record?.initialSnapshot?.physical)return{exact:false,recompute:false,reason:'这是旧曲线记录，没有完整初态与固定步输入；只能查看，不能按原条件重放'};
   if(record.schema!==EXPERIMENT_SCHEMA||record.version!==1||record.identity?.protocolVersion!==LIVE_PROTOCOL_VERSION)return{exact:false,recompute:false,reason:'此记录协议没有安装执行器；历史数据可以查看与导出'};
-  if(record.identity.modelVersion==='3.8.0'&&['3.9.0','3.10.0','3.11.0','3.12.0'].includes(MODEL_VERSION)&&record.initialSnapshot.physical.worldType==='city')return{exact:false,recompute:false,migrationRequired:false,reason:'3.8 城市记录的道路与碰撞几何已经改变，不能安全迁移完整现场状态；仍可查看与导出历史。请在当前城市重新建立实验。3.8 实验室 / 标准平地记录仍可选择明确的当前模型重算。'};
+  if(record.identity.modelVersion==='3.8.0'&&['3.9.0','3.10.0','3.11.0','3.12.0','3.13.0'].includes(MODEL_VERSION)&&record.initialSnapshot.physical.worldType==='city')return{exact:false,recompute:false,migrationRequired:false,reason:'3.8 城市记录的道路与碰撞几何已经改变，不能安全迁移完整现场状态；仍可查看与导出历史。请在当前城市重新建立实验。3.8 实验室 / 标准平地记录仍可选择明确的当前模型重算。'};
   const current=currentExperimentIdentity();if(record.identity.modelVersion!==current.modelVersion){const migration=canMigrateRecordedState(record.identity.modelVersion,current.modelVersion)&&record.initialSnapshot.physical.schemaVersion===1;return{exact:false,recompute:migration,migrationRequired:migration,reason:migration?(record.identity.modelVersion==='3.8.0'?'原 3.8 模型未安装，不能精确重放。可显式按当前模型重算历史初态：保留原参数、刚体、气源和控制状态，并补充当前模型新增的驱动诊断、升降制动与回正状态；迁移与差异单独留证。':`原 ${record.identity.modelVersion} 模型未安装，不能精确重放。可显式按当前模型重算；执行前核对完整状态字段与碰撞几何签名，保留原参数并声明新增参数映射。轮速、气源、控制器和扰动相位保持。`):'原模型 '+record.identity.modelVersion+' 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。'};}const exact=record.identity.modelVersion===current.modelVersion&&record.identity.modelBuildId===current.modelBuildId;
   return{exact,recompute:true,reason:exact?'可按原始条件执行当前相同模型 / 构建':'原始模型 / 构建未安装；不能精确重放。可明确选择按当前模型重新计算，并保留来源身份'};
 }
 function canMigrateRecordedState(from,to){
-  const targets={'3.8.0':['3.9.0','3.10.0','3.11.0','3.12.0'],'3.9.0':['3.10.0','3.11.0','3.12.0'],'3.10.0':['3.11.0','3.12.0'],'3.11.0':['3.12.0']};
+  const targets={'3.8.0':['3.9.0','3.10.0','3.11.0','3.12.0','3.13.0'],'3.9.0':['3.10.0','3.11.0','3.12.0','3.13.0'],'3.10.0':['3.11.0','3.12.0','3.13.0'],'3.11.0':['3.12.0','3.13.0'],'3.12.0':['3.13.0']};
   return targets[from]?.includes(to)??false;
 }
 export function prepareRecordedStateForCurrentModel(record,sim,{recompute=false}={}){
@@ -64,7 +64,7 @@ export function prepareRecordedStateForCurrentModel(record,sim,{recompute=false}
     const parameterMapping={};
     // Older E/Q commands used an explicit 3 m/s² acceleration envelope. A new
     // session's stronger default must not silently accelerate an old input log.
-    if(['3.11.0','3.12.0'].includes(current.modelVersion)&&['3.8.0','3.9.0','3.10.0'].includes(source.modelVersion)&&'verticalAccelerationMps2' in template.params&&!('verticalAccelerationMps2' in physical.params)){physical.params.verticalAccelerationMps2=3;parameterMapping.verticalAccelerationMps2={value:3,meaning:'Historical E/Q acceleration envelope; not the stronger new-session default.'};}
+    if(['3.11.0','3.12.0','3.13.0'].includes(current.modelVersion)&&['3.8.0','3.9.0','3.10.0'].includes(source.modelVersion)&&'verticalAccelerationMps2' in template.params&&!('verticalAccelerationMps2' in physical.params)){physical.params.verticalAccelerationMps2=3;parameterMapping.verticalAccelerationMps2={value:3,meaning:'Historical E/Q acceleration envelope; not the stronger new-session default.'};}
     if(canonicalJSON(Object.keys(physical.params).sort())!==canonicalJSON(Object.keys(template.params).sort()))throw Error('历史参数契约不兼容，当前模型重算未开始');
     const migrated=[];for(const key of added)if(!(key in physical.state)&&key in template.state){physical.state[key]=clone(template.state[key]);if(key==='_verticalControl')physical.state[key].accelerationLimitMps2=3;migrated.push('state.'+key);}
     const unexpected=Object.keys(template.state).filter(key=>!(key in physical.state)&&!['_poseTakeoffOriginHeight','_poseTakeoffQuaternion'].includes(key));if(unexpected.length)throw Error('当前模型增加了尚未声明迁移的状态：'+unexpected.join(', '));

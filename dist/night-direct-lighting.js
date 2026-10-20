@@ -55,5 +55,5 @@ export function createNightDirectLighting(options={}){
       #endif
       #include <lights_fragment_end>`);
   }
-  return {...field,inject,update,uniforms:{...field.uniforms,...uniforms},get shaderKey(){return 'stationary-direct-complementary-blend-3.11';}};
+  return {...field,inject,update,uniforms:{...field.uniforms,...uniforms},get shaderKey(){return 'stationary-direct-complementary-atlas-3.13';}};
 }

@@ -1,0 +1,76 @@
+{
+  "status": "passed",
+  "modelVersion": "3.13.0",
+  "modelBuildId": "461466391bff8e9907d95c157ba2f8ce52b76eae0a202aaed6aac31a768fe2d0",
+  "scope": "Original 3.9 solver fixture and actual current numerical solver. Historical recomputation is not execution of the old solver. No graphics or human driving acceptance.",
+  "sourceHashes": {
+    "dist/experiment-records.js": "637ec079d02e7093db6044f9ddac0eedeae8eb76a13c9f284ac148809f68b2f3",
+    "dist/simulation-snapshot.js": "0e07d3b80662fa883f279465cafb67154910c542a06791732c937aae7485b846",
+    "dist/physics.js": "d6fbfe7e3ed5c3503c91334d40672cd855ab5169437371a5bdda47f644ca27d8",
+    "dist/vehicle-models.js": "44147032c3b9c2f510f73b63712a1ea7116ad81d6a7c4070fcf654cec5cf1eaa",
+    "dist/model-build.js": "ebdcfac86bdfd2b6ab1a4d75be7a0a75f38ce06ad45e3ac93c670682481d7fe5",
+    "tests/history-compatibility-3.10.test.mjs": "7c0b8dfb989fe42f81c5c80252112b3fb3b9447707534b405e37f2297c7f77ce",
+    "qa/fixtures/live-record-3.9.json": "ec85dfa49f6f454ce002d73ef2ae78703d28561ddc4f925afdf4a9dc7c8d76ad"
+  },
+  "evidence": [
+    {
+      "name": "Actual published 3.9 source record is retained and explicitly recomputed without relabelling it as exact replay",
+      "status": "PASS",
+      "sourceIdentity": {
+        "modelVersion": "3.9.0",
+        "modelBuildId": "b353a90366f128bcf4c188fee0c4a3aad38e6a9f83baf27272c8b5828369ad70",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "executionIdentity": {
+        "modelVersion": "3.13.0",
+        "modelBuildId": "461466391bff8e9907d95c157ba2f8ce52b76eae0a202aaed6aac31a768fe2d0",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "steps": 42,
+      "migration": {
+        "from": "3.9.0",
+        "to": "3.13.0",
+        "addedDefaultState": [],
+        "parameterMapping": {
+          "verticalAccelerationMps2": {
+            "value": 3,
+            "meaning": "Historical E/Q acceleration envelope; not the stronger new-session default."
+          }
+        },
+        "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+        "changed": [
+          "modelVersion",
+          "params.verticalAccelerationMps2"
+        ],
+        "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+        "limitation": "The 3.9.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+      },
+      "reproduction": "not_applicable"
+    },
+    {
+      "name": "An unknown build of the current model refuses exact replay but allows explicit unchanged-state recomputation",
+      "status": "PASS",
+      "sourceIdentity": {
+        "modelVersion": "3.13.0",
+        "modelBuildId": "uninstalled-build-for-current-model",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "executionIdentity": {
+        "modelVersion": "3.13.0",
+        "modelBuildId": "461466391bff8e9907d95c157ba2f8ce52b76eae0a202aaed6aac31a768fe2d0",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "steps": 6,
+      "migration": null,
+      "reproduction": "not_applicable"
+    },
+    {
+      "name": "Incompatible collision worlds, parameter/state contracts and unimplemented model versions refuse execution",
+      "status": "PASS"
+    }
+  ]
+}

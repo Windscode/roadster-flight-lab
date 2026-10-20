@@ -27,11 +27,11 @@ export function enrichValidationReport(report){
   report.model='Roadster Flight Lab '+MODEL_VERSION;
   report.sourceIdentity={modelBuildId:MODEL_BUILD_ID,sourceHashes:MODEL_SOURCE_HASHES};
   report.browserVisualQA={status:'current_release_after_capture_pending',modelVersion:MODEL_VERSION,
-    reason:'User-computer IAB screenshots of 3.8/3.9 were successfully retrieved, opened and used to diagnose this revision. No matched after-pixels for the current release, human driving time series or GPU frame-time acceptance has yet been collected. The root cloud browser has no usable WebGL; that environment limit does not invalidate the user-computer evidence or prove a website rendering fault.',
-    baselineEvidence:'qa/visual-evidence-3.10.json',captureInstructions:'docs/visual-3.12.md',bodyStripeSource:'qa/body-stripe-source-3.11.json',
-    historicalReports:['qa/browser-release-3.9.json','qa/browser.json','qa/city-3.4-browser-assets.json'],
-    historyScope:'3.9 real WebGL screenshots establish the observed defects only. Mixed resolutions/vehicle states, paused preview refresh and instantaneous HUD FPS are not strict visual or performance A/B. The real GPU was not identified.'};
-  report.offlineShaderValidation={scope:'Offline syntax and stage-interface checks, not WebGL driver, framebuffer, rendered-pixel or FPS validation.',
+    reason:'User-supplied 3.12 high/balanced/high same-camera PNG pixels and console prove missing mineral facade/road drawing; the named mineral shader exceeds 16 fragment samplers. Original road program attribution was incomplete; exact frozen offline reflection reproduces its overflow and 3.13 adds named on-device diagnostics. Seven 3.11 isolation PNGs establish the receiver-plane stripe fix at one camera, distinct from broad environment highlights. No current 3.13 after-pixels or target-GPU timing has been collected. The cloud browser reports GL_VENDOR / GL_RENDERER Disabled, which is not a verdict on the user device.',
+    baselineEvidence:'qa/visual-evidence-3.13.json',captureInstructions:'docs/visual-3.13.md',bodyStripeSource:'qa/body-stripe-source-3.11.json',
+    historicalReports:['qa/browser-live-3.12.json','qa/browser-release-3.9.json','qa/browser.json','qa/city-3.4-browser-assets.json'],
+    historyScope:'3.12 missing drawing and the scoped 3.11 receiver-plane correction have real pixel evidence. The 54/90 km/h records use physical dry mu=1.25 and different input protocols; they are not wet-road or single-factor A/B acceptance. Paused preview/HUD figures are not route frame-time data; the user GPU identity remains unverified.'};
+  report.offlineShaderValidation={scope:'Offline final source syntax, stage-interface and active sampler array reflection; not WebGL driver, framebuffer, rendered-pixel or FPS validation.',
     postProcessing:shaderEvidence(`qa/render-shader-validation-${REPORT_VERSION}.json`),
     cityLighting:shaderEvidence(`qa/city-shaders-${REPORT_VERSION}.json`)};
   function domEvidence(file){

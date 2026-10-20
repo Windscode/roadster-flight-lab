@@ -1,3 +1,4 @@
+import {entries as flight313Entries,patterns as flight313Patterns} from './i18n-flight-313-en.js';
 import {t as tr} from './i18n.js';
 
 // Presentation-only strings; stored requests, identities and user names remain unchanged.
@@ -938,3 +939,11 @@ Object.assign(entries,{'出现刚体接触，当前响应含接触/机械止挡�
 
 Object.assign(entries,{'已取消':'Cancelled','计算失败':'Computation failed','上次执行中断':'Previous execution interrupted','尚未执行':'Not run yet','正在计算':'Computing'});
 Object.assign(entries,{'已达到64项 / 4 MiB存储上限；旧记录保持不变，新结果只保留在本会话。请导出全部记录 JSON 后再清理。':'The 64-record / 4 MiB storage limit has been reached. Earlier records remain unchanged; new results remain in this session. Export the full JSON library before clearing data.'});
+
+Object.assign(entries,{
+ '就绪 · 固定120 Hz求解 / 10 Hz记录':'Ready · Fixed 120 Hz solve / 10 Hz samples',
+ '就绪 · 固定120 Hz求解 / 按导入方案记录':'Ready · Fixed 120 Hz solve / sampling as imported',
+ '过程中曾持续超过高度误差限值；最终是否恢复请看末段判据':'Height error exceeded the sustained limit earlier in the run; inspect the final-window criteria for recovery.'
+});
+
+Object.assign(entries,flight313Entries);patterns.unshift(...flight313Patterns);

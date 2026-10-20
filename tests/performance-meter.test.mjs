@@ -17,10 +17,10 @@ function fixture({timer=false,capacity=400}={}){
   };
   const renderer={getContext:()=>gl,info:{render:{calls:0,triangles:0}}};
   const meter=new PerformanceMeter(renderer,{capacity});let time=0;
-  const frame=(frameMs,{active=true,gpu=false,resolution={width:1280,height:720}}={})=>{
+  const frame=(frameMs,{active=true,gpu=false,diagnosticFrame=false,resolution={width:1280,height:720}}={})=>{
     time+=frameMs;meter.begin(time,frameMs);
     const returned=meter.measure('submission',()=>{renderer.info.render.calls++;return 37;});assert.equal(returned,37);
-    if(gpu)meter.beginGpu();return meter.end({active,resolution});
+    if(gpu)meter.beginGpu();return meter.end({active,resolution,diagnosticFrame});
   };
   return{meter,frame,gl};
 }
@@ -63,6 +63,11 @@ function fixture({timer=false,capacity=400}={}){
   pass('Asynchronous GPU queries are attributed to their original frame once, and disjoint queries are discarded with evidence');
 }
 
+{
+  const {meter,frame}=fixture();frame(33,{active:false});frame(900,{active:false,diagnosticFrame:true});let summary=meter.snapshot();assert.equal(summary.samples,1);assert.equal(summary.diagnosticFramesExcluded,1);assert.equal(summary.population,'paused-preview');assert.equal(summary.frameP99Ms,33);
+  meter.startCapture({durationMs:1000});frame(700,{diagnosticFrame:true});frame(16);summary=meter.snapshot();assert.equal(summary.samples,1);assert.equal(summary.frameP99Ms,16);assert.equal(summary.diagnosticFramesExcluded,2);assert.equal(meter.capture.frames.length,1);assert.equal(meter.capture.elapsedMs,16);
+  pass('Explicit diagnostic frames are excluded from paused and driving statistics and cannot advance a performance capture');
+}
 writeFileSync(new URL(`../qa/performance-meter-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify({status:'passed',createdAt:new Date().toISOString(),checks,
   scope:'Unit validation of timing statistics, phased capture and a deterministic GL query facade.',
   limitations:'No real browser, rAF scheduler, WebGL driver or GPU was measured. These checks do not constitute FPS or visual acceptance.'},null,2)+'\n');

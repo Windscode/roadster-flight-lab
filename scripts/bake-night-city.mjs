@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from './qa-report-version.mjs';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import * as THREE from '../dist/vendor/three.module.js';
@@ -27,18 +28,18 @@ for(const volume of NIGHT_FIELD_LAYOUT.volumes){
   const file=volume.id+'.bin',bytes=new Uint8Array(data.buffer);writeFileSync(new URL(file,output),bytes);
   volumes.push({...volume,file,validProbes:validHere,bytes:bytes.byteLength,sha256:sha(bytes)});console.log(volume.id,validHere,'valid probes');
 }
-const cases=[[-200,.6,-393],[-200,.6,-279],[-203,2.4,-264],[-138,.6,-398],[-190.1,2.4,-370],[-200,12,-264]].map(position=>{
+const cases=[[-200,.6,-393],[-200,.6,-279],[-203,2.4,-264],[-138,.6,-398],[-190.1,2.4,-370],[-200,12,-264],[-430,.6,-424],[-430,.6,-430.5],[-430,.8,-439]].map(position=>{
   const visible=evaluator.evaluate(position),unoccluded=evaluator.evaluate(position,{occlusion:false});
   return {position,coefficients:visible.coefficients,upIrradiance:evaluateNightCoefficients(visible.coefficients,[0,1,0]),sideIrradiance:evaluateNightCoefficients(visible.coefficients,[1,0,0]),
     blockedSegments:visible.blocked,contributingSources:visible.contributing,unoccludedUpIrradiance:evaluateNightCoefficients(unoccluded.coefficients,[0,1,0])};
 });
-const sourceFiles=['dist/city-environment.js','dist/city-frontage-design.js','dist/city-night-transport.js','dist/city-corridor-plan.js','dist/urban-architecture.js','dist/night-city-lighting.js','scripts/bake-night-city.mjs'];
+const sourceFiles=['dist/city-environment.js','dist/city-landmarks.js','dist/city-frontage-design.js','dist/city-night-transport.js','dist/city-corridor-plan.js','dist/urban-architecture.js','dist/night-city-lighting.js','scripts/bake-night-city.mjs'];
 const report={version:1,createdAt:new Date().toISOString(),...NIGHT_FIELD_LAYOUT,volumes,totalProbes:total,validProbes:valid,anchors:anchors.length,bounceSources:sources.length,staticEnvelopes:occluders.count,blockedSegments,contributions,
   geometryCanonicalSHA256:sha(canonicalGeometryJSON(geometry)),anchorSHA256:sha(JSON.stringify(anchors)),sourceHashes:Object.fromEntries(sourceFiles.map(p=>[p,sha(readFileSync(new URL('../'+p,import.meta.url)))])),seconds:(performance.now()-begin)/1000,
   algorithm:'Fixture cone quadrature → first static envelope hit → cosine diffuse virtual source → visible probe; nonnegative six-axis ambient-cube storage',
   albedos:'Linear representative envelope reflectances: asphalt .070/.075/.078, paving .30/.31/.28, walls .27/.29/.28; these are engineering estimates.',cases,
-  limits:['Reflected diffuse only; camera-selected direct spots and headlights are not baked.','Static envelope occlusion includes current corridor fixtures. Sub-grid facade bevels, actual room interiors and dynamic car occlusion are excluded.','Only one diffuse surface event and finite-range softened virtual sources; finite probe interpolation can soften light near corners.','No screenshot, motion stability, frame time, GPU or subjective lighting acceptance follows from this bake.']};
+  limits:['Reflected diffuse only; camera-selected direct spots and headlights are not baked.','Static envelope occlusion includes current corridor fixtures and the shared South Quay entry canopy. Sub-grid facade bevels, actual room interiors and dynamic car occlusion are excluded.','Only one diffuse surface event and finite-range softened virtual sources; finite probe interpolation can soften light near corners.','No screenshot, motion stability, frame time, GPU or subjective lighting acceptance follows from this bake.']};
 report.identity=sha(JSON.stringify({geometry:report.geometryCanonicalSHA256,anchors:report.anchorSHA256,volumes:volumes.map(v=>v.sha256),layout:NIGHT_FIELD_LAYOUT}));
 writeFileSync(new URL('manifest.json',output),JSON.stringify(report,null,2)+'\n');
-writeFileSync(new URL('../qa/night-irradiance-bake-3.10.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL(`../qa/night-irradiance-bake-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({identity:report.identity,bytes:volumes.reduce((n,v)=>n+v.bytes,0),seconds:report.seconds,cases},null,2));
