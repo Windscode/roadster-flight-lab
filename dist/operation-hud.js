@@ -2,14 +2,15 @@ import {getLanguage,t as tr} from './i18n.js';
 import {estimateLandingReserve,controlLimitFeedback} from './landing-reserve.js';
 import {pilotIntentMessage} from './pilot-input-intent.js';
 const f=(n,d=1)=>Number.isFinite(n)?n.toFixed(d):'—';
-export function createOperationHud({mount,getSim,getContext,getOwner=()=>'',getLastAction=()=>null,exportInputs=()=>{}}){
+export function createOperationHud({mount,getSim,getContext,getOwner=()=>'',getLastAction=()=>null,onTogglePaused=()=>{},exportInputs=()=>{}}){
   const doc=mount.ownerDocument,node=doc.createElement('aside');node.className='operation-hud';node.setAttribute('data-no-i18n','');
-  node.innerHTML='<strong data-operation="identity"></strong><p data-operation="limits"></p><p data-operation="intent" role="status"></p><p class="operation-action" data-operation="action" role="status" hidden></p><p class="operation-attitude" data-operation="attitude"></p><details class="operation-detail"><summary data-operation="summary"></summary><p data-operation="motion-scope"></p><p data-operation="authority"></p><p data-operation="reserve"></p><p data-operation="scope"></p><button type="button" data-operation="export"></button></details>';
-  mount.append(node);const $=name=>node.querySelector('[data-operation="'+name+'"]');$('export').addEventListener('click',exportInputs);
+  node.innerHTML='<div class="operation-header"><strong data-operation="identity"></strong><button type="button" id="operation-pause" data-operation="pause" data-requires-graphics></button></div><p data-operation="limits"></p><p data-operation="intent" role="status"></p><p class="operation-action" data-operation="action" role="status" hidden></p><p class="operation-attitude" data-operation="attitude"></p><details class="operation-detail"><summary data-operation="summary"></summary><p data-operation="motion-scope"></p><p data-operation="authority"></p><p data-operation="reserve"></p><p data-operation="scope"></p><button type="button" data-operation="export"></button></details>';
+  mount.append(node);const $=name=>node.querySelector('[data-operation="'+name+'"]');$('export').addEventListener('click',exportInputs);$('pause').addEventListener('click',onTogglePaused);
   let cached=null,sampled=-Infinity,lastContext=null;
   const limitNames={ 'pressure-derating':['压力降额','Pressure derating'],'attitude-support-limit':['当前姿态无法静态承重','No static support at this attitude'],'force-or-torque-saturation':['合力 / 力矩受限','Force / torque saturation'],'valve-rise':['阀门正在建立推力','Valve thrust building'],'tcs-torque-limit':['TCS 限矩','TCS torque limit'],'combined-tire-grip':['转向与驱动共用附着','Shared cornering / drive grip'],'motor-power-limit':['电机功率受限','Motor power limit'],'lift-off-regeneration':['松油门再生制动','Lift-off regeneration']};
   return{node,update(t,{paused=false}={}){
     const en=getLanguage()==='en',L=(zh,enText)=>en?enText:zh,context=getContext(),sim=getSim();
+    $('pause').textContent=paused?L('继续','Resume'):L('暂停','Pause');$('pause').setAttribute('aria-label',paused?L('继续仿真','Resume simulation'):L('暂停仿真以观察','Pause simulation to inspect'));node.dataset.paused=String(paused);
     const now=performance.now();if(now-sampled>500||lastContext!==context||!cached){const clearance=sim.getClearanceEstimate({maxDistance:120,includeQuickRoll:false,directions:['down']});cached=estimateLandingReserve(t,sim.params,clearance);sampled=now;lastContext=context;}
     const gas=t.supplyMode==='bench'?L('恒压外供气','External constant pressure'):L('有限储气','Finite tank');
     const wind=t.wind&&(t.wind.speedMps||t.wind.gustMps)?L('有风','Wind'):L('无风','No wind'),fault=t.nozzleFault?L('故障 ','Fault ')+t.nozzleFault.id+' '+Math.round(t.nozzleFault.scale*100)+'%':L('无故障','No fault');

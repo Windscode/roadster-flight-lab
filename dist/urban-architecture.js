@@ -113,16 +113,34 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     ceramic:material('painted enamel and tile',{roughness:.59,metalness:.08}),
     metal:material('weathered steel',{roughness:.7,metalness:.58}),
     edges:material('anodised frame',{roughness:.37,metalness:.74}),
-    glass:material('sealed exterior glazing',{roughness:.16,metalness:0,envMapIntensity:1.12}),
-    displayGlass:material('dim sealed street display glazing',{roughness:.25,metalness:0,emissive:0xe2c7a0,emissiveIntensity:.055,envMapIntensity:.8}),
-    litGlass:material('diffused exterior window pane',{roughness:.20,metalness:0,emissive:0xffd3a0,emissiveIntensity:.21,envMapIntensity:1.0}),
+    glass:material('sealed exterior glazing',{roughness:.13,metalness:0,emissive:0xffffff,emissiveIntensity:1,envMapIntensity:1}),
     shutter:material('rolled metal shutter',{roughness:.54,metalness:.72}),
     signs:material('original painted sign atlas',{map:signAtlas,emissiveMap:signAtlas,emissive:signAtlas?0xffffff:0x000000,emissiveIntensity:.18,roughness:.6,metalness:.12}),
     lamp:material('small practical light',{color:0xffdcb1,emissive:0xffc994,emissiveIntensity:2.1,roughness:.35}),
     accent:material('restrained signage accent',{emissive:0xffffff,emissiveIntensity:1.3,roughness:.4,metalness:.15}),
   };
-  mat.litGlass.userData.windowBacklight=true;
-  mat.displayGlass.userData.windowBacklight=true;
+  // All sealed panes use the same opaque glass response. Keep each pane's
+  // original emission and explicit environment strength in instance data,
+  // instead of submitting three otherwise identical draws per facade cell.
+  const glazingStyles={
+    glass:[0,0,0,1.12],
+    displayGlass:[...colour(0xe2c7a0).toArray().map(v=>v*.055),.8],
+    litGlass:[...colour(0xffd3a0).toArray().map(v=>v*.21),1],
+  },explicitGlazingEnvironment={value:0};
+  mat.glass.userData.windowBacklight=true;
+  mat.glass.onBeforeRender=()=>{explicitGlazingEnvironment.value=mat.glass.envMap===null?0:1;};
+  mat.glass.onBeforeCompile=shader=>{
+    shader.uniforms.urbanExplicitGlazingEnvironment=explicitGlazingEnvironment;
+    shader.vertexShader='attribute vec4 urbanGlazing;\nvarying vec4 vUrbanGlazing;\n'+shader.vertexShader;
+    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvUrbanGlazing=urbanGlazing;');
+    shader.fragmentShader='varying vec4 vUrbanGlazing;\nuniform float urbanExplicitGlazingEnvironment;\n'+shader.fragmentShader;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance*=vUrbanGlazing.rgb;');
+    // Three uses scene.environmentIntensity when envMap is null. Preserve
+    // that behaviour; apply the authored per-pane intensity only for an
+    // explicitly assigned material environment, just as the old materials did.
+    shader.fragmentShader=shader.fragmentShader.replace('#include <envmap_physical_pars_fragment>',THREE.ShaderChunk.envmap_physical_pars_fragment.replace(/\benvMapIntensity\b/g,'(envMapIntensity*mix(1.,vUrbanGlazing.w,urbanExplicitGlazingEnvironment))'));
+  };
+  mat.glass.customProgramCacheKey=()=> 'urban-sealed-glazing-instance-response-v1';
   mat.accent.onBeforeCompile=shader=>{
     shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
       #if defined(USE_COLOR) || defined(USE_INSTANCING_COLOR)
@@ -130,7 +148,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       #endif`);
   };
   mat.accent.customProgramCacheKey=()=> 'urban-practical-instance-colour-v1';
-  for(const [key,kind]of Object.entries({concrete:'concrete',darkConcrete:'concrete',ceramic:'enamel',metal:'metal',edges:'frame',glass:'glass',displayGlass:'glass',litGlass:'glass',shutter:'shutter'}))surfaces.attach(mat[key],kind);
+  for(const [key,kind]of Object.entries({concrete:'concrete',darkConcrete:'concrete',ceramic:'enamel',metal:'metal',edges:'frame',glass:'glass',shutter:'shutter'}))surfaces.attach(mat[key],kind);
   // One atlas material per sector, with per-instance UV rects, rather than one
   // draw call for every sign or one material for every illuminated window.
   for(const m of [mat.signs])if(m.map){
@@ -152,14 +170,15 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   let sector='';
   function add(kind,geometry,size,position,rotation=[0,0,0],tint=white,variation=1,tile=-1,levelOverride=null){
     if(size.some(n=>!Number.isFinite(n)||n<=0))return;
-    // Mineral returns and tile trim share the 160 m facade-sector grid even
-    // when their visibility is detail-limited. Material keys remain separate;
-    // this avoids a new sparse batch for every small street-facing return.
-    const level=levelOverride||(kind==='shutter'||kind==='litGlass'||kind==='displayGlass'?'facade':architectureDetailLevel(kind,geometry,size)),cellSize=level==='detail'&&kind!=='concrete'&&kind!=='ceramic'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
+    // Group practical housings and brackets with the 160 m facade sectors.
+    // Thin frames retain their tighter 80 m cells for conservative distant
+    // culling. Every authored instance and original distance tier is retained.
+    const level=levelOverride||(kind==='shutter'||kind==='litGlass'||kind==='displayGlass'?'facade':architectureDetailLevel(kind,geometry,size)),cellSize=level==='detail'&&kind==='edges'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
+    const glazing=glazingStyles[kind];if(glazing)kind='glass';
     const key=cell+'|'+kind+'|'+geometry+'|'+level;
     let batch=batches.get(key);if(!batch){batch={sector:cell,kind,geometry,level,instances:[]};batches.set(key,batch);}
     transform.position.set(...position);transform.rotation.set(...rotation,'YXZ');transform.scale.set(...size);transform.updateMatrix();
-    const c=colour(tint);batch.instances.push({matrix:transform.matrix.toArray(),colour:[c.r*variation,c.g*variation,c.b*variation],tile});stats.instances++;
+    const c=colour(tint);batch.instances.push({matrix:transform.matrix.toArray(),colour:[c.r*variation,c.g*variation,c.b*variation],tile,glazing});stats.instances++;
   }
   const box=(kind,size,p,r,c,v,t)=>add(kind,'box',size,p,r,c,v,t);
   function atlasRect(tile){const i=((tile%16)+16)%16,margin=3/1024;return[(i%4)/4+margin,1-(Math.floor(i/4)+1)/4+margin,.25-2*margin,.25-2*margin];}
@@ -180,7 +199,15 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     function face(localYaw,w,d){
       const yaw=localYaw+frame.yaw,c=Math.cos(yaw),s=Math.sin(yaw),span=Math.abs(Math.cos(localYaw))>.5?w:d,depth=(Math.abs(Math.cos(localYaw))>.5?d:w)/2-.50;
       const point=(along,y,out)=>[b.x+frame.x+c*along+s*(depth+out),b.baseY+y,b.z+frame.z-s*along+c*(depth+out)];
-      const put=(kind,size,along,y,out,tint=p.wall,variance=1,geometry='box',tile=-1,rotation=[0,0,0])=>add(kind,geometry,size,point(along,y,out),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile);
+      const put=(kind,size,along,y,out,tint=p.wall,variance=1,geometry='box',tile=-1,rotation=[0,0,0])=>{
+        // Sealed opaque glazing sits in a solid wall recess. Only the outward
+        // surface can be seen; its five hidden box faces used to consume
+        // geometry in every view. Keep the exact front plane, outward normal,
+        // metre UVs and surrounding three-dimensional reveals.
+        if(geometry==='box'&&['glass','litGlass','displayGlass'].includes(kind))
+          return add(kind,'plane',[size[0],size[1],1],point(along,y,out+size[2]/2),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile,kind==='glass'?architectureDetailLevel(kind,'box',size):'facade');
+        return add(kind,geometry,size,point(along,y,out),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile);
+      };
       const putDetail=(kind,size,along,y,out,tint=p.wall,variance=1)=>add(kind,'box',size,point(along,y,out),[0,yaw,0],tint,variance,-1,'detail');
       return {span,point,put,putDetail};
     }
@@ -436,6 +463,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       for(let i=0;i<count;i++)uvRects.set(atlasRect(batch.instances[i].tile),i*4);
       g.setAttribute('urbanUvRect',new THREE.InstancedBufferAttribute(uvRects,4));
     }
+    if(batch.kind==='glass')g.setAttribute('urbanGlazing',new THREE.InstancedBufferAttribute(new Float32Array(batch.instances.flatMap(instance=>instance.glazing)),4));
     if(mat[batch.kind].userData.exteriorSurface)surfaces.installGeometry(g,batch.instances,batch.geometry);
     const mesh=new THREE.InstancedMesh(g,mat[batch.kind],count);mesh.name=`Urban ${batch.sector} / ${batch.level} / ${batch.kind} / ${batch.geometry}`;
     const c=new THREE.Color();
@@ -453,7 +481,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     stats.triangles+=(g.index?g.index.count:g.attributes.position.count)/3*count;
   }
   stats.textureCount=textures.length+surfaces.stats.textureCount;stats.sectorCount=sectors.size;stats.lightAnchors=lightAnchors.length;
-  stats.geometryMiB=+(stats.instances*(16+3+4)*4/1048576).toFixed(2);
+  stats.geometryMiB=+(group.children.reduce((bytes,mesh)=>bytes+mesh.instanceMatrix.array.byteLength+(mesh.instanceColor?.array.byteLength||0)+Object.values(mesh.geometry.attributes).reduce((n,attribute)=>n+attribute.array.byteLength,0)+(mesh.geometry.index?.array.byteLength||0),0)/1048576).toFixed(2);
   group.userData.stats=stats;group.userData.referenceStudy='Original modular construction; visual study of Dan Hargreaves and Kacper Niepokolczycki Kabuki portfolios. No game assets used.';
   batches.clear();
   return {group,stats,lightAnchors,ready:surfaces.ready,setQuality(q,profile){visibility.setQuality(q,profile);surfaces.setQuality(q);},update(time,p){visibility.update(time,p);},dispose(){

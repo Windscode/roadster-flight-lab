@@ -69,9 +69,11 @@ export function createCityContinuity(streets,routes,buildings,reservations=[]){
   // The selected Weave → Central Cross Street → Foundry route previously
   // lost its footway section between z=-149 and z=138. New shared strips
   // connect to the existing industrial pavement, leaving the inherited
-  // 28 m background crossings at z=0 and z=100 and the turning mouth open.
+  // 28 m background crossings at z=-100, 0 and 100 and the turning mouth open.
+  // Starting at -84 also avoids a disconnected 1 m paving stub before the
+  // -100 crossing; the original asphalt approach remains clear there.
   const connectorFootways=[];
-  for(const [start,end]of [[-117,-16],[16,84],[116,138]])for(const side of [-1,1]){
+  for(const [start,end]of [[-84,-16],[16,84],[116,138]])for(const side of [-1,1]){
     const id='foundry-inner-walk-'+side+'-'+start;
     box(id,[3,.12,end-start],[100+side*10.5,.06,(start+end)/2],'basalt',[0,0,0],'continuity-paving');
     finish(id+'-edge',[.095,.006,end-start],[100+side*8.67,.024,(start+end)/2]);
