@@ -1,0 +1,1070 @@
+{
+  "modelVersion": "3.16.0",
+  "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+  "status": "passed",
+  "scope": "Actual 120 Hz solver, real Node Worker and isolated DOM/storage fixtures. No target-GPU or native browser control/visual acceptance.",
+  "checks": [
+    {
+      "name": "A frozen three-candidate study executes the actual 120 Hz solver and retains each raw result",
+      "status": "passed",
+      "detail": {
+        "candidates": [
+          {
+            "id": "candidate-0",
+            "resultId": "landing-mvh0vy34-792fe076",
+            "algorithmHash": "fnv1a32-de4069ad",
+            "parameters": {
+              "kp": 3.2,
+              "kd": 3.6,
+              "slewLimitMps3": 18,
+              "outputLimitMps2": 6,
+              "controlHz": 60
+            },
+            "metrics": {
+              "valid": true,
+              "reason": "stable_landing",
+              "status": "completed",
+              "settlingTimeS": 2.066666666666667,
+              "overshootM": 0,
+              "gasThroughputKg": 404.7650505174985,
+              "gasWindowKg": 225.270279453032,
+              "gasWindowSeconds": 6,
+              "stableLandingAtS": 11.433333333333334,
+              "controllerLimitedSeconds": 0.03333333333333333,
+              "outputLimitedSeconds": 0,
+              "slewLimitedSeconds": 0.03333333333333333,
+              "actuatorLimitedSeconds": 0.008333333333333333,
+              "peakMassFlowKgS": 42.33449731010216,
+              "heightRmseM": 0.4867615181522289,
+              "supplyMode": "bench"
+            }
+          },
+          {
+            "id": "candidate-1",
+            "resultId": "landing-mvh0vyge-b3f8f9e4",
+            "algorithmHash": "fnv1a32-6f534a52",
+            "parameters": {
+              "kp": 5.2,
+              "kd": 3.1,
+              "slewLimitMps3": 18,
+              "outputLimitMps2": 6,
+              "controlHz": 60
+            },
+            "metrics": {
+              "valid": true,
+              "reason": "stable_landing",
+              "status": "completed",
+              "settlingTimeS": 1.1916666666666669,
+              "overshootM": 0.07152605637525467,
+              "gasThroughputKg": 379.32439027059985,
+              "gasWindowKg": 225.32111577495274,
+              "gasWindowSeconds": 6,
+              "stableLandingAtS": 10.783333333333333,
+              "controllerLimitedSeconds": 0,
+              "outputLimitedSeconds": 0,
+              "slewLimitedSeconds": 0,
+              "actuatorLimitedSeconds": 0.008333333333333333,
+              "peakMassFlowKgS": 44.75699792089573,
+              "heightRmseM": 0.33703134879692526,
+              "supplyMode": "bench"
+            }
+          },
+          {
+            "id": "candidate-2",
+            "resultId": "landing-mvh0vyrd-4a6bc3d7",
+            "algorithmHash": "fnv1a32-996b76d2",
+            "parameters": {
+              "kp": 26,
+              "kd": 7,
+              "slewLimitMps3": 30,
+              "outputLimitMps2": 6,
+              "controlHz": 60
+            },
+            "metrics": {
+              "valid": true,
+              "reason": "stable_landing",
+              "status": "completed",
+              "settlingTimeS": 0.45833333333333326,
+              "overshootM": 0.04253994102690717,
+              "gasThroughputKg": 367.11720945700614,
+              "gasWindowKg": 225.5105705786175,
+              "gasWindowSeconds": 6,
+              "stableLandingAtS": 10.45,
+              "controllerLimitedSeconds": 0.3833333333333337,
+              "outputLimitedSeconds": 0.09999999999999999,
+              "slewLimitedSeconds": 0.3166666666666668,
+              "actuatorLimitedSeconds": 0.008333333333333333,
+              "peakMassFlowKgS": 53.89266144897448,
+              "heightRmseM": 0.16931464729545007,
+              "supplyMode": "bench"
+            }
+          }
+        ],
+        "front": [
+          "candidate-0",
+          "candidate-2"
+        ],
+        "frozen": {
+          "task": {
+            "schema": "roadster.landing-task",
+            "version": 1,
+            "name": "Crosswind landing / VECTOR 07",
+            "seed": 31415,
+            "supplyMode": "bench",
+            "initialPressureBar": 350,
+            "targetHeightM": 2.5,
+            "timeoutS": 16,
+            "nozzleScale": 1,
+            "landingRadiusM": 1.5,
+            "disturbances": [
+              {
+                "timeS": 2,
+                "speedMps": 3,
+                "directionDeg": 90,
+                "gustMps": 1,
+                "gustPeriodS": 2.8
+              },
+              {
+                "timeS": 4,
+                "speedMps": 4,
+                "directionDeg": 270,
+                "gustMps": 1.5,
+                "gustPeriodS": 3.1
+              },
+              {
+                "timeS": 7.5,
+                "speedMps": 0,
+                "directionDeg": 0,
+                "gustMps": 0,
+                "gustPeriodS": 4
+              }
+            ],
+            "faultTimeS": 4.5,
+            "nozzleId": "lift-FL"
+          },
+          "taskId": "fnv1a32-6d222ba9",
+          "initialStateLabel": "fnv1a32-aa53f6f2",
+          "sourceResultId": "landing-mvh0vxlu-792fe076",
+          "identity": {
+            "modelVersion": "3.16.0",
+            "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+            "sourceCommit": null,
+            "sourceTree": null,
+            "sourceIdentityStatus": "not-available",
+            "protocolVersion": "live-fixed-inputs-1",
+            "fixedHz": 120,
+            "taskProtocol": "windlab-disturbance-landing-1"
+          },
+          "collisionIdentity": "08604efb",
+          "controlHz": 60,
+          "criteria": {
+            "plateauStartS": 1,
+            "plateauEndS": 6,
+            "heightBandM": 0.12,
+            "verticalSpeedBandMps": 0.18,
+            "minimumDwellS": 0.5,
+            "statisticsHz": 120
+          },
+          "changed": "Declared algorithm content/hash only; complete physical initial snapshot, initial controller state, wind schedule, model and control frequency are held fixed."
+        }
+      }
+    },
+    {
+      "name": "A genuinely faster candidate costs more fixed-window gas and encounters more bounded-output saturation",
+      "status": "passed",
+      "detail": {
+        "baseline": {
+          "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+          "statisticsHz": 120,
+          "count": 1372,
+          "heightErrorSquared": 325.0772560598995,
+          "peakHeightErrorM": 1.3761262059955417,
+          "maxHeightM": 2.497772598250652,
+          "minHeightM": 0.5794901493972662,
+          "minEnvelopeClearanceM": 0.029488837177744753,
+          "saturationSeconds": 0.008333333333333333,
+          "controllerLimitedSeconds": 0.03333333333333333,
+          "gasThroughputKg": 404.7650505174985,
+          "onboardDischargedKg": 0,
+          "externalSupplyKg": 404.7650505174985,
+          "peakLateralErrorM": 0.0030194753362026167,
+          "holdOvershootM": 0,
+          "hoverSettlingTimeS": 2.066666666666667,
+          "hoverSettlingConfirmedAtS": 6,
+          "takeoffHoldGasKg": 225.270279453032,
+          "takeoffHoldDurationS": 6,
+          "peakMassFlowKgS": 42.33449731010216,
+          "controllerOutputLimitedSeconds": 0,
+          "controllerSlewLimitedSeconds": 0.03333333333333333,
+          "heightResponseCriteria": {
+            "plateauStartS": 1,
+            "plateauEndS": 6,
+            "heightBandM": 0.12,
+            "verticalSpeedBandMps": 0.18,
+            "minimumDwellS": 0.5,
+            "statisticsHz": 120
+          },
+          "heightResponseMeaning": "Settling is measured from the 1 s start of the constant target, at every 120 Hz state; the final uninterrupted height/vertical-speed band must persist at least 0.5 s through 6 s. Null means no qualification in that window. Overshoot uses the same 1–6 s window. Fixed-window gas is 0–6 s only; partial failed runs retain their shorter duration.",
+          "heightRmseM": 0.4867615181522289,
+          "takeoffAtS": 1.475,
+          "firstContact": {
+            "timeS": 10.733333333333333,
+            "step": 1288,
+            "preContactVerticalMps": 0.3214010218971134,
+            "postContactVerticalMps": -0.3420094010122656,
+            "tiltDeg": 0.000006334062540496968,
+            "position": {
+              "x": -0.000022785998621023394,
+              "y": 0.7052742646755342,
+              "z": 0.0000034254160947440126
+            },
+            "errorM": 0.000023042031346637204,
+            "contacts": 4
+          },
+          "stableLandingAtS": 11.433333333333334,
+          "landingErrorM": 0.00001950742159618909,
+          "gasRemainingKg": 249.55820028489444,
+          "landingSucceeded": true,
+          "recoveryFromLastDisturbanceS": 3.9333333333333336,
+          "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+          "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+        },
+        "candidate": {
+          "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+          "statisticsHz": 120,
+          "count": 1254,
+          "heightErrorSquared": 35.94898203513345,
+          "peakHeightErrorM": 0.5277405537277222,
+          "maxHeightM": 2.542539941026907,
+          "minHeightM": 0.5776133520786996,
+          "minEnvelopeClearanceM": 0.027608204320240304,
+          "saturationSeconds": 0.008333333333333333,
+          "controllerLimitedSeconds": 0.3833333333333337,
+          "gasThroughputKg": 367.11720945700614,
+          "onboardDischargedKg": 0,
+          "externalSupplyKg": 367.11720945700614,
+          "peakLateralErrorM": 0.003020142228500479,
+          "holdOvershootM": 0.04253994102690717,
+          "hoverSettlingTimeS": 0.45833333333333326,
+          "hoverSettlingConfirmedAtS": 6,
+          "takeoffHoldGasKg": 225.5105705786175,
+          "takeoffHoldDurationS": 6,
+          "peakMassFlowKgS": 53.89266144897448,
+          "controllerOutputLimitedSeconds": 0.09999999999999999,
+          "controllerSlewLimitedSeconds": 0.3166666666666668,
+          "heightResponseCriteria": {
+            "plateauStartS": 1,
+            "plateauEndS": 6,
+            "heightBandM": 0.12,
+            "verticalSpeedBandMps": 0.18,
+            "minimumDwellS": 0.5,
+            "statisticsHz": 120
+          },
+          "heightResponseMeaning": "Settling is measured from the 1 s start of the constant target, at every 120 Hz state; the final uninterrupted height/vertical-speed band must persist at least 0.5 s through 6 s. Null means no qualification in that window. Overshoot uses the same 1–6 s window. Fixed-window gas is 0–6 s only; partial failed runs retain their shorter duration.",
+          "heightRmseM": 0.16931464729545007,
+          "takeoffAtS": 0.8083333333333333,
+          "firstContact": {
+            "timeS": 9.758333333333333,
+            "step": 1171,
+            "preContactVerticalMps": 0.512500102159652,
+            "postContactVerticalMps": -0.5262497164860809,
+            "tiltDeg": 0.000026901323122301473,
+            "position": {
+              "x": -0.00024867208777310814,
+              "y": 0.711783721579989,
+              "z": 0.00006472124474172025
+            },
+            "errorM": 0.0002569565075228764,
+            "contacts": 4
+          },
+          "stableLandingAtS": 10.45,
+          "landingErrorM": 0.0002462801148145647,
+          "gasRemainingKg": 249.55820028489444,
+          "landingSucceeded": true,
+          "recoveryFromLastDisturbanceS": 2.9499999999999993,
+          "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+          "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+        },
+        "tradeoff": {
+          "controlled": true,
+          "bothCompleted": true,
+          "differences": {
+            "settlingTimeS": -1.6083333333333336,
+            "overshootM": 0.04253994102690717,
+            "gasThroughputKg": -37.64784106049234,
+            "gasWindowKg": 0.24029112558548604,
+            "stableLandingAtS": -0.9833333333333343,
+            "controllerLimitedSeconds": 0.35000000000000037,
+            "outputLimitedSeconds": 0.09999999999999999,
+            "actuatorLimitedSeconds": 0,
+            "heightRmseM": -0.3174468708567788
+          },
+          "meaning": "Negative settling/gas/error differences favour the candidate only for this fixed task. Gas through completion and gas within the identical 0–6 s window have different endpoints. AST output/slew limiting is distinct from physical actuator allocation saturation.",
+          "piInterpretation": "Integral state can accumulate while takeoff/valves and bounded acceleration lag; low-pass velocity adds phase lag. For this short ramp/hold/descent task, these may prolong settling and spend more time supporting weight. A changed curve alone is not an improvement. Inspect retained integral/filter states, target, observation and bounded/achieved response; no universal PI verdict is implied."
+        }
+      }
+    },
+    {
+      "name": "Integral/filter template failure to improve this task is retained and inspectable, not called research success",
+      "status": "passed",
+      "detail": {
+        "baselineRmse": 0.4867615181522289,
+        "piRmse": 0.6729632601568822,
+        "baselineGas": 404.7650505174985,
+        "piGas": 420.73576329161097,
+        "interpretation": {
+          "controlled": true,
+          "bothCompleted": true,
+          "differences": {
+            "settlingTimeS": null,
+            "overshootM": 0.2649796476127677,
+            "gasThroughputKg": 15.970712774112485,
+            "gasWindowKg": 0.2143023063887597,
+            "stableLandingAtS": 0.42499999999999893,
+            "controllerLimitedSeconds": -0.03333333333333333,
+            "outputLimitedSeconds": 0,
+            "actuatorLimitedSeconds": 0,
+            "heightRmseM": 0.18620174200465334
+          },
+          "meaning": "Negative settling/gas/error differences favour the candidate only for this fixed task. Gas through completion and gas within the identical 0–6 s window have different endpoints. AST output/slew limiting is distinct from physical actuator allocation saturation.",
+          "piInterpretation": "Integral state can accumulate while takeoff/valves and bounded acceleration lag; low-pass velocity adds phase lag. For this short ramp/hold/descent task, these may prolong settling and spend more time supporting weight. A changed curve alone is not an improvement. Inspect retained integral/filter states, target, observation and bounded/achieved response; no universal PI verdict is implied."
+        }
+      }
+    },
+    {
+      "name": "Held-out validation uses the frozen initial snapshot and a different predeclared wind task, outside tuning ranking",
+      "status": "passed",
+      "detail": {
+        "status": "completed",
+        "reason": "stable_landing",
+        "taskId": "fnv1a32-b8b29316",
+        "wind": [
+          {
+            "timeS": 1.75,
+            "speedMps": 7,
+            "directionDeg": 45,
+            "gustMps": 2,
+            "gustPeriodS": 1.7
+          },
+          {
+            "timeS": 3.4,
+            "speedMps": 9,
+            "directionDeg": 225,
+            "gustMps": 3,
+            "gustPeriodS": 2.3
+          },
+          {
+            "timeS": 7.1,
+            "speedMps": 1,
+            "directionDeg": 135,
+            "gustMps": 0.5,
+            "gustPeriodS": 2.9
+          }
+        ],
+        "metrics": {
+          "source": "all 120 Hz post-integration physical states; display curves do not define statistics",
+          "statisticsHz": 120,
+          "count": 1254,
+          "heightErrorSquared": 35.9505199828372,
+          "peakHeightErrorM": 0.5277405537277222,
+          "maxHeightM": 2.542539941026907,
+          "minHeightM": 0.577614978837214,
+          "minEnvelopeClearanceM": 0.027600885591368918,
+          "saturationSeconds": 0.008333333333333333,
+          "controllerLimitedSeconds": 0.3833333333333337,
+          "gasThroughputKg": 367.59130466635884,
+          "onboardDischargedKg": 0,
+          "externalSupplyKg": 367.59130466635884,
+          "peakLateralErrorM": 0.011372274920470955,
+          "holdOvershootM": 0.04253994102690717,
+          "hoverSettlingTimeS": 0.45833333333333326,
+          "hoverSettlingConfirmedAtS": 6,
+          "takeoffHoldGasKg": 225.86015633623126,
+          "takeoffHoldDurationS": 6,
+          "peakMassFlowKgS": 53.89266144897448,
+          "controllerOutputLimitedSeconds": 0.09999999999999999,
+          "controllerSlewLimitedSeconds": 0.3166666666666668,
+          "heightResponseCriteria": {
+            "plateauStartS": 1,
+            "plateauEndS": 6,
+            "heightBandM": 0.12,
+            "verticalSpeedBandMps": 0.18,
+            "minimumDwellS": 0.5,
+            "statisticsHz": 120
+          },
+          "heightResponseMeaning": "Settling is measured from the 1 s start of the constant target, at every 120 Hz state; the final uninterrupted height/vertical-speed band must persist at least 0.5 s through 6 s. Null means no qualification in that window. Overshoot uses the same 1–6 s window. Fixed-window gas is 0–6 s only; partial failed runs retain their shorter duration.",
+          "heightRmseM": 0.16931826901536115,
+          "takeoffAtS": 0.8083333333333333,
+          "firstContact": {
+            "timeS": 9.758333333333333,
+            "step": 1171,
+            "preContactVerticalMps": 0.5124874172013216,
+            "postContactVerticalMps": -0.5262443788885227,
+            "tiltDeg": 0.00005414755536325889,
+            "position": {
+              "x": -0.0004352131265071624,
+              "y": 0.7117908133072709,
+              "z": -0.00023597669101356597
+            },
+            "errorM": 0.0004950711708288529,
+            "contacts": 4
+          },
+          "stableLandingAtS": 10.45,
+          "landingErrorM": 0.00046043028284990843,
+          "gasRemainingKg": 249.55820028489444,
+          "landingSucceeded": true,
+          "recoveryFromLastDisturbanceS": 3.3499999999999996,
+          "recoveryMeaning": "Time from the last applied scheduled wind change to sustained stable landing, including commanded descent; not isolated wind-response settling time.",
+          "clearanceMeaning": "Minimum vertical AABB hull gap to the actual flat laboratory floor; estimate of collision envelope, not tyre travel, city AGL, or recovery height."
+        }
+      }
+    },
+    {
+      "name": "Finite 100 bar physical failures and cancelled partial candidates stay in the scan; neither enters the Pareto front",
+      "status": "passed",
+      "detail": {
+        "finite": [
+          {
+            "id": "candidate-0",
+            "resultId": "landing-mvh0vzux-36899811",
+            "algorithmHash": "fnv1a32-de4069ad",
+            "parameters": {
+              "kp": 3.2,
+              "kd": 3.6,
+              "slewLimitMps3": 18,
+              "outputLimitMps2": 6,
+              "controlHz": 60
+            },
+            "metrics": {
+              "valid": false,
+              "reason": "hard_or_tilted_touchdown",
+              "status": "failed",
+              "settlingTimeS": null,
+              "overshootM": 0,
+              "gasThroughputKg": 68.50755890445122,
+              "gasWindowKg": null,
+              "gasWindowSeconds": 2.1083333333333334,
+              "stableLandingAtS": null,
+              "controllerLimitedSeconds": 0.5416666666666672,
+              "outputLimitedSeconds": 0.3583333333333336,
+              "slewLimitedSeconds": 0.26666666666666666,
+              "actuatorLimitedSeconds": 1.3249999999999977,
+              "peakMassFlowKgS": 49.78283077879118,
+              "heightRmseM": 1.0045774576656368,
+              "supplyMode": "finite"
+            }
+          },
+          {
+            "id": "candidate-1",
+            "resultId": "landing-mvh0w02z-95675504",
+            "algorithmHash": "fnv1a32-6f534a52",
+            "parameters": {
+              "kp": 5.2,
+              "kd": 3.1,
+              "slewLimitMps3": 18,
+              "outputLimitMps2": 6,
+              "controlHz": 60
+            },
+            "metrics": {
+              "valid": false,
+              "reason": "hard_or_tilted_touchdown",
+              "status": "failed",
+              "settlingTimeS": null,
+              "overshootM": 0,
+              "gasThroughputKg": 68.68645631305472,
+              "gasWindowKg": null,
+              "gasWindowSeconds": 2.216666666666667,
+              "stableLandingAtS": null,
+              "controllerLimitedSeconds": 0.6333333333333335,
+              "outputLimitedSeconds": 0.41666666666666713,
+              "slewLimitedSeconds": 0.3166666666666668,
+              "actuatorLimitedSeconds": 1.4749999999999972,
+              "peakMassFlowKgS": 47.41338652045422,
+              "heightRmseM": 0.7876396131656644,
+              "supplyMode": "finite"
+            }
+          },
+          {
+            "id": "candidate-2",
+            "resultId": "landing-mvh0w084-a4513a57",
+            "algorithmHash": "fnv1a32-996b76d2",
+            "parameters": {
+              "kp": 26,
+              "kd": 7,
+              "slewLimitMps3": 30,
+              "outputLimitMps2": 6,
+              "controlHz": 60
+            },
+            "metrics": {
+              "valid": false,
+              "reason": "hard_or_tilted_touchdown",
+              "status": "failed",
+              "settlingTimeS": null,
+              "overshootM": 0.04187793385039296,
+              "gasThroughputKg": 68.64206321516986,
+              "gasWindowKg": null,
+              "gasWindowSeconds": 2.2583333333333333,
+              "stableLandingAtS": null,
+              "controllerLimitedSeconds": 0.9416666666666658,
+              "outputLimitedSeconds": 0.6583333333333334,
+              "slewLimitedSeconds": 0.4000000000000004,
+              "actuatorLimitedSeconds": 1.60833333333333,
+              "peakMassFlowKgS": 51.516575447591414,
+              "heightRmseM": 0.5326463940882837,
+              "supplyMode": "finite"
+            }
+          }
+        ],
+        "partialCancelledSteps": 120
+      }
+    },
+    {
+      "name": "Non-dominance is independent of weights and missing metrics are never interpreted as zero",
+      "status": "passed",
+      "detail": {
+        "front": [
+          "A",
+          "B"
+        ],
+        "failedAndMissingExcluded": true
+      }
+    },
+    {
+      "name": "Observer truth, actual measured feedback and bounded/achieved control remain distinct and repeat exactly",
+      "status": "passed",
+      "detail": {
+        "status": "completed",
+        "observation": {
+          "configuration": {
+            "enabled": true,
+            "delayMs": 50,
+            "seed": 1531,
+            "positionNoiseM": 0.025,
+            "velocityNoiseMps": 0.02,
+            "attitudeNoiseDeg": 0,
+            "angularRateNoiseRadS": 0
+          },
+          "outerLoop": "Uses configured position/velocity measurement when enabled; otherwise ideal pre-step truth.",
+          "innerLoop": "Existing bounded position/attitude feedback uses the same declared observation model; wheel/contact switches remain ideal.",
+          "timeBasis": "controllerIO.timeS is relative task time; observationTimeS is absolute simulation time, including the 2 s settled fixture prelude and any declared delay.",
+          "trace": "Each control decision retains target/actual observation, pre-step truth, request, bounded application and post-integration physical response. Applied acceleration is a control request, not achieved acceleration."
+        },
+        "firstDecision": {
+          "step": 0,
+          "timeS": 0,
+          "inputs": {
+            "dt": 0.016666666666666666,
+            "error": -0.017442270833998963,
+            "height": 0.6144539542340373,
+            "targetHeight": 0.5970116834000383,
+            "verticalSpeed": -0.012628610500652402,
+            "time": 0
+          },
+          "truth": {
+            "heightM": 0.5970116834000383,
+            "verticalSpeedMps": -0.000010178045887559133
+          },
+          "observationTimeS": 1.9999999999999953,
+          "raw": -0.010352268866448043,
+          "limited": -0.010352268866448043,
+          "output": -0.010352268866448043,
+          "states": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "operations": 7,
+          "saturated": false,
+          "actuatorRequest": {
+            "active": true,
+            "requested": -0.010352268866448043,
+            "applied": -0.010352268866448043,
+            "reason": "applied"
+          },
+          "physicalResponse": {
+            "postStepVerticalMps": 0.01379244493261939,
+            "netVerticalAccelerationMps2": 1.656314757420834,
+            "requestedBodyLiftN": 21554.895526918066,
+            "achievedBodyLiftN": 3643.62811535103,
+            "massFlowKgS": 6.472767796815362,
+            "allocationError": 0.22392303417611953
+          }
+        },
+        "exactRepeat": true
+      }
+    },
+    {
+      "name": "Task exit restores settings and pilot authority after the terminal snapshot, without teleporting or refilling",
+      "status": "passed",
+      "detail": {
+        "reason": "pilot_takeover",
+        "restored": [
+          "model parameter settings including gas supply mode",
+          "wind configuration",
+          "nozzle fault configuration",
+          "observation configuration"
+        ],
+        "retained": [
+          "terminal physical pose and velocity",
+          "simulation time",
+          "actual remaining gas mass; no refill"
+        ],
+        "authority": "pilot",
+        "supplyMode": "bench",
+        "gasRemainingKg": 60.09522929185035,
+        "wind": {
+          "speedMps": 4,
+          "directionDeg": 35,
+          "gustMps": 1,
+          "gustPeriodS": 3
+        },
+        "nozzleFault": {
+          "id": "lift-FR",
+          "scale": 0.75
+        },
+        "physicalStateUnchanged": true
+      }
+    },
+    {
+      "name": "Full candidate results, algorithms and study linkage round-trip; invalid or quota-blocked archives preserve original bytes",
+      "status": "passed",
+      "detail": {
+        "bytes": 2507606,
+        "records": 3,
+        "studyCount": 1,
+        "protectedRawPreserved": true
+      }
+    },
+    {
+      "name": "Real Worker scan returns partial cancelled work, releases its task slot and accepts the next request",
+      "status": "passed",
+      "detail": {
+        "cancelledAtStep": 120,
+        "retainedCandidates": 1,
+        "nextTaskAccepted": true
+      }
+    },
+    {
+      "name": "Isolated UI copy/edit/scan/select/held-out/live redecision and refresh preserve graphs, full results and persistent warnings",
+      "status": "passed",
+      "detail": {
+        "recordCount": 6,
+        "studyCount": 1,
+        "liveReexecutionMatched": true,
+        "warningPersists": true,
+        "unpersistedValidationExported": true
+      }
+    }
+  ],
+  "evidence": {
+    "study": {
+      "schema": "roadster.height-study",
+      "version": 1,
+      "protocol": "height-pareto-study-1",
+      "id": "height-study-mvh0vyrh-26e32f88",
+      "status": "completed",
+      "frozen": {
+        "task": {
+          "schema": "roadster.landing-task",
+          "version": 1,
+          "name": "Crosswind landing / VECTOR 07",
+          "seed": 31415,
+          "supplyMode": "bench",
+          "initialPressureBar": 350,
+          "targetHeightM": 2.5,
+          "timeoutS": 16,
+          "nozzleScale": 1,
+          "landingRadiusM": 1.5,
+          "disturbances": [
+            {
+              "timeS": 2,
+              "speedMps": 3,
+              "directionDeg": 90,
+              "gustMps": 1,
+              "gustPeriodS": 2.8
+            },
+            {
+              "timeS": 4,
+              "speedMps": 4,
+              "directionDeg": 270,
+              "gustMps": 1.5,
+              "gustPeriodS": 3.1
+            },
+            {
+              "timeS": 7.5,
+              "speedMps": 0,
+              "directionDeg": 0,
+              "gustMps": 0,
+              "gustPeriodS": 4
+            }
+          ],
+          "faultTimeS": 4.5,
+          "nozzleId": "lift-FL"
+        },
+        "taskId": "fnv1a32-6d222ba9",
+        "initialStateLabel": "fnv1a32-aa53f6f2",
+        "sourceResultId": "landing-mvh0vxlu-792fe076",
+        "identity": {
+          "modelVersion": "3.16.0",
+          "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+          "sourceCommit": null,
+          "sourceTree": null,
+          "sourceIdentityStatus": "not-available",
+          "protocolVersion": "live-fixed-inputs-1",
+          "fixedHz": 120,
+          "taskProtocol": "windlab-disturbance-landing-1"
+        },
+        "collisionIdentity": "08604efb",
+        "controlHz": 60,
+        "criteria": {
+          "plateauStartS": 1,
+          "plateauEndS": 6,
+          "heightBandM": 0.12,
+          "verticalSpeedBandMps": 0.18,
+          "minimumDwellS": 0.5,
+          "statisticsHz": 120
+        },
+        "changed": "Declared algorithm content/hash only; complete physical initial snapshot, initial controller state, wind schedule, model and control frequency are held fixed."
+      },
+      "candidates": [
+        {
+          "id": "candidate-0",
+          "algorithm": {
+            "schema": "roadster.height-controller",
+            "version": 1,
+            "name": "PD / height outer loop",
+            "interfaceVersion": "height-outer-acceleration-1",
+            "controlHz": 60,
+            "outputLimit": 6,
+            "slewLimit": 18,
+            "root": {
+              "op": "sub",
+              "args": [
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 3.2
+                    },
+                    {
+                      "op": "input",
+                      "name": "error"
+                    }
+                  ]
+                },
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 3.6
+                    },
+                    {
+                      "op": "input",
+                      "name": "verticalSpeed"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "algorithmHash": "fnv1a32-de4069ad",
+          "parameters": {
+            "kp": 3.2,
+            "kd": 3.6,
+            "slewLimitMps3": 18,
+            "outputLimitMps2": 6,
+            "controlHz": 60
+          },
+          "declaration": "Unchanged edited baseline"
+        },
+        {
+          "id": "candidate-1",
+          "algorithm": {
+            "schema": "roadster.height-controller",
+            "version": 1,
+            "name": "PD / height outer loop / P5.20 D3.10 S18.0",
+            "interfaceVersion": "height-outer-acceleration-1",
+            "controlHz": 60,
+            "outputLimit": 6,
+            "slewLimit": 18,
+            "root": {
+              "op": "sub",
+              "args": [
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 5.2
+                    },
+                    {
+                      "op": "input",
+                      "name": "error"
+                    }
+                  ]
+                },
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 3.1
+                    },
+                    {
+                      "op": "input",
+                      "name": "verticalSpeed"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "algorithmHash": "fnv1a32-6f534a52",
+          "parameters": {
+            "kp": 5.2,
+            "kd": 3.1,
+            "slewLimitMps3": 18,
+            "outputLimitMps2": 6,
+            "controlHz": 60
+          },
+          "declaration": "Only declared PD constants and slew limit differ"
+        },
+        {
+          "id": "candidate-2",
+          "algorithm": {
+            "schema": "roadster.height-controller",
+            "version": 1,
+            "name": "PD / height outer loop / P26.00 D7.00 S30.0",
+            "interfaceVersion": "height-outer-acceleration-1",
+            "controlHz": 60,
+            "outputLimit": 6,
+            "slewLimit": 30,
+            "root": {
+              "op": "sub",
+              "args": [
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 26
+                    },
+                    {
+                      "op": "input",
+                      "name": "error"
+                    }
+                  ]
+                },
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 7
+                    },
+                    {
+                      "op": "input",
+                      "name": "verticalSpeed"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "algorithmHash": "fnv1a32-996b76d2",
+          "parameters": {
+            "kp": 26,
+            "kd": 7,
+            "slewLimitMps3": 30,
+            "outputLimitMps2": 6,
+            "controlHz": 60
+          },
+          "declaration": "Only declared PD constants and slew limit differ"
+        }
+      ],
+      "rows": [
+        {
+          "id": "candidate-0",
+          "resultId": "landing-mvh0vy34-792fe076",
+          "algorithmHash": "fnv1a32-de4069ad",
+          "parameters": {
+            "kp": 3.2,
+            "kd": 3.6,
+            "slewLimitMps3": 18,
+            "outputLimitMps2": 6,
+            "controlHz": 60
+          },
+          "metrics": {
+            "valid": true,
+            "reason": "stable_landing",
+            "status": "completed",
+            "settlingTimeS": 2.066666666666667,
+            "overshootM": 0,
+            "gasThroughputKg": 404.7650505174985,
+            "gasWindowKg": 225.270279453032,
+            "gasWindowSeconds": 6,
+            "stableLandingAtS": 11.433333333333334,
+            "controllerLimitedSeconds": 0.03333333333333333,
+            "outputLimitedSeconds": 0,
+            "slewLimitedSeconds": 0.03333333333333333,
+            "actuatorLimitedSeconds": 0.008333333333333333,
+            "peakMassFlowKgS": 42.33449731010216,
+            "heightRmseM": 0.4867615181522289,
+            "supplyMode": "bench"
+          }
+        },
+        {
+          "id": "candidate-1",
+          "resultId": "landing-mvh0vyge-b3f8f9e4",
+          "algorithmHash": "fnv1a32-6f534a52",
+          "parameters": {
+            "kp": 5.2,
+            "kd": 3.1,
+            "slewLimitMps3": 18,
+            "outputLimitMps2": 6,
+            "controlHz": 60
+          },
+          "metrics": {
+            "valid": true,
+            "reason": "stable_landing",
+            "status": "completed",
+            "settlingTimeS": 1.1916666666666669,
+            "overshootM": 0.07152605637525467,
+            "gasThroughputKg": 379.32439027059985,
+            "gasWindowKg": 225.32111577495274,
+            "gasWindowSeconds": 6,
+            "stableLandingAtS": 10.783333333333333,
+            "controllerLimitedSeconds": 0,
+            "outputLimitedSeconds": 0,
+            "slewLimitedSeconds": 0,
+            "actuatorLimitedSeconds": 0.008333333333333333,
+            "peakMassFlowKgS": 44.75699792089573,
+            "heightRmseM": 0.33703134879692526,
+            "supplyMode": "bench"
+          }
+        },
+        {
+          "id": "candidate-2",
+          "resultId": "landing-mvh0vyrd-4a6bc3d7",
+          "algorithmHash": "fnv1a32-996b76d2",
+          "parameters": {
+            "kp": 26,
+            "kd": 7,
+            "slewLimitMps3": 30,
+            "outputLimitMps2": 6,
+            "controlHz": 60
+          },
+          "metrics": {
+            "valid": true,
+            "reason": "stable_landing",
+            "status": "completed",
+            "settlingTimeS": 0.45833333333333326,
+            "overshootM": 0.04253994102690717,
+            "gasThroughputKg": 367.11720945700614,
+            "gasWindowKg": 225.5105705786175,
+            "gasWindowSeconds": 6,
+            "stableLandingAtS": 10.45,
+            "controllerLimitedSeconds": 0.3833333333333337,
+            "outputLimitedSeconds": 0.09999999999999999,
+            "slewLimitedSeconds": 0.3166666666666668,
+            "actuatorLimitedSeconds": 0.008333333333333333,
+            "peakMassFlowKgS": 53.89266144897448,
+            "heightRmseM": 0.16931464729545007,
+            "supplyMode": "bench"
+          }
+        }
+      ],
+      "front": [
+        "candidate-0",
+        "candidate-2"
+      ],
+      "validationTask": {
+        "schema": "roadster.landing-task",
+        "version": 1,
+        "name": "Crosswind landing / VECTOR 07 / held-out wind",
+        "seed": 31415,
+        "supplyMode": "bench",
+        "initialPressureBar": 350,
+        "targetHeightM": 2.5,
+        "timeoutS": 16,
+        "nozzleScale": 1,
+        "landingRadiusM": 1.5,
+        "disturbances": [
+          {
+            "timeS": 1.75,
+            "speedMps": 7,
+            "directionDeg": 45,
+            "gustMps": 2,
+            "gustPeriodS": 1.7
+          },
+          {
+            "timeS": 3.4,
+            "speedMps": 9,
+            "directionDeg": 225,
+            "gustMps": 3,
+            "gustPeriodS": 2.3
+          },
+          {
+            "timeS": 7.1,
+            "speedMps": 1,
+            "directionDeg": 135,
+            "gustMps": 0.5,
+            "gustPeriodS": 2.9
+          }
+        ],
+        "faultTimeS": 4.5,
+        "nozzleId": "lift-FL"
+      },
+      "validationPolicy": "Predeclared held-out wind schedule, never included in tuning Pareto ranking. Validate a selected candidate explicitly; a validation failure remains a failure.",
+      "objectiveOrder": [
+        "Valid collision-free stable landing first",
+        "Non-dominated settling time, overshoot, complete-task gas; no weighted score"
+      ],
+      "createdAt": "2026-10-20T18:34:38.910Z"
+    },
+    "tradeoff": {
+      "controlled": true,
+      "bothCompleted": true,
+      "differences": {
+        "settlingTimeS": -1.6083333333333336,
+        "overshootM": 0.04253994102690717,
+        "gasThroughputKg": -37.64784106049234,
+        "gasWindowKg": 0.24029112558548604,
+        "stableLandingAtS": -0.9833333333333343,
+        "controllerLimitedSeconds": 0.35000000000000037,
+        "outputLimitedSeconds": 0.09999999999999999,
+        "actuatorLimitedSeconds": 0,
+        "heightRmseM": -0.3174468708567788
+      },
+      "meaning": "Negative settling/gas/error differences favour the candidate only for this fixed task. Gas through completion and gas within the identical 0–6 s window have different endpoints. AST output/slew limiting is distinct from physical actuator allocation saturation.",
+      "piInterpretation": "Integral state can accumulate while takeoff/valves and bounded acceleration lag; low-pass velocity adds phase lag. For this short ramp/hold/descent task, these may prolong settling and spend more time supporting weight. A changed curve alone is not an improvement. Inspect retained integral/filter states, target, observation and bounded/achieved response; no universal PI verdict is implied."
+    },
+    "pi": {
+      "controlled": true,
+      "bothCompleted": true,
+      "differences": {
+        "settlingTimeS": null,
+        "overshootM": 0.2649796476127677,
+        "gasThroughputKg": 15.970712774112485,
+        "gasWindowKg": 0.2143023063887597,
+        "stableLandingAtS": 0.42499999999999893,
+        "controllerLimitedSeconds": -0.03333333333333333,
+        "outputLimitedSeconds": 0,
+        "actuatorLimitedSeconds": 0,
+        "heightRmseM": 0.18620174200465334
+      },
+      "meaning": "Negative settling/gas/error differences favour the candidate only for this fixed task. Gas through completion and gas within the identical 0–6 s window have different endpoints. AST output/slew limiting is distinct from physical actuator allocation saturation.",
+      "piInterpretation": "Integral state can accumulate while takeoff/valves and bounded acceleration lag; low-pass velocity adds phase lag. For this short ramp/hold/descent task, these may prolong settling and spend more time supporting weight. A changed curve alone is not an improvement. Inspect retained integral/filter states, target, observation and bounded/achieved response; no universal PI verdict is implied."
+    }
+  },
+  "sourceHashes": {
+    "dist/landing-challenge.js": "e08102fca7bfbcb649372e3cec91470cdd7a364422aa5f9b075037c7c8899b6b",
+    "dist/height-control-study.js": "4fe93a5c98103fe8f240b29b9df5fbe133684057c2e5b1e8affcb519fdbe44b1",
+    "dist/task-setting-scope.js": "476afdecaf8510218dafb979f7613c2883beadd3ddc67997b18b37e90928608f",
+    "dist/landing-research-ui.js": "f196e56d47c69b6b3ac9e6ed8ceb9c9039dd93fda62931ece6e6ec5bb2a42322",
+    "dist/landing-research-worker.js": "418a74822e9e4c0f73c7e1decc839799e95e9504077ab396881bcf28acbbcc52"
+  }
+}

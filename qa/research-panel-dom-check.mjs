@@ -1,3 +1,5 @@
+import {awaitExport} from './await-export.mjs';
+import {withActualExportWorker} from './export-worker-dom-adapter.mjs';
 import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 // Optional DOM-only integration check. Supply an installed jsdom package path:
 // node qa/research-panel-dom-check.mjs /path/to/node_modules/jsdom
@@ -22,11 +24,11 @@ URL.createObjectURL=blob=>{lastBlob=blob;return'blob:research-panel-dom-check';}
 // The asynchronous facade checks the browser-worker message contract while
 // obtaining reports from the actual solver. Worker-thread scheduling and canvas
 // pixels are deliberately outside this DOM test's evidence.
-globalThis.Worker=class {
+globalThis.Worker=withActualExportWorker(class {
   constructor(url,options){assert.ok(String(url).endsWith('/experiment-worker.js'));assert.equal(options.type,'module');this.stopped=false;workers.add(this);}
   postMessage(request){requests.push(structuredClone(request));this.timer=setTimeout(()=>{if(this.stopped)return;try{const report=runExperiment(request);solverReports++;this.onmessage?.({data:{ok:true,report}});}catch(error){this.onmessage?.({data:{ok:false,error:error.message}});}},0);}
   terminate(){this.stopped=true;clearTimeout(this.timer);workers.delete(this);}
-};
+});
 const waitFor=async fn=>{const deadline=Date.now()+30000;while(!fn()){assert.ok(Date.now()<deadline,'DOM study timed out');await new Promise(resolve=>setTimeout(resolve,10));}};
 const test=async(name,fn)=>{const start=performance.now();await fn();results.push({name,status:'PASS',ms:Math.round(performance.now()-start)});console.log('PASS: '+name);};
 const change=element=>element.dispatchEvent(new dom.window.Event('change',{bubbles:true}));
@@ -57,16 +59,16 @@ try{
   });
   await test('Sweep configuration, archive export and imported-mode exit remain usable',async()=>{
     $(first,'lab-mode').value='sweep';change($(first,'lab-mode'));$(first,'sweep-key').value='dryMass';change($(first,'sweep-key'));assert.ok(+$(first,'sweep-from').value<+$(first,'sweep-to').value);assert.equal($(first,'sweep-count').value,'3');
-    $(first,'export-study').click();assert.ok(lastBlob);const archive=JSON.parse(await lastBlob.text());archiveFixture=archive;assert.equal(archive.requests.length,2);assert.equal(archive.results.length,2);
+    $(first,'export-study').click();await awaitExport(doc);assert.ok(lastBlob);const archive=JSON.parse(await lastBlob.text());archiveFixture=archive;assert.equal(archive.requests.length,2);assert.equal(archive.results.length,2);
     const input=$(second,'import-study');Object.defineProperty(input,'files',{configurable:true,value:[{size:2000,text:async()=>JSON.stringify(archive)}]});change(input);await waitFor(()=>$(second,'lab-mode').value==='imported');assert.equal($(second,'lab-mode').disabled,false);assert.equal($(second,'lab-kind').disabled,false);assert.equal($(second,'lab-param-dryMass').disabled,true);
     $(second,'lab-mode').value='single';change($(second,'lab-mode'));assert.equal($(second,'lab-param-dryMass').disabled,false);
-    $(first,'export-rows').click();assert.match(await lastBlob.text(),/run_id,case,/);
+    $(first,'export-rows').click();await awaitExport(doc);assert.match(await lastBlob.text(),/run_id,case,/);
   });
   await test('Road-surface launch, ABS/TCS and wing comparisons are executable options in the same standard research panel',async()=>{
     $(first,'lab-kind').value='launch';change($(first,'lab-kind'));$(first,'lab-mode').value='pair';change($(first,'lab-mode'));assert.equal($(first,'road-condition').hidden,false);assert.ok([...$(first,'lab-pair').options].some(o=>o.value==='tractionAssist'));assert.ok([...$(first,'lab-pair').options].some(o=>o.value==='wingMode'));$(first,'lab-pair').value='tractionAssist';$(first,'lab-road-surface').value='split';const requestStart=requests.length;$(first,'protocol-form').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));await waitFor(()=>!first.getState().running);const jobs=requests.slice(requestStart);assert.equal(jobs.length,2);assert.deepEqual(jobs.map(r=>r.params.tractionAssist),[false,true]);assert.ok(jobs.every(r=>r.params.roadSurface==='split'));assert.equal(first.getState().records,4);assert.ok([...$(first,'chart-channel').options].some(o=>o.value==='wheelFL'));assert.ok([...$(first,'chart-channel').options].some(o=>o.value==='slipRR'));
   });
   await test('Channel, overlay, record switches and clear reset pointer series and units without waiting for another pointer event',async()=>{
-    const canvas=$(first,'response-chart');canvas.getBoundingClientRect=()=>({left:0,top:0,width:1100,height:280});canvas.onpointermove({currentTarget:canvas,clientX:500});assert.match($(first,'chart-readout').textContent,/t ≈/);$(first,'chart-channel').value='slipFL';change($(first,'chart-channel'));assert.match($(first,'chart-readout').textContent,/左前滑移率/);assert.doesNotMatch($(first,'chart-readout').textContent,/km\/h/);const checked=$(first,'record-table').querySelector('input:checked');checked.checked=false;checked.onchange();assert.match($(first,'chart-readout').textContent,/1 条当前系列/);const other=$(first,'record-table').querySelectorAll('tr')[2].querySelector('button');other.click();assert.match($(first,'active-title').textContent,/直线制动/);assert.doesNotMatch($(first,'chart-readout').textContent,/t ≈/);$(first,'export-rows').click();const csv=await lastBlob.text(),diag=JSON.parse($(first,'analysis-content').dataset.result);assert.match(csv,new RegExp('model='+diag.modelVersion));assert.match(csv,new RegExp('protocol='+diag.protocolVersion));assert.equal(csv.split('\r\n').filter(line=>!line.startsWith('#')).length,201);$(first,'clear-library').click();assert.equal(first.getState().records,0);assert.equal($(first,'response-legend').children.length,0);assert.equal($(first,'summary-unit').textContent,'');assert.equal($(first,'chart-readout').textContent,'没有当前曲线。');
+    const canvas=$(first,'response-chart');canvas.getBoundingClientRect=()=>({left:0,top:0,width:1100,height:280});canvas.onpointermove({currentTarget:canvas,clientX:500});assert.match($(first,'chart-readout').textContent,/t ≈/);$(first,'chart-channel').value='slipFL';change($(first,'chart-channel'));assert.match($(first,'chart-readout').textContent,/左前滑移率/);assert.doesNotMatch($(first,'chart-readout').textContent,/km\/h/);const checked=$(first,'record-table').querySelector('input:checked');checked.checked=false;checked.onchange();assert.match($(first,'chart-readout').textContent,/1 条当前系列/);const other=$(first,'record-table').querySelectorAll('tr')[2].querySelector('button');other.click();assert.match($(first,'active-title').textContent,/直线制动/);assert.doesNotMatch($(first,'chart-readout').textContent,/t ≈/);$(first,'export-rows').click();await awaitExport(doc);const csv=await lastBlob.text(),diag=JSON.parse($(first,'analysis-content').dataset.result);assert.match(csv,new RegExp('model='+diag.modelVersion));assert.match(csv,new RegExp('protocol='+diag.protocolVersion));assert.equal(csv.split('\r\n').filter(line=>!line.startsWith('#')).length,201);$(first,'clear-library').click();assert.equal(first.getState().records,0);assert.equal($(first,'response-legend').children.length,0);assert.equal($(first,'summary-unit').textContent,'');assert.equal($(first,'chart-readout').textContent,'没有当前曲线。');
   });
   await test('Cancelling, closing and disposal stop workers and keep the active page intact',async()=>{
     $(second,'lab-mode').value='imported';change($(second,'lab-mode'));$(second,'protocol-form').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));assert.equal(second.getState().running,true);const stale=[...workers][0];second.cancel();assert.equal(second.getState().lastAttempt.status,'cancelled');assert.match($(second,'attempt-log').textContent,/cancelled/);assert.equal(second.getState().running,false);assert.equal(workers.size,0);
@@ -82,7 +84,7 @@ try{
     history=await createResearchStudyPanel({mount:doc.getElementById('mount-a'),getSim});history.open();assert.equal(history.getState().records,64);assert.match($(history,'active-protocol').textContent,/历史结果/);assert.equal(JSON.parse($(history,'analysis-content').dataset.result).historical,true);
     $(history,'rerun-active').click();await waitFor(()=>!history.getState().running);assert.equal(history.getState().records,65);assert.equal(dom.window.localStorage.getItem('roadster-research-library-v2'),raw,'new model silently erased old records');assert.match($(history,'library-notice').textContent,/64项/);
     const current=JSON.parse($(history,'analysis-content').dataset.result);assert.equal(current.historical,false);assert.equal(current.selected,1);assert.equal($(history,'record-table').querySelectorAll('tr.historical input:disabled').length,64);
-    $(history,'export-library').click();const complete=JSON.parse(await lastBlob.text());assert.equal(complete.entries.length,65);assert.equal(complete.entries.filter(e=>e.report.modelVersion==='3.6.0').length,64);
+    $(history,'export-library').click();await awaitExport(doc);const complete=JSON.parse(await lastBlob.text());assert.equal(complete.entries.length,65);assert.equal(complete.entries.filter(e=>e.report.modelVersion==='3.6.0').length,64);
     history.dispose();
   });
   await test('Oversized old archives are protected before parsing and new session results remain exportable',async()=>{

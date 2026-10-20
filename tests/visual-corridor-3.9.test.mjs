@@ -6,7 +6,7 @@ import * as THREE from '../dist/vendor/three.module.js';
 import {RoadsterSim} from '../dist/physics.js';
 import {CITY_STREETS,CITY_ROUTE_CORRIDOR} from '../dist/city-plan.js';
 import {CITY_BUILDINGS} from '../dist/city-data.js';
-import {routeFacingFacade,buildUrbanArchitecture} from '../dist/urban-architecture.js';
+import {routeFacingFacade,backgroundGroundFrontage,buildUrbanArchitecture} from '../dist/urban-architecture.js';
 import {streetFrontageDesign} from '../dist/city-frontage-design.js';
 import {buildWetReflectionCamera,hideDistantReflectionMeshes,createWetRoadReflection} from '../dist/wet-road-reflection.js';
 import {attachRoadSurface} from '../dist/road-surface-material.js';
@@ -80,18 +80,21 @@ test('Connector pavements and fixtures share physics records and stay outside th
   for(const leg of CITY_ROUTE_CORRIDOR.legs){assert.equal(CITY_ROUTE_CORRIDOR.solids.filter(s=>s.id.startsWith('corridor-'+leg.id+'-walk-')).length,2);assert.ok(CITY_ROUTE_CORRIDOR.lights.some(l=>l.id.startsWith(leg.id)));}
   evidence.corridor={sharedSolids:checked,pavements:CITY_ROUTE_CORRIDOR.solids.filter(s=>s.kind==='corridor-paving').length,lightFixtures:CITY_ROUTE_CORRIDOR.lights.length,legs:CITY_ROUTE_CORRIDOR.legs.map(l=>l.id),completeRoadWidthsClear:true};
 });
-test('Authored frontage orders cover every route family and every facade retains outward-facing doorway fixtures',()=>{
-  const families={},orders={},faces=[];
-  for(const b of CITY_BUILDINGS)for(let side=0;side<4;side++){const f=routeFacingFacade(b,side);if(f){const d=streetFrontageDesign(b,f);families[f.family]=(families[f.family]||0)+1;orders[d.order]=(orders[d.order]||0)+1;faces.push({...f,building:b.id,side,order:d.order});}}
-  assert.deepEqual(Object.keys(families).sort(),['canal','civic','industrial','market']);assert.ok(faces.length>8);
+test('Authored frontage orders cover every route family and added ordinary-street ground facades retain outward-facing doorway fixtures',()=>{
+  const families={},orders={},faces=[],curated=[];
+  for(const b of CITY_BUILDINGS)for(let side=0;side<4;side++){const route=routeFacingFacade(b,side),f=route||backgroundGroundFrontage(b,side);if(f){const d=streetFrontageDesign(b,f);orders[d.order]=(orders[d.order]||0)+1;const face={...f,building:b.id,side,order:d.order,curated:!!route};faces.push(face);if(route){families[f.family]=(families[f.family]||0)+1;curated.push(face);}}}
+  assert.deepEqual(Object.keys(families).sort(),['canal','civic','industrial','market']);assert.ok(curated.length>8);
+  // Preserve the original curated-route requirements. The inherited statistic
+  // now includes 3.16's ordinary-street ground orders as well; comparing that
+  // combined count with the former route-only subset would be a false failure.
   const kit=buildUrbanArchitecture(THREE,new THREE.Group(),CITY_BUILDINGS);assert.equal(kit.stats.routeFacingFrontages,faces.length);assert.deepEqual(kit.stats.designedGroundOrders,orders);
   // Civic/canalside broad portals, gallery shop doors and working service bays
   // intentionally no longer share the 3.9 one-portal/one-light-per-face module.
   assert.equal(kit.stats.facadePortals,faces.filter(f=>['southbank','exchange'].includes(f.order)).length);
   const doors=kit.lightAnchors.filter(a=>a.role==='door');assert.equal(new Set(doors.map(a=>a.id)).size,doors.length,'Fixture identities must remain unique');
-  for(const face of faces){const fixtures=doors.filter(a=>a.id.startsWith(`frontage-${face.building}-${face.side}-`));assert.ok(fixtures.length>=2,`${face.building} side ${face.side} lost its first-bay or entrance fixture`);}
+  for(const face of faces){const fixtures=doors.filter(a=>a.id.startsWith(`frontage-${face.building}-${face.side}-`));assert.ok(fixtures.length>=(face.curated?2:1),`${face.building} side ${face.side} lost its required ${face.curated?'first-bay and entrance':'entrance'} fixture`);}
   for(const a of doors){const b=CITY_BUILDINGS.find(b=>b.id===a.building),outside=p=>Math.abs(p[0]-b.x)>b.w/2||Math.abs(p[2]-b.z)>b.d/2;assert.ok(outside(a.position)&&outside(a.target));assert.ok(a.target[1]<a.position[1]);}
-  evidence.frontages={families,orders,routeFacingFrontages:faces.length,broadCivicPortals:kit.stats.facadePortals,doorwayAnchors:doors.length,eachFacadeHasEntranceAndFirstBayFixtures:true,windowBacklights:kit.stats.backlitWindowPanels,roomsOrCrowdsAdded:0};kit.dispose();
+  evidence.frontages={families,orders,curatedRouteFacingFrontages:curated.length,ordinaryGroundFrontages:faces.length-curated.length,designedGroundFrontages:faces.length,legacyCombinedStatistic:'routeFacingFrontages',broadCivicPortals:kit.stats.facadePortals,doorwayAnchors:doors.length,eachCuratedFacadeHasEntranceAndFirstBayFixtures:true,eachOrdinaryFacadeHasEntranceFixture:true,windowBacklights:kit.stats.backlitWindowPanels,roomsOrCrowdsAdded:0};kit.dispose();
 });
 test('A near road fixture retains a slot when nearby door lights compete for the balanced budget',()=>{
   const scene=new THREE.Scene(),anchors=[{position:[1,3,0],target:[1,0,2],role:'door',range:10,intensity:180},{position:[-1,3,0],target:[-1,0,2],role:'door',range:10,intensity:180},{position:[7,7,0],target:[2,0,3],role:'street',range:29,intensity:1750}];

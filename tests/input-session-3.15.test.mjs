@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import {ExperimentRecorder,executeExperiment,contentLabel} from '../dist/experiment-records.js';
 import assert from 'node:assert/strict';
 import {writeFileSync,readFileSync} from 'node:fs';
@@ -27,4 +28,4 @@ assert.deepEqual(commands.map(e=>[e.step,e.args[0]]),[[36,'window-blur'],[96,'ed
 const replay=await executeExperiment(releaseRecord,{createSim:()=>new RoadsterSim({supplyMode:'bench'}),yieldEvery:0});
 assert.equal(contentLabel(replay.finalSnapshot.physical),contentLabel(releaseRecord.finalSnapshot.physical));
 checks.push('Focus/pause release is a recorded public command; export and complete fixed-input replay reproduce the full physical continuation exactly.');
-const report={schema:'roadster-input-session-tests',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',checks,events,releaseReplay:{commands,initialStateLabel:releaseRecord.initialSnapshot.stateLabel,finalStateLabel:releaseRecord.finalSnapshot.stateLabel,matched:true},scope:'DOM-like received-event and actual-solver lifecycle test. Real hardware rollover, native focus and actual context loss remain separate acceptance.'};writeFileSync(new URL('../qa/input-session-3.15.json',import.meta.url),JSON.stringify(report,null,2)+'\n');for(const c of checks)console.log('PASS: '+c);
+const report={schema:'roadster-input-session-tests',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',checks,events,releaseReplay:{commands,initialStateLabel:releaseRecord.initialSnapshot.stateLabel,finalStateLabel:releaseRecord.finalSnapshot.stateLabel,matched:true},scope:'DOM-like received-event and actual-solver lifecycle test. Real hardware rollover, native focus and actual context loss remain separate acceptance.'};writeFileSync(new URL(`../qa/input-session-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');for(const c of checks)console.log('PASS: '+c);

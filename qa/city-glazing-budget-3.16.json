@@ -1,0 +1,83 @@
+{
+  "schema": "roadster-city-glazing-budget-preservation-3.16",
+  "status": "passed",
+  "createdAt": "2026-10-20T18:36:15.837Z",
+  "original": {
+    "schema": "roadster-urban-budget-original-3.16",
+    "originalBuild": "c12a71547cc90783b98cda473c2cb1a5b338a362a5d47592e8d238a9db0b819c",
+    "originalPath": "dist/urban-architecture.js",
+    "originalSHA256": "16b108cd1a67e1c542df06807ef9b4b8dee24ce1b85109f8476ce11c94db139d",
+    "fixtureSHA256": "af5f0bcdf1787a5380561c0eab6c647e29cf911ca490c8534388880f362afbcd",
+    "changedOnlyImportSpecifiers": [
+      "city-data.js",
+      "city-plan.js",
+      "city-render-budget.js",
+      "city-exterior-materials.js",
+      "city-frontage-design.js"
+    ],
+    "bodyScope": "Exact c12a original architecture generator body. Relative imports are rebased to the current project modules; city data, frontage detail and palette remain shared. This comparison isolates the subsequent pane geometry and spatial/material batching changes, not unrelated historical 3.15 visual differences."
+  },
+  "checks": [
+    {
+      "name": "Every original instance survives; non-pane shapes retain exact geometry, transform, tint, material and detail tier",
+      "status": "passed",
+      "totalInstances": 144164,
+      "glazingInstances": 23245,
+      "otherInstances": 120919,
+      "attributeLocationsMaximum": 10,
+      "attributeLimit": 16
+    },
+    {
+      "name": "Every outward glass vertex, normal, metre UV, tint, emission, reflection parameter and LOD matches the retained generator",
+      "status": "passed",
+      "comparedPanes": 23245,
+      "convertedHiddenFaceBoxes": 23200,
+      "unchangedFullBoxes": 45,
+      "maxErrors": {
+        "vertexM": 0.000054022762924432755,
+        "normal": 3.3306690738754696e-16,
+        "uv": 0,
+        "metreUV": 0,
+        "colour": 0,
+        "emissionLinear": 6.5565109175214076e-9,
+        "environmentIntensity": 1.1920928910669204e-8
+      },
+      "positionToleranceM": 0.0001,
+      "scope": "Comparison uses the actual Float32 instance matrices; front planes differ only by sub-0.1 mm transform rounding. Hidden side/back faces in solid sealed recesses are removed; full freestanding clerestory boxes are retained."
+    },
+    {
+      "name": "The actual glass shader carries instance response through the inherited exterior hooks and preserves scene-versus-explicit environment selection",
+      "status": "passed",
+      "newSamplerUniforms": 0,
+      "newAttributeLocations": 1,
+      "emissionEnvironmentStates": [
+        "initial ×1",
+        "clear day ×0",
+        "wet night ×2.1"
+      ],
+      "scope": "Source hook and material state checks only; actual GPU link/draw validation is separate."
+    }
+  ],
+  "allocation": {
+    "before": {
+      "triangles": 1726234,
+      "batches": 1243,
+      "actualBufferBytes": 14376212
+    },
+    "after": {
+      "triangles": 1494234,
+      "batches": 884,
+      "actualBufferBytes": 14335472
+    }
+  },
+  "sourceHashes": {
+    "dist/urban-architecture.js": "ab712d8dc12b3cf1197e89ecdcd714aea7f9f7d37132c61b754a188b2cb60b59",
+    "dist/city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
+    "dist/city-render-budget.js": "c7cb69daf59a80af4ff4009badb3b819c2429a75c88036b7ce84e576e40ccb3f",
+    "dist/city-frontage-design.js": "ed686c122ce5ae318f9088697301d2639a8e0b339c0e8cf05f33c58a6858a2a9",
+    "tests/city-glazing-budget-3.16.test.mjs": "fd92598533975a27b4f8270b6cbae809ebff153c3cb75bba0f38842d6b446851",
+    "tests/fixtures/urban-architecture-before-budget-3.16.mjs": "af5f0bcdf1787a5380561c0eab6c647e29cf911ca490c8534388880f362afbcd",
+    "tests/fixtures/urban-architecture-before-budget-3.16.provenance.json": "8af52a19e34b0b3ce34d781ddc5f97156d6782b2a341e6053d51590f372e5fde"
+  },
+  "scope": "The full 15-view budget is separately checked against unchanged 3.5 thresholds. This independent representation-preservation test cannot replace final source-bound GPU frames, validate hidden geometry from an impossible position inside a closed building, or measure hardware performance."
+}

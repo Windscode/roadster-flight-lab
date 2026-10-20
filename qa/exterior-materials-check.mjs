@@ -9,7 +9,7 @@ import {buildStreetLife,STREET_COLLIDERS} from '../dist/street-life.js';
 import {createCityExteriorMaterials,EXTERIOR_SURFACES,MINERAL_SCAN_MEAN} from '../dist/city-exterior-materials.js';
 import {countVisibleGeometry} from '../dist/city-render-budget.js';
 import {RoadsterSim} from '../dist/physics.js';
-import {partitionCityGeometry} from './city-geometry-scope.mjs';
+import {partitionCityGeometry,CITY_ADDITIONS_316_CONTRACT} from './city-geometry-scope.mjs';
 import {canonicalGeometryJSON} from '../dist/irradiance-math.js';
 
 // This is a geometry/material contract audit, not browser visual or FPS evidence.
@@ -21,12 +21,16 @@ const hash=v=>createHash('sha256').update(v).digest('hex');
 const root=new THREE.Group(),architecture=buildUrbanArchitecture(THREE,root,CITY_BUILDINGS),street=buildStreetLife(THREE,root);
 await Promise.all([architecture.ready,street.ready]);
 const geometry=new RoadsterSim().getWorldGeometry(),canonicalSHA256=hash(canonicalGeometryJSON(geometry));
-assert.equal(hash(JSON.stringify(STREET_COLLIDERS)),base.colliderSHA256);
+const streetAdditions=CITY_ADDITIONS_316_CONTRACT.groups.find(g=>g.id==='crosstown-existing-tree-and-seat-kits'),newStreetIds=new Set(streetAdditions.ids);
+assert.deepEqual(STREET_COLLIDERS.filter(g=>newStreetIds.has(g.id)),streetAdditions.authoring,'The 18 explicitly approved 3.16 street proxies changed');
+const retainedStreet=STREET_COLLIDERS.filter(g=>!newStreetIds.has(g.id));assert.equal(retainedStreet.length,108);
+assert.equal(hash(JSON.stringify(retainedStreet)),base.colliderSHA256,'The original 108 street proxies must retain their strict 3.5 identity');
+assert.equal(hash(JSON.stringify(STREET_COLLIDERS)),CITY_ADDITIONS_316_CONTRACT.currentStreetColliderSHA256,'Unexpected street furnishing proxy outside the exact addition contract');
 assert.equal(hash(JSON.stringify(URBAN_MATERIAL_PALETTE)),base.paletteSHA256);
 const geometryScope=partitionCityGeometry(geometry),retainedGeometryCanonicalSHA256=hash(canonicalGeometryJSON(geometryScope.unchangedLegacy));
 assert.equal(geometryScope.contract.reconstructedHistoricalCanonicalSHA256,protocol.geometry.canonicalSHA256);
-record('Unrelated original city geometry, 108 street proxies and shared wall palette retain their identities; three approved tower profiles and all new shared entities are explicit',{
-  canonicalSHA256,retainedGeometryCanonicalSHA256,geometryContract:geometryScope.contract,newSharedEntities:geometryScope.added.length,streetColliderSHA256:base.colliderSHA256,paletteSHA256:base.paletteSHA256,quantization:1e-9,
+record('Unrelated original city geometry, the original 108 street proxies and shared wall palette retain their identities; every later support is explicitly frozen',{
+  canonicalSHA256,retainedGeometryCanonicalSHA256,geometryContract:geometryScope.contract,newSharedEntities:geometryScope.added.length,retainedStreetColliderSHA256:base.colliderSHA256,currentStreetColliderSHA256:hash(JSON.stringify(STREET_COLLIDERS)),approved316StreetAdditions:streetAdditions,paletteSHA256:base.paletteSHA256,quantization:1e-9,
 });
 
 let metricInstances=0,finiteInstances=0,metricMaxError=0;const matrix=new THREE.Matrix4(),materials=new Map();
@@ -150,7 +154,7 @@ assert.ok(newTriangles<oldTriangles);assert.ok(routeArchitecture.stats.drawBatch
 for(const quality of ['balanced','high','ultra'])for(const row of views[quality]){const before=base.views[quality].find(v=>v.view===row.view);assert.ok(row.drawCalls<=before.drawCalls,row.view+' increased beauty calls');assert.ok(row.triangles<=before.triangles*1.10,row.view+' inflated triangles by more than 10%');if(quality==='balanced')assert.ok(row.drawCalls<300&&row.triangles<650000);}
 record('Authored exterior upgrades reduce allocated geometry and all 15 matched-view draw counts remain within the 3.5 budget',{allocatedTrianglesBefore:oldTriangles,allocatedTrianglesAfter:newTriangles,allocatedBatchesBefore:base.architecture.drawBatches+base.street.drawBatches,allocatedBatchesAfter:routeArchitecture.stats.drawBatches+routeStreet.stats.drawBatches,comparison:'Last balanced pass after balanced/high/ultra/balanced, five views in the original order; cold start preserved separately.'});
 
-const sourceFiles=['qa/exterior-materials-check.mjs','qa/exterior-baseline-3.5.json','dist/city-exterior-materials.js','dist/urban-architecture.js','dist/street-life.js','dist/city-data.js','dist/city-plan.js','dist/city-render-budget.js'];
+const sourceFiles=['qa/exterior-materials-check.mjs','qa/exterior-baseline-3.5.json','qa/city-geometry-scope.mjs','qa/fixtures/city-additions-3.16.json','dist/city-exterior-materials.js','dist/urban-architecture.js','dist/street-life.js','dist/city-data.js','dist/city-plan.js','dist/city-render-budget.js'];
 const sourceSHA256=Object.fromEntries(sourceFiles.map(file=>[file,hash(readFileSync(new URL('../'+file,import.meta.url)))]));
 const result={status:'passed',version:REPORT_VERSION,createdAt:new Date().toISOString(),method:'Real Three geometry, matrices, frusta, material callbacks and independently checked seam coverage; no browser/GPU context.',sourceSHA256,baselineSourceCommit:base.sourceCommit,checks,architecture:routeArchitecture.stats,street:routeStreet.stats,views,coldStart,baselineViews:base.views,limits:['Counts cover architecture and static street furnishings only, excluding vehicle, environment extras and canvas text.','Some views may submit modestly more triangles after facade changes; the existing per-view 10% triangle ceiling and draw-count limits remain unchanged.','Solid building envelopes still block shallow visual shop recesses; the simulation does not model enterable interiors.','Daylight was rebaked for the full current static city; fine facade details and texture averages still use representative envelope albedos, not detailed per-facade lightmaps.','This audit does not establish actual target-device frame rate, rendered appearance, GPU numeric precision or arbitrary mirrored/DoubleSide normal-map behavior.']};
 writeFileSync(new URL(`./exterior-materials-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(result,null,2)+'\n');routeArchitecture.dispose();routeStreet.dispose();

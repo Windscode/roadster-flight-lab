@@ -1,0 +1,2104 @@
+{
+  "status": "passed",
+  "modelVersion": "3.16.0",
+  "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+  "scope": "Fixed-step physical solver, declared flat numerical fixtures, actual city read-only preflight and existing record/replay/storage. Does not establish real WebGL frames, live keyboard timing or GPU performance.",
+  "sourceHashes": {
+    "dist/driving-capture.js": "53f78df5e38078dfb0010c7e82bf8313d8a0829032720f60530e8e4938f321e2",
+    "dist/physics.js": "4717c20baa2a568ea85c32657279eef84f8dd9d7caf3971b58579b2c4166e2c0",
+    "dist/city-data.js": "86d39546dd361ca7a277493bcb448b4ef5aea64acdc38559d2c65ad051b632ec",
+    "dist/experiment-records.js": "2dcbb4c7cdeea98bd49c5820877ab48f771b0c221bdc0ebabc9ae586ba3ba44b",
+    "dist/experiment-reproduction.js": "4165dd4b5699f39487acecdae456b1cf43729ee9b82f89a542d49ae675306fd9",
+    "tests/control-capture-3.10.test.mjs": "d50667cb9d46a32dbcdc35a0acba0c161a4ed9814ac010ba5327685e91700768"
+  },
+  "evidence": [
+    {
+      "name": "54 / 90 km/h are reached from rest through recorded physical throttle; every sample in the 2 s gate passes and steering has a full 4 s interval",
+      "status": "PASS",
+      "scope": "Actual solver, flat numerical fixture; no WebGL or real input device.",
+      "cases": {
+        "steer-54": {
+          "recordId": "live-20261020183149601-1",
+          "steps": 2254,
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5962264654680856,
+            "maximumHeightM": 0.6070826549539461,
+            "peakAbsoluteRollDeg": 2.835707940386132,
+            "peakAbsolutePitchDeg": 1.5284239268252917,
+            "peakAngularSpeedDegS": 42.266985683196815,
+            "peakSlipDeg": 1.0017094792335068,
+            "peakYawRateDegS": 42.2669842874818,
+            "peakLateralAccelerationMps2": 9.286413493755152,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 213.5879860648405,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 23653.73372786187,
+            "measurementMinSpeedKmh": 43.67726898180747,
+            "measurementMaxSpeedKmh": 54.26681093936181,
+            "radiusSumM": 7105.463213362166,
+            "radiusCount": 361,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 1312,
+              "endStep": 1552,
+              "durationS": 2,
+              "targetSpeedKmh": 54,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 54.26823074783857,
+              "actualMaximumSpeedKmh": 54.79693659055751,
+              "actualPeakAbsoluteAccelerationMps2": 0.11943887140184163,
+              "actualPeakSlipDeg": 0,
+              "actualPeakAngularRateRadS": 0.00016498578063570184,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 12.933333333333334,
+            "steerEndedAtS": 16.933333333333334,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 2254,
+                "unloadedSteps": 0,
+                "minLoadN": 4649.806327947151,
+                "maxLoadN": 11795.38690154336,
+                "peakAbsoluteSlipAngleDeg": 4.877619850352512,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "FL": {
+                "samples": 2254,
+                "unloadedSteps": 0,
+                "minLoadN": 1912.5000629333276,
+                "maxLoadN": 9133.755332886254,
+                "peakAbsoluteSlipAngleDeg": 5.4495492591981884,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "RR": {
+                "samples": 2254,
+                "unloadedSteps": 0,
+                "minLoadN": 2581.3621996324523,
+                "maxLoadN": 8912.33139312061,
+                "peakAbsoluteSlipAngleDeg": 4.980753278450562,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "RL": {
+                "samples": 2254,
+                "unloadedSteps": 0,
+                "minLoadN": 1252.1639896317774,
+                "maxLoadN": 6167.029190808285,
+                "peakAbsoluteSlipAngleDeg": 5.462891865097981,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              }
+            },
+            "frozenThrottle": 0.01872709161051066,
+            "steerStartSpeedKmh": 54.26823074783857,
+            "steerStartHeadingDeg": 0,
+            "yawAtHalfSecondDegS": 33.68947341593384,
+            "steerEndSpeedKmh": 43.67726898180747,
+            "speedLossKmh": 10.5909617660311,
+            "headingChangeDeg": 145.33121477418,
+            "durationS": 18.783333333333335,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 49.27861193304556,
+            "meanPathRadiusM": 19.682723582720683,
+            "medianPathRadiusM": 19.63029963585513,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.1179623554387663
+          },
+          "recordBytes": 1192362
+        },
+        "steer-90": {
+          "recordId": "live-20261020183150684-1",
+          "steps": 2893,
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5961957244142762,
+            "maximumHeightM": 0.6092562588130991,
+            "peakAbsoluteRollDeg": 2.863105151694563,
+            "peakAbsolutePitchDeg": 1.5443034335448163,
+            "peakAngularSpeedDegS": 25.594867290094772,
+            "peakSlipDeg": 3.2622751489429294,
+            "peakYawRateDegS": 23.83833742037696,
+            "peakLateralAccelerationMps2": 9.382667165173691,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 430.0029943860126,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 41010.23536144165,
+            "measurementMinSpeedKmh": 79.8042830297573,
+            "measurementMaxSpeedKmh": 90.14117099642435,
+            "radiusSumM": 21349.14860095011,
+            "radiusCount": 361,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 1855,
+              "endStep": 2095,
+              "durationS": 2,
+              "targetSpeedKmh": 90,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 90.1433742163616,
+              "actualMaximumSpeedKmh": 90.79980267102471,
+              "actualPeakAbsoluteAccelerationMps2": 0.12747404899447365,
+              "actualPeakSlipDeg": 0,
+              "actualPeakAngularRateRadS": 0.00015993326713284087,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 17.458333333333332,
+            "steerEndedAtS": 21.458333333333332,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 2893,
+                "unloadedSteps": 0,
+                "minLoadN": 4649.806327947151,
+                "maxLoadN": 13088.068339742182,
+                "peakAbsoluteSlipAngleDeg": 4.930466510294172,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "FL": {
+                "samples": 2893,
+                "unloadedSteps": 0,
+                "minLoadN": 1839.1802221798532,
+                "maxLoadN": 9050.919450076579,
+                "peakAbsoluteSlipAngleDeg": 5.0947298338967215,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "RR": {
+                "samples": 2893,
+                "unloadedSteps": 0,
+                "minLoadN": 2570.7822516971323,
+                "maxLoadN": 9145.35019782846,
+                "peakAbsoluteSlipAngleDeg": 5.06749599390253,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "RL": {
+                "samples": 2893,
+                "unloadedSteps": 0,
+                "minLoadN": 869.6462354536686,
+                "maxLoadN": 6168.256897306227,
+                "peakAbsoluteSlipAngleDeg": 5.24642322725765,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              }
+            },
+            "frozenThrottle": 0.02205194009846421,
+            "steerStartSpeedKmh": 90.1433742163616,
+            "steerStartHeadingDeg": 0,
+            "yawAtHalfSecondDegS": 20.958687734639692,
+            "steerEndSpeedKmh": 79.8042830297573,
+            "speedLossKmh": 10.339091186604293,
+            "headingChangeDeg": 85.27589200416617,
+            "durationS": 24.108333333333334,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 85.43799033633677,
+            "meanPathRadiusM": 59.138915792105564,
+            "medianPathRadiusM": 59.2612539684003,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.3041664894608805
+          },
+          "recordBytes": 1521613
+        }
+      }
+    },
+    {
+      "name": "Every explicit outer-city zero-speed setup completes against the intact city world, including an immediate start before the first suspension step",
+      "status": "PASS",
+      "scope": "Intact website city geometry and dynamics, with declared zero-speed initialization; no WebGL.",
+      "cases": [
+        {
+          "protocol": "steer-10-gentle",
+          "explicitAtRestSetup": {
+            "id": "capture-steer-10-gentle",
+            "protocolId": "steer-10-gentle",
+            "label": "外圈采集起点 · 静止",
+            "labelEn": "Outer-city capture start · At rest",
+            "position": [
+              -120,
+              0.62,
+              -602
+            ],
+            "yaw": 1.5707963267948966,
+            "steerSign": -1,
+            "mode": "drive",
+            "initialSpeedMps": 0
+          },
+          "initialContactCount": 0,
+          "cityBodyCount": 2252,
+          "geometryUnchanged": true,
+          "surfaceClassification": {
+            "scope": "20 Hz vehicle-centre samples on existing city street/intersection asphalt. Not a continuous geometry sweep or a lane-keeping criterion; physical contact/collision guards run at 120 Hz.",
+            "samples": 80,
+            "surfaceIds": {
+              "ground": 80
+            },
+            "nominalGridStreetWidthM": 28,
+            "maximumDistanceFromNearestGridAxisM": 1.9284466691731268,
+            "outsideNominalStreetStripSamples": 0
+          },
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5931890851889747,
+            "maximumHeightM": 0.62,
+            "peakAbsoluteRollDeg": 0.25520982201863357,
+            "peakAbsolutePitchDeg": 1.347541827680824,
+            "peakAngularSpeedDegS": 8.297657843043753,
+            "peakSlipDeg": 2.794865439338652,
+            "peakYawRateDegS": 5.556208712377949,
+            "peakLateralAccelerationMps2": 0.6878787073287498,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 32.120970116214515,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 4753.515475053874,
+            "measurementMinSpeedKmh": 9.562049591919845,
+            "measurementMaxSpeedKmh": 10.27485690852343,
+            "radiusSumM": 10478.077735053019,
+            "radiusCount": 361,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 665,
+              "endStep": 905,
+              "durationS": 2,
+              "targetSpeedKmh": 10,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 10.276295403322576,
+              "actualMaximumSpeedKmh": 10.798356544613073,
+              "actualPeakAbsoluteAccelerationMps2": 0.11773830936438223,
+              "actualPeakSlipDeg": 8.913715617452257e-15,
+              "actualPeakAngularRateRadS": 0.00016347318887703654,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 7.541666666666667,
+            "steerEndedAtS": 11.541666666666666,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 1485,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 9114.077172384232,
+                "peakAbsoluteSlipAngleDeg": 1.1273593307921967,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9582305902161984
+              },
+              "FL": {
+                "samples": 1485,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 8012.989682862222,
+                "peakAbsoluteSlipAngleDeg": 1.084254955974021,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9680672391594133
+              },
+              "RR": {
+                "samples": 1485,
+                "unloadedSteps": 0,
+                "minLoadN": 2724.8581203606204,
+                "maxLoadN": 6504.451991998512,
+                "peakAbsoluteSlipAngleDeg": 0.9338453664020924,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9705419688728458
+              },
+              "RL": {
+                "samples": 1485,
+                "unloadedSteps": 0,
+                "minLoadN": 2717.2085409361785,
+                "maxLoadN": 6504.451991998513,
+                "peakAbsoluteSlipAngleDeg": 0.9334806293890706,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9679439271337704
+              }
+            },
+            "frozenThrottle": 0.01789540840143228,
+            "steerStartSpeedKmh": 10.276295403322576,
+            "steerStartHeadingDeg": 90,
+            "yawAtHalfSecondDegS": -5.538466790746357,
+            "steerEndSpeedKmh": 9.562049591919845,
+            "speedLossKmh": 0.7142458114027317,
+            "headingChangeDeg": -21.054342964764377,
+            "durationS": 12.375,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 9.90315723969557,
+            "meanPathRadiusM": 29.025146080479278,
+            "medianPathRadiusM": 29.025056618652236,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.010577995029474313
+          },
+          "phases": [
+            {
+              "phase": "prepare",
+              "step": 0,
+              "timeS": 0,
+              "simTime": 0,
+              "position": {
+                "x": -120,
+                "y": 0.62,
+                "z": -602
+              },
+              "velocity": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "rollDeg": 0,
+              "pitchDeg": 0,
+              "headingDeg": 90
+            },
+            {
+              "phase": "steer",
+              "step": 905,
+              "timeS": 7.541666666666667,
+              "simTime": 7.541666666666831,
+              "position": {
+                "x": -99.42020718360783,
+                "y": 0.5970089736690138,
+                "z": -602
+              },
+              "velocity": {
+                "x": 2.854526509609845,
+                "y": 2.9401311616460022e-9,
+                "z": 4.469277775085013e-16
+              },
+              "rollDeg": 2.8031744226132427e-16,
+              "pitchDeg": -0.004469896412605641,
+              "headingDeg": 90
+            },
+            {
+              "phase": "brake",
+              "step": 1385,
+              "timeS": 11.541666666666666,
+              "simTime": 11.541666666666652,
+              "position": {
+                "x": -88.74539177127222,
+                "y": 0.5970087936701126,
+                "z": -599.5783731144963
+              },
+              "velocity": {
+                "x": 2.4346567550246796,
+                "y": 1.2892031524124138e-8,
+                "z": 1.0688993565439155
+              },
+              "rollDeg": -0.09074349747142701,
+              "pitchDeg": -0.006848347416903969,
+              "headingDeg": 68.94565703523563
+            }
+          ],
+          "recordId": "live-20261020000000000-1",
+          "reproduction": "matched"
+        },
+        {
+          "protocol": "steer-54-gentle",
+          "explicitAtRestSetup": {
+            "id": "capture-steer-54-gentle",
+            "protocolId": "steer-54-gentle",
+            "label": "外圈采集起点 · 静止",
+            "labelEn": "Outer-city capture start · At rest",
+            "position": [
+              -120,
+              0.62,
+              -602
+            ],
+            "yaw": 1.5707963267948966,
+            "steerSign": -1,
+            "mode": "drive",
+            "initialSpeedMps": 0
+          },
+          "initialContactCount": 0,
+          "cityBodyCount": 2252,
+          "geometryUnchanged": true,
+          "surfaceClassification": {
+            "scope": "20 Hz vehicle-centre samples on existing city street/intersection asphalt. Not a continuous geometry sweep or a lane-keeping criterion; physical contact/collision guards run at 120 Hz.",
+            "samples": 80,
+            "surfaceIds": {
+              "ground": 80
+            },
+            "nominalGridStreetWidthM": 28,
+            "maximumDistanceFromNearestGridAxisM": 11.456084981461686,
+            "outsideNominalStreetStripSamples": 0
+          },
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5931877276962869,
+            "maximumHeightM": 0.62,
+            "peakAbsoluteRollDeg": 0.7314752927775016,
+            "peakAbsolutePitchDeg": 1.5411076625292037,
+            "peakAngularSpeedDegS": 11.337620279510217,
+            "peakSlipDeg": 0.1141597869447057,
+            "peakYawRateDegS": 7.482169518484482,
+            "peakLateralAccelerationMps2": 1.9495875428987481,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 221.81956114620613,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 25810.53160680113,
+            "measurementMinSpeedKmh": 53.270141026967984,
+            "measurementMaxSpeedKmh": 54.266869138096745,
+            "radiusSumM": 41464.01538062863,
+            "radiusCount": 361,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 1313,
+              "endStep": 1553,
+              "durationS": 2,
+              "targetSpeedKmh": 54,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 54.2682525202451,
+              "actualMaximumSpeedKmh": 54.79699946932895,
+              "actualPeakAbsoluteAccelerationMps2": 0.11945773980709512,
+              "actualPeakSlipDeg": 6.745423327588199e-15,
+              "actualPeakAngularRateRadS": 0.00016499841356959913,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 12.941666666666666,
+            "steerEndedAtS": 16.941666666666666,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 2277,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 8450.7099769314,
+                "peakAbsoluteSlipAngleDeg": 0.7835068832542658,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9652946473314646
+              },
+              "FL": {
+                "samples": 2277,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 8498.027814897247,
+                "peakAbsoluteSlipAngleDeg": 0.7708501837424022,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9652961732103633
+              },
+              "RR": {
+                "samples": 2277,
+                "unloadedSteps": 0,
+                "minLoadN": 2573.523445592911,
+                "maxLoadN": 6614.748718495064,
+                "peakAbsoluteSlipAngleDeg": 0.7796346128976723,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9897592108673057
+              },
+              "RL": {
+                "samples": 2277,
+                "unloadedSteps": 0,
+                "minLoadN": 2572.3548946518013,
+                "maxLoadN": 6614.748718495064,
+                "peakAbsoluteSlipAngleDeg": 0.7703325158740942,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.99280147576701
+              }
+            },
+            "frozenThrottle": 0.018727046770608432,
+            "steerStartSpeedKmh": 54.2682525202451,
+            "steerStartHeadingDeg": 90,
+            "yawAtHalfSecondDegS": -7.217835503299817,
+            "steerEndSpeedKmh": 53.270141026967984,
+            "speedLossKmh": 0.9981114932771149,
+            "headingChangeDeg": -28.307437014003597,
+            "durationS": 18.975,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 53.77194084750236,
+            "meanPathRadiusM": 114.85876836739233,
+            "medianPathRadiusM": 114.85288844638121,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.11851644447645392
+          },
+          "phases": [
+            {
+              "phase": "prepare",
+              "step": 0,
+              "timeS": 0,
+              "simTime": 0,
+              "position": {
+                "x": -120,
+                "y": 0.62,
+                "z": -602
+              },
+              "velocity": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "rollDeg": 0,
+              "pitchDeg": 0,
+              "headingDeg": 90
+            },
+            {
+              "phase": "steer",
+              "step": 1553,
+              "timeS": 12.941666666666666,
+              "simTime": 12.941666666666572,
+              "position": {
+                "x": 29.339020059538445,
+                "y": 0.5970091085787071,
+                "z": -602
+              },
+              "velocity": {
+                "x": 15.074514725028337,
+                "y": 6.134958487166144e-8,
+                "z": 2.5855737373902387e-15
+              },
+              "rollDeg": 1.7160707786831802e-16,
+              "pitchDeg": 0.007698612991171756,
+              "headingDeg": 90
+            },
+            {
+              "phase": "brake",
+              "step": 2033,
+              "timeS": 16.941666666666666,
+              "simTime": 16.941666666666347,
+              "position": {
+                "x": 86.81041849439785,
+                "y": 0.5969975576299693,
+                "z": -588.2527142790606
+              },
+              "velocity": {
+                "x": 13.027865646039915,
+                "y": 7.952805954058727e-9,
+                "z": 7.016670320144263
+              },
+              "rollDeg": -0.723374103032864,
+              "pitchDeg": 0.003404466467219793,
+              "headingDeg": 61.6925629859964
+            }
+          ],
+          "recordId": "live-20261020000000001-1",
+          "reproduction": "matched"
+        },
+        {
+          "protocol": "steer-54-tap",
+          "explicitAtRestSetup": {
+            "id": "capture-steer-54-tap",
+            "protocolId": "steer-54-tap",
+            "label": "外圈采集起点 · 静止",
+            "labelEn": "Outer-city capture start · At rest",
+            "position": [
+              -170,
+              0.62,
+              -602
+            ],
+            "yaw": 1.5707963267948966,
+            "steerSign": -1,
+            "mode": "drive",
+            "initialSpeedMps": 0
+          },
+          "initialContactCount": 0,
+          "cityBodyCount": 2252,
+          "geometryUnchanged": true,
+          "surfaceClassification": {
+            "scope": "20 Hz vehicle-centre samples on existing city street/intersection asphalt. Not a continuous geometry sweep or a lane-keeping criterion; physical contact/collision guards run at 120 Hz.",
+            "samples": 80,
+            "surfaceIds": {
+              "ground": 80
+            },
+            "nominalGridStreetWidthM": 28,
+            "maximumDistanceFromNearestGridAxisM": 3.1699853671298115,
+            "outsideNominalStreetStripSamples": 0
+          },
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5931877276962869,
+            "maximumHeightM": 0.62,
+            "peakAbsoluteRollDeg": 1.298259456689394,
+            "peakAbsolutePitchDeg": 1.5412716014627836,
+            "peakAngularSpeedDegS": 20.438864438315026,
+            "peakSlipDeg": 0.5244306525099784,
+            "peakYawRateDegS": 19.727329577490377,
+            "peakLateralAccelerationMps2": 4.041939266392146,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 221.91602714155414,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 25819.17938716007,
+            "measurementMinSpeedKmh": 53.45455506675685,
+            "measurementMaxSpeedKmh": 54.26683271023215,
+            "radiusSumM": 0,
+            "radiusCount": 0,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 1313,
+              "endStep": 1553,
+              "durationS": 2,
+              "targetSpeedKmh": 54,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 54.26825252024509,
+              "actualMaximumSpeedKmh": 54.796999469328945,
+              "actualPeakAbsoluteAccelerationMps2": 0.11945773980709512,
+              "actualPeakSlipDeg": 6.7489113453634866e-15,
+              "actualPeakAngularRateRadS": 0.00016499841356953094,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 12.941666666666666,
+            "steerEndedAtS": 16.941666666666666,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 2277,
+                "unloadedSteps": 0,
+                "minLoadN": 3754.916291566796,
+                "maxLoadN": 8523.338047062605,
+                "peakAbsoluteSlipAngleDeg": 3.4692658060635164,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9737724304199695
+              },
+              "FL": {
+                "samples": 2277,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 8523.469015872579,
+                "peakAbsoluteSlipAngleDeg": 3.1963258286450023,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9737724304199696
+              },
+              "RR": {
+                "samples": 2277,
+                "unloadedSteps": 0,
+                "minLoadN": 2572.909692882424,
+                "maxLoadN": 6614.748718495058,
+                "peakAbsoluteSlipAngleDeg": 1.8359770593549316,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9802574157895562
+              },
+              "RL": {
+                "samples": 2277,
+                "unloadedSteps": 0,
+                "minLoadN": 2572.908808585585,
+                "maxLoadN": 7030.230237158001,
+                "peakAbsoluteSlipAngleDeg": 1.7769869833117962,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9802574157895566
+              }
+            },
+            "frozenThrottle": 0.018727046770609053,
+            "steerStartSpeedKmh": 54.26825252024509,
+            "steerStartHeadingDeg": 90,
+            "yawAtHalfSecondDegS": -2.660243590074143,
+            "steerEndSpeedKmh": 53.45455506675685,
+            "speedLossKmh": 0.8136974534882384,
+            "headingChangeDeg": -5.376881865568919,
+            "durationS": 18.975,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 53.78995705658348,
+            "meanPathRadiusM": null,
+            "medianPathRadiusM": null,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.11851376531460937
+          },
+          "phases": [
+            {
+              "phase": "prepare",
+              "step": 0,
+              "timeS": 0,
+              "simTime": 0,
+              "position": {
+                "x": -170,
+                "y": 0.62,
+                "z": -602
+              },
+              "velocity": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "rollDeg": 0,
+              "pitchDeg": 0,
+              "headingDeg": 90
+            },
+            {
+              "phase": "steer",
+              "step": 1553,
+              "timeS": 12.941666666666666,
+              "simTime": 12.941666666666572,
+              "position": {
+                "x": -20.660979940461655,
+                "y": 0.5970091085787071,
+                "z": -602
+              },
+              "velocity": {
+                "x": 15.074514725028335,
+                "y": 6.134958494168381e-8,
+                "z": 2.555900546583364e-15
+              },
+              "rollDeg": -1.677245647943742e-16,
+              "pitchDeg": 0.007698612991176038,
+              "headingDeg": 90
+            },
+            {
+              "phase": "brake",
+              "step": 2033,
+              "timeS": 16.941666666666666,
+              "simTime": 16.941666666666347,
+              "position": {
+                "x": 38.86610160420778,
+                "y": 0.5970090997810344,
+                "z": -596.7720366700327
+              },
+              "velocity": {
+                "x": 14.78315213510911,
+                "y": -7.661650609213363e-10,
+                "z": 1.3914014266664183
+              },
+              "rollDeg": -0.0000275728007372771,
+              "pitchDeg": 0.007106248486683154,
+              "headingDeg": 84.62311813443108
+            }
+          ],
+          "recordId": "live-20261020000000002-1",
+          "reproduction": "matched"
+        },
+        {
+          "protocol": "steer-90-gentle",
+          "explicitAtRestSetup": {
+            "id": "capture-steer-90-gentle",
+            "protocolId": "steer-90-gentle",
+            "label": "外圈采集起点 · 静止",
+            "labelEn": "Outer-city capture start · At rest",
+            "position": [
+              -300,
+              0.62,
+              -602
+            ],
+            "yaw": 1.5707963267948966,
+            "steerSign": -1,
+            "mode": "drive",
+            "initialSpeedMps": 0
+          },
+          "initialContactCount": 0,
+          "cityBodyCount": 2252,
+          "geometryUnchanged": true,
+          "surfaceClassification": {
+            "scope": "20 Hz vehicle-centre samples on existing city street/intersection asphalt. Not a continuous geometry sweep or a lane-keeping criterion; physical contact/collision guards run at 120 Hz.",
+            "samples": 80,
+            "surfaceIds": {
+              "ground": 80
+            },
+            "nominalGridStreetWidthM": 28,
+            "maximumDistanceFromNearestGridAxisM": 7.379607996345612,
+            "outsideNominalStreetStripSamples": 0
+          },
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5931877276962869,
+            "maximumHeightM": 0.62,
+            "peakAbsoluteRollDeg": 0.7497830624004432,
+            "peakAbsolutePitchDeg": 1.5444579476342246,
+            "peakAngularSpeedDegS": 11.780453057851467,
+            "peakSlipDeg": 0.4732220057445726,
+            "peakYawRateDegS": 4.6495777454453195,
+            "peakLateralAccelerationMps2": 2.006524465257121,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 438.273677761099,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 42947.38052551694,
+            "measurementMinSpeedKmh": 88.78821152182984,
+            "measurementMaxSpeedKmh": 90.14120458648397,
+            "radiusSumM": 110956.24165097093,
+            "radiusCount": 361,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 1856,
+              "endStep": 2096,
+              "durationS": 2,
+              "targetSpeedKmh": 90,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 90.1433985945557,
+              "actualMaximumSpeedKmh": 90.7998538528877,
+              "actualPeakAbsoluteAccelerationMps2": 0.12747423817837664,
+              "actualPeakSlipDeg": 8.127490746597539e-15,
+              "actualPeakAngularRateRadS": 0.00015994856000862108,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 17.466666666666665,
+            "steerEndedAtS": 21.466666666666665,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 2910,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 8513.160030176985,
+                "peakAbsoluteSlipAngleDeg": 0.7965432419468222,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9898370076239346
+              },
+              "FL": {
+                "samples": 2910,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 9726.792539842098,
+                "peakAbsoluteSlipAngleDeg": 0.7915891706228759,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9755032511729625
+              },
+              "RR": {
+                "samples": 2910,
+                "unloadedSteps": 0,
+                "minLoadN": 2228.2136429954853,
+                "maxLoadN": 6614.748718495063,
+                "peakAbsoluteSlipAngleDeg": 0.7942475929202043,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9958648588383495
+              },
+              "RL": {
+                "samples": 2910,
+                "unloadedSteps": 0,
+                "minLoadN": 2570.7772197021054,
+                "maxLoadN": 6614.748718495064,
+                "peakAbsoluteSlipAngleDeg": 0.7900135603622996,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9935170176726259
+              }
+            },
+            "frozenThrottle": 0.02205163544178195,
+            "steerStartSpeedKmh": 90.1433985945557,
+            "steerStartHeadingDeg": 90,
+            "yawAtHalfSecondDegS": -4.398429931537933,
+            "steerEndSpeedKmh": 88.78821152182984,
+            "speedLossKmh": 1.3551870727258688,
+            "headingChangeDeg": -17.461030864184693,
+            "durationS": 24.25,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 89.47370942816029,
+            "meanPathRadiusM": 307.35801011349287,
+            "medianPathRadiusM": 307.35443480552715,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.30482203610971265
+          },
+          "phases": [
+            {
+              "phase": "prepare",
+              "step": 0,
+              "timeS": 0,
+              "simTime": 0,
+              "position": {
+                "x": -300,
+                "y": 0.62,
+                "z": -602
+              },
+              "velocity": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "rollDeg": 0,
+              "pitchDeg": 0,
+              "headingDeg": 90
+            },
+            {
+              "phase": "steer",
+              "step": 2096,
+              "timeS": 17.466666666666665,
+              "simTime": 17.466666666666317,
+              "position": {
+                "x": 8.672935021623301,
+                "y": 0.5969361838843367,
+                "z": -602
+              },
+              "velocity": {
+                "x": 25.039835165823554,
+                "y": 9.747767594527703e-7,
+                "z": 4.061361930180813e-15
+              },
+              "rollDeg": 7.143824625872977e-17,
+              "pitchDeg": 0.024144663024734236,
+              "headingDeg": 90
+            },
+            {
+              "phase": "brake",
+              "step": 2576,
+              "timeS": 21.466666666666665,
+              "simTime": 21.46666666666609,
+              "position": {
+                "x": 106.7611140550202,
+                "y": 0.5969287972342325,
+                "z": -588.5305974413466
+              },
+              "velocity": {
+                "x": 23.587046811503058,
+                "y": 0.0000012666346989191681,
+                "z": 7.2093242924438705
+              },
+              "rollDeg": -0.7480709222926184,
+              "pitchDeg": 0.02223487973286463,
+              "headingDeg": 72.53896913581531
+            }
+          ],
+          "recordId": "live-20261020000000003-1",
+          "reproduction": "matched"
+        },
+        {
+          "protocol": "steer-90-coast",
+          "explicitAtRestSetup": {
+            "id": "capture-steer-90-coast",
+            "protocolId": "steer-90-coast",
+            "label": "外圈采集起点 · 静止",
+            "labelEn": "Outer-city capture start · At rest",
+            "position": [
+              -300,
+              0.62,
+              -602
+            ],
+            "yaw": 1.5707963267948966,
+            "steerSign": -1,
+            "mode": "drive",
+            "initialSpeedMps": 0
+          },
+          "initialContactCount": 0,
+          "cityBodyCount": 2252,
+          "geometryUnchanged": true,
+          "surfaceClassification": {
+            "scope": "20 Hz vehicle-centre samples on existing city street/intersection asphalt. Not a continuous geometry sweep or a lane-keeping criterion; physical contact/collision guards run at 120 Hz.",
+            "samples": 80,
+            "surfaceIds": {
+              "ground": 80
+            },
+            "nominalGridStreetWidthM": 28,
+            "maximumDistanceFromNearestGridAxisM": 18.444700189606237,
+            "outsideNominalStreetStripSamples": 14
+          },
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5931877276962869,
+            "maximumHeightM": 0.62,
+            "peakAbsoluteRollDeg": 1.7889496298853218,
+            "peakAbsolutePitchDeg": 1.5442072844939876,
+            "peakAngularSpeedDegS": 14.70170301002809,
+            "peakSlipDeg": 1.1392006717658236,
+            "peakYawRateDegS": 13.969422184834594,
+            "peakLateralAccelerationMps2": 4.8063951979166175,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 415.7395271006699,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 38302.7388788544,
+            "measurementMinSpeedKmh": 69.2708163937368,
+            "measurementMaxSpeedKmh": 90.1174013216708,
+            "radiusSumM": 35312.103021007155,
+            "radiusCount": 361,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 1856,
+              "endStep": 2096,
+              "durationS": 2,
+              "targetSpeedKmh": 90,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 90.1433985945557,
+              "actualMaximumSpeedKmh": 90.7998538528877,
+              "actualPeakAbsoluteAccelerationMps2": 0.12747423817837664,
+              "actualPeakSlipDeg": 8.127490746597539e-15,
+              "actualPeakAngularRateRadS": 0.00015994856000862108,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 17.466666666666665,
+            "steerEndedAtS": 21.466666666666665,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 2851,
+                "unloadedSteps": 0,
+                "minLoadN": 3861.394857485021,
+                "maxLoadN": 8850.871202536802,
+                "peakAbsoluteSlipAngleDeg": 2.060718901800857,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9999999999999999
+              },
+              "FL": {
+                "samples": 2851,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 12365.615824247796,
+                "peakAbsoluteSlipAngleDeg": 2.0211311151736044,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9917613995148352
+              },
+              "RR": {
+                "samples": 2851,
+                "unloadedSteps": 0,
+                "minLoadN": 1891.3934759820984,
+                "maxLoadN": 6614.748718495063,
+                "peakAbsoluteSlipAngleDeg": 1.9279880684885005,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9999988617012902
+              },
+              "RL": {
+                "samples": 2851,
+                "unloadedSteps": 0,
+                "minLoadN": 2521.4075403142715,
+                "maxLoadN": 6932.312362182883,
+                "peakAbsoluteSlipAngleDeg": 1.8904885386445915,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              }
+            },
+            "frozenThrottle": 0.02205163544178195,
+            "steerStartSpeedKmh": 90.1433985945557,
+            "steerStartHeadingDeg": 90,
+            "yawAtHalfSecondDegS": -10.800011088121117,
+            "steerEndSpeedKmh": 69.2708163937368,
+            "speedLossKmh": 20.87258220081891,
+            "headingChangeDeg": -46.79909936564412,
+            "durationS": 23.758333333333333,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 79.79737266427999,
+            "meanPathRadiusM": 97.81745989198657,
+            "medianPathRadiusM": 97.44636952542656,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.28845570365420786
+          },
+          "phases": [
+            {
+              "phase": "prepare",
+              "step": 0,
+              "timeS": 0,
+              "simTime": 0,
+              "position": {
+                "x": -300,
+                "y": 0.62,
+                "z": -602
+              },
+              "velocity": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "rollDeg": 0,
+              "pitchDeg": 0,
+              "headingDeg": 90
+            },
+            {
+              "phase": "steer",
+              "step": 2096,
+              "timeS": 17.466666666666665,
+              "simTime": 17.466666666666317,
+              "position": {
+                "x": 8.672935021623301,
+                "y": 0.5969361838843367,
+                "z": -602
+              },
+              "velocity": {
+                "x": 25.039835165823554,
+                "y": 9.747767594527703e-7,
+                "z": 4.061361930180813e-15
+              },
+              "rollDeg": 7.143824625872977e-17,
+              "pitchDeg": 0.024144663024734236,
+              "headingDeg": 90
+            },
+            {
+              "phase": "brake",
+              "step": 2576,
+              "timeS": 21.466666666666665,
+              "simTime": 21.46666666666609,
+              "position": {
+                "x": 89.91229365636875,
+                "y": 0.5969547279899334,
+                "z": -573.4810746998986
+              },
+              "velocity": {
+                "x": 13.367367155570559,
+                "y": 0.0000026662177242582255,
+                "z": 13.843384668931652
+              },
+              "rollDeg": -1.775237080158813,
+              "pitchDeg": -0.181344805930668,
+              "headingDeg": 43.20090063435589
+            }
+          ],
+          "recordId": "live-20261020000000004-1",
+          "reproduction": "matched"
+        },
+        {
+          "protocol": "steer-54",
+          "explicitAtRestSetup": {
+            "id": "capture-steer-54",
+            "protocolId": "steer-54",
+            "label": "54 km/h 外圈采集起点 · 静止",
+            "labelEn": "54 km/h outer-city capture start · At rest",
+            "position": [
+              -170,
+              0.62,
+              -602
+            ],
+            "yaw": 1.5707963267948966,
+            "steerSign": -1,
+            "mode": "drive",
+            "initialSpeedMps": 0
+          },
+          "initialContactCount": 0,
+          "cityBodyCount": 2252,
+          "geometryUnchanged": true,
+          "surfaceClassification": {
+            "scope": "20 Hz vehicle-centre samples on existing city street/intersection asphalt. Not a continuous geometry sweep or a lane-keeping criterion; physical contact/collision guards run at 120 Hz.",
+            "samples": 80,
+            "surfaceIds": {
+              "ground": 80
+            },
+            "nominalGridStreetWidthM": 28,
+            "maximumDistanceFromNearestGridAxisM": 5.214371720811873,
+            "outsideNominalStreetStripSamples": 0
+          },
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5931877276962869,
+            "maximumHeightM": 0.62,
+            "peakAbsoluteRollDeg": 2.835707722727505,
+            "peakAbsolutePitchDeg": 1.5284239112713385,
+            "peakAngularSpeedDegS": 42.26700492875707,
+            "peakSlipDeg": 1.0017102634967114,
+            "peakYawRateDegS": 42.26700353312349,
+            "peakLateralAccelerationMps2": 9.286412406622306,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 213.58701834374304,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 23653.73202011284,
+            "measurementMinSpeedKmh": 43.677240142738995,
+            "measurementMaxSpeedKmh": 54.26683271023215,
+            "radiusSumM": 7105.461770645239,
+            "radiusCount": 361,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 1313,
+              "endStep": 1553,
+              "durationS": 2,
+              "targetSpeedKmh": 54,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 54.26825252024509,
+              "actualMaximumSpeedKmh": 54.796999469328945,
+              "actualPeakAbsoluteAccelerationMps2": 0.11945773980709512,
+              "actualPeakSlipDeg": 6.7489113453634866e-15,
+              "actualPeakAngularRateRadS": 0.00016499841356953094,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 12.941666666666666,
+            "steerEndedAtS": 16.941666666666666,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 2255,
+                "unloadedSteps": 0,
+                "minLoadN": 1912.5005320494179,
+                "maxLoadN": 9133.754510776587,
+                "peakAbsoluteSlipAngleDeg": 5.449549710346967,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "FL": {
+                "samples": 2255,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 11795.385250127825,
+                "peakAbsoluteSlipAngleDeg": 4.877619440948976,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1.0000000000000002
+              },
+              "RR": {
+                "samples": 2255,
+                "unloadedSteps": 0,
+                "minLoadN": 1252.1650565169011,
+                "maxLoadN": 6614.748718495058,
+                "peakAbsoluteSlipAngleDeg": 5.462889073667545,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "RL": {
+                "samples": 2255,
+                "unloadedSteps": 0,
+                "minLoadN": 2581.3621852158512,
+                "maxLoadN": 8912.327514638073,
+                "peakAbsoluteSlipAngleDeg": 4.980750467832259,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              }
+            },
+            "frozenThrottle": 0.018727046770609053,
+            "steerStartSpeedKmh": 54.26825252024509,
+            "steerStartHeadingDeg": 90,
+            "yawAtHalfSecondDegS": -33.68945471806246,
+            "steerEndSpeedKmh": 43.677240142738995,
+            "speedLossKmh": 10.591012377506097,
+            "headingChangeDeg": -145.33120804378098,
+            "durationS": 18.791666666666668,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 49.27860837523508,
+            "meanPathRadiusM": 19.6827195862749,
+            "medianPathRadiusM": 19.630294546841355,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.11796524079623397
+          },
+          "phases": [
+            {
+              "phase": "prepare",
+              "step": 0,
+              "timeS": 0,
+              "simTime": 0,
+              "position": {
+                "x": -170,
+                "y": 0.62,
+                "z": -602
+              },
+              "velocity": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "rollDeg": 0,
+              "pitchDeg": 0,
+              "headingDeg": 90
+            },
+            {
+              "phase": "steer",
+              "step": 1553,
+              "timeS": 12.941666666666666,
+              "simTime": 12.941666666666572,
+              "position": {
+                "x": -20.660979940461655,
+                "y": 0.5970091085787071,
+                "z": -602
+              },
+              "velocity": {
+                "x": 15.074514725028335,
+                "y": 6.134958494168381e-8,
+                "z": 2.555900546583364e-15
+              },
+              "rollDeg": -1.677245647943742e-16,
+              "pitchDeg": 0.007698612991176038,
+              "headingDeg": 90
+            },
+            {
+              "phase": "brake",
+              "step": 2033,
+              "timeS": 16.941666666666666,
+              "simTime": 16.941666666666347,
+              "position": {
+                "x": -2.3372538762359962,
+                "y": 0.606334490902779,
+                "z": -566.0855278555701
+              },
+              "velocity": {
+                "x": -10.034696517420551,
+                "y": -0.0001295431249147102,
+                "z": 6.820104640334857
+              },
+              "rollDeg": -2.8095308668377714,
+              "pitchDeg": -0.021290160770329424,
+              "headingDeg": 304.668791956219
+            }
+          ],
+          "recordId": "live-20261020000000005-1",
+          "reproduction": "matched"
+        },
+        {
+          "protocol": "steer-90",
+          "explicitAtRestSetup": {
+            "id": "capture-steer-90",
+            "protocolId": "steer-90",
+            "label": "90 km/h 外圈采集起点 · 静止",
+            "labelEn": "90 km/h outer-city capture start · At rest",
+            "position": [
+              -375,
+              0.62,
+              -602
+            ],
+            "yaw": 1.5707963267948966,
+            "steerSign": -1,
+            "mode": "drive",
+            "initialSpeedMps": 0
+          },
+          "initialContactCount": 0,
+          "cityBodyCount": 2252,
+          "geometryUnchanged": true,
+          "surfaceClassification": {
+            "scope": "20 Hz vehicle-centre samples on existing city street/intersection asphalt. Not a continuous geometry sweep or a lane-keeping criterion; physical contact/collision guards run at 120 Hz.",
+            "samples": 80,
+            "surfaceIds": {
+              "ground": 80
+            },
+            "nominalGridStreetWidthM": 28,
+            "maximumDistanceFromNearestGridAxisM": 14.649361060132971,
+            "outsideNominalStreetStripSamples": 1
+          },
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 0.5931877276962869,
+            "maximumHeightM": 0.62,
+            "peakAbsoluteRollDeg": 2.863104922121494,
+            "peakAbsolutePitchDeg": 1.5443036972134094,
+            "peakAngularSpeedDegS": 25.594867410293347,
+            "peakSlipDeg": 3.2622744236222228,
+            "peakYawRateDegS": 23.83833907766044,
+            "peakLateralAccelerationMps2": 9.382665766014203,
+            "nozzleSaturationSeconds": 0,
+            "pathLengthM": 430.0010419777813,
+            "measurementSteps": 480,
+            "measurementSpeedSumKmh": 41010.23635212722,
+            "measurementMinSpeedKmh": 79.80426313299958,
+            "measurementMaxSpeedKmh": 90.1411956548814,
+            "radiusSumM": 21349.150148021658,
+            "radiusCount": 361,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": null,
+            "recoveryStartHeightM": null,
+            "recoveryMinimumHeightM": null,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": {
+              "startStep": 1856,
+              "endStep": 2096,
+              "durationS": 2,
+              "targetSpeedKmh": 90,
+              "toleranceKmh": 0.8,
+              "maximumLongitudinalAccelerationMps2": 0.2,
+              "actualMinimumSpeedKmh": 90.1433985945557,
+              "actualMaximumSpeedKmh": 90.7998538528877,
+              "actualPeakAbsoluteAccelerationMps2": 0.12747423817837664,
+              "actualPeakSlipDeg": 8.127490746597539e-15,
+              "actualPeakAngularRateRadS": 0.0001599485600075011,
+              "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+            },
+            "steerStartedAtS": 17.466666666666665,
+            "steerEndedAtS": 21.466666666666665,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 2894,
+                "unloadedSteps": 0,
+                "minLoadN": 1839.1807780469476,
+                "maxLoadN": 9050.920173178594,
+                "peakAbsoluteSlipAngleDeg": 5.0947291420303555,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              },
+              "FL": {
+                "samples": 2894,
+                "unloadedSteps": 0,
+                "minLoadN": 3900.0000000000036,
+                "maxLoadN": 13088.068059176818,
+                "peakAbsoluteSlipAngleDeg": 4.930465689273367,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 0.9999999999999999
+              },
+              "RR": {
+                "samples": 2894,
+                "unloadedSteps": 0,
+                "minLoadN": 869.6466524102352,
+                "maxLoadN": 6614.748718495063,
+                "peakAbsoluteSlipAngleDeg": 5.246422046901737,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1.0000000000000002
+              },
+              "RL": {
+                "samples": 2894,
+                "unloadedSteps": 0,
+                "minLoadN": 2570.7824405164283,
+                "maxLoadN": 9145.34772508683,
+                "peakAbsoluteSlipAngleDeg": 5.067494816365066,
+                "peakAbsoluteLongitudinalSlip": 1,
+                "peakFrictionUtilization": 1
+              }
+            },
+            "frozenThrottle": 0.02205163544178195,
+            "steerStartSpeedKmh": 90.1433985945557,
+            "steerStartHeadingDeg": 90,
+            "yawAtHalfSecondDegS": -20.958685816060623,
+            "steerEndSpeedKmh": 79.80426313299958,
+            "speedLossKmh": 10.339135461556126,
+            "headingChangeDeg": -85.27587986938511,
+            "durationS": 24.116666666666667,
+            "measuredSteeringDurationS": 4,
+            "meanMeasurementSpeedKmh": 85.43799240026505,
+            "meanPathRadiusM": 59.13892007762232,
+            "medianPathRadiusM": 59.26125566060058,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 0,
+            "energyUsedKWh": 0.3041691257069106
+          },
+          "phases": [
+            {
+              "phase": "prepare",
+              "step": 0,
+              "timeS": 0,
+              "simTime": 0,
+              "position": {
+                "x": -375,
+                "y": 0.62,
+                "z": -602
+              },
+              "velocity": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "rollDeg": 0,
+              "pitchDeg": 0,
+              "headingDeg": 90
+            },
+            {
+              "phase": "steer",
+              "step": 2096,
+              "timeS": 17.466666666666665,
+              "simTime": 17.466666666666317,
+              "position": {
+                "x": -66.32706497837648,
+                "y": 0.5969361838843366,
+                "z": -602
+              },
+              "velocity": {
+                "x": 25.039835165823554,
+                "y": 9.74776759161334e-7,
+                "z": 4.072920239698244e-15
+              },
+              "rollDeg": 1.4598250322436083e-16,
+              "pitchDeg": 0.02414466302473795,
+              "headingDeg": 90
+            },
+            {
+              "phase": "brake",
+              "step": 2576,
+              "timeS": 21.466666666666665,
+              "simTime": 21.46666666666609,
+              "position": {
+                "x": 3.3962282126639525,
+                "y": 0.6068928510873957,
+                "z": -551.277286534604
+              },
+              "velocity": {
+                "x": 2.986344295413387,
+                "y": 0.000009871218700929307,
+                "z": 21.996628237545867
+              },
+              "rollDeg": -2.8546695927223285,
+              "pitchDeg": -0.003640025501509802,
+              "headingDeg": 4.724120130614892
+            }
+          ],
+          "recordId": "live-20261020000000006-1",
+          "reproduction": "matched"
+        }
+      ]
+    },
+    {
+      "name": "The stable-speed gate and fixed input history are independent of 60 / 120 / 240 Hz synthetic display dispatch",
+      "status": "PASS",
+      "rows": [
+        {
+          "dispatchHz": 60,
+          "steps": 2893,
+          "gate": {
+            "startStep": 1855,
+            "endStep": 2095,
+            "durationS": 2,
+            "targetSpeedKmh": 90,
+            "toleranceKmh": 0.8,
+            "maximumLongitudinalAccelerationMps2": 0.2,
+            "actualMinimumSpeedKmh": 90.1433742163616,
+            "actualMaximumSpeedKmh": 90.79980267102471,
+            "actualPeakAbsoluteAccelerationMps2": 0.12747404899447365,
+            "actualPeakSlipDeg": 0,
+            "actualPeakAngularRateRadS": 0.00015993326713284087,
+            "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+          },
+          "terminalStateEqual": true,
+          "inputJournalEqual": true
+        },
+        {
+          "dispatchHz": 120,
+          "steps": 2893,
+          "gate": {
+            "startStep": 1855,
+            "endStep": 2095,
+            "durationS": 2,
+            "targetSpeedKmh": 90,
+            "toleranceKmh": 0.8,
+            "maximumLongitudinalAccelerationMps2": 0.2,
+            "actualMinimumSpeedKmh": 90.1433742163616,
+            "actualMaximumSpeedKmh": 90.79980267102471,
+            "actualPeakAbsoluteAccelerationMps2": 0.12747404899447365,
+            "actualPeakSlipDeg": 0,
+            "actualPeakAngularRateRadS": 0.00015993326713284087,
+            "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+          },
+          "terminalStateEqual": true,
+          "inputJournalEqual": true
+        },
+        {
+          "dispatchHz": 240,
+          "steps": 2893,
+          "gate": {
+            "startStep": 1855,
+            "endStep": 2095,
+            "durationS": 2,
+            "targetSpeedKmh": 90,
+            "toleranceKmh": 0.8,
+            "maximumLongitudinalAccelerationMps2": 0.2,
+            "actualMinimumSpeedKmh": 90.1433742163616,
+            "actualMaximumSpeedKmh": 90.79980267102471,
+            "actualPeakAbsoluteAccelerationMps2": 0.12747404899447365,
+            "actualPeakSlipDeg": 0,
+            "actualPeakAngularRateRadS": 0.00015993326713284087,
+            "definition": "Every 120 Hz sample must pass speed, acceleration, side-slip and angular-rate conditions."
+          },
+          "terminalStateEqual": true,
+          "inputJournalEqual": true
+        }
+      ],
+      "actualBrowserFrameRate": false
+    },
+    {
+      "name": "E8 release and Q landing retain actual extra climb, throughput and closed-valve ground confirmation; original response setting is restored by a journaled command",
+      "status": "PASS",
+      "metrics": {
+        "rawHz": 120,
+        "minimumHeightM": 0.5757285451751485,
+        "maximumHeightM": 104.0958369619376,
+        "peakAbsoluteRollDeg": 6.927579147231144e-14,
+        "peakAbsolutePitchDeg": 1.79546563374416e-8,
+        "peakAngularSpeedDegS": 0.000001439452475261303,
+        "peakSlipDeg": 0,
+        "peakYawRateDegS": 0,
+        "peakLateralAccelerationMps2": 0,
+        "nozzleSaturationSeconds": 0,
+        "pathLengthM": 7.159484576767576e-8,
+        "measurementSteps": 0,
+        "measurementSpeedSumKmh": 0,
+        "measurementMinSpeedKmh": null,
+        "measurementMaxSpeedKmh": null,
+        "radiusSumM": 0,
+        "radiusCount": 0,
+        "releaseHeightM": 97.49823057185492,
+        "releaseVerticalMps": 7.976708646739083,
+        "releasePeakHeightM": 104.0958369619376,
+        "verticalStoppedAtS": 8.983333333333333,
+        "recoveredAtS": null,
+        "recoveryStartHeightM": null,
+        "recoveryMinimumHeightM": null,
+        "groundConfirmedAtS": 24.416666666666668,
+        "stableSpeedWindow": null,
+        "steerStartedAtS": null,
+        "steerEndedAtS": null,
+        "wheelExtrema": {
+          "FR": {
+            "samples": 2930,
+            "unloadedSteps": 2831,
+            "minLoadN": 2257.7801389414185,
+            "maxLoadN": 8017.077923643825,
+            "peakAbsoluteSlipAngleDeg": 3.012777516590131e-12,
+            "peakAbsoluteLongitudinalSlip": 7.575271385948569e-8,
+            "peakFrictionUtilization": 7.629394531250141e-7
+          },
+          "FL": {
+            "samples": 2930,
+            "unloadedSteps": 2831,
+            "minLoadN": 2257.780138941413,
+            "maxLoadN": 8017.077923643733,
+            "peakAbsoluteSlipAngleDeg": 3.012777516590131e-12,
+            "peakAbsoluteLongitudinalSlip": 7.57527138594846e-8,
+            "peakFrictionUtilization": 7.629394531250143e-7
+          },
+          "RR": {
+            "samples": 2930,
+            "unloadedSteps": 2831,
+            "minLoadN": 2257.7801388945627,
+            "maxLoadN": 8017.077538511679,
+            "peakAbsoluteSlipAngleDeg": 3.0127775166073304e-12,
+            "peakAbsoluteLongitudinalSlip": 7.575272110600115e-8,
+            "peakFrictionUtilization": 7.629394531250143e-7
+          },
+          "RL": {
+            "samples": 2930,
+            "unloadedSteps": 2831,
+            "minLoadN": 2257.780138894558,
+            "maxLoadN": 8017.0775385115885,
+            "peakAbsoluteSlipAngleDeg": 3.0127775166073304e-12,
+            "peakAbsoluteLongitudinalSlip": 7.575272110600007e-8,
+            "peakFrictionUtilization": 7.629394531250142e-7
+          }
+        },
+        "releaseBrakeTimeS": 2.9833333333333334,
+        "releaseClimbDistanceM": 6.5976063900826745,
+        "groundThrustN": 1.223541863233933e-10,
+        "groundMassFlowKgS": 2.1592547377583447e-13,
+        "durationS": 24.416666666666668,
+        "measuredSteeringDurationS": 0,
+        "meanMeasurementSpeedKmh": null,
+        "meanPathRadiusM": null,
+        "medianPathRadiusM": null,
+        "onboardGasUsedKg": 0,
+        "externalGasUsedKg": 893.755924465751,
+        "energyUsedKWh": 0.005425925925925894
+      },
+      "steps": 2930,
+      "recordId": "live-20261020183211117-1"
+    },
+    {
+      "name": "Z / B and 1 / 2 are actual rate inputs, followed by release and G; signed pose excursions, continuous samples and recovery costs survive in the same record",
+      "status": "PASS",
+      "rows": [
+        {
+          "id": "roll-z-level",
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 44.557709601045936,
+            "maximumHeightM": 64.4768587627453,
+            "peakAbsoluteRollDeg": 138.99177893202386,
+            "peakAbsolutePitchDeg": 0.12242551044028269,
+            "peakAngularSpeedDegS": 190.1007949687267,
+            "peakSlipDeg": 0,
+            "peakYawRateDegS": 0,
+            "peakLateralAccelerationMps2": 0,
+            "nozzleSaturationSeconds": 1.6749999999999965,
+            "pathLengthM": 52.598920573021644,
+            "measurementSteps": 0,
+            "measurementSpeedSumKmh": 0,
+            "measurementMinSpeedKmh": null,
+            "measurementMaxSpeedKmh": null,
+            "radiusSumM": 0,
+            "radiusCount": 0,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": 8.958333333333334,
+            "recoveryStartHeightM": 57.06418035140865,
+            "recoveryMinimumHeightM": 44.557709601045936,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": null,
+            "steerStartedAtS": null,
+            "steerEndedAtS": null,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 1075,
+                "unloadedSteps": 1075,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621432770476508e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "FL": {
+                "samples": 1075,
+                "unloadedSteps": 1075,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621432770476508e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "RR": {
+                "samples": 1075,
+                "unloadedSteps": 1075,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621468115887179e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "RL": {
+                "samples": 1075,
+                "unloadedSteps": 1075,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621468115887179e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              }
+            },
+            "recoveryStartRollDeg": -121.13454161149569,
+            "recoveryStartPitchDeg": 0.033196245968609386,
+            "recoveryHeadingTargetDeg": 359.9235868792022,
+            "recoveryHeightLossM": 12.506470750362716,
+            "recoveryTimeS": 6.058333333333334,
+            "finalTiltDeg": 0.035460042852461626,
+            "finalHeadingErrorDeg": 0.000006429893460335734,
+            "durationS": 8.958333333333334,
+            "measuredSteeringDurationS": 0,
+            "meanMeasurementSpeedKmh": null,
+            "meanPathRadiusM": null,
+            "medianPathRadiusM": null,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 472.725598654324,
+            "energyUsedKWh": 0.0019907407407407287
+          },
+          "recordId": "live-20261020183211840-1",
+          "retainedPoseSamples": 181
+        },
+        {
+          "id": "roll-b-level",
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 44.556845432439246,
+            "maximumHeightM": 64.4768587627453,
+            "peakAbsoluteRollDeg": 138.9924607260376,
+            "peakAbsolutePitchDeg": 0.14803269534903718,
+            "peakAngularSpeedDegS": 190.10100095373684,
+            "peakSlipDeg": 0,
+            "peakYawRateDegS": 0,
+            "peakLateralAccelerationMps2": 0,
+            "nozzleSaturationSeconds": 1.6749999999999965,
+            "pathLengthM": 52.599851114205634,
+            "measurementSteps": 0,
+            "measurementSpeedSumKmh": 0,
+            "measurementMinSpeedKmh": null,
+            "measurementMaxSpeedKmh": null,
+            "radiusSumM": 0,
+            "radiusCount": 0,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": 8.958333333333334,
+            "recoveryStartHeightM": 57.06386590465242,
+            "recoveryMinimumHeightM": 44.556845432439246,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": null,
+            "steerStartedAtS": null,
+            "steerEndedAtS": null,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 1075,
+                "unloadedSteps": 1075,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621432770476508e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "FL": {
+                "samples": 1075,
+                "unloadedSteps": 1075,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621432770476508e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "RR": {
+                "samples": 1075,
+                "unloadedSteps": 1075,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621468115887179e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "RL": {
+                "samples": 1075,
+                "unloadedSteps": 1075,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621468115887179e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              }
+            },
+            "recoveryStartRollDeg": 121.13570079568012,
+            "recoveryStartPitchDeg": 0.06510866333943599,
+            "recoveryHeadingTargetDeg": 0.07517664654801592,
+            "recoveryHeightLossM": 12.50702047221317,
+            "recoveryTimeS": 6.058333333333334,
+            "finalTiltDeg": 0.03545781102937076,
+            "finalHeadingErrorDeg": -0.000006418425869014755,
+            "durationS": 8.958333333333334,
+            "measuredSteeringDurationS": 0,
+            "meanMeasurementSpeedKmh": null,
+            "meanPathRadiusM": null,
+            "medianPathRadiusM": null,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 472.75702103400624,
+            "energyUsedKWh": 0.0019907407407407287
+          },
+          "recordId": "live-20261020183212200-1",
+          "retainedPoseSamples": 181
+        },
+        {
+          "id": "pitch-1-level",
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 62.40291200812884,
+            "maximumHeightM": 64.4768587627453,
+            "peakAbsoluteRollDeg": 0.06431202041435105,
+            "peakAbsolutePitchDeg": 55.52555184610412,
+            "peakAngularSpeedDegS": 69.4741322708608,
+            "peakSlipDeg": 0,
+            "peakYawRateDegS": 0,
+            "peakLateralAccelerationMps2": 0,
+            "nozzleSaturationSeconds": 1.5416666666666636,
+            "pathLengthM": 12.30721576651956,
+            "measurementSteps": 0,
+            "measurementSpeedSumKmh": 0,
+            "measurementMinSpeedKmh": null,
+            "measurementMaxSpeedKmh": null,
+            "radiusSumM": 0,
+            "radiusCount": 0,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": 5.908333333333333,
+            "recoveryStartHeightM": 62.858208788540246,
+            "recoveryMinimumHeightM": 62.40291200812884,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": null,
+            "steerStartedAtS": null,
+            "steerEndedAtS": null,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 709,
+                "unloadedSteps": 709,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621432770476508e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "FL": {
+                "samples": 709,
+                "unloadedSteps": 709,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621432770476508e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "RR": {
+                "samples": 709,
+                "unloadedSteps": 709,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621468115887179e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "RL": {
+                "samples": 709,
+                "unloadedSteps": 709,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621468115887179e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              }
+            },
+            "recoveryStartRollDeg": 0.007101972146798511,
+            "recoveryStartPitchDeg": 50.06363300943706,
+            "recoveryHeadingTargetDeg": 0.003635251303762743,
+            "recoveryHeightLossM": 0.455296780411409,
+            "recoveryTimeS": 3.0083333333333333,
+            "finalTiltDeg": 0.021187978655562125,
+            "finalHeadingErrorDeg": 0.0001875063114198383,
+            "durationS": 5.908333333333333,
+            "measuredSteeringDurationS": 0,
+            "meanMeasurementSpeedKmh": null,
+            "meanPathRadiusM": null,
+            "medianPathRadiusM": null,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 289.16372147909885,
+            "energyUsedKWh": 0.001312962962962955
+          },
+          "recordId": "live-20261020183212481-1",
+          "retainedPoseSamples": 120
+        },
+        {
+          "id": "pitch-2-level",
+          "metrics": {
+            "rawHz": 120,
+            "minimumHeightM": 62.402915614420145,
+            "maximumHeightM": 64.4768587627453,
+            "peakAbsoluteRollDeg": 0.06983373330402834,
+            "peakAbsolutePitchDeg": 55.525520537468275,
+            "peakAngularSpeedDegS": 69.4742382324892,
+            "peakSlipDeg": 0,
+            "peakYawRateDegS": 0,
+            "peakLateralAccelerationMps2": 0,
+            "nozzleSaturationSeconds": 1.5416666666666636,
+            "pathLengthM": 12.307196750854901,
+            "measurementSteps": 0,
+            "measurementSpeedSumKmh": 0,
+            "measurementMinSpeedKmh": null,
+            "measurementMaxSpeedKmh": null,
+            "radiusSumM": 0,
+            "radiusCount": 0,
+            "releaseHeightM": null,
+            "releaseVerticalMps": null,
+            "releasePeakHeightM": null,
+            "verticalStoppedAtS": null,
+            "recoveredAtS": 5.908333333333333,
+            "recoveryStartHeightM": 62.85821022792587,
+            "recoveryMinimumHeightM": 62.402915614420145,
+            "groundConfirmedAtS": null,
+            "stableSpeedWindow": null,
+            "steerStartedAtS": null,
+            "steerEndedAtS": null,
+            "wheelExtrema": {
+              "FR": {
+                "samples": 709,
+                "unloadedSteps": 709,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621432770476508e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "FL": {
+                "samples": 709,
+                "unloadedSteps": 709,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621432770476508e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "RR": {
+                "samples": 709,
+                "unloadedSteps": 709,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621468115887179e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              },
+              "RL": {
+                "samples": 709,
+                "unloadedSteps": 709,
+                "minLoadN": null,
+                "maxLoadN": 0,
+                "peakAbsoluteSlipAngleDeg": 7.621468115887179e-17,
+                "peakAbsoluteLongitudinalSlip": 0,
+                "peakFrictionUtilization": 0
+              }
+            },
+            "recoveryStartRollDeg": 0.009064097667157095,
+            "recoveryStartPitchDeg": -50.06359494820861,
+            "recoveryHeadingTargetDeg": 359.99668380656686,
+            "recoveryHeightLossM": 0.4552946135057283,
+            "recoveryTimeS": 3.0083333333333333,
+            "finalTiltDeg": 0.021187973581123013,
+            "finalHeadingErrorDeg": -7.234438612613304e-7,
+            "durationS": 5.908333333333333,
+            "measuredSteeringDurationS": 0,
+            "meanMeasurementSpeedKmh": null,
+            "meanPathRadiusM": null,
+            "medianPathRadiusM": null,
+            "onboardGasUsedKg": 0,
+            "externalGasUsedKg": 289.167603568501,
+            "energyUsedKWh": 0.001312962962962955
+          },
+          "recordId": "live-20261020183212686-1",
+          "retainedPoseSamples": 120
+        }
+      ],
+      "scope": "Actual fixed-step solver and input journal, not live IAB driving."
+    },
+    {
+      "name": "Protocol-enriched JSON still validates, persists without cutting events, and replays with the shared exact-input engine",
+      "status": "PASS",
+      "rows": [
+        {
+          "recordId": "live-20261020183150684-1",
+          "reproduction": "matched",
+          "retainedControlSamples": 484,
+          "bytes": 1297795
+        },
+        {
+          "recordId": "live-20261020183211117-1",
+          "reproduction": "matched",
+          "retainedControlSamples": 490,
+          "bytes": 1174465
+        },
+        {
+          "recordId": "live-20261020183211840-1",
+          "reproduction": "matched",
+          "retainedControlSamples": 181,
+          "bytes": 564053
+        }
+      ],
+      "libraryBytes": 3036575,
+      "statisticsNotRecomputedFromDisplayRows": true
+    },
+    {
+      "name": "Pilot takeover, an unmet speed gate and obstacle preflight keep failed/cancelled evidence without initializing a faster car or deleting city colliders",
+      "status": "PASS",
+      "cancelledSteps": 120,
+      "timeoutSteps": 3601,
+      "neverSteeredWithoutStableGate": true,
+      "cityPreflightFailure": "预计转向弧线存在建筑、路缘或边界障碍；请换朝向 / 转向方向或移到开阔区域。",
+      "cityGeometryUnchanged": true
+    },
+    {
+      "name": "Operator vertical-setting changes survive cancellation, and an externally ended recorder links its exact prefix instead of showing the previous run",
+      "status": "PASS",
+      "operatorNewRateMps": 6,
+      "recordedPrefixSteps": 60,
+      "protocolCompleted": false,
+      "prefixReproduction": "matched",
+      "postRecordRestoreExplicit": true
+    }
+  ]
+}

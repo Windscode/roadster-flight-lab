@@ -5,11 +5,12 @@ import {createHash} from 'node:crypto';
 import * as THREE from '../dist/vendor/three.module.js';
 import {createRoadster,VEHICLE_GEOMETRY,sampleVehicleSurface} from '../dist/vehicle.js';
 import {createRoadster as createBaseline,sampleVehicleSurface as sampleBaseline} from '../dist/vehicle-reference-3.13.js';
+import {createRoadster as createRecentBaseline} from '../dist/vehicle-reference-3.15.js';
 import {VEHICLE_PHOTO_MATCHES,normalizedLandmarkReport,letterboxViewport} from '../dist/vehicle-display-study.js';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {MODEL_BUILD_ID} from '../dist/model-build.js';
 const checks=[],check=(name,fn)=>checks.push({name,status:'passed',detail:fn()}),sha=b=>createHash('sha256').update(b).digest('hex');
-const car=createRoadster({inspection:true}),driver=createRoadster(),baseline=createBaseline();
+const car=createRoadster({inspection:true}),driver=createRoadster(),baseline=createBaseline(),recentBaseline=createRecentBaseline();
 const allNames=root=>{const names=[];root.traverse(o=>names.push(o.name,...o.userData.parts||[]));return names;};
 check('Frozen 3.13 exterior restores the published bytes and independent layout',()=>{
   const source=readFileSync(new URL('../dist/vehicle-reference-3.13.js',import.meta.url)).toString().replace("from './vehicle-reference-layout-3.13.js'","from './vehicle-layout.js'");
@@ -48,7 +49,7 @@ check('Rubber, coated dark alloy, machined silver, rotor and cabin finishes rema
   assert.ok(car.materials.wheelDark.metalness<.25);assert.ok(car.materials.wheelSilver.metalness>.8);assert.ok(car.materials.rotor.roughness>car.materials.wheelSilver.roughness+.15);
   assert.ok(car.materials.wheelSilver.color.r>car.materials.wheelDark.color.r*4);assert.ok(car.materials.seatFabric.color.r>car.materials.upholstery.color.r*4);assert.equal(car.materials.seatFabric.metalness,0);
   for(const key of ['lampGuide','seatFabric','seatBolster','headlining','tailMount'])for(const value of Object.values(car.materials[key]))assert.ok(!value?.isTexture,key+' unexpectedly adds a texture sampler');
-  for(const key of ['metalness','roughness','clearcoat','clearcoatRoughness'])assert.equal(car.materials.paint[key],baseline.materials.paint[key]);assert.equal(car.materials.glass.opacity,.94);
+  for(const key of ['metalness','roughness','clearcoat','clearcoatRoughness'])assert.equal(car.materials.paint[key],baseline.materials.paint[key]);assert.equal(car.materials.glass.opacity,.90);assert.equal(car.materials.glass.userData.interiorVisualAlphaMultiplier,.24);
   return Object.fromEntries(['rubber','wheelDark','wheelSilver','rotor','seatFabric','seatBolster'].map(key=>[key,{color:car.materials[key].color.getHexString(),metalness:car.materials[key].metalness,roughness:car.materials[key].roughness}]));
 });
 check('Tail installation surrounds unchanged nozzle positions and nozzle geometry',()=>{
@@ -58,7 +59,10 @@ check('Tail installation surrounds unchanged nozzle positions and nozzle geometr
   // Independent rays through the actual merged carbon geometry distinguish a
   // real aperture from a black/metal disc resting over the uncut rear panel.
   const apertureRays=[],ray=new THREE.Raycaster();
-  const hits=(model,x,offset)=>{const panels=[];model.group.traverse(o=>{if(o.isMesh&&(o.userData.parts||[o.name]).includes('contoured rear carbon valance'))panels.push(o);});ray.set(new THREE.Vector3(x+offset,-.035,-2.45),new THREE.Vector3(0,0,1));return ray.intersectObjects(panels,false).filter(h=>h.point.z< -2.28);};
+  // 3.16 recesses the retained valance by up to 44 mm; the old -2.28 m
+  // cutoff excluded that real panel from the outside-aperture ray. Keep the
+  // full 25 cm rear installation depth while still excluding remote bodywork.
+  const hits=(model,x,offset)=>{const panels=[];model.group.traverse(o=>{if(o.isMesh&&(o.userData.parts||[o.name]).includes('contoured rear carbon valance'))panels.push(o);});ray.set(new THREE.Vector3(x+offset,-.035,-2.45),new THREE.Vector3(0,0,1));return ray.intersectObjects(panels,false).filter(h=>h.point.z< -2.20);};
   for(const quality of ['balanced','high','ultra']){car.setQuality(quality);baseline.setQuality(quality);car.group.updateMatrixWorld(true);baseline.group.updateMatrixWorld(true);
     for(let j=0;j<4;j++){const x=(j-1.5)*.32,old=hits(baseline,x,.03),mouth=hits(car,x,.03),returnEdge=hits(car,x,.09),outside=hits(car,x,.135);assert.equal(old.length,1);assert.equal(mouth.length,0);assert.equal(returnEdge.length,1);assert.equal(outside.length,1);assert.ok(returnEdge[0].point.z<outside[0].point.z-.015);apertureRays.push({quality,port:j+1,oldPanelZ:old[0].point.z,currentPanelBlockingMouth:false,bevelZ:returnEdge[0].point.z,retainedPanelZ:outside[0].point.z});}
   }
@@ -69,18 +73,28 @@ check('Identity, LOD, lamps and cutaway cycling preserve wheel, wing and glass g
   const pose=()=>({wheels:car.wheels.map(w=>({position:w.assembly.position.toArray(),rotation:w.assembly.quaternion.toArray(),spin:w.spin.rotation.toArray()})),wing:{position:car.wing.position.toArray(),rotation:car.wing.quaternion.toArray()}}),before=pose();
   for(let i=0;i<3;i++)for(const quality of ['balanced','ultra','high'])for(const mode of ['official-study','experimental']){car.setQuality(quality);car.setDisplayConfiguration(mode);car.setCutaway(true);car.setLampMode('off');car.setCutaway(false);car.setLampMode('low-beam');assert.deepEqual(pose(),before);}
   car.group.updateMatrixWorld(true);const panes=[];car.group.traverse(o=>{if(o.userData.independentOpticalPanel)panes.push(o);});assert.equal(panes.length,7);assert.equal(panes.filter(o=>o.material===car.materials.glass).length,5);
-  for(const z of [-2,-1.42,-.3,.8,1.42,2.1])for(const x of [0,.4,.7,.95])assert.deepEqual(sampleVehicleSurface(x,z),sampleBaseline(x,z));
-  return{cycles:18,independentGlassPanels:5,independentLampCovers:2,unchangedTyreRadiusM:VEHICLE_GEOMETRY.tyreRadius,unchangedPrimaryBodySections:true,changedLocalSidePanel:'12 mm concavity replaces 20 mm; fixed width/arch boundary and physics envelope remain'};
+  // 3.16 deliberately rounds the painted shoulder transitions. Preserve the
+  // dimensions/arch/bonnet stations, rather than requiring the old visual fold.
+  let maximumSurfaceDeltaM=0;
+  for(const z of [-2,-1.42,-.3,.8,1.42,2.1])for(const x of [0,.4,.7,.95]){
+    const current=sampleVehicleSurface(x,z),old=sampleBaseline(x,z);
+    for(const key of ['outerX','archY','linerInnerX','bonnetHalfWidth','section'])assert.deepEqual(current[key],old[key],key);
+    maximumSurfaceDeltaM=Math.max(maximumSurfaceDeltaM,Math.abs(current.bodyY-old.bodyY));
+  }
+  assert.ok(maximumSurfaceDeltaM<.010,'The authorised local fillet changes the broad body envelope');
+  return{cycles:18,independentGlassPanels:5,independentLampCovers:2,unchangedTyreRadiusM:VEHICLE_GEOMETRY.tyreRadius,unchangedDimensionStations:true,maximumSurfaceDeltaM,changedLocalSidePanel:'3.16 rounds only the cross-section transitions; fixed width/arch stations and the existing tyre clearance gate remain'};
 });
 check('Photographic cameras reproduce the declared normalized landmark residuals and keep a separate technical rig',()=>{
   const result=[];for(const ref of VEHICLE_PHOTO_MATCHES){const camera=new THREE.PerspectiveCamera(),[w,h]=ref.sourceResolution;camera.filmGauge=36;camera.aspect=w/h;camera.setFocalLength(ref.focalLengthMm);camera.position.set(...ref.position);camera.lookAt(...ref.target);camera.setViewOffset(w,h,-ref.frameShiftUV[0]*w,-ref.frameShiftUV[1]*h,w,h);const measured=normalizedLandmarkReport(THREE,camera,new THREE.Matrix4(),ref);assert.ok(Math.abs(measured.rmsImageDiagonalFraction-ref.rmsImageDiagonalFraction)<1e-12);assert.equal(measured.status,'design-comparison-only');assert.ok(measured.points.every(p=>p.errorPixels>=0&&p.manualTolerancePixels>=10));result.push({id:ref.id,sourceSHA256:ref.sha256,rmsImageDiagonalPercent:100*measured.rmsImageDiagonalFraction,landmarks:measured.points.length});}
   const box=letterboxViewport(900,720,3440/1024);assert.ok(Math.abs(box.width/box.height-3440/1024)<1e-12);assert.equal(box.width,900);assert.ok(box.y>0);assert.throws(()=>letterboxViewport(0,10,1),/Invalid/);return{views:result,metricCADClaim:false,geometryImprovementClaim:false};
 });
-check('All new geometry has finite unit normals and explicit LOD costs against 3.13',()=>{
-  const costs={};for(const q of ['balanced','high','ultra']){driver.setQuality(q);baseline.setQuality(q);const after=driver.getRenderCost(),before=baseline.getRenderCost();assert.ok(after.triangles/before.triangles<1.04);assert.ok(after.drawables-before.drawables<=4);costs[q]={before,after,triangleDelta:after.triangles-before.triangles,drawablesDelta:after.drawables-before.drawables};}
+check('All new geometry has finite unit normals and bounded incremental LOD costs against the 3.15 task baseline',()=>{
+  // The 4% increment applies to this round's accepted 3.15 baseline. Preserve
+  // the earlier 3.13 counts separately instead of silently changing history.
+  const costs={};for(const q of ['balanced','high','ultra']){driver.setQuality(q);baseline.setQuality(q);recentBaseline.setQuality(q);const after=driver.getRenderCost(),before=recentBaseline.getRenderCost(),historical313=baseline.getRenderCost();assert.ok(after.triangles/before.triangles<1.04);assert.ok(after.drawables-before.drawables<=1);costs[q]={baselineVersion:'3.15.0',historical313,before,after,triangleDelta:after.triangles-before.triangles,drawablesDelta:after.drawables-before.drawables};}
   car.setDisplayConfiguration('official-study');for(const q of ['balanced','high','ultra']){car.setQuality(q);car.group.traverse(o=>{if(!o.geometry)return;const p=o.geometry.attributes.position,n=o.geometry.attributes.normal;assert.ok(p.array.every(Number.isFinite),o.name);if(n)for(let i=0;i<n.count;i++)assert.ok(Math.abs(Math.hypot(n.getX(i),n.getY(i),n.getZ(i))-1)<.0006,o.name+' invalid normal');});}
   return{costs,meaning:'Resource costs only, not visual quality or GPU performance.'};
 });
-const sourcePaths=['dist/vehicle.js','dist/vehicle-inspection.js','dist/vehicle-display-study.js','dist/vehicle-study-capture.js','dist/vehicle-reference-3.13.js','dist/vehicle-reference-layout-3.13.js','dist/i18n-vehicle-314-en.js','tests/vehicle-display-3.14.test.mjs'];
-const report={schema:'roadster-vehicle-display-3.14',status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,asOf:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(sourcePaths.map(p=>[p,sha(readFileSync(new URL('../'+p,import.meta.url)))])),limitations:['Geometry/material parameters, camera projection and identity isolation are tested. No real GPU pixel or perceived-detail acceptance is implied.','Current official original photographs and supplied actual 3.13 images were viewed; no 3.14 after-images or actual video have been acquired in this test.','Same-camera studio/daylight plus actual city wet-night frames, full optical orbit and steering/suspension/wing motion remain target-device checks.']};
-writeFileSync(new URL(`../qa/vehicle-display-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');car.dispose();driver.dispose();baseline.dispose();console.log(JSON.stringify(report,null,2));
+const sourcePaths=['dist/vehicle.js','dist/vehicle-inspection.js','dist/vehicle-display-study.js','dist/vehicle-study-capture.js','dist/vehicle-reference-3.13.js','dist/vehicle-reference-layout-3.13.js','dist/vehicle-reference-3.15.js','dist/vehicle-reference-layout-3.15.js','dist/i18n-vehicle-314-en.js','tests/vehicle-display-3.14.test.mjs'];
+const report={schema:'roadster-vehicle-display-3.14',status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,asOf:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(sourcePaths.map(p=>[p,sha(readFileSync(new URL('../'+p,import.meta.url)))])),limitations:['Geometry/material parameters, camera projection and identity isolation are tested. No real GPU pixel or perceived-detail acceptance is implied.','This structural test does not acquire images; current matched WebGL captures and visual review are separate evidence.','Same-camera studio/daylight plus actual city wet-night frames, full optical orbit and steering/suspension/wing motion remain target-device checks.']};
+writeFileSync(new URL(`../qa/vehicle-display-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');car.dispose();driver.dispose();baseline.dispose();recentBaseline.dispose();console.log(JSON.stringify(report,null,2));

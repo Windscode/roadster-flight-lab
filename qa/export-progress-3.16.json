@@ -1,0 +1,96 @@
+{
+  "modelVersion": "3.16.0",
+  "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+  "checks": [
+    {
+      "name": "Chunked JSON preserves supported data and native JSON normalization without double toJSON",
+      "status": "passed"
+    },
+    {
+      "name": "Large preparation yields to the event loop and cancellation stops before file handoff",
+      "status": "passed"
+    },
+    {
+      "name": "Preparation, browser handoff and disk completion are recorded as distinct states",
+      "status": "passed"
+    },
+    {
+      "name": "Cancel, visible preparation failure and browser retry preserve an honest outcome",
+      "status": "passed"
+    },
+    {
+      "name": "Dedicated-worker protocol transfers exact records and cancels by terminating its worker",
+      "status": "passed"
+    },
+    {
+      "name": "A superseded asynchronous snapshot cannot replace or relabel a newer export",
+      "status": "passed"
+    }
+  ],
+  "measurements": {
+    "synthetic40000": {
+      "bytes": 6219750,
+      "elapsedMs": 717.544973,
+      "chunks": 95
+    },
+    "inputHandoff": {
+      "status": "handed-off",
+      "filename": "input.json",
+      "elapsedMs": 43.222180999999864,
+      "snapshotMs": 0.01577399999996487,
+      "serializeMs": 17.538320000000112,
+      "blobMs": 0.23325199999999313,
+      "bytes": 632,
+      "visited": 52,
+      "characters": 632,
+      "error": null,
+      "browserCompletion": "unobservable",
+      "serializer": "cooperative-main-thread",
+      "workerSerializeMs": null,
+      "postMessageMs": 0
+    },
+    "workerProtocol": {
+      "scope": "Worker transport fixture, not native worker performance",
+      "completed": {
+        "status": "handed-off",
+        "filename": "worker.json",
+        "elapsedMs": 5.648297000000184,
+        "snapshotMs": 0.020330999999941923,
+        "serializeMs": 2.6459719999998015,
+        "blobMs": 0.0007909999999355932,
+        "bytes": 57,
+        "visited": 18,
+        "characters": 57,
+        "error": null,
+        "browserCompletion": "unobservable",
+        "serializer": "worker",
+        "workerSerializeMs": 1,
+        "postMessageMs": 0.0784080000000813
+      },
+      "cancelled": {
+        "status": "cancelled",
+        "filename": "worker-cancel.json",
+        "elapsedMs": 2.3754129999999805,
+        "snapshotMs": 0.02553899999998066,
+        "serializeMs": 0,
+        "blobMs": 0,
+        "bytes": 0,
+        "visited": 0,
+        "characters": 0,
+        "error": null,
+        "browserCompletion": "unobservable",
+        "serializer": null,
+        "workerSerializeMs": null,
+        "postMessageMs": 0
+      }
+    }
+  },
+  "sourceHashes": {
+    "dist/export-encoder.js": "1a6d64d4ac78512404f18ab60cc939de9de6b2b0bbdafb0ce72e2b1dcff9356a",
+    "dist/export-worker.js": "9347c78bb8a6a16544cfc372480887351728b5a2238c38db0f944d65b7a9d5c3",
+    "dist/export-download.js": "518de941b393e307a46ab7b624fba0ac1ea9dfaef5f5bc0848ac7d16f57e4cb7",
+    "dist/input-session.js": "fcdd8e4d4cf4d4a20887f088da94bd7dae34a682bff9edc83709c809bd670536",
+    "tests/export-progress-3.16.test.mjs": "12e1f2993c97b57ec673c427125f2cc84b4dfd94f36e81f7fd3b3a77c1f2197e"
+  },
+  "scope": "Actual cooperative encoder, immutable received-event journal and DOM download manager; browser handoff is simulated here. Native download measurement is reported separately. No claim about the earlier browser tool timeout."
+}

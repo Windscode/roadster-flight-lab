@@ -100,7 +100,7 @@ test('bounded result persistence retains honest outcome and compact samples',()=
   const storage=memory();saveResults(storage,[result]);const loaded=loadResults(storage);assert.equal(loaded.length,1);assert.equal(loaded[0].status,'completed');assert.ok(loaded[0].samples.length<=181);
 });
 const physicalResults=[];
-function runPhysicalPreset(preset,airborne=false){
+function runPhysicalPreset(preset,airborne=false,expectedStatus='completed'){
   // The slower, pilot-bounded roll needs an open sky. The wind laboratory's
   // 24.1 m beam is a real obstacle, not an unlimited numerical fixture.
   const world=preset.id==='roll-return'?'city':'windlab';
@@ -112,7 +112,7 @@ function runPhysicalPreset(preset,airborne=false){
   let minHeight=initial.heightWorld,maxHeight=initial.heightWorld,samples=0;
   const maxSteps=Math.ceil(preset.stages.reduce((n,s)=>n+s.durationS,0)/dt)+120;
   for(let i=0;i<maxSteps&&runner.active;i++){const t=sim.step(dt,(_,fixed)=>runner.stepInput(fixed,{}),()=>samples++);minHeight=Math.min(minHeight,t.heightWorld);maxHeight=Math.max(maxHeight,t.heightWorld);assert.equal(t.fault,null);}
-  assert.ok(result,'program produced an outcome');assert.equal(result.status,'completed',result.reason);const end=sim.telemetry();
+  assert.ok(result,'program produced an outcome');assert.equal(result.status,expectedStatus,result.reason);const end=sim.telemetry();
   physicalResults.push({preset:preset.id,world,scenario:sim.scenario,initialState:airborne?'airborne':'ground',status:result.status,durationS:result.durationS,positionStart:initial.position,positionEnd:end.position,minHeightM:minHeight,maxHeightM:maxHeight,finalMode:end.mode,finalContacts:end.contactCount,finalThrustN:end.thrustN,sampleCallbacks:samples,summary:result.summary,stages:result.stages});
   return{sim,result,initial,end};
 }
@@ -143,8 +143,9 @@ test('actual airborne roll preset finishes near starting height and keeps physic
   const {result,initial,end}=runPhysicalPreset(defaultProgramLibrary().programs.find(p=>p.id==='roll-return'),true);
   assert.equal(end.mode,'hover');assert.equal(end.contactCount,0);assert.equal(end.stabilizationMode,'hold');assert.ok(Math.abs(end.heightWorld-initial.heightWorld)<.6);assert.ok(result.durationS>3);
 });
-test('actual finite-tank preset lands and preserves measured consumption when supply restores',()=>{
-  const {sim,result,initial,end}=runPhysicalPreset(defaultProgramLibrary().programs.find(p=>p.id==='finite-budget'));
+test('actual finite-tank preset reports early reserve recovery as an interrupted task, lands, and preserves finite consumption',()=>{
+  const {sim,result,initial,end}=runPhysicalPreset(defaultProgramLibrary().programs.find(p=>p.id==='finite-budget'),false,'cancelled');
+  assert.equal(result.finiteRecovery.state,'landed');assert.equal(result.finiteRecovery.originalTaskCompleted,false);assert.equal(result.finiteRecovery.externalGasUsedKg,0);assert.ok(Math.abs(result.finiteRecovery.firstContact.preControlStepVerticalMps)<1.4);assert.ok(result.finiteRecovery.stableTimeS>=.5-1e-9);
   assert.equal(end.mode,'drive');assert.ok(end.contactCount>0);assert.ok(end.gasMass<initial.gasMass);assert.ok(result.summary.gasThroughputKg>150);assert.ok(Math.abs((initial.gasMass-end.gasMass)-result.summary.gasThroughputKg)<1);assert.equal(sim.params.supplyMode,'bench');
 });
 const sourceFiles=['dist/flight-programs.js','dist/research-console.js','dist/research-console.css','dist/physics.js','dist/wind-lab-data.js','tests/flight-programs.test.mjs'];

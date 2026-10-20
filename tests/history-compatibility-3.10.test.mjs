@@ -19,7 +19,7 @@ assert.equal(original.identity.modelBuildId,'b353a90366f128bcf4c188fee0c4a3aad38
 validateExperimentRecord(original);
 const bytesBefore=JSON.stringify(original);
 const unavailable=await assertHistoricalReadOnly({source:original,bytes:originalBytes,path:originalPath,createSim});
-evidence.push({name:'Actual published 3.9 source record remains readable/exportable and rejects undeclared 3.14 migration',status:'PASS',...unavailable,legacyMigrationEvidence:'qa/history-original-3.9-to-3.13.json'});
+evidence.push({name:'Actual published 3.9 source record remains readable/exportable and rejects undeclared current-model migration',status:'PASS',...unavailable,legacyMigrationEvidence:'qa/history-original-3.9-to-3.13.json'});
 console.log('PASS: Actual 3.9 history is immutable and exportable; both exact replay and undeclared current-model migration are refused before import.');
 
 // A different build of the current model remains a recomputation case. Generate

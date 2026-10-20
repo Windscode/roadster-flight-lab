@@ -1,6 +1,7 @@
 // Exact historical partition. Only explicitly listed additions and the three
 // frozen 3.14 anchor profiles and one explicitly frozen 3.15 vehicle-mouth
-// paving split can differ. Every other original entity retains its 1e-9
+// paving split, and the explicit frozen 3.16 street additions can differ.
+// Every other original entity retains its 1e-9
 // canonical identity. No kind/prefix-wide geometry exclusions.
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -8,9 +9,11 @@ import {createHash} from 'node:crypto';
 import {CITY_ROUTE_CORRIDOR,CITY_STREETS} from '../dist/city-plan.js';
 import {SOUTH_QUAY_ENTRY_SOLIDS} from '../dist/city-landmarks.js';
 import {CITY_BUILDINGS,CITY_CONTINUITY} from '../dist/city-data.js';
+import {STREET_COLLIDERS} from '../dist/street-life.js';
 import {canonicalGeometryJSON as canonical} from '../dist/irradiance-math.js';
 export const CITY_GEOMETRY_CONTRACT=JSON.parse(readFileSync(new URL('./fixtures/city-geometry-scope-3.14.json',import.meta.url)));
 export const CITY_ENTRY_GEOMETRY_CONTRACT=JSON.parse(readFileSync(new URL('./fixtures/city-entry-geometry-scope-3.15.json',import.meta.url)));
+export const CITY_ADDITIONS_316_CONTRACT=JSON.parse(readFileSync(new URL('./fixtures/city-additions-3.16.json',import.meta.url)));
 const hash=value=>createHash('sha256').update(canonical(value)).digest('hex');
 const eulerQuaternion=([x,y,z])=>{const sx=Math.sin(x/2),cx=Math.cos(x/2),sy=Math.sin(y/2),cy=Math.cos(y/2),sz=Math.sin(z/2),cz=Math.cos(z/2);return[sx*cy*cz+cx*sy*sz,cx*sy*cz-sx*cy*sz,cx*cy*sz+sx*sy*cz,cx*cy*cz-sx*sy*sz];};
 function bounds(boxes){
@@ -19,6 +22,30 @@ function bounds(boxes){
     for(const a of [-1,1])for(const b of [-1,1])for(const c of [-1,1]){const corner=[a*box.size[0]/2,b*box.size[1]/2,c*box.size[2]/2];for(let k=0;k<3;k++){const p=box.position[k]+m[k].reduce((v,e,j)=>v+e*corner[j],0);min[k]=Math.min(min[k],p);max[k]=Math.max(max[k],p);}}
   }
   return{min,max};
+}
+function restoreApproved316Additions(current){
+  const f=CITY_ADDITIONS_316_CONTRACT,ids=new Set(f.expectedCurrent.map(g=>g.id));
+  assert.equal(ids.size,31,'The approved 3.16 addition set must remain an exact 31-record list');
+  assert.equal(hash(f.expectedCurrent),f.expectedCanonicalSHA256,'The 3.16 expected geometry identity changed');
+  assert.equal(new Set(current.map(g=>g.id)).size,current.length,'Duplicate physical geometry identities');
+  for(const[file,expected]of Object.entries(f.unchangedFrozenFixtures))assert.equal(createHash('sha256').update(readFileSync(new URL('../'+file,import.meta.url))).digest('hex'),expected,'A frozen historical fixture was altered: '+file);
+  const actual=current.filter(g=>ids.has(g.id));
+  assert.equal(canonical(actual),canonical(f.expectedCurrent),'An approved 3.16 addition was changed, removed, duplicated or reordered');
+  for(const group of f.groups){
+    assert.equal(group.ids.length,group.count);assert.equal(hash(group.expectedCurrent),group.canonicalSHA256);
+    const idSet=new Set(group.ids),authored=group.id==='foundry-footways-and-crosstown-shelter'?CITY_CONTINUITY.solids:STREET_COLLIDERS;
+    assert.deepEqual(authored.filter(g=>idSet.has(g.id)),group.authoring,'An approved 3.16 authored support changed: '+group.id);
+  }
+  const retainedContinuity=CITY_CONTINUITY.solids.filter(g=>!ids.has(g.id)),retainedStreet=STREET_COLLIDERS.filter(g=>!ids.has(g.id));
+  const rawHash=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
+  const tag=f.authoringMetadataChange;assert.equal(tag.field,'data.project');assert.deepEqual(retainedContinuity.map(g=>g.id),tag.ids);
+  const oldTaggedContinuity=retainedContinuity.map(g=>{assert.equal(g.data.project,tag.after,'Unexpected project version tag');return{...g,data:{...g.data,project:tag.before}};});
+  assert.equal(rawHash(oldTaggedContinuity),f.sourceBefore.continuityAuthoringSHA256,'An original continuity object changed beyond the explicit project version tag');
+  assert.equal(rawHash(retainedStreet),f.sourceBefore.streetColliderSHA256,'An original street furnishing proxy changed');
+  const comparison=current.filter(g=>!ids.has(g.id));
+  assert.equal(comparison.length,f.sourceBefore.physicalCount);
+  assert.equal(hash(comparison),f.sourceBefore.physicalCanonicalSHA256,'After only the exact 3.16 additions are removed, the original 3.15 city must be byte-canonically intact');
+  return{comparison,actual,retainedContinuity,change:{changeId:f.changeId,expectedCanonicalSHA256:f.expectedCanonicalSHA256,groups:f.groups.map(g=>({id:g.id,count:g.count,ids:g.ids,canonicalSHA256:g.canonicalSHA256,scope:g.scope})),sourceBefore:f.sourceBefore,originalContractFailures:f.originalContractFailures,scope:f.scope}};
 }
 function restoreApprovedEntryForHistoricalComparison(current){
   const f=CITY_ENTRY_GEOMETRY_CONTRACT,map=new Map(current.map(g=>[g.id,g]));
@@ -52,11 +79,11 @@ function restoreApprovedEntryForHistoricalComparison(current){
   return{comparison,change:{changeId:f.changeId,sourceCommit:f.sourceCommit,sourceCityPlanSHA256:f.sourceCityPlanSHA256,before:f.before,current:actual,opening,unchangedOuterBounds:f.unchangedOuterBounds,originalFailure:f.originalFailure,scope:f.scope}};
 }
 export function partitionCityGeometry(currentGeometry){
-  const entry=restoreApprovedEntryForHistoricalComparison(currentGeometry),geometry=entry.comparison;
-  const f=CITY_GEOMETRY_CONTRACT,source=[...CITY_ROUTE_CORRIDOR.solids,...SOUTH_QUAY_ENTRY_SOLIDS,...CITY_CONTINUITY.solids],plan=new Map(source.map(s=>[s.id,s]));
+  const additions316=restoreApproved316Additions(currentGeometry),entry=restoreApprovedEntryForHistoricalComparison(additions316.comparison),geometry=entry.comparison;
+  const f=CITY_GEOMETRY_CONTRACT,source=[...CITY_ROUTE_CORRIDOR.solids,...SOUTH_QUAY_ENTRY_SOLIDS,...additions316.retainedContinuity],plan=new Map(source.map(s=>[s.id,s]));
   assert.equal(new Set(geometry.map(g=>g.id)).size,geometry.length,'Duplicate physical geometry identities');
   assert.equal(plan.size,source.length,'Duplicate authored addition identities');
-  assert.deepEqual(CITY_CONTINUITY.solids.map(g=>g.id),f.continuityAdditionIds,'3.14 additions must use the frozen explicit entity list');
+  assert.deepEqual(additions316.retainedContinuity.map(g=>g.id),f.continuityAdditionIds,'3.14 additions must use the frozen explicit entity list');
   const added=geometry.filter(g=>plan.has(g.id)),legacy=geometry.filter(g=>!plan.has(g.id)),currentMap=new Map(geometry.map(g=>[g.id,g]));
   assert.equal(added.length,plan.size,'Authored entities are missing or duplicated in the physical world');
   for(const actual of added){
@@ -87,6 +114,7 @@ export function partitionCityGeometry(currentGeometry){
   const reconstructedLegacy=restore(legacy),reconstructedSource313=restore(geometry.filter(g=>!added314.has(g.id)));
   assert.equal(reconstructedLegacy.length,f.baselineHistoricalCount);assert.equal(hash(reconstructedLegacy),f.baselineHistoricalCanonicalSHA256,'Reconstructed historical city must retain the original 77b01ed identity');
   assert.equal(reconstructedSource313.length,f.baselineFullCount);assert.equal(hash(reconstructedSource313),f.baselineFullCanonicalSHA256,'Reconstructed full 3.13 city differs from the independently frozen solver');
-  const contract={currentPhysicalCount:currentGeometry.length,currentPhysicalCanonicalSHA256:hash(currentGeometry),approved315GeometryChanges:[entry.change],historicalComparisonNormalization:'Only the two explicitly checked 3.15 paving pieces are restored to the frozen original box before the inherited historical counts/hashes. These comparison hashes are not the full-current geometry identity; all other entities remain unchanged.',sourceCommit:f.sourceCommit,sourcePhysicsSHA256:f.sourcePhysicsSHA256,sourceCitySHA256:f.sourceCitySHA256,quantization:f.quantization,unchangedHistoricalCount:unchangedLegacy.length,unchangedHistoricalCanonicalSHA256:hash(unchangedLegacy),unchangedSource313Count:unchangedSource313.length,unchangedSource313CanonicalSHA256:hash(unchangedSource313),reconstructedHistoricalCount:reconstructedLegacy.length,reconstructedHistoricalCanonicalSHA256:hash(reconstructedLegacy),reconstructedSource313Count:reconstructedSource313.length,reconstructedSource313CanonicalSHA256:hash(reconstructedSource313),explicit314AdditionCount:currentAdditions.length,explicit314AdditionIds:f.continuityAdditionIds,approvedTowerChanges:towerRows,originalFailure:f.firstFailure,scope:'Exact geometry identity, three explicit tower profiles and one explicit vehicle-mouth paving split only; not GPU, aesthetics, driving or performance acceptance.'};
-  return{legacy,added,addedIds:added.map(g=>g.id),unchangedLegacy,unchangedSource313,reconstructedLegacy,contract};
+  const contract={currentPhysicalCount:currentGeometry.length,currentPhysicalCanonicalSHA256:hash(currentGeometry),approved315GeometryChanges:[entry.change],approved316Additions:additions316.change,historicalComparisonNormalization:'First verify the 31 exact 3.16 supports (13 continuity, 18 street furnishing) and remove only those verified records, recovering the independently restored 3.15 full city hash. Then restore the two explicitly checked 3.15 paving pieces to their frozen original box. The unchanged inherited historical counts/hashes still apply to every remaining record; they are not the full-current geometry identity.',sourceCommit:f.sourceCommit,sourcePhysicsSHA256:f.sourcePhysicsSHA256,sourceCitySHA256:f.sourceCitySHA256,quantization:f.quantization,unchangedHistoricalCount:unchangedLegacy.length,unchangedHistoricalCanonicalSHA256:hash(unchangedLegacy),unchangedSource313Count:unchangedSource313.length,unchangedSource313CanonicalSHA256:hash(unchangedSource313),reconstructedHistoricalCount:reconstructedLegacy.length,reconstructedHistoricalCanonicalSHA256:hash(reconstructedLegacy),reconstructedSource313Count:reconstructedSource313.length,reconstructedSource313CanonicalSHA256:hash(reconstructedSource313),explicit314AdditionCount:currentAdditions.length,explicit314AdditionIds:f.continuityAdditionIds,approvedTowerChanges:towerRows,originalFailure:f.firstFailure,scope:'Exact geometry identity, three explicit tower profiles, one explicit vehicle-mouth paving split and 31 exact new street supports only; not GPU, aesthetics, driving or performance acceptance.'};
+  const allAdded=[...added,...additions316.actual];
+  return{legacy,added:allAdded,addedIds:allAdded.map(g=>g.id),unchangedLegacy,unchangedSource313,reconstructedLegacy,contract};
 }

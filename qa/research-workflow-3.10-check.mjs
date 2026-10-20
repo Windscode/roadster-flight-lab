@@ -1,3 +1,5 @@
+import {awaitExport} from './await-export.mjs';
+import {withActualExportWorker} from './export-worker-dom-adapter.mjs';
 import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 // DOM behavior and localization contract with real numerical reports.
 // No browser layout, WebGL pixels, native Worker timing or FPS evidence.
@@ -21,7 +23,7 @@ const original={fetch:globalThis.fetch,Worker:globalThis.Worker,localStorage:glo
 let study,live,stopObserver=null;const evidence=[],requests=[],workers=new Set(),drawnText=[],workerPlan=[];
 dom.window.HTMLCanvasElement.prototype.getContext=()=>new Proxy({},{get:(target,key)=>key==='fillText'?text=>drawnText.push(String(text)):key in target?target[key]:()=>{},set:(target,key,value)=>{target[key]=value;return true;}});dom.window.HTMLElement.prototype.scrollIntoView=()=>{};
 globalThis.localStorage=dom.window.localStorage;globalThis.fetch=async url=>({ok:true,status:200,text:async()=>readFileSync(new URL('../dist/research-panel.html',import.meta.url),'utf8')});
-globalThis.Worker=class{constructor(){this.stopped=false;workers.add(this);}postMessage(request){requests.push(structuredClone(request));const outcome=workerPlan.shift()||'normal';this.deliver=()=>{if(this.stopped)return;try{if(outcome==='fail')throw Error('Deliberate worker failure');this.onmessage?.({data:{ok:true,report:runExperiment(request)}});}catch(error){this.onmessage?.({data:{ok:false,error:error.message}});}};if(outcome!=='hold')this.timer=setTimeout(this.deliver,0);}terminate(){this.stopped=true;clearTimeout(this.timer);workers.delete(this);}};
+globalThis.Worker=withActualExportWorker(class{constructor(){this.stopped=false;workers.add(this);}postMessage(request){requests.push(structuredClone(request));const outcome=workerPlan.shift()||'normal';this.deliver=()=>{if(this.stopped)return;try{if(outcome==='fail')throw Error('Deliberate worker failure');this.onmessage?.({data:{ok:true,report:runExperiment(request)}});}catch(error){this.onmessage?.({data:{ok:false,error:error.message}});}};if(outcome!=='hold')this.timer=setTimeout(this.deliver,0);}terminate(){this.stopped=true;clearTimeout(this.timer);workers.delete(this);}});
 registerTranslations(entries,patterns);setLanguage('zh');
 const sim=new RoadsterSim({}, {world:'windlab'}),getSim=()=>sim;
 const oldReport=JSON.parse(readFileSync(new URL('./fixtures/standard-brake-wet-3.8.json',import.meta.url),'utf8')),oldEntry={id:'actual-3.8-wet-brake',label:'单次实验',note:'Original historical archive fixture',report:oldReport};
@@ -112,8 +114,8 @@ try{
     const blobs=[],urlCreate=URL.createObjectURL,urlRevoke=URL.revokeObjectURL,anchorClick=dom.window.HTMLAnchorElement.prototype.click;
     try{
       URL.createObjectURL=blob=>{blobs.push(blob);return'blob:research-roll-test-'+blobs.length;};URL.revokeObjectURL=()=>{};dom.window.HTMLAnchorElement.prototype.click=()=>{};
-      $('export-library').click();const exported=JSON.parse(Buffer.from(await blobs.at(-1).arrayBuffer()).toString('utf8'));assert.equal(JSON.stringify(exported.entries.find(e=>e.id===legacyEntry.id).report),raw);assert.ok(exported.entries.some(e=>e.report.kind==='roll'&&e.report.request.durationS===20&&e.report.rows.length===400));
-      $('export-rows').click();assert.equal(Buffer.from(await blobs.at(-1).arrayBuffer()).toString('utf8'),'\uFEFF'+csv);
+      $('export-library').click();await awaitExport(doc);const exported=JSON.parse(Buffer.from(await blobs.at(-1).arrayBuffer()).toString('utf8'));assert.equal(JSON.stringify(exported.entries.find(e=>e.id===legacyEntry.id).report),raw);assert.ok(exported.entries.some(e=>e.report.kind==='roll'&&e.report.request.durationS===20&&e.report.rows.length===400));
+      $('export-rows').click();await awaitExport(doc);assert.equal(Buffer.from(await blobs.at(-1).arrayBuffer()).toString('utf8'),'\uFEFF'+csv);
     }finally{URL.createObjectURL=urlCreate;URL.revokeObjectURL=urlRevoke;dom.window.HTMLAnchorElement.prototype.click=anchorClick;}
     const legacyDraft=JSON.parse(dom.window.localStorage.getItem('roadster-study-draft-v1'));delete legacyDraft.protocolVersion;delete legacyDraft.request.durationS;
     study.dispose();dom.window.localStorage.setItem('roadster-study-draft-v1',JSON.stringify(legacyDraft));study=await createResearchStudyPanel({mount:doc.getElementById('study'),getSim});study.open();assert.equal($('lab-roll-window').value,'8');assert.equal(study.getState().pendingRequest.durationS,8);

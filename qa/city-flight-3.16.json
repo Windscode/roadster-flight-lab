@@ -1,0 +1,524 @@
+{
+  "schema": "roadster-city-flight-qa",
+  "version": 1,
+  "identity": {
+    "modelVersion": "3.16.0",
+    "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+    "sourceCommit": null,
+    "sourceTree": null,
+    "sourceIdentityStatus": "not-available",
+    "protocolVersion": "live-fixed-inputs-1",
+    "fixedHz": 120
+  },
+  "route": {
+    "id": "forum-terrace-hop-1",
+    "name": "上城 · 驾驶与飞越",
+    "nameEn": "Upper City · Drive and fly",
+    "surfaceId": "upper-city-terrace",
+    "surfaceY": 8,
+    "streetId": "forum-main",
+    "start": {
+      "center": [
+        400,
+        8,
+        230
+      ],
+      "radiusM": 2.5,
+      "maxSpeedMps": 0.5,
+      "headingDeg": 0,
+      "headingToleranceDeg": 20
+    },
+    "drive": {
+      "minimumGroundDistanceM": 18,
+      "checkpointZ": 252,
+      "halfWidthM": 5.5
+    },
+    "takeoff": {
+      "minX": 394.5,
+      "maxX": 405.5,
+      "minZ": 252,
+      "maxZ": 266,
+      "minimumCgHeightM": 9.05,
+      "airborneDwellS": 0.12
+    },
+    "gate": {
+      "id": "forum-air-gate",
+      "center": [
+        400,
+        12,
+        280
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "halfWidthM": 5.5,
+      "halfHeightM": 2.7,
+      "minimumForwardSpeedMps": 0.25,
+      "envelopeMarginM": 0.05
+    },
+    "landing": {
+      "center": [
+        400,
+        8,
+        305
+      ],
+      "radiusM": 4.5,
+      "bounds": {
+        "minX": 393.5,
+        "maxX": 406.5,
+        "minZ": 298.5,
+        "maxZ": 311.5
+      },
+      "maximumTouchdownVerticalMps": 1.4,
+      "maximumTouchdownTiltDeg": 8,
+      "stableContacts": 3,
+      "stableHorizontalMps": 0.4,
+      "stableVerticalMps": 0.35,
+      "stableAngularRadS": 0.15,
+      "stableSeconds": 0.5
+    },
+    "bounds": {
+      "minX": 389.5,
+      "maxX": 410.5,
+      "minZ": 220,
+      "maxZ": 330,
+      "minY": 7.8,
+      "maxY": 24
+    },
+    "timeoutS": 75,
+    "rules": [
+      "Start stopped on the existing 8 m terrace road, heading +Z; starting never teleports or refills.",
+      "Drive on wheels at least 18 m and cross z=252 before taking off inside the marked strip.",
+      "Cross the gate once in +Z while fully airborne; the physical hull/tyre envelope must fit the 11 by 5.4 m opening.",
+      "Touch down only inside the marked terrace area, with <=1.4 m/s descent and <=8 degree tilt; no hull collision.",
+      "At least 3 wheels on upper-city-terrace, slow translation and rotation for 0.5 s are required before completion.",
+      "Reset, refill, changed wind/fault/model parameters or a discontinuity end the attempt; cancel releases the observer without moving the vehicle."
+    ],
+    "scope": "A single curated route on an existing vehicle platform. It does not certify other roads, rooftop access, arbitrary jumps or finite-gas success."
+  },
+  "setup": "Existing harbor scenario initialized before each attempt, then 240 physical settling steps. This is a numerical solver fixture, not evidence of a native user driving to the start from the website.",
+  "fixedHz": 120,
+  "results": [
+    {
+      "id": "city-mvh0vqf2-be420bb8",
+      "status": "completed",
+      "reason": "stable_platform_landing",
+      "summary": {
+        "statisticsHz": 120,
+        "count": 2568,
+        "groundDistanceM": 26.857598075048436,
+        "pathDistanceM": 92.72653240203147,
+        "peakSpeedMps": 16.225547166380508,
+        "minimumWorldCgHeightM": 8.581688551509,
+        "maximumWorldCgHeightM": 11.999809752384518,
+        "minimumHullGapEstimateM": 0.3051919264165921,
+        "saturationSeconds": 7.025000000000139,
+        "gasThroughputKg": 732.6724267541197,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 732.6724267541197,
+        "firstContact": {
+          "step": 2474,
+          "timeS": 20.616666666666667,
+          "position": {
+            "x": 400.0000172813143,
+            "y": 8.718353333326938,
+            "z": 305.2502155598028
+          },
+          "preContactVerticalMps": -0.30007462735231777,
+          "verticalMps": -0.2997112242748545,
+          "rollDeg": -0.00011700984718775127,
+          "pitchDeg": 0.6851655802988732,
+          "wheelObjects": [
+            "upper-city-terrace",
+            "upper-city-terrace"
+          ]
+        },
+        "landingErrorM": 0.258084473416803,
+        "stableLandingAtS": 21.4,
+        "gateCrossing": {
+          "direction": "forward",
+          "fraction": 0.7691821690278438,
+          "position": {
+            "x": 400.0000713687992,
+            "y": 11.896503552566685,
+            "z": 280
+          },
+          "forwardSpeedMps": 15.11907838318137,
+          "envelopeHalfWidthM": 1.022571592166969,
+          "envelopeHalfHeightM": 0.8234979254029042,
+          "inside": true,
+          "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+          "step": 1306,
+          "timeS": 10.881409851408565
+        },
+        "driveCheckpointAtS": 4.108333333333333,
+        "takeoffAtS": 8.258333333333333,
+        "hullCollision": false,
+        "landingSucceeded": true,
+        "gasRemainingKg": 249.55820028489444,
+        "clearanceMeaning": "Minimum world-Y corner gap of the four actual hull boxes above the declared flat 8 m terrace; an estimate, not city AGL or recovery height.",
+        "supplyMeaning": "External regulated flow; not an onboard tank consumption result."
+      },
+      "stepCount": 2568,
+      "taskId": "fnv1a32-a06b9b00",
+      "collisionIdentity": "b0619ba2",
+      "commands": [
+        {
+          "step": 635,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 12,
+                "z": 256.84482177677336
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        },
+        {
+          "step": 936,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 12,
+                "z": 305
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        },
+        {
+          "step": 2153,
+          "method": "startManeuver",
+          "args": [
+            "land"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "city-mvh0vrc1-80e70255",
+      "status": "failed",
+      "reason": "contact_before_gate",
+      "summary": {
+        "statisticsHz": 120,
+        "count": 1305,
+        "groundDistanceM": 26.857468681034565,
+        "pathDistanceM": 48.91011133107865,
+        "peakSpeedMps": 12.204245790313243,
+        "minimumWorldCgHeightM": 8.595850066706557,
+        "maximumWorldCgHeightM": 11.648923940149805,
+        "minimumHullGapEstimateM": 0.3051919264165921,
+        "saturationSeconds": 3.0749999999999917,
+        "gasThroughputKg": 245.8838820770071,
+        "onboardDischargedKg": 245.8838820770071,
+        "externalSupplyKg": 0,
+        "firstContact": null,
+        "landingErrorM": null,
+        "stableLandingAtS": null,
+        "gateCrossing": null,
+        "driveCheckpointAtS": 4.108333333333333,
+        "takeoffAtS": 8.258333333333333,
+        "hullCollision": false,
+        "landingSucceeded": false,
+        "gasRemainingKg": 3.6625537285531062,
+        "clearanceMeaning": "Minimum world-Y corner gap of the four actual hull boxes above the declared flat 8 m terrace; an estimate, not city AGL or recovery height.",
+        "supplyMeaning": "Actual finite onboard discharge; no refill during the attempt."
+      },
+      "stepCount": 1305,
+      "taskId": "fnv1a32-308cf011",
+      "collisionIdentity": "b0619ba2",
+      "commands": [
+        {
+          "step": 635,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 12,
+                "z": 256.84482177677336
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        },
+        {
+          "step": 936,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 12,
+                "z": 305
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "city-mvh0vrw0-5ca37b15",
+      "status": "failed",
+      "reason": "missed_takeoff_strip",
+      "summary": {
+        "statisticsHz": 120,
+        "count": 776,
+        "groundDistanceM": 36.00139913291906,
+        "pathDistanceM": 36.00152571461811,
+        "peakSpeedMps": 5.925969160271044,
+        "minimumWorldCgHeightM": 8.595850066706557,
+        "maximumWorldCgHeightM": 8.603973726438442,
+        "minimumHullGapEstimateM": 0.3051919264165921,
+        "saturationSeconds": 0,
+        "gasThroughputKg": 0,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 0,
+        "firstContact": null,
+        "landingErrorM": null,
+        "stableLandingAtS": null,
+        "gateCrossing": null,
+        "driveCheckpointAtS": 4.108333333333333,
+        "takeoffAtS": null,
+        "hullCollision": false,
+        "landingSucceeded": false,
+        "gasRemainingKg": 249.55820028489444,
+        "clearanceMeaning": "Minimum world-Y corner gap of the four actual hull boxes above the declared flat 8 m terrace; an estimate, not city AGL or recovery height.",
+        "supplyMeaning": "External regulated flow; not an onboard tank consumption result."
+      },
+      "stepCount": 776,
+      "taskId": "fnv1a32-a06b9b00",
+      "collisionIdentity": "b0619ba2",
+      "commands": []
+    },
+    {
+      "id": "city-mvh0vslf-ada1526b",
+      "status": "failed",
+      "reason": "gate_envelope_outside",
+      "summary": {
+        "statisticsHz": 120,
+        "count": 1306,
+        "groundDistanceM": 26.85759818358043,
+        "pathDistanceM": 53.85906129543448,
+        "peakSpeedMps": 15.141415757258383,
+        "minimumWorldCgHeightM": 8.595850066706557,
+        "maximumWorldCgHeightM": 17.665993140981197,
+        "minimumHullGapEstimateM": 0.3051919264165921,
+        "saturationSeconds": 3.083333333333325,
+        "gasThroughputKg": 266.7080589712852,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 266.7080589712852,
+        "firstContact": null,
+        "landingErrorM": null,
+        "stableLandingAtS": null,
+        "gateCrossing": null,
+        "driveCheckpointAtS": 4.108333333333333,
+        "takeoffAtS": 8.191666666666666,
+        "hullCollision": false,
+        "landingSucceeded": false,
+        "gasRemainingKg": 249.55820028489444,
+        "clearanceMeaning": "Minimum world-Y corner gap of the four actual hull boxes above the declared flat 8 m terrace; an estimate, not city AGL or recovery height.",
+        "supplyMeaning": "External regulated flow; not an onboard tank consumption result."
+      },
+      "stepCount": 1306,
+      "taskId": "fnv1a32-a06b9b00",
+      "collisionIdentity": "b0619ba2",
+      "commands": [
+        {
+          "step": 635,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 18,
+                "z": 256.84482177677336
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        },
+        {
+          "step": 936,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 18,
+                "z": 305
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "city-mvh0vtoc-b34d617e",
+      "status": "failed",
+      "reason": "reverse_gate_crossing",
+      "summary": {
+        "statisticsHz": 120,
+        "count": 2052,
+        "groundDistanceM": 26.857598075048436,
+        "pathDistanceM": 97.93197903797792,
+        "peakSpeedMps": 15.158820062059304,
+        "minimumWorldCgHeightM": 8.595850066706557,
+        "maximumWorldCgHeightM": 11.99979542406283,
+        "minimumHullGapEstimateM": 0.3051919264165921,
+        "saturationSeconds": 8.975000000000131,
+        "gasThroughputKg": 618.3190606867792,
+        "onboardDischargedKg": 0,
+        "externalSupplyKg": 618.3190606867792,
+        "firstContact": null,
+        "landingErrorM": null,
+        "stableLandingAtS": null,
+        "gateCrossing": {
+          "direction": "forward",
+          "fraction": 0.7691821690278438,
+          "position": {
+            "x": 400.0000713687992,
+            "y": 11.896503552566685,
+            "z": 280
+          },
+          "forwardSpeedMps": 15.11907838318137,
+          "envelopeHalfWidthM": 1.022571592166969,
+          "envelopeHalfHeightM": 0.8234979254029042,
+          "inside": true,
+          "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+          "step": 1306,
+          "timeS": 10.881409851408565
+        },
+        "driveCheckpointAtS": 4.108333333333333,
+        "takeoffAtS": 8.258333333333333,
+        "hullCollision": false,
+        "landingSucceeded": false,
+        "gasRemainingKg": 249.55820028489444,
+        "clearanceMeaning": "Minimum world-Y corner gap of the four actual hull boxes above the declared flat 8 m terrace; an estimate, not city AGL or recovery height.",
+        "supplyMeaning": "External regulated flow; not an onboard tank consumption result."
+      },
+      "stepCount": 2052,
+      "taskId": "fnv1a32-a06b9b00",
+      "collisionIdentity": "b0619ba2",
+      "commands": [
+        {
+          "step": 635,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 12,
+                "z": 256.84482177677336
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        },
+        {
+          "step": 936,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 12,
+                "z": 305
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        },
+        {
+          "step": 1306,
+          "method": "setPoseTarget",
+          "args": [
+            {
+              "position": {
+                "x": 400,
+                "y": 12,
+                "z": 270
+              },
+              "quaternion": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "replay": {
+    "status": "completed",
+    "steps": 2568,
+    "identicalFinalPhysicalContentLabel": true
+  },
+  "cancellation": {
+    "unchangedPhysicalState": true
+  },
+  "resetFailure": {
+    "preResetTerminalRetained": true
+  },
+  "storage": {
+    "quotaOldBytesUnchanged": true,
+    "fullUnsavedCandidateExportable": true,
+    "corruptRawQuarantined": true
+  },
+  "limits": [
+    "No GPU rendering or native keyboard result is claimed by these numeric fixtures.",
+    "The successful external-supply route does not establish finite-gas feasibility; finite failure is retained.",
+    "Task score is gated on collision-free stable landing before time and gas."
+  ]
+}

@@ -1,0 +1,3097 @@
+{
+  "schema": "roadster-independent-contact-convergence",
+  "version": 1,
+  "createdAt": "2026-10-20T15:56:12.739Z",
+  "modelVersion": "3.16.0",
+  "modelBuildId": "9d02ba8300ce31026efe4d9bf3bf7471d02dfaf79381edd2cb0ede385559fedf",
+  "status": "failed",
+  "baseline": {
+    "sourceCommit": "9f6c8f47a2678beee3915a0320ac2bf93312e96b",
+    "originalPath": "dist/physics.js",
+    "originalSha256": "e4ade915e0d01dc7a697034cf3307b07cbfe2d408ec44f37861a2f7cfa8cabd1",
+    "originalGitBlob": "8e8713c8e209070160b9a15f4fee5c1edfe5dfa4",
+    "importRelocation": "Local relative imports rebased to ../../../dist only; solver logic byte-preserved. Current helpers are shared, no old model identity claim."
+  },
+  "sourceHashes": {
+    "dist/physics.js": "61e6bfd3e2fb889c9e8dbfc0c5322a6dea3feed7b9c6eeeb77c7302ddaa423e5",
+    "dist/wheel-contact-envelope.js": "97397ac5ed94a5c677a16594687c7671af6e638b3510c1b6ee5679af63a5ea05",
+    "dist/contact-step-schedule.js": "e4361ade34017f082bcd3d88f1768d2e6969e20ed519bd7ebbaddab6f27c58a2",
+    "dist/simulation-safety.js": "0ba6826cfa038b5628abda97f6b0de402dffb999eb8052fe0b967a708bbcf28d",
+    "tests/contact-geometry-oracle-3.16.mjs": "d275b135311b85374e31b2cd26cc1ffdfba626a648f5ddf874698ff294e8651d"
+  },
+  "checks": [
+    {
+      "name": "Circular edge support matches the analytic 0.1 m axle offset (full)",
+      "passed": true,
+      "offsetM": 0.1,
+      "singleWheelPatch": false,
+      "beforeObject": "ground",
+      "afterObject": "fixture-step",
+      "actualLengthM": 0.2607697373888626,
+      "expectedLengthM": 0.2607697373888626,
+      "actualNormal": {
+        "x": 0,
+        "y": 0.9627844935436148,
+        "z": -0.2702702702702705
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.9627844935436148,
+        "z": -0.2702702702702703
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0.09999999999999998,
+        "z": 0
+      }
+    },
+    {
+      "name": "Circular edge support matches the analytic 0.1 m axle offset (single)",
+      "passed": true,
+      "offsetM": 0.1,
+      "singleWheelPatch": true,
+      "beforeObject": "ground",
+      "afterObject": "fixture-step",
+      "actualLengthM": 0.2607697373888626,
+      "expectedLengthM": 0.2607697373888626,
+      "actualNormal": {
+        "x": 0,
+        "y": 0.9627844935436148,
+        "z": -0.2702702702702705
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.9627844935436148,
+        "z": -0.2702702702702703
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0.09999999999999998,
+        "z": 0
+      }
+    },
+    {
+      "name": "Circular edge support matches the analytic 0.2 m axle offset (full)",
+      "passed": true,
+      "offsetM": 0.2,
+      "singleWheelPatch": false,
+      "beforeObject": "ground",
+      "afterObject": "fixture-step",
+      "actualLengthM": 0.3057123516745325,
+      "expectedLengthM": 0.30571235167453253,
+      "actualNormal": {
+        "x": 0,
+        "y": 0.8413179684472099,
+        "z": -0.5405405405405405
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.8413179684472096,
+        "z": -0.5405405405405406
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0.09999999999999998,
+        "z": 0
+      }
+    },
+    {
+      "name": "Circular edge support matches the analytic 0.2 m axle offset (single)",
+      "passed": true,
+      "offsetM": 0.2,
+      "singleWheelPatch": true,
+      "beforeObject": "ground",
+      "afterObject": "fixture-step",
+      "actualLengthM": 0.3057123516745325,
+      "expectedLengthM": 0.30571235167453253,
+      "actualNormal": {
+        "x": 0,
+        "y": 0.8413179684472099,
+        "z": -0.5405405405405405
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.8413179684472096,
+        "z": -0.5405405405405406
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0.09999999999999998,
+        "z": 0
+      }
+    },
+    {
+      "name": "Circular edge support matches the analytic 0.3 m axle offset (full)",
+      "passed": false,
+      "offsetM": 0.3,
+      "singleWheelPatch": false,
+      "beforeObject": "ground",
+      "afterObject": "ground",
+      "actualLengthM": 0.3470000000000001,
+      "expectedLengthM": 0.40043592172292297,
+      "actualNormal": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.5853083196677761,
+        "z": -0.8108108108108107
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0,
+        "z": -0.30000000000000004
+      }
+    },
+    {
+      "name": "Circular edge support matches the analytic 0.3 m axle offset (single)",
+      "passed": false,
+      "offsetM": 0.3,
+      "singleWheelPatch": true,
+      "beforeObject": "ground",
+      "afterObject": "ground",
+      "actualLengthM": 0.3470000000000001,
+      "expectedLengthM": 0.40043592172292297,
+      "actualNormal": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.5853083196677761,
+        "z": -0.8108108108108107
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0,
+        "z": -0.30000000000000004
+      }
+    },
+    {
+      "name": "60/120/240 Hz caller intervals are reported separately from the actual contact integration intervals",
+      "passed": true
+    },
+    {
+      "name": "Full-width endpoint convergence improves from 60→120 to 120→240 Hz without a trajectory projection",
+      "passed": true,
+      "positionDelta60To120M": 0.010000532052229155,
+      "positionDelta120To240M": 0.005080455418797707,
+      "speedDelta120To240Mps": 0.00594630951761254
+    },
+    {
+      "name": "120 Hz independent SAT penetration decreases for both 90 km/h 10 cm fixtures",
+      "passed": true
+    },
+    {
+      "name": "The severe single-wheel upset is retained and its long trajectory is explicitly not accepted as converged",
+      "passed": true,
+      "positionDelta60To120M": 1.0162709631539157,
+      "positionDelta120To240M": 7.192664128613017,
+      "status": "NOT_CONVERGED_FULL_TRAJECTORY",
+      "reason": "The severe asymmetric curb upset retains large post-impact trajectory sensitivity; a smaller penetration is not a full-contact-model validation."
+    },
+    {
+      "name": "All passive cases remain finite with no significant peak mechanical energy creation",
+      "passed": true,
+      "limitFraction": 0.005,
+      "scope": "Screen for energy injection only; deformation and damage energy are not modelled."
+    },
+    {
+      "name": "Suspension travel, damping, grip, lift and motor ratings retain the declared 3.15 values",
+      "passed": true
+    },
+    {
+      "name": "20 km/h 2 cm ordinary road cases stay upright",
+      "passed": true
+    }
+  ],
+  "geometryChecks": [
+    {
+      "offsetM": 0.1,
+      "singleWheelPatch": false,
+      "beforeObject": "ground",
+      "afterObject": "fixture-step",
+      "actualLengthM": 0.2607697373888626,
+      "expectedLengthM": 0.2607697373888626,
+      "actualNormal": {
+        "x": 0,
+        "y": 0.9627844935436148,
+        "z": -0.2702702702702705
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.9627844935436148,
+        "z": -0.2702702702702703
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0.09999999999999998,
+        "z": 0
+      }
+    },
+    {
+      "offsetM": 0.1,
+      "singleWheelPatch": true,
+      "beforeObject": "ground",
+      "afterObject": "fixture-step",
+      "actualLengthM": 0.2607697373888626,
+      "expectedLengthM": 0.2607697373888626,
+      "actualNormal": {
+        "x": 0,
+        "y": 0.9627844935436148,
+        "z": -0.2702702702702705
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.9627844935436148,
+        "z": -0.2702702702702703
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0.09999999999999998,
+        "z": 0
+      }
+    },
+    {
+      "offsetM": 0.2,
+      "singleWheelPatch": false,
+      "beforeObject": "ground",
+      "afterObject": "fixture-step",
+      "actualLengthM": 0.3057123516745325,
+      "expectedLengthM": 0.30571235167453253,
+      "actualNormal": {
+        "x": 0,
+        "y": 0.8413179684472099,
+        "z": -0.5405405405405405
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.8413179684472096,
+        "z": -0.5405405405405406
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0.09999999999999998,
+        "z": 0
+      }
+    },
+    {
+      "offsetM": 0.2,
+      "singleWheelPatch": true,
+      "beforeObject": "ground",
+      "afterObject": "fixture-step",
+      "actualLengthM": 0.3057123516745325,
+      "expectedLengthM": 0.30571235167453253,
+      "actualNormal": {
+        "x": 0,
+        "y": 0.8413179684472099,
+        "z": -0.5405405405405405
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.8413179684472096,
+        "z": -0.5405405405405406
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0.09999999999999998,
+        "z": 0
+      }
+    },
+    {
+      "offsetM": 0.3,
+      "singleWheelPatch": false,
+      "beforeObject": "ground",
+      "afterObject": "ground",
+      "actualLengthM": 0.3470000000000001,
+      "expectedLengthM": 0.40043592172292297,
+      "actualNormal": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.5853083196677761,
+        "z": -0.8108108108108107
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0,
+        "z": -0.30000000000000004
+      }
+    },
+    {
+      "offsetM": 0.3,
+      "singleWheelPatch": true,
+      "beforeObject": "ground",
+      "afterObject": "ground",
+      "actualLengthM": 0.3470000000000001,
+      "expectedLengthM": 0.40043592172292297,
+      "actualNormal": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "expectedNormal": {
+        "x": 0,
+        "y": 0.5853083196677761,
+        "z": -0.8108108108108107
+      },
+      "patch": {
+        "x": -0.89,
+        "y": 0,
+        "z": -0.30000000000000004
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "before-full-10cm-90kmh-60Hz",
+      "variant": "before",
+      "controlHz": 60,
+      "actualIntegrationSamples": 180,
+      "minIntegratorDtS": 0.016666666666666666,
+      "maxIntegratorDtS": 0.016666666666666666,
+      "refinedControlSteps": 0,
+      "singleWheelPatch": false,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.4333333333333333,
+        "preImpactSpeedKmh": 89.68515576874145,
+        "postImpactSpeedKmh": 82.45908012469312,
+        "integratorDtS": 0.016666666666666666,
+        "mechanism": "rigid-contact"
+      },
+      "maxContactEquationDepthM": 0.19840041912253173,
+      "maxIndependentSATPenetrationM": 0.08954865397293002,
+      "maxIndependentStepSATPenetrationM": 0.08954865397293002,
+      "peakPerSliceNormalImpulseNs": 19419.42677472136,
+      "peakContactNormalForceN": 582756.1176296382,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 25833.894196863002,
+      "primaryStepImpulseVectorNs": [
+        0,
+        22004.537335578076,
+        -13403.471773095684
+      ],
+      "maxTiltDeg": 176.95441108011727,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 103592.40432220334,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0.000055231703214966333,
+            "y": 4.539887646322924,
+            "z": 9.751069552708628
+          },
+          "velocity": {
+            "x": 0.00008684229373263962,
+            "y": 4.984394605980856,
+            "z": 18.713368735923048
+          },
+          "quaternion": {
+            "x": 0.20181917375581593,
+            "y": -0.00006249331151386929,
+            "z": -0.0002837189673558987,
+            "w": 0.9794227568842035
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": 0.003144937067026999,
+            "y": 2.5857371212593216,
+            "z": 39.34481621266207
+          },
+          "velocity": {
+            "x": 0.0049215010405982956,
+            "y": 2.0604504044930247,
+            "z": 3.7270861912889006
+          },
+          "quaternion": {
+            "x": 0.7621312499923985,
+            "y": -0.00040891444164926666,
+            "z": -0.0005911972886980979,
+            "w": -0.6474221505785617
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "vehicle-upset",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "before-single-10cm-90kmh-60Hz",
+      "variant": "before",
+      "controlHz": 60,
+      "actualIntegrationSamples": 180,
+      "minIntegratorDtS": 0.016666666666666666,
+      "maxIntegratorDtS": 0.016666666666666666,
+      "refinedControlSteps": 0,
+      "singleWheelPatch": true,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.4333333333333333,
+        "preImpactSpeedKmh": 89.68515576874145,
+        "postImpactSpeedKmh": 84.65503990626569,
+        "integratorDtS": 0.016666666666666666,
+        "mechanism": "rigid-contact"
+      },
+      "maxContactEquationDepthM": 0.1295659804182038,
+      "maxIndependentSATPenetrationM": 0.06132916314965797,
+      "maxIndependentStepSATPenetrationM": 0.000016035555007593016,
+      "peakPerSliceNormalImpulseNs": 10803.791192763263,
+      "peakContactNormalForceN": 575562.2334561637,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 7780.587362883826,
+      "primaryStepImpulseVectorNs": [
+        0,
+        6932.192342823691,
+        -3533.0226483231136
+      ],
+      "maxTiltDeg": 64.28095871638922,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 186263.47942378395,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0.12062719439780316,
+            "y": 1.8672594914495648,
+            "z": 11.958956497539338
+          },
+          "velocity": {
+            "x": 0.20382614339529637,
+            "y": -0.520798488165691,
+            "z": 23.188586246318465
+          },
+          "quaternion": {
+            "x": -0.1850247970472207,
+            "y": -0.2964886888551942,
+            "z": -0.4194383335733805,
+            "w": 0.8378136822633945
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": -1.7695565171709557,
+            "y": 0.5981268296598928,
+            "z": 40.72710847662384
+          },
+          "velocity": {
+            "x": -3.774729245548914,
+            "y": 0.009657708244191213,
+            "z": 11.786506928690903
+          },
+          "quaternion": {
+            "x": -0.0010740718291400622,
+            "y": 0.9878642244351593,
+            "z": -0.00011688206052516517,
+            "w": 0.15531615108999777
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "vehicle-upset",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "before-full-10cm-90kmh-120Hz",
+      "variant": "before",
+      "controlHz": 120,
+      "actualIntegrationSamples": 360,
+      "minIntegratorDtS": 0.008333333333333333,
+      "maxIntegratorDtS": 0.008333333333333333,
+      "refinedControlSteps": 0,
+      "singleWheelPatch": false,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.4250000000000005,
+        "preImpactSpeedKmh": 89.68496148419382,
+        "postImpactSpeedKmh": 82.4735278896216,
+        "integratorDtS": 0.008333333333333333,
+        "mechanism": "rigid-contact"
+      },
+      "maxContactEquationDepthM": 0.049065507335889345,
+      "maxIndependentSATPenetrationM": 0.09049562287605609,
+      "maxIndependentStepSATPenetrationM": 0.09049562287605609,
+      "peakPerSliceNormalImpulseNs": 18921.258777528277,
+      "peakContactNormalForceN": 1135338.1792419392,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 25894.443085889183,
+      "primaryStepImpulseVectorNs": [
+        6.944890802428701e-13,
+        22097.48222123829,
+        -13377.17152666484
+      ],
+      "maxTiltDeg": 179.6358191120599,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 105702.80974018047,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0.0000765559882199489,
+            "y": 4.544413284535426,
+            "z": 9.758054784246918
+          },
+          "velocity": {
+            "x": 0.00012518404632253026,
+            "y": 4.959170178007942,
+            "z": 18.72505357044447
+          },
+          "quaternion": {
+            "x": 0.21155823184840108,
+            "y": -0.0000972046151083553,
+            "z": -0.0000902002634237277,
+            "w": 0.9773653855914654
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": -0.00003690967941456358,
+            "y": 2.553292553528421,
+            "z": 39.612989255206344
+          },
+          "velocity": {
+            "x": -0.00021579686161908013,
+            "y": 1.8950481341162027,
+            "z": 3.9362248365745147
+          },
+          "quaternion": {
+            "x": 0.7412225243481249,
+            "y": 0.000006542316671509579,
+            "z": 0.000025047900524879966,
+            "w": -0.6712593900488799
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "vehicle-upset",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "before-single-10cm-90kmh-120Hz",
+      "variant": "before",
+      "controlHz": 120,
+      "actualIntegrationSamples": 360,
+      "minIntegratorDtS": 0.008333333333333333,
+      "maxIntegratorDtS": 0.008333333333333333,
+      "refinedControlSteps": 0,
+      "singleWheelPatch": true,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.4250000000000005,
+        "preImpactSpeedKmh": 89.68496148419382,
+        "postImpactSpeedKmh": 84.71985829023816,
+        "integratorDtS": 0.008333333333333333,
+        "mechanism": "rigid-contact"
+      },
+      "maxContactEquationDepthM": 0.06536858283715963,
+      "maxIndependentSATPenetrationM": 0.039042527465179555,
+      "maxIndependentStepSATPenetrationM": 0.0001736489158193355,
+      "peakPerSliceNormalImpulseNs": 8023.031188592979,
+      "peakContactNormalForceN": 920567.3468459491,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 7671.394557049575,
+      "primaryStepImpulseVectorNs": [
+        0,
+        6834.867953660609,
+        -3483.514677154827
+      ],
+      "maxTiltDeg": 126.0771070134261,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 163810.02218628975,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0.08886655385471709,
+            "y": 1.801589851652131,
+            "z": 11.628469829675396
+          },
+          "velocity": {
+            "x": 0.38392102502187564,
+            "y": -0.1807473452513254,
+            "z": 19.78043458581244
+          },
+          "quaternion": {
+            "x": -0.08019225996064147,
+            "y": -0.15480066862575345,
+            "z": -0.45236536846626757,
+            "w": 0.8746265076292867
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": -1.1161862414764185,
+            "y": 1.433275454735817,
+            "z": 41.84389194603852
+          },
+          "velocity": {
+            "x": -1.1933258438952103,
+            "y": -3.0342442203183655,
+            "z": 8.704534282699987
+          },
+          "quaternion": {
+            "x": 0.7566156412979372,
+            "y": 0.37891106148004544,
+            "z": 0.40864017562555494,
+            "w": 0.3420122595698758
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "vehicle-upset",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "before-full-10cm-90kmh-240Hz",
+      "variant": "before",
+      "controlHz": 240,
+      "actualIntegrationSamples": 720,
+      "minIntegratorDtS": 0.004166666666666667,
+      "maxIntegratorDtS": 0.004166666666666667,
+      "refinedControlSteps": 0,
+      "singleWheelPatch": false,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.42083333333333306,
+        "preImpactSpeedKmh": 89.68485591791433,
+        "postImpactSpeedKmh": 82.59188461371026,
+        "integratorDtS": 0.004166666666666667,
+        "mechanism": "rigid-contact"
+      },
+      "maxContactEquationDepthM": 0.03791184417923735,
+      "maxIndependentSATPenetrationM": 0.028894783420981868,
+      "maxIndependentStepSATPenetrationM": 0.028894783420981868,
+      "peakPerSliceNormalImpulseNs": 13372.741053531081,
+      "peakContactNormalForceN": 2196229.571627054,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 25483.627866046703,
+      "primaryStepImpulseVectorNs": [
+        9.475789948598693e-13,
+        21844.477473359966,
+        -13025.047437801031
+      ],
+      "maxTiltDeg": 178.97301765686655,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 114911.10504715447,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": -0.00007327767263310053,
+            "y": 4.475976872153507,
+            "z": 9.84004304946749
+          },
+          "velocity": {
+            "x": -0.0001515059367596633,
+            "y": 4.822173179261446,
+            "z": 18.88429041173859
+          },
+          "quaternion": {
+            "x": 0.22253396459788705,
+            "y": 0.0001338871240970116,
+            "z": -0.0013107416793375717,
+            "w": 0.9749240476215747
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": 0.006059011944079114,
+            "y": 2.884143272098001,
+            "z": 39.66782438845547
+          },
+          "velocity": {
+            "x": 0.05782669957362616,
+            "y": 2.294447775223359,
+            "z": 3.8752373192287175
+          },
+          "quaternion": {
+            "x": 0.6972966702615592,
+            "y": -0.03163769106473775,
+            "z": -0.010893047101852028,
+            "w": -0.7160012232329437
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "vehicle-upset",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "before-single-10cm-90kmh-240Hz",
+      "variant": "before",
+      "controlHz": 240,
+      "actualIntegrationSamples": 720,
+      "minIntegratorDtS": 0.004166666666666667,
+      "maxIntegratorDtS": 0.004166666666666667,
+      "refinedControlSteps": 0,
+      "singleWheelPatch": true,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.42083333333333306,
+        "preImpactSpeedKmh": 89.68485591791433,
+        "postImpactSpeedKmh": 84.95271742571364,
+        "integratorDtS": 0.004166666666666667,
+        "mechanism": "rigid-contact"
+      },
+      "maxContactEquationDepthM": 0.03364397176715345,
+      "maxIndependentSATPenetrationM": 0.015090654531481063,
+      "maxIndependentStepSATPenetrationM": 0.0002524386873386658,
+      "peakPerSliceNormalImpulseNs": 7253.042093607367,
+      "peakContactNormalForceN": 1740730.102465768,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 7253.042093607367,
+      "primaryStepImpulseVectorNs": [
+        1.1566859608796825e-12,
+        6462.116896483218,
+        -3293.579333768428
+      ],
+      "maxTiltDeg": 53.2776386685196,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 151372.84818212886,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0.011383126793987945,
+            "y": 1.7362914263359464,
+            "z": 12.019053232880085
+          },
+          "velocity": {
+            "x": -0.011977729537753407,
+            "y": 0.20951452133168194,
+            "z": 23.28638534343411
+          },
+          "quaternion": {
+            "x": -0.16935202799869925,
+            "y": -0.240899414442108,
+            "z": -0.4128302422966008,
+            "w": 0.8618924258743126
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": -7.865471375273329,
+            "y": 0.6148910602054831,
+            "z": 47.474808438761286
+          },
+          "velocity": {
+            "x": -8.343610965172505,
+            "y": 0.03880627681422056,
+            "z": 7.262866860282499
+          },
+          "quaternion": {
+            "x": 0.02140588040949678,
+            "y": -0.674495839910435,
+            "z": -0.0234204562042353,
+            "w": 0.7375965241638525
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "remained-upright",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "after-full-10cm-90kmh-60Hz",
+      "variant": "after",
+      "controlHz": 60,
+      "actualIntegrationSamples": 495,
+      "minIntegratorDtS": 0.0010416666666666667,
+      "maxIntegratorDtS": 0.016666666666666666,
+      "refinedControlSteps": 21,
+      "singleWheelPatch": false,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.4156249999999998,
+        "preImpactSpeedKmh": 89.68688000733881,
+        "postImpactSpeedKmh": 89.71169456835041,
+        "integratorDtS": 0.0010416666666666667,
+        "mechanism": "circular-suspension-support"
+      },
+      "maxContactEquationDepthM": 0.019281965611309196,
+      "maxIndependentSATPenetrationM": 0.014233455850159546,
+      "maxIndependentStepSATPenetrationM": 0.014233455850159546,
+      "peakPerSliceNormalImpulseNs": 10126.137935628914,
+      "peakContactNormalForceN": 2430273.111763219,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 24063.562206884664,
+      "primaryStepImpulseVectorNs": [
+        4.426738185644014e-13,
+        20394.48061923795,
+        -12571.867083055939
+      ],
+      "maxTiltDeg": 28.95131532953308,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 411324.3215635696,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 3.89575017754911e-12,
+            "y": 4.452215177123271,
+            "z": 9.795358082965624
+          },
+          "velocity": {
+            "x": 7.664837478302844e-12,
+            "y": 4.638910411176891,
+            "z": 18.904018743615936
+          },
+          "quaternion": {
+            "x": -0.15083459149375933,
+            "y": -4.249298338296711e-10,
+            "z": -1.7736681955186876e-9,
+            "w": 0.9885590149348246
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": -0.00019820452907910738,
+            "y": 0.6953080591479548,
+            "z": 47.38615120558023
+          },
+          "velocity": {
+            "x": -0.0007696264676175027,
+            "y": -0.006895235300006896,
+            "z": 18.738297955371547
+          },
+          "quaternion": {
+            "x": -0.0009677249359189873,
+            "y": 0.000003504821715678502,
+            "z": -0.0006212370007833962,
+            "w": 0.9999993387801582
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "remained-upright",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "after-single-10cm-90kmh-60Hz",
+      "variant": "after",
+      "controlHz": 60,
+      "actualIntegrationSamples": 1935,
+      "minIntegratorDtS": 0.0010416666666666667,
+      "maxIntegratorDtS": 0.016666666666666666,
+      "refinedControlSteps": 117,
+      "singleWheelPatch": true,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.4156249999999998,
+        "preImpactSpeedKmh": 89.68688000733881,
+        "postImpactSpeedKmh": 89.69884189063875,
+        "integratorDtS": 0.0010416666666666667,
+        "mechanism": "circular-suspension-support"
+      },
+      "maxContactEquationDepthM": 0.02330452780433101,
+      "maxIndependentSATPenetrationM": 0.01518393373534671,
+      "maxIndependentStepSATPenetrationM": 0.01518393373534671,
+      "peakPerSliceNormalImpulseNs": 5207.352858890547,
+      "peakContactNormalForceN": 2804505.697988628,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 7571.684534950778,
+      "primaryStepImpulseVectorNs": [
+        0,
+        6743.7179587600085,
+        -3442.7650857134604
+      ],
+      "maxTiltDeg": 158.32233432192422,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 106683.49080529313,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0.042712443625864925,
+            "y": 1.8386064955646986,
+            "z": 11.894722000415237
+          },
+          "velocity": {
+            "x": -0.09191040524873985,
+            "y": 0.05068082097978556,
+            "z": 21.24298028681034
+          },
+          "quaternion": {
+            "x": -0.10519403642618973,
+            "y": -0.2782570436083947,
+            "z": -0.5641645123447305,
+            "w": 0.7702114225285898
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": 5.406591578700928,
+            "y": 1.5089048626683959,
+            "z": 31.53141105363918
+          },
+          "velocity": {
+            "x": 3.8254831057928973,
+            "y": -2.214824790486568,
+            "z": 4.775920108034288
+          },
+          "quaternion": {
+            "x": 0.5108872063071751,
+            "y": 0.6322595977340308,
+            "z": 0.49024301720502833,
+            "w": 0.31448982111757084
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "vehicle-upset",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "after-full-10cm-90kmh-120Hz",
+      "variant": "after",
+      "controlHz": 120,
+      "actualIntegrationSamples": 647,
+      "minIntegratorDtS": 0.0010416666666666667,
+      "maxIntegratorDtS": 0.008333333333333333,
+      "refinedControlSteps": 41,
+      "singleWheelPatch": false,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.41562500000000013,
+        "preImpactSpeedKmh": 89.68655962986588,
+        "postImpactSpeedKmh": 89.7113120172053,
+        "integratorDtS": 0.0010416666666666667,
+        "mechanism": "circular-suspension-support"
+      },
+      "maxContactEquationDepthM": 0.019391770233303254,
+      "maxIndependentSATPenetrationM": 0.014356404271644835,
+      "maxIndependentStepSATPenetrationM": 0.014356404271644835,
+      "peakPerSliceNormalImpulseNs": 10106.599708813208,
+      "peakContactNormalForceN": 2425583.9373135157,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 24072.850108318326,
+      "primaryStepImpulseVectorNs": [
+        6.480686464112566e-13,
+        20398.642561022654,
+        -12580.834466970284
+      ],
+      "maxTiltDeg": 29.00679920502613,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 411157.5870489011,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 3.98086265921214e-12,
+            "y": 4.470931025182923,
+            "z": 9.793480824368014
+          },
+          "velocity": {
+            "x": 8.319357198718402e-12,
+            "y": 4.6399529893872895,
+            "z": 18.90016529284246
+          },
+          "quaternion": {
+            "x": -0.15516808978815058,
+            "y": -4.2967178261646176e-10,
+            "z": -1.7705140717739013e-9,
+            "w": 0.9878880826852284
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": -0.0000955326104303037,
+            "y": 0.6929113502185612,
+            "z": 47.376442658515266
+          },
+          "velocity": {
+            "x": 0.003354265339025856,
+            "y": -0.003897067752902319,
+            "z": 18.734317495447016
+          },
+          "quaternion": {
+            "x": -0.0015852318300872985,
+            "y": -0.00002559991609837623,
+            "z": -0.0003717660715198953,
+            "w": 0.9999986740864597
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "remained-upright",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "after-single-10cm-90kmh-120Hz",
+      "variant": "after",
+      "controlHz": 120,
+      "actualIntegrationSamples": 1837,
+      "minIntegratorDtS": 0.0010416666666666667,
+      "maxIntegratorDtS": 0.008333333333333333,
+      "refinedControlSteps": 211,
+      "singleWheelPatch": true,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.41562500000000013,
+        "preImpactSpeedKmh": 89.68655962986588,
+        "postImpactSpeedKmh": 89.6984906093864,
+        "integratorDtS": 0.0010416666666666667,
+        "mechanism": "circular-suspension-support"
+      },
+      "maxContactEquationDepthM": 0.023422142041933457,
+      "maxIndependentSATPenetrationM": 0.015308241743682324,
+      "maxIndependentStepSATPenetrationM": 0.015308241743682324,
+      "peakPerSliceNormalImpulseNs": 5218.521554012086,
+      "peakContactNormalForceN": 2810492.427097069,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 7586.423547671338,
+      "primaryStepImpulseVectorNs": [
+        0,
+        6756.806844538606,
+        -3449.5419762838496
+      ],
+      "maxTiltDeg": 158.41215654760362,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 98197.76143348671,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0.0439016280600754,
+            "y": 1.8405161825657657,
+            "z": 11.903910865890504
+          },
+          "velocity": {
+            "x": -0.10950353560937315,
+            "y": 0.0018492395723165248,
+            "z": 21.508879089384806
+          },
+          "quaternion": {
+            "x": -0.10926955202203124,
+            "y": -0.28347578749877467,
+            "z": -0.5609818492176205,
+            "w": 0.7700655866555997
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": 4.879446853249486,
+            "y": 2.300818959694835,
+            "z": 31.888898356783375
+          },
+          "velocity": {
+            "x": 2.570583230094519,
+            "y": 0.08787876146445324,
+            "z": 3.4513372881026383
+          },
+          "quaternion": {
+            "x": -0.17933731735133476,
+            "y": 0.6205770113015389,
+            "z": 0.5862938669272965,
+            "w": 0.4888576492729904
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "vehicle-upset",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "after-full-10cm-90kmh-240Hz",
+      "variant": "after",
+      "controlHz": 240,
+      "actualIntegrationSamples": 969,
+      "minIntegratorDtS": 0.0010416666666666667,
+      "maxIntegratorDtS": 0.004166666666666667,
+      "refinedControlSteps": 83,
+      "singleWheelPatch": false,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.1,
+            60
+          ],
+          "position": [
+            0,
+            0.05,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.41562499999999974,
+        "preImpactSpeedKmh": 89.68639956752895,
+        "postImpactSpeedKmh": 89.71111839493622,
+        "integratorDtS": 0.0010416666666666667,
+        "mechanism": "circular-suspension-support"
+      },
+      "maxContactEquationDepthM": 0.019447091965691367,
+      "maxIndependentSATPenetrationM": 0.01441834735928424,
+      "maxIndependentStepSATPenetrationM": 0.01441834735928424,
+      "peakPerSliceNormalImpulseNs": 10096.761542414893,
+      "peakContactNormalForceN": 2423222.7773708245,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 24077.53100175584,
+      "primaryStepImpulseVectorNs": [
+        2.2034711166237534e-13,
+        20400.747091639063,
+        -12585.338931829989
+      ],
+      "maxTiltDeg": 29.034749069267253,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 411065.5070541593,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 4.024146003561019e-12,
+            "y": 4.480229785852443,
+            "z": 9.792535321588417
+          },
+          "velocity": {
+            "x": 8.662288865796835e-12,
+            "y": 4.640481399127398,
+            "z": 18.89822611004487
+          },
+          "quaternion": {
+            "x": -0.1573514196939108,
+            "y": -4.320446267910725e-10,
+            "z": -1.7688689616478402e-9,
+            "w": 0.9875426728604243
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": -0.00013628880343976896,
+            "y": 0.6922977563306023,
+            "z": 47.3713995574122
+          },
+          "velocity": {
+            "x": -0.0004437002517482889,
+            "y": -0.007949072548096842,
+            "z": 18.732192569238823
+          },
+          "quaternion": {
+            "x": -0.001727896182248277,
+            "y": -0.00002713247652773537,
+            "z": 0.00013322303535917413,
+            "w": 0.9999984979439895
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "remained-upright",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "after-single-10cm-90kmh-240Hz",
+      "variant": "after",
+      "controlHz": 240,
+      "actualIntegrationSamples": 2619,
+      "minIntegratorDtS": 0.0010416666666666667,
+      "maxIntegratorDtS": 0.004166666666666667,
+      "refinedControlSteps": 633,
+      "singleWheelPatch": true,
+      "stepHeightM": 0.1,
+      "nominalInitialSpeedKmh": 90,
+      "durationS": 3,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.1,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.05,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 0.41562499999999974,
+        "preImpactSpeedKmh": 89.68639956752895,
+        "postImpactSpeedKmh": 89.69831377192935,
+        "integratorDtS": 0.0010416666666666667,
+        "mechanism": "circular-suspension-support"
+      },
+      "maxContactEquationDepthM": 0.015295744969208783,
+      "maxIndependentSATPenetrationM": 0.009024678951415566,
+      "maxIndependentStepSATPenetrationM": 0.007077031637096887,
+      "peakPerSliceNormalImpulseNs": 4335.938056080667,
+      "peakContactNormalForceN": 2452371.7417979804,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 7458.912363002494,
+      "primaryStepImpulseVectorNs": [
+        0,
+        6642.0198737993605,
+        -3393.9420031748873
+      ],
+      "maxTiltDeg": 165.9646735353182,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 717574.7158510821,
+      "finalMechanicalEnergyJ": 75280.26170146893,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": -0.007941631367442456,
+            "y": 1.8274932792615484,
+            "z": 11.82792074472647
+          },
+          "velocity": {
+            "x": -0.3577631392706134,
+            "y": 0.04309902317701648,
+            "z": 21.473963617207506
+          },
+          "quaternion": {
+            "x": -0.08947085311165641,
+            "y": -0.23322907443623841,
+            "z": -0.6137206675504909,
+            "w": 0.748963355246749
+          }
+        },
+        "3.0": {
+          "position": {
+            "x": -0.9179280938759552,
+            "y": 0.9015432477980575,
+            "z": 27.868091413945347
+          },
+          "velocity": {
+            "x": -1.03334970027116,
+            "y": -4.248856323690499,
+            "z": 2.954208634128549
+          },
+          "quaternion": {
+            "x": -0.8687390580753608,
+            "y": 0.08622989039535067,
+            "z": -0.46791306897955504,
+            "w": -0.13752896005887236
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "vehicle-upset",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "after-full-2cm-20kmh-120Hz",
+      "variant": "after",
+      "controlHz": 120,
+      "actualIntegrationSamples": 600,
+      "minIntegratorDtS": 0.008333333333333333,
+      "maxIntegratorDtS": 0.008333333333333333,
+      "refinedControlSteps": 0,
+      "singleWheelPatch": false,
+      "stepHeightM": 0.02,
+      "nominalInitialSpeedKmh": 20,
+      "durationS": 5,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            12,
+            0.02,
+            60
+          ],
+          "position": [
+            0,
+            0.01,
+            30
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 1.8999999999999957,
+        "preImpactSpeedKmh": 19.818735302560547,
+        "postImpactSpeedKmh": 19.68753104195805,
+        "integratorDtS": 0.008333333333333333,
+        "mechanism": "circular-suspension-support"
+      },
+      "maxContactEquationDepthM": 0,
+      "maxIndependentSATPenetrationM": 0,
+      "maxIndependentStepSATPenetrationM": 0,
+      "peakPerSliceNormalImpulseNs": 0,
+      "peakContactNormalForceN": 0,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 0,
+      "primaryStepImpulseVectorNs": [
+        0,
+        0,
+        0
+      ],
+      "maxTiltDeg": 0.5623807027439391,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 48532.845809217026,
+      "finalMechanicalEnergyJ": 46085.98485282692,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0,
+            "y": 0.597008730444102,
+            "z": -6.458078434126897
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0.0000015454917601260368,
+            "z": 5.528741611024307
+          },
+          "quaternion": {
+            "x": -3.4894250480622357e-7,
+            "y": 0,
+            "z": 0,
+            "w": 0.9999999999999393
+          }
+        },
+        "5.0": {
+          "position": {
+            "x": 0,
+            "y": 0.6170089696029067,
+            "z": 15.145460861577874
+          },
+          "velocity": {
+            "x": 0,
+            "y": 6.333763318482742e-8,
+            "z": 5.320524988880589
+          },
+          "quaternion": {
+            "x": -2.9075114332680977e-7,
+            "y": 0,
+            "z": 0,
+            "w": 0.9999999999999578
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "remained-upright",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    },
+    {
+      "id": "after-single-2cm-20kmh-120Hz",
+      "variant": "after",
+      "controlHz": 120,
+      "actualIntegrationSamples": 600,
+      "minIntegratorDtS": 0.008333333333333333,
+      "maxIntegratorDtS": 0.008333333333333333,
+      "refinedControlSteps": 0,
+      "singleWheelPatch": true,
+      "stepHeightM": 0.02,
+      "nominalInitialSpeedKmh": 20,
+      "durationS": 5,
+      "fixtureGeometry": [
+        {
+          "id": "ground",
+          "type": "box",
+          "kind": "floor",
+          "size": [
+            1240,
+            1,
+            1240
+          ],
+          "position": [
+            0,
+            -0.5,
+            0
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "fixture-step",
+          "type": "box",
+          "kind": "step",
+          "size": [
+            0.6,
+            0.02,
+            0.8
+          ],
+          "position": [
+            -0.89,
+            0.01,
+            0.4
+          ],
+          "quaternion": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "firstContact": {
+        "timeS": 1.8999999999999957,
+        "preImpactSpeedKmh": 19.818735302560547,
+        "postImpactSpeedKmh": 19.75222150573453,
+        "integratorDtS": 0.008333333333333333,
+        "mechanism": "circular-suspension-support"
+      },
+      "maxContactEquationDepthM": 0,
+      "maxIndependentSATPenetrationM": 0,
+      "maxIndependentStepSATPenetrationM": 0,
+      "peakPerSliceNormalImpulseNs": 0,
+      "peakContactNormalForceN": 0,
+      "primaryContactWindowS": 0.2,
+      "primaryStepNormalImpulseNs": 0,
+      "primaryStepImpulseVectorNs": [
+        0,
+        0,
+        0
+      ],
+      "maxTiltDeg": 0.29967311491562065,
+      "peakMechanicalEnergyGainFraction": 0,
+      "initialMechanicalEnergyJ": 48532.845809217026,
+      "finalMechanicalEnergyJ": 46373.54158938417,
+      "checkpoints": {
+        "1.0": {
+          "position": {
+            "x": 0,
+            "y": 0.597008730444102,
+            "z": -6.458078434126897
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0.0000015454917601260368,
+            "z": 5.528741611024307
+          },
+          "quaternion": {
+            "x": -3.4894250480622357e-7,
+            "y": 0,
+            "z": 0,
+            "w": 0.9999999999999393
+          }
+        },
+        "5.0": {
+          "position": {
+            "x": -0.011662682313810093,
+            "y": 0.5971043520702115,
+            "z": 15.316003557357602
+          },
+          "velocity": {
+            "x": -0.004924419077271444,
+            "y": 0.00041361112495267763,
+            "z": 5.380034086808826
+          },
+          "quaternion": {
+            "x": -4.4007072531710185e-7,
+            "y": -0.0003834068014253462,
+            "z": 0.00038753850944791386,
+            "w": 0.9999998514064564
+          }
+        }
+      },
+      "fault": null,
+      "outcome": "remained-upright",
+      "parameters": {
+        "dryMass": 1950,
+        "gravity": 9.81,
+        "tireMu": 1.25,
+        "springRate": 65000,
+        "suspensionDamping": 5800,
+        "suspensionRest": 0.37,
+        "suspensionMin": 0.24,
+        "suspensionDroop": 0.04,
+        "wheelRadius": 0.37,
+        "maxMotorForce": 24000,
+        "motorPower": 700000,
+        "brakeForce": 42000,
+        "regenForce": 0,
+        "regenPower": 60000,
+        "steeringAssist": true,
+        "tractionAssist": true,
+        "absEnabled": true,
+        "wheelInertia": 1.8,
+        "roadSurface": "dry",
+        "wetGripMultiplier": 0.52,
+        "splitMuPositionX": 0,
+        "steeringAccelG": 1,
+        "cornerStiffnessFront": 82000,
+        "cornerStiffnessRear": 90000,
+        "tireRelaxationLength": 0.35,
+        "dragArea": 0.58,
+        "airDensity": 1.225,
+        "wingMode": "active",
+        "wingDeployment": 0,
+        "wingAreaM2": 0.38,
+        "wingDragCoefficient": 0.75,
+        "wingDownforceCoefficient": 1.1,
+        "wingActuatorRate": 1.5,
+        "tankLitres": 600,
+        "initialPressureBar": 350,
+        "regulatorBar": 50,
+        "gasTemperatureK": 293.15,
+        "exhaustVelocity": 650,
+        "nozzleModel": "isentropic",
+        "nozzleVelocityEfficiency": 0.9,
+        "ambientPressureBar": 1,
+        "climbRateMps": 5,
+        "verticalAccelerationMps2": 5,
+        "gasGamma": 1.4,
+        "tankThermalTime": 90,
+        "gasModel": "adiabatic",
+        "valveRiseTime": 0.045,
+        "valveFallTime": 0.025,
+        "liftNozzleMax": 20000,
+        "sideNozzleMax": 5500,
+        "axialNozzleMax": 11000,
+        "suctionPressurePa": 8200,
+        "suctionArea": 4.8,
+        "sealRange": 0.08,
+        "fanPower": 26000,
+        "fanEfficiency": 0.75,
+        "sealPerimeter": 11.84766219862439,
+        "sealLeakCd": 0.6,
+        "sealLipGap": 0.003,
+        "skirtReach": 0.5660000000000001,
+        "batteryKWh": 200,
+        "supplyMode": "bench",
+        "hoverHeight": 4,
+        "positionGain": 2.4,
+        "velocityGain": 3.1,
+        "altitudeGain": 3.2,
+        "verticalDamping": 3.6,
+        "attitudeResponse": 4.5,
+        "rollRateDegS": 180,
+        "pitchRateDegS": 60,
+        "yawRateDegS": 46,
+        "angularAccelerationDegS2": 360
+      }
+    }
+  ],
+  "convergence": {
+    "full": {
+      "positionDelta60To120M": 0.010000532052229155,
+      "positionDelta120To240M": 0.005080455418797707,
+      "speedDelta120To240Mps": 0.00594630951761254
+    },
+    "single": {
+      "positionDelta60To120M": 1.0162709631539157,
+      "positionDelta120To240M": 7.192664128613017,
+      "status": "NOT_CONVERGED_FULL_TRAJECTORY",
+      "reason": "The severe asymmetric curb upset retains large post-impact trajectory sensitivity; a smaller penetration is not a full-contact-model validation."
+    }
+  },
+  "geometryMethod": "Independent analytic circular edge contact; independent separating-axis test on transformed regular 20-gon cylinder and box volumes. SAT samples every actual solver slice. Contact-equation post-step offsets are reported separately.",
+  "energyScope": "Translation, body/wheel rotation, gravity and suspension spring potential. The stored spring compression is the last force-evaluation value. No drive/regen input in these declared passive fixtures. Energy screens are not a complete deformable tyre, restitution or damage validation.",
+  "trace": {
+    "file": "contact-convergence-3.16.ndjson.gz",
+    "format": "gzip UTF-8 NDJSON; one row per actual integrator slice, with caller step and dt",
+    "samples": 12222,
+    "bytes": 2895733,
+    "sha256": "e8268e9324f79fe6e92914389d97caef061adff5bcf0ffc92617eb17b9ed6848"
+  },
+  "limits": [
+    "The 120 Hz product input interval is retained; hard contact can use the same solver at 960 Hz internally. This is not a claim of three pure 60/120/240 Hz solvers agreeing.",
+    "The three-width circular tire model is an approximation, and 20-sided rigid wheel stops retain their facets. Tyre deformation, rim damage and suspension structural failure are outside this model.",
+    "Full-width finite response and lower penetration do not establish that a real car could safely cross a 10 cm curb at 90 km/h.",
+    "Asymmetric 90 km/h 10 cm strikes remain adverse and their post-impact trajectory has not converged. This is an open physical/numerical limitation, not reclassified as normal or accepted."
+  ]
+}

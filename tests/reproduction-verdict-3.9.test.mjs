@@ -74,7 +74,7 @@ await test('A current-model snapshot with a different collision signature is rej
   const changed=clone(reference);changed.initialSnapshot.physical.geometrySignature='different-collision-world';changed.initialSnapshot.stateLabel=contentLabel(changed.initialSnapshot.physical);
   return await assertCurrentSnapshotRejected({record:changed,createSim,message:'快照不可恢复：场景几何或世界类型不匹配'});
 });
-await test('The original 3.8 archive remains readable and exportable; 3.14 refuses an undeclared full-state migration',async()=>{
+await test('The original 3.8 archive remains readable and exportable; the current model refuses an undeclared full-state migration',async()=>{
   const path=new URL('../qa/fixtures/live-record-3.8.json',import.meta.url),bytes=fs.readFileSync(path),previous=JSON.parse(bytes);assert.equal(previous.identity.modelVersion,'3.8.0');
   const outcome=await assertHistoricalReadOnly({source:previous,bytes,path,createSim});
   // The former mixed fixture changed the world on an old-model record. Preserve
@@ -82,7 +82,7 @@ await test('The original 3.8 archive remains readable and exportable; 3.14 refus
   // model code; the independent current-model case above checks real geometry.
   const oldCity=clone(previous);oldCity.initialSnapshot.physical.worldType='city';oldCity.initialSnapshot.stateLabel=contentLabel(oldCity.initialSnapshot.physical);
   const mixed=await assertHistoricalReadOnly({source:oldCity,createSim});
-  return{...outcome,mixedOldModelAndChangedWorld:{execution:mixed.execution,reason:mixed.reason},legacyMigrationEvidence:'qa/reproduction-verdict-3.13.json',currentAcceptance:'Read/export retained; there is no declared 3.8-to-3.14 full-state migrator. Current geometry rejection is tested independently.'};
+  return{...outcome,mixedOldModelAndChangedWorld:{execution:mixed.execution,reason:mixed.reason},legacyMigrationEvidence:'qa/reproduction-verdict-3.13.json',currentAcceptance:'Read/export retained; there is no declared 3.8-to-current full-state migrator. Current geometry rejection is tested independently.'};
 });
 await test('Road study names include the actual road condition and both driver aids without changing recorded numeric requests',()=>{
   const names=[];for(const surface of ['dry','wet','split']){const jobs=buildStudyRequests({kind:'brake',params:{roadSurface:surface}},{mode:'pair',pairKey:'absEnabled'});for(const job of jobs){assert.match(job.label,new RegExp(researchConditionLabel(job.request).replaceAll(' / ',' \\/ ')));assert.equal(job.request.params.roadSurface,surface);assert.ok(job.label.includes('TCS'));names.push(job.label);}assert.deepEqual(jobs.map(j=>j.request.params.absEnabled),[false,true]);}return{names};

@@ -1,0 +1,649 @@
+{
+  "schema": "roadster-landing-reserve-tests",
+  "version": 1,
+  "modelVersion": "3.16.0",
+  "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+  "status": "passed",
+  "checks": [
+    "Same actual remaining gas: low gentle descent, high descent and fast low descent produce different landing/arrest results; hover does not imply safe landing.",
+    "Bench reports throughput, never finite remaining gas or endurance.",
+    "Low-pressure failed trim does not produce an available landing estimate.",
+    "Temperature enters the existing nozzle/gas laws; same mass has greater predicted gas use when cold.",
+    "Wind and nozzle-fault qualifications remain visible; static capacity is not dynamic-recovery certification.",
+    "Tilt, fast lateral travel and missing lower surface make the advisory unavailable.",
+    "Production default lift-off regeneration is identified from actual forces, not disabled in the default test."
+  ],
+  "cases": [
+    {
+      "id": "same-tank-low",
+      "input": {
+        "height": 2,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate"
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.5023388057007081,
+          "gasRequiredKg": 58.06932657021861,
+          "gasRemainingKg": 191.4888737146759,
+          "pressureAtContactBar": 242.4161859195635,
+          "peakDemandRatio": 0.3603879475320699,
+          "arrest": null
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "same-tank-high",
+      "input": {
+        "height": 10,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate"
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 6.341666666666772,
+          "contactVerticalMps": -7.054886672966889,
+          "gasRequiredKg": 244.76088454142973,
+          "gasRemainingKg": 4.797315743464927,
+          "pressureAtContactBar": 1.4701731441421035,
+          "peakDemandRatio": 41.374847918649024,
+          "arrest": null
+        },
+        "limitations": [],
+        "status": "insufficient",
+        "sampledClearanceM": 9.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "same-tank-fast-descent",
+      "input": {
+        "height": 2,
+        "velocity": -12,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": false,
+          "heightRequiredM": null,
+          "timeS": null,
+          "gasRequiredKg": 10.431287899468657,
+          "status": "hard-contact-estimate"
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 0.11666666666666665,
+          "contactVerticalMps": -12.05629693085735,
+          "gasRequiredKg": 4.226943603754284,
+          "gasRemainingKg": 245.33125668114016,
+          "pressureAtContactBar": 342.5376806933649,
+          "peakDemandRatio": 0.4467043933225646,
+          "arrest": null
+        },
+        "limitations": [],
+        "status": "insufficient",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "bench-high",
+      "input": {
+        "height": 10,
+        "velocity": 0,
+        "supplyMode": "bench",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate"
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 8.21666666666684,
+          "contactVerticalMps": -0.5126215830550431,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 0.3694153012480196,
+          "arrest": null,
+          "enduranceS": null,
+          "throughputKg": 310.8954797375758
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 9.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "low-pressure",
+      "input": {
+        "height": 2,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 5,
+        "pressure": 7.012392291666666,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": false,
+          "marginN": -9362.399319727892,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": false,
+          "possible": null
+        },
+        "landing": {
+          "available": false,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null
+        },
+        "limitations": [
+          "no-current-static-trim"
+        ],
+        "status": "insufficient-support",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "same-mass-cold",
+      "input": {
+        "height": 2,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 238.7856046392632,
+        "temperature": 200,
+        "wind": false,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate"
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.502453008548839,
+          "gasRequiredKg": 70.36025734187946,
+          "gasRemainingKg": 179.19794294301514,
+          "pressureAtContactBar": 152.13992786729497,
+          "peakDemandRatio": 0.3578671706521148,
+          "arrest": null
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "wind",
+      "input": {
+        "height": 2,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": true,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate"
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.5023388057007081,
+          "gasRequiredKg": 58.06932657021861,
+          "gasRemainingKg": 191.4888737146759,
+          "pressureAtContactBar": 242.4161859195635,
+          "peakDemandRatio": 0.3603879475320699,
+          "arrest": null
+        },
+        "limitations": [
+          "wind-not-forecast"
+        ],
+        "status": "conditional-estimate",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "front-left-disabled",
+      "input": {
+        "height": 2,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": true,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 38422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate"
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.5023388057007081,
+          "gasRequiredKg": 58.06932657021861,
+          "gasRemainingKg": 191.4888737146759,
+          "pressureAtContactBar": 242.4161859195635,
+          "peakDemandRatio": 0.7207758950641397,
+          "arrest": null
+        },
+        "limitations": [
+          "fault-capacity-included-not-dynamic-recovery"
+        ],
+        "status": "conditional-estimate",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "tilted",
+      "input": {
+        "height": 2,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": false,
+        "tilt": 0.4,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 56390.81534083115,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": false,
+          "possible": null
+        },
+        "landing": {
+          "available": false,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null
+        },
+        "limitations": [
+          "attitude-outside-estimate"
+        ],
+        "status": "unavailable",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "horizontal",
+      "input": {
+        "height": 2,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 8
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": false,
+          "possible": null
+        },
+        "landing": {
+          "available": false,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null
+        },
+        "limitations": [
+          "horizontal-motion-outside-estimate"
+        ],
+        "status": "unavailable",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "no-surface",
+      "input": {
+        "height": 2,
+        "velocity": 0,
+        "supplyMode": "finite",
+        "mass": 249.55820028489444,
+        "pressure": 350,
+        "temperature": 293.15,
+        "wind": false,
+        "fault": false,
+        "tilt": 0,
+        "horizontal": 0
+      },
+      "estimate": {
+        "protocol": "vertical-landing-reserve-1",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": false,
+          "possible": null
+        },
+        "landing": {
+          "available": false,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null
+        },
+        "limitations": [
+          "no-sampled-landing-surface"
+        ],
+        "status": "unavailable"
+      }
+    }
+  ],
+  "defaultRegenFeedback": {
+    "layer": "drive",
+    "reasons": [
+      "lift-off-regeneration"
+    ],
+    "requested": 0,
+    "achieved": 0,
+    "unit": "Nm"
+  },
+  "scope": "Actual-solver initial states plus bounded advisory forecast; not a 6-DOF landing success certificate or native HUD/GPU test."
+}

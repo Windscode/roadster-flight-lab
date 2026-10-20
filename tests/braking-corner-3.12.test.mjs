@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {RoadsterSim,DEFAULT_PARAMS} from '../dist/physics.js';
+import * as CANNON from '../dist/vendor/cannon-es.js';
+import {RoadsterSim as PreCrown} from './fixtures/physics-3.15-before/physics.js';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {integrateWheel} from '../dist/tire-dynamics.js';
 import {driverAxes} from '../dist/controls.js';
@@ -90,8 +92,13 @@ check('The service-brake/load-transfer cause is isolated before adding the conti
     assert.ok(axle.peakBodySlipAbove30KmhDeg<3&&after.peakBodySlipAbove30KmhDeg<3,'Redistribution resolves this measured high-speed drift');
     assert.ok(after.peakLongitudinalSlip<.05&&after.saturatedAnyWheelSeconds===0);
     for(const r of results){close(r.metrics.minimumBrakeRequestN,6300,1e-7,'Unchanged 15% total service request');close(r.metrics.maximumBrakeRequestN,6300,1e-7,'Unchanged 15% total service request');assert.equal(r.metrics.minimumContacts,4);assert.equal(r.metrics.hullContactSteps+r.metrics.wheelStopContactSteps,0);assert.ok(r.metrics.peakGrip<=1+1e-9);}
-    for(const key of ['peakBodySlipAbove30KmhDeg','peakTireSlipDeg','peakLongitudinalSlip','endSpeedKmh','pathLengthM'])close(after[key],axle[key],1e-6,'Final production preserves the isolated axle-only result: '+key);
-    evidence.primary.push({surface,results});
+    // Keep the original exact one-change claim on the actual frozen ray-support
+    // solver. A continuous finite-radius contact patch changes the force lever
+    // arm under roll/pitch; its production trajectory is not that ablation.
+    // Every original production performance/budget limit above still applies.
+    const isolatedPreCrown=retain('frozen-3.15-ray-support',runCorner(PreCrown,{surface}));
+    for(const key of ['peakBodySlipAbove30KmhDeg','peakTireSlipDeg','peakLongitudinalSlip','endSpeedKmh','pathLengthM'])close(isolatedPreCrown.metrics[key],axle[key],1e-6,'Frozen ray-support production preserves the isolated axle-only result: '+key);
+    evidence.primary.push({surface,results,isolatedPreCrown});
   }
 });
 
@@ -110,11 +117,15 @@ check('Gentle inputs, opposite turns, straight full braking and split-friction l
     evidence.gentle.push({surface,mirror});
     const results=[['published-3.11',Before],['production-'+REPORT_VERSION,RoadsterSim]].map(([stage,Sim])=>retain(stage,runCorner(Sim,{surface,steer:0,brake:1,seconds:6,stopAtRest:true})));
     const [before,after]=results.map(r=>r.metrics);assert.notEqual(after.stopTimeSeconds,null);
-    close(after.pathLengthM,before.pathLengthM,1e-6,'The 60/40 straight-line stopping budget is retained');
+    const isolatedPreCrown=retain('frozen-3.15-ray-support',runCorner(PreCrown,{surface,steer:0,brake:1,seconds:6,stopAtRest:true}));
+    close(isolatedPreCrown.metrics.pathLengthM,before.pathLengthM,1e-6,'The frozen ray-support 60/40 stopping trajectory is retained exactly');
+    assert.ok(after.pathLengthM<=before.pathLengthM+1e-6,'The current finite-radius contact may not increase the historical stopping distance');
+    close(after.minimumBrakeRequestN,42000,1e-7,'Current full service request retains the original 42 kN budget');
+    close(after.maximumBrakeRequestN,42000,1e-7,'Current full service request may not exceed the original 42 kN budget');
     close(after.stopTimeSeconds,before.stopTimeSeconds,DT,'Straight stopping duration');
     assert.ok(after.minimumAbsPressure<.8,'Wet/dry full-brake regression must exercise ABS, not only easy cases');
     assert.equal(after.minimumContacts,4);assert.equal(after.hullContactSteps+after.wheelStopContactSteps,0);
-    evidence.stopping.push({surface,results});
+    evidence.stopping.push({surface,results,isolatedPreCrown});
   }
   for(const steer of [0,1]){
     const results=[['published-3.11',Before],['production-'+REPORT_VERSION,RoadsterSim]].map(([stage,Sim])=>retain(stage,runCorner(Sim,{surface:'split',steer,brake:1,seconds:6,stopAtRest:true})));
@@ -155,10 +166,20 @@ check('Passing one percent brake no longer removes the lift-off force; a nondecr
 check('Contact loss cannot duplicate an axle budget and low-speed brake input cannot release parking hold',()=>{
   evidence.contactBudgets=[];
   for(const mask of [15,7,3,12,5,0])for(const brake of [.15,1]){
-    const sim=rolling(RoadsterSim,54),original=sim._raySurface;
-    sim._raySurface=function(from,to,ray){const i=this._wheelRays.indexOf(ray);if(i>=0&&!(mask&(1<<i))){ray.reset();return false;}return original.call(this,from,to,ray);};
+    const sim=rolling(RoadsterSim,54),ground=sim.world.bodies.find(body=>body.userData?.id==='ground');
+    assert.ok(ground,'The isolated support fixture has a ground body');
+    const floorY=ground.position.y+ground.shapes[0].halfExtents.y;
+    const patches=sim.wheelStates.map(w=>({...w.contactPointWorld}));
+    sim.world.removeBody(ground);
+    // Real separated wheel-sized supports, not a stub of the obsolete ray path.
+    // Missing patches cannot be reached by either tyre radius or half width.
+    for(let i=0;i<4;i++)if(mask&(1<<i)){
+      const support=new CANNON.Body({mass:0,position:new CANNON.Vec3(patches[i].x,floorY-.1,patches[i].z),shape:new CANNON.Box(new CANNON.Vec3(.3,.1,.55))});
+      support.userData={id:'brake-mask-support-'+i};sim.world.addBody(support);
+    }
     sim.body.force.setZero();sim.body.torque.setZero();sim._wheels(DT,{throttle:0,steer:0,brake});
     const w=sim.wheelStates,front=sum(w.slice(0,2),w=>w.brakeDemandN),rear=sum(w.slice(2),w=>w.brakeDemandN);
+    assert.equal(w.reduce((value,wheel,i)=>value|(Number(wheel.contact)<<i),0),mask,'The real support geometry must produce the declared contact mask');
     close(front,brake*42000*.6,1e-8,'Front axle request');close(rear,brake*42000*.4,1e-8,'Rear axle request');
     assert.ok(sum(w,w=>w.brakeDemandN)<=42000+1e-8);
     for(const axle of [w.slice(0,2),w.slice(2)])if(axle.some(w=>w.contact))for(const wheel of axle)if(!wheel.contact)assert.equal(wheel.brakeDemandN,0,'No unused duplicate on an unloaded partner');

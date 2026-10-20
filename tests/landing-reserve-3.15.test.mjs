@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
 import {RoadsterSim} from '../dist/physics.js';
@@ -21,4 +22,4 @@ const wind=run('wind',{wind:true});assert.equal(wind.status,'conditional-estimat
 const fault=run('front-left-disabled',{fault:true});assert.ok(fault.limitations.includes('fault-capacity-included-not-dynamic-recovery'));checks.push('Wind and nozzle-fault qualifications remain visible; static capacity is not dynamic-recovery certification.');
 for(const [id,options]of [['tilted',{tilt:.4}],['horizontal',{horizontal:8}],['no-surface',{surface:false}]])assert.equal(run(id,options).status,'unavailable');checks.push('Tilt, fast lateral travel and missing lower surface make the advisory unavailable.');
 const sim=new RoadsterSim();for(let i=0;i<120;i++)sim.advanceFixed({throttle:1});for(let i=0;i<30;i++)sim.advanceFixed({});const feedback=controlLimitFeedback(sim.telemetry());assert.ok(feedback.reasons.includes('lift-off-regeneration'));checks.push('Production default lift-off regeneration is identified from actual forces, not disabled in the default test.');
-const report={schema:'roadster-landing-reserve-tests',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',checks,cases,defaultRegenFeedback:feedback,scope:'Actual-solver initial states plus bounded advisory forecast; not a 6-DOF landing success certificate or native HUD/GPU test.'};writeFileSync(new URL('../qa/landing-reserve-3.15.json',import.meta.url),JSON.stringify(report,null,2)+'\n');for(const c of checks)console.log('PASS: '+c);
+const report={schema:'roadster-landing-reserve-tests',version:1,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',checks,cases,defaultRegenFeedback:feedback,scope:'Actual-solver initial states plus bounded advisory forecast; not a 6-DOF landing success certificate or native HUD/GPU test.'};writeFileSync(new URL(`../qa/landing-reserve-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');for(const c of checks)console.log('PASS: '+c);

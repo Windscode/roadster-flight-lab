@@ -26,11 +26,15 @@ export function enrichValidationReport(report){
   }
   report.model='Roadster Flight Lab '+MODEL_VERSION;
   report.sourceIdentity={modelBuildId:MODEL_BUILD_ID,sourceHashes:MODEL_SOURCE_HASHES};
-  report.browserVisualQA={status:'current_release_after_capture_pending',modelVersion:MODEL_VERSION,
-    reason:'User-supplied 3.13 high / balanced / high 1280x720 wet-night exposure-1.02 pixels show recovered observed roads and facades. The named road/mineral programs used 13/12 active fragment sampler elements and linked, validated and drew without listed errors in that condition; requiredCategories was empty, so this is not all-scene acceptance. Ultra08 had 25 GL1286 draw errors despite 14/13 samplers and successful link/validate, and the 14-frame matrix did not complete. The 3.14 cube-target construction and frame-bound diagnostics have CPU/GL-interface/DOM checks, but no target-GPU after-pixels or warmed route timings. The 2026-10-20 browser attempt on the deployed baseline returned Error creating WebGL context; it is a separate environment and no current-release image was acquired.',
-    baselineEvidence:'qa/visual-evidence-3.14.json',captureInstructions:'docs/release-3.15.md',bodyStripeSource:'qa/body-stripe-source-3.11.json',
-    historicalReports:['qa/visual-evidence-3.13.json','qa/browser-live-3.12.json','qa/browser-release-3.9.json','qa/browser.json','qa/city-3.4-browser-assets.json'],
-    historyScope:'The user\'s 3.13 full specified continuous route is traversable, not a current-release drive or all-street/collision/performance certificate. The actual X bench trace CG 0.597009→3.904830 m and roll peak 365.510947 degrees is preserved, not exact landing or finite-gas acceptance. The scoped 3.11 receiver-plane correction is retained. Previous 54/90 km/h records used physical dry mu=1.25, not wet-road or matched A/B. Paused/HUD figures are not route frame-time data.'};
+  const nativeFile=`qa/native-acceptance-${REPORT_VERSION}.json`;
+  const native=existsSync(new URL(nativeFile,root))?read(nativeFile):null;
+  const nativeCurrent=native?.modelBuildId===MODEL_BUILD_ID;
+  report.browserVisualQA={status:nativeCurrent?native.status:'current_release_final_capture_pending',modelVersion:MODEL_VERSION,
+    currentEvidence:native?{report:nativeFile,modelBuildId:native.modelBuildId,sourceIdentityCurrent:nativeCurrent,scope:native.scope,openGates:native.openGates}:null,
+    reason:nativeCurrent?native.summary:'The user supplied actual 3.15 candidate images and native observations. Actual Chrome WebGL2/SwiftShader rendering is available in this development environment and intermediate 3.16 frames were inspected; final same-source captures are reported separately once completed. Software-rendered pixels do not establish performance or driver behavior on the user GPU.',
+    captureInstructions:'docs/release-3.16.md',bodyStripeSource:'qa/body-stripe-source-3.11.json',
+    historicalReports:['docs/candidate-capture-3.15.md','qa/visual-evidence-3.14.json','qa/visual-evidence-3.13.json','qa/browser-live-3.12.json','qa/browser-release-3.9.json','qa/browser.json','qa/city-3.4-browser-assets.json'],
+    historyScope:'The user ran the 3.15 candidate on their own computer. Those observations do not certify the final 3.16 whole-city route, full manual airborne pitch turn, high-speed step handling or hardware-GPU matrix. Earlier Euler-angle samples are not cumulative turns. Paused and software-GPU HUD readings are not route frame-time acceptance.'};
   report.offlineShaderValidation={scope:'Offline final source syntax, stage-interface and active sampler array reflection; not WebGL driver, framebuffer, rendered-pixel or FPS validation.',
     postProcessing:shaderEvidence(`qa/render-shader-validation-${REPORT_VERSION}.json`),
     cityLighting:shaderEvidence(`qa/city-shaders-${REPORT_VERSION}.json`)};

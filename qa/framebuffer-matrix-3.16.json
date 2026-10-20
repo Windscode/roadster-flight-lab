@@ -1,0 +1,445 @@
+{
+  "status": "passed",
+  "createdAt": "2026-10-20T18:33:40.435Z",
+  "modelVersion": "3.16.0",
+  "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+  "checks": [
+    {
+      "name": "Frozen one-argument cube resize reproduces undefined height and invalid viewport in bundled Three.js",
+      "status": "passed",
+      "detail": {
+        "scope": "CPU target allocation descriptors, not a target-driver framebuffer query",
+        "width": 256,
+        "height": null,
+        "viewportHeight": "undefined",
+        "faceWidth": 128
+      }
+    },
+    {
+      "name": "Repeated 128/256/0 quality changes keep six coherent faces, dispose replaced targets and retain same-size probes",
+      "status": "passed",
+      "detail": {
+        "created": 6,
+        "disposed": 6,
+        "textureFormat": "unchanged half-float mipmapped cube",
+        "scope": "Actual Three.js resource objects, no GPU"
+      }
+    },
+    {
+      "name": "Framebuffer inspection queries the actual attachment and restores renderbuffer binding",
+      "status": "passed",
+      "detail": {
+        "available": true,
+        "framebufferId": 3,
+        "status": 36054,
+        "statusName": "FRAMEBUFFER_INCOMPLETE_ATTACHMENT",
+        "complete": false,
+        "target": {
+          "kind": "cube",
+          "name": "offscreen",
+          "width": 256,
+          "height": 256,
+          "depth": 1,
+          "validDimensions": true,
+          "face": 0,
+          "mip": 0,
+          "samples": 0,
+          "depthBuffer": true,
+          "stencilBuffer": false,
+          "textures": [
+            {
+              "name": null,
+              "uuid": "62fa9e7c-f345-4b67-9c09-d5b53983f84f",
+              "type": 1009,
+              "format": 1023,
+              "internalFormat": null,
+              "generateMipmaps": false,
+              "images": [
+                {
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1
+                },
+                {
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1
+                },
+                {
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1
+                },
+                {
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1
+                },
+                {
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1
+                },
+                {
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1
+                }
+              ]
+            }
+          ],
+          "depthTexture": null
+        },
+        "attachments": [
+          {
+            "name": "color0",
+            "type": 5890,
+            "objectId": 1,
+            "textureLevel": 0,
+            "cubeFace": 34069
+          },
+          {
+            "name": "depth",
+            "type": 36161,
+            "objectId": 2,
+            "width": 256,
+            "height": 0,
+            "internalFormat": 33189,
+            "samples": 0
+          },
+          {
+            "name": "stencil",
+            "type": 0,
+            "objectId": null
+          }
+        ],
+        "scope": "Framebuffer status and attachment identities queried on the actual bound framebuffer. Texture dimensions are CPU allocation descriptors; renderbuffer dimensions are queried from the driver."
+      }
+    },
+    {
+      "name": "Linked, validated, under-16 programs fail the actual draw gate on GL1286 and incomplete framebuffer",
+      "status": "passed",
+      "detail": {
+        "event": {
+          "index": 0,
+          "pass": "reflections",
+          "framebuffer": 0,
+          "material": "City / scanned asphalt + local puddles",
+          "object": "Canonical road surface",
+          "cameraId": 9,
+          "mainColor": true,
+          "drawCalls": 1,
+          "preDrawErrors": [],
+          "drawErrors": [
+            1286
+          ],
+          "diagnosticErrors": []
+        },
+        "failures": [
+          "framebuffer-0-incomplete",
+          "required-category-not-drawn:road",
+          "program-71-draw-gl-error"
+        ]
+      }
+    },
+    {
+      "name": "Carry-in, pre-draw and draw faults stay separate; a later clean frame cannot rewrite a failed frame",
+      "status": "passed",
+      "detail": {
+        "failed": [
+          "carry-in-gl-errors",
+          "program-71-draw-gl-error",
+          "program-71-pre-draw-gl-error"
+        ],
+        "clean": "passed"
+      }
+    },
+    {
+      "name": "An attempted draw without a stored program retains its named pass/FBO and all error classes before a later clean draw",
+      "status": "passed",
+      "detail": {
+        "beforeReproduction": {
+          "sourceSHA256": "e82cfb7742e1931793c6518807f0542d843e442b581b22d6104a0e63b8f1c581",
+          "scope": "GL-interface fixture observed before correction; no target GPU",
+          "injected": {
+            "preDraw": 1282,
+            "draw": 1286
+          },
+          "result": {
+            "status": "passed",
+            "failures": [],
+            "drawEvents": 1,
+            "unattributedDrawCalls": 0,
+            "programs": [
+              {
+                "materials": [
+                  "City / asphalt"
+                ],
+                "preDrawErrors": [],
+                "glErrors": []
+              }
+            ],
+            "remainingGlErrors": []
+          },
+          "failure": "The missing currentProgram branch returned after draining GL1282/GL1286; the original errors and attempted draw were absent from the report."
+        },
+        "after": {
+          "status": "failed",
+          "failures": [
+            "unattributed-draw-gl-error"
+          ],
+          "event": {
+            "index": 0,
+            "pass": "fixture/unattributed-attempt",
+            "framebuffer": 0,
+            "material": "City / scanned asphalt + local puddles",
+            "materialType": "MeshStandardMaterial",
+            "object": "Canonical road surface",
+            "objectKind": "mesh",
+            "cameraId": 9,
+            "programId": null,
+            "drawCalls": 0,
+            "preDrawErrors": [
+              1282
+            ],
+            "drawErrors": [
+              1286
+            ],
+            "diagnosticErrors": [
+              1280
+            ]
+          },
+          "framebuffer": {
+            "available": true,
+            "framebufferId": 3,
+            "status": 36053,
+            "statusName": "FRAMEBUFFER_COMPLETE",
+            "complete": true,
+            "target": {
+              "kind": "cube",
+              "name": "Fixture / missing-program-target",
+              "width": 256,
+              "height": 256,
+              "depth": 1,
+              "validDimensions": true,
+              "face": 0,
+              "mip": 0,
+              "samples": 0,
+              "depthBuffer": true,
+              "stencilBuffer": false,
+              "textures": [
+                {
+                  "name": "Fixture / missing-program-target",
+                  "uuid": "d2768e56-1c34-46f8-af8c-7199fcb64c1f",
+                  "type": 1009,
+                  "format": 1023,
+                  "internalFormat": null,
+                  "generateMipmaps": false,
+                  "images": [
+                    {
+                      "width": 256,
+                      "height": 256,
+                      "depth": 1
+                    },
+                    {
+                      "width": 256,
+                      "height": 256,
+                      "depth": 1
+                    },
+                    {
+                      "width": 256,
+                      "height": 256,
+                      "depth": 1
+                    },
+                    {
+                      "width": 256,
+                      "height": 256,
+                      "depth": 1
+                    },
+                    {
+                      "width": 256,
+                      "height": 256,
+                      "depth": 1
+                    },
+                    {
+                      "width": 256,
+                      "height": 256,
+                      "depth": 1
+                    }
+                  ]
+                }
+              ],
+              "depthTexture": null
+            },
+            "attachments": [
+              {
+                "name": "color0",
+                "type": 5890,
+                "objectId": 1,
+                "textureLevel": 0,
+                "cubeFace": 34069
+              },
+              {
+                "name": "depth",
+                "type": 36161,
+                "objectId": 2,
+                "width": 256,
+                "height": 256,
+                "internalFormat": 33189,
+                "samples": 0
+              },
+              {
+                "name": "stencil",
+                "type": 0,
+                "objectId": null
+              }
+            ],
+            "scope": "Framebuffer status and attachment identities queried on the actual bound framebuffer. Texture dimensions are CPU allocation descriptors; renderbuffer dimensions are queried from the driver.",
+            "id": 0,
+            "pass": "fixture/unattributed-attempt"
+          },
+          "laterCleanProgramDraws": 1
+        }
+      }
+    },
+    {
+      "name": "A clean zero-draw unattributed attempt is retained without false failure; an actual unattributed draw still fails",
+      "status": "passed",
+      "detail": {
+        "outcomes": [
+          {
+            "submittedDrawCalls": 0,
+            "status": "passed",
+            "failures": []
+          },
+          {
+            "submittedDrawCalls": 1,
+            "status": "failed",
+            "failures": [
+              "draw-without-program-attribution"
+            ]
+          }
+        ],
+        "scope": "GL-interface rejection semantics; no actual GPU"
+      }
+    },
+    {
+      "name": "Malformed target dimensions fail even if a facade claims framebuffer completeness",
+      "status": "passed",
+      "detail": {
+        "kind": "cube",
+        "name": "offscreen",
+        "width": 256,
+        "height": null,
+        "depth": 1,
+        "validDimensions": false,
+        "face": 0,
+        "mip": 0,
+        "samples": 0,
+        "depthBuffer": true,
+        "stencilBuffer": false,
+        "textures": [
+          {
+            "name": null,
+            "uuid": "6b132e52-2ea0-4cb0-815a-ffa3e9ff51e6",
+            "type": 1009,
+            "format": 1023,
+            "internalFormat": null,
+            "generateMipmaps": false,
+            "images": [
+              {
+                "width": 128,
+                "height": 128,
+                "depth": 1
+              },
+              {
+                "width": 128,
+                "height": 128,
+                "depth": 1
+              },
+              {
+                "width": 128,
+                "height": 128,
+                "depth": 1
+              },
+              {
+                "width": 128,
+                "height": 128,
+                "depth": 1
+              },
+              {
+                "width": 128,
+                "height": 128,
+                "depth": 1
+              },
+              {
+                "width": 128,
+                "height": 128,
+                "depth": 1
+              }
+            ]
+          }
+        ],
+        "depthTexture": null
+      }
+    },
+    {
+      "name": "Fourteen completed matrix cases produce an openable STORE ZIP with 14 PNGs, 14 conditions and exact CRCs",
+      "status": "passed",
+      "detail": {
+        "entries": 30,
+        "frames": 14,
+        "scope": "Archive/orchestration only; fixture pixels are not graphical acceptance"
+      }
+    },
+    {
+      "name": "Completed collection with a failing actual-draw verdict remains failed, not success",
+      "status": "passed",
+      "detail": "failed"
+    },
+    {
+      "name": "Failure during case 4 retains all three preceding original frames and the failed ordinary audit",
+      "status": "passed",
+      "detail": {
+        "name": "Error",
+        "message": "PNG encoding timeout",
+        "completedFrames": 3,
+        "nextCase": "02-high-wet-night-vehicle",
+        "partialAudit": {
+          "status": "failed",
+          "priorGlErrors": [
+            1286
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cancel preserves the exact prefix, leaves missing frames explicit, and still creates an archive",
+      "status": "passed",
+      "detail": {
+        "status": "cancelled",
+        "completed": 6,
+        "missing": 8
+      }
+    },
+    {
+      "name": "A missing PNG fails immediately and never substitutes a successful frame or a blank image",
+      "status": "passed",
+      "detail": {
+        "name": "Error",
+        "message": "Incomplete actual frame result",
+        "completedFrames": 0,
+        "nextCase": "01-high-clear-day-viaduct",
+        "partialAudit": null
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/cube-probe-target.js": "17c87dfc424dc1e50e5622c115da3852724be97d7f71cb1a387a753ecd6cbc81",
+    "dist/framebuffer-diagnostics.js": "f0fe9e7daea93ed99617f2c2dd601aa56f3a32e2c0e15a9f3920273ea6a88079",
+    "dist/render-program-diagnostics.js": "8c961ee03fcbff9b862df1c0f8aae931468f8405bc4b660523321242892adc70",
+    "dist/render-capture-matrix.js": "02e453a7b9b03a9e43ea0935ba5b064d6a86cf152405c8f47fbae3c1786c19d2",
+    "dist/capture-archive.js": "ff0bcf04e26dbc506eabb4569edd8be1b3e167e6e567d84a38c7ca61db1160c2"
+  },
+  "scope": "Real Three.js CPU resource lifecycle + explicit GL-interface and ZIP fixtures. No current-release target GPU draw, full 14-frame real-image matrix, image quality or performance pass."
+}

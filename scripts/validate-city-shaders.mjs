@@ -20,6 +20,8 @@ import {attachPavementSurface,CITY_PAVEMENT_SPECIFICATIONS} from '../dist/paveme
 import {createLocalProbeSun} from '../dist/local-probe-sun.js';
 import {createCityExteriorMaterials} from '../dist/city-exterior-materials.js';
 import {cityLightingVariant,injectCityMaterialLighting} from '../dist/city-material-lighting.js';
+import {buildUrbanArchitecture} from '../dist/urban-architecture.js';
+import {CITY_BUILDINGS} from '../dist/city-data.js';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const dist=new URL('../dist/',import.meta.url);
@@ -52,7 +54,7 @@ const temporary=await fs.mkdtemp(path.join(os.tmpdir(),'roadster-city-shaders-')
 const sourceFiles=['scripts/validate-city-shaders.mjs','dist/vendor/three.module.js','dist/vendor/three.core.js',
   'dist/vendor/addons/csm/CSM.js','dist/vendor/addons/csm/CSMShader.js','dist/indirect-lighting.js',
   'dist/irradiance-math.js','dist/city-render-budget.js','dist/city-environment.js',
-  'dist/local-probe-sun.js','dist/pavement-surface-material.js','dist/road-surface-material.js','dist/city-exterior-materials.js','dist/wind-laboratory.js',
+  'dist/local-probe-sun.js','dist/pavement-surface-material.js','dist/road-surface-material.js','dist/city-exterior-materials.js','dist/urban-architecture.js','dist/wind-laboratory.js',
   'dist/city-practical-lights.js','dist/wet-road-reflection.js','dist/visual-presets.js','dist/night-city-lighting.js','dist/city-night-transport.js','dist/night-direct-lighting.js','dist/night-direct-transport.js','dist/receiver-plane-shadows.js','dist/city-material-lighting.js','dist/night-field-atlas.js'];
 
 try{
@@ -148,8 +150,12 @@ try{
   const nightGI=createNightCityLighting({fetchAsset:async url=>{const bytes=await fs.readFile(url);return {ok:true,json:async()=>JSON.parse(bytes.toString('utf8')),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};}});await nightGI.ready;
   const nightDirect=createNightDirectLighting({fetchAsset:async url=>{const bytes=await fs.readFile(url);return {ok:true,json:async()=>JSON.parse(bytes.toString('utf8')),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};}});await nightDirect.ready;
   const probeSun=createLocalProbeSun(new THREE.Scene(),{}),exterior=createCityExteriorMaterials(THREE);
+  const architecture=buildUrbanArchitecture(THREE,new THREE.Group(),CITY_BUILDINGS.slice(0,1));await architecture.ready;
+  const actualGlazing=architecture.group.children.find(mesh=>mesh.geometry.getAttribute('urbanGlazing'))?.material;
+  if(!actualGlazing)throw Error('The actual city opaque glazing instance material was not constructed');
   const dummyTextures={albedo:new THREE.Texture(),normal:new THREE.Texture(),roughness:new THREE.Texture()};
-  for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const night of [false,true])for(const kind of ['standard','physical','asphalt','pavement',...['continuity-stone','service-concrete','ivory','basalt'].map(id=>'pavement-'+id),'exterior-concrete','exterior-glass','exterior-enamel']){
+  for(const quality of ['balanced','high','ultra'])for(const instanced of [false,true])for(const night of [false,true])for(const kind of ['standard','physical','asphalt','pavement',...['continuity-stone','service-concrete','ivory','basalt'].map(id=>'pavement-'+id),'exterior-concrete','exterior-glass','exterior-enamel','opaque-glazing-instance']){
+    if(kind==='opaque-glazing-instance'&&!instanced)continue;
     // Exterior/night material variants are required by the stationary field.
     const physical=kind==='physical',spots=night?({balanced:3,high:5,ultra:6}[quality]):0;
     gi.setEnabled(!night);nightGI.setEnabled(night);nightGI.setQuality(quality);
@@ -158,6 +164,7 @@ try{
       cascades:count,maxFar:profile.shadowFar,shadowMapSize:profile.shadowSize});
     const material=physical?new THREE.MeshPhysicalMaterial():new THREE.MeshStandardMaterial();
     try{
+      if(kind==='opaque-glazing-instance'){material.copy(actualGlazing);material.onBeforeCompile=actualGlazing.onBeforeCompile;material.customProgramCacheKey=actualGlazing.customProgramCacheKey;architecture.setQuality(quality);}
       if(kind==='asphalt')attachRoadSurface(material,dummyTextures).setQuality(quality);
       if(kind==='pavement'||kind.startsWith('pavement-'))attachPavementSurface(material,CITY_PAVEMENT_SPECIFICATIONS[kind.slice(9)]||{}).setWetness(night?1:0);
       if(kind.startsWith('exterior-')){exterior.attach(material,kind.slice(9));exterior.setQuality(quality);}
@@ -172,7 +179,7 @@ try{
       const name=quality+'-'+(night?'wet-night-':'clear-day-')+(instanced?'instanced':'single')+'-'+kind;
       const defines={...material.defines};if(physical)defines.PHYSICAL='';
       const coverage={quality,weather:night?'wet-night':'clear-day',cascades:count,giEvaluation:night?'stationary fixture bounce / six-direction 3D field (daytime bake excluded)':profile.giMode,nightFieldReads:night?nightGI.stats.runtimeTextureReadsPerFragment:0,spotLights:spots,spotShadows:spots,instanced,
-        material:physical?'Physical with clearcoat, albedo, normal and roughness maps':kind,
+        material:physical?'Physical with clearcoat, albedo, normal and roughness maps':kind,actualGlazingInstanceHook:kind==='opaque-glazing-instance',
         shadowMap:'PCF soft main view; dedicated local sun depth branch only in daytime probe-capable variants',environment:'CubeUV IBL',fade:true,lightingVariant:variant};
       await compile(name,{...shader,defines},{shaderType:physical?'MeshPhysicalMaterial':'MeshStandardMaterial',shaderName:name,
         instancing:instanced,instancingColor:instanced,vertexColors:false,shadowMapEnabled:true,
@@ -256,7 +263,7 @@ try{
   await compile('probe-packed-depth-opaque',{...depthShader,defines:{}},{shaderType:'MeshDepthMaterial',shaderName:'ProbeSunDepth',
     useDepthPacking:true,depthPacking:THREE.RGBADepthPacking,doubleSided:true},
     {material:'Double-sided opaque RGBADepthPacking; local orthographic solar visibility capture'});
-  probeSun.dispose();exterior.dispose();
+  probeSun.dispose();exterior.dispose();architecture.dispose();
   const sourceHashes=Object.fromEntries(await Promise.all(sourceFiles.map(async name=>[name,sha256(await fs.readFile(path.join(root,name)))])));
   const failed=results.filter(r=>r.status==='fail').length;
   const report={format:'roadster-offline-city-shader-validation-1',createdAt:new Date().toISOString(),status:failed?'failed':'passed',

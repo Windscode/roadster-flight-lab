@@ -1,0 +1,5920 @@
+{
+  "status": "passed",
+  "modelVersion": "3.16.0",
+  "generatedAt": "2026-10-20T18:31:37.208Z",
+  "baselineCommit": "a25b228a6d56f358cba24106ce897e1cb5c99bc1",
+  "sourceSha256": {
+    "dist/physics.js": "4717c20baa2a568ea85c32657279eef84f8dd9d7caf3971b58579b2c4166e2c0",
+    "dist/vehicle-models.js": "cadf5e3eebe35159a330867d00ec542659fc37aaae0da9b69789f9fe6b4de15a",
+    "dist/tire-dynamics.js": "de2336ef6ff88d276a414a2e90a2a6a7c29e8b18bed5767a6031bb14782c388d",
+    "dist/simulation-snapshot.js": "44b213653bf85b7aa7cc16f724a2121e2840820b62e78c60355bb7e7e1aeec70",
+    "dist/control-observation.js": "8920e824d32dbece63aade3f0ab4da5c294225aa46419d6e556e603f2ed75cc8"
+  },
+  "checks": [
+    {
+      "name": "One four-wheel drive budget survives partial contacts, TCS and actual substep mechanical-work limits",
+      "status": "PASS"
+    },
+    {
+      "name": "Mechanical/electrical accounting remains physical during free spin and complete rigid-body takeoff/landing contact changes",
+      "status": "PASS"
+    },
+    {
+      "name": "Faster steering develops real tire-force curvature and yaw response on low/mid/high-speed circles and an authored city intersection",
+      "status": "PASS"
+    },
+    {
+      "name": "E/Q use the selected velocity immediately, brake smoothly on release and taper descent into real ground contact",
+      "status": "PASS"
+    },
+    {
+      "name": "G recovers level after manual pose changes and unsealed F arming, while real adhesion and finite thrust retain authority",
+      "status": "PASS"
+    },
+    {
+      "name": "New wheel, release-braking and recovery states preserve complete snapshot replay across display rates with seeded sensing and nozzle derating",
+      "status": "PASS"
+    }
+  ],
+  "evidence": {
+    "driveBudget": {
+      "before": [
+        {
+          "grounded": 4,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333334,
+          "actualTorqueNm": 8633.333333333332,
+          "mechanicalPowerW": 721373.010166619,
+          "electricalPowerW": 801525.5668517988,
+          "electricalEnergyJ": 6679.37972376499,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 26089.08841642535,
+          "totalLongitudinalForceN": 13621.604919433594,
+          "wheels": [
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 2158.333333333333,
+              "omegaRadS": 85.12913135092239,
+              "slipRatio": 0.0460502748135072,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            },
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 2158.333333333333,
+              "omegaRadS": 85.12913135092239,
+              "slipRatio": 0.0460502748135072,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            },
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 2158.333333333333,
+              "omegaRadS": 85.12913135092239,
+              "slipRatio": 0.0460502748135072,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            },
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 2158.333333333333,
+              "omegaRadS": 85.12913135092239,
+              "slipRatio": 0.0460502748135072,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": null
+        },
+        {
+          "grounded": 3,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 10791.666666666668,
+          "actualTorqueNm": 10463.060416666664,
+          "mechanicalPowerW": 885719.1767803485,
+          "electricalPowerW": 984132.4186448317,
+          "electricalEnergyJ": 8201.10348870693,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 27584.11347792868,
+          "totalLongitudinalForceN": 13033.407211303711,
+          "wheels": [
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 2877.777777777777,
+              "omegaRadS": 86.85130423717823,
+              "slipRatio": 0.06502968150673284,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            },
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 2877.777777777777,
+              "omegaRadS": 86.85130423717823,
+              "slipRatio": 0.06502968150673284,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            },
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 2877.777777777777,
+              "omegaRadS": 86.85130423717823,
+              "slipRatio": 0.06502968150673284,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 1829.727083333333,
+              "omegaRadS": 89.55203980021689,
+              "slipRatio": null,
+              "drivePowerW": null,
+              "tcsFactor": 0.7462500000000002
+            }
+          ],
+          "accounting": null
+        },
+        {
+          "grounded": 2,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 12950,
+          "actualTorqueNm": 12292.787499999999,
+          "mechanicalPowerW": 1060920.7494797613,
+          "electricalPowerW": 1178800.8327552904,
+          "electricalEnergyJ": 9823.340272960753,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29408.245543018595,
+          "totalLongitudinalForceN": 11383.51821899414,
+          "wheels": [
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 4316.666666666666,
+              "omegaRadS": 91.20496893364009,
+              "slipRatio": 0.1098302061725787,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            },
+            {
+              "contact": true,
+              "normalLoadN": 6000,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 4316.666666666666,
+              "omegaRadS": 91.20496893364009,
+              "slipRatio": 0.1098302061725787,
+              "drivePowerW": null,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 1829.727083333333,
+              "omegaRadS": 89.55203980021689,
+              "slipRatio": null,
+              "drivePowerW": null,
+              "tcsFactor": 0.7462500000000002
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": null,
+              "actualTorqueNm": 1829.727083333333,
+              "omegaRadS": 89.55203980021689,
+              "slipRatio": null,
+              "drivePowerW": null,
+              "tcsFactor": 0.7462500000000002
+            }
+          ],
+          "accounting": null
+        }
+      ],
+      "after": [
+        {
+          "grounded": 4,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        }
+      ],
+      "operatingCases": [
+        {
+          "grounded": 4,
+          "tcs": true,
+          "speedMps": -30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": false,
+          "speedMps": -30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333332,
+          "actualTorqueNm": 8158.288254614386,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29500.24348672996,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 8633.333333333332,
+            "postTcsTorqueNm": 8633.333333333332,
+            "actualTorqueNm": 8158.288254614386,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 1.3528168548280477e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": true,
+          "speedMps": -30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": false,
+          "speedMps": -30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333332,
+          "actualTorqueNm": 8158.288254614386,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29500.24348672996,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 8633.333333333332,
+            "postTcsTorqueNm": 8633.333333333332,
+            "actualTorqueNm": 8158.288254614386,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 1.3528168548280477e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": true,
+          "speedMps": -30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": false,
+          "speedMps": -30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333332,
+          "actualTorqueNm": 8158.288254614386,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29500.24348672996,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 8633.333333333332,
+            "postTcsTorqueNm": 8633.333333333332,
+            "actualTorqueNm": 8158.288254614386,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 1.3528168548280477e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": true,
+          "speedMps": -30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": -81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": false,
+          "speedMps": -30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333332,
+          "actualTorqueNm": 8158.288254614386,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29500.24348672996,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": -2158.333333333333,
+              "actualTorqueNm": -2039.5720636535964,
+              "omegaRadS": -90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 8633.333333333332,
+            "postTcsTorqueNm": 8633.333333333332,
+            "actualTorqueNm": 8158.288254614386,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 1.3528168548280477e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": true,
+          "speedMps": 0,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 0,
+          "wheelEnergyAfterJ": 0,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": false,
+          "speedMps": 0,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 45633.33333333333,
+          "electricalPowerW": 50703.70370370369,
+          "electricalEnergyJ": 422.5308641975308,
+          "wheelEnergyBeforeJ": 0,
+          "wheelEnergyAfterJ": 380.2777777777777,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 45633.33333333333,
+            "electricalPowerW": 50703.70370370369,
+            "mechanicalWorkJ": 380.2777777777777,
+            "electricalWorkJ": 422.5308641975308,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": true,
+          "speedMps": 0,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 0,
+          "wheelEnergyAfterJ": 0,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": false,
+          "speedMps": 0,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 45633.33333333333,
+          "electricalPowerW": 50703.70370370369,
+          "electricalEnergyJ": 422.5308641975308,
+          "wheelEnergyBeforeJ": 0,
+          "wheelEnergyAfterJ": 380.2777777777777,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 45633.33333333333,
+            "electricalPowerW": 50703.70370370369,
+            "mechanicalWorkJ": 380.2777777777777,
+            "electricalWorkJ": 422.5308641975308,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": true,
+          "speedMps": 0,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 0,
+          "wheelEnergyAfterJ": 0,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": false,
+          "speedMps": 0,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 45633.33333333333,
+          "electricalPowerW": 50703.70370370369,
+          "electricalEnergyJ": 422.5308641975308,
+          "wheelEnergyBeforeJ": 0,
+          "wheelEnergyAfterJ": 380.2777777777777,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 45633.33333333333,
+            "electricalPowerW": 50703.70370370369,
+            "mechanicalWorkJ": 380.2777777777777,
+            "electricalWorkJ": 422.5308641975308,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": true,
+          "speedMps": 0,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 0,
+          "wheelEnergyAfterJ": 0,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": false,
+          "speedMps": 0,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 45633.33333333333,
+          "electricalPowerW": 50703.70370370369,
+          "electricalEnergyJ": 422.5308641975308,
+          "wheelEnergyBeforeJ": 0,
+          "wheelEnergyAfterJ": 380.2777777777777,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.277777777777777,
+              "slipRatio": null,
+              "drivePowerW": 11408.333333333332,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 45633.33333333333,
+            "electricalPowerW": 50703.70370370369,
+            "mechanicalWorkJ": 380.2777777777777,
+            "electricalWorkJ": 422.5308641975308,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": true,
+          "speedMps": 0.1,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 0.2629656683710738,
+          "wheelEnergyAfterJ": 0.2629656683710738,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0.1,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": false,
+          "speedMps": 0.1,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 48033.33333333333,
+          "electricalPowerW": 53370.37037037036,
+          "electricalEnergyJ": 444.753086419753,
+          "wheelEnergyBeforeJ": 0.2629656683710738,
+          "wheelEnergyAfterJ": 400.5407434461488,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 48033.33333333333,
+            "electricalPowerW": 53370.37037037036,
+            "mechanicalWorkJ": 400.2777777777777,
+            "electricalWorkJ": 444.753086419753,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0.1,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": true,
+          "speedMps": 0.1,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 0.2629656683710738,
+          "wheelEnergyAfterJ": 0.2629656683710738,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0.1,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": false,
+          "speedMps": 0.1,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 48033.33333333333,
+          "electricalPowerW": 53370.37037037036,
+          "electricalEnergyJ": 444.753086419753,
+          "wheelEnergyBeforeJ": 0.2629656683710738,
+          "wheelEnergyAfterJ": 400.5407434461488,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 48033.33333333333,
+            "electricalPowerW": 53370.37037037036,
+            "mechanicalWorkJ": 400.2777777777777,
+            "electricalWorkJ": 444.753086419753,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0.1,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": true,
+          "speedMps": 0.1,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 0.2629656683710738,
+          "wheelEnergyAfterJ": 0.2629656683710738,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0.1,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": false,
+          "speedMps": 0.1,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 48033.33333333333,
+          "electricalPowerW": 53370.37037037036,
+          "electricalEnergyJ": 444.753086419753,
+          "wheelEnergyBeforeJ": 0.2629656683710738,
+          "wheelEnergyAfterJ": 400.5407434461488,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 48033.33333333333,
+            "electricalPowerW": 53370.37037037036,
+            "mechanicalWorkJ": 400.2777777777777,
+            "electricalWorkJ": 444.753086419753,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0.1,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": true,
+          "speedMps": 0.1,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 0.2629656683710738,
+          "wheelEnergyAfterJ": 0.2629656683710738,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 0.2702702702702703,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0.1,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": false,
+          "speedMps": 0.1,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 48033.33333333333,
+          "electricalPowerW": 53370.37037037036,
+          "electricalEnergyJ": 444.753086419753,
+          "wheelEnergyBeforeJ": 0.2629656683710738,
+          "wheelEnergyAfterJ": 400.5407434461488,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 10.548048048048047,
+              "slipRatio": null,
+              "drivePowerW": 12008.333333333332,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 48033.33333333333,
+            "electricalPowerW": 53370.37037037036,
+            "mechanicalWorkJ": 400.2777777777777,
+            "electricalWorkJ": 444.753086419753,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 0.1,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": true,
+          "speedMps": 8,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 1682.9802775748722,
+          "wheelEnergyAfterJ": 1682.9802775748722,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 8,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": false,
+          "speedMps": 8,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 237633.33333333337,
+          "electricalPowerW": 264037.0370370371,
+          "electricalEnergyJ": 2200.308641975309,
+          "wheelEnergyBeforeJ": 1682.9802775748722,
+          "wheelEnergyAfterJ": 3663.258055352652,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 237633.33333333337,
+            "electricalPowerW": 264037.0370370371,
+            "mechanicalWorkJ": 1980.277777777778,
+            "electricalWorkJ": 2200.308641975309,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 8,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": true,
+          "speedMps": 8,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 1682.9802775748722,
+          "wheelEnergyAfterJ": 1682.9802775748722,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 8,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": false,
+          "speedMps": 8,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 237633.33333333337,
+          "electricalPowerW": 264037.0370370371,
+          "electricalEnergyJ": 2200.308641975309,
+          "wheelEnergyBeforeJ": 1682.9802775748722,
+          "wheelEnergyAfterJ": 3663.258055352652,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 237633.33333333337,
+            "electricalPowerW": 264037.0370370371,
+            "mechanicalWorkJ": 1980.277777777778,
+            "electricalWorkJ": 2200.308641975309,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 8,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": true,
+          "speedMps": 8,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 1682.9802775748722,
+          "wheelEnergyAfterJ": 1682.9802775748722,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 8,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": false,
+          "speedMps": 8,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 237633.33333333337,
+          "electricalPowerW": 264037.0370370371,
+          "electricalEnergyJ": 2200.308641975309,
+          "wheelEnergyBeforeJ": 1682.9802775748722,
+          "wheelEnergyAfterJ": 3663.258055352652,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 237633.33333333337,
+            "electricalPowerW": 264037.0370370371,
+            "mechanicalWorkJ": 1980.277777777778,
+            "electricalWorkJ": 2200.308641975309,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 8,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": true,
+          "speedMps": 8,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 1682.9802775748722,
+          "wheelEnergyAfterJ": 1682.9802775748722,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 21.62162162162162,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 8,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": false,
+          "speedMps": 8,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8880,
+          "requestedTorqueNm": 8880,
+          "actualTorqueNm": 8880,
+          "mechanicalPowerW": 237633.33333333337,
+          "electricalPowerW": 264037.0370370371,
+          "electricalEnergyJ": 2200.308641975309,
+          "wheelEnergyBeforeJ": 1682.9802775748722,
+          "wheelEnergyAfterJ": 3663.258055352652,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2220,
+              "actualTorqueNm": 2220,
+              "omegaRadS": 31.899399399399407,
+              "slipRatio": null,
+              "drivePowerW": 59408.33333333334,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8880,
+            "requestedTorqueNm": 8880,
+            "postTcsTorqueNm": 8880,
+            "actualTorqueNm": 8880,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 237633.33333333337,
+            "electricalPowerW": 264037.0370370371,
+            "mechanicalWorkJ": 1980.277777777778,
+            "electricalWorkJ": 2200.308641975309,
+            "powerLimited": false,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 8,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": false,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333332,
+          "actualTorqueNm": 8158.288254614386,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29500.24348672996,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 8633.333333333332,
+            "postTcsTorqueNm": 8633.333333333332,
+            "actualTorqueNm": 8158.288254614386,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 1.3528168548280477e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": false,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333332,
+          "actualTorqueNm": 8158.288254614386,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29500.24348672996,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 8633.333333333332,
+            "postTcsTorqueNm": 8633.333333333332,
+            "actualTorqueNm": 8158.288254614386,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 1.3528168548280477e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": false,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333332,
+          "actualTorqueNm": 8158.288254614386,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29500.24348672996,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 8633.333333333332,
+            "postTcsTorqueNm": 8633.333333333332,
+            "actualTorqueNm": 8158.288254614386,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 1.3528168548280477e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": true,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 23666.91015339664,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 81.08108108108108,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": false,
+          "speedMps": 30,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 8633.333333333334,
+          "requestedTorqueNm": 8633.333333333332,
+          "actualTorqueNm": 8158.288254614386,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 23666.91015339664,
+          "wheelEnergyAfterJ": 29500.24348672996,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 2158.333333333333,
+              "actualTorqueNm": 2039.5720636535964,
+              "omegaRadS": 90.5235443387366,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 8633.333333333332,
+            "requestedTorqueNm": 8633.333333333332,
+            "postTcsTorqueNm": 8633.333333333332,
+            "actualTorqueNm": 8158.288254614386,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 30,
+            "brakeMechanicalWorkJ": 1.3528168548280477e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": true,
+          "speedMps": 60,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 4316.666666666667,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 94667.64061358655,
+          "wheelEnergyAfterJ": 94667.64061358655,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 4316.666666666666,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 60,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 4,
+          "tcs": false,
+          "speedMps": 60,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 4316.666666666667,
+          "requestedTorqueNm": 4316.666666666666,
+          "actualTorqueNm": 4252.142506918565,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 94667.64061358655,
+          "wheelEnergyAfterJ": 100500.97394691991,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 4316.666666666666,
+            "requestedTorqueNm": 4316.666666666666,
+            "postTcsTorqueNm": 4316.666666666666,
+            "actualTorqueNm": 4252.142506918565,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 60,
+            "brakeMechanicalWorkJ": 1.4607334624050252e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": true,
+          "speedMps": 60,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 4316.666666666667,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 94667.64061358655,
+          "wheelEnergyAfterJ": 94667.64061358655,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 4316.666666666666,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 60,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 3,
+          "tcs": false,
+          "speedMps": 60,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 4316.666666666667,
+          "requestedTorqueNm": 4316.666666666666,
+          "actualTorqueNm": 4252.142506918565,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 94667.64061358655,
+          "wheelEnergyAfterJ": 100500.97394691991,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 4316.666666666666,
+            "requestedTorqueNm": 4316.666666666666,
+            "postTcsTorqueNm": 4316.666666666666,
+            "actualTorqueNm": 4252.142506918565,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 60,
+            "brakeMechanicalWorkJ": 1.4607334624050252e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": true,
+          "speedMps": 60,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 4316.666666666667,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 94667.64061358655,
+          "wheelEnergyAfterJ": 94667.64061358655,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 4316.666666666666,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 60,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 2,
+          "tcs": false,
+          "speedMps": 60,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 4316.666666666667,
+          "requestedTorqueNm": 4316.666666666666,
+          "actualTorqueNm": 4252.142506918565,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 94667.64061358655,
+          "wheelEnergyAfterJ": 100500.97394691991,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 4316.666666666666,
+            "requestedTorqueNm": 4316.666666666666,
+            "postTcsTorqueNm": 4316.666666666666,
+            "actualTorqueNm": 4252.142506918565,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 60,
+            "brakeMechanicalWorkJ": 1.4607334624050252e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": true,
+          "speedMps": 60,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 4316.666666666667,
+          "requestedTorqueNm": 0,
+          "actualTorqueNm": 0,
+          "mechanicalPowerW": 0,
+          "electricalPowerW": 0,
+          "electricalEnergyJ": 0,
+          "wheelEnergyBeforeJ": 94667.64061358655,
+          "wheelEnergyAfterJ": 94667.64061358655,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 0,
+              "actualTorqueNm": 0,
+              "omegaRadS": 162.16216216216216,
+              "slipRatio": null,
+              "drivePowerW": 0,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 4316.666666666666,
+            "requestedTorqueNm": 0,
+            "postTcsTorqueNm": 0,
+            "actualTorqueNm": 0,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 0,
+            "electricalPowerW": 0,
+            "mechanicalWorkJ": 0,
+            "electricalWorkJ": 0,
+            "powerLimited": false,
+            "airbornePolicy": "unloaded-drive-cut",
+            "shares": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 60,
+            "brakeMechanicalWorkJ": 0,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        },
+        {
+          "grounded": 0,
+          "tcs": false,
+          "speedMps": 60,
+          "dt": 0.008333333333333333,
+          "omegaScale": 1,
+          "torqueBudgetNm": 4316.666666666667,
+          "requestedTorqueNm": 4316.666666666666,
+          "actualTorqueNm": 4252.142506918565,
+          "mechanicalPowerW": 699999.9999999999,
+          "electricalPowerW": 777777.7777777776,
+          "electricalEnergyJ": 6481.48148148148,
+          "wheelEnergyBeforeJ": 94667.64061358655,
+          "wheelEnergyAfterJ": 100500.97394691991,
+          "totalLongitudinalForceN": 0,
+          "wheels": [
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            },
+            {
+              "contact": false,
+              "normalLoadN": 0,
+              "requestedTorqueNm": 1079.1666666666665,
+              "actualTorqueNm": 1063.0356267296413,
+              "omegaRadS": 167.08362339702163,
+              "slipRatio": null,
+              "drivePowerW": 174999.99999999997,
+              "tcsFactor": 1
+            }
+          ],
+          "accounting": {
+            "torqueBudgetNm": 4316.666666666666,
+            "requestedTorqueNm": 4316.666666666666,
+            "postTcsTorqueNm": 4316.666666666666,
+            "actualTorqueNm": 4252.142506918565,
+            "mechanicalPowerLimitW": 700000,
+            "mechanicalPowerW": 699999.9999999999,
+            "electricalPowerW": 777777.7777777776,
+            "mechanicalWorkJ": 5833.333333333332,
+            "electricalWorkJ": 6481.48148148148,
+            "powerLimited": true,
+            "airbornePolicy": "equal-four-wheel-shares",
+            "shares": [
+              0.25,
+              0.25,
+              0.25,
+              0.25
+            ],
+            "corneringDriveScale": 1,
+            "corneringTractionActive": false,
+            "steeringSurfaceMu": 1.25,
+            "steeringSpeedMps": 60,
+            "brakeMechanicalWorkJ": 1.4607334624050252e-11,
+            "liftOffBrakeMechanicalWorkJ": 0,
+            "electricalRecoveredWorkJ": 0
+          }
+        }
+      ],
+      "physicalStepStress": [
+        {
+          "hz": 60,
+          "grounded": 4,
+          "omegaScale": 0.1,
+          "powerW": 156266.7181069958
+        },
+        {
+          "hz": 60,
+          "grounded": 4,
+          "omegaScale": 3,
+          "powerW": 699999.9999999998
+        },
+        {
+          "hz": 60,
+          "grounded": 3,
+          "omegaScale": 0.1,
+          "powerW": 156266.7181069958
+        },
+        {
+          "hz": 60,
+          "grounded": 3,
+          "omegaScale": 3,
+          "powerW": 699999.9999999998
+        },
+        {
+          "hz": 60,
+          "grounded": 2,
+          "omegaScale": 0.1,
+          "powerW": 156266.7181069958
+        },
+        {
+          "hz": 60,
+          "grounded": 2,
+          "omegaScale": 3,
+          "powerW": 699999.9999999998
+        },
+        {
+          "hz": 60,
+          "grounded": 0,
+          "omegaScale": 0.1,
+          "powerW": 156266.7181069958
+        },
+        {
+          "hz": 60,
+          "grounded": 0,
+          "omegaScale": 3,
+          "powerW": 699999.9999999998
+        },
+        {
+          "hz": 120,
+          "grounded": 4,
+          "omegaScale": 0.1,
+          "powerW": 113133.3590534979
+        },
+        {
+          "hz": 120,
+          "grounded": 4,
+          "omegaScale": 3,
+          "powerW": 699999.9999999999
+        },
+        {
+          "hz": 120,
+          "grounded": 3,
+          "omegaScale": 0.1,
+          "powerW": 113133.3590534979
+        },
+        {
+          "hz": 120,
+          "grounded": 3,
+          "omegaScale": 3,
+          "powerW": 699999.9999999999
+        },
+        {
+          "hz": 120,
+          "grounded": 2,
+          "omegaScale": 0.1,
+          "powerW": 113133.3590534979
+        },
+        {
+          "hz": 120,
+          "grounded": 2,
+          "omegaScale": 3,
+          "powerW": 699999.9999999999
+        },
+        {
+          "hz": 120,
+          "grounded": 0,
+          "omegaScale": 0.1,
+          "powerW": 113133.3590534979
+        },
+        {
+          "hz": 120,
+          "grounded": 0,
+          "omegaScale": 3,
+          "powerW": 699999.9999999999
+        },
+        {
+          "hz": 240,
+          "grounded": 4,
+          "omegaScale": 0.1,
+          "powerW": 91566.67952674897
+        },
+        {
+          "hz": 240,
+          "grounded": 4,
+          "omegaScale": 3,
+          "powerW": 700000
+        },
+        {
+          "hz": 240,
+          "grounded": 3,
+          "omegaScale": 0.1,
+          "powerW": 91566.67952674897
+        },
+        {
+          "hz": 240,
+          "grounded": 3,
+          "omegaScale": 3,
+          "powerW": 700000
+        },
+        {
+          "hz": 240,
+          "grounded": 2,
+          "omegaScale": 0.1,
+          "powerW": 91566.67952674897
+        },
+        {
+          "hz": 240,
+          "grounded": 2,
+          "omegaScale": 3,
+          "powerW": 700000
+        },
+        {
+          "hz": 240,
+          "grounded": 0,
+          "omegaScale": 0.1,
+          "powerW": 91566.67952674897
+        },
+        {
+          "hz": 240,
+          "grounded": 0,
+          "omegaScale": 3,
+          "powerW": 700000
+        }
+      ],
+      "policy": "TCS on: normalized load shares, zero drive torque for unloaded wheels. TCS off: 25% torque and power per wheel, including airborne spin. No redistribution of unused power within a substep.",
+      "limiter": "Analytic conservative midpoint-work bound from spin inertia and friction-circle contact torque; a small amount of rated power may remain unused."
+    },
+    "contactAndEnergy": {
+      "freeSpin": [
+        {
+          "sign": -1,
+          "hz": 60,
+          "shaftWorkJ": 2916.6666666666656,
+          "wheelEnergyIncreaseJ": 2916.666666666668,
+          "powerW": 174999.99999999994
+        },
+        {
+          "sign": -1,
+          "hz": 120,
+          "shaftWorkJ": 1458.333333333333,
+          "wheelEnergyIncreaseJ": 1458.333333333333,
+          "powerW": 174999.99999999997
+        },
+        {
+          "sign": -1,
+          "hz": 240,
+          "shaftWorkJ": 729.1666666666667,
+          "wheelEnergyIncreaseJ": 729.166666666667,
+          "powerW": 175000.00000000003
+        },
+        {
+          "sign": 1,
+          "hz": 60,
+          "shaftWorkJ": 2916.6666666666656,
+          "wheelEnergyIncreaseJ": 2916.666666666668,
+          "powerW": 174999.99999999994
+        },
+        {
+          "sign": 1,
+          "hz": 120,
+          "shaftWorkJ": 1458.333333333333,
+          "wheelEnergyIncreaseJ": 1458.333333333333,
+          "powerW": 174999.99999999997
+        },
+        {
+          "sign": 1,
+          "hz": 240,
+          "shaftWorkJ": 729.1666666666667,
+          "wheelEnergyIncreaseJ": 729.166666666667,
+          "powerW": 175000.00000000003
+        }
+      ],
+      "rigidBodyContactTransitions": [
+        {
+          "timeS": 0.008333333333333333,
+          "count": 4,
+          "wheelOmegaRadS": [
+            5.2440927734910785,
+            5.2440927734910785,
+            5.284300047230954,
+            5.284300047230954
+          ]
+        },
+        {
+          "timeS": 0.1,
+          "count": 2,
+          "wheelOmegaRadS": [
+            7.140428243847076,
+            7.140428243847076,
+            7.749604641850261,
+            7.749604641850261
+          ]
+        },
+        {
+          "timeS": 0.125,
+          "count": 0,
+          "wheelOmegaRadS": [
+            7.140428243847076,
+            7.140428243847076,
+            7.894150226604245,
+            7.894150226604245
+          ]
+        },
+        {
+          "timeS": 8.066666666666666,
+          "count": 2,
+          "wheelOmegaRadS": [
+            7.140428243847076,
+            7.140428243847076,
+            0,
+            0
+          ]
+        },
+        {
+          "timeS": 8.116666666666667,
+          "count": 4,
+          "wheelOmegaRadS": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "maxMechanicalPowerW": 23873.562183915532,
+      "maxTorqueBudgetExcessNm": 9.094947017729282e-13,
+      "motorElectricalJ": 2298.931487931079,
+      "shaftJ": 2069.0383391379714,
+      "auxiliaryPowerW": 800,
+      "limits": "The one-step partial-contact fixtures are deterministic load fixtures. This takeoff/landing trace is a separate full Cannon trajectory, not a curb-traversal claim. External gas compressor power is off-board."
+    },
+    "steering": {
+      "circlesAndStepResponse": [
+        {
+          "before": {
+            "initialSpeedMps": 8,
+            "steer": 1,
+            "seconds": 6,
+            "settledSpeedMps": 7.934311353870936,
+            "radiusM": 7.877656107671159,
+            "lateralAccelerationMps2": 7.991374058441341,
+            "yawRateRadS": 1.0071918912713906,
+            "yawAtHalfSecondRadS": 0.878080971185896,
+            "steeringCentreDeg": 21.065920904304836,
+            "bodySlipDeg": 6.476197819709442,
+            "peakBetaDeg": 6.569087036501381,
+            "peakLateralAcceleration": 8.002704951928363,
+            "maxGrip": 0.8701010675134726,
+            "minContacts": 4
+          },
+          "after": {
+            "initialSpeedMps": 8,
+            "steer": 1,
+            "seconds": 6,
+            "settledSpeedMps": 7.9044319407505,
+            "radiusM": 7.18554371225076,
+            "lateralAccelerationMps2": 8.695242393339472,
+            "yawRateRadS": 1.1000464623538642,
+            "yawAtHalfSecondRadS": 1.0256903968740456,
+            "steeringCentreDeg": 23.206268345520982,
+            "bodySlipDeg": 6.925136063912102,
+            "peakBetaDeg": 7.904098893275382,
+            "peakLateralAcceleration": 9.076848695287437,
+            "maxGrip": 0.9684465823420434,
+            "minContacts": 4
+          }
+        },
+        {
+          "before": {
+            "initialSpeedMps": 15,
+            "steer": 1,
+            "seconds": 6,
+            "settledSpeedMps": 14.861769968718823,
+            "radiusM": 25.954337428968696,
+            "lateralAccelerationMps2": 8.510030633900454,
+            "yawRateRadS": 0.572612188979673,
+            "yawAtHalfSecondRadS": 0.507442912580919,
+            "steeringCentreDeg": 6.670895948860259,
+            "bodySlipDeg": -0.9112237844617924,
+            "peakBetaDeg": 0.9112239561854872,
+            "peakLateralAcceleration": 8.51003109509409,
+            "maxGrip": 0.7700095671100504,
+            "minContacts": 4
+          },
+          "after": {
+            "initialSpeedMps": 15,
+            "steer": 1,
+            "seconds": 6,
+            "settledSpeedMps": 14.815072217129364,
+            "radiusM": 23.222799958564487,
+            "lateralAccelerationMps2": 9.4513308124076,
+            "yawRateRadS": 0.6379537456104908,
+            "yawAtHalfSecondRadS": 0.5973248191537137,
+            "steeringCentreDeg": 7.574191223332217,
+            "bodySlipDeg": -1.3313614125750421,
+            "peakBetaDeg": 1.3313775289152678,
+            "peakLateralAcceleration": 9.451332349542524,
+            "maxGrip": 0.8540930823291015,
+            "minContacts": 4
+          }
+        },
+        {
+          "before": {
+            "initialSpeedMps": 25,
+            "steer": 1,
+            "seconds": 6,
+            "settledSpeedMps": 24.861517590674044,
+            "radiusM": 71.63876261322154,
+            "lateralAccelerationMps2": 8.627941555167515,
+            "yawRateRadS": 0.34704001972928605,
+            "yawAtHalfSecondRadS": 0.2984582217564294,
+            "steeringCentreDeg": 2.620763422949023,
+            "bodySlipDeg": -2.874439800320706,
+            "peakBetaDeg": 2.8744412348349626,
+            "peakLateralAcceleration": 8.627942475971118,
+            "maxGrip": 0.7635650464183414,
+            "minContacts": 4
+          },
+          "after": {
+            "initialSpeedMps": 25,
+            "steer": 1,
+            "seconds": 6,
+            "settledSpeedMps": 24.826398321488416,
+            "radiusM": 64.08438547254963,
+            "lateralAccelerationMps2": 9.617788312586914,
+            "yawRateRadS": 0.38740167575021434,
+            "yawAtHalfSecondRadS": 0.36384200575859776,
+            "steeringCentreDeg": 3.0396897871313033,
+            "bodySlipDeg": -3.5525277109466784,
+            "peakBetaDeg": 3.5546343451434663,
+            "peakLateralAcceleration": 9.72880143954018,
+            "maxGrip": 0.8483868603907834,
+            "minContacts": 4
+          }
+        },
+        {
+          "before": {
+            "initialSpeedMps": 40,
+            "steer": 1,
+            "seconds": 6,
+            "settledSpeedMps": 39.85089273453914,
+            "radiusM": 194.7208896994943,
+            "lateralAccelerationMps2": 8.155743609176657,
+            "yawRateRadS": 0.20465648444827658,
+            "yawAtHalfSecondRadS": 0.18315783811674935,
+            "steeringCentreDeg": 1.2118272219700221,
+            "bodySlipDeg": -3.126249485642566,
+            "peakBetaDeg": 3.1703904776638896,
+            "peakLateralAcceleration": 8.708539770348084,
+            "maxGrip": 0.7177549696509723,
+            "minContacts": 4
+          },
+          "after": {
+            "initialSpeedMps": 40,
+            "steer": 1,
+            "seconds": 6,
+            "settledSpeedMps": 39.83316016444632,
+            "radiusM": 173.18871646724065,
+            "lateralAccelerationMps2": 9.161570574883152,
+            "yawRateRadS": 0.22999858753489244,
+            "yawAtHalfSecondRadS": 0.23828358777628417,
+            "steeringCentreDeg": 1.4716266998238536,
+            "bodySlipDeg": -3.7638384382242975,
+            "peakBetaDeg": 3.9368731414236144,
+            "peakLateralAcceleration": 10.577967800964272,
+            "maxGrip": 0.8188168351673012,
+            "minContacts": 4
+          }
+        }
+      ],
+      "cityBend": {
+        "before": {
+          "world": "complete-authored-city",
+          "intersection": "weave-main / crosstown-link",
+          "cornerRadiusM": 12,
+          "requestedSpeedMps": 11,
+          "finished": true,
+          "elapsedS": 10.425,
+          "maxCrossTrackErrorM": 2.2454887955246576,
+          "meanCrossTrackErrorM": 0.38709722714920036,
+          "hullImpactSteps": 0,
+          "minContacts": 4,
+          "maxGrip": 0.7777910338905746,
+          "peakSlipDeg": 1.8876751751260523,
+          "finalPosition": {
+            "x": -133.10872075202548,
+            "y": 0.5970090575151477,
+            "z": -132.49919046724906
+          }
+        },
+        "after": {
+          "world": "complete-authored-city",
+          "intersection": "weave-main / crosstown-link",
+          "cornerRadiusM": 12,
+          "requestedSpeedMps": 11,
+          "finished": true,
+          "elapsedS": 10.341666666666667,
+          "maxCrossTrackErrorM": 0.9637086704517484,
+          "meanCrossTrackErrorM": 0.20811521068041397,
+          "hullImpactSteps": 0,
+          "minContacts": 4,
+          "maxGrip": 0.8585658748202265,
+          "peakSlipDeg": 2.0757100278346474,
+          "finalPosition": {
+            "x": -133.0762353622741,
+            "y": 0.5970090633949838,
+            "z": -132.4999931121632
+          }
+        }
+      },
+      "unchangedTireMu": 1.25,
+      "changes": "Input-side lateral reference 0.9→1.0 g; inverse tanh lateral-slip compensation; steering lag 0.16→0.10 s and rack rate 1.25→1.8 rad/s. No direct pose/yaw writes, grip increase or yaw-force assist.",
+      "tradeoff": "A stronger full-key steering request causes more body slip; the high-speed radius remains constrained by tire force. The city test driver is confined to numerical validation and is not a gameplay shortcut."
+    },
+    "verticalResponse": {
+      "runs": [
+        {
+          "level": false,
+          "climbRateMps": 0.5,
+          "ascentAt5sMps": 0.4992108188965664,
+          "heightAtReleaseM": 42.231572349735025,
+          "heightAfterBrakingM": 42.34540650728332,
+          "settledVerticalMps": 0.0002488441684088699,
+          "descentFirstContact": {
+            "timeS": 8.9,
+            "verticalSpeedMps": -0.28780102229055315
+          },
+          "peakDescentMps": 0.6155720904453806
+        },
+        {
+          "level": false,
+          "climbRateMps": 3,
+          "ascentAt5sMps": 2.9946190810916566,
+          "heightAtReleaseM": 53.548136352231346,
+          "heightAfterBrakingM": 54.612803652234135,
+          "settledVerticalMps": 0.0004622292136872336,
+          "descentFirstContact": {
+            "timeS": 2.1666666666666665,
+            "verticalSpeedMps": -0.5516133180519587
+          },
+          "peakDescentMps": 2.9406560689886647
+        },
+        {
+          "level": false,
+          "climbRateMps": 8,
+          "ascentAt5sMps": 7.978034783067783,
+          "heightAtReleaseM": 72.39297293152791,
+          "heightAfterBrakingM": 78.95516134656725,
+          "settledVerticalMps": 0.0010952793283968475,
+          "descentFirstContact": {
+            "timeS": 2,
+            "verticalSpeedMps": -0.5886949944296996
+          },
+          "peakDescentMps": 3.5215414850323006
+        },
+        {
+          "level": true,
+          "climbRateMps": 0.5,
+          "ascentAt5sMps": 0.49916304802993156,
+          "heightAtReleaseM": 42.215619845484696,
+          "heightAfterBrakingM": 42.33942977421995,
+          "settledVerticalMps": -0.000035897164769411045,
+          "descentFirstContact": {
+            "timeS": 8.891666666666667,
+            "verticalSpeedMps": -0.29124481912293365
+          },
+          "peakDescentMps": 0.6157989337497269
+        },
+        {
+          "level": true,
+          "climbRateMps": 3,
+          "ascentAt5sMps": 2.994293714241322,
+          "heightAtReleaseM": 53.52364228912093,
+          "heightAfterBrakingM": 54.61353268028552,
+          "settledVerticalMps": -0.0001307398024594976,
+          "descentFirstContact": {
+            "timeS": 2.1333333333333333,
+            "verticalSpeedMps": -0.6226296292994807
+          },
+          "peakDescentMps": 2.929334196834826
+        },
+        {
+          "level": true,
+          "climbRateMps": 8,
+          "ascentAt5sMps": 7.976707822286468,
+          "heightAtReleaseM": 72.365875416217,
+          "heightAfterBrakingM": 78.95271475641042,
+          "settledVerticalMps": -0.0008789682837957693,
+          "descentFirstContact": {
+            "timeS": 1.9583333333333333,
+            "verticalSpeedMps": -0.6723757751793719
+          },
+          "peakDescentMps": 3.5027461755258695
+        }
+      ],
+      "units": "World vertical velocity m/s; requested command is independent of button hold duration.",
+      "defaultMps": 5,
+      "rangeMps": [
+        0.5,
+        14
+      ],
+      "normalAccelerationRequestLimitMps2": 5,
+      "release": "Finite force brakes velocity toward zero, then captures the achieved stop height.",
+      "landing": "Descent reference uses the selected acceleration within real upright braking authority, 0.4 s feedback/valve allowance and a low-speed contact approach; contact still physically decides touchdown.",
+      "insufficientThrust": {
+        "ratedLiftN": 16000,
+        "requestedVelocityMps": 8,
+        "actualVelocityMps": -1.5637448537080896,
+        "limited": true
+      }
+    },
+    "levelRecovery": {
+      "poseAndWrapCases": [
+        {
+          "pitchDeg": 0,
+          "rollDeg": 0,
+          "headingDeg": 0,
+          "gesture": {
+            "roll": 1
+          },
+          "gestureSeconds": 0.7,
+          "suctionArmed": false,
+          "before": {
+            "pitchDeg": -0.15338537003633787,
+            "rollDeg": -102.3622330717046,
+            "heightM": 129.46014246785546,
+            "headingDeg": 359.881699155068
+          },
+          "after": {
+            "pitchDeg": -0.0012922430623040105,
+            "rollDeg": 0.001115426906595114,
+            "heightM": 129.99959130054853,
+            "headingDeg": 359.8816992039053,
+            "verticalSpeedMps": 0.00029394489921453327,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 127.43171176564813,
+          "maxRate": 2.8261624720721503,
+          "maxForceRatio": 0.9855529501444462,
+          "firstLevelTimeS": 1.6333333333333333,
+          "contact": false,
+          "limitedSteps": 69,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0.0017272866375134877,
+            "headingTargetRad": -0.002064739251954438,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        },
+        {
+          "pitchDeg": 0,
+          "rollDeg": 0,
+          "headingDeg": 0,
+          "gesture": {
+            "roll": -1
+          },
+          "gestureSeconds": 0.7,
+          "suctionArmed": false,
+          "before": {
+            "pitchDeg": -0.17254338060669505,
+            "rollDeg": 102.36487280702248,
+            "heightM": 129.45999263452836,
+            "headingDeg": 0.1349542026679842
+          },
+          "after": {
+            "pitchDeg": -0.0012941985235436224,
+            "rollDeg": -0.0011156380689498887,
+            "heightM": 129.99959114747585,
+            "headingDeg": 0.13495415361848018,
+            "verticalSpeedMps": 0.0002941844045855771,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 127.43125039630021,
+          "maxRate": 2.8262242677371674,
+          "maxForceRatio": 0.98557354869149,
+          "firstLevelTimeS": 1.6333333333333333,
+          "contact": false,
+          "limitedSteps": 69,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0.0017289257843336363,
+            "headingTargetRad": 0.0023553951759603307,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        },
+        {
+          "pitchDeg": 0,
+          "rollDeg": 0,
+          "headingDeg": 0,
+          "gesture": {
+            "pitch": 1
+          },
+          "gestureSeconds": 0.7,
+          "suctionArmed": false,
+          "before": {
+            "pitchDeg": 43.0489707284536,
+            "rollDeg": 0.0021425293992997107,
+            "heightM": 129.885718967259,
+            "headingDeg": 359.9982290062225
+          },
+          "after": {
+            "pitchDeg": 9.367131436752486e-9,
+            "rollDeg": 6.230959432965835e-12,
+            "heightM": 129.99980831783776,
+            "headingDeg": 359.99822900597707,
+            "verticalSpeedMps": 0.000006622371596407409,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 129.84824276819697,
+          "maxRate": 1.0108953853469465,
+          "maxForceRatio": 0.7544929289279518,
+          "firstLevelTimeS": 1.6666666666666667,
+          "contact": false,
+          "limitedSteps": 37,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0,
+            "headingTargetRad": -0.00003090967244911316,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        },
+        {
+          "pitchDeg": 0,
+          "rollDeg": 0,
+          "headingDeg": 0,
+          "gesture": {
+            "pitch": -1
+          },
+          "gestureSeconds": 0.7,
+          "suctionArmed": false,
+          "before": {
+            "pitchDeg": -43.0489619313588,
+            "rollDeg": 0.004148882151660669,
+            "heightM": 129.88571880781498,
+            "headingDeg": 0.0020793504873495294
+          },
+          "after": {
+            "pitchDeg": -9.367014640366639e-9,
+            "rollDeg": 5.0322443711738075e-12,
+            "heightM": 129.99980831785462,
+            "headingDeg": 0.002079350728592999,
+            "verticalSpeedMps": 0.0000066222695703755766,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 129.84824246556755,
+          "maxRate": 1.0108944937537685,
+          "maxForceRatio": 0.7544929247244717,
+          "firstLevelTimeS": 1.6666666666666667,
+          "contact": false,
+          "limitedSteps": 37,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0,
+            "headingTargetRad": 0.000036291512306741594,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        },
+        {
+          "pitchDeg": 0,
+          "rollDeg": 179,
+          "headingDeg": 179,
+          "gesture": null,
+          "gestureSeconds": 0.7,
+          "suctionArmed": false,
+          "before": {
+            "pitchDeg": -3.1060104311167156e-18,
+            "rollDeg": 179.01917055847048,
+            "heightM": 129.682078481421,
+            "headingDeg": 179
+          },
+          "after": {
+            "pitchDeg": -1.8195287350143144e-7,
+            "rollDeg": -0.0004700348975384119,
+            "heightM": 129.99978830872644,
+            "headingDeg": 179.00000000615307,
+            "verticalSpeedMps": 0.0004895726125571564,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 121.54496261019318,
+          "maxRate": 4.849772390138631,
+          "maxForceRatio": 0.9892551105085285,
+          "firstLevelTimeS": 1.825,
+          "contact": false,
+          "limitedSteps": 94,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0.0004756699324801707,
+            "headingTargetRad": 3.12413936106985,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        },
+        {
+          "pitchDeg": 0,
+          "rollDeg": -179,
+          "headingDeg": -179,
+          "gesture": null,
+          "gestureSeconds": 0.7,
+          "suctionArmed": false,
+          "before": {
+            "pitchDeg": -3.1060104311167156e-18,
+            "rollDeg": -179.01917055847048,
+            "heightM": 129.682078481421,
+            "headingDeg": 181
+          },
+          "after": {
+            "pitchDeg": -1.8240399643419746e-7,
+            "rollDeg": 0.0004700283706545317,
+            "heightM": 129.99978830739798,
+            "headingDeg": 180.99999999384184,
+            "verticalSpeedMps": 0.0004895745542577621,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 121.54497021430596,
+          "maxRate": 4.849772480843393,
+          "maxForceRatio": 0.9892564403343613,
+          "firstLevelTimeS": 1.825,
+          "contact": false,
+          "limitedSteps": 94,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0.000475663036508765,
+            "headingTargetRad": -3.12413936106985,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        },
+        {
+          "pitchDeg": 89,
+          "rollDeg": 0,
+          "headingDeg": 179,
+          "gesture": null,
+          "gestureSeconds": 0.7,
+          "suctionArmed": false,
+          "before": {
+            "pitchDeg": 89.00000000000048,
+            "rollDeg": 0,
+            "heightM": 129.8019858090321,
+            "headingDeg": 179
+          },
+          "after": {
+            "pitchDeg": 2.0568304593283988e-7,
+            "rollDeg": 1.8303410030885247e-10,
+            "heightM": 129.99983647190493,
+            "headingDeg": 179.00026926146688,
+            "verticalSpeedMps": -0.000040419489419505235,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 128.4503827817354,
+          "maxRate": 1.9821610603817363,
+          "maxForceRatio": 0.9732986428279407,
+          "firstLevelTimeS": 1.9666666666666666,
+          "contact": false,
+          "limitedSteps": 84,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0,
+            "headingTargetRad": 3.12413936106985,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        },
+        {
+          "pitchDeg": 0,
+          "rollDeg": 0,
+          "headingDeg": 0,
+          "gesture": {
+            "roll": 1
+          },
+          "gestureSeconds": 0.7,
+          "suctionArmed": true,
+          "before": {
+            "pitchDeg": -0.15338537003633787,
+            "rollDeg": -102.3622330717046,
+            "heightM": 129.46014246785546,
+            "headingDeg": 359.881699155068
+          },
+          "after": {
+            "pitchDeg": -0.018635876443036735,
+            "rollDeg": 0.019052373699679166,
+            "heightM": 129.99662028957204,
+            "headingDeg": 359.8817055273486,
+            "verticalSpeedMps": 0.004673553508934088,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 127.43171176564813,
+          "maxRate": 2.8261624720721503,
+          "maxForceRatio": 0.9855529501444462,
+          "firstLevelTimeS": 1.6333333333333333,
+          "contact": false,
+          "limitedSteps": 69,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0.026931803511219064,
+            "headingTargetRad": -0.002064739251954438,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        }
+      ],
+      "armedSuctionRegression": {
+        "before": {
+          "pitchDeg": 0,
+          "rollDeg": 0,
+          "headingDeg": 0,
+          "gesture": {
+            "roll": 1
+          },
+          "gestureSeconds": 0.7,
+          "suctionArmed": true,
+          "before": {
+            "pitchDeg": -0.04170943053411845,
+            "rollDeg": -52.52167413961118,
+            "heightM": 129.93696855693332,
+            "headingDeg": 359.9602330053471
+          },
+          "after": {
+            "pitchDeg": 0.06825123245087374,
+            "rollDeg": -39.672063134497556,
+            "heightM": 114.96174408797168,
+            "headingDeg": 359.83988401750753,
+            "verticalSpeedMps": -3.5679300499199713,
+            "sealQuality": 0,
+            "stabilizationActive": false
+          },
+          "setterMovedBody": false,
+          "minHeight": 114.96174408797168,
+          "maxRate": 0.4467122923287684,
+          "maxForceRatio": 0.9999999999999997,
+          "firstLevelTimeS": null,
+          "contact": false,
+          "limitedSteps": 0,
+          "levelRecovery": null
+        },
+        "after": {
+          "pitchDeg": 0,
+          "rollDeg": 0,
+          "headingDeg": 0,
+          "gesture": {
+            "roll": 1
+          },
+          "gestureSeconds": 0.7,
+          "suctionArmed": true,
+          "before": {
+            "pitchDeg": -0.15338537003633787,
+            "rollDeg": -102.3622330717046,
+            "heightM": 129.46014246785546,
+            "headingDeg": 359.881699155068
+          },
+          "after": {
+            "pitchDeg": -0.018635876443036735,
+            "rollDeg": 0.019052373699679166,
+            "heightM": 129.99662028957204,
+            "headingDeg": 359.8817055273486,
+            "verticalSpeedMps": 0.004673553508934088,
+            "sealQuality": 0,
+            "stabilizationActive": true
+          },
+          "setterMovedBody": false,
+          "minHeight": 127.43171176564813,
+          "maxRate": 2.8261624720721503,
+          "maxForceRatio": 0.9855529501444462,
+          "firstLevelTimeS": 1.6333333333333333,
+          "contact": false,
+          "limitedSteps": 69,
+          "levelRecovery": {
+            "active": true,
+            "status": "level",
+            "tiltErrorDeg": 0.026931803511219064,
+            "headingTargetRad": -0.002064739251954438,
+            "verticalSupportFeasible": true,
+            "torqueSaturated": false
+          }
+        }
+      },
+      "realAdhesion": {
+        "sealQuality": 0.975680909297279,
+        "rollDeg": -180,
+        "jetThrustN": 0,
+        "status": "surface"
+      },
+      "insufficientLiftStatus": "limited",
+      "diagnosis": "Ordinary unsealed/off-F 3.8 numerical cases already levelled. The reproduced defect was suctionEnabled alone suppressing G at zero seal. A real sealed surface still suppresses aerial recovery. No body pose is assigned by G."
+    },
+    "repeatability": {
+      "displayHz": [
+        30,
+        60,
+        144,
+        240
+      ],
+      "fixedPhysicalHz": 120,
+      "comparedSteps": 240,
+      "completeSnapshotEqual": true,
+      "seed": 3901,
+      "measurementDelayMs": 25,
+      "fault": {
+        "id": "lift-FR",
+        "scale": 0.8
+      },
+      "initialReleaseBraking": true
+    },
+    "thrustAuthority": {
+      "massKg": 2199.5582002848946,
+      "weightN": 21577.66594479482,
+      "pressureBar": 350,
+      "regulatorBar": 50,
+      "liftMaxN": 80000,
+      "hoverThrustRatio": 3.7075372380254317,
+      "hoverReserveN": 58422.33405520518,
+      "bodyUpDot": 1,
+      "verticalForceUpperBoundN": 80000,
+      "verticalForceReserveUpperBoundN": 58422.33405520518,
+      "positiveTorqueUpperNm": {
+        "x": 56800,
+        "y": 15620,
+        "z": 26020
+      },
+      "negativeTorqueLowerNm": {
+        "x": -56800,
+        "y": -15620,
+        "z": -26020
+      },
+      "currentPoseTrimFeasible": true,
+      "levelTargetTrimFeasible": true,
+      "currentPoseTrim": {
+        "staticFeasible": true,
+        "method": "bounded-symmetric-wrench-interval-v1",
+        "requestedWrench": [
+          0,
+          21577.66594479482,
+          0,
+          0,
+          0,
+          0
+        ],
+        "achievedWrench": [
+          0,
+          21577.66594479482,
+          0,
+          0,
+          0,
+          0
+        ],
+        "residualWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forceResidualN": 0,
+        "torqueResidualNm": 0,
+        "tolerances": {
+          "forceN": 0.05,
+          "torqueNm": 0.05,
+          "boundN": 1e-7
+        },
+        "diagonalIntervalN": {
+          "minimum": 0,
+          "maximum": 10788.83297239741
+        },
+        "nozzles": [
+          {
+            "id": "lift-FR",
+            "forceN": 5394.416486198705,
+            "maximumN": 20000,
+            "remainingIncreaseN": 14605.583513801295,
+            "remainingDecreaseN": 5394.416486198705,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "lift-FL",
+            "forceN": 5394.416486198705,
+            "maximumN": 20000,
+            "remainingIncreaseN": 14605.583513801295,
+            "remainingDecreaseN": 5394.416486198705,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "lift-RR",
+            "forceN": 5394.416486198705,
+            "maximumN": 20000,
+            "remainingIncreaseN": 14605.583513801295,
+            "remainingDecreaseN": 5394.416486198705,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "lift-RL",
+            "forceN": 5394.416486198705,
+            "maximumN": 20000,
+            "remainingIncreaseN": 14605.583513801295,
+            "remainingDecreaseN": 5394.416486198705,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "roll-FR",
+            "forceN": 0,
+            "maximumN": 5500,
+            "remainingIncreaseN": 5500,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "roll-FL",
+            "forceN": 0,
+            "maximumN": 5500,
+            "remainingIncreaseN": 5500,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "roll-RR",
+            "forceN": 0,
+            "maximumN": 5500,
+            "remainingIncreaseN": 5500,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "roll-RL",
+            "forceN": 0,
+            "maximumN": 5500,
+            "remainingIncreaseN": 5500,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "rear-boost",
+            "forceN": 0,
+            "maximumN": 11000,
+            "remainingIncreaseN": 11000,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "front-brake",
+            "forceN": 0,
+            "maximumN": 11000,
+            "remainingIncreaseN": 11000,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          }
+        ],
+        "saturatedNozzles": [],
+        "dynamicRecovery": "not-evaluated",
+        "reserve": null,
+        "scope": "zero velocity, zero angular velocity, gravity wrench only; no aerodynamic, valve-lag or transient recovery certificate"
+      },
+      "levelTargetTrim": {
+        "staticFeasible": true,
+        "method": "bounded-symmetric-wrench-interval-v1",
+        "requestedWrench": [
+          0,
+          21577.66594479482,
+          0,
+          0,
+          0,
+          0
+        ],
+        "achievedWrench": [
+          0,
+          21577.66594479482,
+          0,
+          0,
+          0,
+          0
+        ],
+        "residualWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forceResidualN": 0,
+        "torqueResidualNm": 0,
+        "tolerances": {
+          "forceN": 0.05,
+          "torqueNm": 0.05,
+          "boundN": 1e-7
+        },
+        "diagonalIntervalN": {
+          "minimum": 0,
+          "maximum": 10788.83297239741
+        },
+        "nozzles": [
+          {
+            "id": "lift-FR",
+            "forceN": 5394.416486198705,
+            "maximumN": 20000,
+            "remainingIncreaseN": 14605.583513801295,
+            "remainingDecreaseN": 5394.416486198705,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "lift-FL",
+            "forceN": 5394.416486198705,
+            "maximumN": 20000,
+            "remainingIncreaseN": 14605.583513801295,
+            "remainingDecreaseN": 5394.416486198705,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "lift-RR",
+            "forceN": 5394.416486198705,
+            "maximumN": 20000,
+            "remainingIncreaseN": 14605.583513801295,
+            "remainingDecreaseN": 5394.416486198705,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "lift-RL",
+            "forceN": 5394.416486198705,
+            "maximumN": 20000,
+            "remainingIncreaseN": 14605.583513801295,
+            "remainingDecreaseN": 5394.416486198705,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "roll-FR",
+            "forceN": 0,
+            "maximumN": 5500,
+            "remainingIncreaseN": 5500,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "roll-FL",
+            "forceN": 0,
+            "maximumN": 5500,
+            "remainingIncreaseN": 5500,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "roll-RR",
+            "forceN": 0,
+            "maximumN": 5500,
+            "remainingIncreaseN": 5500,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "roll-RL",
+            "forceN": 0,
+            "maximumN": 5500,
+            "remainingIncreaseN": 5500,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "rear-boost",
+            "forceN": 0,
+            "maximumN": 11000,
+            "remainingIncreaseN": 11000,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          },
+          {
+            "id": "front-brake",
+            "forceN": 0,
+            "maximumN": 11000,
+            "remainingIncreaseN": 11000,
+            "remainingDecreaseN": 0,
+            "disabled": false,
+            "saturated": false
+          }
+        ],
+        "saturatedNozzles": [],
+        "dynamicRecovery": "not-evaluated",
+        "reserve": null,
+        "scope": "zero velocity, zero angular velocity, gravity wrench only; no aerodynamic, valve-lag or transient recovery certificate"
+      },
+      "allocationResidual": 0,
+      "saturatedNozzles": [],
+      "boundMeaning": "independent-axis bounds; not simultaneously achievable, valve lag and allocation coupling remain",
+      "gasInitialMassKg": 249.55820028489444,
+      "dryMassKg": 1950,
+      "gasTemperatureK": 293.15,
+      "exhaustVelocityMps": 566.6500769168936,
+      "hoverMassFlowKgS": 38.0793488323473,
+      "allMainNozzlesFlowKgS": 141.18060379568786,
+      "finiteHoverBudgetS": 5.385219990492912,
+      "staticPureRollLimitDeg": 30.649601019849797,
+      "staticPurePitchLimitDeg": 30.64960101952238,
+      "inertiaKgm2": {
+        "x": 3497.2975384529827,
+        "y": 4135.169416535602,
+        "z": 945.8100261225047
+      },
+      "ratedNozzles": [
+        {
+          "id": "lift-FR",
+          "position": {
+            "x": -0.59,
+            "y": -0.32,
+            "z": 1.42
+          },
+          "direction": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "ratedForceN": 20000
+        },
+        {
+          "id": "lift-FL",
+          "position": {
+            "x": 0.59,
+            "y": -0.32,
+            "z": 1.42
+          },
+          "direction": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "ratedForceN": 20000
+        },
+        {
+          "id": "lift-RR",
+          "position": {
+            "x": -0.59,
+            "y": -0.32,
+            "z": -1.42
+          },
+          "direction": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "ratedForceN": 20000
+        },
+        {
+          "id": "lift-RL",
+          "position": {
+            "x": 0.59,
+            "y": -0.32,
+            "z": -1.42
+          },
+          "direction": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "ratedForceN": 20000
+        },
+        {
+          "id": "roll-FR",
+          "position": {
+            "x": -0.89,
+            "y": -0.22,
+            "z": 1.42
+          },
+          "direction": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "ratedForceN": 5500
+        },
+        {
+          "id": "roll-FL",
+          "position": {
+            "x": 0.89,
+            "y": -0.22,
+            "z": 1.42
+          },
+          "direction": {
+            "x": -1,
+            "y": 0,
+            "z": 0
+          },
+          "ratedForceN": 5500
+        },
+        {
+          "id": "roll-RR",
+          "position": {
+            "x": -0.89,
+            "y": -0.22,
+            "z": -1.42
+          },
+          "direction": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "ratedForceN": 5500
+        },
+        {
+          "id": "roll-RL",
+          "position": {
+            "x": 0.89,
+            "y": -0.22,
+            "z": -1.42
+          },
+          "direction": {
+            "x": -1,
+            "y": 0,
+            "z": 0
+          },
+          "ratedForceN": 5500
+        },
+        {
+          "id": "rear-boost",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": -2.07
+          },
+          "direction": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "ratedForceN": 11000
+        },
+        {
+          "id": "front-brake",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 2.07
+          },
+          "direction": {
+            "x": 0,
+            "y": 0,
+            "z": -1
+          },
+          "ratedForceN": 11000
+        }
+      ],
+      "classification": "All installed masses, inertias, nozzle layout and force ceilings are explicit engineering/playable-lab hypotheses. The gas law and nozzle thermodynamic relation are physics-based; no Tesla actuator calibration has been identified."
+    }
+  },
+  "limits": [
+    "Numerical physics and control validation only; no GPU-rendered driving feel, visuals or device FPS claim.",
+    "Rated thrust is deliberately unchanged. Finite gas, valve lag, asymmetric actuator failure, unilateral lift and coupled allocation remain physical limitations.",
+    "ABS is not ESC. The drive-power repair does not retune ABS to guarantee universal shorter stopping distances."
+  ]
+}
