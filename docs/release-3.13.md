@@ -82,6 +82,20 @@ G恢复网格就绪文案按真实10Hz显示，完成/取消/错误结果不会�
 
 公开提交和原站实际部署的最终对应关系由 [deployment.json](https://windscode.github.io/roadster-flight-lab/deployment.json) 提供；发布完成前不预写成功。在线校验须同时核对modelVersion、modelBuildId、sourceCommit与sourceTree。
 
+### 已发布版本的浏览器复核
+
+功能提交 [`1dde9a3df081297978d7cc98409be86bcc6daa23`](https://github.com/Windscode/roadster-flight-lab/commit/1dde9a3df081297978d7cc98409be86bcc6daa23) 正常快进接续3.12；[原Pages工作流39387877160](https://github.com/Windscode/roadster-flight-lab/actions/runs/39387877160) 的build和deploy均成功。线上`deployment.json`实际返回同一提交、树`1833c38ea50a24ae6350ec1c88de78660bc6e388`及上述模型构建。
+
+在已部署网页通过原生Worker执行了一条新的有限储气X研究：平地静置、无风、600L、350bar、20秒窗口。独立持续稳定着陆判据为**4.325秒**，最高CG为**3.907398m**，完整旋转360°，首次轮胎承载约3.500秒；20秒末耗气**157.681835kg**、余气**91.876365kg**，车壳接触样本0。这里的全窗口耗气与上文“内部完成时”的耗气统计终点不同。400行20Hz曲线与全部120Hz统计由页面原样导出到[线上研究包](../qa/live-browser-x-3.13.json)。
+
+已发布同源重算与浏览器结果匹配，比较17,402个数值，最大绝对差1.82e−11、按max(1,|a|,|b|)归一的最大差4.44e−14；不是逐位相同。复核命令：`node qa/verify-live-browser-3.13.mjs`。原16条3.12研究记录保留，新增后17条；刷新后仍保留，并在中英界面明确显示当前配置已完成。初始G网格就绪行已现场核实为10Hz。
+
+[浏览器回执](../qa/live-browser-3.13.json)保存来源、哈希、实际GPU错误和统计口径。以下是**实际3.13研究界面**，不是三维场景后图：
+
+![3.13已部署网页中的有限储气X研究与完成状态](../qa/screenshots/3.13/live-x-study-en.jpg)
+
+该次浏览器仍返回`GL_VENDOR = Disabled`、`GL_RENDERER = Disabled`和`BindToCurrentSequence failed`。以上结果不能替代目标GPU链接、缺绘修复后图、车身材质或驾驶帧时验收。此追加仅保存线上证据，不修改生产模型。
+
 ## 6. 最少本地补采
 
 1. 主城1280×720，进入“渲染完整性诊断”，执行“高 / 极高切换检查 + 原始帧 ZIP”；自动采晴天/湿夜、反复切档、桥下和车辆，共14张PNG及具名program数据。
