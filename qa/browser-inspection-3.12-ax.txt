@@ -1,0 +1,88 @@
+Browser tab: 4, Title: "Roadster · 50 mm surface inspection", URL: "https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html".
+1 AXWebArea Roadster · 50 mm surface inspection, URL: windscode.github.io/roadster-flight-lab/vehicle-inspection.html
+	2 container
+		3 container Description: Roadster 3D vehicle inspection, ID: inspection-stage
+			4 text This environment could not create a 3D rendering context: Error creating WebGL context.. This does not establish a fault in the vehicle mesh or shaders.
+		5 link Description: ← Back to city & laboratory, Value: windscode.github.io/roadster-flight-lab/
+		6 container
+			7 text Language
+			8 pop up button (collapsed, settable) Description: Interface language, Value: English, Secondary Actions: Expand
+				9 menu
+					10 中文
+					11 (selected) English
+		12 text ROADSTER / SURFACE STUDY
+		13 heading Surface & proportion study, Value: 1
+			14 text Surface & proportion study
+		15 text Compare the current model with frozen 3.9 / 3.8 exteriors using the same 50 mm lens and light studio. Drag to orbit; fixed views support repeatable captures.
+		16 container Model comparison
+			17 text Model comparison
+			18 container
+				19 text Reference version
+				20 pop up button (disabled, collapsed, settable) Reference version, Value: 3.9 · 6083bbf, ID: reference-version, Secondary Actions: Expand
+					21 menu
+						22 (selected) 3.9 · 6083bbf
+						23 3.8 · a25b228
+			24 button (disabled) Current 3.12 exterior, ID: model-current
+			25 button (disabled) Original 3.9 exterior, ID: model-baseline
+			26 text The reference model loads only when requested on this page. Driving and physics use the current model.
+		27 container Fixed focal length · 50 mm
+			28 text Fixed focal length · 50 mm
+			29 button (disabled) Underbody / motion envelope, ID: under
+			30 button (disabled) Cutaway off, ID: cutaway
+		31 container Surface lighting
+			32 text Surface lighting
+			33 button (disabled) Studio strip lights, ID: studio-light
+			34 button (disabled) Broad daylight, ID: day-light
+			35 text Inspect highlight continuity and flush panel seams. The reference photos do not disclose focal length; 50 mm is this project’s repeatable inspection condition.
+		36 container Stripe and surface isolation
+			37 text Stripe and surface isolation
+			38 container
+				39 text Surface display
+				40 pop up button (disabled, collapsed, settable) Surface display, Value: Full materials and shadows, ID: surface-mode, Secondary Actions: Expand
+					41 menu
+						42 (selected) Full materials and shadows
+						43 Disable vehicle shadow reception
+						44 Disable environment reflections
+						45 Diffuse clay
+						46 Surface normals
+						47 Triangle wireframe
+			48 checkbox (disabled, settable, integer) Description: PCF receiver-plane depth correction, Value: 1, ID: shadow-correction
+			49 button (disabled) Capture seven matching diagnostic frames, ID: capture-diagnostics
+			50 text Keep the view and lights fixed while isolating shadows, reflections and geometry. The default retains full materials, real shadows and reflections. Each export records its diagnostic state. Disable correction to compare the previous shadow depth test.
+		51 container Motion & detail
+			52 text Motion & detail
+			53 container
+				54 text Render budget
+				55 pop up button (disabled, collapsed, settable) Render budget, Value: Close inspection, ID: inspection-quality, Secondary Actions: Expand
+					56 menu
+						57 Driving detail
+						58 (selected) Close inspection
+						59 Performance budget
+			60 container
+				61 text Suspension length
+				62 text 0.287 m
+			63 slider (disabled, settable, float) Suspension length, Value: 0.28700000047683716, Details: 0.287, ID: suspension
+			64 container
+				65 text Front-wheel steering
+				66 text 0°
+			67 slider (disabled, settable, integer) Front-wheel steering, Value: 0, ID: steer
+			68 container
+				69 text Physical wing command
+				70 text 0%
+			71 slider (disabled, settable, integer) Physical wing command, Value: 0, ID: wing-deployment
+			72 button (disabled) Extend sealing skirt, ID: seal
+			73 button (disabled) Sweep steering & suspension, ID: sweep
+		74 container Capture fixed conditions
+			75 text Capture fixed conditions
+			76 button (disabled) Original comparison frames + conditions ZIP, ID: capture-bundle
+			77 button (disabled) Capture 3.9 / 3.12 comparison PNG, ID: capture-pair
+			78 button (disabled) Export current PNG, ID: capture-frame
+			79 button Export current state JSON (independent), ID: capture-meta
+			80 text The ZIP contains two unscaled original WebGL frames, a separately labelled comparison, and matching conditions linked by one captureId. Camera and physics are frozen during capture. An independent JSON records the state when clicked; it is not linked to earlier images.
+		81 button (collapsed) Official Tesla references & engineering assumptions, Secondary Actions: Expand
+			82 text Official Tesla references & engineering assumptions
+		83 text 3D is unavailable; official references and state JSON remain accessible.
+		84 text Front / 50 mm
+		85 text CURRENT / 3.12
+
+The focused UI element is 79 button Export current state JSON (independent), ID: capture-meta

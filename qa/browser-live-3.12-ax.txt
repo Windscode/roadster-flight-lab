@@ -1,0 +1,495 @@
+Browser tab: 3, Title: "ROADSTER — Flight Lab", URL: "https://windscode.github.io/roadster-flight-lab/?view=lab".
+1 AXWebArea ROADSTER — Flight Lab, URL: windscode.github.io/roadster-flight-lab/?view=lab
+	2 container Description: Roadster 3D simulation proving ground, ID: app
+		3 container
+			4 text Language
+			5 pop up button (collapsed, settable) Description: Interface language, Value: English, ID: language-select, Secondary Actions: Expand
+				6 menu
+					7 中文
+					8 (selected) English
+		9 container ID: viewport, Description: 3D scene. WASD to drive, Space to brake, H for flight, 1 and 2 to adjust pitch, E and Q to climb and descend, G to toggle auto-level, Z and B for continuous roll with auto-level off, 3–9 for saved sequences, P to pause.
+		10 container Description: Measured frame rate and render resolution, ID: render-stat-chip
+			11 text 3D not running · No frame-rate data
+		12 container Graphics unavailable. Research remains available., ID: graphics-status
+			13 heading Graphics unavailable. Research remains available., Value: 1, ID: graphics-status-title
+				14 text Graphics unavailable. Research remains available.
+			15 button Run numerical studies, ID: graphics-open-study
+			16 button View recorded experiments, ID: graphics-open-records
+			17 button Retry 3D graphics, ID: graphics-reload
+		18 container Advanced research: comparisons, parameter sweeps & records
+			19 container
+				20 text ROADSTER STUDY / COMPARISON & SWEEPS
+				21 container Research actions
+					22 button Read current vehicle parameters, ID: roadster-study-1-lab-current
+					23 link Description: Model documentation ↗, Value: windscode.github.io/roadster-flight-lab/physics-notes.md
+					24 button Description: Close advanced research panel, ID: roadster-study-1-study-close
+				25 text 3.12.0 / flat-lab-4
+			26 container
+				27 text CONTROLLED STUDIES / SAME-PAGE RESEARCH
+				28 heading Compare. Sweep. Explain the response., Value: 1
+					29 text Compare. Sweep. Explain the response.
+				30 text Isolate one factor from standard initial conditions and compare road handling, flight control and gas budgets. Research and the 3D scene use the same dynamics. Independent engineering approximation
+				31 text Not calibrated to a physical Tesla
+			32 container Suggested experiments
+				33 button 01 / VEHICLE How does ABS regulate wheel speed? Dry / wet / split grip · Braking comparison
+					34 text 01 / VEHICLE
+					35 text How does ABS regulate wheel speed?
+					36 text Dry / wet / split grip · Braking comparison
+				37 button 02 / CONTROL When do noise and delay destabilize control? Five seeds × two delays × A / B
+					38 text 02 / CONTROL
+					39 text When do noise and delay destabilize control?
+					40 text Five seeds × two delays × A / B
+				41 button 03 / ENERGY When does finite gas cease to support hover? Finite / constant pressure · Authority & error
+					42 text 03 / ENERGY
+					43 text When does finite gas cease to support hover?
+					44 text Finite / constant pressure · Authority & error
+				45 button 04 / RECOVERY How much height does ordinary G levelling need? Four tilts × four heights · Actual recovery samples
+					46 text 04 / RECOVERY
+					47 text How much height does ordinary G levelling need?
+					48 text Four tilts × four heights · Actual recovery samples
+				49 button 05 / TRACTION How does TCS change wheel spin? Wheel speed, slip & launch distance
+					50 text 05 / TRACTION
+					51 text How does TCS change wheel spin?
+					52 text Wheel speed, slip & launch distance
+			53 container Next experiment
+				54 text 01 / PROTOCOL
+				55 heading Next experiment, Value: 2, ID: roadster-study-1-setup-title
+					56 text Next experiment
+				57 text Next run: G recovery height grid · Current model 3.12.0. This configuration completed 16 / 16 executions; 16 results remain in the library. Completion does not mean that a physical criterion passed. The selected saved result remains separate.
+				58 container roadster-study-1-protocol-form
+					59 text Experiment
+					60 pop up button (collapsed, settable) Experiment, Value: Flight control / Airborne attitude recovery, ID: roadster-study-1-lab-kind, Secondary Actions: Expand
+						61 menu
+							62 Road handling / Steering step
+							63 Road handling / Wheel speed & traction launch
+							64 Road handling / Straight-line braking
+							65 (selected) Flight control / Airborne attitude recovery
+							66 Flight control / Vertical command & release
+							67 Gas supply & energy / Hover & gas discharge
+							68 Flight control / Ballistic roll & landing
+					69 text Ordinary G levelling: four starting roll angles × four centre-of-mass heights, 16 cases with a 12-second observation window each.
+					70 text Run mode
+					71 pop up button (collapsed, settable) Run mode, Value: G recovery height grid, ID: roadster-study-1-lab-mode, Secondary Actions: Expand
+						72 menu
+							73 Single experiment
+							74 Paired comparison A / B
+							75 Single-parameter sweep
+							76 Five-seed controller comparison
+							77 (selected) G recovery height grid
+							78 Imported experiment requests
+					79 container Description: Ordinary G levelling · Sampled heights, ID: roadster-study-1-recovery-grid-fields
+						80 text Ordinary G levelling · Sampled heights
+						81 text Starting roll: 30°, 60°, 90°, 120°. Centre-of-mass heights: 3, 6, 12, 24 m. Each independent 12-second case uses ordinary G levelling and the current vehicle parameters, gas supply and thrust limits.
+						82 container
+							83 text Constant crosswind m/s
+						84 stepper (settable, integer) Constant crosswind m/s, Value: 6, ID: roadster-study-1-recovery-grid-wind
+						85 text Front-right lift nozzle availability
+						86 pop up button (collapsed, settable) Front-right lift nozzle availability, Value: 100% · healthy, ID: roadster-study-1-recovery-grid-nozzle, Secondary Actions: Expand
+							87 menu
+								88 (selected) 100% · healthy
+								89 75% · derated
+								90 50% · derated
+						91 button (collapsed) Initial state, recovery and contact criteria, Secondary Actions: Expand
+							92 text Initial state, recovery and contact criteria
+					93 button (collapsed) Model parameters & assumptions 10 adjustable quantities, Secondary Actions: Expand
+						94 text Model parameters & assumptions
+						95 text 10 adjustable quantities
+					96 container
+						97 text Study note Optional
+					98 text field (settable) Study note Optional, Value: 3.12 browser QA; defaults; external supply; crosswind 6 m/s; FR nozzle 100%., ID: roadster-study-1-study-note
+					99 container
+						100 button Run experiment →, ID: roadster-study-1-lab-run
+						101 button (disabled) Stop, ID: roadster-study-1-lab-cancel
+					102 text Ready · Fixed 120 Hz solve / 20 Hz samples
+					103 text Current vehicle parameters loaded. Background standard experiments use their own initial states; the live vehicle is unchanged.
+					104 button (collapsed) Execution / failure / cancellation log, Secondary Actions: Expand
+						105 text Execution / failure / cancellation log
+			106 container Responses & results
+				107 text 02 / OBSERVE & COMPARE
+				108 heading Responses & results, Value: 2, ID: roadster-study-1-results-title
+					109 text Responses & results
+				110 button Export selected study bundle, ID: roadster-study-1-export-study
+				111 button All standard experiments · JSON, ID: roadster-study-1-export-library
+				112 button Current record · CSV, ID: roadster-study-1-export-rows
+				113 text Import study requests
+				114 container Description: G recovery height-grid results, ID: roadster-study-1-recovery-grid-summary
+					115 heading G recovery height grid, Value: 3
+						116 text G recovery height grid
+					117 button Export grid and complete conditions, ID: roadster-study-1-export-recovery-grid
+					118 text Ordinary G levelling · Constant-pressure external supply · Constant crosswind 6 m/s · Front-right main nozzle 100% · Model 3.12.0 / 3361bb3fc7
+					119 text 16 / 16 cells returned; 15 recovered, 1 contact, 0 unrecovered in the window, 0 not returned. Computation completed
+					120 container Recovery-grid legend
+						121 text Recovered
+						122 text Tire or rigid-body contact
+						123 text Not recovered within window
+						124 text Not returned
+					125 table Starting centre-of-mass height × roll; select a returned cell to view its original response
+						126 text Starting centre-of-mass height × roll; select a returned cell to view its original response
+						127 row
+							128 cell
+								129 text Height / roll
+							130 cell
+								131 text 30°
+							132 cell
+								133 text 60°
+							134 cell
+								135 text 90°
+							136 cell
+								137 text 120°
+						138 container roadster-study-1-recovery-grid-cells
+							139 row
+								140 cell
+									141 text 24 m
+								142 cell
+									143 checkbox Description: Roll 30° / Height 24 m: Recovered, Value: 0
+										144 text Recovered
+										145 text 1.52 s
+								146 cell
+									147 checkbox Description: Roll 60° / Height 24 m: Recovered, Value: 0
+										148 text Recovered
+										149 text 1.70 s
+								150 cell
+									151 checkbox Description: Roll 90° / Height 24 m: Recovered, Value: 0
+										152 text Recovered
+										153 text 2.07 s
+								154 cell
+									155 checkbox Description: Roll 120° / Height 24 m: Recovered, Value: 0
+										156 text Recovered
+										157 text 3.03 s
+							158 row
+								159 cell
+									160 text 12 m
+								161 cell
+									162 checkbox Description: Roll 30° / Height 12 m: Recovered, Value: 0
+										163 text Recovered
+										164 text 1.52 s
+								165 cell
+									166 checkbox Description: Roll 60° / Height 12 m: Recovered, Value: 0
+										167 text Recovered
+										168 text 1.70 s
+								169 cell
+									170 checkbox Description: Roll 90° / Height 12 m: Recovered, Value: 0
+										171 text Recovered
+										172 text 2.07 s
+								173 cell
+									174 checkbox Description: Roll 120° / Height 12 m: Recovered, Value: 0
+										175 text Recovered
+										176 text 3.03 s
+							177 row
+								178 cell
+									179 text 6 m
+								180 cell
+									181 checkbox Description: Roll 30° / Height 6 m: Recovered, Value: 0
+										182 text Recovered
+										183 text 1.52 s
+								184 cell
+									185 checkbox Description: Roll 60° / Height 6 m: Recovered, Value: 0
+										186 text Recovered
+										187 text 1.70 s
+								188 cell
+									189 checkbox Description: Roll 90° / Height 6 m: Recovered, Value: 0
+										190 text Recovered
+										191 text 2.07 s
+								192 cell
+									193 checkbox Description: Roll 120° / Height 6 m: Recovered, Value: 1
+										194 text Recovered
+										195 text 3.03 s
+							196 row
+								197 cell
+									198 text 3 m
+								199 cell
+									200 checkbox Description: Roll 30° / Height 3 m: Recovered, Value: 0
+										201 text Recovered
+										202 text 1.52 s
+								203 cell
+									204 checkbox Description: Roll 60° / Height 3 m: Recovered, Value: 0
+										205 text Recovered
+										206 text 1.70 s
+								207 cell
+									208 checkbox Description: Roll 90° / Height 3 m: Recovered, Value: 0
+										209 text Recovered
+										210 text 2.07 s
+								211 cell
+									212 checkbox Description: Roll 120° / Height 3 m: Tire or rigid-body contact, Value: 0
+										213 text Tire or rigid-body contact
+										214 text Minimum 0.58 m
+					215 container roadster-study-1-recovery-grid-lowest
+						216 text Roll 30°: lowest successful sampled height 3 m
+						217 text Roll 60°: lowest successful sampled height 3 m
+						218 text Roll 90°: lowest successful sampled height 3 m
+						219 text Roll 120°: lowest successful sampled height 6 m
+					220 text Only the lowest successful sampled height is reported. The gaps between heights and other wind/gas conditions have not been tested by this grid. Failed and unreturned cases remain visible.
+				221 container roadster-study-1-analysis-content
+					222 text Current-model result · R-9982b266 · g-recovery-grid-1 · Model 3.12.0 · 3361bb3fc7
+					223 heading Airborne attitude recovery / Roll 120° / Height 6 m, Value: 3, ID: roadster-study-1-active-title
+						224 text Airborne attitude recovery / Roll 120° / Height 6 m
+					225 text Sustained recovery confirmed
+					226 button Load this record's configuration, ID: roadster-study-1-load-active-config
+					227 button Recompute request with current model, ID: roadster-study-1-rerun-active
+					228 text Viewing a saved result: Airborne attitude recovery · . The left-hand configuration is used for the next execution; viewing or switching results does not replace it.
+					229 text Height error exceeded the sustained limit. Rated thrust-to-weight ratio alone does not establish recovery.
+The grid uses ordinary G levelling with initial pitch −10° and world angular velocity (0.2, 0, 0.3) rad/s. No extra position target is set. Each case runs for 12 s, calculates metrics at 120 Hz and saves curves at 10 Hz.
+Constant-pressure bench: onboard gas stays unchanged; measured throughput comes from the external supply.
+					230 container roadster-study-1-metric-cards
+						231 text Sustained recovery time
+						232 text 3.03 s
+						233 text Current-model 120 Hz response statistics
+						234 text Height-error RMSE
+						235 text 0.55 m
+						236 text Δ from first same-version record -1.79 m
+						237 text Nozzle saturation time
+						238 text 0.28 s
+						239 text Δ from first same-version record 0.02 s
+						240 text Actual gas throughput
+						241 text 521.48 kg
+						242 text Δ from first same-version record 481.27 kg
+					243 heading Time response, Value: 3
+						244 text Time response
+					245 pop up button (collapsed, settable) Description: Time-response variable, Value: Body tilt / °, ID: roadster-study-1-chart-channel, Secondary Actions: Expand
+						246 menu
+							247 (selected) Body tilt / °
+							248 Roll angle / °
+							249 Pitch angle / °
+							250 Angular speed / rad/s
+							251 Center-of-mass height / m
+							252 Height error / m
+							253 Vertical speed / m/s
+							254 Horizontal displacement / m
+							255 Front-right main delivered thrust / N
+							256 Front-right main available thrust / N
+					257 image Description: Time responses from multiple experiments, ID: roadster-study-1-response-chart
+					258 text Body tilt / ° · 2 current series; move the pointer to read the nearest sample.
+					259 container roadster-study-1-response-legend
+						260 text 1. Roll 120° / Height 3 m 2. Roll 120° / Height 6 m
+					261 heading Gas supply & support, Value: 3
+						262 text Gas supply & support
+					263 pop up button (collapsed, settable) Description: Gas variable, Value: Remaining gas / kg, ID: roadster-study-1-budget-channel, Secondary Actions: Expand
+						264 menu
+							265 (selected) Remaining gas / kg
+							266 Actual mass flow / kg/s
+							267 Tank pressure / bar
+							268 Tank temperature / K
+							269 Rated lift thrust / weight
+							270 Normalized allocation residual
+					271 image Description: Gas supply and control-allocation response, ID: roadster-study-1-budget-chart
+					272 heading Sustained recovery time, Value: 3, ID: roadster-study-1-summary-chart-title
+						273 text Sustained recovery time
+					274 text s
+					275 image Description: Primary-metric comparison for this study, ID: roadster-study-1-summary-chart
+					276 button (collapsed) Criteria, events & parameter snapshot, Secondary Actions: Expand
+						277 text Criteria, events & parameter snapshot
+				278 container
+					279 text LOCAL EXPERIMENT LIBRARY
+					280 heading Experiment records 16 records, Value: 3
+						281 text Experiment records 
+						282 text 16 records
+					283 button Clear local records, ID: roadster-study-1-clear-library
+					284 text Overlay experiments of the same kind, model, build and protocol. Historical versions are marked and can be explicitly recomputed with the current model. The browser stores up to 64 records / 4 MiB; earlier records remain at the limit and new results remain exportable in-session. Ordinary bundles support 1–12 requests, robustness bundles up to 20, and G grids 16. Standard-library JSON contains reports and running, failed or cancelled attempts. Export live-driving records from Record & replay. CSV contains only the selected record with its original identity and sampling metadata.
+					285 table
+						286 row
+							287 cell
+								288 text Overlay
+							289 cell
+								290 text Experiment / condition
+							291 cell
+								292 text Outcome
+							293 cell
+								294 text Primary metric
+							295 cell
+								296 text Onboard gas used · kg
+						297 container roadster-study-1-record-table
+							298 row
+								299 cell
+									300 checkbox (settable, integer) Description: Overlay Roll 120° / Height 24 m, Value: 0
+								301 cell
+									302 button Airborne attitude recovery · Roll 120° / Height 24 m
+									303 text Current model 3.12.0 · 3361bb3fc7 · R-899eb3f2 / bench
+								304 cell
+									305 text Sustained recovery confirmed
+								306 cell
+									307 text 3.03 s
+								308 cell
+									309 text 0.00
+							310 row
+								311 cell
+									312 checkbox (settable, integer) Description: Overlay Roll 90° / Height 24 m, Value: 0
+								313 cell
+									314 button Airborne attitude recovery · Roll 90° / Height 24 m
+									315 text Current model 3.12.0 · 3361bb3fc7 · R-9074bfbc / bench
+								316 cell
+									317 text Sustained recovery confirmed
+								318 cell
+									319 text 2.07 s
+								320 cell
+									321 text 0.00
+							322 row
+								323 cell
+									324 checkbox (settable, integer) Description: Overlay Roll 60° / Height 24 m, Value: 0
+								325 cell
+									326 button Airborne attitude recovery · Roll 60° / Height 24 m
+									327 text Current model 3.12.0 · 3361bb3fc7 · R-e9acdb9c / bench
+								328 cell
+									329 text Sustained recovery confirmed
+								330 cell
+									331 text 1.70 s
+								332 cell
+									333 text 0.00
+							334 row
+								335 cell
+									336 checkbox (settable, integer) Description: Overlay Roll 30° / Height 24 m, Value: 0
+								337 cell
+									338 button Airborne attitude recovery · Roll 30° / Height 24 m
+									339 text Current model 3.12.0 · 3361bb3fc7 · R-1d74b190 / bench
+								340 cell
+									341 text Sustained recovery confirmed
+								342 cell
+									343 text 1.52 s
+								344 cell
+									345 text 0.00
+							346 row
+								347 cell
+									348 checkbox (settable, integer) Description: Overlay Roll 120° / Height 12 m, Value: 0
+								349 cell
+									350 button Airborne attitude recovery · Roll 120° / Height 12 m
+									351 text Current model 3.12.0 · 3361bb3fc7 · R-322235ea / bench
+								352 cell
+									353 text Sustained recovery confirmed
+								354 cell
+									355 text 3.03 s
+								356 cell
+									357 text 0.00
+							358 row
+								359 cell
+									360 checkbox (settable, integer) Description: Overlay Roll 90° / Height 12 m, Value: 0
+								361 cell
+									362 button Airborne attitude recovery · Roll 90° / Height 12 m
+									363 text Current model 3.12.0 · 3361bb3fc7 · R-92b93a1e / bench
+								364 cell
+									365 text Sustained recovery confirmed
+								366 cell
+									367 text 2.07 s
+								368 cell
+									369 text 0.00
+							370 row
+								371 cell
+									372 checkbox (settable, integer) Description: Overlay Roll 60° / Height 12 m, Value: 0
+								373 cell
+									374 button Airborne attitude recovery · Roll 60° / Height 12 m
+									375 text Current model 3.12.0 · 3361bb3fc7 · R-61991ff2 / bench
+								376 cell
+									377 text Sustained recovery confirmed
+								378 cell
+									379 text 1.70 s
+								380 cell
+									381 text 0.00
+							382 row
+								383 cell
+									384 checkbox (settable, integer) Description: Overlay Roll 30° / Height 12 m, Value: 0
+								385 cell
+									386 button Airborne attitude recovery · Roll 30° / Height 12 m
+									387 text Current model 3.12.0 · 3361bb3fc7 · R-3fbcc44e / bench
+								388 cell
+									389 text Sustained recovery confirmed
+								390 cell
+									391 text 1.52 s
+								392 cell
+									393 text 0.00
+							394 row
+								395 cell
+									396 checkbox (settable, integer) Description: Overlay Roll 120° / Height 6 m, Value: 1
+								397 cell
+									398 button Airborne attitude recovery · Roll 120° / Height 6 m
+									399 text Current model 3.12.0 · 3361bb3fc7 · R-9982b266 / bench
+								400 cell
+									401 text Sustained recovery confirmed
+								402 cell
+									403 text 3.03 s
+								404 cell
+									405 text 0.00
+							406 row
+								407 cell
+									408 checkbox (settable, integer) Description: Overlay Roll 90° / Height 6 m, Value: 0
+								409 cell
+									410 button Airborne attitude recovery · Roll 90° / Height 6 m
+									411 text Current model 3.12.0 · 3361bb3fc7 · R-69905990 / bench
+								412 cell
+									413 text Sustained recovery confirmed
+								414 cell
+									415 text 2.07 s
+								416 cell
+									417 text 0.00
+							418 row
+								419 cell
+									420 checkbox (settable, integer) Description: Overlay Roll 60° / Height 6 m, Value: 0
+								421 cell
+									422 button Airborne attitude recovery · Roll 60° / Height 6 m
+									423 text Current model 3.12.0 · 3361bb3fc7 · R-0aae7072 / bench
+								424 cell
+									425 text Sustained recovery confirmed
+								426 cell
+									427 text 1.70 s
+								428 cell
+									429 text 0.00
+							430 row
+								431 cell
+									432 checkbox (settable, integer) Description: Overlay Roll 30° / Height 6 m, Value: 0
+								433 cell
+									434 button Airborne attitude recovery · Roll 30° / Height 6 m
+									435 text Current model 3.12.0 · 3361bb3fc7 · R-d5af205c / bench
+								436 cell
+									437 text Sustained recovery confirmed
+								438 cell
+									439 text 1.52 s
+								440 cell
+									441 text 0.00
+							442 row
+								443 cell
+									444 checkbox (settable, integer) Description: Overlay Roll 120° / Height 3 m, Value: 1
+								445 cell
+									446 button Airborne attitude recovery · Roll 120° / Height 3 m
+									447 text Current model 3.12.0 · 3361bb3fc7 · R-79cf14c4 / bench
+								448 cell
+									449 text Tire or rigid-body contact
+								450 cell
+									451 text — s
+								452 cell
+									453 text 0.00
+							454 row
+								455 cell
+									456 checkbox (settable, integer) Description: Overlay Roll 90° / Height 3 m, Value: 0
+								457 cell
+									458 button Airborne attitude recovery · Roll 90° / Height 3 m
+									459 text Current model 3.12.0 · 3361bb3fc7 · R-60260f1c / bench
+								460 cell
+									461 text Sustained recovery confirmed
+								462 cell
+									463 text 2.07 s
+								464 cell
+									465 text 0.00
+							466 row
+								467 cell
+									468 checkbox (settable, integer) Description: Overlay Roll 60° / Height 3 m, Value: 0
+								469 cell
+									470 button Airborne attitude recovery · Roll 60° / Height 3 m
+									471 text Current model 3.12.0 · 3361bb3fc7 · R-847d29ae / bench
+								472 cell
+									473 text Sustained recovery confirmed
+								474 cell
+									475 text 1.70 s
+								476 cell
+									477 text 0.00
+							478 row
+								479 cell
+									480 checkbox (settable, integer) Description: Overlay Roll 30° / Height 3 m, Value: 0
+								481 cell
+									482 button Airborne attitude recovery · Roll 30° / Height 3 m
+									483 text Current model 3.12.0 · 3361bb3fc7 · R-40d24f94 / bench
+								484 cell
+									485 text Sustained recovery confirmed
+								486 cell
+									487 text 1.52 s
+								488 cell
+									489 text 0.00
+				490 text Definitions and thresholds support research within this software model. Repeatability, conservation, controller response and real-vehicle validity are distinct forms of evidence. No confidence interval is invented without a parameter distribution.
+
+The focused UI element is 22 button Read current vehicle parameters, ID: roadster-study-1-lab-current

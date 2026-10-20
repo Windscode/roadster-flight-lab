@@ -1,0 +1,3994 @@
+{
+  "schema": "roadster.live-browser-grid-comparison",
+  "version": 1,
+  "status": "passed",
+  "generatedAt": "2026-10-20T05:34:36.177939+00:00",
+  "scope": "Read-only parse and comparison of the actual Chrome UI-downloaded 16-case archive with the retained numerical QA data. No solver rerun, production modification, WebGL image acceptance or graphics-performance measurement.",
+  "sources": {
+    "browserDownload": {
+      "path": "qa/browser-live-grid-export-3.12.json",
+      "bytes": 4473359,
+      "sha256": "8bba6de357cd14a417ee99cba10521daf5da2fdaa022aad63dbc534bffb8342a",
+      "createdAt": "2026-10-20T05:25:39.540Z",
+      "note": "3.12 deployed browser verification: default parameters, constant-pressure external supply, 6 m/s crosswind, healthy front-right nozzle."
+    },
+    "referenceCurves": {
+      "path": "qa/research-recovery-grid-curves-3.12.json",
+      "bytes": 2622692,
+      "sha256": "83fb9ce55272a4d5ad1de5b651fef861d2127339693f9f29404c79b4c72b6fcf"
+    },
+    "referenceSummary": {
+      "path": "qa/research-recovery-grid-3.12.json",
+      "bytes": 19395,
+      "sha256": "8aca0387da57f10120fd9e1cb0c0d224a96233230b6ffb9787735100ab2ce5b3"
+    },
+    "referenceSourceHashes": {
+      "dist/research-recovery-grid.js": "6d7d04c79a40c700abe6f08ed313bc7ac7a443ba61d1d60659ebd368643a30a8",
+      "dist/research-study.js": "149b1e530c386b2614aacd299857e209848a7f9d037899b7feccd544d58b03cb",
+      "dist/research-protocol.js": "934ecf255b0431177bc3c5b8574a38887c285bf64814fc009d7f9f2a52f26c8b",
+      "dist/experiment-worker.js": "51cf3802831a3ed4e66101f5b19d61ff1e0978095c3d264217d5fa60795066cf",
+      "dist/physics.js": "035f1ba01c7acacddf56a2a5497a52516c474f56a6f1fe027bf7c8046bf791ae",
+      "dist/vehicle-models.js": "6ed2e0462d2161dd78bdd6b9b0c2c9bf95bbe7ab40b708ff8431db5a0c2e0499",
+      "tests/research-recovery-grid-3.12.test.mjs": "9451d3b80477e5095885f254465e1b96a870e8d0eb63910194816ac0360c1352"
+    },
+    "referenceSourceHashesMatchInstalled": {
+      "dist/research-recovery-grid.js": true,
+      "dist/research-study.js": true,
+      "dist/research-protocol.js": true,
+      "dist/experiment-worker.js": true,
+      "dist/physics.js": true,
+      "dist/vehicle-models.js": true,
+      "tests/research-recovery-grid-3.12.test.mjs": true
+    }
+  },
+  "identity": {
+    "modelVersion": "3.12.0",
+    "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+    "protocolVersion": "g-recovery-grid-1"
+  },
+  "exporterIdentity": {
+    "modelVersion": "3.12.0",
+    "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+    "protocolVersion": "flat-lab-4"
+  },
+  "exporterIdentityProtocolNote": "flat-lab-4 identifies the generic study exporter. The archive, execution attempt and all 16 actual grid reports correctly identify g-recovery-grid-1.",
+  "checks": [
+    {
+      "name": "Original browser export byte count and SHA-256 match supplied evidence",
+      "passed": true
+    },
+    {
+      "name": "Installed build equals the declared deployed build",
+      "passed": true
+    },
+    {
+      "name": "Browser archive and retained curves have the current grid identity",
+      "passed": true
+    },
+    {
+      "name": "Retained numerical summary has the current model/build",
+      "passed": true
+    },
+    {
+      "name": "Versioned reference source hashes still match current source files",
+      "passed": true
+    },
+    {
+      "name": "Archive contains 16 non-null requests and 16 non-null reports",
+      "passed": true
+    },
+    {
+      "name": "Requests and results each cover 16 unique declared roll/height combinations",
+      "passed": true
+    },
+    {
+      "name": "Reference has the same unique 16 cases",
+      "passed": true
+    },
+    {
+      "name": "All complete requests exactly equal matched versioned QA requests",
+      "passed": true
+    },
+    {
+      "name": "Every report uses the current build and grid protocol",
+      "passed": true
+    },
+    {
+      "name": "Every report source manifest exactly equals installed model-build manifest",
+      "passed": true
+    },
+    {
+      "name": "All report metadata other than generatedAt exactly matches QA",
+      "passed": true
+    },
+    {
+      "name": "Every case uses ordinary G, bench supply, wind 6 at 90 degrees without gust, healthy FR and declared initial conditions",
+      "passed": true
+    },
+    {
+      "name": "Each report has 1440 statistics steps, 120 saved rows and expected time grid",
+      "passed": true
+    },
+    {
+      "name": "All 1920 rows have the same recorded channel schema as QA",
+      "passed": true
+    },
+    {
+      "name": "Every compared numeric value is within declared comparison tolerance and all categorical/null values match",
+      "passed": true
+    },
+    {
+      "name": "All 72 applied/requested parameters exactly equal the default-plus-bench reference fixture",
+      "passed": true
+    },
+    {
+      "name": "15 recovered and one contact agree across all reports and both summaries",
+      "passed": true
+    },
+    {
+      "name": "The sole contact is roll 120 degrees at initial height 3 m",
+      "passed": true
+    },
+    {
+      "name": "Browser and QA summaries are complete with 16 returned cells",
+      "passed": true
+    },
+    {
+      "name": "Lowest successful sampled heights and their returned counts agree exactly",
+      "passed": true
+    },
+    {
+      "name": "All summary cell values match QA within tolerance, excluding browser-specific record IDs",
+      "passed": true
+    },
+    {
+      "name": "Execution attempt is completed with 16 unique jobs, completed IDs and non-null summary IDs",
+      "passed": true
+    },
+    {
+      "name": "Frozen attempt jobs, archive requests and returned reports correspond one-to-one",
+      "passed": true
+    },
+    {
+      "name": "Every returned cell has its matching actual report/runId and is unambiguous",
+      "passed": true
+    },
+    {
+      "name": "Browser and reference inputs remained unchanged throughout read-only comparison",
+      "passed": true
+    }
+  ],
+  "conditions": {
+    "gridRollsDeg": [
+      30,
+      60,
+      90,
+      120
+    ],
+    "gridHeightsM": [
+      3,
+      6,
+      12,
+      24
+    ],
+    "uniqueRequests": 16,
+    "uniqueResultRequests": 16,
+    "allRequestsExactlyMatchReference": true,
+    "supplyMode": "bench",
+    "wind": {
+      "speedMps": 6,
+      "directionDeg": 90,
+      "gustMps": 0,
+      "gustPeriodS": 5
+    },
+    "nozzleFault": {
+      "id": "lift-FR",
+      "scale": 1
+    },
+    "initialPitchDeg": -10,
+    "initialHeadingDeg": 0,
+    "initialWorldAngularVelocityRadS": {
+      "x": 0.2,
+      "y": 0,
+      "z": 0.3
+    },
+    "defaultParameterCount": 72,
+    "allRequestedAndAppliedParametersExactlyMatchDefaultFixture": true,
+    "defaultParameterEvidence": "The retained fixture source declares only kind=attitude and params.supplyMode=bench. normalizeResearchRequest expands DEFAULT_PARAMS, with bench explicitly overriding the scientific finite-supply default. Both source definitions and hashes were verified without executing code.",
+    "defaultParameters": {
+      "dryMass": 1950,
+      "gravity": 9.81,
+      "tireMu": 1.25,
+      "springRate": 65000,
+      "suspensionDamping": 5800,
+      "suspensionRest": 0.37,
+      "suspensionMin": 0.24,
+      "suspensionDroop": 0.04,
+      "wheelRadius": 0.37,
+      "maxMotorForce": 24000,
+      "motorPower": 700000,
+      "brakeForce": 42000,
+      "regenForce": 2600,
+      "regenPower": 60000,
+      "steeringAssist": true,
+      "tractionAssist": true,
+      "absEnabled": true,
+      "wheelInertia": 1.8,
+      "roadSurface": "dry",
+      "wetGripMultiplier": 0.52,
+      "splitMuPositionX": 0,
+      "steeringAccelG": 1,
+      "cornerStiffnessFront": 82000,
+      "cornerStiffnessRear": 90000,
+      "tireRelaxationLength": 0.35,
+      "dragArea": 0.58,
+      "airDensity": 1.225,
+      "wingMode": "active",
+      "wingDeployment": 0,
+      "wingAreaM2": 0.38,
+      "wingDragCoefficient": 0.75,
+      "wingDownforceCoefficient": 1.1,
+      "wingActuatorRate": 1.5,
+      "tankLitres": 600,
+      "initialPressureBar": 350,
+      "regulatorBar": 50,
+      "gasTemperatureK": 293.15,
+      "exhaustVelocity": 650,
+      "nozzleModel": "isentropic",
+      "nozzleVelocityEfficiency": 0.9,
+      "ambientPressureBar": 1,
+      "climbRateMps": 5,
+      "verticalAccelerationMps2": 5,
+      "gasGamma": 1.4,
+      "tankThermalTime": 90,
+      "gasModel": "adiabatic",
+      "valveRiseTime": 0.045,
+      "valveFallTime": 0.025,
+      "liftNozzleMax": 20000,
+      "sideNozzleMax": 5500,
+      "axialNozzleMax": 11000,
+      "suctionPressurePa": 8200,
+      "suctionArea": 4.8,
+      "sealRange": 0.08,
+      "fanPower": 26000,
+      "fanEfficiency": 0.75,
+      "sealPerimeter": 11.84766219862439,
+      "sealLeakCd": 0.6,
+      "sealLipGap": 0.003,
+      "skirtReach": 0.5660000000000001,
+      "batteryKWh": 200,
+      "supplyMode": "bench",
+      "hoverHeight": 4,
+      "positionGain": 2.4,
+      "velocityGain": 3.1,
+      "altitudeGain": 3.2,
+      "verticalDamping": 3.6,
+      "attitudeResponse": 4.5,
+      "rollRateDegS": 180,
+      "pitchRateDegS": 60,
+      "yawRateDegS": 46,
+      "angularAccelerationDegS2": 360
+    }
+  },
+  "sampling": {
+    "solverHz": 120,
+    "durationSPerCase": 12,
+    "statisticsStepsPerCase": 1440,
+    "totalStatisticsStepsRepresented": 23040,
+    "curveHz": 10,
+    "rowsPerCase": 120,
+    "totalStoredRows": 1920,
+    "channelsPerRow": 50,
+    "expectedSavedTimeRangeS": [
+      0.1,
+      12
+    ],
+    "maximumTimeGridRoundingErrorS": 1.865174681370263e-13,
+    "statisticsVerifiedFromStoredMetadata": true,
+    "allSavedCurveValuesCompared": true
+  },
+  "comparisonMethod": {
+    "pairing": "Exact declared roll/height grid key; unique complete requests must match exactly before numeric comparison.",
+    "requestsAndIdentities": "Exact equality; no tolerance used for parameter or request equality.",
+    "numericComparison": {
+      "absoluteTolerance": 1e-08,
+      "relativeTolerance": 1e-12,
+      "absoluteToleranceOverrideForTiltErrorDeg": 1e-06,
+      "rule": "abs(browser-reference) <= absoluteTolerance + relativeTolerance*max(abs(browser),abs(reference))",
+      "scaledDifferenceDefinition": "abs(browser-reference)/max(1,abs(browser),abs(reference))",
+      "purpose": "Roundoff comparison bounds only; none of the physical success/contact thresholds is changed."
+    },
+    "otherValues": "All categorical, boolean and null leaves require exact matching, and object keys/list lengths must match.",
+    "metadataExcluded": [
+      "Per-report generatedAt",
+      "Browser archive note and export time",
+      "Browser batch and record IDs"
+    ],
+    "exactNumericEqualityOfAllCurves": false
+  },
+  "sectionComparisons": {
+    "request": {
+      "numericPairs": 1184,
+      "exactlyEqualNumericPairs": 1184,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 176,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "requestedParams": {
+      "numericPairs": 1024,
+      "exactlyEqualNumericPairs": 1024,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 128,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "appliedParams": {
+      "numericPairs": 1024,
+      "exactlyEqualNumericPairs": 1024,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 128,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "input": {
+      "numericPairs": 336,
+      "exactlyEqualNumericPairs": 336,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 96,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "initialState": {
+      "numericPairs": 4336,
+      "exactlyEqualNumericPairs": 4336,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 144,
+      "matchingCategoricalPairs": 784,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "finalState": {
+      "numericPairs": 5320,
+      "exactlyEqualNumericPairs": 4578,
+      "differentNumericPairs": 742,
+      "matchingNullPairs": 256,
+      "matchingCategoricalPairs": 848,
+      "maxAbsoluteDifference": 2.6193447411060333e-10,
+      "maxScaledDifference": 2.5100753689997125e-14,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.finalState.wheelStates[2].allocatedDrivePowerW",
+        "browser": 174821.62686088588,
+        "reference": 174821.62686088562,
+        "absoluteDifference": 2.6193447411060333e-10,
+        "scaledDifference": 1.4982955988565271e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.finalState.wheelStates[3].lateralDemandN",
+        "browser": -7.713827954568064,
+        "reference": -7.71382795456787,
+        "absoluteDifference": 1.936228954946273e-13,
+        "scaledDifference": 2.5100753689997125e-14
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "metrics": {
+      "numericPairs": 711,
+      "exactlyEqualNumericPairs": 524,
+      "differentNumericPairs": 187,
+      "matchingNullPairs": 204,
+      "matchingCategoricalPairs": 65,
+      "maxAbsoluteDifference": 5.820766091346741e-11,
+      "maxScaledDifference": 7.424127315653695e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll60_height3.metrics.deliveredImpulseNs",
+        "browser": 277713.5201413909,
+        "reference": 277713.52014139097,
+        "absoluteDifference": 5.820766091346741e-11,
+        "scaledDifference": 2.0959606462023318e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.finalSpeedKmh",
+        "browser": -3.5253707147684313e-06,
+        "reference": -3.5253707221925586e-06,
+        "absoluteDifference": 7.424127315653695e-15,
+        "scaledDifference": 7.424127315653695e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "events": {
+      "numericPairs": 21,
+      "exactlyEqualNumericPairs": 21,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 21,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "phases": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 16,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "rows": {
+      "numericPairs": 84931,
+      "exactlyEqualNumericPairs": 61423,
+      "differentNumericPairs": 23508,
+      "matchingNullPairs": 9149,
+      "matchingCategoricalPairs": 1920,
+      "maxAbsoluteDifference": 5.001290227774544e-07,
+      "maxScaledDifference": 5.001290227774544e-07,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height3.rows[89].tiltErrorDeg",
+        "browser": 1.7075472925031877e-06,
+        "reference": 1.2074182697257333e-06,
+        "absoluteDifference": 5.001290227774544e-07,
+        "scaledDifference": 5.001290227774544e-07
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height3.rows[89].tiltErrorDeg",
+        "browser": 1.7075472925031877e-06,
+        "reference": 1.2074182697257333e-06,
+        "absoluteDifference": 5.001290227774544e-07,
+        "scaledDifference": 5.001290227774544e-07
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    }
+  },
+  "curveChannelComparisons": {
+    "time": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "speed": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 42,
+      "differentNumericPairs": 1878,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 8.042178034628478e-15,
+      "maxScaledDifference": 8.042178034628478e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[11].speed",
+        "browser": 0.01016341404039204,
+        "reference": 0.010163414040383997,
+        "absoluteDifference": 8.042178034628478e-15,
+        "scaledDifference": 8.042178034628478e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[11].speed",
+        "browser": 0.01016341404039204,
+        "reference": 0.010163414040383997,
+        "absoluteDifference": 8.042178034628478e-15,
+        "scaledDifference": 8.042178034628478e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "height": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1660,
+      "differentNumericPairs": 260,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.552713678800501e-15,
+      "maxScaledDifference": 4.440892098500626e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height24.rows[3].height",
+        "browser": 23.929436437015514,
+        "reference": 23.92943643701551,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 1.4846624943097055e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[8].height",
+        "browser": 0.6479004347558802,
+        "reference": 0.6479004347558798,
+        "absoluteDifference": 4.440892098500626e-16,
+        "scaledDifference": 4.440892098500626e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "targetHeight": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "heightError": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1671,
+      "differentNumericPairs": 249,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.552713678800501e-15,
+      "maxScaledDifference": 3.552713678800501e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height24.rows[3].heightError",
+        "browser": -0.07056356298448563,
+        "reference": -0.07056356298448918,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 3.552713678800501e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height24.rows[3].heightError",
+        "browser": -0.07056356298448563,
+        "reference": -0.07056356298448918,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 3.552713678800501e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "vertical": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 76,
+      "differentNumericPairs": 1844,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 4.4825254619240695e-15,
+      "maxScaledDifference": 4.4825254619240695e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[9].vertical",
+        "browser": 0.017354374902572578,
+        "reference": 0.01735437490257706,
+        "absoluteDifference": 4.4825254619240695e-15,
+        "scaledDifference": 4.4825254619240695e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[9].vertical",
+        "browser": 0.017354374902572578,
+        "reference": 0.01735437490257706,
+        "absoluteDifference": 4.4825254619240695e-15,
+        "scaledDifference": 4.4825254619240695e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "beta": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 1920,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "betaValid": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "steer": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "steerInput": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "throttle": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "brake": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "yaw": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 11,
+      "differentNumericPairs": 1909,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 2.3503421431314564e-13,
+      "maxScaledDifference": 2.3503421431314564e-13,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[9].yaw",
+        "browser": 0.31077990954567797,
+        "reference": 0.310779909545913,
+        "absoluteDifference": 2.3503421431314564e-13,
+        "scaledDifference": 2.3503421431314564e-13
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[9].yaw",
+        "browser": 0.31077990954567797,
+        "reference": 0.310779909545913,
+        "absoluteDifference": 2.3503421431314564e-13,
+        "scaledDifference": 2.3503421431314564e-13
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "roll": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 58,
+      "differentNumericPairs": 1862,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 5.3290705182007514e-14,
+      "maxScaledDifference": 1.3276849728863122e-14,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height24.rows[5].roll",
+        "browser": 27.723188154572693,
+        "reference": 27.723188154572746,
+        "absoluteDifference": 5.3290705182007514e-14,
+        "scaledDifference": 1.922243029368813e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll60_height6.rows[12].roll",
+        "browser": 1.3379354859598414,
+        "reference": 1.3379354859598591,
+        "absoluteDifference": 1.7763568394002505e-14,
+        "scaledDifference": 1.3276849728863122e-14
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "rollTravel": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 389,
+      "differentNumericPairs": 1531,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.2789769243681803e-13,
+      "maxScaledDifference": 1.2684245596994711e-14,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[10].rollTravel",
+        "browser": -118.13444175930704,
+        "reference": -118.13444175930717,
+        "absoluteDifference": 1.2789769243681803e-13,
+        "scaledDifference": 1.0826452517327926e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[0].rollTravel",
+        "browser": -2.030642971577748,
+        "reference": -2.0306429715777736,
+        "absoluteDifference": 2.5757174171303632e-14,
+        "scaledDifference": 1.2684245596994711e-14
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "pitch": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 44,
+      "differentNumericPairs": 1876,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.0935696792557792e-14,
+      "maxScaledDifference": 1.0935696792557792e-14,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[8].pitch",
+        "browser": -0.11204431403596635,
+        "reference": -0.11204431403597728,
+        "absoluteDifference": 1.0935696792557792e-14,
+        "scaledDifference": 1.0935696792557792e-14
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[8].pitch",
+        "browser": -0.11204431403596635,
+        "reference": -0.11204431403597728,
+        "absoluteDifference": 1.0935696792557792e-14,
+        "scaledDifference": 1.0935696792557792e-14
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "gas": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "temperature": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "pressure": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "flow": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 898,
+      "differentNumericPairs": 1022,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.1368683772161603e-13,
+      "maxScaledDifference": 1.9348247286386127e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height6.rows[3].flow",
+        "browser": 133.75697944722526,
+        "reference": 133.75697944722538,
+        "absoluteDifference": 1.1368683772161603e-13,
+        "scaledDifference": 8.49950695593211e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[2].flow",
+        "browser": 23.870522813145733,
+        "reference": 23.870522813145687,
+        "absoluteDifference": 4.618527782440651e-14,
+        "scaledDifference": 1.9348247286386127e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "ve": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "thrust": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 828,
+      "differentNumericPairs": 1092,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 5.820766091346741e-11,
+      "maxScaledDifference": 1.882700863011634e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height6.rows[3].thrust",
+        "browser": 75793.40269194155,
+        "reference": 75793.4026919416,
+        "absoluteDifference": 5.820766091346741e-11,
+        "scaledDifference": 7.679779353626523e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[2].thrust",
+        "browser": 13526.233588115492,
+        "reference": 13526.233588115467,
+        "absoluteDifference": 2.546585164964199e-11,
+        "scaledDifference": 1.882700863011634e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "thrustMargin": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "allocationError": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 30,
+      "differentNumericPairs": 1890,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.95516952522712e-16,
+      "maxScaledDifference": 3.95516952522712e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height6.rows[4].allocationError",
+        "browser": 0.04610041533495393,
+        "reference": 0.04610041533495433,
+        "absoluteDifference": 3.95516952522712e-16,
+        "scaledDifference": 3.95516952522712e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll90_height6.rows[4].allocationError",
+        "browser": 0.04610041533495393,
+        "reference": 0.04610041533495433,
+        "absoluteDifference": 3.95516952522712e-16,
+        "scaledDifference": 3.95516952522712e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "saturated": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "grip": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1806,
+      "differentNumericPairs": 114,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 9.992007221626409e-16,
+      "maxScaledDifference": 9.992007221626409e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[9].grip",
+        "browser": 0.9999584230270863,
+        "reference": 0.9999584230270853,
+        "absoluteDifference": 9.992007221626409e-16,
+        "scaledDifference": 9.992007221626409e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[9].grip",
+        "browser": 0.9999584230270863,
+        "reference": 0.9999584230270853,
+        "absoluteDifference": 9.992007221626409e-16,
+        "scaledDifference": 9.992007221626409e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "contacts": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "x": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 279,
+      "differentNumericPairs": 1641,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.5987211554602254e-14,
+      "maxScaledDifference": 1.8887304881589065e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height24.rows[17].x",
+        "browser": -8.468145886629268,
+        "reference": -8.468145886629284,
+        "absoluteDifference": 1.5987211554602254e-14,
+        "scaledDifference": 1.887923492183235e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height3.rows[119].x",
+        "browser": -1.8810061578788877,
+        "reference": -1.8810061578788841,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 1.8887304881589065e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "z": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1846,
+      "differentNumericPairs": 74,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 5.684341886080802e-14,
+      "maxScaledDifference": 1.6245399861554933e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[46].z",
+        "browser": -349.9047659624227,
+        "reference": -349.90476596242274,
+        "absoluteDifference": 5.684341886080802e-14,
+        "scaledDifference": 1.624539714526569e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[119].z",
+        "browser": -349.90470745708825,
+        "reference": -349.9047074570883,
+        "absoluteDifference": 5.684341886080802e-14,
+        "scaledDifference": 1.6245399861554933e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "positionError": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 282,
+      "differentNumericPairs": 1638,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.7763568394002505e-14,
+      "maxScaledDifference": 1.9127067743838334e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height24.rows[34].positionError",
+        "browser": 10.711041299696781,
+        "reference": 10.711041299696799,
+        "absoluteDifference": 1.7763568394002505e-14,
+        "scaledDifference": 1.658435244247013e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height3.rows[116].positionError",
+        "browser": 1.9735164502366271,
+        "reference": 1.9735164502366234,
+        "absoluteDifference": 3.774758283725532e-15,
+        "scaledDifference": 1.9127067743838334e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "slipFL": {
+      "numericPairs": 111,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 111,
+      "matchingNullPairs": 1809,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 8.298049747335057e-15,
+      "maxScaledDifference": 8.298049747335057e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[9].slipFL",
+        "browser": 0.006242234023578247,
+        "reference": 0.006242234023586545,
+        "absoluteDifference": 8.298049747335057e-15,
+        "scaledDifference": 8.298049747335057e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[9].slipFL",
+        "browser": 0.006242234023578247,
+        "reference": 0.006242234023586545,
+        "absoluteDifference": 8.298049747335057e-15,
+        "scaledDifference": 8.298049747335057e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "slipFR": {
+      "numericPairs": 114,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 114,
+      "matchingNullPairs": 1806,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.946811851136562e-15,
+      "maxScaledDifference": 3.946811851136562e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[19].slipFR",
+        "browser": -7.391407620840629e-07,
+        "reference": -7.391407581372511e-07,
+        "absoluteDifference": 3.946811851136562e-15,
+        "scaledDifference": 3.946811851136562e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[19].slipFR",
+        "browser": -7.391407620840629e-07,
+        "reference": -7.391407581372511e-07,
+        "absoluteDifference": 3.946811851136562e-15,
+        "scaledDifference": 3.946811851136562e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "slipRL": {
+      "numericPairs": 111,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 111,
+      "matchingNullPairs": 1809,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 8.297182385597068e-15,
+      "maxScaledDifference": 8.297182385597068e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[9].slipRL",
+        "browser": 0.0061628877947061235,
+        "reference": 0.006162887794714421,
+        "absoluteDifference": 8.297182385597068e-15,
+        "scaledDifference": 8.297182385597068e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[9].slipRL",
+        "browser": 0.0061628877947061235,
+        "reference": 0.006162887794714421,
+        "absoluteDifference": 8.297182385597068e-15,
+        "scaledDifference": 8.297182385597068e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "slipRR": {
+      "numericPairs": 115,
+      "exactlyEqualNumericPairs": 1,
+      "differentNumericPairs": 114,
+      "matchingNullPairs": 1805,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.946797028059985e-15,
+      "maxScaledDifference": 3.946797028059985e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[19].slipRR",
+        "browser": -7.398580371914048e-07,
+        "reference": -7.398580332446078e-07,
+        "absoluteDifference": 3.946797028059985e-15,
+        "scaledDifference": 3.946797028059985e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[19].slipRR",
+        "browser": -7.398580371914048e-07,
+        "reference": -7.398580332446078e-07,
+        "absoluteDifference": 3.946797028059985e-15,
+        "scaledDifference": 3.946797028059985e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "wheelFL": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "wheelFR": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "wheelRL": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "wheelRR": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "abs": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "tcs": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "wing": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "wingDrag": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "wingDownforce": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "tiltErrorDeg": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 933,
+      "differentNumericPairs": 987,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 5.001290227774544e-07,
+      "maxScaledDifference": 5.001290227774544e-07,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height3.rows[89].tiltErrorDeg",
+        "browser": 1.7075472925031877e-06,
+        "reference": 1.2074182697257333e-06,
+        "absoluteDifference": 5.001290227774544e-07,
+        "scaledDifference": 5.001290227774544e-07
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height3.rows[89].tiltErrorDeg",
+        "browser": 1.7075472925031877e-06,
+        "reference": 1.2074182697257333e-06,
+        "absoluteDifference": 5.001290227774544e-07,
+        "scaledDifference": 5.001290227774544e-07
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "angularRateRadS": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 18,
+      "differentNumericPairs": 1902,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 8.43769498715119e-15,
+      "maxScaledDifference": 3.3611911923234145e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.rows[3].angularRateRadS",
+        "browser": 3.183972810698303,
+        "reference": 3.1839728106982945,
+        "absoluteDifference": 8.43769498715119e-15,
+        "scaledDifference": 2.650052462382884e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll90_height24.rows[6].angularRateRadS",
+        "browser": 1.1891031065947102,
+        "reference": 1.1891031065947142,
+        "absoluteDifference": 3.9968028886505635e-15,
+        "scaledDifference": 3.3611911923234145e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "rigidContacts": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "frontRightLiftForceN": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 631,
+      "differentNumericPairs": 1289,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.637978807091713e-11,
+      "maxScaledDifference": 1.7100148045822273e-14,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height24.rows[5].frontRightLiftForceN",
+        "browser": 6664.571543240458,
+        "reference": 6664.571543240494,
+        "absoluteDifference": 3.637978807091713e-11,
+        "scaledDifference": 5.458683703052919e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.rows[3].frontRightLiftForceN",
+        "browser": 1396.1420601485177,
+        "reference": 1396.1420601485415,
+        "absoluteDifference": 2.3874235921539366e-11,
+        "scaledDifference": 1.7100148045822273e-14
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "frontRightLiftAvailableN": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "frontRightLiftHealth": {
+      "numericPairs": 1920,
+      "exactlyEqualNumericPairs": 1920,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "controllerMode": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 1920,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    }
+  },
+  "metricFieldComparisons": {
+    "statisticsSource": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 16,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "statisticsSteps": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "statisticsDt": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "minimumAbsPressure": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "minimumTcsFactor": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxAbsSlipRatio": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "lockedWheelSeconds": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "spinningWheelSeconds": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "absActiveSeconds": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "tcsActiveSeconds": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "peakWheelOmegaRadS": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 15,
+      "differentNumericPairs": 1,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.7763568394002505e-15,
+      "maxScaledDifference": 1.063525677877436e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.peakWheelOmegaRadS",
+        "browser": 1.6702528921967068,
+        "reference": 1.670252892196705,
+        "absoluteDifference": 1.7763568394002505e-15,
+        "scaledDifference": 1.063525677877436e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.peakWheelOmegaRadS",
+        "browser": 1.6702528921967068,
+        "reference": 1.670252892196705,
+        "absoluteDifference": 1.7763568394002505e-15,
+        "scaledDifference": 1.063525677877436e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "launchDistanceM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "finalSpeedKmh": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 16,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 7.424127315653695e-15,
+      "maxScaledDifference": 7.424127315653695e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.finalSpeedKmh",
+        "browser": -3.5253707147684313e-06,
+        "reference": -3.5253707221925586e-06,
+        "absoluteDifference": 7.424127315653695e-15,
+        "scaledDifference": 7.424127315653695e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.finalSpeedKmh",
+        "browser": -3.5253707147684313e-06,
+        "reference": -3.5253707221925586e-06,
+        "absoluteDifference": 7.424127315653695e-15,
+        "scaledDifference": 7.424127315653695e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "peakWingDownforceN": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "peakWingDragN": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "brakeDissipationJ": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 15,
+      "differentNumericPairs": 1,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 8.881784197001252e-15,
+      "maxScaledDifference": 6.08350679861333e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.brakeDissipationJ",
+        "browser": 14.59977689023995,
+        "reference": 14.59977689023994,
+        "absoluteDifference": 8.881784197001252e-15,
+        "scaledDifference": 6.08350679861333e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.brakeDissipationJ",
+        "browser": 14.59977689023995,
+        "reference": 14.59977689023994,
+        "absoluteDifference": 8.881784197001252e-15,
+        "scaledDifference": 6.08350679861333e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "tireDissipationJ": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 15,
+      "differentNumericPairs": 1,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 2.1827872842550278e-11,
+      "maxScaledDifference": 3.864214762999547e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.tireDissipationJ",
+        "browser": 56487.21456052474,
+        "reference": 56487.214560524764,
+        "absoluteDifference": 2.1827872842550278e-11,
+        "scaledDifference": 3.864214762999547e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.tireDissipationJ",
+        "browser": 56487.21456052474,
+        "reference": 56487.214560524764,
+        "absoluteDifference": 2.1827872842550278e-11,
+        "scaledDifference": 3.864214762999547e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "externalSupplyKg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 7,
+      "differentNumericPairs": 9,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.1368683772161603e-13,
+      "maxScaledDifference": 2.412340426345686e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height3.metrics.externalSupplyKg",
+        "browser": 471.2719501775859,
+        "reference": 471.2719501775858,
+        "absoluteDifference": 1.1368683772161603e-13,
+        "scaledDifference": 2.4123404263456857e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height12.metrics.externalSupplyKg",
+        "browser": 471.2719501775857,
+        "reference": 471.27195017758584,
+        "absoluteDifference": 1.1368683772161603e-13,
+        "scaledDifference": 2.412340426345686e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxBetaDeg": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "betaValidFraction": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxYawRateDegS": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 16,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 6.394884621840902e-14,
+      "maxScaledDifference": 3.1616205312303084e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.maxYawRateDegS",
+        "browser": 20.22660391616443,
+        "reference": 20.226603916164493,
+        "absoluteDifference": 6.394884621840902e-14,
+        "scaledDifference": 3.1616205312303084e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.maxYawRateDegS",
+        "browser": 20.22660391616443,
+        "reference": 20.226603916164493,
+        "absoluteDifference": 6.394884621840902e-14,
+        "scaledDifference": 3.1616205312303084e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxVerticalMps": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 2,
+      "differentNumericPairs": 14,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 6.328271240363392e-15,
+      "maxScaledDifference": 6.328271240363392e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.maxVerticalMps",
+        "browser": 0.3045396852841754,
+        "reference": 0.30453968528418174,
+        "absoluteDifference": 6.328271240363392e-15,
+        "scaledDifference": 6.328271240363392e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.maxVerticalMps",
+        "browser": 0.3045396852841754,
+        "reference": 0.30453968528418174,
+        "absoluteDifference": 6.328271240363392e-15,
+        "scaledDifference": 6.328271240363392e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxHeightM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 13,
+      "differentNumericPairs": 3,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.552713678800501e-15,
+      "maxScaledDifference": 1.4798431045845295e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height24.metrics.maxHeightM",
+        "browser": 24.00736718503639,
+        "reference": 24.007367185036387,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 1.4798431045845295e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height24.metrics.maxHeightM",
+        "browser": 24.00736718503639,
+        "reference": 24.007367185036387,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 1.4798431045845295e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "minHeightM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 13,
+      "differentNumericPairs": 3,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.552713678800501e-15,
+      "maxScaledDifference": 3.3306690738754696e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height24.metrics.minHeightM",
+        "browser": 23.929419780455728,
+        "reference": 23.929419780455724,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 1.4846635277392592e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.minHeightM",
+        "browser": 0.5771846392233206,
+        "reference": 0.5771846392233203,
+        "absoluteDifference": 3.3306690738754696e-16,
+        "scaledDifference": 3.3306690738754696e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxAbsRollDeg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 12,
+      "differentNumericPairs": 4,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.4210854715202004e-14,
+      "maxScaledDifference": 1.5723725700304967e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height3.metrics.maxAbsRollDeg",
+        "browser": 90.37841912318768,
+        "reference": 90.3784191231877,
+        "absoluteDifference": 1.4210854715202004e-14,
+        "scaledDifference": 1.5723725700304967e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll90_height3.metrics.maxAbsRollDeg",
+        "browser": 90.37841912318768,
+        "reference": 90.3784191231877,
+        "absoluteDifference": 1.4210854715202004e-14,
+        "scaledDifference": 1.5723725700304967e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "rollTravelDeg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 4,
+      "differentNumericPairs": 12,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.1368683772161603e-13,
+      "maxScaledDifference": 9.473903155882222e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.rollTravelDeg",
+        "browser": -120.00546676681044,
+        "reference": -120.00546676681056,
+        "absoluteDifference": 1.1368683772161603e-13,
+        "scaledDifference": 9.47347156630184e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll90_height6.metrics.rollTravelDeg",
+        "browser": -89.99999988206756,
+        "reference": -89.99999988206764,
+        "absoluteDifference": 8.526512829121202e-14,
+        "scaledDifference": 9.473903155882222e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "completeRotation": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 16,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "inverted": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 16,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "gasUsedKg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "throughputKg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 7,
+      "differentNumericPairs": 9,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.1368683772161603e-13,
+      "maxScaledDifference": 2.412340426345686e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height3.metrics.throughputKg",
+        "browser": 471.2719501775859,
+        "reference": 471.2719501775858,
+        "absoluteDifference": 1.1368683772161603e-13,
+        "scaledDifference": 2.4123404263456857e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height12.metrics.throughputKg",
+        "browser": 471.2719501775857,
+        "reference": 471.27195017758584,
+        "absoluteDifference": 1.1368683772161603e-13,
+        "scaledDifference": 2.412340426345686e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "massBalanceErrorKg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "deliveredImpulseNs": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 11,
+      "differentNumericPairs": 5,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 5.820766091346741e-11,
+      "maxScaledDifference": 2.1796843388942742e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll60_height3.metrics.deliveredImpulseNs",
+        "browser": 277713.5201413909,
+        "reference": 277713.52014139097,
+        "absoluteDifference": 5.820766091346741e-11,
+        "scaledDifference": 2.0959606462023318e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height6.metrics.deliveredImpulseNs",
+        "browser": 267046.286816904,
+        "reference": 267046.2868169039,
+        "absoluteDifference": 5.820766091346741e-11,
+        "scaledDifference": 2.1796843388942742e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "remainingGasKg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "initialHoverEstimateSeconds": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "lossOfSupportSeconds": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "heightHoldLostSeconds": {
+      "numericPairs": 4,
+      "exactlyEqualNumericPairs": 4,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 12,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "groundTouchSeconds": {
+      "numericPairs": 1,
+      "exactlyEqualNumericPairs": 1,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 15,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "touchdown": {
+      "numericPairs": 4,
+      "exactlyEqualNumericPairs": 4,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 15,
+      "matchingCategoricalPairs": 1,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "stableLanding": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "stop": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "speedRmseKmh": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "meanSpeedKmh": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "minSpeedKmh": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxSpeedKmh": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "heightRmseM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 11,
+      "differentNumericPairs": 5,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 5.516420653606247e-16,
+      "maxScaledDifference": 5.516420653606247e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height24.metrics.heightRmseM",
+        "browser": 0.01443523199431839,
+        "reference": 0.014435231994318941,
+        "absoluteDifference": 5.516420653606247e-16,
+        "scaledDifference": 5.516420653606247e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height24.metrics.heightRmseM",
+        "browser": 0.01443523199431839,
+        "reference": 0.014435231994318941,
+        "absoluteDifference": 5.516420653606247e-16,
+        "scaledDifference": 5.516420653606247e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxPositionErrorM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 2,
+      "differentNumericPairs": 14,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.5987211554602254e-14,
+      "maxScaledDifference": 1.4664668890732548e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height24.metrics.maxPositionErrorM",
+        "browser": 10.901856478127149,
+        "reference": 10.901856478127165,
+        "absoluteDifference": 1.5987211554602254e-14,
+        "scaledDifference": 1.4664668890732548e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll90_height24.metrics.maxPositionErrorM",
+        "browser": 10.901856478127149,
+        "reference": 10.901856478127165,
+        "absoluteDifference": 1.5987211554602254e-14,
+        "scaledDifference": 1.4664668890732548e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "finalPositionErrorM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 2,
+      "differentNumericPairs": 14,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.5987211554602254e-14,
+      "maxScaledDifference": 1.8029235833479547e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height24.metrics.finalPositionErrorM",
+        "browser": 10.84539428835311,
+        "reference": 10.845394288353125,
+        "absoluteDifference": 1.5987211554602254e-14,
+        "scaledDifference": 1.4741014599875754e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height24.metrics.finalPositionErrorM",
+        "browser": 1.9705292623679875,
+        "reference": 1.970529262367991,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 1.8029235833479547e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "releaseOvershootM": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 16,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "recoveredAtSeconds": {
+      "numericPairs": 15,
+      "exactlyEqualNumericPairs": 15,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 1,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "recoveryMaintainedToEnd": {
+      "numericPairs": 0,
+      "exactlyEqualNumericPairs": 0,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 16,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "driverSaturationSeconds": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "nozzleSaturationSeconds": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "allocationRmse": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 3,
+      "differentNumericPairs": 13,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.6653345369377348e-16,
+      "maxScaledDifference": 1.6653345369377348e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.allocationRmse",
+        "browser": 0.38695097353096036,
+        "reference": 0.3869509735309602,
+        "absoluteDifference": 1.6653345369377348e-16,
+        "scaledDifference": 1.6653345369377348e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.allocationRmse",
+        "browser": 0.38695097353096036,
+        "reference": 0.3869509735309602,
+        "absoluteDifference": 1.6653345369377348e-16,
+        "scaledDifference": 1.6653345369377348e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxHeadingDeviationDeg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 12,
+      "differentNumericPairs": 4,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 2.220446049250313e-16,
+      "maxScaledDifference": 1.6614548266561693e-16,
+      "worstAbsoluteDifference": {
+        "path": "roll120_height3.metrics.maxHeadingDeviationDeg",
+        "browser": 1.336446837810911,
+        "reference": 1.3364468378109111,
+        "absoluteDifference": 2.220446049250313e-16,
+        "scaledDifference": 1.6614548266561693e-16
+      },
+      "worstScaledDifference": {
+        "path": "roll120_height3.metrics.maxHeadingDeviationDeg",
+        "browser": 1.336446837810911,
+        "reference": 1.3364468378109111,
+        "absoluteDifference": 2.220446049250313e-16,
+        "scaledDifference": 1.6614548266561693e-16
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maxLateralDeviationM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 2,
+      "differentNumericPairs": 14,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.5987211554602254e-14,
+      "maxScaledDifference": 1.5913610329912319e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height24.metrics.maxLateralDeviationM",
+        "browser": 10.896940124032849,
+        "reference": 10.896940124032865,
+        "absoluteDifference": 1.5987211554602254e-14,
+        "scaledDifference": 1.4671285124658943e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height3.metrics.maxLateralDeviationM",
+        "browser": 1.9534375949291993,
+        "reference": 1.9534375949291962,
+        "absoluteDifference": 3.1086244689504383e-15,
+        "scaledDifference": 1.5913610329912319e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "hullContactSamples": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "attitudeRmseDeg": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 2,
+      "differentNumericPairs": 14,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.7763568394002505e-14,
+      "maxScaledDifference": 2.546382012846576e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height3.metrics.attitudeRmseDeg",
+        "browser": 15.288575730759742,
+        "reference": 15.28857573075976,
+        "absoluteDifference": 1.7763568394002505e-14,
+        "scaledDifference": 1.1618851034150419e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height3.metrics.attitudeRmseDeg",
+        "browser": 5.232002200882886,
+        "reference": 5.232002200882873,
+        "absoluteDifference": 1.3322676295501878e-14,
+        "scaledDifference": 2.546382012846576e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "positionRmseM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 3,
+      "differentNumericPairs": 13,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 1.5987211554602254e-14,
+      "maxScaledDifference": 1.6384567194328112e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll90_height24.metrics.positionRmseM",
+        "browser": 10.073537062432413,
+        "reference": 10.073537062432429,
+        "absoluteDifference": 1.5987211554602254e-14,
+        "scaledDifference": 1.5870504526383176e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height24.metrics.positionRmseM",
+        "browser": 1.8972881200222083,
+        "reference": 1.8972881200222114,
+        "absoluteDifference": 3.1086244689504383e-15,
+        "scaledDifference": 1.6384567194328112e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "maximumHeightLossM": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 14,
+      "differentNumericPairs": 2,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 3.552713678800501e-15,
+      "maxScaledDifference": 3.552713678800501e-15,
+      "worstAbsoluteDifference": {
+        "path": "roll30_height24.metrics.maximumHeightLossM",
+        "browser": 0.07058021954427218,
+        "reference": 0.07058021954427574,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 3.552713678800501e-15
+      },
+      "worstScaledDifference": {
+        "path": "roll30_height24.metrics.maximumHeightLossM",
+        "browser": 0.07058021954427218,
+        "reference": 0.07058021954427574,
+        "absoluteDifference": 3.552713678800501e-15,
+        "scaledDifference": 3.552713678800501e-15
+      },
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "energyUsedKWh": {
+      "numericPairs": 16,
+      "exactlyEqualNumericPairs": 16,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 0,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    },
+    "sustainedFinalRecoverySeconds": {
+      "numericPairs": 15,
+      "exactlyEqualNumericPairs": 15,
+      "differentNumericPairs": 0,
+      "matchingNullPairs": 1,
+      "matchingCategoricalPairs": 0,
+      "maxAbsoluteDifference": 0.0,
+      "maxScaledDifference": 0.0,
+      "worstAbsoluteDifference": null,
+      "worstScaledDifference": null,
+      "structuralOrCategoricalMismatches": [],
+      "numericDifferencesBeyondComparisonTolerance": [],
+      "withinComparisonTolerance": true
+    }
+  },
+  "summaryCaseComparison": {
+    "numericPairs": 208,
+    "exactlyEqualNumericPairs": 185,
+    "differentNumericPairs": 23,
+    "matchingNullPairs": 16,
+    "matchingCategoricalPairs": 48,
+    "maxAbsoluteDifference": 1.1368683772161603e-13,
+    "maxScaledDifference": 3.552713678800501e-15,
+    "worstAbsoluteDifference": {
+      "path": "roll30_height3.summaryCase.externalGasKg",
+      "browser": 471.2719501775859,
+      "reference": 471.2719501775858,
+      "absoluteDifference": 1.1368683772161603e-13,
+      "scaledDifference": 2.4123404263456857e-16
+    },
+    "worstScaledDifference": {
+      "path": "roll30_height24.summaryCase.maximumHeightLossM",
+      "browser": 0.07058021954427218,
+      "reference": 0.07058021954427574,
+      "absoluteDifference": 3.552713678800501e-15,
+      "scaledDifference": 3.552713678800501e-15
+    },
+    "structuralOrCategoricalMismatches": [],
+    "numericDifferencesBeyondComparisonTolerance": [],
+    "withinComparisonTolerance": true
+  },
+  "floatingPointInterpretation": {
+    "largestCurveDifference": {
+      "path": "roll30_height3.rows[89].tiltErrorDeg",
+      "browser": 1.7075472925031877e-06,
+      "reference": 1.2074182697257333e-06,
+      "absoluteDifference": 5.001290227774544e-07,
+      "scaledDifference": 5.001290227774544e-07
+    },
+    "largestCurveDifferenceUnit": "degrees (tiltErrorDeg)",
+    "cosineDifferenceImpliedByWorstAnglePair": 2.220446049250313e-16,
+    "explanation": "The largest curve difference occurs for near-zero tilt computed as acos(clamp(bodyUpY,-1,1)) in experiment-worker.js. Inverting these reported angles gives a cosine difference of approximately 2.22e-16. The near-zero acos mapping amplifies roundoff into about 5.00e-7 degrees. This is consistent with cross-runtime double-precision rounding, not a changed physical condition; the physical success tilt threshold remains 2 degrees. This interpretation is inferred from the saved values and source, without re-executing the solver.",
+    "outcomesAndEventTimesExactlyEqual": true
+  },
+  "grid": {
+    "counts": {
+      "recovered": 15,
+      "contact": 1,
+      "not_recovered_in_window": 0,
+      "not_returned": 0
+    },
+    "complete": true,
+    "contactCasesRollHeight": [
+      [
+        120,
+        3
+      ]
+    ],
+    "lowestSampledSuccess": [
+      {
+        "rollDeg": 30,
+        "heightM": 3,
+        "returned": 4
+      },
+      {
+        "rollDeg": 60,
+        "heightM": 3,
+        "returned": 4
+      },
+      {
+        "rollDeg": 90,
+        "heightM": 3,
+        "returned": 4
+      },
+      {
+        "rollDeg": 120,
+        "heightM": 6,
+        "returned": 4
+      }
+    ],
+    "returnedCases": 16,
+    "notReturnedCases": 0
+  },
+  "executionAttempt": {
+    "id": "mvg8nv2i-roadster-study-1-2",
+    "status": "completed",
+    "identity": {
+      "modelVersion": "3.12.0",
+      "modelBuildId": "3361bb3fc75c778555e46846b9299c271b8557cbe24d244af9c0719e27ff5255",
+      "protocolVersion": "g-recovery-grid-1"
+    },
+    "startedAt": "2026-10-20T05:24:31.626Z",
+    "finishedAt": "2026-10-20T05:24:38.118Z",
+    "reportedWallClockDurationS": 6.492,
+    "wallClockMeaning": "Difference of saved browser attempt timestamps for this batch; not GPU/FPS or route performance.",
+    "frozenJobs": 16,
+    "completedIds": [
+      "mvg8nv2i-roadster-study-1-2-0",
+      "mvg8nv2i-roadster-study-1-2-1",
+      "mvg8nv2i-roadster-study-1-2-2",
+      "mvg8nv2i-roadster-study-1-2-3",
+      "mvg8nv2i-roadster-study-1-2-4",
+      "mvg8nv2i-roadster-study-1-2-5",
+      "mvg8nv2i-roadster-study-1-2-6",
+      "mvg8nv2i-roadster-study-1-2-7",
+      "mvg8nv2i-roadster-study-1-2-8",
+      "mvg8nv2i-roadster-study-1-2-9",
+      "mvg8nv2i-roadster-study-1-2-10",
+      "mvg8nv2i-roadster-study-1-2-11",
+      "mvg8nv2i-roadster-study-1-2-12",
+      "mvg8nv2i-roadster-study-1-2-13",
+      "mvg8nv2i-roadster-study-1-2-14",
+      "mvg8nv2i-roadster-study-1-2-15"
+    ],
+    "completedIdsExactlyCoverReturnedSummaryCells": true,
+    "missingOrNullReports": 0,
+    "missingOrNullReturnedCellIds": 0,
+    "sourceConfiguration": null,
+    "reason": "全部方案已返回实际求解结果"
+  },
+  "nullValueSemantics": {
+    "missingReportOrReturnedCaseNulls": 0,
+    "matchingCurveNullValues": 9149,
+    "matchingMetricNullValues": 204,
+    "metricNullCountsByField": {
+      "maxBetaDeg": 16,
+      "initialHoverEstimateSeconds": 16,
+      "lossOfSupportSeconds": 16,
+      "heightHoldLostSeconds": 12,
+      "groundTouchSeconds": 15,
+      "touchdown": 15,
+      "stableLanding": 16,
+      "stop": 16,
+      "speedRmseKmh": 16,
+      "meanSpeedKmh": 16,
+      "minSpeedKmh": 16,
+      "maxSpeedKmh": 16,
+      "releaseOvershootM": 16,
+      "recoveredAtSeconds": 1,
+      "sustainedFinalRecoverySeconds": 1
+    },
+    "explanation": "All 16 actual reports and returned grid cases are present. Null scientific fields remain intentional: e.g. undefined airborne road beta/slip, events that never occurred, inapplicable stopping/landing fields, and no recovery time for the contact case. Null sourceConfiguration means no historical configuration origin after default reset. These are not missing Worker results."
+  },
+  "heightWarningSemantics": {
+    "source": "dist/experiment-worker.js",
+    "sourceLines": {
+      "heightReference": 86,
+      "continuousErrorTimer": 88,
+      "firstEventLatch": 89,
+      "recoveryPredicate": 97,
+      "recoveryTimer": 98,
+      "warningEmission": 120,
+      "finalOutcome": 125,
+      "exportedEvent": 127,
+      "exportedFinalRecoveryTime": 133
+    },
+    "warningDefinition": "During any part of the full 12 s, absolute COM-height error from the starting height exceeds 0.75 m continuously for at least 0.25 s. The first confirmation time is retained even if the error subsequently recovers.",
+    "finalRecoveryDefinition": "The last continuous segment through the end must satisfy tilt/roll/pitch <2 degrees, angular speed <0.15 rad/s, abs(vertical speed)<0.4 m/s and abs(starting-height error)<0.75 m for at least 0.5 s, with no tire or rigid-body contact anywhere in the run.",
+    "canCoexist": true,
+    "focusCase": {
+      "rollDeg": 120,
+      "heightM": 24,
+      "outcome": "recovered",
+      "warningPresent": true,
+      "heightHoldLostSeconds": 0.5750000000000004,
+      "minimumHeightM": 21.991595455777045,
+      "maximumHeightLossM": 2.0084045442229552,
+      "firstSustainedRecoverySeconds": 3.033333333333325,
+      "sustainedFinalRecoverySeconds": 3.033333333333327,
+      "recoveryMaintainedToEnd": true,
+      "savedEvents": [
+        {
+          "time": 0.5750000000000004,
+          "type": "sustained_height_error"
+        },
+        {
+          "time": 3.033333333333325,
+          "type": "stable_attitude_recovery"
+        }
+      ],
+      "finalStoredSample": {
+        "time": 11.99999999999996,
+        "height": 23.999816249684326,
+        "heightError": -0.00018375031567430256,
+        "tiltErrorDeg": 0,
+        "angularRateRadS": 8.721743673846162e-09,
+        "vertical": 8.318471330226539e-08
+      },
+      "warningAndRecoveryMetricsMatchReference": true
+    }
+  },
+  "cases": [
+    {
+      "rollDeg": 30,
+      "heightM": 3,
+      "runId": "R-40d24f94",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3846,
+        "differentNumericPairs": 1434,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll30_height3.rows[89].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll30_height3.rows[89].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 33,
+        "differentNumericPairs": 11,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 1.1368683772161603e-13,
+        "maxScaledDifference": 2.546382012846576e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll30_height3.metrics.externalSupplyKg",
+          "browser": 471.2719501775859,
+          "reference": 471.2719501775858,
+          "absoluteDifference": 1.1368683772161603e-13,
+          "scaledDifference": 2.4123404263456857e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll30_height3.metrics.attitudeRmseDeg",
+          "browser": 5.232002200882886,
+          "reference": 5.232002200882873,
+          "absoluteDifference": 1.3322676295501878e-14,
+          "scaledDifference": 2.546382012846576e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 2.92941978045573,
+        "maximumHeightLossM": 0.07058021954426996,
+        "firstSustainedRecoverySeconds": 1.524999999999997,
+        "sustainedFinalRecoverySeconds": 1.5249999999999988,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018369529383654992,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 5.411174161847108e-10,
+        "finalStoredVerticalSpeedMps": 5.492635262972889e-09
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 60,
+      "heightM": 3,
+      "runId": "R-847d29ae",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3635,
+        "differentNumericPairs": 1645,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll60_height3.rows[95].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll60_height3.rows[95].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 31,
+        "differentNumericPairs": 13,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 5.820766091346741e-11,
+        "maxScaledDifference": 2.3077509004508887e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll60_height3.metrics.deliveredImpulseNs",
+          "browser": 277713.5201413909,
+          "reference": 277713.52014139097,
+          "absoluteDifference": 5.820766091346741e-11,
+          "scaledDifference": 2.0959606462023318e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll60_height3.metrics.maxYawRateDegS",
+          "browser": 9.236821040190355,
+          "reference": 9.236821040190334,
+          "absoluteDifference": 2.1316282072803006e-14,
+          "scaledDifference": 2.3077509004508887e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 2.953531220498037,
+        "maximumHeightLossM": 0.04646877950196293,
+        "firstSustainedRecoverySeconds": 1.6999999999999964,
+        "sustainedFinalRecoverySeconds": 1.6999999999999982,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.0001837016359731436,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 1.4727051395825135e-09,
+        "finalStoredVerticalSpeedMps": 1.547755126081325e-08
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 90,
+      "heightM": 3,
+      "runId": "R-60260f1c",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3696,
+        "differentNumericPairs": 1584,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll90_height3.rows[104].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll90_height3.rows[104].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 31,
+        "differentNumericPairs": 13,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 5.820766091346741e-11,
+        "maxScaledDifference": 1.1618851034150419e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll90_height3.metrics.deliveredImpulseNs",
+          "browser": 288551.6921381959,
+          "reference": 288551.69213819597,
+          "absoluteDifference": 5.820766091346741e-11,
+          "scaledDifference": 2.0172351263006986e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll90_height3.metrics.attitudeRmseDeg",
+          "browser": 15.288575730759742,
+          "reference": 15.28857573075976,
+          "absoluteDifference": 1.7763568394002505e-14,
+          "scaledDifference": 1.1618851034150419e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 2.233904110448073,
+        "maximumHeightLossM": 0.7660958895519272,
+        "firstSustainedRecoverySeconds": 2.066666666666662,
+        "sustainedFinalRecoverySeconds": 2.0666666666666638,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.0001837249629348392,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 4.908222150025591e-09,
+        "finalStoredVerticalSpeedMps": 4.881921275890417e-08
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 120,
+      "heightM": 3,
+      "runId": "R-79cf14c4",
+      "outcome": "contact",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5731,
+        "exactlyEqualNumericPairs": 3559,
+        "differentNumericPairs": 2172,
+        "matchingNullPairs": 149,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 4.76324656150176e-10,
+        "maxScaledDifference": 4.76324656150176e-10,
+        "worstAbsoluteDifference": {
+          "path": "roll120_height3.rows[20].tiltErrorDeg",
+          "browser": 0.0015303203740378475,
+          "reference": 0.0015303208503625037,
+          "absoluteDifference": 4.76324656150176e-10,
+          "scaledDifference": 4.76324656150176e-10
+        },
+        "worstScaledDifference": {
+          "path": "roll120_height3.rows[20].tiltErrorDeg",
+          "browser": 0.0015303203740378475,
+          "reference": 0.0015303208503625037,
+          "absoluteDifference": 4.76324656150176e-10,
+          "scaledDifference": 4.76324656150176e-10
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 48,
+        "exactlyEqualNumericPairs": 33,
+        "differentNumericPairs": 15,
+        "matchingNullPairs": 12,
+        "matchingCategoricalPairs": 5,
+        "maxAbsoluteDifference": 2.1827872842550278e-11,
+        "maxScaledDifference": 7.424127315653695e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll120_height3.metrics.tireDissipationJ",
+          "browser": 56487.21456052474,
+          "reference": 56487.214560524764,
+          "absoluteDifference": 2.1827872842550278e-11,
+          "scaledDifference": 3.864214762999547e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll120_height3.metrics.finalSpeedKmh",
+          "browser": -3.5253707147684313e-06,
+          "reference": -3.5253707221925586e-06,
+          "absoluteDifference": 7.424127315653695e-15,
+          "scaledDifference": 7.424127315653695e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": 0.5750000000000004,
+        "minimumHeightM": 0.5771846392233206,
+        "maximumHeightLossM": 2.4228153607766796,
+        "firstSustainedRecoverySeconds": null,
+        "sustainedFinalRecoverySeconds": null,
+        "recoveryMaintainedToEnd": false,
+        "groundTouchSeconds": 0.591666666666667,
+        "rigidContactSamples": 34,
+        "finalStoredHeightErrorM": -2.4029910163056014,
+        "finalStoredTiltErrorDeg": 0.005466782395203938,
+        "finalStoredAngularRateRadS": 8.769309113926846e-09,
+        "finalStoredVerticalSpeedMps": -1.4530439272788396e-15
+      },
+      "warnings": [
+        "出现刚体接触，当前响应含接触/机械止挡作用",
+        "高度误差持续超限；不应只依据额定推重比判断控制成功"
+      ]
+    },
+    {
+      "rollDeg": 30,
+      "heightM": 6,
+      "runId": "R-d5af205c",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3775,
+        "differentNumericPairs": 1505,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll30_height6.rows[89].tiltErrorDeg",
+          "browser": 1.2074182697257333e-06,
+          "reference": 1.7075472925031877e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll30_height6.rows[89].tiltErrorDeg",
+          "browser": 1.2074182697257333e-06,
+          "reference": 1.7075472925031877e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 33,
+        "differentNumericPairs": 11,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 5.820766091346741e-11,
+        "maxScaledDifference": 2.546382012846576e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll30_height6.metrics.deliveredImpulseNs",
+          "browser": 267046.286816904,
+          "reference": 267046.2868169039,
+          "absoluteDifference": 5.820766091346741e-11,
+          "scaledDifference": 2.1796843388942742e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll30_height6.metrics.attitudeRmseDeg",
+          "browser": 5.232002200882873,
+          "reference": 5.232002200882886,
+          "absoluteDifference": 1.3322676295501878e-14,
+          "scaledDifference": 2.546382012846576e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 5.929419780455728,
+        "maximumHeightLossM": 0.07058021954427218,
+        "firstSustainedRecoverySeconds": 1.524999999999997,
+        "sustainedFinalRecoverySeconds": 1.5249999999999988,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018369529383654992,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 5.411173976368147e-10,
+        "finalStoredVerticalSpeedMps": 5.4926359857416385e-09
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 60,
+      "heightM": 6,
+      "runId": "R-0aae7072",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3763,
+        "differentNumericPairs": 1517,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll60_height6.rows[95].tiltErrorDeg",
+          "browser": 1.2074182697257333e-06,
+          "reference": 1.7075472925031877e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll60_height6.rows[95].tiltErrorDeg",
+          "browser": 1.2074182697257333e-06,
+          "reference": 1.7075472925031877e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 31,
+        "differentNumericPairs": 13,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 5.684341886080802e-14,
+        "maxScaledDifference": 7.186985797631762e-16,
+        "worstAbsoluteDifference": {
+          "path": "roll60_height6.metrics.externalSupplyKg",
+          "browser": 490.0970306973442,
+          "reference": 490.09703069734417,
+          "absoluteDifference": 5.684341886080802e-14,
+          "scaledDifference": 1.1598400990091134e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll60_height6.metrics.attitudeRmseDeg",
+          "browser": 9.886519269235734,
+          "reference": 9.886519269235741,
+          "absoluteDifference": 7.105427357601002e-15,
+          "scaledDifference": 7.186985797631762e-16
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 5.9535312204980375,
+        "maximumHeightLossM": 0.04646877950196249,
+        "firstSustainedRecoverySeconds": 1.6999999999999964,
+        "sustainedFinalRecoverySeconds": 1.6999999999999982,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018370163597936084,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 1.4727050837955387e-09,
+        "finalStoredVerticalSpeedMps": 1.5477555702698886e-08
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 90,
+      "heightM": 6,
+      "runId": "R-69905990",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3671,
+        "differentNumericPairs": 1609,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll90_height6.rows[104].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll90_height6.rows[104].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 28,
+        "differentNumericPairs": 16,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 8.526512829121202e-14,
+        "maxScaledDifference": 1.1618851034150419e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll90_height6.metrics.rollTravelDeg",
+          "browser": -89.99999988206756,
+          "reference": -89.99999988206764,
+          "absoluteDifference": 8.526512829121202e-14,
+          "scaledDifference": 9.473903155882222e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll90_height6.metrics.attitudeRmseDeg",
+          "browser": 15.288575730759742,
+          "reference": 15.28857573075976,
+          "absoluteDifference": 1.7763568394002505e-14,
+          "scaledDifference": 1.1618851034150419e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 5.233904110448073,
+        "maximumHeightLossM": 0.7660958895519272,
+        "firstSustainedRecoverySeconds": 2.066666666666662,
+        "sustainedFinalRecoverySeconds": 2.0666666666666638,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018372496293128648,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 4.908222127979759e-09,
+        "finalStoredVerticalSpeedMps": 4.8819209082691366e-08
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 120,
+      "heightM": 6,
+      "runId": "R-9982b266",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3947,
+        "differentNumericPairs": 1333,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 2.546585164964199e-11,
+        "maxScaledDifference": 3.958014251576552e-14,
+        "worstAbsoluteDifference": {
+          "path": "roll120_height6.rows[2].thrust",
+          "browser": 13526.233588115492,
+          "reference": 13526.233588115467,
+          "absoluteDifference": 2.546585164964199e-11,
+          "scaledDifference": 1.882700863011634e-15
+        },
+        "worstScaledDifference": {
+          "path": "roll120_height6.rows[11].tiltErrorDeg",
+          "browser": 4.286040104457571,
+          "reference": 4.286040104457741,
+          "absoluteDifference": 1.6964207816272392e-13,
+          "scaledDifference": 3.958014251576552e-14
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 45,
+        "exactlyEqualNumericPairs": 32,
+        "differentNumericPairs": 13,
+        "matchingNullPairs": 12,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 1.1368683772161603e-13,
+        "maxScaledDifference": 1.434591004719215e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll120_height6.metrics.externalSupplyKg",
+          "browser": 521.4782649599928,
+          "reference": 521.4782649599929,
+          "absoluteDifference": 1.1368683772161603e-13,
+          "scaledDifference": 2.1800877497806727e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll120_height6.metrics.maxYawRateDegS",
+          "browser": 17.33525141994805,
+          "reference": 17.335251419948076,
+          "absoluteDifference": 2.4868995751603507e-14,
+          "scaledDifference": 1.434591004719215e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": 0.5750000000000004,
+        "minimumHeightM": 3.9915954557770545,
+        "maximumHeightLossM": 2.0084045442229455,
+        "firstSustainedRecoverySeconds": 3.033333333333325,
+        "sustainedFinalRecoverySeconds": 3.033333333333327,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018375031568229616,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 8.72174373939708e-09,
+        "finalStoredVerticalSpeedMps": 8.318471684988198e-08
+      },
+      "warnings": [
+        "高度误差持续超限；不应只依据额定推重比判断控制成功"
+      ]
+    },
+    {
+      "rollDeg": 30,
+      "heightM": 12,
+      "runId": "R-3fbcc44e",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3919,
+        "differentNumericPairs": 1361,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 1.0913936421275139e-11,
+        "maxScaledDifference": 4.551914400963142e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll30_height12.rows[39].thrust",
+          "browser": 21623.149117600762,
+          "reference": 21623.14911760075,
+          "absoluteDifference": 1.0913936421275139e-11,
+          "scaledDifference": 5.047339017049758e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll30_height12.rows[11].roll",
+          "browser": 0.9565964855822283,
+          "reference": 0.9565964855822238,
+          "absoluteDifference": 4.551914400963142e-15,
+          "scaledDifference": 4.551914400963142e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 32,
+        "differentNumericPairs": 12,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 1.1368683772161603e-13,
+        "maxScaledDifference": 5.683432260682975e-16,
+        "worstAbsoluteDifference": {
+          "path": "roll30_height12.metrics.externalSupplyKg",
+          "browser": 471.2719501775857,
+          "reference": 471.27195017758584,
+          "absoluteDifference": 1.1368683772161603e-13,
+          "scaledDifference": 2.412340426345686e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll30_height12.metrics.maxLateralDeviationM",
+          "browser": 1.9534375949291978,
+          "reference": 1.9534375949291967,
+          "absoluteDifference": 1.1102230246251565e-15,
+          "scaledDifference": 5.683432260682975e-16
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 11.92941978045573,
+        "maximumHeightLossM": 0.0705802195442704,
+        "firstSustainedRecoverySeconds": 1.524999999999997,
+        "sustainedFinalRecoverySeconds": 1.5249999999999988,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018369529383832628,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 5.411174269782875e-10,
+        "finalStoredVerticalSpeedMps": 5.49263517274475e-09
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 60,
+      "heightM": 12,
+      "runId": "R-61991ff2",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3789,
+        "differentNumericPairs": 1491,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll60_height12.rows[95].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll60_height12.rows[95].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 34,
+        "differentNumericPairs": 10,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 5.820766091346741e-11,
+        "maxScaledDifference": 7.692503001502983e-16,
+        "worstAbsoluteDifference": {
+          "path": "roll60_height12.metrics.deliveredImpulseNs",
+          "browser": 277713.52014139085,
+          "reference": 277713.5201413909,
+          "absoluteDifference": 5.820766091346741e-11,
+          "scaledDifference": 2.095960646202332e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll60_height12.metrics.maxYawRateDegS",
+          "browser": 9.23682104019033,
+          "reference": 9.236821040190323,
+          "absoluteDifference": 7.105427357601002e-15,
+          "scaledDifference": 7.692503001502983e-16
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 11.953531220498036,
+        "maximumHeightLossM": 0.046468779501964264,
+        "firstSustainedRecoverySeconds": 1.6999999999999964,
+        "sustainedFinalRecoverySeconds": 1.6999999999999982,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018370163597403177,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 1.4727050580896037e-09,
+        "finalStoredVerticalSpeedMps": 1.5477553708242223e-08
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 90,
+      "heightM": 12,
+      "runId": "R-92b93a1e",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3788,
+        "differentNumericPairs": 1492,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll90_height12.rows[104].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll90_height12.rows[104].tiltErrorDeg",
+          "browser": 1.7075472925031877e-06,
+          "reference": 1.2074182697257333e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 33,
+        "differentNumericPairs": 11,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 5.684341886080802e-14,
+        "maxScaledDifference": 1.1618851034150419e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll90_height12.metrics.externalSupplyKg",
+          "browser": 509.2237765292246,
+          "reference": 509.22377652922466,
+          "absoluteDifference": 5.684341886080802e-14,
+          "scaledDifference": 1.1162758198024898e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll90_height12.metrics.attitudeRmseDeg",
+          "browser": 15.288575730759742,
+          "reference": 15.28857573075976,
+          "absoluteDifference": 1.7763568394002505e-14,
+          "scaledDifference": 1.1618851034150419e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 11.233904110448073,
+        "maximumHeightLossM": 0.7660958895519272,
+        "firstSustainedRecoverySeconds": 2.066666666666662,
+        "sustainedFinalRecoverySeconds": 2.0666666666666638,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018372496293217466,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 4.90822205473463e-09,
+        "finalStoredVerticalSpeedMps": 4.8819209531909684e-08
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 120,
+      "heightM": 12,
+      "runId": "R-322235ea",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 4156,
+        "differentNumericPairs": 1124,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 2.546585164964199e-11,
+        "maxScaledDifference": 3.958014251576552e-14,
+        "worstAbsoluteDifference": {
+          "path": "roll120_height12.rows[2].thrust",
+          "browser": 13526.233588115492,
+          "reference": 13526.233588115467,
+          "absoluteDifference": 2.546585164964199e-11,
+          "scaledDifference": 1.882700863011634e-15
+        },
+        "worstScaledDifference": {
+          "path": "roll120_height12.rows[11].tiltErrorDeg",
+          "browser": 4.286040104457571,
+          "reference": 4.286040104457741,
+          "absoluteDifference": 1.6964207816272392e-13,
+          "scaledDifference": 3.958014251576552e-14
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 45,
+        "exactlyEqualNumericPairs": 38,
+        "differentNumericPairs": 7,
+        "matchingNullPairs": 12,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 4.263256414560601e-14,
+        "maxScaledDifference": 1.434591004719215e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll120_height12.metrics.rollTravelDeg",
+          "browser": -119.99999978906109,
+          "reference": -119.99999978906105,
+          "absoluteDifference": 4.263256414560601e-14,
+          "scaledDifference": 3.552713685045547e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll120_height12.metrics.maxYawRateDegS",
+          "browser": 17.33525141994805,
+          "reference": 17.335251419948076,
+          "absoluteDifference": 2.4868995751603507e-14,
+          "scaledDifference": 1.434591004719215e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": 0.5750000000000004,
+        "minimumHeightM": 9.991595455777054,
+        "maximumHeightLossM": 2.0084045442229463,
+        "firstSustainedRecoverySeconds": 3.033333333333325,
+        "sustainedFinalRecoverySeconds": 3.033333333333327,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018375031568140798,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 8.721743756896035e-09,
+        "finalStoredVerticalSpeedMps": 8.318471486741367e-08
+      },
+      "warnings": [
+        "高度误差持续超限；不应只依据额定推重比判断控制成功"
+      ]
+    },
+    {
+      "rollDeg": 30,
+      "heightM": 24,
+      "runId": "R-1d74b190",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3751,
+        "differentNumericPairs": 1529,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 5.001290227774544e-07,
+        "maxScaledDifference": 5.001290227774544e-07,
+        "worstAbsoluteDifference": {
+          "path": "roll30_height24.rows[89].tiltErrorDeg",
+          "browser": 1.2074182697257333e-06,
+          "reference": 1.7075472925031877e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "worstScaledDifference": {
+          "path": "roll30_height24.rows[89].tiltErrorDeg",
+          "browser": 1.2074182697257333e-06,
+          "reference": 1.7075472925031877e-06,
+          "absoluteDifference": 5.001290227774544e-07,
+          "scaledDifference": 5.001290227774544e-07
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 28,
+        "differentNumericPairs": 16,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 1.1368683772161603e-13,
+        "maxScaledDifference": 3.552713678800501e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll30_height24.metrics.externalSupplyKg",
+          "browser": 471.2719501775859,
+          "reference": 471.271950177586,
+          "absoluteDifference": 1.1368683772161603e-13,
+          "scaledDifference": 2.412340426345685e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll30_height24.metrics.maximumHeightLossM",
+          "browser": 0.07058021954427218,
+          "reference": 0.07058021954427574,
+          "absoluteDifference": 3.552713678800501e-15,
+          "scaledDifference": 3.552713678800501e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 23.929419780455728,
+        "maximumHeightLossM": 0.07058021954427218,
+        "firstSustainedRecoverySeconds": 1.524999999999997,
+        "sustainedFinalRecoverySeconds": 1.5249999999999988,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.0001836952938454317,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 5.411173440509095e-10,
+        "finalStoredVerticalSpeedMps": 5.4926447260921965e-09
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 60,
+      "heightM": 24,
+      "runId": "R-e9acdb9c",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 4205,
+        "differentNumericPairs": 1075,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 9.094947017729282e-12,
+        "maxScaledDifference": 2.55351295663786e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll60_height24.rows[4].frontRightLiftForceN",
+          "browser": 4568.838012045429,
+          "reference": 4568.8380120454385,
+          "absoluteDifference": 9.094947017729282e-12,
+          "scaledDifference": 1.990647730068577e-15
+        },
+        "worstScaledDifference": {
+          "path": "roll60_height24.rows[9].pitch",
+          "browser": 0.961827527711636,
+          "reference": 0.9618275277116335,
+          "absoluteDifference": 2.55351295663786e-15,
+          "scaledDifference": 2.55351295663786e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 38,
+        "differentNumericPairs": 6,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 5.820766091346741e-11,
+        "maxScaledDifference": 3.8462515007514905e-16,
+        "worstAbsoluteDifference": {
+          "path": "roll60_height24.metrics.deliveredImpulseNs",
+          "browser": 277713.52014139097,
+          "reference": 277713.5201413909,
+          "absoluteDifference": 5.820766091346741e-11,
+          "scaledDifference": 2.0959606462023318e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll60_height24.metrics.maxYawRateDegS",
+          "browser": 9.236821040190328,
+          "reference": 9.236821040190332,
+          "absoluteDifference": 3.552713678800501e-15,
+          "scaledDifference": 3.8462515007514905e-16
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 23.95353122049803,
+        "maximumHeightLossM": 0.04646877950197137,
+        "firstSustainedRecoverySeconds": 1.6999999999999964,
+        "sustainedFinalRecoverySeconds": 1.6999999999999982,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018370163597225542,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 1.4727049273757397e-09,
+        "finalStoredVerticalSpeedMps": 1.5477557011473395e-08
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 90,
+      "heightM": 24,
+      "runId": "R-9074bfbc",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 3874,
+        "differentNumericPairs": 1406,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 3.637978807091713e-11,
+        "maxScaledDifference": 6.1164717334519585e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll90_height24.rows[4].thrust",
+          "browser": 54072.701395825665,
+          "reference": 54072.7013958257,
+          "absoluteDifference": 3.637978807091713e-11,
+          "scaledDifference": 6.727939816545872e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll90_height24.rows[10].yaw",
+          "browser": -1.5610172707178884,
+          "reference": -1.561017270717898,
+          "absoluteDifference": 9.547918011776346e-15,
+          "scaledDifference": 6.1164717334519585e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 44,
+        "exactlyEqualNumericPairs": 32,
+        "differentNumericPairs": 12,
+        "matchingNullPairs": 13,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 1.1368683772161603e-13,
+        "maxScaledDifference": 1.5870504526383176e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll90_height24.metrics.externalSupplyKg",
+          "browser": 509.22377652922484,
+          "reference": 509.2237765292247,
+          "absoluteDifference": 1.1368683772161603e-13,
+          "scaledDifference": 2.232551639604979e-16
+        },
+        "worstScaledDifference": {
+          "path": "roll90_height24.metrics.positionRmseM",
+          "browser": 10.073537062432413,
+          "reference": 10.073537062432429,
+          "absoluteDifference": 1.5987211554602254e-14,
+          "scaledDifference": 1.5870504526383176e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": null,
+        "minimumHeightM": 23.233904110448062,
+        "maximumHeightLossM": 0.7660958895519379,
+        "firstSustainedRecoverySeconds": 2.066666666666662,
+        "sustainedFinalRecoverySeconds": 2.0666666666666638,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018372496293395102,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 4.90822213024011e-09,
+        "finalStoredVerticalSpeedMps": 4.881921792022666e-08
+      },
+      "warnings": []
+    },
+    {
+      "rollDeg": 120,
+      "heightM": 24,
+      "runId": "R-899eb3f2",
+      "outcome": "recovered",
+      "requestsExactlyEqual": true,
+      "storedRows": 120,
+      "statisticsSteps": 1440,
+      "curveComparison": {
+        "numericPairs": 5280,
+        "exactlyEqualNumericPairs": 4049,
+        "differentNumericPairs": 1231,
+        "matchingNullPairs": 600,
+        "matchingCategoricalPairs": 120,
+        "maxAbsoluteDifference": 2.546585164964199e-11,
+        "maxScaledDifference": 3.958014251576552e-14,
+        "worstAbsoluteDifference": {
+          "path": "roll120_height24.rows[2].thrust",
+          "browser": 13526.233588115492,
+          "reference": 13526.233588115467,
+          "absoluteDifference": 2.546585164964199e-11,
+          "scaledDifference": 1.882700863011634e-15
+        },
+        "worstScaledDifference": {
+          "path": "roll120_height24.rows[11].tiltErrorDeg",
+          "browser": 4.286040104457571,
+          "reference": 4.286040104457741,
+          "absoluteDifference": 1.6964207816272392e-13,
+          "scaledDifference": 3.958014251576552e-14
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "metricComparison": {
+        "numericPairs": 45,
+        "exactlyEqualNumericPairs": 37,
+        "differentNumericPairs": 8,
+        "matchingNullPairs": 12,
+        "matchingCategoricalPairs": 4,
+        "maxAbsoluteDifference": 2.4868995751603507e-14,
+        "maxScaledDifference": 1.434591004719215e-15,
+        "worstAbsoluteDifference": {
+          "path": "roll120_height24.metrics.maxYawRateDegS",
+          "browser": 17.33525141994805,
+          "reference": 17.335251419948076,
+          "absoluteDifference": 2.4868995751603507e-14,
+          "scaledDifference": 1.434591004719215e-15
+        },
+        "worstScaledDifference": {
+          "path": "roll120_height24.metrics.maxYawRateDegS",
+          "browser": 17.33525141994805,
+          "reference": 17.335251419948076,
+          "absoluteDifference": 2.4868995751603507e-14,
+          "scaledDifference": 1.434591004719215e-15
+        },
+        "structuralOrCategoricalMismatches": [],
+        "numericDifferencesBeyondComparisonTolerance": [],
+        "withinComparisonTolerance": true
+      },
+      "heightAndRecovery": {
+        "heightHoldLostSeconds": 0.5750000000000004,
+        "minimumHeightM": 21.991595455777045,
+        "maximumHeightLossM": 2.0084045442229552,
+        "firstSustainedRecoverySeconds": 3.033333333333325,
+        "sustainedFinalRecoverySeconds": 3.033333333333327,
+        "recoveryMaintainedToEnd": true,
+        "groundTouchSeconds": null,
+        "rigidContactSamples": 0,
+        "finalStoredHeightErrorM": -0.00018375031567430256,
+        "finalStoredTiltErrorDeg": 0,
+        "finalStoredAngularRateRadS": 8.721743673846162e-09,
+        "finalStoredVerticalSpeedMps": 8.318471330226539e-08
+      },
+      "warnings": [
+        "高度误差持续超限；不应只依据额定推重比判断控制成功"
+      ]
+    }
+  ],
+  "limits": [
+    "This compares saved full 120 Hz summary statistics and every saved 10 Hz sample. The unsaved individual 120 Hz state sequence is not present and was not reconstructed.",
+    "Browser-generated timestamps and user-facing download provenance are retained; this parse does not independently measure browser CPU or graphics frame time.",
+    "Floating-point differences mean the browser and Node numeric reports are not asserted to be bit-for-bit identical.",
+    "No change was made to production code, tests, source JSON archives, or the original browser download."
+  ],
+  "provenancePathNote": "Public paths name the preserved repository files. Original comparison was produced read-only from the actual browser download; only these three source-path labels were made portable.",
+  "originalComparisonSha256": "b7eb9a06059edd1460f66deedea7d57968ead951546ce875d282a42ee7e58c5a"
+}

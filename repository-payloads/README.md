@@ -17,3 +17,5 @@ The runtime still loads its original `.bin` paths. Pages preparation publishes r
 The original user-uploaded stripe PNG and its segments are retained locally and excluded from the public Git tree and Pages. Its inspected provenance and SHA-256 remain in `qa/body-stripe-source-3.11.json`. This image is not a runtime dependency.
 
 The 3.12 addition retains all earlier entries and archives four complete generated JSON files. See [the 3.12 public data inventory](../docs/publication-payloads-3.12.md) for original-byte identities and direct Pages download links.
+
+A subsequent 3.12 browser-verification entry preserves the exact new 16-case standard-grid download. The prior fourteen entries are unchanged. See [the actual browser acceptance](../docs/browser-live-3.12.md) for its source, complete data, numerical comparison and the separate uncompleted WebGL acceptance.

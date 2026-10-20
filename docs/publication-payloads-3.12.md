@@ -22,3 +22,10 @@
 新克隆运行 `npm start`、`npm test` 或 `npm run validate` 时会先还原；也可执行 `npm run payloads:restore`。单独执行依赖这些数据的脚本前需先还原。普通还原保留已有本地修改，严格 Pages 准备遇到未归档修改会拒绝发布。
 
 此次调整源于约 9.4 MB 原始 JSON 的一次直接上传在 444.8 秒内未返回结果，随后被中止；没有返回可证实的硬大小上限。采用既有分块方式避免重复长时间等待，没有删减数据或改变运行模型。用户上传的原始条纹 PNG 继续排除在公开 Git 与 Pages 之外。
+
+
+## 线上验收的后续归档
+
+另增加实际 Chrome 从网格专用按钮下载的 `qa/browser-live-grid-export-3.12.json`：4,473,359 B，SHA-256 `8bba6de357cd14a417ee99cba10521daf5da2fdaa022aad63dbc534bffb8342a`。这是新执行的 16 个合成标准仿真，不含现场驾驶历史；原始下载字节不作删改。沿用相同归档机制后为 582,491 B / 3 段，旧 14 项的全部元数据和分段保持原样。
+
+当前合计 15 项、原始 51,663,817 B、压缩 12,821,090 B、73 段；本地重建和严格发布准备按更新后清单核对。完整下载发布在 [browser-live-grid-export-3.12.json](https://windscode.github.io/roadster-flight-lab/qa/browser-live-grid-export-3.12.json)，本次字节记录见 [browser-live-payload-review-3.12.json](../qa/browser-live-payload-review-3.12.json)。该数据不会随城市启动加载。
