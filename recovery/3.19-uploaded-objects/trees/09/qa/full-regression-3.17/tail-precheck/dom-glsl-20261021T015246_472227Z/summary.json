@@ -1,0 +1,799 @@
+{
+  "schema": "roadster-tail-precheck-3.17",
+  "startedAt": "2026-10-21T01:52:46.473625+00:00",
+  "modelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+  "scope": "Only optional DOM and offline GLSL tail gates, in scripts/validate.mjs order. This does not substitute for the standard full regression or native WebGL/user-GPU acceptance. Original per-step stdout/stderr retained.",
+  "runtime": {
+    "node": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "jsdomPackage": "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom",
+    "JSDOM_MODULE_PATH": "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js",
+    "GLSLANG_VALIDATOR": "/workspace/scratch/4a18da1d1c35/qa-runtime/glslang/usr/bin/glslangValidator"
+  },
+  "priorCurrentVersionReports": [
+    {
+      "file": "qa/research-workspace-3.17.json",
+      "backup": "before-reports/qa/research-workspace-3.17.json",
+      "bytes": 3378,
+      "sha256": "891dad604184de948fc286e20411b00b03ed42ed739bfbb66e36975ffda63477"
+    },
+    {
+      "file": "qa/wind-workspace-3.17.json",
+      "backup": "before-reports/qa/wind-workspace-3.17.json",
+      "bytes": 3850,
+      "sha256": "a19802a28661efd68aa0b5dd7d9699b7f8245a0e29d6103c1e80d53276cf7de0"
+    }
+  ],
+  "sourceHashesAtStart": {
+    "app-shell.js": "9631522c21495bdce2d057f5180da70603e12bcb4aad89d94d625d6903107238",
+    "app.js": "05a02808e030921721d0c658620b9d9726efe6ae188574d79da4865dbf860546",
+    "audio.js": "80b39ba94e8b7ff56dc526229188b7927e8b53b68894e52ad32818257d689141",
+    "bounded-height-controller.js": "e310531ade879e91d6921c785b8cc73aa029839cafa37c46a321ff0c8b9697e0",
+    "capture-archive.js": "ff0bcf04e26dbc506eabb4569edd8be1b3e167e6e567d84a38c7ca61db1160c2",
+    "car-radio.js": "c8ac1e1a4aa8ed52e6b2b67eb7d627c85464930bcd0bc91ed6e6587c86389f78",
+    "chase-camera.js": "083c515420ea4342487e8b6bd74a6443e2ba856c91506f8951024989c79ef76c",
+    "city-continuity.js": "031d7b465f7ad2a35dd9d9e187aa995cf996037e1242871993e75f613d1d8547",
+    "city-corridor-plan.js": "4d121702e283329d7399fa42994642b3d1e2b4d3e58521cb9045eef607edb3f1",
+    "city-data.js": "86d39546dd361ca7a277493bcb448b4ef5aea64acdc38559d2c65ad051b632ec",
+    "city-environment.js": "dd3a3c8d3adabd46f6661f1908701c57524a6523debf8acb36b0c3f5a21934e9",
+    "city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
+    "city-flight-challenge.js": "1fc92edfafb05ba2ff1f78d56a2aad9ef1cf3e0b16d8e3994a38f9dae935cd3c",
+    "city-flight-ui.js": "ec1a35b2c88dd8397e381da99628b518d956bc77973403fa223413bf18a56f4b",
+    "city-frontage-design.js": "54bee924dd9264bae0cdc38748053af27f3b559999c80b47e37894af93d2d85d",
+    "city-horizon.js": "6e36815298a6f4d596b1d881237bedaf8e701a724b50c695894efd457537bef2",
+    "city-landmarks.js": "c59b9c67908e6e4c90d8f14356cb4c937a58e4a868c63e35eb9594b133aeb884",
+    "city-map.js": "85921b8d48cbde9b2c9df82e7e9627bfcc31d6d6a0712b888b6b3de6657c0ac0",
+    "city-material-lighting.js": "0433957213054d2cd658856edd9ac22d509e09cb769599fbf2301e8dc8ef263b",
+    "city-navigation.js": "3cdc9251e94256e6f285f020c0e96a3b9e1eebec99c7d8ccb99de82ba2061153",
+    "city-night-transport.js": "fff2703b2a8a26f4f059043a3cff09598389d29c3216be9946a5105e92022cb9",
+    "city-plan.js": "6b370c9f951354de5a00263cb524e1a2df7cfc00e8b6cf6d2df020b82cf71ab4",
+    "city-practical-lights.js": "2058413c6e8b9f8785efd1d239f4701fb47fab6bed9bc6470ed9655033812118",
+    "city-render-budget.js": "d61901f692b16684fc520349ac8944cd7a95123c8460ae0d8fd1f82b83aeeebd",
+    "city-review.js": "473086fa0694cb94d8be50b276b3cb5834cb6696863b8792ef35af60e9f5e02a",
+    "city-street-edge.js": "c52294188bd47eb491fbd6010168d341a6914c64c8a1285e13806e6e08298f31",
+    "city-street-sections.js": "36f27904785fb5a357825a41de49d945380a548c0c71a0363f024a34e45f1de1",
+    "contact-ao-pass.js": "b9b95f465bdab91bb1bbe91920b32ea60d12095088ad4cb617e3f1da934f238c",
+    "contact-friction.js": "165882c28194bff55250891e778e07751027babbc892f054eedf354e13ca817d",
+    "contact-ledger.js": "031a00a892ebbe0408b9fa3c465f95e9760009e7aeead8f0faec73d87ac34c40",
+    "contact-step-schedule.js": "0a11ded3273469b16332c86b84419794589514a293c9e071a2abfa6face23c4d",
+    "control-observation.js": "8920e824d32dbece63aade3f0ab4da5c294225aa46419d6e556e603f2ed75cc8",
+    "controls.js": "eb14d7f191cddd3d6ccd608a1d2b9df52b2466a1a2d43fdc953de04fc8f135e1",
+    "cube-probe-target.js": "17c87dfc424dc1e50e5622c115da3852724be97d7f71cb1a387a753ecd6cbc81",
+    "driving-capture.js": "53f78df5e38078dfb0010c7e82bf8313d8a0829032720f60530e8e4938f321e2",
+    "environment.js": "f5f90b08d2f9aa0ad4addcc9a09e11d772b970da329a1cdd909c7a8d846c12a5",
+    "exhaust.js": "375429cd7095567bd9d8602c92825643defcd5525ec9b062b5e3ad9276c8dd10",
+    "experiment-console.js": "092d4d9882828856cd2e1b8bd3430a96f8de06fce2cba1385eff51e7971f1088",
+    "experiment-records.js": "d3f8667dc9988abd9814314df39fd32355fc4e90a088faa40e8aeb9ec010ebb7",
+    "experiment-replay-worker.js": "8bed7be5c1a0ea4fefab0a9c0c967af0ffde054314a01702857b59064e395262",
+    "experiment-reproduction.js": "4165dd4b5699f39487acecdae456b1cf43729ee9b82f89a542d49ae675306fd9",
+    "experiment-worker.js": "279002966a94b68c6c4215124764640f748f06d4710ee52313a357e355e48a1e",
+    "export-download.js": "518de941b393e307a46ab7b624fba0ac1ea9dfaef5f5bc0848ac7d16f57e4cb7",
+    "export-encoder.js": "1a6d64d4ac78512404f18ab60cc939de9de6b2b0bbdafb0ce72e2b1dcff9356a",
+    "export-worker.js": "9347c78bb8a6a16544cfc372480887351728b5a2238c38db0f944d65b7a9d5c3",
+    "finite-program-recovery.js": "de1b20b28ea02b147a5bfa2aa9682f4fd42e4ddbd2977cf3b475f2c34d7e4c8c",
+    "flight-programs.js": "461ca94a631d6c376a216a2c26e5249115d541b268974fc224edbb64998ce648",
+    "framebuffer-diagnostics.js": "f0fe9e7daea93ed99617f2c2dd601aa56f3a32e2c0e15a9f3920273ea6a88079",
+    "game.css": "ade71937a79314ea2347dbb7d2bda56c3222dd6352566c314b556542e013d090",
+    "height-control-study.js": "4fe93a5c98103fe8f240b29b9df5fbe133684057c2e5b1e8affcb519fdbe44b1",
+    "i18n-capture-en.js": "6fb36fdb6e13160a85159bd63f4c7d6549312fa42933a4abb7a6ecd8ad14f825",
+    "i18n-controls-311-en.js": "0e82a3bac391a40d463eb4bbd1d78e24362e2fb20d7d283d944c0337572a4e7b",
+    "i18n-flight-313-en.js": "825bbc5a2490d041c7b20ba9c729f1b2693db0cf59e06444b818a74d3f22f7b6",
+    "i18n-main-en.js": "42227d3b11e8cbf53f67413efb254b06081c90a1f23627bdfb55da9859161468",
+    "i18n-release-314-en.js": "1944b2adb818290f90b9e043cb61438e771043276ee756183642922ca37fe2e7",
+    "i18n-release-315-en.js": "6d991d25c43af232aa13959392e1b22fd519a6f8b530f6f68682c7f17036a0b6",
+    "i18n-release-316-en.js": "3ae5869206e0e1bab9dd9db375f314119a447a4af1f34361fe5293743a0ac287",
+    "i18n-release-317-en.js": "60941a3e3243d3e4be04de57a99631d90039eea56759ab17397f1ac9875b1a2f",
+    "i18n-render-313-en.js": "68f1219d1b228f681978dc0432e08439607505b2d07a08b292fd82cc5b087405",
+    "i18n-research-en.js": "b50b1ce81f16b85b48e78c6402540c1a8040590902c20730f856275093e5304c",
+    "i18n-vehicle-310-en.js": "2f33aa6393043244ff73a9f3a2fa0e654bed7a2427c99b9c150e89203e55e4d6",
+    "i18n-vehicle-314-en.js": "58af4e0083cb98e37e7cae89089c1bf4fcf91401e53894eaaf85a56e04c21868",
+    "i18n-visual-311-en.js": "511d5dbc6c59c1d0e53618b6d8426cad218954cc7cab54be9f90b64ca2fd9154",
+    "i18n-visual-en.js": "da4952997fd47df297b8ccbfcebc394bd7c7bdb5caba127e53830f2a9b14ee73",
+    "i18n.js": "6735cf85a82021768a89d1dec541c7b2f16eeb426decab129c53257f9135ef4b",
+    "index.html": "a0c648573dc5a7c92de1c9c376459080493e81872ebbca97f91e12e477e34880",
+    "indirect-lighting.js": "87ea771788d4d9b177fd475b053a8537a5254176791c24d733b7407966efb885",
+    "input-session.js": "853df1e5a6ce0a5610aa42628e8f3e273e11dafd102d792796353fa0f84e9340",
+    "inspection-capture.js": "eb9c412e11b81c54bbcafd62e8de29930d003790e410bbd9194778138db5168e",
+    "inspection-diagnostics-capture.js": "f9bb86d2bc10544ddfb09e4546690a58fd7200a45db0dcb6df733cff59a20baa",
+    "irradiance-math.js": "f4c9de47c61ebf8a661d9cfddfbcf0a47c77266438f43909090cd1032b1637f9",
+    "landing-challenge.js": "2a2a0d5192cef8bb9f223f937f66af184d200138db5c29edd3f7adee10bfc1f8",
+    "landing-research-ui.js": "343e260dc43e4a5f2cc3bcfe9966ad3b250a053e078d324c4aef4c354e2958cf",
+    "landing-research-worker.js": "6e2a6d1a8261cd9639ffaf90ebcd345675692c21087a265b774659e7322b5453",
+    "landing-reserve.js": "391347f411d35af207058b1360a971a2ae3acc90a475d53422248ed1cda651df",
+    "local-probe-sun.js": "518069c383e4815dcaf796576d969a568356ddfc202e922055d17bbd871a1f1a",
+    "locale-bootstrap.js": "2bfa0300dbed844c2e80616e79ed7fdef4f06210adaa7aa6c66f6f4b66c1d7c1",
+    "main.js": "7db5e6aad152beb39f3e5a3e6bd16d4aec9e180372374bccf6ca753cc2cb64e1",
+    "night-city-lighting.js": "00c3d8dd0cca95eeb398af6459379431aa7b2b8fe2683c5ff241c62ae2ad845f",
+    "night-direct-lighting.js": "ccc6b213f2f44e97035ff064939ae498be4295ebe6655576488989a6fb70e234",
+    "night-direct-transport.js": "964f62fab051aecd75c5d3d65acf6d31c1a51ff84a037fda3c2ad7f593a74938",
+    "night-field-atlas.js": "afe38d53e75b49f3609fb1156dc4961bb20e73d04939227ee987b54790239ba7",
+    "operation-hud.js": "0fa8bb95195dab2baa68bfc637c18378f622903998fe4e65a38eafa32d427a5f",
+    "pavement-surface-material.js": "c2b28f5548988a98bacbc801f4db41a97589fecf3cabe3a6a4ba97a4fa806da8",
+    "performance-meter.js": "0febb4a02352075265ab0c83e9eb2f9afec351b289974dc0918d744c6dc6f7d7",
+    "physics.js": "a026758fd88a8ca4380cf65ba6a6f083f740f9f1e0e7553ab733af0c9100c053",
+    "pilot-input-intent.js": "97470ee5a7be87a2e8034ff1d39fdeceb7931f47becef79af8162ff31447a378",
+    "pitch-maneuver.js": "10885ca047e990496073bacaaed04f7ab5f4aba523c5fcf66d9197cd284f6e08",
+    "receiver-plane-shadows.js": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741",
+    "render-capture-matrix.js": "244ccc6973e6addc720eb670f89cbc0dea12d815e7fc1ae070921adc7e51eace",
+    "render-profiles.js": "4442bc45eab81e0a98c66551afba46b2049f916e66abaa7274f3a9c4b30f9719",
+    "render-program-diagnostics.js": "8c961ee03fcbff9b862df1c0f8aae931468f8405bc4b660523321242892adc70",
+    "research-comparison.js": "0c58e5785b457ecfec8d6f05e18bece610a72de0a4010a5a29637190fa78ac77",
+    "research-console.css": "d0be108ffca3dbb836432f6a9e8dac6e60a7b3ada6cd80f5829fde1604185976",
+    "research-console.js": "d4a80ba3314a0547db3f1f8d38f87def6813ed07a5ff58b5f11b7901ba90a0fb",
+    "research-entry.js": "dd4c073e1c659c847e13718d24c0880d9befd162273b630c03aa06618fef3987",
+    "research-i18n-3.14.js": "c3b8718531309130155ca55ddd8933af91fc0540ad39b4067225498254158064",
+    "research-lab.js": "6f775a2ca38dbd99f13f65555326440ee18cfeca89610dad4fd1972a6521bee9",
+    "research-panel.html": "8122431c7b5a2d5d33a4d835618bebe016bc767ee7fd57994d8e4cb86f2acc1e",
+    "research-protocol.js": "934ecf255b0431177bc3c5b8574a38887c285bf64814fc009d7f9f2a52f26c8b",
+    "research-recovery-grid.js": "6d7d04c79a40c700abe6f08ed313bc7ac7a443ba61d1d60659ebd368643a30a8",
+    "research-result-summary.js": "e695c877da84c267543f706cc6e3d2be456fc43b56eb76b5c6c6a91794f632da",
+    "research-robustness.js": "1068dd22eda5d3364847e40e40105ada9ed90dd2a5057af36f60b06c5839fcfe",
+    "research-storage.js": "c7ff58556f1d52566046ca75e3e7cc89c3f1a5c619b95519d6276b48804113f3",
+    "research-study.js": "149b1e530c386b2614aacd299857e209848a7f9d037899b7feccd544d58b03cb",
+    "research-workbench.js": "850163f60c802083162621b5677a9276cacec13b09bf5c910aae0be88430f723",
+    "research.css": "87091394e00fa0acc14c499142192468398f925fae26b8f8d5bef3c4a94cec17",
+    "research.html": "a088f6e56ef218bf546961026a500587a0f23f7b4987f6fae61f31d9f9c6bce9",
+    "road-surface-material.js": "c73da629769b4bbe1cbcce06006ede15564daa779d20e9e3b1a8afce90bbf833",
+    "runtime-identity.js": "147c924df8e30f61228fe5b97cecbeba2d0eb0d14a5a91227295bd51578d12bc",
+    "simulation-safety.js": "0c68b858ff1ac919338706119bdc97131e99bc66baae4ff622021e66e6881d94",
+    "simulation-snapshot.js": "58b62a71790ba0e8cb148ce83d21370e36c243eb90768e9df6248515547b1d3f",
+    "stable-fxaa-shader.js": "07109f48c213c693c19e7903449b23c59d9de5d494890ff073953fa27e837574",
+    "static-city-broadphase.js": "02e290e83ffd4d341211b75a70f2408010006001fb600a2d0a279fb8d8c45a14",
+    "street-life.js": "ca9705e7d2ada742fc6fb2587d5a60baf9082e2f77e30bf4e87ad89adddabcfe",
+    "style.css": "d1fa674efc57b15e66a1303f731baed510718a01c8634aaa265c07eaf6e23b95",
+    "task-setting-scope.js": "476afdecaf8510218dafb979f7613c2883beadd3ddc67997b18b37e90928608f",
+    "telemetry.js": "d698282add7fd8a81a91e9183c823525183f3e83f67147a84aae0ac993f22fcf",
+    "tire-dynamics.js": "de2336ef6ff88d276a414a2e90a2a6a7c29e8b18bed5767a6031bb14782c388d",
+    "trim-feasibility.js": "5ebfbc9057b1555c1f32f57e70b4c5e43ff0cffddbbddebed4fd1623acf2f0ac",
+    "ui-preferences.js": "0ec10f97794ae9a420b850251092f131b0ee7d38deffa1671da8379b56968a32",
+    "urban-architecture.js": "a4819cc5230ed7af1e41800cc7d66a420b3bfa0d518fef12108fd5b100dcefb7",
+    "vehicle-clearance.js": "2cd62f637d74a8186b8712afb4942450e61a8d9f689b90f1fea94ba2073a6d87",
+    "vehicle-display-study.js": "3eb0019219cea0a95d3f1860eb06f7c10f99e980d8600725524450c4dabe6749",
+    "vehicle-inspection.css": "669fe86a7a031b4da6f4370844c66d1d543b6d44f12d1a596ecbbb713db8cc5b",
+    "vehicle-inspection.html": "76f31554644f84bf1fe3f3096840fa147c51d0916a9493be5c64508b454379d9",
+    "vehicle-inspection.js": "752ede2c30207d797ba8fa0ac0246c59d6ce83ba389e2277aa8a830c8c8de6e1",
+    "vehicle-layout.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "vehicle-light-state.js": "a191269ed32dc2e79b78c47a4230d8e6e7a4e52aebfd2d07e6fd8bcfb5bdea10",
+    "vehicle-models.js": "b932b8f46de41b1f2a9ae04a4e461d49580d491516ce5208fbeb93834828daf5",
+    "vehicle-reference-3.13.js": "31257f22ae30c1df7392c8a7dcafea1a91017e0b000299b10716ef01ebbb99a3",
+    "vehicle-reference-3.15.js": "2747bba7a03d626ceb0661ec5771d8fc6e4c82c0e147402b1ca3fb47386f2009",
+    "vehicle-reference-3.7.js": "c15443cf9c69af3a2d0c6867a1000645deff12e2db2cc4eab1916134da54cd07",
+    "vehicle-reference-3.8.js": "9152de502fb086ca2027db690226d9ba88881915d6a54b4269e97ab08ffd885b",
+    "vehicle-reference-3.9.js": "d49b3d5bfc7e234877dfeacdbe5615e948a47b8609fead19859664eeb40a83d7",
+    "vehicle-reference-layout-3.13.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "vehicle-reference-layout-3.15.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "vehicle-reference-layout-3.7.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "vehicle-reference-layout-3.8.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "vehicle-reference-layout-3.9.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "vehicle-study-capture.js": "31f1f93dd062ab0452988bbbe81ed730252a13e21499440df148ec83606dee2c",
+    "vehicle-surface-diagnostics.js": "d612c5f281ac80332a634e16631d124cc23ce1713f51caee62b4f78909515ff3",
+    "vehicle.js": "2c5bd25456264409bcdd7c613e3fc1636e53c8973e552a99c6e5d691d30c1c0b",
+    "vendor/addons/controls/OrbitControls.js": "d3b6283dcec39e541db397bdd868fec380e118f3053ec26e9873252a14b7b5d6",
+    "vendor/addons/csm/CSM.js": "6876eaa29c95daeb82e846788e84bde03126e066165c34286ee2ee18ea58c018",
+    "vendor/addons/csm/CSMFrustum.js": "632b096b39c503ebe1c3f83e63dca25c51af2103ff0ca467ebf5dc1855196989",
+    "vendor/addons/csm/CSMShader.js": "7fef360105e6c09d44a9810bc1563e17e3851f99f5499cdb04de667c2724f48d",
+    "vendor/addons/exporters/GLTFExporter.js": "c3462aec753006797689fef9ce8ec121d982b0956ff08527060f8d75bca784b9",
+    "vendor/addons/loaders/GLTFLoader.js": "979269c237f704ffa4a37d3800ec21f237c017e40f8e28b1cd7accf5b2377574",
+    "vendor/addons/loaders/HDRLoader.js": "a43733878e7109caa3b62caac52a9de0bcdc5241a4252490757eb9f470033c37",
+    "vendor/addons/loaders/RGBELoader.js": "6c08f9c441040a61a188ad7711078da4df48f8c5ac3b3725dd6f10ac9ff81162",
+    "vendor/addons/math/SimplexNoise.js": "dd1f3c42c1bc9fa1b76c1c0796d352521accf0a3a95cc7d0caf479abc5a444a2",
+    "vendor/addons/objects/Reflector.js": "482a723e9fdfd7f8b1532d1efaad0d2cf2572ab711467939888f72b260df290c",
+    "vendor/addons/postprocessing/EffectComposer.js": "a4213fd367dfc6d6962114cca322385b1f350d0fa028c3fcd6519c1df6484fe1",
+    "vendor/addons/postprocessing/MaskPass.js": "7cd08eee9d5d6f5578beaddbdcbe9c384f6873810af27f22ab7db3ceeb127aa3",
+    "vendor/addons/postprocessing/OutputPass.js": "68861f1a93c6d33c02affa49592bba46242d237281c8031ee010d926cc5bb2c0",
+    "vendor/addons/postprocessing/Pass.js": "ac015c53e4a491b4f071535d003e6208ec56e00cfbb74942d93556dd53c45673",
+    "vendor/addons/postprocessing/RenderPass.js": "d30f0caa2c781a7a5248f062a6a6b051dd18d6526868be0340d802c1d058dc0b",
+    "vendor/addons/postprocessing/SMAAPass.js": "0866956c8e58b56bbee51cb0215a92c67346b17f2393fc2e6bd688bc63a6c6c0",
+    "vendor/addons/postprocessing/SSAOPass.js": "1fb1bac8e55de7c0cdd8cf975e6b55921476a18e061ac79bcdcf15d1109ab927",
+    "vendor/addons/postprocessing/ShaderPass.js": "1a07592b97c68fec70b9ece4ee32522878c9e71e8364c10f359480b8cd676ef2",
+    "vendor/addons/postprocessing/UnrealBloomPass.js": "62f410581c96130cb054399ec7743398c682db4185327fad70ae920f66c3d29e",
+    "vendor/addons/shaders/CopyShader.js": "a33057d5ac91c43304c186ac0e8816e62bb2ed471d3a00ff3018dfd5c0389718",
+    "vendor/addons/shaders/FXAAShader.js": "65542fe09ff45114289acacff7de0086f844d267647f9474442f4ab3da002c6d",
+    "vendor/addons/shaders/LuminosityHighPassShader.js": "123c9d8c4155fa296822eb3325574e82a6c5f4cb30eed065c6cc073ba7ca3bbe",
+    "vendor/addons/shaders/OutputShader.js": "353479f77a8d7e2629d49ccac9fc2f5dbfdda5442e0adf867b00377a2fcb0cb2",
+    "vendor/addons/shaders/SMAAShader.js": "fe3c777685feede7a0cfae9561b343b9f92b50c4ccfb790fe5b8e678a56247a7",
+    "vendor/addons/shaders/SSAOShader.js": "24424c1e61e31d969362b96e603ed90439e73865f694a8f68288d23195d7ccfc",
+    "vendor/addons/utils/BufferGeometryUtils.js": "748066188940e858e5d48985866e84a6e6691fc31776ea59d9d89c1a7f6fe6cd",
+    "vendor/cannon-es.js": "f0700cbd3a482954949b9d58c1b0f76dcc74767750297647a39d8c40dd63d37c",
+    "vendor/three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
+    "vendor/three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
+    "visual-presets.js": "29e63a9677714ee0770b0ae13f27a629e7676fccfbb899afc5b25a32c95d0b88",
+    "wet-road-reflection.js": "69e9f1280bd8bf0d2119e156fba83ccc99c31c1b7a60e03df9670cc6c5264683",
+    "wheel-contact-envelope.js": "d7dddaa5777ea9b56f73c979d8e17e31b38cca9a5a80b5746a32540ebfb806b9",
+    "wind-control-study.js": "54f2963341cd3c6201d1670a6f40177b1b28679777a617c6a5a8f523937e4088",
+    "wind-lab-data.js": "27ce72f8053b99037462be6c4b62d37d371021d6e02fca96d4392587d9f2ab41",
+    "wind-laboratory.js": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d"
+  },
+  "steps": [
+    {
+      "name": "01-export-progress",
+      "script": "tests/export-progress-3.16.test.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "tests/export-progress-3.16.test.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:52:46.474097+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:52:47.793126+00:00",
+      "wallSeconds": 1.319,
+      "stdout": {
+        "file": "01-export-progress.stdout.log",
+        "bytes": 538,
+        "sha256": "e23303321634791815a7800d773e3c0ca63cb8eefdadba9cb32b77bcd9bb41a6"
+      },
+      "stderr": {
+        "file": "01-export-progress.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/export-progress-3.17.json",
+          "snapshot": "after-reports/01-export-progress/qa/export-progress-3.17.json",
+          "bytes": 3413,
+          "sha256": "35d2d0bb005d9635e51c92b590974b7513dbfed1cc497f5af7fd6565237887bc"
+        }
+      ]
+    },
+    {
+      "name": "02-research-workspace",
+      "script": "tests/research-workspace-3.16.test.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "tests/research-workspace-3.16.test.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:52:47.794834+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:52:49.514338+00:00",
+      "wallSeconds": 1.72,
+      "stdout": {
+        "file": "02-research-workspace.stdout.log",
+        "bytes": 667,
+        "sha256": "2b697af058a7eca4c11e6f53a8a50edf0b924f7d14d4ea4dec90774faf579452"
+      },
+      "stderr": {
+        "file": "02-research-workspace.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/research-workspace-3.17.json",
+          "snapshot": "after-reports/02-research-workspace/qa/research-workspace-3.17.json",
+          "bytes": 3378,
+          "sha256": "cedb3d70d19e41b3aa05c560a9f4d76d3dc4828fc11beca23934bee353d5a8ec"
+        }
+      ]
+    },
+    {
+      "name": "03-wind-workspace",
+      "script": "tests/wind-workspace-3.17.test.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "tests/wind-workspace-3.17.test.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:52:49.515651+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:52:51.243606+00:00",
+      "wallSeconds": 1.728,
+      "stdout": {
+        "file": "03-wind-workspace.stdout.log",
+        "bytes": 243,
+        "sha256": "b63a7e1bb881692f9e33f9cb3f5c9744770e631e7394137adc9a8e66be986ed9"
+      },
+      "stderr": {
+        "file": "03-wind-workspace.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/wind-workspace-3.17.json",
+          "snapshot": "after-reports/03-wind-workspace/qa/wind-workspace-3.17.json",
+          "bytes": 3850,
+          "sha256": "b9911d0037a165ab0a36e1af96d3d570b6e5f5f2545ee64de3821062ca8addd5"
+        }
+      ]
+    },
+    {
+      "name": "04-pilot-sequences",
+      "script": "tests/pilot-sequences-3.15.test.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "tests/pilot-sequences-3.15.test.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:52:51.245238+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:53:02.776801+00:00",
+      "wallSeconds": 11.532,
+      "stdout": {
+        "file": "04-pilot-sequences.stdout.log",
+        "bytes": 1416,
+        "sha256": "412b515659481059980045d56f32cd4685288d9f5dbc6485efb8fe67dd43376a"
+      },
+      "stderr": {
+        "file": "04-pilot-sequences.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/pilot-sequences-3.17.json",
+          "snapshot": "after-reports/04-pilot-sequences/qa/pilot-sequences-3.17.json",
+          "bytes": 725093,
+          "sha256": "8699326c163f25cda281645660a518f97d2dea8dc290b4970933ae8eb2165d27"
+        },
+        {
+          "file": "qa/pilot-sequences-3.17.ndjson.gz",
+          "snapshot": "after-reports/04-pilot-sequences/qa/pilot-sequences-3.17.ndjson.gz",
+          "bytes": 10505550,
+          "sha256": "d16a3f0490749e2973ca50d31c3e446ee652a0477bcc2929837c7c30b00822eb"
+        }
+      ]
+    },
+    {
+      "name": "05-city-flight-handoff",
+      "script": "tests/city-flight-handoff-3.15.test.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "tests/city-flight-handoff-3.15.test.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:53:02.794500+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:53:15.725718+00:00",
+      "wallSeconds": 12.931,
+      "stdout": {
+        "file": "05-city-flight-handoff.stdout.log",
+        "bytes": 683,
+        "sha256": "67c3f2bc50770a3907a96d18a50a4797fe526f84c0c6c630a15657b3114383aa"
+      },
+      "stderr": {
+        "file": "05-city-flight-handoff.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/city-flight-handoff-3.17.json",
+          "snapshot": "after-reports/05-city-flight-handoff/qa/city-flight-handoff-3.17.json",
+          "bytes": 22333,
+          "sha256": "ced57f334e1ed37b691f5baecb1f19da1cba87a2661106ff77708a9842851c89"
+        }
+      ]
+    },
+    {
+      "name": "06-city-flight-ui",
+      "script": "tests/city-flight-ui-3.15.test.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "tests/city-flight-ui-3.15.test.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:53:15.727066+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:53:17.451519+00:00",
+      "wallSeconds": 1.724,
+      "stdout": {
+        "file": "06-city-flight-ui.stdout.log",
+        "bytes": 103,
+        "sha256": "c7ac91abde9377545b54367e201631dae11bf82e01b73faeeba2e0e363b9f48c"
+      },
+      "stderr": {
+        "file": "06-city-flight-ui.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/city-flight-ui-3.17.json",
+          "snapshot": "after-reports/06-city-flight-ui/qa/city-flight-ui-3.17.json",
+          "bytes": 3113,
+          "sha256": "15e5423e1335f14633cbefc19fe8cbd7a9bfb2c3022a405908aaa91dfa5027fc"
+        }
+      ]
+    },
+    {
+      "name": "07-research-boundaries",
+      "script": "tests/research-boundaries-3.14.test.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "tests/research-boundaries-3.14.test.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:53:17.453191+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:53:20.191543+00:00",
+      "wallSeconds": 2.738,
+      "stdout": {
+        "file": "07-research-boundaries.stdout.log",
+        "bytes": 832,
+        "sha256": "7dc85e1232ec8689efeb9a14efe58d4dce09d3fb5eb5d71d905d331953f936c9"
+      },
+      "stderr": {
+        "file": "07-research-boundaries.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/research-boundaries-3.17.json",
+          "snapshot": "after-reports/07-research-boundaries/qa/research-boundaries-3.17.json",
+          "bytes": 3263,
+          "sha256": "3890c153c95424055eafb660a4cd793ce68a0c8619fee448962dc6c0193aa5db"
+        }
+      ]
+    },
+    {
+      "name": "08-same-page-ui",
+      "script": "qa/same-page-ui-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--experimental-vm-modules",
+        "qa/same-page-ui-check.mjs"
+      ],
+      "startedAt": "2026-10-21T01:53:20.192565+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:53:52.063549+00:00",
+      "wallSeconds": 31.871,
+      "stdout": {
+        "file": "08-same-page-ui.stdout.log",
+        "bytes": 4254,
+        "sha256": "91022e3a8eaa3483f7eab9b2f7e1bded8e399a5c0f7a7409f186a6e5c780beb2"
+      },
+      "stderr": {
+        "file": "08-same-page-ui.stderr.log",
+        "bytes": 174,
+        "sha256": "c85be7d90244acdf9c3e88306c897e6e3333a4f0843a0406238bc17eecf17d2a"
+      },
+      "outputs": [
+        {
+          "file": "qa/same-page-ui-3.17.json",
+          "snapshot": "after-reports/08-same-page-ui/qa/same-page-ui-3.17.json",
+          "bytes": 39873,
+          "sha256": "d1f019aab62f3765f9a33ae09fd50c803569996541c67732320915809de800c0"
+        }
+      ]
+    },
+    {
+      "name": "09-no-webgl-research",
+      "script": "qa/same-page-ui-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--experimental-vm-modules",
+        "qa/same-page-ui-check.mjs",
+        "--graphics-unavailable"
+      ],
+      "startedAt": "2026-10-21T01:53:52.064935+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:53:56.502018+00:00",
+      "wallSeconds": 4.437,
+      "stdout": {
+        "file": "09-no-webgl-research.stdout.log",
+        "bytes": 656,
+        "sha256": "880af398dc44f238c81920223e1eaae7838464e261072f30c7a18d7cc64b2ab6"
+      },
+      "stderr": {
+        "file": "09-no-webgl-research.stderr.log",
+        "bytes": 174,
+        "sha256": "77822d227047e9893d85c9bd51d81d711608f12471b0bd003b254da16b7bb3a3"
+      },
+      "outputs": [
+        {
+          "file": "qa/no-webgl-research-3.17.json",
+          "snapshot": "after-reports/09-no-webgl-research/qa/no-webgl-research-3.17.json",
+          "bytes": 13981,
+          "sha256": "fd4832979a09c4d2e7272ce02c519a130d0cbb2c85ac42b5a1e41a1dd7e42588"
+        }
+      ]
+    },
+    {
+      "name": "10-research-panel",
+      "script": "qa/research-panel-dom-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "qa/research-panel-dom-check.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:53:56.503182+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:54:04.812522+00:00",
+      "wallSeconds": 8.309,
+      "stdout": {
+        "file": "10-research-panel.stdout.log",
+        "bytes": 868,
+        "sha256": "b80eacb5056973797da34545a25debd25747accbd3a6be760e3ec9d5f5b3c230"
+      },
+      "stderr": {
+        "file": "10-research-panel.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/research-panel-dom-3.17.json",
+          "snapshot": "after-reports/10-research-panel/qa/research-panel-dom-3.17.json",
+          "bytes": 2306,
+          "sha256": "acf5188cec181c1c09ed0e9a866e35eb55861f1beddf9b50b7e1f3ed55271c39"
+        }
+      ]
+    },
+    {
+      "name": "11-experiment-console",
+      "script": "qa/experiment-console-dom-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "qa/experiment-console-dom-check.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:54:04.813610+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:54:10.814351+00:00",
+      "wallSeconds": 6.001,
+      "stdout": {
+        "file": "11-experiment-console.stdout.log",
+        "bytes": 1577,
+        "sha256": "3af14ac688099e38909981c37b5c8753750d79e06293b33216348d4bb34682cc"
+      },
+      "stderr": {
+        "file": "11-experiment-console.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/experiment-console-dom-3.17.json",
+          "snapshot": "after-reports/11-experiment-console/qa/experiment-console-dom-3.17.json",
+          "bytes": 3163,
+          "sha256": "ed9074d8c70d7aefb3e9731e5cadfa92349507b0b84c8488584e790edba7cb1d"
+        }
+      ]
+    },
+    {
+      "name": "12-research-workflow",
+      "script": "qa/research-workflow-3.10-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "qa/research-workflow-3.10-check.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:54:10.815808+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:54:24.711556+00:00",
+      "wallSeconds": 13.896,
+      "stdout": {
+        "file": "12-research-workflow.stdout.log",
+        "bytes": 1478,
+        "sha256": "fa71aa91dd36ae3dc83ae28141b4c1f5c631d152666ac71a53fcd6a45c638b74"
+      },
+      "stderr": {
+        "file": "12-research-workflow.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/research-workflow-3.17.json",
+          "snapshot": "after-reports/12-research-workflow/qa/research-workflow-3.17.json",
+          "bytes": 6346,
+          "sha256": "158ebbf9f020d574dd1841c0fdc7a73f231ec856aa8fff9079a9ad2dce53c618"
+        }
+      ]
+    },
+    {
+      "name": "13-research-robustness",
+      "script": "qa/research-robustness-3.11-dom-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "qa/research-robustness-3.11-dom-check.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:54:24.713323+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:54:48.606648+00:00",
+      "wallSeconds": 23.893,
+      "stdout": {
+        "file": "13-research-robustness.stdout.log",
+        "bytes": 494,
+        "sha256": "467a7114c6545763e7c0ddcbc09d26b0957daa8868a2abc1746276f163601648"
+      },
+      "stderr": {
+        "file": "13-research-robustness.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/research-robustness-3.17-dom.json",
+          "snapshot": "after-reports/13-research-robustness/qa/research-robustness-3.17-dom.json",
+          "bytes": 3107,
+          "sha256": "7e900a4841738ef57cf4e747960d1ca91165c8f662f66d134381d74b167f7710"
+        }
+      ]
+    },
+    {
+      "name": "14-research-recovery-grid",
+      "script": "qa/research-recovery-grid-3.12-dom-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "qa/research-recovery-grid-3.12-dom-check.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:54:48.607808+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:55:15.787516+00:00",
+      "wallSeconds": 27.18,
+      "stdout": {
+        "file": "14-research-recovery-grid.stdout.log",
+        "bytes": 566,
+        "sha256": "2e4b727238fa79ac53ca2b7eba4cede7c642a05e4f05c4b1c02ea881321d31fe"
+      },
+      "stderr": {
+        "file": "14-research-recovery-grid.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/research-recovery-grid-3.17-dom.json",
+          "snapshot": "after-reports/14-research-recovery-grid/qa/research-recovery-grid-3.17-dom.json",
+          "bytes": 13488,
+          "sha256": "3a11be9c1fec59e22f6f4b02a0fa84e0f018611dc03895e50b137a3de444a80d"
+        }
+      ]
+    },
+    {
+      "name": "15-vehicle-inspection",
+      "script": "qa/vehicle-inspection-3.10-dom-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "qa/vehicle-inspection-3.10-dom-check.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:55:15.788728+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:55:19.122925+00:00",
+      "wallSeconds": 3.334,
+      "stdout": {
+        "file": "15-vehicle-inspection.stdout.log",
+        "bytes": 5780,
+        "sha256": "cf7a32db9517dfd634946d5f3ec199c7d7c96310b611a37256a563b0e175399f"
+      },
+      "stderr": {
+        "file": "15-vehicle-inspection.stderr.log",
+        "bytes": 174,
+        "sha256": "8bda5d3c7ded2b56990ce83762fe7cc72ab2c56f901aba8a9aa9fbf1672e254b"
+      },
+      "outputs": [
+        {
+          "file": "qa/vehicle-inspection-3.17-dom.json",
+          "snapshot": "after-reports/15-vehicle-inspection/qa/vehicle-inspection-3.17-dom.json",
+          "bytes": 5780,
+          "sha256": "cf7a32db9517dfd634946d5f3ec199c7d7c96310b611a37256a563b0e175399f"
+        }
+      ]
+    },
+    {
+      "name": "16-research-safety",
+      "script": "qa/research-safety-3.14-dom-check.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "qa/research-safety-3.14-dom-check.mjs",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js"
+      ],
+      "startedAt": "2026-10-21T01:55:19.124556+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:55:28.843472+00:00",
+      "wallSeconds": 9.719,
+      "stdout": {
+        "file": "16-research-safety.stdout.log",
+        "bytes": 1201,
+        "sha256": "d77c76c3d5f7b0e4411edd714b14695bd63f68dad4e27575aa0f6251a3096828"
+      },
+      "stderr": {
+        "file": "16-research-safety.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/research-safety-3.17-dom.json",
+          "snapshot": "after-reports/16-research-safety/qa/research-safety-3.17-dom.json",
+          "bytes": 2487,
+          "sha256": "0e088b3d2f6949089dc6e00ec6d9f5dd670faaf4b63f002b4ebc544b6a240cf1"
+        }
+      ]
+    },
+    {
+      "name": "17-city-shaders",
+      "script": "scripts/validate-city-shaders.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "scripts/validate-city-shaders.mjs",
+        "--validatorPath",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/glslang/usr/bin/glslangValidator",
+        "--compareBaseline"
+      ],
+      "startedAt": "2026-10-21T01:55:28.844723+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:55:43.799582+00:00",
+      "wallSeconds": 14.955,
+      "stdout": {
+        "file": "17-city-shaders.stdout.log",
+        "bytes": 12886,
+        "sha256": "6b294ad70394450df4b64cee06d220c3cd1cfec594897082b09ee3887078fda0"
+      },
+      "stderr": {
+        "file": "17-city-shaders.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/city-shaders-3.17.json",
+          "snapshot": "after-reports/17-city-shaders/qa/city-shaders-3.17.json",
+          "bytes": 639202,
+          "sha256": "61ebfc9645acfc03b693db22bac027e1d026a95c5d92898a6ee88fa8e193686c"
+        }
+      ]
+    },
+    {
+      "name": "18-render-shaders",
+      "script": "scripts/validate-render-shaders.mjs",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "scripts/validate-render-shaders.mjs",
+        "--validatorPath",
+        "/workspace/scratch/4a18da1d1c35/qa-runtime/glslang/usr/bin/glslangValidator"
+      ],
+      "startedAt": "2026-10-21T01:55:43.801770+00:00",
+      "status": "passed",
+      "exitCode": 0,
+      "finishedAt": "2026-10-21T01:55:44.418058+00:00",
+      "wallSeconds": 0.616,
+      "stdout": {
+        "file": "18-render-shaders.stdout.log",
+        "bytes": 683,
+        "sha256": "9be2c3c20d91c72cca9f644f4ce3652e4b5b399685b27b4da5eb288d5f528006"
+      },
+      "stderr": {
+        "file": "18-render-shaders.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "outputs": [
+        {
+          "file": "qa/render-shader-validation-3.17.json",
+          "snapshot": "after-reports/18-render-shaders/qa/render-shader-validation-3.17.json",
+          "bytes": 13031,
+          "sha256": "e997064f005516ba641f1666a138c3e8a2e98ea561d4d5cc8d697f9037fd80c6"
+        }
+      ]
+    }
+  ],
+  "status": "tail-precheck-passed",
+  "finishedAt": "2026-10-21T01:55:44.419292+00:00",
+  "passed": 18,
+  "failed": 0,
+  "productSourceChanges": []
+}

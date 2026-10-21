@@ -1,0 +1,90 @@
+{
+  "status": "passed",
+  "modelVersion": "3.18.0",
+  "modelBuildId": "4a9cc90a2c8f4f74ef8765e36571bb49df0b3d7652a64cd8b3014eac88ee40d4",
+  "scope": "Original 3.9 solver fixture retained read-only, undeclared historical migration refused, and genuine current-model build recomputation plus geometry/parameter/state rejection tested independently. No old solver execution or relabelled historical state. No graphics or human driving acceptance.",
+  "sourceHashes": {
+    "dist/experiment-records.js": "d3f8667dc9988abd9814314df39fd32355fc4e90a088faa40e8aeb9ec010ebb7",
+    "dist/simulation-snapshot.js": "e0fd58488365709eaacfd896af8abcd1f8db3b5aa3991a92db276d9c3f34ea35",
+    "dist/physics.js": "38df473c0f03e9c540b13800954218326c749c3753f968af0177e414c604d4be",
+    "dist/vehicle-models.js": "48037add0aa75d297289cf9473124f2bde3d17e78decdd4bb053bb6522917c84",
+    "dist/model-build.js": "4f7b8b21886bc55d039b6accf7d565559ad674e03ad6c434d38c5f79db962b21",
+    "tests/history-compatibility-3.10.test.mjs": "b7c99e04e6cf763e56a9250ce89ee293c2b5fcf9e91f4415024c7cbd0d70ace8",
+    "tests/history-contract-3.14.mjs": "994efaaef73dde1287812abfe99bac1f69e92d5444d1109f05c62aca162ebd47",
+    "qa/fixtures/live-record-3.9.json": "ec85dfa49f6f454ce002d73ef2ae78703d28561ddc4f925afdf4a9dc7c8d76ad"
+  },
+  "evidence": [
+    {
+      "name": "Actual published 3.9 source record remains readable/exportable and rejects undeclared current-model migration",
+      "status": "PASS",
+      "sourceIdentity": {
+        "modelVersion": "3.9.0",
+        "modelBuildId": "b353a90366f128bcf4c188fee0c4a3aad38e6a9f83baf27272c8b5828369ad70",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "execution": "rejected-before-import-and-integration",
+      "reason": "原模型 3.9.0 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。",
+      "physicalImports": 0,
+      "physicalSteps": 0,
+      "historyViewAndExportRetained": true,
+      "sourceUnchanged": true,
+      "originalFileBytesUnchanged": true,
+      "archiveBytesUnchanged": true,
+      "legacyMigrationEvidence": "qa/history-original-3.9-to-3.13.json"
+    },
+    {
+      "name": "An unknown build of the current model refuses exact replay but allows explicit unchanged-state recomputation",
+      "status": "PASS",
+      "sourceIdentity": {
+        "modelVersion": "3.18.0",
+        "modelBuildId": "uninstalled-build-for-current-model",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "executionIdentity": {
+        "modelVersion": "3.18.0",
+        "modelBuildId": "4a9cc90a2c8f4f74ef8765e36571bb49df0b3d7652a64cd8b3014eac88ee40d4",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "steps": 6,
+      "migration": null,
+      "reproduction": "not_applicable"
+    },
+    {
+      "name": "Current-model geometry is rejected independently of historical version availability",
+      "status": "PASS",
+      "modelVersion": "3.18.0",
+      "reason": "快照不可恢复：场景几何或世界类型不匹配",
+      "physicalSteps": 0,
+      "destinationUnchanged": true
+    },
+    {
+      "name": "Current-model parameters is rejected independently of historical version availability",
+      "status": "PASS",
+      "modelVersion": "3.18.0",
+      "reason": "快照不可恢复：参数契约不匹配",
+      "physicalSteps": 0,
+      "destinationUnchanged": true
+    },
+    {
+      "name": "Current-model controller-state is rejected independently of historical version availability",
+      "status": "PASS",
+      "modelVersion": "3.18.0",
+      "reason": "快照不可恢复：缺少状态 _heightIntegral",
+      "physicalSteps": 0,
+      "destinationUnchanged": true
+    },
+    {
+      "name": "Incompatible collision worlds, parameter/state contracts and unimplemented model versions refuse execution",
+      "status": "PASS"
+    }
+  ]
+}

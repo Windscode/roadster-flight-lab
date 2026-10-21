@@ -1,0 +1,41 @@
+{
+  "schema": "roadster-route-visuals-3.19",
+  "createdAt": "2026-10-21T05:34:05.241Z",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "Actual material uniforms and per-wheel map agree; weather/quality changes preserve prepared descriptor; elevated decks excluded",
+      "status": "passed",
+      "compared": 8670,
+      "scope": "CPU binding and map consistency, not GPU pixels"
+    },
+    {
+      "name": "Prepared regions add zero texture samplers and no geometry pass",
+      "status": "passed",
+      "roadSamplers": 4,
+      "uniformPayloadBytes": 396,
+      "scope": "Shader source bindings; offline/GPU compilation checked separately"
+    },
+    {
+      "name": "Two addressed service portals and two retained bridge joints use closed, finite attached geometry",
+      "status": "passed",
+      "portalDepthM": 0.62,
+      "portalHandlesM": 1.06,
+      "bridgeFinishTriangles": 1392,
+      "servicePortals": 2,
+      "retainedBuildings": 114
+    }
+  ],
+  "sourceHashes": {
+    "dist/city-route-detail.js": "c7bd3293238e56801934a64dfbc503197d61215adcb9b840e37cdca651fab754",
+    "dist/city-frontage-design.js": "98f0e8f779a2c182e076c10e88f886e03b3afe44c3f1dd20e2cb6398307d1607",
+    "dist/city-environment.js": "4839766012a86708c61f6f88009a0df5790c454cdd19ffe2575d17798d041039",
+    "dist/road-surface-material.js": "6e80a21c898ecea1de77b740d116ee619ff4e2c30b610bff5e09649009a08c80",
+    "dist/route-surface.js": "2dfa3bebc3d124d03a1cbfed4ef9fef12b62643c6f2a0b4a1a9e825cfda9dfe4"
+  },
+  "limits": [
+    "No GPU frame-time or VRAM result is asserted.",
+    "No screenshot or continuous driving observation is replaced by a CPU check.",
+    "Old 3.18 street showcases, collision geometry and practical source anchors are retained; exact historical regressions remain separate."
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "roadster-landing-archive-native-3.18",
+  "startedAt": "2026-10-21T03:15:16.834Z",
+  "scope": "Native Chromium, actual research-panel module, real IndexedDB and module export Worker. An isolated page loads no vehicle or city renderer. Imported matrix contains real solver records from the separately identified stage run; no rerun or final-model claim.",
+  "input": {
+    "archive": "qa/wind-matrix-3.18/development-2/strong-bench.json.gz",
+    "bytes": 10420311,
+    "sha256": "ea23091b2d73d811636a4cb67e0c3d9ab7450e3fdb83fc9a80c5b050e9473ede",
+    "recordModel": {
+      "modelVersion": "3.18.0",
+      "modelBuildId": "5b9ff8f6a852198bd6e6dfcdbc9779c9dd8e65877b598a26e6fa6bdc08d95faa",
+      "sourceCommit": null,
+      "sourceTree": null,
+      "sourceIdentityStatus": "not-available",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120,
+      "taskProtocol": "windlab-disturbance-landing-1"
+    }
+  },
+  "checks": [
+    {
+      "name": "A complete 12-record matrix exceeding 4 MiB persists and reloads through real IndexedDB; every record and matrix matches and legacy bytes remain untouched",
+      "status": "passed",
+      "bytes": 10420338,
+      "revision": 1,
+      "wallMs": 6222.38834,
+      "legacySHA256": "2a688ac9cf0e017a58dea78fcb1aa29c9bceb8de9db71eedfd3266c00c1c53bb",
+      "storedSHA256": "5acc4b0031e82298b8dd70b2b4d27fc6810cb733dd8557e769d921c8c9893a28"
+    },
+    {
+      "name": "Inspecting B and changing wind strength/direction retains the explicit A source; complete-window gas and full-task gas remain separate, labels switch language without modifying the controller",
+      "status": "passed",
+      "sourceId": "landing-mvhj2f8e-1f615c70",
+      "selectedId": "landing-mvhj2fi6-ef4e9dae",
+      "matrixText": "strong · 31701 / 31702 / 31703 · bench · 配对完成/计划 6/6 · 均落稳且窗口完整 6\n\n方向 / 控制器\t落稳 / 执行\t完整窗口\t高度 RMSE 中位 / 最大 m\t同窗气量 中位 / 最大 kg\t全任务气量 中位 / 最大 kg\t分配 / 控制图受限 最大 s\n横风 · A\t3/3 已执行\n未执行 0\t3/3\t0.1497 / 0.1500\t151.6252 / 152.0060\t407.6847 / 408.2480\t0.008 / 0.033\n横风 · B\t3/3 已执行\n未执行 0\t3/3\t0.0291 / 0.0292\t152.4216 / 152.7992\t382.2088 / 382.7668\t0.008 / 0.000\n前后风 · A\t3/3 已执行\n未执行 0\t3/3\t0.1498 / 0.1504\t151.0351 / 151.3231\t406.3866 / 406.9913\t0.008 / 0.033\n前后风 · B\t3/3 已执行\n未执行 0\t3/3\t0.0290 / 0.0292\t151.8309 / 152.1145\t380.9165 / 381.5130\t0.008 / 0.000\n\n分布含所有完整窗口，包括随后落地失败的记录。全任务气量含失败/取消的不同持续时间，不能据此选出更省气的赢家。成功比例仅描述这些预先声明的情形；静风种子是同一零风工况的重复，不能当独立风样本。\n\n逐情形结果 · 选择失败或尾部回看\n风序列\tA\tB\nseed 31701 · 横风\tA · 落稳完成\tB · 落稳完成\nseed 31701 · 前后风\tA · 落稳完成\tB · 落稳完成\nseed 31702 · 横风\tA · 落稳完成\tB · 落稳完成\nseed 31702 · 前后风\tA · 落稳完成\tB · 落稳完成\nseed 31703 · 横风\tA · 落稳完成\tB · 落稳完成\nseed 31703 · 前后风\tA · 落稳完成\tB · 落稳完成\n{\n  \"tails\": [\n    {\n      \"resultId\": \"landing-mvhj2fvi-13250170\",\n      \"caseIndex\": 1,\n      \"seed\": 31701,\n      \"profile\": \"strong\",\n      \"direction\": \"longitudinal\",\n      \"role\": \"A\",\n      \"status\": \"completed\",\n      \"reason\": \"stable_landing\",\n      \"windowComplete\": true,\n      \"heightRmseM\": 0.15035041675071584,\n      \"totalGasKg\": 406.9912648497579,\n      \"allocationLimitedS\": 0.008333333333333333,\n      \"controllerLimitedS\": 0.03333333333333333\n    },\n    {\n      \"resultId\": \"landing-mvhj2f8e-1f615c70\",\n      \"caseIndex\": 0,\n      \"seed\": 31701,\n      \"profile\": \"strong\",\n      \"direction\": \"lateral\",\n      \"role\": \"A\",\n      \"status\": \"completed\",\n      \"reason\": \"stable_landing\",\n      \"windowComplete\": true,\n      \"heightRmseM\": 0.14996535973767217,\n      \"totalGasKg\": 408.2480422507338,\n      \"allocationLimitedS\": 0.008333333333333333,\n      \"controllerLimitedS\": 0.03333333333333333\n    },\n    {\n      \"resultId\": \"landing-mvhj2gsp-6f0446b0\",\n      \"caseIndex\": 3,\n      \"seed\": 31702,\n      \"profile\": \"strong\",\n      \"direction\": \"longitudinal\",\n      \"role\": \"A\",\n      \"status\": \"completed\",\n      \"reason\": \"stable_landing\",\n      \"windowComplete\": true,\n      \"heightRmseM\": 0.14978987238447575,\n      \"totalGasKg\": 406.2399151334461,\n      \"allocationLimitedS\": 0.008333333333333333,\n      \"controllerLimitedS\": 0.03333333333333333\n    },\n    {\n      \"resultId\": \"landing-mvhj2gc4-422f6a29\",\n      \"caseIndex\": 2,\n      \"seed\": 31702,\n      \"profile\": \"strong\",\n      \"direction\": \"lateral\",\n      \"role\": \"A\",\n      \"status\": \"completed\",\n      \"reason\": \"stable_landing\",\n      \"windowComplete\": true,\n      \"heightRmseM\": 0.14971426863967444,\n      \"totalGasKg\": 407.14139716387007,\n      \"allocationLimitedS\": 0.008333333333333333,\n      \"controllerLimitedS\": 0.03333333333333333\n    },\n    {\n      \"resultId\": \"landing-mvhj2hq4-8a74e496\",\n      \"caseIndex\": 5,\n      \"seed\": 31703,\n      \"profile\": \"strong\",\n      \"direction\": \"longitudinal\",\n      \"role\": \"A\",\n      \"status\": \"completed\",\n      \"reason\": \"stable_landing\",\n      \"windowComplete\": true,\n      \"heightRmseM\": 0.1496856932274536,\n      \"totalGasKg\": 406.38655512310237,\n      \"allocationLimitedS\": 0.008333333333333333,\n      \"controllerLimitedS\": 0.03333333333333333\n    },\n    {\n      \"resultId\": \"landing-mvhj2h9t-47321e6b\",\n      \"caseIndex\": 4,\n      \"seed\": 31703,\n      \"profile\": \"strong\",\n      \"direction\": \"lateral\",\n      \"role\": \"A\",\n      \"status\": \"completed\",\n      \"reason\": \"stable_landing\",\n      \"windowComplete\": true,\n      \"heightRmseM\": 0.1496015584394694,\n      \"totalGasKg\": 407.6846885345661,\n      \"allocationLimitedS\": 0.008333333333333333,\n      \"controllerLimitedS\": 0.03333333333333333\n    }\n  ],\n  \"source\": \"fnv1a32-a682ecdc\",\n  \"identity\": {\n    \"modelVersion\": \"3.18.0\",\n    \"modelBuildId\": \"5b9ff8f6a852198bd6e6dfcdbc9779c9dd8e65877b598a26e6fa6bdc08d95faa\",\n    \"sourceCommit\": null,\n    \"sourceTree\": null,\n    \"sourceIdentityStatus\": \"not-available\",\n    \"protocolVersion\": \"live-fixed-inputs-1\",\n    \"fixedHz\": 120,\n    \"taskProtocol\": \"windlab-disturbance-landing-1\"\n  },\n  \"notRunPairs\": 0\n}"
+    },
+    {
+      "name": "The task-library UI exports the full 10 MiB archive through its real Worker, browser download event and bounded disk save; original solver records match",
+      "status": "passed",
+      "filename": "roadster-landing-research.json",
+      "downloadAndSaveMs": 1753.5072839999993,
+      "bytes": 10421325,
+      "sha256": "e7ef559f5b7ebef1027fe97504d20c1bff98aa3d6d2e55d24042e8eea1e484fc",
+      "applicationReceipt": {
+        "status": "handed-off",
+        "filename": "roadster-landing-research.json",
+        "elapsedMs": 1346.2000000029802,
+        "snapshotMs": 0.10000000894069672,
+        "serializeMs": 1316.5,
+        "blobMs": 0,
+        "bytes": 10421325,
+        "visited": 1369439,
+        "characters": 10420701,
+        "error": null,
+        "browserCompletion": "unobservable",
+        "serializer": "worker",
+        "workerSerializeMs": 1243,
+        "postMessageMs": 24.599999994039536,
+        "compatibilityScanMs": 38.20000000298023,
+        "queueWaitMs": 0.5,
+        "phase": "browser-handoff",
+        "deadlineMs": 30000,
+        "events": [
+          {
+            "phase": "queued",
+            "atMs": 0
+          },
+          {
+            "phase": "snapshot",
+            "atMs": 0.5
+          },
+          {
+            "phase": "compatibility-scan",
+            "atMs": 0.7999999970197678
+          },
+          {
+            "phase": "worker-start",
+            "atMs": 39
+          },
+          {
+            "phase": "worker-wait",
+            "atMs": 64.1000000089407
+          },
+          {
+            "phase": "worker-complete",
+            "atMs": 1317
+          },
+          {
+            "phase": "blob",
+            "atMs": 1317.1000000089407
+          },
+          {
+            "phase": "browser-click",
+            "atMs": 1346
+          },
+          {
+            "phase": "browser-handoff",
+            "atMs": 1346.2000000029802
+          }
+        ]
+      },
+      "browserDownloadObserved": true,
+      "testDiskSaveObserved": true
+    },
+    {
+      "name": "A stale second page cannot overwrite a newer committed archive; its current work is explicitly unsaved and legacy data stays intact",
+      "status": "passed",
+      "committedRevision": 2,
+      "message": "Another page updated the task archive; original data remains. Export current work and reload before merging."
+    },
+    {
+      "name": "Unavailable asynchronous storage expires at its bounded deadline, and an invalid existing archive is retained verbatim and cannot be overwritten",
+      "status": "passed",
+      "blockedMessage": "Task archive storage exceeded 40 ms; retained data was not reported saved.",
+      "readMessage": "Task database archive is protected; Expected ',' or '}' after property value in JSON at position 47 (line 1 column 48)",
+      "writeMessage": "Task database archive is protected; original bytes were not overwritten",
+      "protectedRaw": "{\"unreadable-original\":\"keep this exact string\"",
+      "corrupt": "{\"unreadable-original\":\"keep this exact string\""
+    }
+  ],
+  "errors": [],
+  "status": "passed",
+  "finishedAt": "2026-10-21T03:15:32.520Z"
+}

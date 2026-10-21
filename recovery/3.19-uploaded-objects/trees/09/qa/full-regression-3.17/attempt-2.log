@@ -1,0 +1,139 @@
+PASS scripts/repository-payloads.mjs
+PASS scripts/model-build.mjs
+PASS tests/physics.test.mjs
+PASS tests/braking.test.mjs
+PASS tests/vehicle-geometry.test.mjs
+PASS tests/city-seal.test.mjs
+PASS tests/handling-controls.test.mjs
+PASS tests/air-stabilization.test.mjs
+PASS tests/pose-hold.test.mjs
+PASS tests/flight-controls-3.7.test.mjs
+PASS tests/flight-programs.test.mjs
+PASS tests/wind-laboratory.test.mjs
+PASS tests/physics-research-3.8.test.mjs
+PASS tests/experiment-records.test.mjs
+PASS tests/research-road-3.8.test.mjs
+PASS tests/performance-meter.test.mjs
+PASS tests/physics-controls-3.9.test.mjs
+PASS tests/reproduction-verdict-3.9.test.mjs
+PASS tests/visual-corridor-3.9.test.mjs
+PASS tests/city-lighting-3.10.test.mjs
+PASS tests/vehicle-surface-3.10.test.mjs
+PASS tests/inspection-capture-3.10.test.mjs
+PASS tests/history-compatibility-3.10.test.mjs
+PASS tests/control-capture-3.10.test.mjs
+PASS tests/vehicle-dynamics-3.11.test.mjs
+PASS tests/ui-response-3.11.test.mjs
+PASS tests/capture-detail-3.11.test.mjs
+PASS tests/research-robustness-3.11.test.mjs
+PASS tests/history-compatibility-3.11.test.mjs
+PASS tests/visual-regressions-3.11.test.mjs
+PASS tests/braking-corner-3.12.test.mjs
+PASS tests/chase-camera-3.12.test.mjs
+PASS tests/reflection-stability-3.12.test.mjs
+PASS tests/research-recovery-grid-3.12.test.mjs
+PASS tests/sampler-budget-3.13.test.mjs
+PASS tests/render-program-diagnostics-3.13.test.mjs
+PASS tests/x-flip-3.13.test.mjs
+PASS tests/visual-quality-3.13.test.mjs
+PASS tests/history-compatibility-3.13.test.mjs
+PASS tests/framebuffer-matrix-3.14.test.mjs
+PASS tests/physics-controls-3.14.test.mjs
+PASS tests/camera-clearance-3.14.test.mjs
+PASS tests/contact-regressions-3.14.test.mjs
+PASS tests/vehicle-display-3.14.test.mjs
+PASS tests/vehicle-study-capture-3.14.test.mjs
+{
+  "status": "failed",
+  "checks": [
+    {
+      "name": "The inherited 114 parcels, 12 streets and 113 route segments retain their exact 3.13 authoring data",
+      "status": "passed"
+    },
+    {
+      "name": "All streets and every elevated connection have explicit coverage; new solids leave the full declared lanes and inherited slabs open",
+      "status": "passed"
+    },
+    {
+      "name": "Background lamps no longer occupy authored ramps; retained lights keep their actual physical-height visual bounds clear",
+      "status": "passed"
+    },
+    {
+      "name": "Maintenance access, South Quay ramp/entry, civic threshold and perimeter banks preserve usable shared space",
+      "status": "passed"
+    },
+    {
+      "name": "Four formerly isolated pendant lenses connect through backing and eight hangers to actual roof or viaduct undersides",
+      "status": "passed"
+    },
+    {
+      "name": "Every new raised element has a matching actual rendered instance with the physics transform, and remains visible nearby in balanced",
+      "status": "passed"
+    },
+    {
+      "name": "The three redesigned anchor towers share exact storey transition heights with physical tiers and preserve low-quality primary masses",
+      "status": "failed",
+      "error": {
+        "name": "AssertionError",
+        "message": "arcology-west missing real floor cores\n\n0 !== 32\n",
+        "actual": 0,
+        "expected": 32
+      }
+    },
+    {
+      "name": "Authored industrial exhaust stacks retain their primary silhouette at 120 m in balanced without promoting all thin details",
+      "status": "passed"
+    },
+    {
+      "name": "Distant geography starts outside the reachable workspace, preserves four perimeter walls and remains a low-detail whole",
+      "status": "passed"
+    }
+  ],
+  "geometryCanonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
+  "bakeIdentityObservation": [
+    {
+      "name": "irradiance",
+      "geometryCanonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
+      "currentGeometryMatches": true
+    },
+    {
+      "name": "night-irradiance",
+      "geometryCanonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
+      "currentGeometryMatches": true
+    },
+    {
+      "name": "night-direct-irradiance",
+      "geometryCanonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
+      "currentGeometryMatches": true
+    }
+  ]
+}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: See qa/city-continuity-3.17.json for retained failures.
+
+'failed' !== 'passed'
+
+    at file:///workspace/scratch/4a18da1d1c35/roadster-flight-lab/tests/city-continuity-3.14.test.mjs:145:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'failed',
+  expected: 'passed',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+file:///workspace/scratch/4a18da1d1c35/roadster-flight-lab/scripts/validate.mjs:17
+    if(result.error||result.status!==0){process.stdout.write(stdout);process.stderr.write(stderr);throw new Error(path+' failed',{cause:result.error});}
+                                                                                                        ^
+
+Error: tests/city-continuity-3.14.test.mjs failed
+    at run (file:///workspace/scratch/4a18da1d1c35/roadster-flight-lab/scripts/validate.mjs:17:105)
+    at file:///workspace/scratch/4a18da1d1c35/roadster-flight-lab/scripts/validate.mjs:71:15 {
+  [cause]: undefined
+}
+
+Node.js v24.19.0

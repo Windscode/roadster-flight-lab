@@ -1,0 +1,38 @@
+{
+  "schema": "roadster-landing-archive-native-3.18",
+  "startedAt": "2026-10-21T03:10:37.849Z",
+  "scope": "Native Chromium, actual research-panel module, real IndexedDB and module export Worker. An isolated page loads no vehicle or city renderer. Imported matrix contains real solver records from the separately identified stage run; no rerun or final-model claim.",
+  "input": {
+    "archive": "qa/wind-matrix-3.18/development-2/strong-bench.json.gz",
+    "bytes": 10420311,
+    "sha256": "ea23091b2d73d811636a4cb67e0c3d9ab7450e3fdb83fc9a80c5b050e9473ede",
+    "recordModel": {
+      "modelVersion": "3.18.0",
+      "modelBuildId": "5b9ff8f6a852198bd6e6dfcdbc9779c9dd8e65877b598a26e6fa6bdc08d95faa",
+      "sourceCommit": null,
+      "sourceTree": null,
+      "sourceIdentityStatus": "not-available",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120,
+      "taskProtocol": "windlab-disturbance-landing-1"
+    }
+  },
+  "checks": [
+    {
+      "name": "A complete 12-record matrix exceeding 4 MiB persists and reloads through real IndexedDB; every record and matrix matches and legacy bytes remain untouched",
+      "status": "passed",
+      "bytes": 10420338,
+      "revision": 1,
+      "wallMs": 6094.573794999999,
+      "legacySHA256": "2a688ac9cf0e017a58dea78fcb1aa29c9bceb8de9db71eedfd3266c00c1c53bb",
+      "storedSHA256": "5acc4b0031e82298b8dd70b2b4d27fc6810cb733dd8557e769d921c8c9893a28"
+    }
+  ],
+  "errors": [],
+  "status": "failed",
+  "failure": {
+    "message": "locator.selectOption: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-lr=\"records\"]')\u001b[22m\n\u001b[2m    - locator resolved to <select data-lr=\"records\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    60 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying select option action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+    "stack": "locator.selectOption: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-lr=\"records\"]')\u001b[22m\n\u001b[2m    - locator resolved to <select data-lr=\"records\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    60 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying select option action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/landing-archive-3.18.test.mjs:40:44"
+  },
+  "finishedAt": "2026-10-21T03:11:14.965Z"
+}

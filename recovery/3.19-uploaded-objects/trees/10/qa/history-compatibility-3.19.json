@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "modelVersion": "3.19.0",
+  "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+  "scope": "Actual published 3.9/3.11 and source-generated 3.10 records remain immutably viewable and exportable. The current model explicitly refuses their undeclared full-state migration before import or integration; old solvers are not executed and historical parameters are not relabelled.",
+  "fixtureProvenance": {
+    "3.9": "6083bbf0e01f4eef5447f2c1b951d8b41e691f46",
+    "3.10": "6d2b897bc928ae0e44fa258a7184719cd660e48b (prior source commit; content incorporated in public 3.11)",
+    "3.11": "ab9372b56a01c2a47b18d32baf48162f3cd8f86c (public source solver fixture)"
+  },
+  "sourceHashes": {
+    "dist/experiment-records.js": "f306f68fa7fe4a3d5741e925d6542bd810a497e23cadec83d90d543b21e6eb5e",
+    "dist/simulation-snapshot.js": "80e3fa5fa82ca23795750aac18aeb3482933578d8963aa1660fc19fdf4f017c3",
+    "dist/physics.js": "3aa89a4a111b7a4001220f284077c6f5fe51d58d8b3fa7f6105dfce208aec107",
+    "dist/vehicle-models.js": "476e8066da018610373a9cc75932b5cb148cca50059774278162ad1845b1f2eb",
+    "tests/history-compatibility-3.11.test.mjs": "a35034df05f7b1a0594f71234b2a731b3b06454b017e5b68d2e5e43cca9d265e",
+    "tests/history-contract-3.14.mjs": "02355960fb1e522fa99dbfe6d4ec7a2a30d7afaad56d60e89f75fe8840d8774d",
+    "qa/fixtures/live-record-3.9.json": "ec85dfa49f6f454ce002d73ef2ae78703d28561ddc4f925afdf4a9dc7c8d76ad",
+    "qa/fixtures/live-record-3.10.json": "89417a1f58d183e4f7ec6a103d8f5ebb9e75e7e11c862001fe5405232b5ba92c",
+    "qa/fixtures/live-record-3.11.json": "9b9ebd6914ad89a5a725224b196f3f2b6eddf3721b9886f4471756b74da05c6b",
+    "qa/fixtures/live-record-3.11-provenance.json": "080fe6ca4dffc6829427b49dce7e95b5cc6de84e9fb86a31e60c0b4f51a550a8"
+  },
+  "evidence": [
+    {
+      "sourceIdentity": {
+        "modelVersion": "3.9.0",
+        "modelBuildId": "b353a90366f128bcf4c188fee0c4a3aad38e6a9f83baf27272c8b5828369ad70",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "execution": "rejected-before-import-and-integration",
+      "reason": "原模型 3.9.0 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。",
+      "physicalImports": 0,
+      "physicalSteps": 0,
+      "historyViewAndExportRetained": true,
+      "sourceUnchanged": true,
+      "originalFileBytesUnchanged": true,
+      "archiveBytesUnchanged": true,
+      "sourceSteps": 42,
+      "originalClimbRateMps": 3,
+      "originalRollRateDegS": 120,
+      "originalAccelerationMps2": null,
+      "currentOnlyStateMissing": "_researchHeightControl",
+      "legacyMigrationEvidence": "qa/history-compatibility-3.13.json"
+    },
+    {
+      "sourceIdentity": {
+        "modelVersion": "3.10.0",
+        "modelBuildId": "a6b126a29a3e6702f28ef4921d04798c9f9b80b0285ca89c614e103231b9fd8c",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "execution": "rejected-before-import-and-integration",
+      "reason": "原模型 3.10.0 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。",
+      "physicalImports": 0,
+      "physicalSteps": 0,
+      "historyViewAndExportRetained": true,
+      "sourceUnchanged": true,
+      "originalFileBytesUnchanged": true,
+      "archiveBytesUnchanged": true,
+      "sourceSteps": 180,
+      "originalClimbRateMps": 3,
+      "originalRollRateDegS": 120,
+      "originalAccelerationMps2": null,
+      "currentOnlyStateMissing": "_researchHeightControl",
+      "legacyMigrationEvidence": "qa/history-compatibility-3.13.json"
+    },
+    {
+      "sourceIdentity": {
+        "modelVersion": "3.11.0",
+        "modelBuildId": "cd2e0dbd848ef6b14c21b3fb0cb509fd1cfb9c0aa8240fe082f734bc87821522",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "execution": "rejected-before-import-and-integration",
+      "reason": "原模型 3.11.0 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。",
+      "physicalImports": 0,
+      "physicalSteps": 0,
+      "historyViewAndExportRetained": true,
+      "sourceUnchanged": true,
+      "originalFileBytesUnchanged": true,
+      "archiveBytesUnchanged": true,
+      "sourceSteps": 240,
+      "originalClimbRateMps": 5,
+      "originalRollRateDegS": 180,
+      "originalAccelerationMps2": 4.5,
+      "currentOnlyStateMissing": "_researchHeightControl",
+      "legacyMigrationEvidence": "qa/history-compatibility-3.13.json"
+    }
+  ]
+}

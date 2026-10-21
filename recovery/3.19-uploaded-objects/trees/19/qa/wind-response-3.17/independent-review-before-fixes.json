@@ -1,0 +1,159 @@
+{
+  "partialWindow": {
+    "recordStatus": "cancelled",
+    "window": {
+      "startS": 2,
+      "endS": 6,
+      "count": 120,
+      "heightSquared": 9.996693508645578,
+      "lateralSquared": 0.09469908037682988,
+      "attitudeSquared": 0.001198367641349565,
+      "peakLateralM": 0.03852972180485279,
+      "peakWindMps": 26.517612989561666,
+      "gasThroughputKg": 37.07482917536069,
+      "allocationLimitedS": 0,
+      "durationS": 1,
+      "complete": false,
+      "statisticsHz": 120,
+      "heightRmseM": 0.2886274055572567,
+      "lateralRmseM": 0.0280919739986397,
+      "attitudeRmseDeg": 0.0031601261068581383
+    },
+    "helper": {
+      "status": "cancelled",
+      "reason": "user_cancel",
+      "landed": false,
+      "windowComplete": false,
+      "heightRmseM": 0.2886274055572567,
+      "lateralRmseM": 0.0280919739986397,
+      "peakLateralM": 0.03852972180485279,
+      "attitudeRmseDeg": 0.0031601261068581383,
+      "peakWindMps": 26.517612989561666,
+      "windowGasKg": null,
+      "windowLimitedS": 0,
+      "windowSeconds": 1,
+      "settlingS": null,
+      "landingS": null,
+      "totalGasKg": 112.34803488336796,
+      "supplyMode": "bench"
+    },
+    "renderedTableText": "strong · seed 973 · fnv1a32-b42353bc · 保留失败或未完成窗口，不评优胜固定窗口与全任务分列A · PD / height outer loopB · —任务结局用户取消—2–6 s 高度 RMSE / m0.2886—2–6 s 水平偏移 RMSE / m0.0281—2–6 s 姿态 RMS / °0.0032—2–6 s 同窗气量 / kg——2–6 s 分配受限 / s0.0000—落稳时刻 / s——全任务气量 / kg112.3480—三维重执行 A"
+  },
+  "failedRequest": {
+    "requestedWind": {
+      "profile": "strong",
+      "seed": 973,
+      "candidateMode": "responsive"
+    },
+    "originalTaskId": "fnv1a32-6d222ba9",
+    "plannedWindTaskId": "fnv1a32-bbc7ed8e",
+    "retainedAttempt": {
+      "id": "landing-job-mvhf3pra-1",
+      "action": "wind-pair",
+      "identity": {
+        "modelVersion": "3.17.0",
+        "modelBuildId": "4bc12c8cd0a0b1391b196dc28e37bed30de04bad7aea4427c88b72a935293522",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "algorithm": {
+        "schema": "roadster.height-controller",
+        "version": 1,
+        "name": "PD / height outer loop",
+        "interfaceVersion": "height-outer-acceleration-1",
+        "controlHz": 60,
+        "outputLimit": 6,
+        "slewLimit": 18,
+        "root": {
+          "op": "sub",
+          "args": [
+            {
+              "op": "mul",
+              "args": [
+                {
+                  "op": "const",
+                  "value": 3.2
+                },
+                {
+                  "op": "input",
+                  "name": "error"
+                }
+              ]
+            },
+            {
+              "op": "mul",
+              "args": [
+                {
+                  "op": "const",
+                  "value": 3.6
+                },
+                {
+                  "op": "input",
+                  "name": "verticalSpeed"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "task": {
+        "schema": "roadster.landing-task",
+        "version": 1,
+        "name": "Crosswind landing / VECTOR 07",
+        "seed": 31415,
+        "supplyMode": "bench",
+        "initialPressureBar": 350,
+        "targetHeightM": 2.5,
+        "timeoutS": 16,
+        "nozzleScale": 1,
+        "landingRadiusM": 1.5,
+        "disturbances": [
+          {
+            "timeS": 2,
+            "speedMps": 3,
+            "directionDeg": 90,
+            "gustMps": 1,
+            "gustPeriodS": 2.8
+          },
+          {
+            "timeS": 4,
+            "speedMps": 4,
+            "directionDeg": 270,
+            "gustMps": 1.5,
+            "gustPeriodS": 3.1
+          },
+          {
+            "timeS": 7.5,
+            "speedMps": 0,
+            "directionDeg": 0,
+            "gustMps": 0,
+            "gustPeriodS": 4
+          }
+        ],
+        "faultTimeS": 4.5,
+        "nozzleId": "lift-FL"
+      },
+      "sourceId": "landing-mvhf3pcp-d063c503",
+      "startedAt": "2026-10-21T01:12:35.110Z",
+      "lastProgress": null,
+      "status": "failed",
+      "reason": "Synthetic Worker failure used only to verify retained request provenance",
+      "finishedAt": "2026-10-21T01:12:35.116Z"
+    },
+    "retainedWindowFields": []
+  },
+  "archiveIntegrity": {
+    "initialRecordIds": [
+      "landing-mvhf3pcp-d063c503",
+      "landing-mvhf3pko-1e9a2c7d"
+    ],
+    "storedRecordIds": [
+      "landing-mvhf3pcp-d063c503",
+      "landing-mvhf3pko-1e9a2c7d"
+    ],
+    "originalRecordsUnchanged": true
+  }
+}

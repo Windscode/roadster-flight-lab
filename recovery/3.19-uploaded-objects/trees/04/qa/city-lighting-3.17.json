@@ -1,0 +1,131 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "name": "Night assets match current fixture/geometry identities, preserve nonnegative directional values and stay within the 4 MiB / WebGL2 texture budget",
+      "status": "passed"
+    },
+    {
+      "name": "Fixture-to-surface-to-probe transport is finite, rejects occluded energy, has zero output with no fixtures, and agrees with packed probe values",
+      "status": "passed"
+    },
+    {
+      "name": "Balanced uses the coarser field, 3D sampling uses three explicit-LOD reads per field, and day mode contributes no night bounce or direct-light multiplier",
+      "status": "passed"
+    },
+    {
+      "name": "Fixed-camera pool is vehicle-independent, responds to view direction, keeps overlapping light during handoff and does not refresh static paused shadows",
+      "status": "passed"
+    }
+  ],
+  "evidence": {
+    "nightField": {
+      "identity": "de6631e0ca72de6c7825cedb893d9e3a7ed0be6e0ea0b10be5d1b5765d5bd2f7",
+      "bytes": 3334320,
+      "coefficients": 1250370,
+      "layout": [
+        {
+          "id": "night-city",
+          "spacing": [
+            24,
+            24
+          ],
+          "dimensions": [
+            53,
+            53,
+            30
+          ]
+        },
+        {
+          "id": "night-route",
+          "spacing": [
+            4,
+            4
+          ],
+          "dimensions": [
+            109,
+            81,
+            30
+          ]
+        },
+        {
+          "id": "night-route-balanced",
+          "spacing": [
+            8,
+            8
+          ],
+          "dimensions": [
+            55,
+            41,
+            30
+          ]
+        }
+      ]
+    },
+    "transport": {
+      "blockedTestSegments": 199,
+      "bounceSources": 21182,
+      "packedProbe": {
+        "position": [
+          -200,
+          0.6,
+          -392
+        ],
+        "maximumRelativeQuantization": 0.001
+      },
+      "scope": "Numerical transport and storage, not GPU appearance"
+    },
+    "practicalPool": {
+      "baselineCameraIds": [
+        "city-fixture-71",
+        "city-fixture-72",
+        "city-fixture-74"
+      ],
+      "maximumHighShadowMaps": 5,
+      "minimumSumOfGainsDuring4mpsCameraTravel": 1.999998149398802,
+      "pausedRedundantShadowUpdates": 0,
+      "pausedVerifiedIntervalS": 1,
+      "maximums": {
+        "balanced": {
+          "street": 2,
+          "heads": 1,
+          "size": 256,
+          "headSize": 384,
+          "hz": 20
+        },
+        "high": {
+          "street": 3,
+          "heads": 2,
+          "size": 384,
+          "headSize": 512,
+          "hz": 24
+        },
+        "ultra": {
+          "street": 4,
+          "heads": 2,
+          "size": 512,
+          "headSize": 768,
+          "hz": 30
+        }
+      }
+    }
+  },
+  "sourceHashes": {
+    "dist/city-environment.js": "dd3a3c8d3adabd46f6661f1908701c57524a6523debf8acb36b0c3f5a21934e9",
+    "dist/city-practical-lights.js": "2058413c6e8b9f8785efd1d239f4701fb47fab6bed9bc6470ed9655033812118",
+    "dist/city-frontage-design.js": "54bee924dd9264bae0cdc38748053af27f3b559999c80b47e37894af93d2d85d",
+    "dist/city-night-transport.js": "fff2703b2a8a26f4f059043a3cff09598389d29c3216be9946a5105e92022cb9",
+    "dist/night-city-lighting.js": "00c3d8dd0cca95eeb398af6459379431aa7b2b8fe2683c5ff241c62ae2ad845f",
+    "dist/road-surface-material.js": "c73da629769b4bbe1cbcce06006ede15564daa779d20e9e3b1a8afce90bbf833",
+    "dist/street-life.js": "ca9705e7d2ada742fc6fb2587d5a60baf9082e2f77e30bf4e87ad89adddabcfe",
+    "dist/urban-architecture.js": "a4819cc5230ed7af1e41800cc7d66a420b3bfa0d518fef12108fd5b100dcefb7",
+    "dist/visual-presets.js": "29e63a9677714ee0770b0ae13f27a629e7676fccfbb899afc5b25a32c95d0b88",
+    "scripts/bake-night-city.mjs": "45ed8c2a561ce24c908cdac7028066f90a938f5ad463bfa8e39c36f3e3146d3d",
+    "tests/city-lighting-3.10.test.mjs": "24af239e133ba5e7c983e6cb7e38e8ab7fb6b57848cbc9c8bab8ee1ad994f335"
+  },
+  "limits": [
+    "Actual 3.9 IAB images supplied by the user were inspected. This report does not contain 3.10 GPU pixels or motion/FPS acceptance.",
+    "Night diffuse transport is one stationary surface bounce with representative envelope albedos; it does not include dynamic car occlusion or fine facade lightmaps.",
+    "The preserved physical city and tyre/flight models are independent of these material/light changes."
+  ]
+}

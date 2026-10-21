@@ -1,0 +1,124 @@
+{
+  "schema": "roadster-city-batch-equivalence-3.17",
+  "status": "passed",
+  "createdAt": "2026-10-21T01:57:40.950Z",
+  "provenance": {
+    "originalFile": "dist/urban-architecture.js",
+    "stageBuild": "df6854e239f29782d8ab53048603b6ba249da3e0eb967020512a92558765a19f",
+    "originalSHA256": "25be0fd33921045325c72be9777bd0efcd2a14b8309bf7bbdc7dc9c08673e25c",
+    "fixtureSHA256": "cbcb09e6f690b37c8c5e7b329355f6577c25d601ff6e9d8f21e24c6a2112647f",
+    "changedOnlyImportSpecifiers": [
+      "city-data.js",
+      "city-plan.js",
+      "city-render-budget.js",
+      "city-exterior-materials.js",
+      "city-frontage-design.js"
+    ],
+    "purpose": "Retains the exact 3.17 pre-batch-repair builder for instance/material equivalence and failed budget evidence."
+  },
+  "checks": [
+    "Frozen pre-repair builder differs only by independently verified import relocation",
+    "Both concrete responses match all recorded actual material and shader parameters",
+    "Every full-scene instance, prototype indexed geometry, normal/UV, tint, metric/glazing/sign attribute, LOD and shadow flag matches",
+    "Allocated triangles are unchanged and real instance batches decrease"
+  ],
+  "instances": 173926,
+  "instanceSetSHA256": "c2401aed63e8fe12b77c07be81dffe79469dd4e154f599c9ab1517bb3484ef9b",
+  "before": {
+    "triangles": 1420052,
+    "batches": 1011
+  },
+  "after": {
+    "triangles": 1420052,
+    "batches": 918
+  },
+  "mergedMaterialResponses": {
+    "plaster": {
+      "hash": "3b75c0e8ddfb00cb2a9646b33a7acd38029029c9250948f4cdce907d411749e9",
+      "response": {
+        "type": "MeshStandardMaterial",
+        "color": [
+          1,
+          1,
+          1
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "roughness": 0.9,
+        "metalness": 0,
+        "envMapIntensity": 1,
+        "opacity": 1,
+        "transparent": false,
+        "side": 0,
+        "blending": 1,
+        "depthWrite": true,
+        "depthTest": true,
+        "wireframe": false,
+        "flatShading": false,
+        "toneMapped": true,
+        "alphaTest": 0,
+        "polygonOffset": false,
+        "map": null,
+        "normalMap": null,
+        "roughnessMap": null,
+        "metalnessMap": null,
+        "emissiveMap": null,
+        "surface": "concrete",
+        "vertexShader": "1031f1e27dc15ac80c01a01ad37e7e2a0dfba8dba81be2bfa80dfddbf98df152",
+        "fragmentShader": "15697320b131b84f347b3eb73db50a675120f4777e62bd8d82e9250ed987738a",
+        "programKey": "onBeforeCompile( /* shaderobject, renderer */ ) {}|city-exterior-metres-v1|concrete"
+      }
+    },
+    "recessed": {
+      "hash": "3b75c0e8ddfb00cb2a9646b33a7acd38029029c9250948f4cdce907d411749e9",
+      "response": {
+        "type": "MeshStandardMaterial",
+        "color": [
+          1,
+          1,
+          1
+        ],
+        "emissive": [
+          0,
+          0,
+          0
+        ],
+        "emissiveIntensity": 1,
+        "roughness": 0.9,
+        "metalness": 0,
+        "envMapIntensity": 1,
+        "opacity": 1,
+        "transparent": false,
+        "side": 0,
+        "blending": 1,
+        "depthWrite": true,
+        "depthTest": true,
+        "wireframe": false,
+        "flatShading": false,
+        "toneMapped": true,
+        "alphaTest": 0,
+        "polygonOffset": false,
+        "map": null,
+        "normalMap": null,
+        "roughnessMap": null,
+        "metalnessMap": null,
+        "emissiveMap": null,
+        "surface": "concrete",
+        "vertexShader": "1031f1e27dc15ac80c01a01ad37e7e2a0dfba8dba81be2bfa80dfddbf98df152",
+        "fragmentShader": "15697320b131b84f347b3eb73db50a675120f4777e62bd8d82e9250ed987738a",
+        "programKey": "onBeforeCompile( /* shaderobject, renderer */ ) {}|city-exterior-metres-v1|concrete"
+      }
+    }
+  },
+  "sourceHashes": {
+    "dist/urban-architecture.js": "a4819cc5230ed7af1e41800cc7d66a420b3bfa0d518fef12108fd5b100dcefb7",
+    "dist/city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
+    "dist/city-render-budget.js": "d61901f692b16684fc520349ac8944cd7a95123c8460ae0d8fd1f82b83aeeebd",
+    "tests/city-batch-budget-3.17.test.mjs": "339a9206863e9dc72edfc3a0ac9c3bc909b624398e4c6f3f27ba1990d2d87a37"
+  },
+  "scope": "Actual Three object equivalence before culling; material names and sector identifiers are intentionally excluded. Atlas construction is DOM-free in both builders. This cannot replace the unchanged 15-view draw/triangle contract, native pixels, GPU performance or arbitrary-camera tests."
+}

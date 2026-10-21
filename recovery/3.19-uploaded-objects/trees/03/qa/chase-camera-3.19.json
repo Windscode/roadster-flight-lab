@@ -1,0 +1,124 @@
+{
+  "status": "passed",
+  "version": "3.19.0",
+  "scope": "Deterministic camera kinematics in Node at specified update rates. Not WebGL frames, measured GPU performance, tyre handling or human driving acceptance.",
+  "publishedBaseline": {
+    "commit": "ab9372b56a01c2a47b18d32baf48162f3cd8f86c",
+    "file": "dist/main.js",
+    "algorithm": "World-space position.lerp(vehicle + heading offset, 1-exp(-4*dt))"
+  },
+  "protocol": {
+    "durationS": 5,
+    "constantSpeedsKmh": [
+      54,
+      90,
+      -54
+    ],
+    "updateRatesHz": [
+      30,
+      60,
+      144
+    ],
+    "verticalSignal": "0.62 + 0.08 sin(20t) metres; previous vertical filtering retained",
+    "zeroDtScope": "A zero-time/no-translation function call only; actual UI pause keeps calling the camera with wall-clock dt and can continue settling.",
+    "physicalStateMutated": false
+  },
+  "comparisons": [
+    {
+      "speedKmh": 54,
+      "fps": 30,
+      "nominalDistanceM": 7.375,
+      "beforeDistanceM": 10.880553902935986,
+      "afterDistanceM": 7.374999999999972
+    },
+    {
+      "speedKmh": 54,
+      "fps": 60,
+      "nominalDistanceM": 7.375,
+      "beforeDistanceM": 11.00138877854458,
+      "afterDistanceM": 7.374999999999972
+    },
+    {
+      "speedKmh": 54,
+      "fps": 144,
+      "nominalDistanceM": 7.375,
+      "beforeDistanceM": 11.073157782486561,
+      "afterDistanceM": 7.375000000000242
+    },
+    {
+      "speedKmh": 90,
+      "fps": 30,
+      "nominalDistanceM": 7.825,
+      "beforeDistanceM": 13.667589838226647,
+      "afterDistanceM": 7.824999999999946
+    },
+    {
+      "speedKmh": 90,
+      "fps": 60,
+      "nominalDistanceM": 7.825,
+      "beforeDistanceM": 13.868981297574294,
+      "afterDistanceM": 7.825000000000102
+    },
+    {
+      "speedKmh": 90,
+      "fps": 144,
+      "nominalDistanceM": 7.825,
+      "beforeDistanceM": 13.988596304144252,
+      "afterDistanceM": 7.824999999999747
+    },
+    {
+      "speedKmh": -54,
+      "fps": 30,
+      "nominalDistanceM": 7.375,
+      "beforeDistanceM": 3.8694460970640137,
+      "afterDistanceM": 7.375
+    },
+    {
+      "speedKmh": -54,
+      "fps": 60,
+      "nominalDistanceM": 7.375,
+      "beforeDistanceM": 3.748611221455434,
+      "afterDistanceM": 7.375
+    },
+    {
+      "speedKmh": -54,
+      "fps": 144,
+      "nominalDistanceM": 7.375,
+      "beforeDistanceM": 3.676842217513453,
+      "afterDistanceM": 7.374999999999758
+    }
+  ],
+  "transport": [
+    {
+      "fps": 30,
+      "turnRateRadS": 0.28,
+      "extraTranslationMps": {
+        "x": 4,
+        "z": -7
+      },
+      "maximumRelativeErrorM": 8.556067554929068e-14
+    },
+    {
+      "fps": 60,
+      "turnRateRadS": 0.28,
+      "extraTranslationMps": {
+        "x": 4,
+        "z": -7
+      },
+      "maximumRelativeErrorM": 9.479822483716542e-14
+    },
+    {
+      "fps": 144,
+      "turnRateRadS": 0.28,
+      "extraTranslationMps": {
+        "x": 4,
+        "z": -7
+      },
+      "maximumRelativeErrorM": 1.3043830727131805e-13
+    }
+  ],
+  "sourceHashes": {
+    "dist/chase-camera.js": "083c515420ea4342487e8b6bd74a6443e2ba856c91506f8951024989c79ef76c",
+    "dist/main.js": "1ee6fff0433672c5525d1799a2769ccca75cd7b24cb269c6a81d156f8e9ee80a"
+  }
+}

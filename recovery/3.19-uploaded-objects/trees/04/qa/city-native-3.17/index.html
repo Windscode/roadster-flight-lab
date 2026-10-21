@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roadster 3.17 城市原图与证据</title>
+<style>
+:root{color-scheme:dark;background:#10171b;color:#e5ecee;font:16px/1.65 system-ui,sans-serif}body{max-width:1440px;margin:0 auto;padding:32px}h1{font-size:28px;line-height:1.25}h2{margin-top:36px;font-size:21px}p{max-width:1050px;color:#bccbd1}a{color:#8cdbd2}code{overflow-wrap:anywhere;font-size:.85em}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{margin:0;background:#18232a;border:1px solid #31424b;border-radius:9px;overflow:hidden}.card img{display:block;width:100%;height:auto}.card figcaption{padding:14px 18px}.tag{font-size:12px;letter-spacing:.08em;color:#86cec6}.single{max-width:1000px}.note{border-left:3px solid #d7b37a;padding:8px 16px;background:#242725}.evidence{display:flex;flex-wrap:wrap;gap:10px 24px}small{color:#b6c6cc}footer{border-top:1px solid #34434b;padding-top:20px;margin-top:36px}@media(max-width:850px){body{padding:18px}.pair{grid-template-columns:1fr}}
+</style>
+<header>
+  <span class="tag">ROADSTER FLIGHT LAB / 3.17</span>
+  <h1>城市日夜：原始图像与实际验证</h1>
+  <p>冻结 3.16 对照既有城市的增量改进。每张图都是未调色、未重绘的真实浏览器 PNG；点图可打开原图。三张阶段候选来自 <code>df6854e2…</code>，后续预算合批只补一张最终湿夜，原证据不改身份。</p>
+  <p>Chrome 156 / ANGLE SwiftShader，1280 × 720，DPR 1，high。Crosstown 固定相机 <code>[-78, 2.05, -135] → [96, 5, -129]</code>，48°；晴天曝光 0.87，湿夜 1.02。图中原生暂停提示/HUD保留；首张基线 HUD 可见，不能直接对整张图做像素统计。</p>
+  <div class="evidence"><a href="../../docs/CITY_3.17_REPORT.md">完整城市报告</a><a href="summary.json">证据摘要 / SHA256</a><a href="candidate/build-binding.json">阶段 build 绑定</a><a href="../city-batch-equivalence-3.17.json">合批实例等同性</a><a href="../city-batch-bake-binding-3.17.json">三次真实重烘与源绑定</a></div>
+</header>
+<section>
+<h2>同相机 · 晴天</h2>
+<div class="pair">
+  <figure class="card"><a href="baseline/crosstown-clear-day.png"><img src="baseline/crosstown-clear-day.png" alt="3.16 冻结基线 Crosstown 日间原图" loading="lazy"></a><figcaption><strong>3.16 冻结基线</strong><br><small>空前场、稀疏街缘和黑色水平楼面。<a href="baseline/crosstown-clear-day.json">同帧条件</a></small></figcaption></figure>
+  <figure class="card"><a href="candidate/crosstown-clear-day.png"><img src="candidate/crosstown-clear-day.png" alt="3.17 阶段 Crosstown 日间原图" loading="lazy"></a><figcaption><strong>3.17 连续店廊与普通楼墙窗</strong><br><small>四段街缘、檐口、入口标识和五类既有楼立面。店面大玻璃仍较平。<a href="candidate/crosstown-clear-day.json">同帧条件 / 实际响应 SHA</a></small></figcaption></figure>
+</div>
+</section>
+<section>
+<h2>同相机 · 湿夜</h2>
+<div class="pair">
+  <figure class="card"><a href="baseline/crosstown-wet-night.png"><img src="baseline/crosstown-wet-night.png" alt="3.16 冻结基线 Crosstown 湿夜原图" loading="lazy"></a><figcaption><strong>3.16 冻结基线</strong><br><small>近处强灯池与深暗间隔。<a href="baseline/crosstown-wet-night.json">同帧条件</a></small></figcaption></figure>
+  <figure class="card"><a href="candidate/crosstown-wet-night.png"><img src="candidate/crosstown-wet-night.png" alt="3.17 阶段 Crosstown 湿夜原图" loading="lazy"></a><figcaption><strong>3.17 错位真实路灯、棚灯及间接层次</strong><br><small>曝光不变，包含夜间意外太阳的实际修复；上层与远景仍偏暗。<a href="candidate/crosstown-wet-night.json">同帧条件 / 实际响应 SHA</a></small></figcaption></figure>
+</div>
+</section>
+<section>
+<h2>最终最小合批后 · 一张实际复核</h2>
+<figure class="card single"><a href="final-after-batch/crosstown-wet-night.png"><img src="final-after-batch/crosstown-wet-night.png" alt="3.17 最终合批后 Crosstown 湿夜原图" loading="lazy"></a><figcaption><strong>最终湿夜 · 材质与光场实际加载</strong><br><small>173,926 实例的面、法线、UV、颜色、材质响应和 LOD 与阶段图等同；批次与剔除边界有明确改变。此图验证实际显示，不能替代持续性能。<a href="final-after-batch/crosstown-wet-night.json">原始条件</a> · <a href="final-after-batch/build-binding.json">最终实际 build 绑定</a> · <a href="final-after-batch/errors.json">原错误记录</a></small></figcaption></figure>
+</section>
+<section>
+<h2>正常跟随相机 · 道路与车身关系</h2>
+<figure class="card single"><a href="candidate/drive-clear-day.png"><img src="candidate/drive-clear-day.png" alt="3.17 原路线入口的正常跟随相机，显示车身与城市街道" loading="lazy"></a><figcaption><strong>原路线入口按钮 / 正常跟随 / 暂停静帧</strong><br><small>真实车身、玻璃和后部安装可见。不是连续驾驶证据。<a href="candidate/drive-clear-day.json">同帧条件</a></small></figcaption></figure>
+</section>
+<section>
+<h2>持续帧时与限制</h2>
+<p class="note">两个版本在此软件 GPU 环境都未达流畅。每档 30 秒记录窗口只有 4–8 帧，切档的首个 rAF 延迟十余秒。基线还与整轮 CPU 验证并发，候选采集前验证已停止；不能以时间差宣称优化因果，更不能当成用户显卡成绩。</p>
+<div class="evidence"><a href="performance-baseline/summary.json">3.16 持续观察</a><a href="performance-candidate/summary.json">阶段 3.17 持续观察</a><a href="../city-dev-attempts-3.17/README.md">失败与修正记录</a><a href="../exterior-materials-3.17.json">原 15 视点 draw / 三角形合同</a></div>
+</section>
+<footer><small>未关阴影掩盖问题，未提高整图曝光。所有源、原图和失败归档以实际采集身份保存；最终打包身份见总交付说明。</small></footer>
+</html>

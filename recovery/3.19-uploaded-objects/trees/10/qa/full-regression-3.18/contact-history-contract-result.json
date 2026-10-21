@@ -1,0 +1,108 @@
+{
+  "status": "focused-contract-and-contact-regressions-passed",
+  "build": "a347d7b355477cce764671d29d7fdaab7c06bf24964868f66abea7623bc046b3",
+  "sourceAndHistoricalHashesUnchanged": true,
+  "sourceAndHistoricalHashes": {
+    "dist/model-build.js": "d71ec68acc2b5350718676a6a97b293afbc986a3b1ab865bfea3c810846f9539",
+    "dist/physics.js": "38df473c0f03e9c540b13800954218326c749c3753f968af0177e414c604d4be",
+    "dist/pitch-maneuver.js": "f79bf31dad0486b039aac9b4e4d407af64b3fb37f91ebb5864cdfe767c715df7",
+    "dist/simulation-snapshot.js": "e0fd58488365709eaacfd896af8abcd1f8db3b5aa3991a92db276d9c3f34ea35",
+    "dist/experiment-records.js": "d3f8667dc9988abd9814314df39fd32355fc4e90a088faa40e8aeb9ec010ebb7",
+    "qa/contact-impulse-3.17.json": "16b97c8e6495d48fec29c95b0291963932779ee453542eda37c791208efc7984",
+    "qa/native-ui-3.16/final-81926/current-model-task.json": "ad465670001849c16cdd71cd2c2040d19d5380880a55bed472c0b9f0f994bf6e",
+    "qa/city-drive-native-3.16/native-experiment.json": "23e2f26043f33ffdd8ef9515b1b780d8184eda66903c2f52cf4ae6e7454480b2"
+  },
+  "legacyReportRetained": "qa/contact-impulse-3.17.json",
+  "focusedAttempt1FailureRetained": "qa/full-regression-3.18/contact-history-focused-attempt-1-failed.log",
+  "focusedSuccessfulLog": "qa/full-regression-3.18/contact-history-focused-attempt-2.log",
+  "severeImpactVerdict": "NOT_CONVERGED_FULL_TRAJECTORY",
+  "reportStatus": "friction-and-ordinary-regressions-passed-severe-trajectory-still-failed",
+  "checks": [
+    {
+      "name": "Real delivered 3.16 laboratory task retains original bytes and export but refuses undeclared current-model migration",
+      "passed": true,
+      "sourceFile": "qa/native-ui-3.16/final-81926/current-model-task.json",
+      "sourceSha256": "ad465670001849c16cdd71cd2c2040d19d5380880a55bed472c0b9f0f994bf6e",
+      "legacyMigrationEvidence": "qa/contact-impulse-3.17.json",
+      "sourceIdentity": {
+        "modelVersion": "3.16.0",
+        "modelBuildId": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120,
+        "taskProtocol": "windlab-disturbance-landing-1"
+      },
+      "recordType": "roadster.landing-result",
+      "execution": "historical-task-refused-before-import-or-controller-start",
+      "historyViewAndExportRetained": true,
+      "originalFileBytesUnchanged": true,
+      "archiveValuesUnchanged": true,
+      "storageWrites": 0,
+      "physicalImports": 0,
+      "fixtureSettlingSteps": 240,
+      "taskStartRequests": 0,
+      "fullStatePreparation": "explicitly-refused-no-migrator",
+      "scope": "The task API prepares a new current-model fixture for 240 settling steps before refusing the unavailable historical identity. No historical state is imported and no task controller starts; this does not claim zero physical steps in fixture preparation."
+    },
+    {
+      "name": "A genuine current-model laboratory snapshot independently refuses a changed collision world before integration",
+      "passed": true,
+      "modelVersion": "3.18.0",
+      "reason": "快照不可恢复：场景几何或世界类型不匹配",
+      "physicalSteps": 0,
+      "destinationUnchanged": true,
+      "recordIdentity": {
+        "modelVersion": "3.18.0",
+        "modelBuildId": "a347d7b355477cce764671d29d7fdaab7c06bf24964868f66abea7623bc046b3",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "sourceGeometrySignature": "08604efb",
+      "destinationGeometrySignature": "86eba1ba"
+    },
+    {
+      "name": "Original city history stays read-only and the referenced input route is explicitly a new current-model experiment",
+      "passed": true,
+      "sourceIdentity": {
+        "modelVersion": "3.16.0",
+        "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "execution": "rejected-before-import-and-integration",
+      "reason": "原模型 3.16.0 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。",
+      "physicalImports": 0,
+      "physicalSteps": 0,
+      "historyViewAndExportRetained": true,
+      "sourceUnchanged": true,
+      "originalFileBytesUnchanged": true,
+      "archiveBytesUnchanged": true,
+      "routeExecutionIdentity": {
+        "modelVersion": "3.18.0",
+        "modelBuildId": "a347d7b355477cce764671d29d7fdaab7c06bf24964868f66abea7623bc046b3",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "sourceGeometrySignature": "8b51c6b5",
+      "currentGeometrySignature": "d713487b",
+      "geometryScope": "Unavailable historical-model refusal and current-world collision geometry are independent contracts; geometry refusal is tested above with a genuine current-model state."
+    }
+  ],
+  "city": {
+    "steps": 22848,
+    "pathLengthM": 954.6028120559214,
+    "wheelStopEquations": 313,
+    "hullEquations": 0
+  }
+}

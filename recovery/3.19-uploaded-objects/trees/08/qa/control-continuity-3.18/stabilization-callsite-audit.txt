@@ -1,0 +1,52 @@
+dist/landing-challenge.js:110:    sim.clearResearchHeightControl(reason);if(status!=='completed')sim.setStabilizationMode('off');else sim.setMode('drive');this.onFinish(this.result);return this.result;
+dist/pilot-input-intent.js:6:  const {mode='drive',stabilizationMode='off',stabilizationActive=false,contactCount=0,adhered=false,maneuver=null,pitchOverride=false,hasPower=true,pressureLimited=false,manualReferenceRate={x:0},params={}}=context;
+dist/pilot-input-intent.js:9:  const controller=raw?'raw-valves':maneuver?'maneuver':adhered&&stabilizationMode==='level'?'surface-adhesion':pitchOverride?'g-pitch-override':stabilizationMode==='hold'?'pose-hold':stabilizationActive?'g-level':mode==='drive'?'ground-drive':mode==='manual'?'raw-wrench':'pilot-attitude-rate';
+dist/pilot-input-intent.js:12:  const lateral=stabilizationMode==='level'&&['g-level','g-pitch-override'].includes(controller);
+dist/pilot-input-intent.js:22:    afterPitchRelease:stabilizationMode==='level'?'return-to-level':'hold-achieved-attitude',limitations,
+dist/task-setting-scope.js:12:  sim.setMode(before.contactCount>=3?'drive':'hover');sim.setStabilizationMode('off');
+dist/experiment-records.js:15:export const COMMAND_METHODS=Object.freeze(['reset','setMode','setSuction','setStabilizationMode','setAirStabilization','setPoseTarget','setWind','clearWind','setSupplyMode','refillGas','setParam','startManeuver','setRoadSurface','setWing','setObservation','setNozzleFault','clearNozzleFault','releasePilotInput']);
+dist/flight-programs.js:166:      sim.setMode('hover');sim.setStabilizationMode('off');
+dist/flight-programs.js:292:      if(sim.stabilizationMode==='hold'&&!preservePhysicalRecovery)sim.setStabilizationMode('off');
+dist/physics.js:159:    this.stabilizationMode='off';this.airStabilization=false;
+dist/physics.js:239:    if(this.stabilizationMode==='hold')this.stabilizationMode='off';
+dist/physics.js:240:    this.airStabilization=this.stabilizationMode!=='off';
+dist/physics.js:295:    const levelReference=this.stabilizationMode==='level'&&this._levelRecovery.status!=='pilot-pitch';
+dist/physics.js:296:    const q=levelReference?this._levelQuaternion():this.stabilizationMode==='hold'?this._holdQuaternionTarget:this._manualQuaternionTarget;
+dist/physics.js:297:    return{mode:this.mode,stabilizationMode:this.stabilizationMode,position:this.stabilizationMode==='hold'&&this._holdPositionTarget?plain(this._holdPositionTarget):plain(this._positionTarget),quaternion:q?{...plain(q),w:q.w}:null,
+dist/physics.js:325:    if(this.stabilizationMode==='hold')this.setStabilizationMode('off');
+dist/physics.js:341:    if(this.stabilizationMode==='hold'&&this.suctionEnabled!==!!enabled)this.setStabilizationMode('off');
+dist/physics.js:344:  setStabilizationMode(mode){
+dist/physics.js:354:    this.stabilizationMode=mode;this.airStabilization=mode!=='off';this._stabilizationActive=false;
+dist/physics.js:383:  setAirStabilization(enabled){return this.setStabilizationMode(enabled?'level':'off');}
+dist/physics.js:390:    this.setStabilizationMode('hold');
+dist/physics.js:887:    this._levelRecovery.active=false;this._levelRecovery.status=this.stabilizationMode==='level'?(this._contactCount>0?'surface':'armed'):'inactive';
+dist/physics.js:910:    const pilotPitch=this.stabilizationMode==='level'&&this.mode==='hover'&&!adhered&&!this._maneuver&&Math.abs(input.pitch)>.01;
+dist/physics.js:912:    this._levelRecovery.active=this.stabilizationMode==='level'&&stabilize;
+dist/physics.js:914:    if(this.stabilizationMode==='level'&&!this._maneuver&&(adhered||this._contactCount>0&&input.lift<=.01&&(this._stabilizationActive||this._heightTarget<=b.position.y+.15))){
+dist/physics.js:922:    if(this.stabilizationMode==='hold'){
+dist/physics.js:960:        if(this.stabilizationMode==='level'&&Math.abs(this._manualCommandInput.x)>1e-9){
+dist/physics.js:1157:    if(direct){this._stabilizationActive=false;this._holdActive=false;this._levelRecovery.active=false;this._levelRecovery.status=this.stabilizationMode==='level'?'armed':'inactive';this._verticalControl={commandMps:0,targetMps:0,accelerationLimitMps2:this.params.verticalAccelerationMps2,braking:false,pilotActive:false};}
+dist/physics.js:1205:    if(this.stabilizationMode==='hold'){
+dist/physics.js:1213:    this._manualPoseFeasible=this.mode==='hover'&&this.stabilizationMode==='off'&&!this._maneuver?this._holdTrimFeasible(maxes,this._manualQuaternionTarget):null;
+dist/physics.js:1296:    if(this.stabilizationMode==='hold'&&(Math.abs(input.throttle)>.02||Math.abs(input.steer)>.02||
+dist/physics.js:1297:      Math.abs(input.lift)>.02||Math.abs(input.roll)>.02||Math.abs(input.pitch)>.02||input.brake>.02||input.boost||input.frontJets>0||input.rearJets>0))this.setStabilizationMode('off');
+dist/physics.js:1340:      else if(this.stabilizationMode==='hold')this.status=this._holdStatus==='surface'?'定姿定点待命：接触表面，喷口保持让行':
+dist/physics.js:1404:    if(this._levelRecovery.status==='pilot-pitch'){this._levelRecovery.active=false;this._levelRecovery.status=this.stabilizationMode==='level'?'armed':'inactive';}
+dist/research-console.js:192:      else if(action==='stop'){const cancelled=cancel('已停止研究流程'),stopped=experiments.stopAll('用户停止研究'),active=cancelled||stopped;if(!active&&getSim()?.stabilizationMode==='hold'){getSim().setStabilizationMode('off');onCancel('释放研究保持');notify('研究保持已释放，车辆继续按当前动量运动。');}paintStatus();}
+dist/research-console.js:198:      else if(action==='release'){cancel('释放研究保持');getSim().setStabilizationMode('off');onCancel('释放研究保持');notify('已释放研究保持，恢复驾驶控制。');}
+dist/research-console.js:261:      lastLiveSample=time;const state=runner.getState(),manual=telemetry.mode==='hover'&&telemetry.stabilizationMode==='off'&&!telemetry.maneuver,target=state.target?.position??telemetry.holdPositionTarget,quaternion=state.target?.quaternion??telemetry.holdQuaternionTarget??(manual?telemetry.manualQuaternionTarget:null);
+dist/research-console.js:269:    const holding=telemetry.stabilizationMode==='hold',limited=telemetry.holdFeasible===false||telemetry.manualPoseFeasible===false||telemetry.pressureLimited;
+dist/research-console.js:272:    const lab=getContext()==='lab',outside=lab&&target&&(Math.abs(target.x)>24||Math.abs(target.z)>42||target.y+1.1>WIND_LAB_DIMENSIONS.clearHeight);$('space-warning').textContent=(lab?'实验室工作区 X ±24 / Z ±42 m，净高 24.1 m。':'城市现场：世界高度不等于恢复净空。')+(outside?'目标及车体包络可能越出工作区 / 净高；请求未被夹紧。':'')+' '+(telemetry.supplyMode==='bench'?'恒压外供气':'有限车载气源')+' · '+(telemetry.stabilizationMode==='hold'?'研究定姿定点':telemetry.stabilizationMode==='level'?'普通 G 水平稳定':'驾驶控制');
+dist/research-console.js:274:    const manual=telemetry.mode==='hover'&&telemetry.stabilizationMode==='off'&&!telemetry.maneuver,q=active.target?.quaternion??telemetry.holdQuaternionTarget??(manual?telemetry.manualQuaternionTarget:null);
+dist/experiment-worker.js:32:  sim.body.angularVelocity.set(.2,0,.3);sim.setAirStabilization(request.stabilization);
+dist/main.js:199:      environment.setTargetPose(data.stabilizationMode==='hold'&&data.holdPositionTarget?{position:data.holdPositionTarget,quaternion:data.holdQuaternionTarget}:null);
+dist/main.js:244:    const mode=sim.stabilizationMode==='level'?'off':'level';
+dist/main.js:245:    sim.setStabilizationMode(mode);inputSession.action('KeyG',{accepted:true,reason:mode==='level'?'已开启 G 回平保高':'已关闭 G 回平保高',telemetry:sim.telemetry()});logEvent('stabilization_mode',{mode});syncUi(sim.telemetry());
+dist/main.js:302:    $('hud-seal').textContent=data.suctionEnabled?'吸附 '+Math.round(data.sealQuality*100)+'%':data.stabilizationMode==='hold'?({holding:'研究姿态保持',tracking:'目标收敛中',limited:'推力受限',surface:'接触面约束'}[data.holdStatus]||'研究保持待命'):data.airStabilization?'自动回正 G':'';
+dist/main.js:303:    $('stabilize-btn').setAttribute('aria-pressed',data.stabilizationMode==='level');$('stabilize-label').textContent=data.stabilizationMode==='level'?'G 回平保高 · 开启':'G 回平保高 · 关闭';
+dist/main.js:391:    $('control-response-mode').textContent=data.stabilizationMode==='off'?offResponse:data.stabilizationMode==='hold'?'研究程序保持目标姿态；按 G 转为水平稳定，手动输入可接管。':'G 已开启：1 / 2 临时控制俯仰，松键回正；Z / B 为横移。连续滚转请关闭 G。';
+dist/main.js:761:    const message=data.fault?data.fault:data.levelRecovery?.status==='limited'?'回正受限 · 可用推力或力矩不足，姿态仍按真实受力恢复':data.levelRecovery?.status==='recovering'?'正在恢复水平姿态 · 保持切换时航向，推力与力矩有界':data.stabilizationMode==='hold'&&data.holdActive&&data.holdFeasible===false?'当前姿态超出喷口可持续配平能力 · 控制器已饱和，车辆仍按真实受力运动':data.pressureLimited&&(data.mode!=='drive'||data.stabilizationActive)?'储气压力不足 · 推力正在降低，按 T 进行试验补气':data.maneuver?data.status:data.supplyMode==='bench'&&(data.mode!=='drive'||data.stabilizationActive)?'外部持续供气 · 恒压试验工况':'';
+dist/main.js:910:        targetGroup.visible=showForces&&(t.mode==='hover'||t.stabilizationMode==='hold');const target=t.holdPositionTarget;if(t.stabilizationMode==='hold'&&target)targetGroup.position.set(target.x,target.y,target.z);else targetGroup.position.set(t.position.x,t.targetAltitude,t.position.z);
+dist/driving-capture.js:114:        if(!this._command('setStabilizationMode','level'))return{};
+dist/driving-capture.js:117:      if(def.type==='level'&&a.phase==='manual'&&!this._command('setStabilizationMode','off'))return{};
+dist/driving-capture.js:118:      if(def.type==='level'&&a.phase==='recover'&&!this._command('setStabilizationMode','level'))return{};

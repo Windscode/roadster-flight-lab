@@ -1,0 +1,101 @@
+{
+  "schema": "roadster-driver-feedback-acceptance",
+  "version": 1,
+  "modelVersion": "3.19.0",
+  "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+  "createdAt": "2026-10-21T06:44:36.636Z",
+  "scope": "Real RoadsterSim numerical integration, production read-only filters, and the actual main camera updater executed against real Three camera math with inert DOM/menu fixtures. Not browser/native-keyboard, GPU or human comfort acceptance.",
+  "checks": [
+    {
+      "name": "Actual RoadsterSim trajectories and complete snapshots are identical with head/audio feedback enabled or disabled at every fixed step",
+      "status": "PASS"
+    },
+    {
+      "name": "Offset is bounded, follows local acceleration direction and never introduces camera rotation",
+      "status": "PASS"
+    },
+    {
+      "name": "Pause freezes the presentation state; repeated frames do not integrate it, and seek/reset clears old inertial memory",
+      "status": "PASS"
+    },
+    {
+      "name": "The production main camera updater leaves fixed/orbit/chase/top and review camera poses independent of head feedback",
+      "status": "PASS"
+    }
+  ],
+  "evidence": {
+    "physicalIsolation": {
+      "drivingFixedSteps": 720,
+      "landingFixedSteps": 360,
+      "completeSnapshotEquality": "exact at every fixed step",
+      "maximumObservedOffsetM": {
+        "x": 0.0008357124664801503,
+        "y": 0.00007272457622523116,
+        "z": 0.01641552988698567
+      },
+      "landingSoundEvents": 1,
+      "interpretation": "Numerical full-city integration. Enabling the read-only presentation filter and sound state does not change any captured physical continuation state."
+    },
+    "limits": {
+      "limitsM": {
+        "x": 0.025,
+        "y": 0.012,
+        "z": 0.035
+      },
+      "stressOffsetM": {
+        "x": -3.253693913862947e-16,
+        "y": -0.0119999999990899,
+        "z": -0.034999999999995826
+      },
+      "stressMeaning": "Synthetic large acceleration probes a presentation bound, not a physical vehicle maneuver",
+      "cameraShiftM": [
+        -0.0037897763823764308,
+        0.0006890502513396957,
+        -0.00964670351879704
+      ],
+      "cameraQuaternionDifferenceRad": 0,
+      "rotationApplied": false
+    },
+    "pauseAndSeek": {
+      "pause": "holds current bounded offset and freezes filter time; it does not force the current camera to neutral",
+      "repeatedFrame": "no integration at identical physical time",
+      "backwardSeek": "zero offset and reset acceleration",
+      "largeGapThresholdS": 0.15,
+      "reenable": "starts at neutral, without a stale velocity impulse"
+    },
+    "cameraModes": [
+      {
+        "mode": "fixed",
+        "positionIdentical": true,
+        "orientationIdentical": true,
+        "headStateReset": true
+      },
+      {
+        "mode": "orbit",
+        "positionIdentical": true,
+        "orientationIdentical": true,
+        "headStateReset": true
+      },
+      {
+        "mode": "chase",
+        "positionIdentical": true,
+        "orientationIdentical": true,
+        "headStateReset": true
+      },
+      {
+        "mode": "top",
+        "positionIdentical": true,
+        "orientationIdentical": true,
+        "headStateReset": true
+      }
+    ],
+    "reviewCockpit": "inactive presentation filter; exact nominal recorded-frame geometry"
+  },
+  "sourceHashes": {
+    "dist/driver-feedback.js": "69d553e5dfc537e365df5df58afbe49dfaca3eaba0174375e93ec3bcae642ab7",
+    "dist/audio.js": "29248d7c1f64c5a2a05d13dbff396ccdb470b14b663fdb2bb7358991d50b6007",
+    "dist/physics.js": "3aa89a4a111b7a4001220f284077c6f5fe51d58d8b3fa7f6105dfce208aec107",
+    "dist/main.js": "1ee6fff0433672c5525d1799a2769ccca75cd7b24cb269c6a81d156f8e9ee80a",
+    "dist/route-experience.js": "b6fc36df04054cb543d6d348a23a85435c087f273286e9caedc80782fdbd2447"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema": "roadster-final-regression-3.17",
+  "recordedAt": "2026-10-21T02:02:29.531373+00:00",
+  "modelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+  "command": "node scripts/validate.mjs",
+  "environment": {
+    "JSDOM_MODULE_PATH": "/workspace/scratch/4a18da1d1c35/qa-runtime/node_modules/jsdom/lib/api.js",
+    "TRIM_ORACLE_PYTHON": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "GLSLANG_VALIDATOR": "/workspace/scratch/4a18da1d1c35/qa-runtime/glslang/usr/bin/glslangValidator"
+  },
+  "finalExitCode": 0,
+  "attempts": [
+    {
+      "attempt": 1,
+      "log": "qa/full-regression-3.17/attempt-1.log",
+      "bytes": 5041,
+      "sha256": "bf5fd491bba2dec16b6f3e11cee670f4251b898abd59a0a18466d97def9b4261",
+      "status": "failed",
+      "reason": "Botanical high 54 draws exceeded the retained 47-draw ceiling. Actual identical-response batching repaired the product; original budget unchanged."
+    },
+    {
+      "attempt": 2,
+      "log": "qa/full-regression-3.17/attempt-2.log",
+      "bytes": 5371,
+      "sha256": "bbf296ad39cf7d195c9d5ae5fb3c210f85e866b8aa665a027291f4d89879979c",
+      "status": "failed",
+      "reason": "Historical core selection depended on a removed darkConcrete batch name. Real geometry/material selection and stricter storey checks repaired QA; product unchanged."
+    },
+    {
+      "attempt": 3,
+      "log": "qa/full-regression-3.17/attempt-3.log",
+      "bytes": 4969,
+      "sha256": "3e8bdb1531183d923b266c46c4be516cc60b1e3a4807a8f92a85a941566e0124",
+      "status": "failed",
+      "reason": "Historical material test read the removed wallTintSRGB field. QA now checks the complete actual retained/downtown material model, shader response and twelve source identities; product unchanged."
+    },
+    {
+      "attempt": 4,
+      "log": "qa/full-regression-3.17/attempt-4.log",
+      "bytes": 4533,
+      "sha256": "2b1e517a59b2dc314222b23718393ae33221d0202c68fc1982d8a95e43341415",
+      "status": "passed",
+      "reason": "Complete standard runner, all optional JSDOM/SciPy/GLSL checks enabled; process exit 0."
+    }
+  ],
+  "regressionGroups": 90,
+  "declaredAssertions": 641,
+  "countScope": "Assertions are not independent experiments or user experience certification.",
+  "validationSha256": "c3c6a287fc6e785281ad31949ce348ee54202cb235f949d3a36c9f9a7f389120",
+  "domStatus": "passed",
+  "offlineShaders": {
+    "scope": "Offline final source syntax, stage-interface and active sampler array reflection; not WebGL driver, framebuffer, rendered-pixel or FPS validation.",
+    "postProcessing": {
+      "report": "qa/render-shader-validation-3.17.json",
+      "createdAt": "2026-10-21T02:01:03.554Z",
+      "sourceHashesCurrent": true,
+      "status": "passed_with_documented_compiler_normalization",
+      "programPairs": 18,
+      "stages": 36,
+      "exactPass": 13,
+      "compatibilityPass": 5,
+      "failed": 0,
+      "limitations": [
+        "Offline syntax and stage-interface validation only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.",
+        "Five bloom blur pairs may require a reported compiler-only identifier normalization for the unchanged Three.js common average(vec3) function. Such results are compatibility-pass, not exact-pass.",
+        "Built-in beauty/normal/depth material permutations are not exhaustively compiled by this script."
+      ]
+    },
+    "cityLighting": {
+      "report": "qa/city-shaders-3.17.json",
+      "createdAt": "2026-10-21T02:01:02.806Z",
+      "sourceHashesCurrent": true,
+      "status": "passed_with_documented_compiler_normalization",
+      "programPairs": 152,
+      "stages": 304,
+      "exactPass": 0,
+      "compatibilityPass": 152,
+      "failed": 0,
+      "currentMaximumFragmentSamplers": 14,
+      "currentSamplerBudgetFailures": 0,
+      "reproducedLegacyOverBudget": 4,
+      "limitations": [
+        "Offline syntax, stage-interface and AST sampler reflection only. No browser execution, GPU driver, texture completeness, framebuffer validation, visual inspection or FPS measurement.",
+        "Any compiler-only compatibility rename is recorded alongside the exact failure. Production vendor shaders remain unchanged.",
+        "Sampler counts are final-emitted linked/stage AST active-uniform reflection with array lengths, not a target GPU driver query. Live GPU link/draw acceptance remains separate.",
+        "This finite matrix covers the new CSM/GI paths, not every possible material, skinning or morph-target permutation."
+      ]
+    }
+  },
+  "nativeStatus": "partial-native-acceptance-with-open-gates",
+  "retainedOutcomeFailures": [
+    "manual ground WE1",
+    "severe 90km/h step complete-trajectory convergence",
+    "software-renderer fluidity"
+  ],
+  "userHardwareGpu": "not tested"
+}

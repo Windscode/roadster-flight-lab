@@ -1,0 +1,299 @@
+{
+  "schema": "roadster-capture-scheduler-isolated-checks-3.16",
+  "createdAt": "2026-10-21T01:57:04.533Z",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "before-paused-pending-PNG-rAF-and-cancel",
+      "status": "passed",
+      "case": "before-paused-pending-PNG-rAF-and-cancel",
+      "effectsBeforeCancel": {
+        "raf": 3,
+        "sceneUpdates": 3,
+        "reflectionSubmissions": 3,
+        "composers": 3,
+        "audits": 1,
+        "toBlobCalls": 1,
+        "physicsSteps": 0,
+        "errors": []
+      },
+      "lastTimeBeforeCancel": 300,
+      "cancelled": true,
+      "renderResumedAfterCancel": true,
+      "scope": "Actual extracted main functions; rendering and blob completion are controlled stubs, not GPU timing."
+    },
+    {
+      "name": "candidate-paused-pending-PNG-rAF-and-cancel",
+      "status": "passed",
+      "case": "candidate-paused-pending-PNG-rAF-and-cancel",
+      "effectsBeforeCancel": {
+        "raf": 3,
+        "sceneUpdates": 1,
+        "reflectionSubmissions": 1,
+        "composers": 1,
+        "audits": 1,
+        "toBlobCalls": 1,
+        "physicsSteps": 0,
+        "errors": []
+      },
+      "lastTimeBeforeCancel": 300,
+      "cancelled": true,
+      "renderResumedAfterCancel": true,
+      "scope": "Actual extracted main functions; rendering and blob completion are controlled stubs, not GPU timing."
+    },
+    {
+      "name": "before-active-driving-continues",
+      "status": "passed",
+      "case": "before-active-driving-continues",
+      "effects": {
+        "raf": 3,
+        "sceneUpdates": 3,
+        "reflectionSubmissions": 3,
+        "composers": 3,
+        "audits": 1,
+        "toBlobCalls": 1,
+        "physicsSteps": 3,
+        "errors": []
+      },
+      "capturedSimTime": 0.08,
+      "currentSimTime": 0.24
+    },
+    {
+      "name": "candidate-active-driving-continues",
+      "status": "passed",
+      "case": "candidate-active-driving-continues",
+      "effects": {
+        "raf": 3,
+        "sceneUpdates": 3,
+        "reflectionSubmissions": 3,
+        "composers": 3,
+        "audits": 1,
+        "toBlobCalls": 1,
+        "physicsSteps": 3,
+        "errors": []
+      },
+      "capturedSimTime": 0.08,
+      "currentSimTime": 0.24
+    },
+    {
+      "name": "candidate-original-deadline-before-first-frame",
+      "status": "passed",
+      "case": "candidate-original-deadline-before-first-frame",
+      "message": "没有收到完整绘制与PNG编码结果；请保持页面可见并检查WebGL。",
+      "progress": {
+        "captureId": "fixture-export-1792547824524",
+        "label": "fixture-export",
+        "png": true,
+        "phase": "queued",
+        "inFlight": false,
+        "deadlineMs": 20000,
+        "elapsedMs": 20001,
+        "phases": {
+          "queued": {
+            "at": "2026-10-21T01:57:04.524Z",
+            "elapsedMs": 0
+          }
+        }
+      },
+      "exportAuditAvailable": false
+    },
+    {
+      "name": "candidate-original-deadline-after-draw-retains-own-audit",
+      "status": "passed",
+      "case": "candidate-original-deadline-after-draw-retains-own-audit",
+      "progress": {
+        "captureId": "fixture-export-1792547824526",
+        "label": "fixture-export",
+        "png": true,
+        "phase": "toBlob-return",
+        "inFlight": true,
+        "deadlineMs": 20000,
+        "elapsedMs": 20001,
+        "phases": {
+          "queued": {
+            "at": "2026-10-21T01:57:04.526Z",
+            "elapsedMs": 0
+          },
+          "draw-start": {
+            "at": "2026-10-21T01:57:04.526Z",
+            "elapsedMs": 100
+          },
+          "draw-end": {
+            "at": "2026-10-21T01:57:04.526Z",
+            "elapsedMs": 100
+          },
+          "conditions-frozen": {
+            "at": "2026-10-21T01:57:04.526Z",
+            "elapsedMs": 100
+          },
+          "toBlob-call": {
+            "at": "2026-10-21T01:57:04.526Z",
+            "elapsedMs": 100
+          },
+          "toBlob-return": {
+            "at": "2026-10-21T01:57:04.526Z",
+            "elapsedMs": 100
+          }
+        }
+      },
+      "captureAudit": {
+        "status": "stub-only-no-GPU",
+        "label": "fixture-export",
+        "drawCalls": 0,
+        "requiredCategories": []
+      },
+      "lateCallbackDoesNotResolveOrRewriteFailure": true
+    },
+    {
+      "name": "candidate-successful-callback-has-small-phase-record",
+      "status": "passed",
+      "case": "candidate-successful-callback-has-small-phase-record",
+      "progress": {
+        "captureId": "fixture-export-1792547824528",
+        "label": "fixture-export",
+        "png": true,
+        "phase": "callback",
+        "inFlight": true,
+        "deadlineMs": 20000,
+        "elapsedMs": 400,
+        "phases": {
+          "queued": {
+            "at": "2026-10-21T01:57:04.528Z",
+            "elapsedMs": 0
+          },
+          "draw-start": {
+            "at": "2026-10-21T01:57:04.528Z",
+            "elapsedMs": 100
+          },
+          "draw-end": {
+            "at": "2026-10-21T01:57:04.528Z",
+            "elapsedMs": 100
+          },
+          "conditions-frozen": {
+            "at": "2026-10-21T01:57:04.528Z",
+            "elapsedMs": 100
+          },
+          "toBlob-call": {
+            "at": "2026-10-21T01:57:04.528Z",
+            "elapsedMs": 100
+          },
+          "toBlob-return": {
+            "at": "2026-10-21T01:57:04.528Z",
+            "elapsedMs": 100
+          },
+          "callback": {
+            "at": "2026-10-21T01:57:04.528Z",
+            "elapsedMs": 400
+          }
+        }
+      }
+    },
+    {
+      "name": "candidate-ordinary-no-PNG-frame-does-not-freeze",
+      "status": "passed",
+      "case": "candidate-ordinary-no-PNG-frame-does-not-freeze",
+      "effects": {
+        "raf": 2,
+        "sceneUpdates": 2,
+        "reflectionSubmissions": 2,
+        "composers": 2,
+        "audits": 1,
+        "toBlobCalls": 0,
+        "physicsSteps": 0,
+        "errors": []
+      }
+    },
+    {
+      "name": "candidate-render-exception-retains-existing-aborted-export-audit",
+      "status": "passed",
+      "case": "candidate-render-exception-retains-existing-aborted-export-audit",
+      "progress": {
+        "captureId": "fixture-export-1792547824530",
+        "label": "fixture-export",
+        "png": true,
+        "phase": "draw-start",
+        "inFlight": false,
+        "deadlineMs": 20000,
+        "elapsedMs": 100,
+        "phases": {
+          "queued": {
+            "at": "2026-10-21T01:57:04.530Z",
+            "elapsedMs": 0
+          },
+          "draw-start": {
+            "at": "2026-10-21T01:57:04.531Z",
+            "elapsedMs": 100
+          }
+        }
+      },
+      "captureAudit": {
+        "status": "stub-only-no-GPU",
+        "label": "fixture-export",
+        "drawCalls": 0,
+        "aborted": "controlled draw abort"
+      }
+    },
+    {
+      "name": "matrix-preserves-current-export-audit-and-ordinary-prefix-separately",
+      "status": "passed",
+      "case": "matrix-preserves-current-export-audit-and-ordinary-prefix-separately",
+      "expectedFrames": 14,
+      "completedFrames": 0,
+      "failure": {
+        "name": "Error",
+        "message": "fixture deadline",
+        "completedFrames": 0,
+        "nextCase": "01-high-clear-day-viaduct",
+        "partialAudit": {
+          "label": "previous-ordinary",
+          "status": "stub-only-no-GPU"
+        },
+        "partialAuditSource": "ordinary-paused-frame",
+        "captureProgress": {
+          "phase": "toBlob-return",
+          "label": "current-export",
+          "deadlineMs": 20000
+        },
+        "captureAudit": {
+          "label": "current-export",
+          "status": "stub-only-no-GPU"
+        }
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/main.js": "7db5e6aad152beb39f3e5a3e6bd16d4aec9e180372374bccf6ca753cc2cb64e1",
+    "dist/render-capture-matrix.js": "244ccc6973e6addc720eb670f89cbc0dea12d815e7fc1ae070921adc7e51eace",
+    "tests/capture-scheduler-3.16.test.mjs": "fa5824e999afe542ed37bec25f81b90bec8354b0bb8b2d65601ba315b04a761b",
+    "tests/fixtures/capture-scheduler-before-3.16.json": "438809ebb4d08df43a178bbd73f3b1701264385bcea436f26e6b7cef080b1290",
+    "tests/fixtures/render-capture-matrix-before-3.16.mjs": "02e453a7b9b03a9e43ea0935ba5b064d6a86cf152405c8f47fbae3c1786c19d2"
+  },
+  "baseline": {
+    "sourceBuild": "81926b470303a5f51844285ff604fbb84717a627271efddde494e228ce319ec2",
+    "sourcePath": "dist/main.js",
+    "sourceSHA256": "dd7b9c69f4fef5add7c6e8497bb9b5bf7e394bd0f3286e96e52c65d701e6c133",
+    "functions": {
+      "request": {
+        "startLine": 466,
+        "endLine": 475,
+        "sha256": "de1eea83eb6674ed3ae964cc0d4feee3bac3e23e6cc8d46bde2792f5f119589d"
+      },
+      "frame": {
+        "startLine": 863,
+        "endLine": 926,
+        "sha256": "a4e3eda1c28b2c9c8b4f3f32098299ff21a4c1a7625726769bbeb7cd59c4f020"
+      },
+      "cancel": {
+        "startLine": 549,
+        "endLine": 549,
+        "sha256": "4c04e4219a4ca0ea5f91a0fde1fe85216ef78b36d14c11fe61489deba65e760e"
+      }
+    }
+  },
+  "limits": [
+    "The exact application request/frame/cancel functions and matrix collector run in a Node VM with deterministic asynchronous callbacks and clock.",
+    "Rendering and physical integration are effect counters only: this proves scheduling, cancellation, preserved active stepping and failure evidence. It is not native PNG encoding, GPU queue, pixel or vehicle dynamics validation.",
+    "Original 20,000 ms deadline and all fourteen matrix case definitions are unchanged.",
+    "PNG physical state, frame number, render time and capturedAt remain frozen at the rendered frame. captureProgress is a separate later lifecycle record, not a new image or recaptured physics state."
+  ]
+}

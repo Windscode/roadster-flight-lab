@@ -1,0 +1,57 @@
+{
+  "purpose": "Preserve full-regression attempt 3 and the obsolete single wall-palette QA selector before repair. Product sources, manifest and field files are frozen.",
+  "failure": {
+    "file": "tests/indirect-lighting.test.mjs",
+    "line": 27,
+    "actual": "undefined",
+    "expected": "URBAN_MATERIAL_PALETTE.map(p=>p.wall)",
+    "obsoletePath": "manifest.materialModel.wallTintSRGB"
+  },
+  "preservedTest": "qa/city-dev-attempts-3.17/indirect-material-schema-before-test.mjs.txt",
+  "sha256": {
+    "tests/indirect-lighting.test.mjs": "e4e0162b8ce26def87e7c5e586111225c120e5c64b4b949e9161fe3170384599",
+    "qa/full-regression-3.17/attempt-3.log": "3e8bdb1531183d923b266c46c4be516cc60b1e3a4807a8f92a85a941566e0124",
+    "dist/model-build.js": "aa42c10155b6cd409981c52d23beff9baca2f571c9207993174784bfb3484fd7",
+    "dist/assets/irradiance/manifest.json": "04d4f5bc0a76df4c920d952e928f6b2ce052bf128fe6000c752d7b6780dc004b",
+    "dist/assets/irradiance/city.bin": "39f7f5db1f543c37f07084be40f726d1533fc128e5a3ac67c4563b4e609e38bd",
+    "dist/assets/irradiance/lower-market.bin": "73107583744b7f94cb1035102db899e1a50ad2bef925a4abbc40c334153d73d5",
+    "dist/city-data.js": "86d39546dd361ca7a277493bcb448b4ef5aea64acdc38559d2c65ad051b632ec",
+    "dist/city-continuity.js": "031d7b465f7ad2a35dd9d9e187aa995cf996037e1242871993e75f613d1d8547",
+    "dist/city-street-sections.js": "36f27904785fb5a357825a41de49d945380a548c0c71a0363f024a34e45f1de1",
+    "dist/city-street-edge.js": "c52294188bd47eb491fbd6010168d341a6914c64c8a1285e13806e6e08298f31",
+    "dist/city-corridor-plan.js": "4d121702e283329d7399fa42994642b3d1e2b4d3e58521cb9045eef607edb3f1",
+    "dist/city-frontage-design.js": "54bee924dd9264bae0cdc38748053af27f3b559999c80b47e37894af93d2d85d",
+    "dist/street-life.js": "ca9705e7d2ada742fc6fb2587d5a60baf9082e2f77e30bf4e87ad89adddabcfe",
+    "dist/city-plan.js": "6b370c9f951354de5a00263cb524e1a2df7cfc00e8b6cf6d2df020b82cf71ab4",
+    "dist/city-landmarks.js": "c59b9c67908e6e4c90d8f14356cb4c937a58e4a868c63e35eb9594b133aeb884",
+    "dist/urban-architecture.js": "a4819cc5230ed7af1e41800cc7d66a420b3bfa0d518fef12108fd5b100dcefb7",
+    "dist/irradiance-math.js": "f4c9de47c61ebf8a661d9cfddfbcf0a47c77266438f43909090cd1032b1637f9",
+    "scripts/bake-indirect.mjs": "0dd54702215728b024172d81e35e344144327fa9166e00f1d5a7cd92a63c7b52"
+  },
+  "currentMaterialModel": {
+    "version": "3.17",
+    "source": "dist/urban-architecture.js / URBAN_MATERIAL_PALETTE; dist/city-frontage-design.js / DOWNTOWN_FACADE_STYLES",
+    "retainedWallTintSRGB": [
+      9477021,
+      11773332,
+      9214364,
+      11050644,
+      9542039
+    ],
+    "downtownWallTintSRGB": [
+      12039585,
+      12758669,
+      9283749,
+      12630182,
+      10991015
+    ],
+    "wallDiffuseScale": 0.76,
+    "roadTintSRGB": 9607324,
+    "roadAverageLinear": [
+      0.06496923446555924,
+      0.06984488376582869,
+      0.07376618803434053
+    ],
+    "assumption": "Static envelope averages include retained civic/service/mineral materials, remodelled downtown walls and four sealed public frontages. Scanned asphalt baseline average is rescaled by the current linear material tint. Individual windows, metal, shop interiors and textured facade variation are averaged."
+  }
+}

@@ -1,0 +1,121 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import * as THREE from '../dist/vendor/three.module.js';
+import {createRoadster,sampleVehicleSurface,BONNET_JOINT_SPEC} from '../dist/vehicle.js';
+import {createRoadster as createRoadster313,sampleVehicleSurface as sampleSurface313} from '../dist/vehicle-reference-3.13.js';
+import {createRoadster as createRoadster315} from '../dist/vehicle-reference-3.15.js';
+import {buildCityLandmarks,SOUTH_QUAY_ENTRY_SOLIDS,SOUTH_QUAY_ENTRY_LIGHTS} from '../dist/city-landmarks.js';
+import {RoadsterSim} from '../dist/physics.js';
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
+
+const fixture=JSON.parse(readFileSync(new URL('../qa/fixtures/vehicle-optical-baseline-3.12.json',import.meta.url)));
+const checks=[],car=createRoadster({quality:'high'}),check=(name,fn)=>checks.push({name,status:'passed',detail:fn()});
+const sha=data=>createHash('sha256').update(data).digest('hex');
+check('The historical 3.12 wedge fixture remains exact; current wheel clearances and the primary paint response are retained',()=>{
+  let maximumCurrentSurfaceDeltaM=0;const stationChanges=[];
+  for(const p of fixture.samplePoints){
+    assert.deepEqual(sampleSurface313(p.x,p.z),p.sample,'The frozen historical surface changed');
+    const current=sampleVehicleSurface(p.x,p.z);
+    // The 3.18 brief deliberately revises the nose, waist and canopy, rather
+    // than limiting this work to the former <10 mm transverse fillet. Keep
+    // the immutable fixture exact and the actual wheel/liner boundary fixed;
+    // record the visual stations instead of freezing them to the old shape.
+    for(const key of ['archY','linerInnerX'])assert.deepEqual(current[key],p.sample[key],key);
+    for(const value of [...Object.values(current),...Object.values(current.section)])if(typeof value==='number')assert.ok(Number.isFinite(value));
+    stationChanges.push({x:p.x,z:p.z,before:p.sample,after:current});
+    maximumCurrentSurfaceDeltaM=Math.max(maximumCurrentSurfaceDeltaM,Math.abs(current.bodyY-p.sample.bodyY));
+  }
+  for(const [key,value] of Object.entries(fixture.paint))assert.equal(car.materials.paint[key],value);
+  const historical=createRoadster313();assert.equal(historical.materials.glass.opacity,fixture.glassOpacity);historical.dispose();
+  for(const key of ['glass','coverLens'])for(const value of Object.values(car.materials[key]))assert.ok(!value?.isTexture,'Optical detail must not add texture units');
+  return{baselineCommit:fixture.baselineCommit,sourceSHA256:fixture.sourceSHA256,bodySectionSamples:fixture.samplePoints.length,maximumCurrentSurfaceDeltaM,stationChanges,paint:fixture.paint,historicalGlassOpacity:fixture.glassOpacity,currentGlassOpacity:car.materials.glass.opacity,glazingChange:'The 3.16 directional visual filter and opaque-shadow removal remain covered by vehicle-finish-3.16. Intentional 3.18 main-form changes are covered by vehicle-form-3.18 and matched native images; historical samples are not rewritten.',newTextureUnits:0};
+});
+check('Vertical rays hit a recessed joint floor rather than a raised black tube or uncut paint at every LOD',()=>{
+  const result={},ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
+  for(const quality of ['balanced','high','ultra']){
+    car.setQuality(quality);car.group.updateMatrixWorld(true);const surfaces=[];
+    car.group.traverse(o=>{if(o.isMesh&&[car.materials.paint,car.materials.balancedPaint,car.materials.seam].includes(o.material))surfaces.push(o);});
+    const samples=[...fixture.jointRays,...[-.4,0,.4].map(x=>({x,z:1}))].map(original=>{
+      // Follow the actual current longitudinal joint after the authorised hood
+      // width revision. Retain the independent ray, floor-depth tolerance and
+      // adjacent-paint check; the old ray position stays in the report.
+      const transverse=original.z===BONNET_JOINT_SPEC.transverseZM;
+      const x=transverse?original.x:Math.sign(original.x)*sampleVehicleSurface(0,original.z).bonnetHalfWidth;
+      const p={...original,x,bodyY:sampleVehicleSurface(x,original.z).bodyY};
+      ray.set(new THREE.Vector3(p.x,1,p.z),down);const hit=ray.intersectObjects(surfaces,false)[0];assert.ok(hit);
+      const belowBodyM=p.bodyY-hit.point.y;assert.equal(hit.object.material,car.materials.seam,'Joint must be open to its dark recessed floor');
+      // Curved grid interpolation differs slightly by LOD; retain a sub-mm
+      // geometric tolerance rather than accepting a surface-level dark stripe.
+      assert.ok(Math.abs(belowBodyM-BONNET_JOINT_SPEC.depthM)<.0005,quality+' joint floor has wrong depth');
+      const adjacent={x:p.x+(transverse?0:.008),z:p.z+(transverse?.008:0)};
+      ray.set(new THREE.Vector3(adjacent.x,1,adjacent.z),down);const neighbour=ray.intersectObjects(surfaces,false)[0];assert.ok(neighbour);
+      assert.ok([car.materials.paint,car.materials.balancedPaint].includes(neighbour.object.material),'Adjacent painted body was removed');
+      return{x:p.x,z:p.z,baselineX:original.x,baselineAboveBodyM:p.aboveAuthoredBodyM??null,belowBodyM};
+    });result[quality]=samples;
+  }
+  return{authoredJoint:BONNET_JOINT_SPEC,samples:result};
+});
+check('Independent glazing sorting and deterministic LOD restoration survive the intentional 3.18 canopy revision',()=>{
+  car.setQuality('high');car.group.updateMatrixWorld(true);const optical=[],glass=[],initialGlassOpacity=car.materials.glass.opacity;
+  car.group.traverse(o=>{if(o.isMesh&&o.userData.independentOpticalPanel){optical.push(o);if(o.material===car.materials.glass)glass.push(o);}});
+  const sortCentre=o=>{o.geometry.computeBoundingSphere();return o.geometry.boundingSphere.center.clone().applyMatrix4(o.matrixWorld);};
+  assert.equal(glass.length,5);assert.equal(optical.length,7);assert.equal(new Set(optical.map(o=>sortCentre(o).toArray().join(','))).size,7);
+  const bounds=new THREE.Box3();for(const pane of glass){bounds.union(new THREE.Box3().setFromObject(pane));assert.ok(!pane.userData.batched,'Optical pane was merged into a fixed-order batch');assert.ok(pane.material.name.startsWith('Roadster / '));}
+  const historical=createRoadster313({quality:'high'}),historicalBounds=new THREE.Box3();historical.group.updateMatrixWorld(true);
+  historical.group.traverse(o=>{if(o.isMesh&&o.material===historical.materials.glass)historicalBounds.union(new THREE.Box3().setFromObject(o));});
+  const glazingBoundsChanges={};for(const edge of ['min','max']){
+    const old=historicalBounds[edge].toArray(),current=bounds[edge].toArray();
+    for(let i=0;i<3;i++){assert.ok(Math.abs(old[i]-fixture.glassBounds[edge][i])<1e-6,'The historical glazing fixture changed');assert.ok(Number.isFinite(current[i]));}
+    glazingBoundsChanges[edge]={historical:old,current,deltaM:current.map((value,i)=>value-old[i])};
+  }historical.dispose();
+  const depthOrder=(position)=>{const camera=new THREE.PerspectiveCamera(50,16/9,.01,50);camera.position.set(...position);camera.lookAt(0,.3,0);camera.updateMatrixWorld(true);return glass.map(o=>({name:o.name,z:sortCentre(o).applyMatrix4(camera.matrixWorldInverse).z})).sort((a,b)=>a.z-b.z).map(x=>x.name);};
+  const front=depthOrder([0,.7,6]),back=depthOrder([0,.7,-6]),left=depthOrder([6,.7,0]),right=depthOrder([-6,.7,0]);
+  const index=(order,name)=>order.findIndex(n=>n.includes(name));
+  assert.ok(index(front,'rear backlight')<index(front,'windscreen'));assert.ok(index(back,'windscreen')<index(back,'rear backlight'));
+  assert.ok(index(left,'right frameless')<index(left,'left frameless'));assert.ok(index(right,'left frameless')<index(right,'right frameless'));
+  const before=optical.map(o=>({object:o,position:o.position.toArray(),bounds:new THREE.Box3().setFromObject(o)}));
+  for(let cycle=0;cycle<3;cycle++)for(const quality of ['balanced','ultra','high']){car.setQuality(quality);car.setCutaway(true);car.setCutaway(false);}
+  car.group.updateMatrixWorld(true);for(const p of before){assert.deepEqual(p.object.position.toArray(),p.position);const after=new THREE.Box3().setFromObject(p.object);assert.ok(after.min.distanceTo(p.bounds.min)<1e-7&&after.max.distanceTo(p.bounds.max)<1e-7);}
+  assert.equal(car.materials.glass.opacity,initialGlassOpacity);assert.equal(car.materials.coverLens.depthWrite,false);
+  return{baselineGlassBatches:fixture.glass.length,currentGlassPanels:glass.length,headlampCovers:optical.length-glass.length,glazingBoundsChanges,restoredGlassOpacity:initialGlassOpacity,front,back,left,right,worldEnvelope:{min:bounds.min.toArray(),max:bounds.max.toArray()},scope:'Historical glass bounds remain exact. Current glass sorts independently and is restored exactly after LOD/cutaway cycling; the wider front landing and longer rear canopy are checked in vehicle-form-3.18. No GPU blending or reflection acceptance.'};
+});
+check('Both mirrored headlamp cover meshes have outward-facing triangle indices, not only corrected shading normals',()=>{
+  car.setQuality('high');const result={triangles:0,upward:0,downward:0},a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
+  car.group.traverse(o=>{if(!o.isMesh||o.material!==car.materials.coverLens)return;const g=o.geometry,p=g.attributes.position,index=g.index;
+    for(let i=0;i<index.count;i+=3){a.fromBufferAttribute(p,index.getX(i));b.fromBufferAttribute(p,index.getX(i+1));c.fromBufferAttribute(p,index.getX(i+2));const normal=b.sub(a).cross(c.sub(a));result.triangles++;result[normal.y>0?'upward':'downward']++;}
+  });
+  assert.equal(result.triangles,fixture.baselineCoverWinding.triangles);assert.ok(fixture.baselineCoverWinding.downward>0);assert.equal(result.downward,0);assert.equal(car.materials.coverLens.side,THREE.FrontSide);
+  return{before:fixture.baselineCoverWinding,after:result,scope:'The former double-sided cover concealed its mirrored winding mismatch. One-sided optical covers require actual outward index winding.'};
+});
+check('The South Quay entrance is drawn from the same solid transforms used by physics, with an open road and ramp',()=>{
+  const scene=new THREE.Group(),landmark=buildCityLandmarks(THREE,scene),geometry=new RoadsterSim().getWorldGeometry(),matrix=new THREE.Matrix4(),p=new THREE.Vector3(),q=new THREE.Quaternion(),s=new THREE.Vector3(),renderInstances=[];
+  landmark.root.updateMatrixWorld(true);landmark.root.traverse(o=>{if(!o.isInstancedMesh||o.geometry.type!=='BoxGeometry')return;for(let i=0;i<o.count;i++){o.getMatrixAt(i,matrix);matrix.premultiply(o.matrixWorld);matrix.decompose(p,q,s);renderInstances.push({position:p.toArray(),size:s.toArray(),quaternion:q.toArray()});}});
+  assert.equal(SOUTH_QUAY_ENTRY_SOLIDS.length,8);
+  const near=(a,b,t=3e-5)=>a.every((v,i)=>Math.abs(v-b[i])<t);
+  for(const solid of SOUTH_QUAY_ENTRY_SOLIDS){
+    const physical=geometry.find(g=>g.id===solid.id);assert.ok(physical);assert.deepEqual(physical.position,solid.position);assert.deepEqual(physical.size,solid.size);
+    assert.ok(renderInstances.some(v=>near(v.position,physical.position)&&near(v.size,physical.size)&&near(v.quaternion,physical.quaternion)),'Shared collider has no matching visible solid: '+solid.id);
+    const min=solid.position.map((v,i)=>v-solid.size[i]/2),max=solid.position.map((v,i)=>v+solid.size[i]/2);
+    const intersects=(a,b)=>min.every((v,i)=>v<b[i]&&max[i]>a[i]);
+    assert.ok(!intersects([-700,0,-431],[700,4,-409]),'Entry obstructs the existing 22 m arterial');
+    assert.ok(!intersects([-436,0,-468],[-424,5,-431]),'Entry obstructs the original 12 m ramp corridor below 5 m');
+  }
+  for(const light of SOUTH_QUAY_ENTRY_LIGHTS){assert.ok(landmark.lightAnchors.some(a=>a.id===light.id&&near(a.position,light.position)));assert.ok(landmark.root.getObjectByName(light.id+' / actual luminaire'));assert.equal(light.practical,true);assert.ok(light.range<=22);}
+  const result={sharedSolids:SOUTH_QUAY_ENTRY_SOLIDS.map(g=>g.id),rampDeckWidthM:12,arterialWidthM:22,newEntryPierClearWidthM:18.6,checkedHeadroomM:5,finiteRangeFixtures:SOUTH_QUAY_ENTRY_LIGHTS.map(({id,range,intensity})=>({id,range,intensity})),scope:'Preserves prior ramp railings; 12 m is deck width, not net clearance between existing rails.'};
+  const geos=new Set(),materials=new Set();landmark.root.traverse(o=>{if(o.geometry)geos.add(o.geometry);if(o.material)materials.add(o.material);});for(const g of geos)g.dispose();for(const m of materials)m.dispose();return result;
+});
+check('The retained one-drawable and four-percent limits against frozen 3.15 remain unchanged; older gates remain recorded',()=>{
+  const result={},baseline313=createRoadster313({quality:'high'}),baseline315=createRoadster315({quality:'high'});
+  for(const quality of ['balanced','high','ultra']){
+    car.setQuality(quality);baseline313.setQuality(quality);baseline315.setQuality(quality);const current=car.getRenderCost(),before=baseline315.getRenderCost(),original312=fixture.profiles[quality],inherited313=baseline313.getRenderCost();
+    assert.ok(current.drawables-before.drawables<=1);assert.ok(current.triangles/before.triangles<1.04);
+    result[quality]={original312,inherited313,inherited315:before,current,original312Gate:{maxAdditionalDrawables:8,maxTriangleRatio:1.05,passed:current.drawables-original312.drawables<=8&&current.triangles/original312.triangles<1.05},reviewed314Gate:{maxAdditionalDrawables:4,maxTriangleRatio:1.04,passed:current.drawables-inherited313.drawables<=4&&current.triangles/inherited313.triangles<1.04},reviewed316Gate:{baseline:'3.15.0',maxAdditionalDrawables:1,maxTriangleRatio:1.04,passed:true},drawablesDelta:current.drawables-before.drawables,trianglesDelta:current.triangles-before.triangles};
+  }
+  baseline313.dispose();baseline315.dispose();return result;
+});
+
+const sourceFiles=['dist/vehicle.js','dist/vehicle-reference-3.15.js','dist/vehicle-reference-3.13.js','dist/city-landmarks.js','tests/visual-quality-3.13.test.mjs','qa/fixtures/vehicle-optical-baseline-3.12.json'];
+const report={status:'passed',modelVersion:MODEL_VERSION,asOf:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(sourceFiles.map(p=>[p,sha(readFileSync(new URL('../'+p,import.meta.url)))])),limitations:['These are geometric, raycast, sorting-anchor and source checks. They do not certify transparent blending, reflections, shadows, night readability or frame times on a GPU.','Historical images establish only their stated versions and conditions. Matched native captures retain their actual build/source identity and are separate evidence; these structural assertions do not claim pixel acceptance.','New entrance lighting is subject to the global light pool and the finite spatial resolution of the rebaked static fields.']};
+writeFileSync(new URL(`../qa/visual-quality-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');car.dispose();console.log(JSON.stringify(report,null,2));

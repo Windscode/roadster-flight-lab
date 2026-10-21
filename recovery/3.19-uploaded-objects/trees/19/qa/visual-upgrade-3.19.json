@@ -1,0 +1,209 @@
+{
+  "format": "roadster-visual-structure-acceptance-1",
+  "status": "passed",
+  "createdAt": "2026-10-21T06:44:55.717Z",
+  "checks": [
+    {
+      "name": "The full benchmark loop follows canonical supported roads and preserves the overall city",
+      "status": "passed"
+    },
+    {
+      "name": "Wing mesh reads the physical deployment exactly and ignores display speed/brake targets",
+      "status": "passed"
+    },
+    {
+      "name": "Projected footprint and inspection context change actual geometry while preserving wheel state",
+      "status": "passed"
+    },
+    {
+      "name": "Street/headlight pool retains finite real shadowed lights, refreshes moving poses in the same frame and avoids unchanged idle work",
+      "status": "passed"
+    },
+    {
+      "name": "Wet reflection has no balanced pass, respects its cap and restores renderer state on failure",
+      "status": "passed"
+    },
+    {
+      "name": "Weather preset switches actual GI, physical lights and water without changing city geometry",
+      "status": "passed"
+    },
+    {
+      "name": "Inspection retains six calibrated views, adds two close-ups and freezes the actual 3.8 model source",
+      "status": "passed"
+    }
+  ],
+  "evidence": {
+    "route": {
+      "id": "weave-canal-loop-38",
+      "lengthMetres": 1135,
+      "nominalDurationS": 136.2,
+      "sampledCentres": 395,
+      "streetIds": [
+        "weave-main",
+        "crosstown-link",
+        "foundry-main",
+        "canal-link"
+      ],
+      "buildings": 114,
+      "worldSolids": 2367
+    },
+    "wing": {
+      "source": "telemetry.wing.position/incidenceRad",
+      "physicalPosition": {
+        "x": 0,
+        "y": 0.547,
+        "z": -2.065
+      },
+      "incidenceRad": -0.185,
+      "visualTravelMetres": 0.3,
+      "maximumAngleRad": 0.25,
+      "actuatorDynamics": "Owned and tested by physics.js"
+    },
+    "geometryBudgets": {
+      "distant": {
+        "quality": "ultra",
+        "geometryQuality": "balanced",
+        "projectedPixels": 69.48153785542041,
+        "drawables": 86,
+        "meshes": 86,
+        "vertices": 45095,
+        "triangles": 59594,
+        "shadowMeshes": 5
+      },
+      "driving": {
+        "quality": "ultra",
+        "geometryQuality": "high",
+        "projectedPixels": 1109.7255103982857,
+        "drawables": 157,
+        "meshes": 153,
+        "vertices": 153625,
+        "triangles": 238524,
+        "shadowMeshes": 123
+      },
+      "inspection": {
+        "quality": "ultra",
+        "geometryQuality": "ultra",
+        "projectedPixels": 1109.7255103982857,
+        "drawables": 157,
+        "meshes": 153,
+        "vertices": 240151,
+        "triangles": 395060,
+        "shadowMeshes": 123
+      }
+    },
+    "physicalGeometry": {
+      "wheelbaseMetres": 2.84,
+      "trackMetres": 1.78,
+      "radiusMetres": 0.372
+    },
+    "lightBudgets": {
+      "balanced": {
+        "street": 2,
+        "heads": 1,
+        "size": 256,
+        "headSize": 384,
+        "hz": 20
+      },
+      "high": {
+        "street": 3,
+        "heads": 2,
+        "size": 384,
+        "headSize": 512,
+        "hz": 24
+      },
+      "ultra": {
+        "street": 4,
+        "heads": 2,
+        "size": 512,
+        "headSize": 768,
+        "hz": 30
+      }
+    },
+    "lightCadence": [
+      {
+        "quality": "balanced",
+        "idleDirtyIntervalS": 0.05,
+        "motionSameFrame": true,
+        "unnecessaryDelayedRepeat": false,
+        "idleAdditionalUpdates": 0
+      },
+      {
+        "quality": "high",
+        "idleDirtyIntervalS": 0.041666666666666664,
+        "motionSameFrame": true,
+        "unnecessaryDelayedRepeat": false,
+        "idleAdditionalUpdates": 0
+      },
+      {
+        "quality": "ultra",
+        "idleDirtyIntervalS": 0.03333333333333333,
+        "motionSameFrame": true,
+        "unnecessaryDelayedRepeat": false,
+        "idleAdditionalUpdates": 0
+      }
+    ],
+    "reflection": {
+      "balancedPasses": 0,
+      "highSize": [
+        512,
+        288
+      ],
+      "highMaximumHz": 12,
+      "ultraSize": [
+        768,
+        432
+      ],
+      "ultraMaximumHz": 20,
+      "failureStateRestored": true
+    },
+    "weather": {
+      "dayGI": true,
+      "nightDaylightGI": false,
+      "nightExposure": 1.02,
+      "cityGeometryRetained": true,
+      "nightEnvironmentPixels": "Not tested: Node run intentionally has no document or GPU."
+    },
+    "inspection": {
+      "rig": "roadster-studio-50mm-v2",
+      "focalLengthMm": 50,
+      "cameras": [
+        "front",
+        "rear",
+        "side",
+        "front-quarter",
+        "rear-quarter",
+        "top",
+        "front-lamp",
+        "rear-wheel"
+      ],
+      "baseline": "Original 3.8 mesh/material, verified source SHA-256 after import rewiring, under current renderer and lighting; not a complete old pipeline capture",
+      "actualScreenshots": "User-supplied 3.9 IAB images were inspected separately; these Node checks provide no 3.11 after-images."
+    }
+  },
+  "sourceHashes": {
+    "dist/visual-presets.js": "29e63a9677714ee0770b0ae13f27a629e7676fccfbb899afc5b25a32c95d0b88",
+    "dist/vehicle.js": "9b197c22e595f559dd8769dc167a1646a6ac686f3b30ceb1435725ccd1507bc9",
+    "dist/vehicle-inspection.js": "31dc17eb64babe2fd26c30f98a2ff3e762ce070ff1a50f4689050d270fd1efe7",
+    "dist/vehicle-inspection.html": "d248a94676be81e4a2a29bcddb66e2f4619a3ddb87408e5d9b5b322d9bf1ab8b",
+    "dist/vehicle-inspection.css": "4db0aeef4691bded7ed8a9d6642641b8d2e40ecc0d1eee2859f4a0dc26e0f9d9",
+    "dist/vehicle-reference-3.8.js": "9152de502fb086ca2027db690226d9ba88881915d6a54b4269e97ab08ffd885b",
+    "dist/vehicle-reference-layout-3.8.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "dist/city-corridor-plan.js": "4d121702e283329d7399fa42994642b3d1e2b4d3e58521cb9045eef607edb3f1",
+    "dist/pavement-surface-material.js": "c2b28f5548988a98bacbc801f4db41a97589fecf3cabe3a6a4ba97a4fa806da8",
+    "dist/i18n-visual-en.js": "da4952997fd47df297b8ccbfcebc394bd7c7bdb5caba127e53830f2a9b14ee73",
+    "dist/city-environment.js": "4839766012a86708c61f6f88009a0df5790c454cdd19ffe2575d17798d041039",
+    "dist/city-practical-lights.js": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7",
+    "dist/wet-road-reflection.js": "69e9f1280bd8bf0d2119e156fba83ccc99c31c1b7a60e03df9670cc6c5264683",
+    "dist/road-surface-material.js": "6e80a21c898ecea1de77b740d116ee619ff4e2c30b610bff5e09649009a08c80",
+    "dist/indirect-lighting.js": "87ea771788d4d9b177fd475b053a8537a5254176791c24d733b7407966efb885",
+    "dist/urban-architecture.js": "cfefc8658b3c9edced2fe719e705a4e0f72c2d3f507af7f04cc1c12faf6af44c",
+    "dist/city-map.js": "9f3c9c03c0d3a1cae9b4d9cbeb2d4c8d456302564c2ee5495ef9a9dd543d6bb2",
+    "qa/visual-upgrade-check.mjs": "464b371746de770a0f3b3bfe179420b1ae3b6872d8146c1c559c7c2d886a92a7"
+  },
+  "limits": [
+    "Geometry, API state and renderer-contract tests only. No real WebGL frame, browser graphics driver, pixel/shadow-leak inspection, GPU performance or real driving experience is certified.",
+    "The reflection renderer is exercised through a state-recording stub; its real framebuffer needs target-device validation.",
+    "A 50 mm rig makes future comparison repeatable. Official image focal lengths and dimensions are not published.",
+    "Additional street facade surfaces remain within the existing conservative building envelopes; no buildings or city routes were removed."
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "generatedAt": "2026-10-21T01:41:31.561Z",
+  "model": "Roadster Flight Lab 3.17.0",
+  "scope": "软件内部动力学验收，不代表Tesla真实车辆标定",
+  "physics": {
+    "status": "passed",
+    "fixedStepHz": 120,
+    "total": 26,
+    "checks": [
+      {
+        "test": "Asymmetric torque-free rotation conserves world angular momentum and rotational energy",
+        "status": "PASS",
+        "ms": 397
+      },
+      {
+        "test": "Rotational midpoint integration shows second-order step-size convergence",
+        "status": "PASS",
+        "ms": 495
+      },
+      {
+        "test": "10 s ground rest: four contacts, no translation or rotational drift",
+        "status": "PASS",
+        "ms": 595
+      },
+      {
+        "test": "1 s free fall follows gravity without hidden altitude or attitude forces",
+        "status": "PASS",
+        "ms": 58
+      },
+      {
+        "test": "Motor acceleration, friction-limited braking and steering turn the actual body",
+        "status": "PASS",
+        "ms": 414
+      },
+      {
+        "test": "Bench-fed hover tracks height, translates and returns to a low-speed hold",
+        "status": "PASS",
+        "ms": 631
+      },
+      {
+        "test": "Ceiling pressure holds for 10 s, permits tire-driven movement, then releases",
+        "status": "PASS",
+        "ms": 883
+      },
+      {
+        "test": "Suction requires a nearby supporting surface: no magnetic capture in free air",
+        "status": "PASS",
+        "ms": 39
+      },
+      {
+        "test": "Finite gas consumption equals summed nozzle impulse divided by effective exhaust velocity",
+        "status": "PASS",
+        "ms": 187
+      },
+      {
+        "test": "Exhausted gas removes all thrust; prolonged finite hover loses support",
+        "status": "PASS",
+        "ms": 609
+      },
+      {
+        "test": "A full roll is a six-DOF actuator maneuver with inversion, ballistic descent and recovery",
+        "status": "PASS",
+        "ms": 621
+      },
+      {
+        "test": "180° arch traversal continuously climbs from ground and stops upside down",
+        "status": "PASS",
+        "ms": 4765
+      },
+      {
+        "test": "Mode takeover, non-finite input guards and scenario resets remain finite",
+        "status": "PASS",
+        "ms": 1029
+      },
+      {
+        "test": "Normal test runs reject a hidden recovery instead of accepting a shortened simulation",
+        "status": "PASS",
+        "ms": 168
+      },
+      {
+        "test": "Collision geometry exposes every static collider, including arch and boundaries",
+        "status": "PASS",
+        "ms": 13
+      },
+      {
+        "test": "Released accelerator coasts with mild regeneration instead of hidden hard braking",
+        "status": "PASS",
+        "ms": 193
+      },
+      {
+        "test": "Valve output has finite rise and decay, and consumed gas follows delivered force",
+        "status": "PASS",
+        "ms": 47
+      },
+      {
+        "test": "Adiabatic blowdown cools the tank and has lower pressure than the equal-mass isothermal case",
+        "status": "PASS",
+        "ms": 148
+      },
+      {
+        "test": "After a roll, hover does not retain opposing side jets in the allocator null space",
+        "status": "PASS",
+        "ms": 503
+      },
+      {
+        "test": "A ground-origin automatic roll with adequate finite impulse returns to a gentle landing before fuel loses support",
+        "status": "PASS",
+        "ms": 430
+      },
+      {
+        "test": "Twenty-Hz telemetry is uniform at 30, 60 and 144 display frames per second",
+        "status": "PASS",
+        "ms": 410
+      },
+      {
+        "test": "Power exhaustion removes motor, fan and jet authority even with an external gas supply",
+        "status": "PASS",
+        "ms": 60
+      },
+      {
+        "test": "A slow altitude integral rejects a constant unmodelled vertical load without pose correction",
+        "status": "PASS",
+        "ms": 1722
+      },
+      {
+        "test": "CSV schema contains quaternion, gas temperature and both nozzle command and delivered force",
+        "status": "PASS",
+        "ms": 24
+      },
+      {
+        "test": "World-space exhaust preserves force sign and does not attach old gas to a moving vehicle",
+        "status": "PASS",
+        "ms": 67
+      },
+      {
+        "test": "Mist emission count is frame-rate independent and rear outlets share one actuator force",
+        "status": "PASS",
+        "ms": 104
+      }
+    ]
+  },
+  "independentRotationCheck": {
+    "initialAngularVelocityRadPerSec": [
+      0.7,
+      1.2,
+      0.4
+    ],
+    "hz": 120,
+    "durationSeconds": 10,
+    "worldAngularMomentumRelativeError": 5.802611747128903e-13,
+    "peakRotationalEnergyRelativeError": 0.0000017699754394596218,
+    "stepConvergence": "second order"
+  },
+  "browserVisualQA": {
+    "status": "not_performed",
+    "modelVersion": "3.17.0",
+    "reason": "This version has numerical, geometric, static integration and offline shader checks; no current browser, GPU frame-time or visual acceptance has been performed.",
+    "historicalReports": [
+      "qa/browser.json",
+      "qa/city-3.4-browser-assets.json"
+    ],
+    "historyScope": "Retained older-version records are not evidence of current-version browser acceptance."
+  },
+  "realVehicleValidation": {
+    "status": "not_performed",
+    "reason": "OEM calibration and vehicle test data are not available"
+  }
+}

@@ -1,0 +1,2060 @@
+{
+  "schema": "roadster-wind-matrix-evidence-3.18",
+  "recordedAt": "2026-10-21T04:42:12.822Z",
+  "modelVersion": "3.18.0",
+  "modelBuildId": "4a9cc90a2c8f4f74ef8765e36571bb49df0b3d7652a64cd8b3014eac88ee40d4",
+  "sourceHashes": {
+    "dist/physics.js": "38df473c0f03e9c540b13800954218326c749c3753f968af0177e414c604d4be",
+    "dist/vehicle-models.js": "48037add0aa75d297289cf9473124f2bde3d17e78decdd4bb053bb6522917c84",
+    "dist/simulation-snapshot.js": "e0fd58488365709eaacfd896af8abcd1f8db3b5aa3991a92db276d9c3f34ea35",
+    "dist/landing-challenge.js": "4e69b12040f93bd151a39bfd65b513f2b6a58fe3f97da9fc70946ae21b6bf978",
+    "dist/wind-control-study.js": "ae6565050fdb49352f6e3d01a2a5cdf6587cd7cf8252a33a7370604d0928bce1",
+    "dist/wind-matrix-study.js": "aaacc44113d28895e0f900293c0781af14947c83d1810b8dc47fa023a767faec",
+    "dist/wind-response-chart.js": "c9c7f24d2229814148e9db083da7eea5342dd9d0851b7aa1c02a5caaa1b46a32"
+  },
+  "checks": [
+    {
+      "name": "All strength/direction cases use the same complete physical initial state, with A/B identical wind schedules and control frequencies",
+      "status": "passed"
+    },
+    {
+      "name": "Plot height error derives from actual retained states; chosen matrix B exactly reexecutes every decision and terminal state",
+      "status": "passed",
+      "recordId": "landing-mvhmlh5z-ef4e9dae",
+      "steps": 1294
+    },
+    {
+      "name": "Finite-supply failures, partial windows and never-started cases remain distinct, without imputed zero error or a winner",
+      "status": "passed"
+    },
+    {
+      "name": "Matrix archive verifies its summaries against the original full records and rejects altered metrics",
+      "status": "passed"
+    }
+  ],
+  "experiments": [
+    {
+      "name": "calm-bench",
+      "bytes": 5077720,
+      "gzipBytes": 835624,
+      "sha256": "b16511318e99bb5402dbfc9d1fe204bb58938612bde6e2495c26d8528ac1b042",
+      "archive": "calm-bench.json.gz",
+      "sourceInitialState": "fnv1a32-a682ecdc",
+      "records": 6,
+      "summary": {
+        "status": "completed",
+        "plannedPairs": 3,
+        "attemptedPairs": 3,
+        "qualifiedPairs": 3,
+        "notRunPairs": 0,
+        "groups": [
+          {
+            "profile": "calm",
+            "direction": "lateral",
+            "role": "A",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.14909692972024322,
+                "median": 0.14909692972024322,
+                "p90": 0.14909692972024322,
+                "max": 0.14909692972024322
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 3.372482538989247e-9,
+                "median": 3.372482538989247e-9,
+                "p90": 3.372482538989247e-9,
+                "max": 3.372482538989247e-9
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 1.4396459890167928e-11,
+                "median": 1.4396459890167928e-11,
+                "p90": 1.4396459890167928e-11,
+                "max": 1.4396459890167928e-11
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 149.98446326152435,
+                "median": 149.98446326152435,
+                "p90": 149.98446326152435,
+                "max": 149.98446326152435
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 404.6455078905706,
+                "median": 404.6455078905706,
+                "p90": 404.6455078905706,
+                "max": 404.6455078905706
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.03333333333333333,
+                "median": 0.03333333333333333,
+                "p90": 0.03333333333333333,
+                "max": 0.03333333333333333
+              },
+              "landingS": {
+                "n": 3,
+                "min": 11.433333333333334,
+                "median": 11.433333333333334,
+                "p90": 11.433333333333334,
+                "max": 11.433333333333334
+              }
+            }
+          },
+          {
+            "profile": "calm",
+            "direction": "lateral",
+            "role": "B",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.02944674594002676,
+                "median": 0.02944674594002676,
+                "p90": 0.02944674594002676,
+                "max": 0.02944674594002676
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 6.4202631939113205e-9,
+                "median": 6.4202631939113205e-9,
+                "p90": 6.4202631939113205e-9,
+                "max": 6.4202631939113205e-9
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 1.4934455779975638e-11,
+                "median": 1.4934455779975638e-11,
+                "p90": 1.4934455779975638e-11,
+                "max": 1.4934455779975638e-11
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 150.8032836720011,
+                "median": 150.8032836720011,
+                "p90": 150.8032836720011,
+                "max": 150.8032836720011
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 379.2097618146238,
+                "median": 379.2097618146238,
+                "p90": 379.2097618146238,
+                "max": 379.2097618146238
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "landingS": {
+                "n": 3,
+                "min": 10.783333333333333,
+                "median": 10.783333333333333,
+                "p90": 10.783333333333333,
+                "max": 10.783333333333333
+              }
+            }
+          }
+        ],
+        "tails": [
+          {
+            "resultId": "landing-mvhmlbp2-e3114527",
+            "caseIndex": 0,
+            "seed": 31701,
+            "profile": "calm",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14909692972024322,
+            "totalGasKg": 404.6455078905706,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlc8i-da6a0f96",
+            "caseIndex": 1,
+            "seed": 31702,
+            "profile": "calm",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14909692972024322,
+            "totalGasKg": 404.6455078905706,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlcr6-31a425aa",
+            "caseIndex": 2,
+            "seed": 31703,
+            "profile": "calm",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14909692972024322,
+            "totalGasKg": 404.6455078905706,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlbyq-26184409",
+            "caseIndex": 0,
+            "seed": 31701,
+            "profile": "calm",
+            "direction": "lateral",
+            "role": "B",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.02944674594002676,
+            "totalGasKg": 379.2097618146238,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0
+          },
+          {
+            "resultId": "landing-mvhmlcim-2a890c54",
+            "caseIndex": 1,
+            "seed": 31702,
+            "profile": "calm",
+            "direction": "lateral",
+            "role": "B",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.02944674594002676,
+            "totalGasKg": 379.2097618146238,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0
+          },
+          {
+            "resultId": "landing-mvhmld3n-9bcfb048",
+            "caseIndex": 2,
+            "seed": 31703,
+            "profile": "calm",
+            "direction": "lateral",
+            "role": "B",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.02944674594002676,
+            "totalGasKg": 379.2097618146238,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0
+          }
+        ],
+        "winner": null,
+        "metricScope": "Distribution uses every attempted full 2–6 s window, including later failed landings. Partial-window statistics remain in each record and do not enter four-second distributions. Full-task gas includes failed/cancelled shorter tasks and must be read with outcome/duration.",
+        "probabilityScope": "Success fraction describes only these declared deterministic cases. Three seeds are not a population reliability estimate."
+      },
+      "wallMs": 2746.078399
+    },
+    {
+      "name": "crosswind-bench",
+      "bytes": 10427378,
+      "gzipBytes": 1925166,
+      "sha256": "969130b622c6620565bfd52d7ec8cfa9afc2e7a020e4bd190c88c7c7407d6cce",
+      "archive": "crosswind-bench.json.gz",
+      "sourceInitialState": "fnv1a32-a682ecdc",
+      "records": 12,
+      "summary": {
+        "status": "completed",
+        "plannedPairs": 6,
+        "attemptedPairs": 6,
+        "qualifiedPairs": 6,
+        "notRunPairs": 0,
+        "groups": [
+          {
+            "profile": "crosswind",
+            "direction": "lateral",
+            "role": "A",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.14943322002849915,
+                "median": 0.14947642175985426,
+                "p90": 0.14953773321799124,
+                "max": 0.1495530610825255
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 0.0053597433621660265,
+                "median": 0.00597868032538368,
+                "p90": 0.006217026415254012,
+                "max": 0.006276612937721595
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 0.0007056559856194163,
+                "median": 0.0007665111710853116,
+                "p90": 0.000900609165537793,
+                "max": 0.0009341336641509134
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 150.43857740963728,
+                "median": 150.5886506118179,
+                "p90": 150.64823356763662,
+                "max": 150.66312930659132
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 405.54273031855917,
+                "median": 405.70095161785264,
+                "p90": 405.80908672707824,
+                "max": 405.8361205043846
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.03333333333333333,
+                "median": 0.03333333333333333,
+                "p90": 0.03333333333333333,
+                "max": 0.03333333333333333
+              },
+              "landingS": {
+                "n": 3,
+                "min": 11.433333333333334,
+                "median": 11.433333333333334,
+                "p90": 11.433333333333334,
+                "max": 11.433333333333334
+              }
+            }
+          },
+          {
+            "profile": "crosswind",
+            "direction": "lateral",
+            "role": "B",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.02917811698397438,
+                "median": 0.029218026577772366,
+                "p90": 0.029252632665693425,
+                "max": 0.02926128418767369
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 0.005358383710435997,
+                "median": 0.0059779616588942356,
+                "p90": 0.006216184853365345,
+                "max": 0.006275740651983122
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 0.0007120153732602065,
+                "median": 0.0008341322786073144,
+                "p90": 0.0009045436903738672,
+                "max": 0.0009221465433155054
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 151.24471395401363,
+                "median": 151.39297324242747,
+                "p90": 151.45145730274467,
+                "max": 151.46607831782399
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 380.087620551036,
+                "median": 380.24358742760506,
+                "p90": 380.3498139118351,
+                "max": 380.3763705328926
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "landingS": {
+                "n": 3,
+                "min": 10.783333333333333,
+                "median": 10.783333333333333,
+                "p90": 10.783333333333333,
+                "max": 10.783333333333333
+              }
+            }
+          },
+          {
+            "profile": "crosswind",
+            "direction": "longitudinal",
+            "role": "A",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.1494318323160594,
+                "median": 0.1494753746477517,
+                "p90": 0.1495359747827545,
+                "max": 0.14955112481650518
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 0.003396888910953594,
+                "median": 0.004069255029543477,
+                "p90": 0.004142412960705083,
+                "max": 0.004160702443495485
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 0.0001335961983394721,
+                "median": 0.00019817154660892544,
+                "p90": 0.00021141634557893783,
+                "max": 0.00021472754532144092
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 150.31182254668775,
+                "median": 150.35401042139623,
+                "p90": 150.40280201008028,
+                "max": 150.41499990725129
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 405.21283074406284,
+                "median": 405.2294353230274,
+                "p90": 405.356727195663,
+                "max": 405.3885501638219
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.03333333333333333,
+                "median": 0.03333333333333333,
+                "p90": 0.03333333333333333,
+                "max": 0.03333333333333333
+              },
+              "landingS": {
+                "n": 3,
+                "min": 11.433333333333334,
+                "median": 11.433333333333334,
+                "p90": 11.433333333333334,
+                "max": 11.433333333333334
+              }
+            }
+          },
+          {
+            "profile": "crosswind",
+            "direction": "longitudinal",
+            "role": "B",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.029177651266833575,
+                "median": 0.029217851791418076,
+                "p90": 0.029251953524516257,
+                "max": 0.029260478957790804
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 0.003396073059430284,
+                "median": 0.004068698319755424,
+                "p90": 0.004141844044313614,
+                "max": 0.004160130475453161
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 0.00010253197699887031,
+                "median": 0.000134708412829008,
+                "p90": 0.00015924137283219067,
+                "max": 0.00016537461283298635
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 151.11829806622242,
+                "median": 151.15894669711193,
+                "p90": 151.2065123363003,
+                "max": 151.2184037460974
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 379.7596013099034,
+                "median": 379.77451831235305,
+                "p90": 379.89970972315024,
+                "max": 379.93100757584955
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "landingS": {
+                "n": 3,
+                "min": 10.783333333333333,
+                "median": 10.783333333333333,
+                "p90": 10.783333333333333,
+                "max": 10.783333333333333
+              }
+            }
+          }
+        ],
+        "tails": [
+          {
+            "resultId": "landing-mvhmldnh-a8da7fbd",
+            "caseIndex": 0,
+            "seed": 31701,
+            "profile": "crosswind",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.1495530610825255,
+            "totalGasKg": 405.8361205043846,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmle2y-6761fcd3",
+            "caseIndex": 1,
+            "seed": 31701,
+            "profile": "crosswind",
+            "direction": "longitudinal",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14955112481650518,
+            "totalGasKg": 405.3885501638219,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlejz-9a8c7f5c",
+            "caseIndex": 2,
+            "seed": 31702,
+            "profile": "crosswind",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14947642175985426,
+            "totalGasKg": 405.54273031855917,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlf13-4bedf841",
+            "caseIndex": 3,
+            "seed": 31702,
+            "profile": "crosswind",
+            "direction": "longitudinal",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.1494753746477517,
+            "totalGasKg": 405.21283074406284,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlfgu-06502ee0",
+            "caseIndex": 4,
+            "seed": 31703,
+            "profile": "crosswind",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14943322002849915,
+            "totalGasKg": 405.70095161785264,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlfx5-1b82e907",
+            "caseIndex": 5,
+            "seed": 31703,
+            "profile": "crosswind",
+            "direction": "longitudinal",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.1494318323160594,
+            "totalGasKg": 405.2294353230274,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          }
+        ],
+        "winner": null,
+        "metricScope": "Distribution uses every attempted full 2–6 s window, including later failed landings. Partial-window statistics remain in each record and do not enter four-second distributions. Full-task gas includes failed/cancelled shorter tasks and must be read with outcome/duration.",
+        "probabilityScope": "Success fraction describes only these declared deterministic cases. Three seeds are not a population reliability estimate."
+      },
+      "wallMs": 4334.978535
+    },
+    {
+      "name": "strong-bench",
+      "bytes": 10420407,
+      "gzipBytes": 1931570,
+      "sha256": "b8640249177413ffb0eff058bb81e4524501eb3dd920e80f472672c3ec556ad9",
+      "archive": "strong-bench.json.gz",
+      "sourceInitialState": "fnv1a32-a682ecdc",
+      "records": 12,
+      "summary": {
+        "status": "completed",
+        "plannedPairs": 6,
+        "attemptedPairs": 6,
+        "qualifiedPairs": 6,
+        "notRunPairs": 0,
+        "groups": [
+          {
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.1496015584394694,
+                "median": 0.14971426863967444,
+                "p90": 0.14991514151807261,
+                "max": 0.14996535973767217
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 0.01599655412767203,
+                "median": 0.01861935633093629,
+                "p90": 0.019688903844912453,
+                "max": 0.019956290723406496
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 0.0020289569044394445,
+                "median": 0.002333586802766741,
+                "p90": 0.002720405990946883,
+                "max": 0.0028171107879919185
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 151.10563168430312,
+                "median": 151.62521051475093,
+                "p90": 151.92980886709358,
+                "max": 152.00595845517924
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 407.14139716387007,
+                "median": 407.6846885345661,
+                "p90": 408.1353715075003,
+                "max": 408.2480422507338
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.03333333333333333,
+                "median": 0.03333333333333333,
+                "p90": 0.03333333333333333,
+                "max": 0.03333333333333333
+              },
+              "landingS": {
+                "n": 3,
+                "min": 11.433333333333334,
+                "median": 11.433333333333334,
+                "p90": 11.433333333333334,
+                "max": 11.433333333333334
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "B",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.02894992176098219,
+                "median": 0.029072426458788082,
+                "p90": 0.029163535926728754,
+                "max": 0.029186313293713923
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 0.01599573655956582,
+                "median": 0.018618889673797236,
+                "p90": 0.01968840265994765,
+                "max": 0.01995578090648525
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 0.0020576257510621005,
+                "median": 0.002503690507616405,
+                "p90": 0.0029063609239833397,
+                "max": 0.0030070285280750734
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 151.9057861643404,
+                "median": 152.4216307053118,
+                "p90": 152.7236748244071,
+                "max": 152.79918585418093
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 381.67096634455777,
+                "median": 382.20882863751837,
+                "p90": 382.6552270608374,
+                "max": 382.7668266666671
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "landingS": {
+                "n": 3,
+                "min": 10.783333333333333,
+                "median": 10.783333333333333,
+                "p90": 10.783333333333333,
+                "max": 10.783333333333333
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "A",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.1496856932274536,
+                "median": 0.14978987238447575,
+                "p90": 0.1502383078774678,
+                "max": 0.15035041675071584
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 0.00913141921319232,
+                "median": 0.011889274507197468,
+                "p90": 0.012773118488298082,
+                "max": 0.012994079483573236
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 0.0033817117754766004,
+                "median": 0.010495028921194936,
+                "p90": 0.011219963087635725,
+                "max": 0.011401196629245922
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 150.80348828925597,
+                "median": 151.03511372748628,
+                "p90": 151.265514497502,
+                "max": 151.32311469000595
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 406.2399151334461,
+                "median": 406.38655512310237,
+                "p90": 406.8703229044268,
+                "max": 406.9912648497579
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.03333333333333333,
+                "median": 0.03333333333333333,
+                "p90": 0.03333333333333333,
+                "max": 0.03333333333333333
+              },
+              "landingS": {
+                "n": 3,
+                "min": 11.433333333333334,
+                "median": 11.433333333333334,
+                "p90": 11.433333333333334,
+                "max": 11.433333333333334
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "B",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 3,
+            "empiricalSuccessFraction": 1,
+            "completeWindows": 3,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 3,
+                "min": 0.02859008737192466,
+                "median": 0.02901536144461362,
+                "p90": 0.029124203418089203,
+                "max": 0.0291514139114581
+              },
+              "lateralRmseM": {
+                "n": 3,
+                "min": 0.009130402406192808,
+                "median": 0.011888568712981185,
+                "p90": 0.012772160844406471,
+                "max": 0.012993058877262792
+              },
+              "attitudeRmseDeg": {
+                "n": 3,
+                "min": 0.0033951484987640237,
+                "median": 0.010440265773769013,
+                "p90": 0.01105225321059691,
+                "max": 0.011205250069803883
+              },
+              "windowGasKg": {
+                "n": 3,
+                "min": 151.60360298924033,
+                "median": 151.8309024158302,
+                "p90": 152.0577803729817,
+                "max": 152.11449986226958
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 380.7737761431125,
+                "median": 380.9165154274201,
+                "p90": 381.39370152838546,
+                "max": 381.5129980536268
+              },
+              "windowLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "landingS": {
+                "n": 3,
+                "min": 10.783333333333333,
+                "median": 10.783333333333333,
+                "p90": 10.783333333333333,
+                "max": 10.783333333333333
+              }
+            }
+          }
+        ],
+        "tails": [
+          {
+            "resultId": "landing-mvhmlhe6-13250170",
+            "caseIndex": 1,
+            "seed": 31701,
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.15035041675071584,
+            "totalGasKg": 406.9912648497579,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlgys-1f615c70",
+            "caseIndex": 0,
+            "seed": 31701,
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14996535973767217,
+            "totalGasKg": 408.2480422507338,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlia8-6f0446b0",
+            "caseIndex": 3,
+            "seed": 31702,
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14978987238447575,
+            "totalGasKg": 406.2399151334461,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlhuk-422f6a29",
+            "caseIndex": 2,
+            "seed": 31702,
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.14971426863967444,
+            "totalGasKg": 407.14139716387007,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlj42-8a74e496",
+            "caseIndex": 5,
+            "seed": 31703,
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.1496856932274536,
+            "totalGasKg": 406.38655512310237,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          },
+          {
+            "resultId": "landing-mvhmlipf-47321e6b",
+            "caseIndex": 4,
+            "seed": 31703,
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "status": "completed",
+            "reason": "stable_landing",
+            "windowComplete": true,
+            "heightRmseM": 0.1496015584394694,
+            "totalGasKg": 407.6846885345661,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0.03333333333333333
+          }
+        ],
+        "winner": null,
+        "metricScope": "Distribution uses every attempted full 2–6 s window, including later failed landings. Partial-window statistics remain in each record and do not enter four-second distributions. Full-task gas includes failed/cancelled shorter tasks and must be read with outcome/duration.",
+        "probabilityScope": "Success fraction describes only these declared deterministic cases. Three seeds are not a population reliability estimate."
+      },
+      "wallMs": 4139.435270000001
+    },
+    {
+      "name": "strong-finite100",
+      "bytes": 2429076,
+      "gzipBytes": 485546,
+      "sha256": "f6c81c156f008e4a95d89d7005a22817af7f90ac5fd7ba41a136b6d10a3b2675",
+      "archive": "strong-finite100.json.gz",
+      "sourceInitialState": "fnv1a32-625982fe",
+      "records": 12,
+      "summary": {
+        "status": "completed",
+        "plannedPairs": 6,
+        "attemptedPairs": 6,
+        "qualifiedPairs": 0,
+        "notRunPairs": 0,
+        "groups": [
+          {
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 0,
+            "empiricalSuccessFraction": 0,
+            "completeWindows": 0,
+            "failures": {
+              "hard_or_tilted_touchdown": 3
+            },
+            "distributions": {
+              "heightRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "lateralRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "attitudeRmseDeg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 68.60812946720613,
+                "median": 68.64175418825232,
+                "p90": 68.6430908145683,
+                "max": 68.64342497114728
+              },
+              "windowLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 1.3249999999999977,
+                "median": 1.3249999999999977,
+                "p90": 1.3249999999999977,
+                "max": 1.3249999999999977
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.5416666666666672,
+                "median": 0.5416666666666672,
+                "p90": 0.5416666666666672,
+                "max": 0.5416666666666672
+              },
+              "landingS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "B",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 0,
+            "empiricalSuccessFraction": 0,
+            "completeWindows": 0,
+            "failures": {
+              "hard_or_tilted_touchdown": 3
+            },
+            "distributions": {
+              "heightRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "lateralRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "attitudeRmseDeg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 68.68679156974638,
+                "median": 68.68694688921391,
+                "p90": 68.68697965421377,
+                "max": 68.68698784546373
+              },
+              "windowLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 1.4749999999999972,
+                "median": 1.4749999999999972,
+                "p90": 1.4749999999999972,
+                "max": 1.4749999999999972
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.6333333333333335,
+                "median": 0.6333333333333335,
+                "p90": 0.6333333333333335,
+                "max": 0.6333333333333335
+              },
+              "landingS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "A",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 0,
+            "empiricalSuccessFraction": 0,
+            "completeWindows": 0,
+            "failures": {
+              "hard_or_tilted_touchdown": 3
+            },
+            "distributions": {
+              "heightRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "lateralRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "attitudeRmseDeg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 68.5992667532557,
+                "median": 68.63968852872867,
+                "p90": 68.64204233436062,
+                "max": 68.64263078576862
+              },
+              "windowLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 1.3249999999999977,
+                "median": 1.3249999999999977,
+                "p90": 1.3249999999999977,
+                "max": 1.3249999999999977
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.5416666666666672,
+                "median": 0.5416666666666672,
+                "p90": 0.5416666666666672,
+                "max": 0.5416666666666672
+              },
+              "landingS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "B",
+            "planned": 3,
+            "attempted": 3,
+            "notRun": 0,
+            "stableLandings": 0,
+            "empiricalSuccessFraction": 0,
+            "completeWindows": 0,
+            "failures": {
+              "hard_or_tilted_touchdown": 3
+            },
+            "distributions": {
+              "heightRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "lateralRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "attitudeRmseDeg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalGasKg": {
+                "n": 3,
+                "min": 68.6867208279359,
+                "median": 68.68689613835903,
+                "p90": 68.68691930617857,
+                "max": 68.68692509813344
+              },
+              "windowLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalAllocationLimitedS": {
+                "n": 3,
+                "min": 1.4749999999999972,
+                "median": 1.4749999999999972,
+                "p90": 1.4749999999999972,
+                "max": 1.4749999999999972
+              },
+              "controllerLimitedS": {
+                "n": 3,
+                "min": 0.6333333333333335,
+                "median": 0.6333333333333335,
+                "p90": 0.6333333333333335,
+                "max": 0.6333333333333335
+              },
+              "landingS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              }
+            }
+          }
+        ],
+        "tails": [
+          {
+            "resultId": "landing-mvhmlkeu-0464e1b2",
+            "caseIndex": 0,
+            "seed": 31701,
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "status": "failed",
+            "reason": "hard_or_tilted_touchdown",
+            "windowComplete": false,
+            "heightRmseM": null,
+            "totalGasKg": 68.64342497114728,
+            "allocationLimitedS": 1.3249999999999977,
+            "controllerLimitedS": 0.5416666666666672
+          },
+          {
+            "resultId": "landing-mvhmlkjg-5b0514c1",
+            "caseIndex": 0,
+            "seed": 31701,
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "B",
+            "status": "failed",
+            "reason": "hard_or_tilted_touchdown",
+            "windowComplete": false,
+            "heightRmseM": null,
+            "totalGasKg": 68.68694688921391,
+            "allocationLimitedS": 1.4749999999999972,
+            "controllerLimitedS": 0.6333333333333335
+          },
+          {
+            "resultId": "landing-mvhmlkms-37f3bc30",
+            "caseIndex": 1,
+            "seed": 31701,
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "A",
+            "status": "failed",
+            "reason": "hard_or_tilted_touchdown",
+            "windowComplete": false,
+            "heightRmseM": null,
+            "totalGasKg": 68.64263078576862,
+            "allocationLimitedS": 1.3249999999999977,
+            "controllerLimitedS": 0.5416666666666672
+          },
+          {
+            "resultId": "landing-mvhmlkpz-edda38f7",
+            "caseIndex": 1,
+            "seed": 31701,
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "B",
+            "status": "failed",
+            "reason": "hard_or_tilted_touchdown",
+            "windowComplete": false,
+            "heightRmseM": null,
+            "totalGasKg": 68.68689613835903,
+            "allocationLimitedS": 1.4749999999999972,
+            "controllerLimitedS": 0.6333333333333335
+          },
+          {
+            "resultId": "landing-mvhmlkt3-84c8cc19",
+            "caseIndex": 2,
+            "seed": 31702,
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "status": "failed",
+            "reason": "hard_or_tilted_touchdown",
+            "windowComplete": false,
+            "heightRmseM": null,
+            "totalGasKg": 68.64175418825232,
+            "allocationLimitedS": 1.3249999999999977,
+            "controllerLimitedS": 0.5416666666666672
+          },
+          {
+            "resultId": "landing-mvhmlkw2-2fd0d4b8",
+            "caseIndex": 2,
+            "seed": 31702,
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "B",
+            "status": "failed",
+            "reason": "hard_or_tilted_touchdown",
+            "windowComplete": false,
+            "heightRmseM": null,
+            "totalGasKg": 68.68698784546373,
+            "allocationLimitedS": 1.4749999999999972,
+            "controllerLimitedS": 0.6333333333333335
+          }
+        ],
+        "winner": null,
+        "metricScope": "Distribution uses every attempted full 2–6 s window, including later failed landings. Partial-window statistics remain in each record and do not enter four-second distributions. Full-task gas includes failed/cancelled shorter tasks and must be read with outcome/duration.",
+        "probabilityScope": "Success fraction describes only these declared deterministic cases. Three seeds are not a population reliability estimate."
+      }
+    },
+    {
+      "name": "cancelled-3s",
+      "bytes": 268610,
+      "gzipBytes": 52007,
+      "sha256": "6c4c2758bb1ad1e63328a43a977321f003932bca15e5c7b8251828e17dce9ee6",
+      "archive": "cancelled-3s.json.gz",
+      "sourceInitialState": "fnv1a32-a682ecdc",
+      "records": 1,
+      "summary": {
+        "status": "cancelled",
+        "plannedPairs": 6,
+        "attemptedPairs": 1,
+        "qualifiedPairs": 0,
+        "notRunPairs": 5,
+        "groups": [
+          {
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "planned": 3,
+            "attempted": 1,
+            "notRun": 2,
+            "stableLandings": 0,
+            "empiricalSuccessFraction": 0,
+            "completeWindows": 0,
+            "failures": {
+              "user_cancel": 1
+            },
+            "distributions": {
+              "heightRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "lateralRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "attitudeRmseDeg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalGasKg": {
+                "n": 1,
+                "min": 112.5015739837137,
+                "median": 112.5015739837137,
+                "p90": 112.5015739837137,
+                "max": 112.5015739837137
+              },
+              "windowLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalAllocationLimitedS": {
+                "n": 1,
+                "min": 0.008333333333333333,
+                "median": 0.008333333333333333,
+                "p90": 0.008333333333333333,
+                "max": 0.008333333333333333
+              },
+              "controllerLimitedS": {
+                "n": 1,
+                "min": 0,
+                "median": 0,
+                "p90": 0,
+                "max": 0
+              },
+              "landingS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "B",
+            "planned": 3,
+            "attempted": 0,
+            "notRun": 3,
+            "stableLandings": 0,
+            "empiricalSuccessFraction": null,
+            "completeWindows": 0,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "lateralRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "attitudeRmseDeg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalAllocationLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "controllerLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "landingS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "A",
+            "planned": 3,
+            "attempted": 0,
+            "notRun": 3,
+            "stableLandings": 0,
+            "empiricalSuccessFraction": null,
+            "completeWindows": 0,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "lateralRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "attitudeRmseDeg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalAllocationLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "controllerLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "landingS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              }
+            }
+          },
+          {
+            "profile": "strong",
+            "direction": "longitudinal",
+            "role": "B",
+            "planned": 3,
+            "attempted": 0,
+            "notRun": 3,
+            "stableLandings": 0,
+            "empiricalSuccessFraction": null,
+            "completeWindows": 0,
+            "failures": {},
+            "distributions": {
+              "heightRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "lateralRmseM": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "attitudeRmseDeg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalGasKg": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "windowLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "totalAllocationLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "controllerLimitedS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              },
+              "landingS": {
+                "n": 0,
+                "min": null,
+                "median": null,
+                "p90": null,
+                "max": null
+              }
+            }
+          }
+        ],
+        "tails": [
+          {
+            "resultId": "landing-mvhmllnw-0b822618",
+            "caseIndex": 0,
+            "seed": 31701,
+            "profile": "strong",
+            "direction": "lateral",
+            "role": "A",
+            "status": "cancelled",
+            "reason": "user_cancel",
+            "windowComplete": false,
+            "heightRmseM": null,
+            "totalGasKg": 112.5015739837137,
+            "allocationLimitedS": 0.008333333333333333,
+            "controllerLimitedS": 0
+          }
+        ],
+        "winner": null,
+        "metricScope": "Distribution uses every attempted full 2–6 s window, including later failed landings. Partial-window statistics remain in each record and do not enter four-second distributions. Full-task gas includes failed/cancelled shorter tasks and must be read with outcome/duration.",
+        "probabilityScope": "Success fraction describes only these declared deterministic cases. Three seeds are not a population reliability estimate."
+      }
+    }
+  ],
+  "limitations": [
+    "Numerical fixed-step solver only; native pixels and user GPU acceptance are separate.",
+    "Three declared seeds per direction are sensitivity cases, not a population reliability probability.",
+    "This experiment changes only the height outer-loop controller; horizontal control is shared."
+  ],
+  "source": {
+    "id": "landing-mvhmlb9c-76122680",
+    "initialState": "fnv1a32-a682ecdc",
+    "hardware": {
+      "dryMass": 1950,
+      "gravity": 9.81,
+      "tireMu": 1.25,
+      "springRate": 65000,
+      "suspensionDamping": 5800,
+      "suspensionRest": 0.37,
+      "suspensionMin": 0.24,
+      "suspensionDroop": 0.04,
+      "wheelRadius": 0.37,
+      "maxMotorForce": 24000,
+      "motorPower": 700000,
+      "brakeForce": 42000,
+      "regenForce": 2600,
+      "regenPower": 60000,
+      "steeringAssist": true,
+      "tractionAssist": true,
+      "absEnabled": true,
+      "wheelInertia": 1.8,
+      "roadSurface": "dry",
+      "wetGripMultiplier": 0.52,
+      "splitMuPositionX": 0,
+      "steeringAccelG": 1,
+      "cornerStiffnessFront": 82000,
+      "cornerStiffnessRear": 90000,
+      "tireRelaxationLength": 0.35,
+      "dragArea": 0.58,
+      "airDensity": 1.225,
+      "wingMode": "active",
+      "wingDeployment": 0,
+      "wingAreaM2": 0.38,
+      "wingDragCoefficient": 0.75,
+      "wingDownforceCoefficient": 1.1,
+      "wingActuatorRate": 1.5,
+      "tankLitres": 600,
+      "initialPressureBar": 350,
+      "regulatorBar": 50,
+      "gasTemperatureK": 293.15,
+      "exhaustVelocity": 650,
+      "nozzleModel": "isentropic",
+      "nozzleVelocityEfficiency": 0.9,
+      "ambientPressureBar": 1,
+      "climbRateMps": 5,
+      "verticalAccelerationMps2": 5,
+      "gasGamma": 1.4,
+      "tankThermalTime": 90,
+      "gasModel": "adiabatic",
+      "valveRiseTime": 0.045,
+      "valveFallTime": 0.025,
+      "liftNozzleMax": 20000,
+      "sideNozzleMax": 5500,
+      "axialNozzleMax": 11000,
+      "suctionPressurePa": 8200,
+      "suctionArea": 4.8,
+      "sealRange": 0.08,
+      "fanPower": 26000,
+      "fanEfficiency": 0.75,
+      "sealPerimeter": 11.84766219862439,
+      "sealLeakCd": 0.6,
+      "sealLipGap": 0.003,
+      "skirtReach": 0.5660000000000001,
+      "batteryKWh": 200,
+      "supplyMode": "bench",
+      "hoverHeight": 4,
+      "positionGain": 2.4,
+      "velocityGain": 3.1,
+      "altitudeGain": 3.2,
+      "verticalDamping": 3.6,
+      "attitudeResponse": 4.5,
+      "rollRateDegS": 180,
+      "pitchRateDegS": 60,
+      "yawRateDegS": 46,
+      "angularAccelerationDegS2": 360
+    },
+    "supply": "bench",
+    "pressureBar": 350,
+    "task": {
+      "schema": "roadster.landing-task",
+      "version": 1,
+      "name": "Crosswind landing / VECTOR 07",
+      "seed": 31415,
+      "supplyMode": "bench",
+      "initialPressureBar": 350,
+      "targetHeightM": 2.5,
+      "timeoutS": 16,
+      "nozzleScale": 1,
+      "landingRadiusM": 1.5,
+      "disturbances": [
+        {
+          "timeS": 2,
+          "speedMps": 3,
+          "directionDeg": 90,
+          "gustMps": 1,
+          "gustPeriodS": 2.8
+        },
+        {
+          "timeS": 4,
+          "speedMps": 4,
+          "directionDeg": 270,
+          "gustMps": 1.5,
+          "gustPeriodS": 3.1
+        },
+        {
+          "timeS": 7.5,
+          "speedMps": 0,
+          "directionDeg": 0,
+          "gustMps": 0,
+          "gustPeriodS": 4
+        }
+      ],
+      "faultTimeS": 4.5,
+      "nozzleId": "lift-FL"
+    }
+  },
+  "status": "passed",
+  "sourceHashesAfter": {
+    "dist/physics.js": "38df473c0f03e9c540b13800954218326c749c3753f968af0177e414c604d4be",
+    "dist/vehicle-models.js": "48037add0aa75d297289cf9473124f2bde3d17e78decdd4bb053bb6522917c84",
+    "dist/simulation-snapshot.js": "e0fd58488365709eaacfd896af8abcd1f8db3b5aa3991a92db276d9c3f34ea35",
+    "dist/landing-challenge.js": "4e69b12040f93bd151a39bfd65b513f2b6a58fe3f97da9fc70946ae21b6bf978",
+    "dist/wind-control-study.js": "ae6565050fdb49352f6e3d01a2a5cdf6587cd7cf8252a33a7370604d0928bce1",
+    "dist/wind-matrix-study.js": "aaacc44113d28895e0f900293c0781af14947c83d1810b8dc47fa023a767faec",
+    "dist/wind-response-chart.js": "c9c7f24d2229814148e9db083da7eea5342dd9d0851b7aa1c02a5caaa1b46a32"
+  },
+  "sourcesUnchangedDuringRun": true,
+  "completedAt": "2026-10-21T04:42:27.055Z"
+}

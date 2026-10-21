@@ -1,0 +1,64 @@
+{
+  "status": "passed",
+  "checks": 12,
+  "scope": "Actual console DOM and actual fixed-step RoadsterSim replay/A-B. Canvas and asynchronous Worker endpoints are facades; no browser layout, Worker-thread performance, WebGL pixels or FPS evidence.",
+  "sourceHashes": {
+    "dist/experiment-console.js": "e1d6ade6037cef7e3eb08814313220c9ed334b097cba3fea8ad550f783ce7767",
+    "dist/experiment-records.js": "f306f68fa7fe4a3d5741e925d6542bd810a497e23cadec83d90d543b21e6eb5e",
+    "dist/experiment-reproduction.js": "4165dd4b5699f39487acecdae456b1cf43729ee9b82f89a542d49ae675306fd9",
+    "dist/research-console.js": "007ae50232ae8d504b4f76ac5b0e62eb4ec56bad13ad4a648f2214f68a6a3671",
+    "dist/research-console.css": "20578bd504c1df5946c3f58daf05cc590d21a70c355cf63c5e3557e7800f667d",
+    "dist/experiment-replay-worker.js": "8bed7be5c1a0ea4fefab0a9c0c967af0ffde054314a01702857b59064e395262",
+    "qa/experiment-console-dom-check.mjs": "734c9e6a044a27ec8960f7bf361952918272947b51b19a3ecf9d0642e49d5328"
+  },
+  "tests": [
+    {
+      "name": "Record button captures actual driving state, physical commands and immutable per-step metrics; JSON-all and CSV-selected have explicit scope",
+      "status": "PASS"
+    },
+    {
+      "name": "Original-condition 3D replay uses the actual solver and returns to a verified terminal state; replay does not re-run program commands twice",
+      "status": "PASS"
+    },
+    {
+      "name": "Measurement delay/noise and nozzle derating controls apply public physical APIs and are journaled during a manual experiment",
+      "status": "PASS"
+    },
+    {
+      "name": "An existing automatic procedure receives a full experiment snapshot and rejected / cancelled outcomes remain available",
+      "status": "PASS"
+    },
+    {
+      "name": "State restores terminate an old same-scene program and finish any new recorder before importing a different state",
+      "status": "PASS"
+    },
+    {
+      "name": "A solver fault or terminal-command mismatch during 3D replay retains a failed execution with its actual completed step",
+      "status": "PASS"
+    },
+    {
+      "name": "Without WebGL the same console disables only live operations while history, numerical replay and explicit controller A/B remain usable",
+      "status": "PASS"
+    },
+    {
+      "name": "A cancelled numerical Worker execution remains exported with source identity and partial statistics",
+      "status": "PASS"
+    },
+    {
+      "name": "A synchronous Worker constructor failure preserves the requested A/B identity and gains, clears Run / Stop state, and permits retry",
+      "status": "PASS"
+    },
+    {
+      "name": "Synchronous request and cancel postMessage failures each leave one failed attempt, terminate the Worker, and remain exportable",
+      "status": "PASS"
+    },
+    {
+      "name": "An altered retained sample produces the same completed-but-diverged verdict in live 3D and numerical replay, visibly and in exported evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "Refresh restores the full replayable archive and metadata; history remains visible with live controls disabled",
+      "status": "PASS"
+    }
+  ]
+}

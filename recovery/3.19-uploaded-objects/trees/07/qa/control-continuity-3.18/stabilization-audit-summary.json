@@ -1,0 +1,49 @@
+{
+  "schema": "roadster-g-ownership-source-audit-318",
+  "actualSourceHashes": {
+    "dist/physics.js": "38df473c0f03e9c540b13800954218326c749c3753f968af0177e414c604d4be",
+    "dist/main.js": "e84d3b0a9618bdde1a9708161d9879f098708da0d0dfabeb6bcec78966d42791",
+    "dist/driving-capture.js": "53f78df5e38078dfb0010c7e82bf8313d8a0829032720f60530e8e4938f321e2",
+    "dist/experiment-worker.js": "279002966a94b68c6c4215124764640f748f06d4710ee52313a357e355e48a1e",
+    "dist/simulation-snapshot.js": "e0fd58488365709eaacfd896af8abcd1f8db3b5aa3991a92db276d9c3f34ea35",
+    "dist/experiment-reproduction.js": "4165dd4b5699f39487acecdae456b1cf43729ee9b82f89a542d49ae675306fd9",
+    "dist/flight-programs.js": "461ca94a631d6c376a216a2c26e5249115d541b268974fc224edbb64998ce648",
+    "dist/landing-challenge.js": "4e69b12040f93bd151a39bfd65b513f2b6a58fe3f97da9fc70946ae21b6bf978",
+    "dist/research-console.js": "d4a80ba3314a0547db3f1f8d38f87def6813ed07a5ff58b5f11b7901ba90a0fb"
+  },
+  "remainingLevelEntrySources": [
+    {
+      "source": "dist/main.js / toggleStabilization",
+      "authorization": "User KeyG or the visible G switch."
+    },
+    {
+      "source": "dist/driving-capture.js / declared preparation or recovery commands",
+      "authorization": "User explicitly starts the capture protocol; G preparation/recovery is part of that visible experiment."
+    },
+    {
+      "source": "dist/experiment-worker.js / request.stabilization",
+      "authorization": "The requested research configuration controls an isolated numerical worker; not the live player after a collision."
+    },
+    {
+      "source": "dist/simulation-snapshot.js and experiment replay",
+      "authorization": "Explicit requested restoration/replay of recorded controller state or commands, subject to the existing identity and schema contracts."
+    }
+  ],
+  "correctedHoldExits": [
+    "setMode: hold to off",
+    "setSuction: changed suction state releases hold to off",
+    "reset: old world hold discarded as off; pre-existing explicit level preserved"
+  ],
+  "otherAuthorizedJetSources": [
+    "H or E explicitly requests flight assistance; airborne explicit pitch/roll inputs use that existing assistance path.",
+    "X/U/L remain independently owned explicit actions until physical completion or a new pilot takeover.",
+    "Explicit research setPoseTarget keeps its world target until cancellation.",
+    "Direct wrench/raw valves follow explicit selected mode and inputs.",
+    "Delivered valve force can outlast zero command through the existing valve response; that tail is not a new control request."
+  ],
+  "collisionPolicy": "No code path starts G or changes DRIVE to flight assistance merely because the body collides, tilts or leaves the ground. Previously requested H/research/action ownership and physical valve tails are separate.",
+  "limits": [
+    "The source audit and bounded reproduced cases do not identify the user computer build, which remains unverified.",
+    "This audit does not claim that every city collision trajectory or physical recovery is successful."
+  ]
+}

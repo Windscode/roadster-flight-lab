@@ -1,0 +1,43 @@
+{
+  "schema": "roadster-vehicle-form-iteration-history-3.17",
+  "sourcePolicy": "The complete 3.16 Git history is unchanged. Failed iteration logs were copied verbatim where a log file existed; no claim is made that every uncommitted intermediate mesh revision has a separate source snapshot. Final source is the reviewed vehicle.js with SHA256 2c5bd25456264409bcdd7c613e3fc1636e53c8973e552a99c6e5d691d30c1c0b.",
+  "iterations": [
+    {
+      "stage": "shoulder join",
+      "failure": "Existing surface test detected a smooth-strip normal seam.",
+      "log": "surface.log",
+      "resolution": "Shared top/side boundary tangent and graph-normal assignment corrected.",
+      "passedLog": "surface-final.log"
+    },
+    {
+      "stage": "nose ruled-return edges",
+      "failure": "Existing geometry test detected zero/invalid normals at degenerate ruled edges.",
+      "logs": [
+        "geometry-sweep.log",
+        "geometry-sweep-r2.log"
+      ],
+      "resolution": "Use the limiting interior derivative at a collapsed edge; retain finite unit normals."
+    },
+    {
+      "stage": "side sampling redistribution",
+      "failure": "Existing geometry contract found only 100 qualifying interior side samples after too many rows were assigned to the shoulder band.",
+      "log": "geometry-sweep-r3.log",
+      "resolution": "Redistribute the same vertex budget to a 20% shoulder / 80% door parameter range.",
+      "passedLog": "geometry-sweep-r4.log"
+    },
+    {
+      "stage": "frozen baseline loader in new test",
+      "failure": "Sandbox rejected the Git child with spawnSync git EPERM, despite available restored data.",
+      "log": "form-test.log",
+      "resolution": "Run the read-only restored-Git regression with the permitted execution context."
+    },
+    {
+      "stage": "frozen baseline loader dependencies",
+      "failure": "The initial harness required visual-presets.js to equal 3.16, but the parallel city work had legitimately changed that file. This was a test harness dependency assumption, not a model failure.",
+      "evidenceSource": "Retained tool return; the first redirect captured stdout only, so the error itself is transcribed here instead of claiming an original stderr file.",
+      "toolErrorExcerpt": "AssertionError [ERR_ASSERTION]: Frozen geometry shared dependency changed: visual-presets.js; actual e04bf7f7b38fea0a8256415873af6820a3bbee3dcd5dc44ee65bd15de561e20e; expected 29e63a9677714ee0770b0ae13f27a629e7676fccfbb899afc5b25a32c95d0b88",
+      "resolution": "Import the frozen vehicle with its actual frozen leaf dependencies, and share only the byte-identical THREE module.",
+      "passedLog": "form-test-final.log"
+    }
+  ]
+}

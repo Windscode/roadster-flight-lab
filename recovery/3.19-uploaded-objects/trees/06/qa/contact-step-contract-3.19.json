@@ -1,0 +1,167 @@
+{
+  "schema": "roadster-contact-step-contract-evidence",
+  "version": 1,
+  "createdAt": "2026-10-21T06:42:48.239Z",
+  "modelVersion": "3.19.0",
+  "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "The caller, input journal, recorder and seeded delayed observation retain 120 Hz while the real contact integration refines",
+      "passed": true
+    },
+    {
+      "name": "Every delivered kilogram and nozzle impulse is integrated across all contact slices, not inferred from the last instantaneous sample",
+      "passed": true,
+      "lastSampleErrorKg": [
+        {
+          "supply": "bench",
+          "error": -0.0024477922790984152
+        },
+        {
+          "supply": "finite",
+          "error": -0.002442409968231196
+        }
+      ]
+    },
+    {
+      "name": "Finite and bench supply remain distinct during refined contacts",
+      "passed": true
+    },
+    {
+      "name": "The actual recorded contact episode replays with an identical full physical terminal snapshot and raw summary, including noise and delay state",
+      "passed": true
+    },
+    {
+      "name": "Input evidence includes wheel and rigid contacts and retains brief contacts from earlier microsteps",
+      "passed": true
+    },
+    {
+      "name": "A failure inside an unfinished contact-refined tick records its partial integration without fabricating a completed control step",
+      "passed": true,
+      "failure": {
+        "phase": "after-contact-substep",
+        "triggerStep": 180,
+        "simTimeS": 1.5010416666666637,
+        "integration": {
+          "controlStep": 181,
+          "controlDtS": 0.008333333333333333,
+          "substeps": 8,
+          "completedSubsteps": 1,
+          "substepDtS": 0.0010416666666666667,
+          "contactMicrosteps": 0,
+          "wheelContactMicrosteps": 0,
+          "rigidContactMicrosteps": 0,
+          "maxWheelContacts": 0,
+          "maxRigidContacts": 0,
+          "reason": "approaching-hard-contact",
+          "objectId": "partial-step-safety-fixture",
+          "observationPolicy": "one-noisy-delayed-sample-per-control-step",
+          "allocation": {
+            "policy": "pilot-rate-unilateral-lift-objective-1",
+            "active": false,
+            "reason": null,
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "objectiveWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "cases": [
+    {
+      "supply": "bench",
+      "initialSnapshotLabel": "fnv1a32-4e29cb48",
+      "controlSteps": 180,
+      "controlCalls": 180,
+      "actualIntegrationSlices": 362,
+      "refinedControlSteps": 26,
+      "actualDurationS": 1.4999999999999833,
+      "initialObservationSeed": 503994515,
+      "finalObservationSeed": 1021270979,
+      "expectedNoiseDraws": 2160,
+      "observationHeldAcrossEachControlStep": true,
+      "maximumDelaySamples": 61,
+      "gasIntegralKg": 6.602223100057473,
+      "independentGasKg": 6.602223100057473,
+      "endOfStepRiemannGasKg": 6.5997753077783745,
+      "endSampleGasErrorKg": -0.0024477922790984152,
+      "impulseIntegralNs": 3741.150227470059,
+      "totalDeliveredImpulseNs": 3741.150227470059,
+      "contactSlices": 210,
+      "maxRigidContacts": 8,
+      "recordGasKg": 6.602223100057473,
+      "recordStepCount": 180,
+      "replayStatus": "completed",
+      "replaySummaryExact": true,
+      "replayPhysicalSnapshotExact": true,
+      "externalDeltaKg": 6.602223100057473,
+      "onboardDeltaKg": 0,
+      "inputEvents": 180,
+      "inputContactEvidence": true
+    },
+    {
+      "supply": "finite",
+      "initialSnapshotLabel": "fnv1a32-08abab4d",
+      "controlSteps": 180,
+      "controlCalls": 180,
+      "actualIntegrationSlices": 362,
+      "refinedControlSteps": 26,
+      "actualDurationS": 1.4999999999999833,
+      "initialObservationSeed": 503994515,
+      "finalObservationSeed": 1021270979,
+      "expectedNoiseDraws": 2160,
+      "observationHeldAcrossEachControlStep": true,
+      "maximumDelaySamples": 61,
+      "gasIntegralKg": 6.619717886388501,
+      "independentGasKg": 6.619717886388685,
+      "endOfStepRiemannGasKg": 6.6172754764204536,
+      "endSampleGasErrorKg": -0.002442409968231196,
+      "impulseIntegralNs": 3741.150227470059,
+      "totalDeliveredImpulseNs": 3741.150227470059,
+      "contactSlices": 210,
+      "maxRigidContacts": 8,
+      "recordGasKg": 6.619717886388501,
+      "recordStepCount": 180,
+      "replayStatus": "completed",
+      "replaySummaryExact": true,
+      "replayPhysicalSnapshotExact": true,
+      "externalDeltaKg": 0,
+      "onboardDeltaKg": 6.619717886388501,
+      "inputEvents": 180,
+      "inputContactEvidence": true
+    }
+  ],
+  "sourceHashes": {
+    "dist/physics.js": "3aa89a4a111b7a4001220f284077c6f5fe51d58d8b3fa7f6105dfce208aec107",
+    "dist/contact-step-schedule.js": "0a11ded3273469b16332c86b84419794589514a293c9e071a2abfa6face23c4d",
+    "dist/input-session.js": "853df1e5a6ce0a5610aa42628e8f3e273e11dafd102d792796353fa0f84e9340",
+    "dist/experiment-records.js": "f306f68fa7fe4a3d5741e925d6542bd810a497e23cadec83d90d543b21e6eb5e",
+    "dist/control-observation.js": "8920e824d32dbece63aade3f0ab4da5c294225aa46419d6e556e603f2ed75cc8",
+    "dist/simulation-snapshot.js": "80e3fa5fa82ca23795750aac18aeb3482933578d8963aa1660fc19fdf4f017c3"
+  },
+  "archive": {
+    "file": "contact-step-contract-3.19.records.json.gz",
+    "bytes": 54769,
+    "sha256": "59731bb7dd3ed70a26a4852dbc166d1fd431b2892248d751dd9151634462e156"
+  },
+  "limits": [
+    "The synthetic 90 km/h step episode with alternating direct valves verifies sampling, accounting and exact continuation. It is not a claim of safe or converged impact behavior.",
+    "Noisy flight observation is sampled once per caller interval and held during contact refinement. Ideal-state control uses the actual state on every force-integration slice.",
+    "Gas/impulse integrals are exact physical counter deltas. The displayed mass-flow and thrust values remain instantaneous end-of-interval samples."
+  ]
+}

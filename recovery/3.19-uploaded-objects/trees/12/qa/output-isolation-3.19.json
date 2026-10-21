@@ -1,0 +1,88 @@
+{
+  "schema": "roadster-qa-output-isolation-1",
+  "createdAt": "2026-10-21T05:41:28.776664+00:00",
+  "status": "passed-static-output-isolation",
+  "reportVersion": "3.19",
+  "validationEntryPathsInspected": 112,
+  "validationExecuted": false,
+  "testsExecuted": false,
+  "scope": "Static path audit and syntax checks only. Does not establish numerical, browser, or GPU acceptance.",
+  "changes": [
+    {
+      "path": "tests/city-street-detail-3.18.test.mjs",
+      "syntax": "passed",
+      "onlyOutputIsolationChange": true,
+      "sha256": "001aa43f68bfd87970172143d0dd907a2611c06ac6ef07c187895f86dc37142f"
+    },
+    {
+      "path": "tests/control-continuity-3.18.test.mjs",
+      "syntax": "passed",
+      "onlyOutputIsolationChange": true,
+      "sha256": "5d9a0a9cb3061e92675e2e297fc77e75d1ba19b315aac1fefb6d6db49b5b49c8"
+    },
+    {
+      "path": "tests/control-transition-guards-3.18.test.mjs",
+      "syntax": "passed",
+      "onlyOutputIsolationChange": true,
+      "sha256": "44ef9db895d4b59f6457c6d8f976ae330637403b477020b6c9b7cc13dba228b4"
+    },
+    {
+      "path": "tests/shadow-motion-3.18.test.mjs",
+      "syntax": "passed",
+      "onlyOutputIsolationChange": true,
+      "sha256": "910c5432f8f231cd00cb5456f700e32a15e760e43e76203515832fcc4fba36cf"
+    },
+    {
+      "path": "tests/wind-matrix-3.18.test.mjs",
+      "syntax": "passed",
+      "onlyOutputIsolationChange": true,
+      "sha256": "25dbedf52a62f33789351231dd4ae08b204a39cc8e3f207b9edf2facb16e47ba"
+    },
+    {
+      "path": "tests/export-deadline-3.18.test.mjs",
+      "syntax": "passed",
+      "onlyOutputIsolationChange": true,
+      "sha256": "9f8f6f121dd5908bc243640afd433898257f1c5e0982fc29b6344ba295b8e5cf"
+    },
+    {
+      "path": "tests/landing-archive-3.18.test.mjs",
+      "syntax": "passed",
+      "onlyOutputIsolationChange": true,
+      "sha256": "547f54987ec25bb6191092a8a29161e6fd6aa3d22fa0e05295c05f5cbcb44b24"
+    },
+    {
+      "path": "scripts/validate.mjs",
+      "syntax": "passed",
+      "onlyOutputIsolationChange": true,
+      "sha256": "8ee00c8f3824d20e485b3d1d414fa29290b471c840fe02e17d3ea5baba0bc26d"
+    }
+  ],
+  "currentOutputPaths": [
+    "qa/control-continuity-3.19/report.json",
+    "qa/control-continuity-3.19/entry-guards-final.json",
+    "qa/city-street-detail-3.19.json",
+    "qa/shadow-motion-3.19/report.json",
+    "qa/wind-matrix-3.19/development/report.json",
+    "qa/wind-matrix-3.19/validation/report.json",
+    "qa/export-deadline-3.19/report.json",
+    "qa/landing-archive-3.19/report.json",
+    "qa/vehicle-main-form-3.19.json"
+  ],
+  "historicalEvidencePreserved": [
+    "qa/control-continuity-3.18/baseline-exploration-0.5s.json",
+    "qa/control-continuity-3.18/baseline-exploration-fast.json",
+    "qa/wind-matrix-3.18/development-2/strong-bench.json.gz",
+    "qa/city-batch-equivalence-3.17.json"
+  ],
+  "unchangedOutputMechanisms": [
+    "Other reachable QA writers already derive version from REPORT_VERSION or MODEL_VERSION; the independent Python oracle derives the current model report version.",
+    "Physics/static integration update current dist/validation.json; model-build regenerates current dist/model-build.js.",
+    "Repository payload restore preserves existing files on byte mismatch and skips matching existing files.",
+    "The optional 3.15 --capture-before path is historical, refuses overwrite, and is not invoked by validate.mjs."
+  ],
+  "limits": [
+    "Standalone capture/browser scripts outside validate.mjs were not globally rewritten. The 3.18 landing-archive default output was isolated as an additional known risk.",
+    "Historic test filenames and introduced-schema identifiers remain unchanged; assertions, fixtures, thresholds, experiment schedules, and failure classifications are byte-identical after removing the declared output substitutions.",
+    "Caller-supplied output overrides remain the caller responsibility; the validator now supplies its current-version wind-matrix path."
+  ]
+}

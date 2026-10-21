@@ -1,0 +1,32 @@
+{
+  "status": "only-export-progress-language-subscription-changed",
+  "createdAt": "2026-10-21T04:43:03.144570+00:00",
+  "beforeBuild": "2aab3fe94268f58cfc5ad0074d9cfd3de6d39b83bd0380d9a9abfe58b36c92cc",
+  "finalBuild": "4a9cc90a2c8f4f74ef8765e36571bb49df0b3d7652a64cd8b3014eac88ee40d4",
+  "changedExecutableSources": [
+    "export-download.js"
+  ],
+  "unchangedExecutableSources": 183,
+  "beforeSha256": "ac777b12801018426bd83f7f9f48ce8907d8e2edac6f9fb304c09c50e8f04e24",
+  "afterSha256": "2e4a4f2650367063a2a80c7e7789150c99ccb73266be924bcbc61640f0c0ace1",
+  "actualDiff": [
+    "--- actual-2aab\n",
+    "+++ actual-4a9c\n",
+    "@@ -1,4 +1,4 @@\n",
+    "-import {getLanguage} from './i18n.js';",
+    "+import {getLanguage,onLanguageChange} from './i18n.js';",
+    " import {encodeJsonChunks} from './export-encoder.js';",
+    " export {encodeJsonChunks} from './export-encoder.js';",
+    " ",
+    "@@ -117,6 +117,8 @@\n",
+    "     }catch(error){if(id!==serial)return{status:'cancelled',filename};finishTime=now();state.status=error.name==='AbortError'?'cancelled':'failed';state.error=error.name==='AbortError'?null:String(error.message||error);note(error.name==='TimeoutError'?'deadline':state.status);paint();}finally{clearTimeout(deadline);}",
+    "     return{...state,events:state.events.map(event=>({...event}))};",
+    "   }};",
+    "+  // Refresh existing progress text only; language changes must not re-export.",
+    "+  onLanguageChange(paint);",
+    "   managers.set(doc,api);return api;",
+    " }",
+    " "
+  ],
+  "scope": "No numerical/control, vehicle, city geometry, lighting, shader, physics or research source changed. This does not relabel any prior native recording as a final-build run."
+}

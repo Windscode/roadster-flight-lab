@@ -1,0 +1,114 @@
+{
+  "schema": "roadster.candidate-launcher-checks",
+  "version": 1,
+  "modelVersion": "3.17.0",
+  "modelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+  "scope": "Lightweight launcher fixture and read-only runtime/payload checks; no final candidate package, final commit, publication, or old listener control performed.",
+  "checks": [
+    {
+      "check": "complete fixture identity/file/build verification",
+      "status": "PASS",
+      "detail": "--check-only exits without starting a server"
+    },
+    {
+      "check": "changed file rejected",
+      "status": "PASS",
+      "detail": "Missing, changed or mixed candidate file: dist/index.html"
+    },
+    {
+      "check": "stale build rejected even after file manifest refresh",
+      "status": "PASS",
+      "detail": "Runtime source differs from build: dist/index.html"
+    },
+    {
+      "check": "unlisted runtime source rejected",
+      "status": "PASS",
+      "detail": "Runtime source inventory differs from build; missing=[], extra=['extra.js']"
+    },
+    {
+      "check": "malformed manifest produces explicit error",
+      "status": "PASS",
+      "detail": "No traceback or port opened"
+    },
+    {
+      "check": "local static serving",
+      "status": "PASS",
+      "detail": "Identity JSON, JS MIME, root redirect, no-cache, unlisted route 404"
+    },
+    {
+      "check": "occupied port refused without taking over",
+      "status": "PASS",
+      "detail": "Second launcher exits; the original test server remains responsive"
+    },
+    {
+      "check": "actual frozen runtime source identity",
+      "status": "PASS",
+      "detail": {
+        "build": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+        "sourceFiles": 178
+      }
+    },
+    {
+      "check": "current declared runtime payload bytes",
+      "status": "PASS",
+      "detail": {
+        "count": 7,
+        "bytes": 7359840,
+        "scope": "Current manifest/chunks/restored bytes agree. Final-HEAD commitment remains the package preflight requirement."
+      }
+    },
+    {
+      "check": "uncommitted final package rejected",
+      "status": "PASS",
+      "detail": "Candidate preparation stopped: HEAD is still the 3.16 baseline; commit the finished 3.17 work before packaging"
+    }
+  ],
+  "verifiedCurrentRuntimePayloads": [
+    {
+      "path": "dist/assets/irradiance/city.bin",
+      "bytes": 691200,
+      "segments": 3,
+      "sha256": "39f7f5db1f543c37f07084be40f726d1533fc128e5a3ac67c4563b4e609e38bd"
+    },
+    {
+      "path": "dist/assets/night-direct-irradiance/night-direct-city.bin",
+      "bytes": 674160,
+      "segments": 1,
+      "sha256": "4f70240ceeefada18c7240dbbaa33731f91c9fb27426f45ea4f89b7a6369e3f4"
+    },
+    {
+      "path": "dist/assets/night-direct-irradiance/night-direct-route-balanced.bin",
+      "bytes": 541200,
+      "segments": 1,
+      "sha256": "f8008fd4f4ad759082be03d5637351b8ace1e74d9157378be9817d94dd0521bc"
+    },
+    {
+      "path": "dist/assets/night-direct-irradiance/night-direct-route.bin",
+      "bytes": 2118960,
+      "segments": 1,
+      "sha256": "ed8d60de679118b34c833c5f64d95979fd1cb7afc939a74d26cd8b4a36456afa"
+    },
+    {
+      "path": "dist/assets/night-irradiance/night-city.bin",
+      "bytes": 674160,
+      "segments": 2,
+      "sha256": "663cad8f9de309339e39373b595b47285dc2c41ccc400bd4f9450329c28ff7db"
+    },
+    {
+      "path": "dist/assets/night-irradiance/night-route-balanced.bin",
+      "bytes": 541200,
+      "segments": 2,
+      "sha256": "090552e68c8c7e28991a10f3e1a32f78d807ed29a89dfa957d47ff6b3cdc4763"
+    },
+    {
+      "path": "dist/assets/night-irradiance/night-route.bin",
+      "bytes": 2118960,
+      "segments": 4,
+      "sha256": "2eab714a5b9d66ba9b4ab8eb5e3eaa4f652636a34740285ef2b36f4d2b164d63"
+    }
+  ],
+  "finalCandidatePackRun": false,
+  "finalCommitPreflight": "Pending final commit; current rejection expected.",
+  "fixtureOnlyServer": true,
+  "environmentNote": "Initial default-sandbox attempt was blocked at socket creation with PermissionError before application serving. This run used authorized loopback tool permissions on a fresh ephemeral test port; 8317 and 8318 were not touched."
+}

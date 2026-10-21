@@ -1,0 +1,206 @@
+{
+  "schema": "roadster-route-experience-ui-3.19",
+  "identity": {
+    "modelVersion": "3.19.0",
+    "modelBuildId": "8ccb2ab0d967509682aae900ba5a9067bd986d8468f5d5f57f48256fcb857579",
+    "sourceCommit": null,
+    "sourceTree": null,
+    "sourceIdentityStatus": "not-available",
+    "protocolVersion": "live-fixed-inputs-1",
+    "fixedHz": 120
+  },
+  "startedAt": "2026-10-21T06:00:43.708Z",
+  "status": "passed",
+  "environment": "JSDOM, actual route UI, RoadsterSim and archive console/ExperimentRecorder with an explicit host adapter. No main.js DOM integration, native keyboard, rendered pixels, audible device or GPU acceptance.",
+  "inputFixture": {
+    "path": "qa/surface-route-3.19/route-drive.json",
+    "sha256": "4e828166ae50a1034c1cd7088c285cdd0acbaa35f42addb94a83d57a7e6705fb",
+    "modelVersion": "3.19.0",
+    "modelBuildId": "8ccb2ab0d967509682aae900ba5a9067bd986d8468f5d5f57f48256fcb857579",
+    "scope": "The existing numerical driver input sequences are applied to the current model after the host 0.5 s preparation. This is not a claim that a historical solver or its exact recorded initial snapshot was replayed."
+  },
+  "sourceHashesAtStart": {
+    "dist/route-experience.js": "b6fc36df04054cb543d6d348a23a85435c087f273286e9caedc80782fdbd2447",
+    "dist/route-surface.js": "88dac46da14b15557447faec956e1f08c45840216545bb09a9c1eaf7177e4b44",
+    "dist/experiment-console.js": "e1d6ade6037cef7e3eb08814313220c9ed334b097cba3fea8ad550f783ce7767",
+    "dist/experiment-records.js": "f306f68fa7fe4a3d5741e925d6542bd810a497e23cadec83d90d543b21e6eb5e",
+    "dist/physics.js": "3aa89a4a111b7a4001220f284077c6f5fe51d58d8b3fa7f6105dfce208aec107",
+    "tests/route-experience-3.19.test.mjs": "ec6fbe21d0553b65338a86f17800c222d0c5fc81a1da8e5f1eb2216169ee0aa8"
+  },
+  "checks": [
+    {
+      "name": "Both declared route input sequences create complete current-model records with ordered checkpoints and per-wheel surface events",
+      "status": "passed",
+      "detail": {
+        "actualIntegrations": 2,
+        "scope": "Actual fixed-step inputs, route UI lifecycle and archive records; not native keyboard operation."
+      }
+    },
+    {
+      "name": "Moving away from a prepared start cannot begin a route record, and review/practice actions cannot reset or start the live car",
+      "status": "passed",
+      "detail": {
+        "rejectedAfterActualDriving": true,
+        "protectedSessionModes": [
+          "review",
+          "practice"
+        ],
+        "physicalStateUnchangedByDisabledActions": true
+      }
+    },
+    {
+      "name": "Read-only completion fixtures require ordered route progress, four wheels, low linear/angular speed, limited tilt and a continuous half-second stop",
+      "status": "passed",
+      "detail": {
+        "scope": "UI decision boundary fixtures, not additional physical trajectories",
+        "rejectedConditions": [
+          "three-wheel support",
+          "roll",
+          "pitch",
+          "vertical motion",
+          "angular motion",
+          "horizontal motion"
+        ],
+        "orderedCheckpointsRequired": true,
+        "continuousStopSeconds": 0.5
+      }
+    },
+    {
+      "name": "An external recording stop is respected by the next fixed step before any display refresh; the original record remains inspectable",
+      "status": "passed",
+      "detail": {
+        "scope": "Actual recorder interruption plus a read-only terminal telemetry boundary fixture",
+        "externalRecordId": "live-20261021060052483-1",
+        "retainedStatus": "cancelled",
+        "falseCompletionCount": 0
+      }
+    },
+    {
+      "name": "Cancelling route guidance keeps it hidden on subsequent updates while retaining the explicitly prepared physical surface",
+      "status": "passed",
+      "detail": {
+        "physicalSurfacePreserved": true,
+        "cancelledGuideRemainsHidden": true
+      }
+    }
+  ],
+  "continuousRuns": [
+    {
+      "preset": "dry-day",
+      "recordId": "live-20261021060044213-1",
+      "inputStepsApplied": 5458,
+      "recordedSteps": 5253,
+      "descriptorHash": "fnv1a32-fe252d57",
+      "checkpointSteps": [
+        {
+          "checkpoint": 0,
+          "step": 1
+        },
+        {
+          "checkpoint": 1,
+          "step": 889
+        },
+        {
+          "checkpoint": 2,
+          "step": 2489
+        },
+        {
+          "checkpoint": 3,
+          "step": 3572
+        }
+      ],
+      "surfaceEventCount": 29,
+      "visitedRegions": [
+        "weave-straight",
+        "bridge-service-plate",
+        "shelter-runoff",
+        "utility-asphalt-repair",
+        "half-width-damp",
+        "turn-approach-damp",
+        "weave-turn-east",
+        "turn-exit-damp"
+      ],
+      "finishPosition": {
+        "x": -145.23332202772198,
+        "y": 0.597008805028274,
+        "z": -132.49755828079395
+      },
+      "finishSpeedMps": 0.009982110423033938,
+      "finishContacts": 4,
+      "finishTiltDeg": {
+        "roll": -1.9236367262122473e-7,
+        "pitch": -0.001523461250838523
+      },
+      "inspectSelectedId": "live-20261021060044213-1"
+    },
+    {
+      "preset": "after-rain",
+      "recordId": "live-20261021060048526-1",
+      "inputStepsApplied": 5394,
+      "recordedSteps": 5188,
+      "descriptorHash": "fnv1a32-2a74cc71",
+      "checkpointSteps": [
+        {
+          "checkpoint": 0,
+          "step": 1
+        },
+        {
+          "checkpoint": 1,
+          "step": 889
+        },
+        {
+          "checkpoint": 2,
+          "step": 2489
+        },
+        {
+          "checkpoint": 3,
+          "step": 3507
+        }
+      ],
+      "surfaceEventCount": 29,
+      "visitedRegions": [
+        "weave-straight",
+        "bridge-service-plate",
+        "shelter-runoff",
+        "utility-asphalt-repair",
+        "half-width-damp",
+        "turn-approach-damp",
+        "weave-turn-east",
+        "turn-exit-damp"
+      ],
+      "finishPosition": {
+        "x": -145.23195322929814,
+        "y": 0.5970087441715359,
+        "z": -132.49763875111765
+      },
+      "finishSpeedMps": 0.010393616138866113,
+      "finishContacts": 4,
+      "finishTiltDeg": {
+        "roll": 6.832788139913972e-8,
+        "pitch": -0.008019435028826368
+      },
+      "inspectSelectedId": "live-20261021060048526-1"
+    }
+  ],
+  "limits": [
+    "Completion boundary cases use labelled read-only telemetry fixtures derived from a real terminal state. They test UI classification and are not physical trajectory claims.",
+    "The harness owns only an in-memory archive. Only the two actual continuous integrations are exported as experiment records.",
+    "Current main.js environment/map restoration and actual browser operation need their separate integration checks."
+  ],
+  "records": {
+    "path": "qa/route-experience-3.19/continuous-route-records.json.gz",
+    "count": 2,
+    "bytes": 891832,
+    "sha256": "c688638bea5709a81652eba6f47afaf6449a3bc24f914539438b41a9b4a133dd"
+  },
+  "sourceHashesAtEnd": {
+    "dist/route-experience.js": "b6fc36df04054cb543d6d348a23a85435c087f273286e9caedc80782fdbd2447",
+    "dist/route-surface.js": "88dac46da14b15557447faec956e1f08c45840216545bb09a9c1eaf7177e4b44",
+    "dist/experiment-console.js": "e1d6ade6037cef7e3eb08814313220c9ed334b097cba3fea8ad550f783ce7767",
+    "dist/experiment-records.js": "f306f68fa7fe4a3d5741e925d6542bd810a497e23cadec83d90d543b21e6eb5e",
+    "dist/physics.js": "3aa89a4a111b7a4001220f284077c6f5fe51d58d8b3fa7f6105dfce208aec107",
+    "tests/route-experience-3.19.test.mjs": "ec6fbe21d0553b65338a86f17800c222d0c5fc81a1da8e5f1eb2216169ee0aa8"
+  },
+  "sourceStableDuringRun": true,
+  "finishedAt": "2026-10-21T06:00:52.748Z"
+}

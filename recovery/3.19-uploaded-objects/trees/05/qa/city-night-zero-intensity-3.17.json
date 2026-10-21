@@ -1,0 +1,199 @@
+{
+  "schema": "roadster-city-night-zero-intensity-3.17",
+  "baselineCommit": "a0fce89e55efe6eaa54210987ef07cf9dfd7171e",
+  "status": "reproduced-and-fixed",
+  "cause": "CSM constructor uses options.lightIntensity || 3, replacing intended zero with 3 during night quality reconstruction. Candidate explicitly reapplies the current preset to each real DirectionalLight after construction.",
+  "results": [
+    {
+      "name": "baseline316",
+      "sourceSHA256": "c9a9b5d129a99fea9424a0cd7dd42cc2fe41204a2adfe73485cecefda1b1c92f",
+      "samples": [
+        {
+          "operation": "weather",
+          "value": "wet-night",
+          "directionalLights": [
+            {
+              "intensity": 0,
+              "castShadow": false
+            },
+            {
+              "intensity": 0,
+              "castShadow": false
+            }
+          ],
+          "preset": {
+            "id": "wet-night",
+            "name": "湿夜",
+            "night": true,
+            "wetness": 1,
+            "exposure": 1.02,
+            "backgroundIntensity": 0.88,
+            "environmentIntensity": 0.46,
+            "fog": 1318956,
+            "fogDensity": 0.00125,
+            "sunIntensity": 0,
+            "sunColor": 11192047,
+            "ambientIntensity": 0.09,
+            "bloomStrength": 0.14,
+            "description": "粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。"
+          },
+          "cascades": 2
+        },
+        {
+          "operation": "quality",
+          "value": "ultra",
+          "directionalLights": [
+            {
+              "intensity": 3,
+              "castShadow": false
+            },
+            {
+              "intensity": 3,
+              "castShadow": false
+            },
+            {
+              "intensity": 3,
+              "castShadow": false
+            }
+          ],
+          "preset": {
+            "id": "wet-night",
+            "name": "湿夜",
+            "night": true,
+            "wetness": 1,
+            "exposure": 1.02,
+            "backgroundIntensity": 0.88,
+            "environmentIntensity": 0.46,
+            "fog": 1318956,
+            "fogDensity": 0.00125,
+            "sunIntensity": 0,
+            "sunColor": 11192047,
+            "ambientIntensity": 0.09,
+            "bloomStrength": 0.14,
+            "description": "粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。"
+          },
+          "cascades": 3
+        },
+        {
+          "operation": "quality",
+          "value": "high",
+          "directionalLights": [
+            {
+              "intensity": 3,
+              "castShadow": false
+            },
+            {
+              "intensity": 3,
+              "castShadow": false
+            }
+          ],
+          "preset": {
+            "id": "wet-night",
+            "name": "湿夜",
+            "night": true,
+            "wetness": 1,
+            "exposure": 1.02,
+            "backgroundIntensity": 0.88,
+            "environmentIntensity": 0.46,
+            "fog": 1318956,
+            "fogDensity": 0.00125,
+            "sunIntensity": 0,
+            "sunColor": 11192047,
+            "ambientIntensity": 0.09,
+            "bloomStrength": 0.14,
+            "description": "粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。"
+          },
+          "cascades": 2
+        }
+      ]
+    },
+    {
+      "name": "candidate317",
+      "sourceSHA256": "dd3a3c8d3adabd46f6661f1908701c57524a6523debf8acb36b0c3f5a21934e9",
+      "samples": [
+        {
+          "operation": "weather",
+          "value": "wet-night",
+          "directionalLights": [
+            {
+              "intensity": 0,
+              "castShadow": false
+            }
+          ],
+          "preset": {
+            "id": "wet-night",
+            "name": "湿夜",
+            "night": true,
+            "wetness": 1,
+            "exposure": 1.02,
+            "backgroundIntensity": 0.88,
+            "environmentIntensity": 0.46,
+            "fog": 1318956,
+            "fogDensity": 0.00125,
+            "sunIntensity": 0,
+            "sunColor": 11192047,
+            "ambientIntensity": 0.14,
+            "bloomStrength": 0.14,
+            "description": "粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。"
+          },
+          "cascades": 1
+        },
+        {
+          "operation": "quality",
+          "value": "ultra",
+          "directionalLights": [
+            {
+              "intensity": 0,
+              "castShadow": false
+            }
+          ],
+          "preset": {
+            "id": "wet-night",
+            "name": "湿夜",
+            "night": true,
+            "wetness": 1,
+            "exposure": 1.02,
+            "backgroundIntensity": 0.88,
+            "environmentIntensity": 0.46,
+            "fog": 1318956,
+            "fogDensity": 0.00125,
+            "sunIntensity": 0,
+            "sunColor": 11192047,
+            "ambientIntensity": 0.14,
+            "bloomStrength": 0.14,
+            "description": "粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。"
+          },
+          "cascades": 1
+        },
+        {
+          "operation": "quality",
+          "value": "high",
+          "directionalLights": [
+            {
+              "intensity": 0,
+              "castShadow": false
+            }
+          ],
+          "preset": {
+            "id": "wet-night",
+            "name": "湿夜",
+            "night": true,
+            "wetness": 1,
+            "exposure": 1.02,
+            "backgroundIntensity": 0.88,
+            "environmentIntensity": 0.46,
+            "fog": 1318956,
+            "fogDensity": 0.00125,
+            "sunIntensity": 0,
+            "sunColor": 11192047,
+            "ambientIntensity": 0.14,
+            "bloomStrength": 0.14,
+            "description": "粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。"
+          },
+          "cascades": 1
+        }
+      ]
+    }
+  ],
+  "scope": "Actual Three light objects in the frozen baseline and current environment; no GPU pixel or photometric claim."
+}

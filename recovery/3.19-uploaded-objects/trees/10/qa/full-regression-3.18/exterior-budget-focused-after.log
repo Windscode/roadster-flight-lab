@@ -1,0 +1,56 @@
+PASS: Unrelated original city geometry, the original 108 street proxies and shared wall palette retain their identities; every later support is explicitly frozen
+PASS: Every exterior instance carries finite metre dimensions that match its actual transform
+PASS: Metre UV edge lengths stay physical through yaw, 45-degree crossings and tilted anisotropic boxes
+PASS: All new plinths, portal frames, awnings, drip edges and floor belts fit inside existing physical building envelopes
+PASS: Periodic seam filtering matches physical covered area and distant glass/paint seams converge to their mean
+PASS: Six opaque exterior responses, texture colour spaces and quality-switch upload invalidation are correct
+PASS: No crowds or character requests are constructed; 480 updates and three quality levels leave all street matrices untouched
+PASS: Authored exterior upgrades reduce allocated geometry and all 15 matched-view draw counts remain within the 3.5 budget
+{
+  "status": "passed",
+  "checks": 8,
+  "allocatedTrianglesBefore": 1816606,
+  "allocatedTrianglesAfter": 1702698,
+  "balanced": [
+    {
+      "view": "weave-street",
+      "drawCalls": 185,
+      "triangles": 399274,
+      "instances": 41212,
+      "shadowDrawCalls": 28,
+      "shadowTriangles": 116586
+    },
+    {
+      "view": "foundry-avenue",
+      "drawCalls": 53,
+      "triangles": 50450,
+      "instances": 8485,
+      "shadowDrawCalls": 13,
+      "shadowTriangles": 7140
+    },
+    {
+      "view": "civic-terrace",
+      "drawCalls": 47,
+      "triangles": 90486,
+      "instances": 9783,
+      "shadowDrawCalls": 15,
+      "shadowTriangles": 30156
+    },
+    {
+      "view": "aerial",
+      "drawCalls": 71,
+      "triangles": 217656,
+      "instances": 27488,
+      "shadowDrawCalls": 18,
+      "shadowTriangles": 46992
+    },
+    {
+      "view": "botanical",
+      "drawCalls": 17,
+      "triangles": 19982,
+      "instances": 3390,
+      "shadowDrawCalls": 6,
+      "shadowTriangles": 3972
+    }
+  ]
+}

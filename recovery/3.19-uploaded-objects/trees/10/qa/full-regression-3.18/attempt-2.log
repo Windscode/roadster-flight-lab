@@ -1,0 +1,163 @@
+PASS scripts/repository-payloads.mjs
+PASS scripts/model-build.mjs
+PASS tests/physics.test.mjs
+PASS tests/braking.test.mjs
+PASS tests/vehicle-geometry.test.mjs
+PASS tests/city-seal.test.mjs
+PASS tests/handling-controls.test.mjs
+PASS tests/air-stabilization.test.mjs
+PASS tests/pose-hold.test.mjs
+PASS tests/flight-controls-3.7.test.mjs
+PASS tests/flight-programs.test.mjs
+PASS tests/wind-laboratory.test.mjs
+PASS tests/physics-research-3.8.test.mjs
+PASS tests/experiment-records.test.mjs
+PASS tests/research-road-3.8.test.mjs
+PASS tests/performance-meter.test.mjs
+PASS tests/physics-controls-3.9.test.mjs
+PASS tests/reproduction-verdict-3.9.test.mjs
+PASS tests/visual-corridor-3.9.test.mjs
+PASS tests/city-lighting-3.10.test.mjs
+PASS tests/vehicle-surface-3.10.test.mjs
+PASS tests/inspection-capture-3.10.test.mjs
+PASS tests/history-compatibility-3.10.test.mjs
+PASS tests/control-capture-3.10.test.mjs
+PASS tests/vehicle-dynamics-3.11.test.mjs
+PASS tests/ui-response-3.11.test.mjs
+PASS tests/capture-detail-3.11.test.mjs
+PASS tests/research-robustness-3.11.test.mjs
+PASS tests/history-compatibility-3.11.test.mjs
+PASS tests/visual-regressions-3.11.test.mjs
+PASS tests/braking-corner-3.12.test.mjs
+PASS tests/chase-camera-3.12.test.mjs
+PASS tests/reflection-stability-3.12.test.mjs
+PASS tests/research-recovery-grid-3.12.test.mjs
+PASS tests/sampler-budget-3.13.test.mjs
+PASS tests/render-program-diagnostics-3.13.test.mjs
+PASS Frozen baseline sources retain their original bytes except relocated imports, with unchanged shared physical dependencies
+PASS Matched complete 3.9 / 3.12 / current X runs retain actual force, trajectory, gas and contact outcomes
+PASS Fast reference is independent of comfort sliders; nozzle torque and short-takeoff authority remain physical
+PASS Quick-roll practice uses E, then Z, then G through real input APIs, with a sustained recovery window and complete curves
+PASS Low pressure, torque loss, ceiling, descent and unstable initial conditions reject without physical mutation
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ {
++   actualRollRad: 1.3592436315575966,
++   angle: 0,
++   autoLand: false,
++   duration: 1.5,
++   launchAccelerationMps2: 23.37362746842595,
++   launchTime: 0.5012400013821877,
++   launchVelocity: 4.0025,
++   minimumRotationClearanceM: 1.55,
++   name: 'roll',
++   origin: {
++     x: 0,
++     y: 40,
++     z: -240
++   },
++   originGrounded: false,
++   phase: 'rotate',
++   plannedPeakHeight: 44.98297050560826,
++   preflight: {
++     arrestImpulseNs: 18268.442030792157,
++     availableAccelMps2: 26.56094030502949,
++     availableImpulseNs: null,
++     impulseMargin: 1.16,
++     launchImpulseNs: 19619.32100463363,
++     policy: 'quick-roll-1',
++     predictedRotationDisplacementM: 0.2960510431896943,
++     predictedRotationEndVerticalMps: -3.569903259449826,
++     referenceTorqueNm: 11885.399319032125,
++     rollTorqueUpperNm: 26020,
++     rotationImpulseNs: 20144.74460852903,
++     settlingImpulseNs: 32366.498917192228,
++     torqueMargin: 2.1892407063121637
++   },
++   profile: {
++     accelerationRadS2: 12.566370614359172,
++     angleRad: 6.283185307179586,
++     cruiseS: 0.5,
++     durationS: 1.5,
++     kind: 'quick-roll-1',
++     rampS: 0.5,
++     rateRadS: 6.283185307179586
++   },
++   requiredImpulseNs: 104862.84761093056,
++   returnHeight: 40,
++   time: 0.483333333333334
++ }
+- null
+
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/x-flip-3.13.test.mjs:110:123
+    at check (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/x-flip-3.13.test.mjs:13:26)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/x-flip-3.13.test.mjs:107:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    name: 'roll',
+    phase: 'rotate',
+    time: 0.483333333333334,
+    angle: 0,
+    duration: 1.5,
+    origin: { x: 0, y: 40, z: -240 },
+    originGrounded: false,
+    returnHeight: 40,
+    launchVelocity: 4.0025,
+    launchTime: 0.5012400013821877,
+    launchAccelerationMps2: 23.37362746842595,
+    minimumRotationClearanceM: 1.55,
+    profile: {
+      kind: 'quick-roll-1',
+      angleRad: 6.283185307179586,
+      rateRadS: 6.283185307179586,
+      accelerationRadS2: 12.566370614359172,
+      rampS: 0.5,
+      cruiseS: 0.5,
+      durationS: 1.5
+    },
+    actualRollRad: 1.3592436315575966,
+    requiredImpulseNs: 104862.84761093056,
+    plannedPeakHeight: 44.98297050560826,
+    autoLand: false,
+    preflight: {
+      policy: 'quick-roll-1',
+      referenceTorqueNm: 11885.399319032125,
+      rollTorqueUpperNm: 26020,
+      torqueMargin: 2.1892407063121637,
+      availableAccelMps2: 26.56094030502949,
+      launchImpulseNs: 19619.32100463363,
+      rotationImpulseNs: 20144.74460852903,
+      arrestImpulseNs: 18268.442030792157,
+      settlingImpulseNs: 32366.498917192228,
+      impulseMargin: 1.16,
+      predictedRotationEndVerticalMps: -3.569903259449826,
+      predictedRotationDisplacementM: 0.2960510431896943,
+      availableImpulseNs: null
+    }
+  },
+  expected: null,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:17
+    if(result.error||result.status!==0){process.stdout.write(stdout);process.stderr.write(stderr);throw new Error(path+' failed',{cause:result.error});}
+                                                                                                        ^
+
+Error: tests/x-flip-3.13.test.mjs failed
+    at run (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:17:105)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:62:15 {
+  [cause]: undefined
+}
+
+Node.js v24.19.0

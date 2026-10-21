@@ -1,0 +1,61 @@
+PASS scripts/repository-payloads.mjs
+PASS scripts/model-build.mjs
+PASS tests/physics.test.mjs
+PASS tests/braking.test.mjs
+PASS tests/vehicle-geometry.test.mjs
+PASS tests/city-seal.test.mjs
+PASS tests/handling-controls.test.mjs
+PASS tests/air-stabilization.test.mjs
+PASS tests/pose-hold.test.mjs
+PASS tests/flight-controls-3.7.test.mjs
+PASS tests/flight-programs.test.mjs
+PASS tests/wind-laboratory.test.mjs
+PASS tests/physics-research-3.8.test.mjs
+PASS tests/experiment-records.test.mjs
+PASS tests/research-road-3.8.test.mjs
+PASS tests/performance-meter.test.mjs
+PASS tests/physics-controls-3.9.test.mjs
+PASS: Same snapshot, seeded delay/noise, wind phase, nozzle derating and recorded takeover give a measured reproduction match
+PASS: 60 / 120 / 240 Hz rendering groups retain the same physical response and reproduction verdict
+PASS: A changed retained curve cannot pass merely because execution completes and its terminal state agrees
+PASS: Terminal velocity, angular rate, gas, temperature, wheel speed and controller state are checked independently of position
+PASS: Quaternion sign equivalence and small-angle precision avoid false pose errors, while a real tilt is detected
+PASS: Steering memory, lateral relaxation, vertical/level references and disturbance clocks cannot silently diverge behind an identical body pose
+PASS: Decimation compares only retained matching steps and never presents missing curves as full 120 Hz evidence
+PASS: Anti-windup memory, final parameters and mass/inertia are required; equivalent plain sensor-history quaternions do not create false divergence
+PASS: Cancellation and solver failures retain partial evidence without comparing an early state to a future terminal state
+PASS: Controller A/B is explicitly fixed driver inputs with controller redecision, not a demand to reproduce the historical trajectory
+PASS: Previous contact support and every required retained kinematic channel participate in the reproduction judgment
+PASS: A current-model snapshot with a different collision signature is rejected before import or integration
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: A later release must explicitly review this no-migrator contract.
+
+'3.18.0' !== '3.17.0'
+
+    at assertHistoricalReadOnly (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/history-contract-3.14.mjs:15:10)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/reproduction-verdict-3.9.test.mjs:79:23
+    at test (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/reproduction-verdict-3.9.test.mjs:14:47)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/reproduction-verdict-3.9.test.mjs:77:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '3.18.0',
+  expected: '3.17.0',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:17
+    if(result.error||result.status!==0){process.stdout.write(stdout);process.stderr.write(stderr);throw new Error(path+' failed',{cause:result.error});}
+                                                                                                        ^
+
+Error: tests/reproduction-verdict-3.9.test.mjs failed
+    at run (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:17:105)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:43:22 {
+  [cause]: undefined
+}
+
+Node.js v24.19.0

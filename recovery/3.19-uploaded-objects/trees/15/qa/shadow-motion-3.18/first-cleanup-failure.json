@@ -1,0 +1,120 @@
+{
+  "schema": "roadster-shadow-motion-3.18",
+  "createdAt": "2026-10-21T03:08:48.799Z",
+  "status": "failed",
+  "baseline": {
+    "commit": "d9a4fbfd434fe49cdbeae18c32f624360e9dc4e9",
+    "path": "dist/city-practical-lights.js",
+    "originalSHA256": "2058413c6e8b9f8785efd1d239f4701fb47fab6bed9bc6470ed9655033812118",
+    "fixtureSHA256": "7163b0729771fb989ee6909a78773afa25077d49693221758d789ee8972de420",
+    "onlyChange": "Relocate the Three import to the same retained Three library."
+  },
+  "checks": [
+    {
+      "name": "Moving and turning headlamps use depth cameras from the same displayed pose at 120 Hz",
+      "status": "passed",
+      "detail": {
+        "comparisons": [
+          {
+            "quality": "balanced",
+            "before": {
+              "staleFrames": 203,
+              "maxStaleCameraPositionM": 1.0023340900241229
+            },
+            "after": {
+              "staleFrames": 0,
+              "maxStaleCameraPositionM": 0
+            }
+          },
+          {
+            "quality": "high",
+            "before": {
+              "staleFrames": 197,
+              "maxStaleCameraPositionM": 0.852634386988411
+            },
+            "after": {
+              "staleFrames": 0,
+              "maxStaleCameraPositionM": 0
+            }
+          },
+          {
+            "quality": "ultra",
+            "before": {
+              "staleFrames": 189,
+              "maxStaleCameraPositionM": 0.6835449921120275
+            },
+            "after": {
+              "staleFrames": 0,
+              "maxStaleCameraPositionM": 0
+            }
+          }
+        ],
+        "scope": "Actual Three light/shadow camera matrices and retained 3.17 scheduler; no pixel or target-GPU timing inference."
+      }
+    },
+    {
+      "name": "A wheel steering change or body turn at fixed position invalidates shadow depth",
+      "status": "passed",
+      "detail": {
+        "motionInputs": [
+          "steering",
+          "suspension",
+          "body rotation"
+        ],
+        "scope": "Depth invalidation only, separate from the native input/video evidence."
+      }
+    },
+    {
+      "name": "Laboratory depth projection has an integral texel origin throughout continuous follow motion",
+      "status": "passed",
+      "detail": {
+        "rows": [
+          {
+            "quality": "balanced",
+            "maxFraction": 2.5224267119483557e-13,
+            "maxDirectionChange": 4.965068306494546e-16,
+            "shadowSize": 1024,
+            "normalBias": 0.032
+          },
+          {
+            "quality": "high",
+            "maxFraction": 3.801403636316536e-13,
+            "maxDirectionChange": 4.965068306494546e-16,
+            "shadowSize": 1536,
+            "normalBias": 0.032
+          },
+          {
+            "quality": "ultra",
+            "maxFraction": 5.115907697472721e-13,
+            "maxDirectionChange": 4.965068306494546e-16,
+            "shadowSize": 2048,
+            "normalBias": 0.032
+          }
+        ],
+        "scope": "Independent coordinate projection of actual shadow cameras. Does not prove absence of all temporal aliasing."
+      }
+    },
+    {
+      "name": "Daylight camera rotations and vehicle motion refresh cascades while wet night keeps real practical shadows",
+      "status": "failed",
+      "error": {
+        "message": "env.dispose is not a function",
+        "stack": "TypeError: env.dispose is not a function\n    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/shadow-motion-3.18.test.mjs:85:42\n    at async check (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/shadow-motion-3.18.test.mjs:14:47)\n    at async file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/shadow-motion-3.18.test.mjs:69:1"
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/shadow-motion.js": "d875855b6e037f5fc73dab34f5232f672de8d5a39f1764db7caa6e167f493aa6",
+    "dist/city-environment.js": "17cd43f2766908b50b3b6fae2f104ab14bf695fba90bed96eb184dd2f1e770fb",
+    "dist/city-practical-lights.js": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7",
+    "dist/wind-laboratory.js": "50ca542dc229897ecf056d67ae462521ea221322b5b97dec39b31955243bb9ea",
+    "dist/main.js": "e4fcea9cef6c844ca32942123805174259019ca2a6cd7c1c51faff86f90a670b",
+    "dist/receiver-plane-shadows.js": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741",
+    "dist/city-render-budget.js": "0d97a5bbce09a63ce70dcb89a74ef9a5a24f7be4853c59b0299095ec5aa271d7"
+  },
+  "limits": [
+    "No normal map, shadow caster or shadow receiver is disabled by this repair.",
+    "Resolution, bias, retained receiver-plane correction and CSM fade remain independent quality limits.",
+    "This report verifies the reproduced scheduling and projection faults. Native video and user-GPU observation are separate; no universal flicker-free claim."
+  ]
+}
