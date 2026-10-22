@@ -1,6 +1,6 @@
-import {readFileSync,existsSync,mkdirSync,writeFileSync} from 'node:fs';
+import {readFileSync,existsSync,mkdirSync,writeFileSync,openSync,closeSync} from 'node:fs';
 import {resolve} from 'node:path';
-import {execFileSync} from 'node:child_process';
+import {spawnSync} from 'node:child_process';
 import {root,readPlan,copyTo,hash,save} from './recovery-publication.mjs';
 import assert from 'node:assert/strict';
 const {plan,verification}=readPlan(),out=resolve(root,'.pages-site');
@@ -8,9 +8,14 @@ assert(!existsSync(out),'Use a fresh output directory; existing output is preser
 const check=JSON.parse(readFileSync(resolve(root,'.runtime/publication-check.json'),'utf8'));
 assert.equal(check.integration.status,'passed');assert.equal(check.modelBuildId,plan.source.modelBuildId);
 assert.equal(check.publication.planSha256,hash(readFileSync(resolve(root,'publication/recovery-plan.json'))));
-const git=args=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();
+// Use file descriptors rather than captured pipes (Windows process wrapper),
+// and enumerate the committed tree once instead of spawning Git per file.
+mkdirSync(resolve(root,'.runtime'),{recursive:true});
+const git=args=>{const path=resolve(root,'.runtime/git-output.txt'),fd=openSync(path,'w');try{const p=spawnSync('git',args,{cwd:root,stdio:['ignore',fd,'inherit']});if(p.error)throw p.error;assert.equal(p.status,0,'Git inspection failed');}finally{closeSync(fd);}return readFileSync(path,'utf8').trim();};
 const commit=git(['rev-parse','HEAD']),tree=git(['rev-parse','HEAD^{tree}']);
-for(const e of [...plan.runtime,...plan.onlineEvidence])assert.equal(git(['rev-parse','HEAD:'+e.path]),git(['hash-object',e.path]),'Not committed: '+e.path);
+const blobs=new Map(git(['ls-tree','-r','-z','HEAD']).split('\0').filter(Boolean).map(row=>{const i=row.indexOf('\t');return[row.slice(i+1),row.slice(0,i).split(' ')[2]];}));
+import {createHash} from 'node:crypto';
+for(const e of [...plan.runtime,...plan.onlineEvidence]){const b=readFileSync(resolve(root,e.path));const sha=createHash('sha1').update(Buffer.from(`blob ${b.length}\0`)).update(b).digest('hex');assert.equal(blobs.get(e.path),sha,'Not committed: '+e.path);}
 mkdirSync(out);
 for(const e of plan.runtime){
   // The original candidate deployment metadata remains available verbatim.
