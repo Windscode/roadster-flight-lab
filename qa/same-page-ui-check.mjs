@@ -132,7 +132,11 @@ async function createModule(filename){
 }
 async function linker(specifier,referencing){assert.ok(specifier.startsWith('.'),'Unexpected external module '+specifier);return getModule(resolve(dirname(fileURLToPath(referencing.identifier)),specifier));}
 const entry=await getModule(resolve(dist,'app.js'));await entry.link(linker);await entry.evaluate();
-for(let turn=0;turn<2000&&!(window.roadsterReady||noGraphics&&window.roadsterApp?.getState().graphics.status==='unavailable');turn++)await new Promise(resolve=>setImmediate(resolve));
+// The dynamically imported production module graph performs asynchronous file
+// reads in this VM adapter. Yield a real timer turn, as settle() does below:
+// 2000 immediate callbacks can finish before I/O under concurrent DOM checks.
+// This is fixture startup waiting, not a browser boot/performance assertion.
+for(let turn=0;turn<2000&&!(window.roadsterReady||noGraphics&&window.roadsterApp?.getState().graphics.status==='unavailable');turn++)await new Promise(resolve=>setTimeout(resolve,1));
 const assertHealthy=()=>{assert.equal(errors.length,0,errors.join('\n'));assert.ok($('error-screen').classList.contains('hidden'),$('error-message').textContent);};
 assertHealthy();assert.equal(window.roadsterApplicationReady,true,'Application and numerical research shell must initialize independently of WebGL');
 if(!noGraphics)assert.equal(window.roadsterReady,true,'Actual main.js boot must complete');

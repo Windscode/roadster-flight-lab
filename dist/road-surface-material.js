@@ -1,16 +1,19 @@
 import * as THREE from './vendor/three.module.js';
+import {validateRouteSurface,routeSurfaceHash} from './route-surface.js';
 
 // Metre-scale scanned asphalt. Surface detail changes the distribution of
 // reflectance/roughness, not the average material colour used by the GI bake.
 // No displaced collision surface, transparent decal, extra draw or screen pass.
 const ROAD_MEAN=.965;
 const JOINT_MEAN=.020/3.5+.015/13-.020/3.5*.015/13;
+export const ROAD_ROUTE_REGION_CAPACITY=12;
 
 export const ROAD_SURFACE_MODEL=Object.freeze({
   scannedTileMetres:4,diffuseScaleMean:ROAD_MEAN,jointCoverageMean:JOINT_MEAN,
   textureReads:{balanced:3,highNear:5,ultraNear:5},detailRangeMetres:[18,42],
   geometryDisplacement:false,additionalDrawCalls:0,
-  wetness:'Damp aggregate remains rough; sparse shallow puddles collect near road edges and repair depressions. Wheel tracks drain first. Visual wetness does not alter tyre friction.',
+  wetness:'Legacy weather remains optical only. An explicitly prepared route shares authored regions with tyre contacts, with independent opticalWetness and gripScale fields; colour never determines friction.',
+  preparedRoute:{regionCapacity:ROAD_ROUTE_REGION_CAPACITY,additionalDrawCalls:0,additionalTextureReads:0,geometryDisplacement:false,lightingChanges:'Do not change prepared route surface fields.'},
   wetRoughness:{dampAsphalt:[.43,.61],standingWater:[.105,.18]},
   streetScale:'Canonical 10/18/22 m route widths; repair joints follow the nearest street direction rather than a world-aligned tile grid.',
   planarReflection:'One clipped low-resolution ground-plane capture in the benchmark district, budgeted only in high/ultra; no SSR/ray-tracing claim.',
@@ -19,6 +22,11 @@ export const ROAD_SURFACE_MODEL=Object.freeze({
 
 export function attachRoadSurface(material,{albedo,normal,roughness}){
   const uniforms={roadAlbedo:{value:albedo},roadNormal:{value:normal},roadRoughness:{value:roughness},roadFineDetail:{value:0},roadWetness:{value:0},roadReflection:{value:null},roadReflectionMatrix:{value:new THREE.Matrix4()},roadReflectionTexel:{value:new THREE.Vector2(1/512,1/288)},roadReflectionEnabled:{value:0},roadReflectionStrength:{value:0}};
+  Object.assign(uniforms,{roadRouteCount:{value:0},roadRouteGround:{value:new THREE.Vector2(0,.08)},
+    roadRouteBounds:{value:Array.from({length:ROAD_ROUTE_REGION_CAPACITY},()=>new THREE.Vector4())},
+    roadRouteFinish:{value:Array.from({length:ROAD_ROUTE_REGION_CAPACITY},()=>new THREE.Vector4())}});
+  let routeDescription=null;
+  const routeState={active:false,hash:null,presetId:null,regionCount:0,geometryDisplacement:false,additionalTextureBytes:0,additionalDrawCalls:0};
   const original=material.onBeforeCompile,key=material.customProgramCacheKey();
   // World projection is used explicitly; the unused per-map UV transforms must
   // not accidentally create a second normal frame on long instanced ramps.
@@ -39,6 +47,8 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
     shader.fragmentShader=`
       uniform sampler2D roadAlbedo,roadNormal,roadRoughness;
       uniform float roadFineDetail,roadWetness,roadReflectionEnabled,roadReflectionStrength;
+      uniform float roadRouteCount;uniform vec2 roadRouteGround;
+      uniform vec4 roadRouteBounds[${ROAD_ROUTE_REGION_CAPACITY}],roadRouteFinish[${ROAD_ROUTE_REGION_CAPACITY}];
       uniform sampler2D roadReflection;uniform mat4 roadReflectionMatrix;uniform vec2 roadReflectionTexel;
       varying vec3 roadSurfaceWorld;
       float roadJoint(float coordinate,float spacing,float halfWidth){
@@ -57,6 +67,24 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       vec3 roadAxis=abs(roadGeometryNormal);
       vec2 roadMetres=roadAxis.y>=max(roadAxis.x,roadAxis.z)?roadSurfaceWorld.xz:
         roadAxis.x>roadAxis.z?roadSurfaceWorld.zy:roadSurfaceWorld.xy;
+      // Region order is the same stable priority order used by contact queries.
+      // Each rectangle changes optical fields explicitly; no colour->mu map.
+      // Derivatives filter only the boundary pixel, not metre-wide grip zones.
+      float roadLocalWetness=roadWetness,roadRouteCoverage=0.,roadRouteMetal=0.,roadRoutePatch=0.,roadRouteRoughness=.84;
+      float roadRoutePlane=step(abs(roadSurfaceWorld.y-roadRouteGround.x),roadRouteGround.y)*step(.85,roadGeometryNormal.y);
+      for(int routeIndex=0;routeIndex<${ROAD_ROUTE_REGION_CAPACITY};routeIndex++){
+        if(float(routeIndex)<roadRouteCount){
+          vec4 bounds=roadRouteBounds[routeIndex],finish=roadRouteFinish[routeIndex];
+          vec2 routeEdge=min(roadSurfaceWorld.xz-bounds.xy,bounds.zw-roadSurfaceWorld.xz);
+          vec2 routeFoot=max(fwidth(roadSurfaceWorld.xz),vec2(.0001));
+          float coverage=smoothstep(-routeFoot.x*.5,routeFoot.x*.5,routeEdge.x)*smoothstep(-routeFoot.y*.5,routeFoot.y*.5,routeEdge.y)*roadRoutePlane;
+          roadLocalWetness=mix(roadLocalWetness,finish.x,coverage);
+          roadRouteRoughness=mix(roadRouteRoughness,finish.y,coverage);
+          roadRouteMetal=mix(roadRouteMetal,step(1.5,finish.z),coverage);
+          roadRoutePatch=mix(roadRoutePatch,step(.5,finish.z)*(1.-step(1.5,finish.z)),coverage);
+          roadRouteCoverage=max(roadRouteCoverage,coverage);
+        }
+      }
       vec2 roadUv=roadMetres*.25,roadDx=dFdx(roadUv),roadDy=dFdy(roadUv);
       vec2 roadDetailUv=mat2(.8,-.6,.6,.8)*roadUv*2.3+vec2(.37,.71);
       vec2 roadDetailDx=mat2(.8,-.6,.6,.8)*roadDx*2.3;
@@ -91,20 +119,29 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       float puddleContour=.48+.23*sin(roadAlong*.46+sin(roadAcross*1.08))+.15*sin(roadAcross*.91-roadAlong*.17);
       float edgePuddle=smoothstep(.44,.76,puddleContour)*roadCurbBasin;
       float repairPuddle=smoothstep(.66,.81,puddleContour)*(.32+.46*repairPatch)*(1.-wheelTrack*.82);
-      float roadRainFilm=roadWetness*(.61+.12*sin(roadAlong*.11)*sin(roadAcross*.52));
-      float roadWater=roadWetness*max(edgePuddle,repairPuddle)*smoothstep(.55,.95,roadAxis.y);
-      diffuseColor.rgb*=roadColour*(${ROAD_MEAN}+.090*roadWear-.085*(roadRepairJoint-${JOINT_MEAN})-.055*wheelTrack-.045*(repairPatch-.4))*mix(1.,.79,roadRainFilm)*mix(1.,.72,roadWater);`);
+      float roadRainFilm=roadLocalWetness*(.61+.12*sin(roadAlong*.11)*sin(roadAcross*.52));
+      float roadWater=roadLocalWetness*max(edgePuddle,repairPuddle)*smoothstep(.55,.95,roadAxis.y)*(1.-roadRouteMetal*.82);
+      vec3 roadOpticalFinish=roadColour*(${ROAD_MEAN}+.090*roadWear-.085*(roadRepairJoint-${JOINT_MEAN})-.055*wheelTrack-.045*(repairPatch-.4));
+      roadOpticalFinish*=mix(1.,.80,roadRoutePatch);
+      float serviceJoint=max(roadJoint(roadMetres.x+204.5,1.5,.009),roadJoint(roadMetres.y+321.15,1.15,.009));
+      float serviceTread=roadJoint(roadMetres.x+roadMetres.y,.24,.014)*roadJoint(roadMetres.x-roadMetres.y,.48,.095);
+      roadOpticalFinish=mix(roadOpticalFinish,vec3(.26,.29,.30)*(1.-.30*serviceJoint+.11*serviceTread),roadRouteMetal);
+      diffuseColor.rgb*=roadOpticalFinish*mix(1.,.79,roadRainFilm)*mix(1.,.72,roadWater);`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
       float roadScannedRoughness=textureGrad(roadRoughness,roadUv,roadDx,roadDy).g;
       float roadDryRoughness=clamp(.885+.20*(roadScannedRoughness-.9314)+.055*roadWear-.055*roadRepairJoint-.045*wheelTrack,.72,.96);
       float dampAggregate=clamp(.50+.11*(roadScannedRoughness-.83)+.075*roadWear,.43,.61);
-      roughnessFactor=mix(mix(roadDryRoughness,dampAggregate,roadWetness),.105+.075*(1.-roadWater),roadWater);`);
+      roughnessFactor=mix(mix(roadDryRoughness,dampAggregate,roadLocalWetness),.105+.075*(1.-roadWater),roadWater);
+      float routeAuthoredRoughness=clamp(roadRouteRoughness+.045*roadWear,.16,.96);
+      roughnessFactor=mix(roughnessFactor,mix(routeAuthoredRoughness,.14,roadWater*(1.-roadRouteMetal)),roadRouteCoverage);`);
+    shader.fragmentShader=shader.fragmentShader.replace('#include <metalnessmap_fragment>',`#include <metalnessmap_fragment>
+      metalnessFactor=mix(metalnessFactor,.78,roadRouteMetal);`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',`#include <normal_fragment_maps>
       vec3 roadN=textureGrad(roadNormal,roadUv,roadDx,roadDy).xyz*2.-1.;
-      roadN.xy*=mix(.40-.09*roadRainFilm,.065,roadWater);
+      roadN.xy*=mix(.40-.09*roadRainFilm,.065,roadWater)*(1.-roadRouteMetal*.90);
       if(roadNear>.001){
         vec3 roadFine=textureGrad(roadNormal,roadDetailUv,roadDetailDx,roadDetailDy).xyz*2.-1.;
-        roadN.xy+=mat2(.8,.6,-.6,.8)*roadFine.xy*(.15*roadNear)*(1.-roadWater*.8);
+        roadN.xy+=mat2(.8,.6,-.6,.8)*roadFine.xy*(.15*roadNear)*(1.-roadWater*.8)*(1.-roadRouteMetal);
       }
       float roadDet=roadDx.x*roadDy.y-roadDy.x*roadDx.y;
       vec3 roadQ0=dFdx(-vViewPosition),roadQ1=dFdy(-vViewPosition);
@@ -143,7 +180,24 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|road-surface-damp-aggregate-puddles-domain-fade-3.12';
+  material.customProgramCacheKey=()=>key+'|road-surface-authored-contact-regions-3.19';
   material.needsUpdate=true;
-  return{uniforms,model:ROAD_SURFACE_MODEL,setWetness(value){uniforms.roadWetness.value=Math.min(1,Math.max(0,Number(value)||0));},setQuality(q){uniforms.roadFineDetail.value=q==='balanced'?0:1;}};
+  function setRouteSurfaceDescription(value){
+    const description=value===null?null:validateRouteSurface(value);
+    const regions=description?description.regions.map((r,index)=>({...r,index})).sort((a,b)=>a.priority-b.priority||a.index-b.index):[];
+    // Validate and sort before changing any live state, so an invalid request
+    // cannot leave a partially bound material. Only explicit preparation calls
+    // this setter; setWetness/setQuality never edit the descriptor.
+    for(let i=0;i<ROAD_ROUTE_REGION_CAPACITY;i++){
+      const r=regions[i],b=r?.bounds,m=r?description.materials[r.materialId]:null;
+      uniforms.roadRouteBounds.value[i].set(b?.minX??0,b?.minZ??0,b?.maxX??0,b?.maxZ??0);
+      uniforms.roadRouteFinish.value[i].set(m?.opticalWetness??0,m?.roughness??.84,m?.kind==='metal'?2:m?.kind==='patch'?1:0,0);
+    }
+    uniforms.roadRouteGround.value.set(description?.groundY??0,description?.contactToleranceM??.08);
+    uniforms.roadRouteCount.value=regions.length;routeDescription=description;
+    Object.assign(routeState,{active:!!description,hash:description?routeSurfaceHash(description):null,presetId:description?.presetId??null,regionCount:regions.length});
+    return {...routeState};
+  }
+  return{uniforms,model:ROAD_SURFACE_MODEL,routeState,setRouteSurfaceDescription,getRouteSurfaceDescription:()=>routeDescription?structuredClone(routeDescription):null,
+    setWetness(value){uniforms.roadWetness.value=Math.min(1,Math.max(0,Number(value)||0));},setQuality(q){uniforms.roadFineDetail.value=q==='balanced'?0:1;}};
 }

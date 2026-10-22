@@ -1,0 +1,105 @@
+{
+  "schema": "roadster-wind-workspace-3.17",
+  "modelVersion": "3.17.0",
+  "modelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "Worker failure preserves the actual frozen wind seed, schedule, declared A/B graphs and original source record",
+      "status": "passed",
+      "attempt": {
+        "id": "landing-job-mvhgqkpm-1",
+        "action": "wind-pair",
+        "identity": {
+          "modelVersion": "3.17.0",
+          "modelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+          "sourceCommit": null,
+          "sourceTree": null,
+          "sourceIdentityStatus": "not-available",
+          "protocolVersion": "live-fixed-inputs-1",
+          "fixedHz": 120
+        },
+        "algorithm": "fnv1a32-6f534a52",
+        "task": {
+          "schema": "roadster.landing-task",
+          "version": 1,
+          "name": "Wind strong / seed 9012",
+          "seed": 31415,
+          "supplyMode": "bench",
+          "initialPressureBar": 350,
+          "targetHeightM": 2.5,
+          "timeoutS": 16,
+          "nozzleScale": 1,
+          "landingRadiusM": 1.5,
+          "disturbances": [
+            {
+              "timeS": 1.5,
+              "speedMps": 16.551012,
+              "directionDeg": 94.068131,
+              "gustMps": 8.041662,
+              "gustPeriodS": 2.205036
+            },
+            {
+              "timeS": 2.6,
+              "speedMps": 19.611559,
+              "directionDeg": 294.587088,
+              "gustMps": 8.446232,
+              "gustPeriodS": 2.092042
+            },
+            {
+              "timeS": 3.8,
+              "speedMps": 17.291193,
+              "directionDeg": 87.341603,
+              "gustMps": 7.71848,
+              "gustPeriodS": 1.198337
+            },
+            {
+              "timeS": 5,
+              "speedMps": 16.776433,
+              "directionDeg": 280.805939,
+              "gustMps": 7.840083,
+              "gustPeriodS": 1.296698
+            },
+            {
+              "timeS": 7.5,
+              "speedMps": 0,
+              "directionDeg": 0,
+              "gustMps": 0,
+              "gustPeriodS": 3
+            }
+          ],
+          "faultTimeS": 4.5,
+          "nozzleId": "lift-FL"
+        },
+        "sourceId": "landing-mvhgqkco-c22711b0",
+        "startedAt": "2026-10-21T01:58:21.274Z",
+        "lastProgress": null,
+        "wind": {
+          "profile": "strong",
+          "seed": 9012,
+          "candidateMode": "responsive",
+          "protocol": "paired-wind-response-1",
+          "scheduleHash": "fnv1a32-61b9f3a0",
+          "taskId": "fnv1a32-b4d3757b",
+          "baselineAlgorithmHash": "fnv1a32-de4069ad",
+          "candidateAlgorithmHash": "fnv1a32-6f534a52"
+        },
+        "status": "failed",
+        "reason": "Intentional Worker failure: preserve request",
+        "finishedAt": "2026-10-21T01:58:21.286Z"
+      }
+    },
+    {
+      "name": "A cancelled one-second window shows its actual time/sample count and no four-second metric; partial raw statistics remain",
+      "status": "passed"
+    }
+  ],
+  "sourceHashes": {
+    "dist/wind-control-study.js": "54f2963341cd3c6201d1670a6f40177b1b28679777a617c6a5a8f523937e4088",
+    "dist/landing-research-ui.js": "343e260dc43e4a5f2cc3bcfe9966ad3b250a053e078d324c4aef4c354e2958cf",
+    "dist/landing-challenge.js": "2a2a0d5192cef8bb9f223f937f66af184d200138db5c29edd3f7adee10bfc1f8",
+    "dist/landing-research-worker.js": "6e2a6d1a8261cd9639ffaf90ebcd345675692c21087a265b774659e7322b5453",
+    "tests/wind-workspace-3.17.test.mjs": "920a8fea13ca6947cd9eb9d4c83b5dd407f9f5d3ec37b89882c1db5c803dbd8e"
+  },
+  "scope": "Isolated DOM with an intentionally failing Worker fixture, plus actual solver partial records. Native Worker and pixels are separately recorded."
+}

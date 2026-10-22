@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -166,7 +167,7 @@ await check('The previously unlit Foundry, ordinary boulevard and upper avenue s
 
 const files=['dist/city-continuity.js','dist/city-street-sections.js','dist/city-environment.js','dist/city-practical-lights.js','dist/city-horizon.js','dist/city-frontage-design.js','dist/urban-architecture.js','dist/pavement-surface-material.js','dist/street-life.js','tests/city-quality-3.16.test.mjs'];
 const report={schema:'roadster-city-quality-3.16',createdAt:new Date().toISOString(),modelVersion:MODEL_VERSION,status:checks.every(c=>c.status==='passed')?'passed':'failed',geometryCanonicalSHA256:sha(canonicalGeometryJSON(geometry)),checks,sourceHashes:Object.fromEntries(files.map(file=>[file,sha(readFileSync(new URL('../'+file,import.meta.url)))])),scope:'Source preservation is checked separately by city-continuity-3.14. This report tests physical/visual boundary separation, independent shared-geometry rays, actual lamp support, road-layer selection and sparse simulated direct-light samples. It cannot certify GPU draw completeness, artistic quality, vehicle route completion or performance.'};
-writeFileSync(new URL('../qa/city-quality-3.16.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL(`../qa/city-quality-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');
 globalThis.fetch=originalFetch;const resources=new Set();for(const mesh of rayMeshes){resources.add(mesh.geometry);resources.add(mesh.material);}scene.traverse(o=>{if(o.geometry)resources.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])resources.add(m);});resources.forEach(r=>r.dispose?.());
 console.log(JSON.stringify({status:report.status,checks:checks.map(c=>({name:c.name,status:c.status,error:c.error})),geometryCanonicalSHA256:report.geometryCanonicalSHA256},null,2));
-assert.equal(report.status,'passed','See qa/city-quality-3.16.json for retained failures');
+assert.equal(report.status,'passed',`See qa/city-quality-${REPORT_VERSION}.json for retained failures`);

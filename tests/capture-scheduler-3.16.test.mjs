@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFileSync,writeFileSync} from 'node:fs';
@@ -42,7 +43,9 @@ function bootstrap(){
     $:id=>{if(!nodes.has(id))nodes.set(id,{checked:true,dataset:{},textContent:''});return nodes.get(id);},
     shell:{graphicsUnavailable:message=>effect.errors.push(message)},console:{error:error=>effect.errors.push(String(error))},
     researchConsole:{update(){},needsFixedStep:()=>false,afterFixedStep(){}},controlCapture:{getState:()=>({active:false})},inputSession:{tracing:false},
-    cityFlight:{needsFixedStep:()=>false},inputs:()=>({}),captureSample(){},
+    // The route runner is inactive in this scheduler boundary fixture. Keep
+    // the real frame's 3.19 dependency explicit without introducing a solver.
+    cityFlight:{needsFixedStep:()=>false},routeExperience:{needsFixedStep:()=>false},inputs:()=>({}),captureSample(){},
     sim:{body:{previousPosition:{x:0,y:.62,z:0},previousQuaternion:{x:0,y:0,z:0,w:1}},interpolationAlpha:1,_lastInput:{brake:0},
       telemetry:()=>globalThis.t,step(dt){effect.physicsSteps++;globalThis.t.simTime+=dt;return globalThis.t;}},
   });
@@ -119,6 +122,6 @@ assert.deepEqual(afterMatrix.CITY_PROGRAM_MATRIX,beforeMatrix.CITY_PROGRAM_MATRI
 }
 const sourcePaths=['dist/main.js','dist/render-capture-matrix.js','tests/capture-scheduler-3.16.test.mjs','tests/fixtures/capture-scheduler-before-3.16.json','tests/fixtures/render-capture-matrix-before-3.16.mjs'];
 const report={schema:'roadster-capture-scheduler-isolated-checks-3.16',createdAt:new Date().toISOString(),status:'passed',checks:checks.map(result=>({name:result.case,status:'passed',...result})),sourceHashes:Object.fromEntries(sourcePaths.map(path=>[path,sha(readFileSync(new URL(path,root)))])),baseline:{sourceBuild:fixture.sourceBuild,sourcePath:fixture.sourcePath,sourceSHA256:fixture.sourceSHA256,functions:Object.fromEntries(Object.entries(fixture.functions).map(([name,record])=>[name,{startLine:record.startLine,endLine:record.endLine,sha256:record.sha256}]))},limits:['The exact application request/frame/cancel functions and matrix collector run in a Node VM with deterministic asynchronous callbacks and clock.','Rendering and physical integration are effect counters only: this proves scheduling, cancellation, preserved active stepping and failure evidence. It is not native PNG encoding, GPU queue, pixel or vehicle dynamics validation.','Original 20,000 ms deadline and all fourteen matrix case definitions are unchanged.','PNG physical state, frame number, render time and capturedAt remain frozen at the rendered frame. captureProgress is a separate later lifecycle record, not a new image or recaptured physics state.']};
-writeFileSync(new URL('qa/capture-scheduler-3.16.json',root),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL(`qa/capture-scheduler-${REPORT_VERSION}.json`,root),JSON.stringify(report,null,2)+'\n');
 for(const check of report.checks)console.log('PASS '+check.name);
-console.log(JSON.stringify({status:report.status,checks:report.checks.length,report:'qa/capture-scheduler-3.16.json',nativeWebgl:false}));
+console.log(JSON.stringify({status:report.status,checks:report.checks.length,report:`qa/capture-scheduler-${REPORT_VERSION}.json`,nativeWebgl:false}));

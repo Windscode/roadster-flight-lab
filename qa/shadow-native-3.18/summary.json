@@ -1,0 +1,1179 @@
+{
+  "schema": "roadster-native-shadow-observation-3.18",
+  "createdAt": "2026-10-21T03:48:21.085501+00:00",
+  "status": "evidence-with-explicit-limits",
+  "cases": [
+    {
+      "case": "baseline-lab",
+      "report": "qa/shadow-native-3.18/baseline-lab/report.json",
+      "status": "continuous-protocol-observed",
+      "startedAt": "2026-10-21T03:30:16.829Z",
+      "finishedAt": "2026-10-21T03:30:55.840Z",
+      "plan": {
+        "context": "lab",
+        "quality": "high",
+        "viewport": {
+          "width": 800,
+          "height": 450,
+          "dpr": 1
+        },
+        "maxWallS": 240,
+        "sequence": [
+          "idle",
+          "W straight",
+          "W+A",
+          "W+D",
+          "release + pointer orbit",
+          "C camera",
+          "release settle"
+        ]
+      },
+      "declaredBuilds": [
+        "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4"
+      ],
+      "qaRunnerSHA256": null,
+      "failure": null,
+      "sourceIdentity": [
+        {
+          "path": "/model-build.js",
+          "status": 200,
+          "bytes": 17395,
+          "sha256": "aa42c10155b6cd409981c52d23beff9baca2f571c9207993174784bfb3484fd7",
+          "declaredModelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4"
+        },
+        {
+          "path": "/main.js",
+          "status": 200,
+          "bytes": 127760,
+          "sha256": "7db5e6aad152beb39f3e5a3e6bd16d4aec9e180372374bccf6ca753cc2cb64e1"
+        },
+        {
+          "path": "/vehicle.js",
+          "status": 200,
+          "bytes": 98377,
+          "sha256": "2c5bd25456264409bcdd7c613e3fc1636e53c8973e552a99c6e5d691d30c1c0b"
+        },
+        {
+          "path": "/city-environment.js",
+          "status": 200,
+          "bytes": 48367,
+          "sha256": "dd3a3c8d3adabd46f6661f1908701c57524a6523debf8acb36b0c3f5a21934e9"
+        },
+        {
+          "path": "/wind-laboratory.js",
+          "status": 200,
+          "bytes": 28578,
+          "sha256": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d"
+        },
+        {
+          "path": "/receiver-plane-shadows.js",
+          "status": 200,
+          "bytes": 4760,
+          "sha256": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741"
+        },
+        {
+          "path": "/city-practical-lights.js",
+          "status": 200,
+          "bytes": 10922,
+          "sha256": "2058413c6e8b9f8785efd1d239f4701fb47fab6bed9bc6470ed9655033812118"
+        }
+      ],
+      "phases": [
+        {
+          "name": "day-idle",
+          "status": "observed",
+          "targetSimSeconds": 0.25,
+          "actualSimSeconds": 0.3333333333333339,
+          "actualWallMs": 1739.7999999970198,
+          "reason": null
+        },
+        {
+          "name": "day-straight",
+          "status": "observed",
+          "targetSimSeconds": 1,
+          "actualSimSeconds": 1.041666666666663,
+          "actualWallMs": 3214.4000000059605,
+          "reason": null
+        },
+        {
+          "name": "day-left-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.55,
+          "actualSimSeconds": 0.574999999999988,
+          "actualWallMs": 2400.5999999940395,
+          "reason": null
+        },
+        {
+          "name": "day-right-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.55,
+          "actualSimSeconds": 0.558333333333326,
+          "actualWallMs": 1677.1000000089407,
+          "reason": null
+        },
+        {
+          "name": "day-camera-orbit",
+          "status": "observed",
+          "targetSimSeconds": 0.4,
+          "actualSimSeconds": 0.4000000000000199,
+          "actualWallMs": 1181,
+          "reason": null
+        },
+        {
+          "name": "camera-C-and-release",
+          "status": "observed",
+          "targetSimSeconds": 0.6,
+          "actualSimSeconds": 0.6416666666666675,
+          "actualWallMs": 1741.2000000029802,
+          "reason": null
+        }
+      ],
+      "images": [
+        {
+          "file": "01-before-motion.png",
+          "sha256": "60204c816a7fc1216f63445ba1864c850239a96cb76c6ff0de64a0f2715d6526",
+          "bytes": 101093,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        },
+        {
+          "file": "02-after-day-turn-camera.png",
+          "sha256": "e405ef7a20d26a0e80f135ec26b250c0085a85c8671d61cc8ba981001397ed10",
+          "bytes": 406524,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        },
+        {
+          "file": "03-camera-release.png",
+          "sha256": "bb0181eafe19ec9e8d159254d665fb717b05e35a1577e23ebce04f37030fc4ea",
+          "bytes": 225669,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        }
+      ],
+      "errors": [
+        {
+          "kind": "http",
+          "status": 404,
+          "url": "http://127.0.0.1:8327/deployment.json"
+        },
+        {
+          "kind": "error",
+          "message": "Failed to load resource: the server responded with a status of 404 (File not found)",
+          "at": "2026-10-21T03:30:17.445Z"
+        },
+        {
+          "kind": "warning",
+          "message": "THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+          "at": "2026-10-21T03:30:21.088Z"
+        }
+      ],
+      "video": {
+        "file": "continuous-native.webm",
+        "bytes": 2529713,
+        "sha256": "7282f4814155972553fa5f6c516fc2846e0a389659f3c97ab01f084b273ec326",
+        "scope": "Actual browser viewport video with native wall-clock timing; repeated compositor frames/stalls are retained.",
+        "durationWallSeconds": 38.36,
+        "stream": {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 450,
+          "r_frame_rate": "25/1"
+        },
+        "rateScope": "25 fps is video encoding cadence, not application rendering FPS; duplicate compositor frames remain."
+      },
+      "observation": {
+        "file": "qa/shadow-native-3.18/baseline-lab/timing-and-render-budget.json.gz",
+        "sha256": "4a3410177f024b060547f71f58a17abae0bea7a19e861a7387028447cd196ac0",
+        "samples": 72,
+        "errors": [],
+        "simStart": 0.26666666666666666,
+        "simEnd": 5.758333333333355,
+        "simSpanSeconds": 5.4916666666666885,
+        "observerWallSpanSeconds": 17.28669999998808,
+        "rAFIntervalMs": {
+          "count": 71,
+          "median": 237.70000000298023,
+          "p95": 447.40000000596046,
+          "maximum": 506.79999999701977,
+          "scope": "QA rAF observer cadence including software rendering, recording, settings and screenshot overhead. Not user-GPU frame-time acceptance."
+        },
+        "depthUpdateReported": 69,
+        "motionMetadataSamples": 0,
+        "motionChangedSamples": null,
+        "motionWithoutReportedDepthUpdate": null,
+        "weather": {
+          "lab": {
+            "samples": 72,
+            "exposureValues": [
+              0.87
+            ],
+            "headlightSpotsMaximum": 0,
+            "cascadeConfigurations": [
+              [
+                1,
+                1536
+              ]
+            ]
+          }
+        },
+        "finalPosition": {
+          "x": 7.315494193005832,
+          "y": 0.5961699027536057,
+          "z": 51.1008998101428
+        },
+        "finalCameraMode": "chase"
+      }
+    },
+    {
+      "case": "candidate-lab",
+      "report": "qa/shadow-native-3.18/candidate-lab/report.json",
+      "status": "continuous-protocol-observed",
+      "startedAt": "2026-10-21T03:31:27.418Z",
+      "finishedAt": "2026-10-21T03:32:13.000Z",
+      "plan": {
+        "context": "lab",
+        "quality": "high",
+        "viewport": {
+          "width": 800,
+          "height": 450,
+          "dpr": 1
+        },
+        "maxWallS": 240,
+        "sequence": [
+          "idle",
+          "W straight",
+          "W+A",
+          "W+D",
+          "release + pointer orbit",
+          "C camera",
+          "release settle"
+        ]
+      },
+      "declaredBuilds": [
+        "c0802f8d54ef25c4907716e824cd294e0d91edbbcc5ed947622b5dfde51f5bec"
+      ],
+      "qaRunnerSHA256": null,
+      "failure": null,
+      "sourceIdentity": [
+        {
+          "path": "/model-build.js",
+          "status": 200,
+          "bytes": 17960,
+          "sha256": "124e4a76861186ce8e84ef50033c2763db1bf5d274f31213b56a1a4b404b57c9",
+          "declaredModelBuildId": "c0802f8d54ef25c4907716e824cd294e0d91edbbcc5ed947622b5dfde51f5bec"
+        },
+        {
+          "path": "/main.js",
+          "status": 200,
+          "bytes": 128252,
+          "sha256": "8c2ef60f29f61d58a41043beb7cb940e00a0a60c9b02e65c456309388b179fde"
+        },
+        {
+          "path": "/vehicle.js",
+          "status": 200,
+          "bytes": 100211,
+          "sha256": "9b197c22e595f559dd8769dc167a1646a6ac686f3b30ceb1435725ccd1507bc9"
+        },
+        {
+          "path": "/city-environment.js",
+          "status": 200,
+          "bytes": 49482,
+          "sha256": "17cd43f2766908b50b3b6fae2f104ab14bf695fba90bed96eb184dd2f1e770fb"
+        },
+        {
+          "path": "/wind-laboratory.js",
+          "status": 200,
+          "bytes": 29086,
+          "sha256": "50ca542dc229897ecf056d67ae462521ea221322b5b97dec39b31955243bb9ea"
+        },
+        {
+          "path": "/receiver-plane-shadows.js",
+          "status": 200,
+          "bytes": 4760,
+          "sha256": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741"
+        },
+        {
+          "path": "/shadow-motion.js",
+          "status": 200,
+          "bytes": 2313,
+          "sha256": "d875855b6e037f5fc73dab34f5232f672de8d5a39f1764db7caa6e167f493aa6"
+        },
+        {
+          "path": "/city-practical-lights.js",
+          "status": 200,
+          "bytes": 11267,
+          "sha256": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7"
+        }
+      ],
+      "phases": [
+        {
+          "name": "day-idle",
+          "status": "observed",
+          "targetSimSeconds": 0.25,
+          "actualSimSeconds": 0.333333333333334,
+          "actualWallMs": 2009.2000000029802,
+          "reason": null
+        },
+        {
+          "name": "day-straight",
+          "status": "observed",
+          "targetSimSeconds": 1,
+          "actualSimSeconds": 1.041666666666663,
+          "actualWallMs": 4938.600000008941,
+          "reason": null
+        },
+        {
+          "name": "day-left-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.55,
+          "actualSimSeconds": 0.5583333333333222,
+          "actualWallMs": 2561.199999988079,
+          "reason": null
+        },
+        {
+          "name": "day-right-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.55,
+          "actualSimSeconds": 0.5749999999999913,
+          "actualWallMs": 2343.8999999910593,
+          "reason": null
+        },
+        {
+          "name": "day-camera-orbit",
+          "status": "observed",
+          "targetSimSeconds": 0.4,
+          "actualSimSeconds": 0.40000000000001057,
+          "actualWallMs": 1267.2000000029802,
+          "reason": null
+        },
+        {
+          "name": "camera-C-and-release",
+          "status": "observed",
+          "targetSimSeconds": 0.6,
+          "actualSimSeconds": 0.6333333333333426,
+          "actualWallMs": 1957,
+          "reason": null
+        }
+      ],
+      "images": [
+        {
+          "file": "01-before-motion.png",
+          "sha256": "c7d9731421df893fa749e1908882e602cbefff55e06bb0f1fe7a8eef99bc50f4",
+          "bytes": 100764,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        },
+        {
+          "file": "02-after-day-turn-camera.png",
+          "sha256": "02511461161cf09e4c97f6bb49f9bd6584c6c475bcdd79f94c23138e71e9cb10",
+          "bytes": 434417,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        },
+        {
+          "file": "03-camera-release.png",
+          "sha256": "b94ef797c2af3ef571b52049a840890741fdea66d1e7a0d6e940f210f82694a1",
+          "bytes": 225565,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        }
+      ],
+      "errors": [
+        {
+          "kind": "http",
+          "status": 404,
+          "url": "http://127.0.0.1:8328/deployment.json"
+        },
+        {
+          "kind": "error",
+          "message": "Failed to load resource: the server responded with a status of 404 (File not found)",
+          "at": "2026-10-21T03:31:28.099Z"
+        },
+        {
+          "kind": "warning",
+          "message": "THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+          "at": "2026-10-21T03:31:32.400Z"
+        }
+      ],
+      "video": {
+        "file": "continuous-native.webm",
+        "bytes": 2869154,
+        "sha256": "9f13644555fce62a5c4d4dd98f1c6a99ff78ad8dc6a61be109920d744de16a8b",
+        "scope": "Actual browser viewport video with native wall-clock timing; repeated compositor frames/stalls are retained.",
+        "durationWallSeconds": 45.0,
+        "stream": {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 450,
+          "r_frame_rate": "25/1"
+        },
+        "rateScope": "25 fps is video encoding cadence, not application rendering FPS; duplicate compositor frames remain."
+      },
+      "observation": {
+        "file": "qa/shadow-native-3.18/candidate-lab/timing-and-render-budget.json.gz",
+        "sha256": "727c833a8d9c6150e4a794ad8800a217ede2313afa863ae5992280022abb8056",
+        "samples": 70,
+        "errors": [],
+        "simStart": 0.24999999999999997,
+        "simEnd": 5.516666666666673,
+        "simSpanSeconds": 5.266666666666673,
+        "observerWallSpanSeconds": 21.178,
+        "rAFIntervalMs": {
+          "count": 69,
+          "median": 286.59999999403954,
+          "p95": 532,
+          "maximum": 679,
+          "scope": "QA rAF observer cadence including software rendering, recording, settings and screenshot overhead. Not user-GPU frame-time acceptance."
+        },
+        "depthUpdateReported": 69,
+        "motionMetadataSamples": 70,
+        "motionChangedSamples": 69,
+        "motionWithoutReportedDepthUpdate": 0,
+        "weather": {
+          "lab": {
+            "samples": 70,
+            "exposureValues": [
+              0.87
+            ],
+            "headlightSpotsMaximum": 0,
+            "cascadeConfigurations": [
+              [
+                1,
+                1536
+              ]
+            ]
+          }
+        },
+        "finalPosition": {
+          "x": 8.281632586384411,
+          "y": 0.5977543210394665,
+          "z": 51.55995014954938
+        },
+        "finalCameraMode": "chase"
+      }
+    },
+    {
+      "case": "baseline-city",
+      "report": "qa/shadow-native-3.18/baseline-city/report.json",
+      "status": "incomplete",
+      "startedAt": "2026-10-21T03:32:36.299Z",
+      "finishedAt": "2026-10-21T03:33:20.696Z",
+      "plan": {
+        "context": "city",
+        "quality": "high",
+        "viewport": {
+          "width": 800,
+          "height": 450,
+          "dpr": 1
+        },
+        "maxWallS": 240,
+        "sequence": [
+          "day idle",
+          "W straight",
+          "W+A",
+          "W+D",
+          "release + pointer orbit",
+          "continuous weather transition to wet-night",
+          "W night straight",
+          "W+A night turn",
+          "release + C camera",
+          "return to clear-day"
+        ]
+      },
+      "declaredBuilds": [
+        "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4"
+      ],
+      "qaRunnerSHA256": null,
+      "failure": "locator.focus: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#viewport')\u001b[22m\n",
+      "sourceIdentity": [
+        {
+          "path": "/model-build.js",
+          "status": 200,
+          "bytes": 17395,
+          "sha256": "aa42c10155b6cd409981c52d23beff9baca2f571c9207993174784bfb3484fd7",
+          "declaredModelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4"
+        },
+        {
+          "path": "/main.js",
+          "status": 200,
+          "bytes": 127760,
+          "sha256": "7db5e6aad152beb39f3e5a3e6bd16d4aec9e180372374bccf6ca753cc2cb64e1"
+        },
+        {
+          "path": "/city-environment.js",
+          "status": 200,
+          "bytes": 48367,
+          "sha256": "dd3a3c8d3adabd46f6661f1908701c57524a6523debf8acb36b0c3f5a21934e9"
+        },
+        {
+          "path": "/vehicle.js",
+          "status": 200,
+          "bytes": 98377,
+          "sha256": "2c5bd25456264409bcdd7c613e3fc1636e53c8973e552a99c6e5d691d30c1c0b"
+        },
+        {
+          "path": "/wind-laboratory.js",
+          "status": 200,
+          "bytes": 28578,
+          "sha256": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d"
+        },
+        {
+          "path": "/city-practical-lights.js",
+          "status": 200,
+          "bytes": 10922,
+          "sha256": "2058413c6e8b9f8785efd1d239f4701fb47fab6bed9bc6470ed9655033812118"
+        },
+        {
+          "path": "/receiver-plane-shadows.js",
+          "status": 200,
+          "bytes": 4760,
+          "sha256": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741"
+        }
+      ],
+      "phases": [],
+      "images": [],
+      "errors": [
+        {
+          "kind": "http",
+          "status": 404,
+          "url": "http://127.0.0.1:8327/deployment.json"
+        },
+        {
+          "kind": "error",
+          "message": "Failed to load resource: the server responded with a status of 404 (File not found)",
+          "at": "2026-10-21T03:32:36.980Z"
+        },
+        {
+          "kind": "warning",
+          "message": "THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+          "at": "2026-10-21T03:32:40.865Z"
+        }
+      ],
+      "video": {
+        "file": "continuous-native.webm",
+        "bytes": 802074,
+        "sha256": "9ce67f9ab25425255f571d5f0ebb98d586dbbf586faf3ae8e52b423418692a45",
+        "scope": "Actual browser viewport video with native wall-clock timing; repeated compositor frames/stalls are retained.",
+        "durationWallSeconds": 33.04,
+        "stream": {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 450,
+          "r_frame_rate": "25/1"
+        },
+        "rateScope": "25 fps is video encoding cadence, not application rendering FPS; duplicate compositor frames remain."
+      }
+    },
+    {
+      "case": "baseline-city-small",
+      "report": "qa/shadow-native-3.18/baseline-city-small/report.json",
+      "status": "incomplete",
+      "startedAt": "2026-10-21T03:34:43.576Z",
+      "finishedAt": "2026-10-21T03:38:31.935Z",
+      "plan": {
+        "context": "city",
+        "quality": "high",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 1
+        },
+        "maxWallS": 240,
+        "sequence": [
+          "day idle",
+          "W straight",
+          "W+A",
+          "W+D",
+          "release + pointer orbit",
+          "continuous weather transition to wet-night",
+          "W night straight",
+          "W+A night turn",
+          "release + C camera",
+          "return to clear-day"
+        ]
+      },
+      "declaredBuilds": [
+        "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4"
+      ],
+      "qaRunnerSHA256": "9d7a32db59fded23543d2ba760a9a5c5391efaeff1ca1c4ced407be6240c9c7e",
+      "failure": "locator.dispatchEvent: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#exposure-baseline-39')\u001b[22m\n",
+      "sourceIdentity": [
+        {
+          "path": "/model-build.js",
+          "status": 200,
+          "bytes": 17395,
+          "sha256": "aa42c10155b6cd409981c52d23beff9baca2f571c9207993174784bfb3484fd7",
+          "declaredModelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4"
+        },
+        {
+          "path": "/main.js",
+          "status": 200,
+          "bytes": 127760,
+          "sha256": "7db5e6aad152beb39f3e5a3e6bd16d4aec9e180372374bccf6ca753cc2cb64e1"
+        },
+        {
+          "path": "/city-environment.js",
+          "status": 200,
+          "bytes": 48367,
+          "sha256": "dd3a3c8d3adabd46f6661f1908701c57524a6523debf8acb36b0c3f5a21934e9"
+        },
+        {
+          "path": "/vehicle.js",
+          "status": 200,
+          "bytes": 98377,
+          "sha256": "2c5bd25456264409bcdd7c613e3fc1636e53c8973e552a99c6e5d691d30c1c0b"
+        },
+        {
+          "path": "/wind-laboratory.js",
+          "status": 200,
+          "bytes": 28578,
+          "sha256": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d"
+        },
+        {
+          "path": "/city-practical-lights.js",
+          "status": 200,
+          "bytes": 10922,
+          "sha256": "2058413c6e8b9f8785efd1d239f4701fb47fab6bed9bc6470ed9655033812118"
+        },
+        {
+          "path": "/receiver-plane-shadows.js",
+          "status": 200,
+          "bytes": 4760,
+          "sha256": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741"
+        }
+      ],
+      "phases": [
+        {
+          "name": "day-idle",
+          "status": "observed",
+          "targetSimSeconds": 0.25,
+          "actualSimSeconds": 0.4333333333333337,
+          "actualWallMs": 22902.60000000894,
+          "reason": null
+        },
+        {
+          "name": "day-straight",
+          "status": "observed",
+          "targetSimSeconds": 1,
+          "actualSimSeconds": 1.0499999999999963,
+          "actualWallMs": 33419.40000000596,
+          "reason": null
+        },
+        {
+          "name": "day-left-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.55,
+          "actualSimSeconds": 0.5666666666666555,
+          "actualWallMs": 20671.40000000596,
+          "reason": null
+        },
+        {
+          "name": "day-right-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.55,
+          "actualSimSeconds": 0.5916666666666512,
+          "actualWallMs": 20195.70000000298,
+          "reason": null
+        },
+        {
+          "name": "day-camera-orbit",
+          "status": "observed",
+          "targetSimSeconds": 0.4,
+          "actualSimSeconds": 0.48333333333330586,
+          "actualWallMs": 13300.20000000298,
+          "reason": null
+        }
+      ],
+      "images": [
+        {
+          "file": "01-before-motion.png",
+          "sha256": "141049f674f495c27c026111572965d808414d224d90f1fc2927ad1e68fea1cc",
+          "bytes": 251393,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        },
+        {
+          "file": "02-after-day-turn-camera.png",
+          "sha256": "818349fa04bf69e96942b2de989af8f30e90ad7828f2e411c88381137f530778",
+          "bytes": 194814,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        }
+      ],
+      "errors": [
+        {
+          "kind": "http",
+          "status": 404,
+          "url": "http://127.0.0.1:8327/deployment.json"
+        },
+        {
+          "kind": "error",
+          "message": "Failed to load resource: the server responded with a status of 404 (File not found)",
+          "at": "2026-10-21T03:34:44.232Z"
+        },
+        {
+          "kind": "warning",
+          "message": "THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+          "at": "2026-10-21T03:34:48.452Z"
+        },
+        {
+          "kind": "warning",
+          "message": "sigmaRadians, 0.06, is too large and will clip, as it requested 30 samples when the maximum is set to 20",
+          "at": "2026-10-21T03:37:57.060Z"
+        },
+        {
+          "kind": "warning",
+          "message": "sigmaRadians, 0.06, is too large and will clip, as it requested 30 samples when the maximum is set to 20",
+          "at": "2026-10-21T03:37:57.066Z"
+        }
+      ],
+      "video": {
+        "file": "continuous-native.webm",
+        "bytes": 7165791,
+        "sha256": "b36f5e48bce0fe2f09646deb0aa0ed483645b55e481443ebefb71644c3bbd481",
+        "scope": "Actual browser viewport video with native wall-clock timing; repeated compositor frames/stalls are retained.",
+        "durationWallSeconds": 211.24,
+        "stream": {
+          "codec_name": "vp8",
+          "width": 640,
+          "height": 360,
+          "r_frame_rate": "25/1"
+        },
+        "rateScope": "25 fps is video encoding cadence, not application rendering FPS; duplicate compositor frames remain."
+      },
+      "observation": {
+        "file": "qa/shadow-native-3.18/baseline-city-small/timing-and-render-budget.json.gz",
+        "sha256": "1b38e27f5fe42ad316950f9cdbcb892696d9f3e321c67f936fc778e70fd4257b",
+        "samples": 59,
+        "errors": [],
+        "simStart": 0.2333333333333333,
+        "simEnd": 4.716666666666541,
+        "simSpanSeconds": 4.483333333333207,
+        "observerWallSpanSeconds": 165.67240000000595,
+        "rAFIntervalMs": {
+          "count": 58,
+          "median": 2461.2000000029802,
+          "p95": 9686.29999999702,
+          "maximum": 19816.79999999702,
+          "scope": "QA rAF observer cadence including software rendering, recording, settings and screenshot overhead. Not user-GPU frame-time acceptance."
+        },
+        "depthUpdateReported": 58,
+        "motionMetadataSamples": 0,
+        "motionChangedSamples": null,
+        "motionWithoutReportedDepthUpdate": null,
+        "weather": {
+          "clear-day": {
+            "samples": 58,
+            "exposureValues": [
+              0.87
+            ],
+            "headlightSpotsMaximum": 0,
+            "cascadeConfigurations": [
+              [
+                2,
+                1536
+              ]
+            ]
+          },
+          "wet-night": {
+            "samples": 1,
+            "exposureValues": [
+              0.87
+            ],
+            "headlightSpotsMaximum": 2,
+            "cascadeConfigurations": [
+              [
+                1,
+                1024
+              ]
+            ]
+          }
+        },
+        "finalPosition": {
+          "x": -196.07332959497396,
+          "y": 0.597577294394895,
+          "z": -299.5189821625361
+        },
+        "finalCameraMode": "orbit"
+      }
+    },
+    {
+      "case": "candidate-city-small",
+      "report": "qa/shadow-native-3.18/candidate-city-small/report.json",
+      "status": "bounded-partial-protocol",
+      "startedAt": "2026-10-21T03:41:20.158Z",
+      "finishedAt": "2026-10-21T03:47:54.163Z",
+      "plan": {
+        "context": "city",
+        "quality": "high",
+        "viewport": {
+          "width": 640,
+          "height": 360,
+          "dpr": 1
+        },
+        "maxWallS": 360,
+        "sequence": [
+          "day idle",
+          "W straight",
+          "W+A",
+          "W+D",
+          "release + pointer orbit",
+          "continuous weather transition to wet-night",
+          "W night straight",
+          "W+A night turn",
+          "release + C camera",
+          "return to clear-day"
+        ]
+      },
+      "declaredBuilds": [
+        "29f7f7049d4dcfc115026042e11bb8d8a2b42a61abbcefbc8cd8817e3d9a0189"
+      ],
+      "qaRunnerSHA256": "766ff477ff6d586fcd8336c3da9fd282d64e3e06c3f8ddccc0910e5a8dfd7936",
+      "failure": null,
+      "sourceIdentity": [
+        {
+          "path": "/model-build.js",
+          "status": 200,
+          "bytes": 17960,
+          "sha256": "b1d04b5b8c5e8cc08812684d4f2ce6753dba442f0804bcc62a2974ee6523fe3d",
+          "declaredModelBuildId": "29f7f7049d4dcfc115026042e11bb8d8a2b42a61abbcefbc8cd8817e3d9a0189"
+        },
+        {
+          "path": "/main.js",
+          "status": 200,
+          "bytes": 128796,
+          "sha256": "e84d3b0a9618bdde1a9708161d9879f098708da0d0dfabeb6bcec78966d42791"
+        },
+        {
+          "path": "/city-environment.js",
+          "status": 200,
+          "bytes": 49482,
+          "sha256": "17cd43f2766908b50b3b6fae2f104ab14bf695fba90bed96eb184dd2f1e770fb"
+        },
+        {
+          "path": "/vehicle.js",
+          "status": 200,
+          "bytes": 100211,
+          "sha256": "9b197c22e595f559dd8769dc167a1646a6ac686f3b30ceb1435725ccd1507bc9"
+        },
+        {
+          "path": "/wind-laboratory.js",
+          "status": 200,
+          "bytes": 29086,
+          "sha256": "50ca542dc229897ecf056d67ae462521ea221322b5b97dec39b31955243bb9ea"
+        },
+        {
+          "path": "/shadow-motion.js",
+          "status": 200,
+          "bytes": 2313,
+          "sha256": "d875855b6e037f5fc73dab34f5232f672de8d5a39f1764db7caa6e167f493aa6"
+        },
+        {
+          "path": "/city-practical-lights.js",
+          "status": 200,
+          "bytes": 11267,
+          "sha256": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7"
+        },
+        {
+          "path": "/receiver-plane-shadows.js",
+          "status": 200,
+          "bytes": 4760,
+          "sha256": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741"
+        }
+      ],
+      "phases": [
+        {
+          "name": "day-idle",
+          "status": "observed",
+          "targetSimSeconds": 0.25,
+          "actualSimSeconds": 0.4333333333333337,
+          "actualWallMs": 27394.69999998808,
+          "reason": null
+        },
+        {
+          "name": "day-straight",
+          "status": "bounded-partial",
+          "targetSimSeconds": 1,
+          "actualSimSeconds": 0.9833333333333298,
+          "actualWallMs": 35009.90000000596,
+          "reason": "page.waitForFunction: Timeout 35000ms exceeded."
+        },
+        {
+          "name": "day-left-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.55,
+          "actualSimSeconds": 0.5583333333333218,
+          "actualWallMs": 23551.39999999106,
+          "reason": null
+        },
+        {
+          "name": "day-right-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.55,
+          "actualSimSeconds": 0.5583333333333194,
+          "actualWallMs": 20410.20000000298,
+          "reason": null
+        },
+        {
+          "name": "day-camera-orbit",
+          "status": "observed",
+          "targetSimSeconds": 0.4,
+          "actualSimSeconds": 0.48333333333330586,
+          "actualWallMs": 14657.300000011921,
+          "reason": null
+        },
+        {
+          "name": "day-to-night-transition",
+          "status": "observed",
+          "targetSimSeconds": 0.3,
+          "actualSimSeconds": 0.39999999999997726,
+          "actualWallMs": 18129.70000000298,
+          "reason": null
+        },
+        {
+          "name": "night-straight",
+          "status": "bounded-partial",
+          "targetSimSeconds": 0.8,
+          "actualSimSeconds": 0.6416666666666302,
+          "actualWallMs": 35026.10000000894,
+          "reason": "page.waitForFunction: Timeout 35000ms exceeded."
+        },
+        {
+          "name": "night-left-turn",
+          "status": "observed",
+          "targetSimSeconds": 0.45,
+          "actualSimSeconds": 0.474999999999973,
+          "actualWallMs": 26470.69999998808,
+          "reason": null
+        },
+        {
+          "name": "night-camera-release",
+          "status": "observed",
+          "targetSimSeconds": 0.4,
+          "actualSimSeconds": 0.48333333333330586,
+          "actualWallMs": 32280.59999999404,
+          "reason": null
+        },
+        {
+          "name": "night-to-day-return",
+          "status": "observed",
+          "targetSimSeconds": 0.3,
+          "actualSimSeconds": 0.39999999999997726,
+          "actualWallMs": 33859.79999999702,
+          "reason": null
+        }
+      ],
+      "images": [
+        {
+          "file": "01-before-motion.png",
+          "sha256": "bd36d946c19b4f97238daa1a29d9c4a31c3fdf369301a4ff6614bc7684e22712",
+          "bytes": 255184,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        },
+        {
+          "file": "02-after-day-turn-camera.png",
+          "sha256": "963c89c705642125d54acfc7d76a81af96a35e49ca1c955e4dd538d4b78512a1",
+          "bytes": 208028,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        },
+        {
+          "file": "03-night-headlamps.png",
+          "sha256": "394eb0307337d7bf81652f8e9d2f9fe59f0c45e2542892d89df172858baf5060",
+          "bytes": 187524,
+          "association": "Separate telemetry calls bracket the native viewport screenshot; not atomic framebuffer metadata."
+        }
+      ],
+      "errors": [
+        {
+          "kind": "http",
+          "status": 404,
+          "url": "http://127.0.0.1:8328/deployment.json"
+        },
+        {
+          "kind": "error",
+          "message": "Failed to load resource: the server responded with a status of 404 (File not found)",
+          "at": "2026-10-21T03:41:20.708Z"
+        },
+        {
+          "kind": "warning",
+          "message": "THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+          "at": "2026-10-21T03:41:24.043Z"
+        },
+        {
+          "kind": "warning",
+          "message": "sigmaRadians, 0.06, is too large and will clip, as it requested 30 samples when the maximum is set to 20",
+          "at": "2026-10-21T03:44:40.606Z"
+        },
+        {
+          "kind": "warning",
+          "message": "sigmaRadians, 0.06, is too large and will clip, as it requested 30 samples when the maximum is set to 20",
+          "at": "2026-10-21T03:44:40.610Z"
+        }
+      ],
+      "video": {
+        "file": "continuous-native.webm",
+        "bytes": 11661370,
+        "sha256": "df1332cd5d93c20c0d8ea972d56b51bdbbf7527b56470abe996e0e8b29311550",
+        "scope": "Actual browser viewport video with native wall-clock timing; repeated compositor frames/stalls are retained.",
+        "durationWallSeconds": 390.96,
+        "stream": {
+          "codec_name": "vp8",
+          "width": 640,
+          "height": 360,
+          "r_frame_rate": "25/1"
+        },
+        "rateScope": "25 fps is video encoding cadence, not application rendering FPS; duplicate compositor frames remain."
+      },
+      "observation": {
+        "file": "qa/shadow-native-3.18/candidate-city-small/timing-and-render-budget.json.gz",
+        "sha256": "641f351d270cfaa28032938422842f0a7fa46dd0134b71c326952b4a45513ca6",
+        "samples": 90,
+        "errors": [],
+        "simStart": 0.2333333333333333,
+        "simEnd": 7.249999999999725,
+        "simSpanSeconds": 7.016666666666391,
+        "observerWallSpanSeconds": 347.397700000003,
+        "rAFIntervalMs": {
+          "count": 89,
+          "median": 2935.2000000029802,
+          "p95": 11504.79999999702,
+          "maximum": 20613.90000000596,
+          "scope": "QA rAF observer cadence including software rendering, recording, settings and screenshot overhead. Not user-GPU frame-time acceptance."
+        },
+        "depthUpdateReported": 90,
+        "motionMetadataSamples": 90,
+        "motionChangedSamples": 90,
+        "motionWithoutReportedDepthUpdate": 0,
+        "weather": {
+          "clear-day": {
+            "samples": 60,
+            "exposureValues": [
+              0.87
+            ],
+            "headlightSpotsMaximum": 0,
+            "cascadeConfigurations": [
+              [
+                2,
+                1536
+              ]
+            ]
+          },
+          "wet-night": {
+            "samples": 30,
+            "exposureValues": [
+              0.87,
+              1.02
+            ],
+            "headlightSpotsMaximum": 2,
+            "cascadeConfigurations": [
+              [
+                1,
+                1024
+              ]
+            ]
+          }
+        },
+        "finalPosition": {
+          "x": -196.02471391051213,
+          "y": 0.5971105459208218,
+          "z": -256.1715670033168
+        },
+        "finalCameraMode": "chase"
+      }
+    }
+  ],
+  "mechanismEvidence": "qa/shadow-motion-3.18/report.json",
+  "conclusions": [
+    "Native W/A/D, mouse orbit and C acted on continuous application state; no hidden pose/step setters were used.",
+    "Complete laboratory protocols and bounded city protocols are separate from pixel stability acceptance.",
+    "The old low-rate native observations cannot expose all high-display-rate scheduler mismatch; retained 120 Hz actual-matrix reproduction is the evidence for that fault.",
+    "Different actual steering/physics/camera timing and revised vehicle/city geometry prevent registered pixel differencing from these native recordings.",
+    "The reported motion/depth update flags are application telemetry, not atomic GPU framebuffer readback.",
+    "Normal maps, receiver-plane correction and real shadows remain; finite resolution, bias, filtering and cascade aliasing need separate visual observation.",
+    "The original user-installed build and the user GPU remain unverified."
+  ],
+  "failuresRetained": [
+    "qa/shadow-native-baseline-lab-startup-failure-3.18.log",
+    "qa/shadow-native-3.18/baseline-city/report.json",
+    "qa/shadow-native-3.18/baseline-city-small/report.json"
+  ],
+  "runnerSnapshots": [
+    "qa/shadow-native-3.18/runner-before-city-focus.mjs",
+    "qa/shadow-native-3.18/runner-before-city-exposure.mjs"
+  ],
+  "manualVisualReview": {
+    "scope": "Individual screenshots and extracted video frames were viewed. The entire recordings were not played back at native high refresh, and no universal flicker-free result is claimed.",
+    "laboratory": [
+      "baseline-lab screenshots 01,02,03; video frames at wall 22,24,26,28,30 s",
+      "candidate-lab screenshots 01,02,03; video frames at wall 25,27,29,31,33,35 s"
+    ],
+    "city": [
+      "baseline-city-small screenshots 01,02; actual video frames at wall 95,120,145,173,205,210.8 s",
+      "candidate-city-small screenshots 01,02,03; actual video frames at wall 100,130,155,265,285,310,380 s"
+    ],
+    "observations": [
+      "Baseline last extracted frame at 210.8 s shows real night headlights; the state recorder has only one wet-night observation before the exposure-button timeout. This is not a completed baseline night driving comparison.",
+      "Candidate night frame 265 s shows the white body under a warm street-light pool, 285 s is partly occluded by a real foreground pillar, and 310 s shows a darker body at a different position. Sparse frames cannot isolate shadow timing from changed illumination, reflection and visibility.",
+      "Candidate frame 380 s visibly returns to daylight after the recorded night sequence.",
+      "Car material and ground shadow remain visible in laboratory driving/turning sampled frames; high-frequency floor detail remains. Small viewport and slow callback cadence cannot exclude fine shimmer."
+    ]
+  },
+  "specialtySourceComparison": {
+    "asOf": "2026-10-21T03:53:15.725500+00:00",
+    "scope": "Read-only specialty-module equality. Does not replace actual older capture build identities or assert whole-build equality.",
+    "modules": [
+      {
+        "path": "/vehicle.js",
+        "workingSHA256": "9b197c22e595f559dd8769dc167a1646a6ac686f3b30ceb1435725ccd1507bc9",
+        "loaded": {
+          "candidate-lab": "9b197c22e595f559dd8769dc167a1646a6ac686f3b30ceb1435725ccd1507bc9",
+          "candidate-city-small": "9b197c22e595f559dd8769dc167a1646a6ac686f3b30ceb1435725ccd1507bc9"
+        },
+        "equalToWorkingSource": true
+      },
+      {
+        "path": "/shadow-motion.js",
+        "workingSHA256": "d875855b6e037f5fc73dab34f5232f672de8d5a39f1764db7caa6e167f493aa6",
+        "loaded": {
+          "candidate-lab": "d875855b6e037f5fc73dab34f5232f672de8d5a39f1764db7caa6e167f493aa6",
+          "candidate-city-small": "d875855b6e037f5fc73dab34f5232f672de8d5a39f1764db7caa6e167f493aa6"
+        },
+        "equalToWorkingSource": true
+      },
+      {
+        "path": "/city-environment.js",
+        "workingSHA256": "17cd43f2766908b50b3b6fae2f104ab14bf695fba90bed96eb184dd2f1e770fb",
+        "loaded": {
+          "candidate-lab": "17cd43f2766908b50b3b6fae2f104ab14bf695fba90bed96eb184dd2f1e770fb",
+          "candidate-city-small": "17cd43f2766908b50b3b6fae2f104ab14bf695fba90bed96eb184dd2f1e770fb"
+        },
+        "equalToWorkingSource": true
+      },
+      {
+        "path": "/city-practical-lights.js",
+        "workingSHA256": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7",
+        "loaded": {
+          "candidate-lab": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7",
+          "candidate-city-small": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7"
+        },
+        "equalToWorkingSource": true
+      },
+      {
+        "path": "/wind-laboratory.js",
+        "workingSHA256": "50ca542dc229897ecf056d67ae462521ea221322b5b97dec39b31955243bb9ea",
+        "loaded": {
+          "candidate-lab": "50ca542dc229897ecf056d67ae462521ea221322b5b97dec39b31955243bb9ea",
+          "candidate-city-small": "50ca542dc229897ecf056d67ae462521ea221322b5b97dec39b31955243bb9ea"
+        },
+        "equalToWorkingSource": true
+      },
+      {
+        "path": "/receiver-plane-shadows.js",
+        "workingSHA256": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741",
+        "loaded": {
+          "candidate-lab": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741",
+          "candidate-city-small": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741"
+        },
+        "equalToWorkingSource": true
+      }
+    ]
+  },
+  "limitsAdditional": [
+    "The first laboratory reports and first city startup failure predate qaRunnerSHA256 capture; their raw reports were not backfilled. Original runner snapshots remain.",
+    "The candidate city uses a 360-second active-case wall budget; its complete video also includes loading, UI setup and final evidence collection. Individual 35-second phase timeouts were not enlarged to obtain completion.",
+    "The nighttime baseline UI timeout left exposure at 0.87, while the candidate completes the exposure button to 1.02; no full matched-exposure night A/B is claimed."
+  ]
+}

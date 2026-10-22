@@ -1,0 +1,86 @@
+{
+  "modelVersion": "3.19.0",
+  "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+  "status": "passed",
+  "scope": "Independent boundary fixtures: data/AST/state budgets, exact step idempotence, actual Node Worker scheduling, isolated DOM lifecycle and protected raw storage. Not a native browser/GPU assertion.",
+  "checks": [
+    {
+      "name": "JSON AST rejects prototype/extra/accessor/sparse fields before they can become executable data",
+      "status": "passed",
+      "detail": {
+        "prototypeNamesRejected": 3,
+        "accessorOrToJSONInvocations": 0,
+        "maxUTF8Bytes": 12000
+      }
+    },
+    {
+      "name": "Imported state has exact keys, four dense slots, per-node bounds and a bounded non-recursive fault payload",
+      "status": "passed",
+      "detail": {
+        "unusedSlotsMustBeZero": true,
+        "integralOwnLimit": 2,
+        "faultStateRoundTrip": true
+      }
+    },
+    {
+      "name": "Repeated same-step calls do not integrate twice; subrate and snapshot continuation remain deterministic",
+      "status": "passed",
+      "detail": {
+        "controlHz": 60,
+        "duplicateStep": "idempotent",
+        "continuationMatch": true
+      }
+    },
+    {
+      "name": "Static 80-node and per-decision operation budgets are bounded; arithmetic overflow never commits partial integration",
+      "status": "passed",
+      "detail": {
+        "maximumValidGraphOperations": 80,
+        "staticExtraNodeRejected": true,
+        "partialStateCommitted": false
+      }
+    },
+    {
+      "name": "Cancel and observer failure release the actual height command without teleporting; snapshot redecision includes initial controller state",
+      "status": "passed",
+      "detail": {
+        "actualCommandAfterCancel": "disabled",
+        "bodyChangedByCancel": false,
+        "exactTaskRepeat": true
+      }
+    },
+    {
+      "name": "Actual Worker scheduling rejects concurrent/duplicate jobs and cooperatively returns a cancelled partial physical result",
+      "status": "passed",
+      "detail": {
+        "status": "cancelled",
+        "steps": 120,
+        "concurrentRejected": true
+      }
+    },
+    {
+      "name": "UI ignores stale Worker callbacks, closes malformed/cancel-post failures and keeps protected bytes untouched",
+      "status": "passed",
+      "detail": {
+        "staleCallbackIgnored": true,
+        "failedAttemptsPersisted": 2,
+        "protectedRawUnchanged": true
+      }
+    }
+  ],
+  "evidence": {
+    "realWorker": {
+      "status": "cancelled",
+      "steps": 120,
+      "concurrentRejected": true
+    }
+  },
+  "sourceHashes": {
+    "dist/bounded-height-controller.js": "e310531ade879e91d6921c785b8cc73aa029839cafa37c46a321ff0c8b9697e0",
+    "dist/landing-challenge.js": "4e69b12040f93bd151a39bfd65b513f2b6a58fe3f97da9fc70946ae21b6bf978",
+    "dist/landing-research-worker.js": "8d85383c00163a5ae65b0e22cf5e5a547f5e08ad05919857c26aff390ff622b8",
+    "dist/landing-research-ui.js": "f61f9eb969029b6e34e27cdcee181ffab5dd225740ee40ba377dd759456fe87e",
+    "dist/research-comparison.js": "0c58e5785b457ecfec8d6f05e18bece610a72de0a4010a5a29637190fa78ac77",
+    "dist/research-storage.js": "c7ff58556f1d52566046ca75e3e7cc89c3f1a5c619b95519d6276b48804113f3"
+  }
+}

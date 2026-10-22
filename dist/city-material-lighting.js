@@ -8,7 +8,7 @@ export function cityLightingVariant({quality='balanced',night=false,isStatic=fal
   return Object.freeze({quality,night:!!night,isStatic:!!isStatic,contactAO,
     daylightGI:!night,nightBounce:!!night,nightDirect:!!night&&!!isStatic,
     localProbeSun:!night&&quality!=='balanced',
-    key:'city-lighting-3.13|'+quality+'|'+(night?'night-atlas':'day-sh')+'|'+(isStatic?'static':'dynamic')+'|ao-'+Number(contactAO)});
+    key:'city-lighting-3.17|'+(quality==='balanced'?'vertex':'fragment')+'|'+(night?'night-atlas':'day-sh')+'|'+(isStatic?'static':'dynamic')+'|ao-'+Number(contactAO)});
 }
 
 export function injectCityMaterialLighting(shader,{variant,indirect,nightIndirect,nightDirect,probeSun}){

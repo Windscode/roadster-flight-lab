@@ -12,7 +12,7 @@ import {buildingMassing,buildingStoreys} from './city-data.js';
 import {buildingExtras,CITY_STREETS} from './city-plan.js';
 import {architectureDetailLevel,createCityVisibility} from './city-render-budget.js';
 import {createCityExteriorMaterials} from './city-exterior-materials.js';
-import {streetFrontageDesign,buildStreetGroundOrder,buildStreetStoreyOrder} from './city-frontage-design.js';
+import {streetFrontageDesign,buildStreetGroundOrder,buildStreetStoreyOrder,buildDowntownStoreyOrder} from './city-frontage-design.js';
 
 // The offline bounce-light baker imports this same palette. These are authored
 // sRGB material tints, not measurements of a real district or extracted assets.
@@ -53,7 +53,12 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   const transform=new THREE.Object3D(),colourCache=new Map(),white=new THREE.Color(0xffffff);
   const unitBox=new THREE.BoxGeometry(1,1,1),unitPlane=new THREE.PlaneGeometry(1,1),
     unitCylinder=new THREE.CylinderGeometry(.5,.5,1,12),unitCircle=new THREE.CircleGeometry(.5,16);
-  const sourceGeometries={box:unitBox,plane:unitPlane,cylinder:unitCylinder,circle:unitCircle};
+  const surfaceBox=faces=>{const g=unitBox.clone(),indices=Array.from(g.index.array),keep=[];for(const face of faces){const group=g.groups[face];keep.push(...indices.slice(group.start,group.start+group.count));}g.clearGroups();g.setIndex(keep);return g;};
+  // Storey-height piers meet continuous slabs; spandrels meet their piers.
+  // Keep the exposed front and recess returns. Hidden back/cap faces lie in
+  // the existing closed core/slabs and cannot contribute to a visible view.
+  const sourceGeometries={box:unitBox,plane:unitPlane,cylinder:unitCylinder,circle:unitCircle,
+    'wall-pier':surfaceBox([0,1,4]),'wall-spandrel':surfaceBox([2,3,4])};
   geometries.push(...Object.values(sourceGeometries));
   const randFor=seed=>{let n=Math.floor((Number(seed)||.137)*4294967295)>>>0;return()=>{n=(1664525*n+1013904223)>>>0;return n/4294967296;};};
   const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -114,6 +119,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     metal:material('weathered steel',{roughness:.7,metalness:.58}),
     edges:material('anodised frame',{roughness:.37,metalness:.74}),
     glass:material('sealed exterior glazing',{roughness:.13,metalness:0,emissive:0xffffff,emissiveIntensity:1,envMapIntensity:1}),
+    shopGlass:material('clear exterior showcase glazing',{roughness:.14,metalness:0,transparent:true,opacity:.19,depthWrite:false,envMapIntensity:.85}),
     shutter:material('rolled metal shutter',{roughness:.54,metalness:.72}),
     signs:material('original painted sign atlas',{map:signAtlas,emissiveMap:signAtlas,emissive:signAtlas?0xffffff:0x000000,emissiveIntensity:.18,roughness:.6,metalness:.12}),
     lamp:material('small practical light',{color:0xffdcb1,emissive:0xffc994,emissiveIntensity:2.1,roughness:.35}),
@@ -122,6 +128,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   // All sealed panes use the same opaque glass response. Keep each pane's
   // original emission and explicit environment strength in instance data,
   // instead of submitting three otherwise identical draws per facade cell.
+  mat.shopGlass.userData.exteriorShowcase=true;
   const glazingStyles={
     glass:[0,0,0,1.12],
     displayGlass:[...colour(0xe2c7a0).toArray().map(v=>v*.055),.8],
@@ -167,13 +174,22 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   }
   const palette=URBAN_MATERIAL_PALETTE;
   const accentColours=[0x78c4bd,0xd3a074,0xb7b597,0xb08e9d];
-  let sector='';
+  let sector='',mergeDowntownConcrete=false;
   function add(kind,geometry,size,position,rotation=[0,0,0],tint=white,variation=1,tile=-1,levelOverride=null){
     if(size.some(n=>!Number.isFinite(n)||n<=0))return;
     // Group practical housings and brackets with the 160 m facade sectors.
-    // Thin frames retain their tighter 80 m cells for conservative distant
-    // culling. Every authored instance and original distance tier is retained.
-    const level=levelOverride||(kind==='shutter'||kind==='litGlass'||kind==='displayGlass'?'facade':architectureDetailLevel(kind,geometry,size)),cellSize=level==='detail'&&kind==='edges'?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
+    // Thin frames retain 80 m cells. Small circular vent plates share 320 m
+    // cells instead of 1–2 instances per draw; all geometry and distance tiers
+    // remain, and the original 15-view draw/triangle ceilings are enforced.
+    const level=levelOverride||(['shopGlass','displayBack'].includes(kind)?'facade':null)||(kind==='shutter'||kind==='litGlass'||kind==='displayGlass'?'facade':architectureDetailLevel(kind,geometry,size)),cellSize=geometry==='circle'?320:level==='detail'&&(kind==='edges'||kind==='displayFrame')?80:160,cell=Math.floor(position[0]/cellSize)+','+Math.floor(position[2]/cellSize);
+    // Both concrete labels receive the exact same opaque mineral response in
+    // surfaces.attach. The remodelled downtown parcels can share instances;
+    // authored tint, actual faces, metric UVs, LOD and shadow eligibility stay.
+    // Retained hero parcels keep their original material labels unchanged.
+    if(kind==='displayBack')kind='darkConcrete';
+    else if(kind==='displayWood'||kind==='displayGoods')kind='ceramic';
+    else if(kind==='displayFrame')kind='edges';
+    if(mergeDowntownConcrete&&kind==='darkConcrete')kind='concrete';
     const glazing=glazingStyles[kind];if(glazing)kind='glass';
     const key=cell+'|'+kind+'|'+geometry+'|'+level;
     let batch=batches.get(key);if(!batch){batch={sector:cell,kind,geometry,level,instances:[]};batches.set(key,batch);}
@@ -185,6 +201,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
 
   for(const building of buildings){
     const b={baseY:0,...building};
+    mergeDowntownConcrete=b.id.startsWith('block-')||b.id.startsWith('arcology-');
     if(![b.x,b.z,b.w,b.d,b.height].every(Number.isFinite)||b.w<4||b.d<4||b.height<5)continue;
     stats.buildings++;const hero=!!b.hero,detail=hero?2:Math.max(Math.abs(b.x),Math.abs(b.z))<385?1:0;
     if(hero)stats.heroBuildings++;
@@ -204,7 +221,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
         // surface can be seen; its five hidden box faces used to consume
         // geometry in every view. Keep the exact front plane, outward normal,
         // metre UVs and surrounding three-dimensional reveals.
-        if(geometry==='box'&&['glass','litGlass','displayGlass'].includes(kind))
+        if(geometry==='box'&&['glass','litGlass','displayGlass','shopGlass'].includes(kind))
           return add(kind,'plane',[size[0],size[1],1],point(along,y,out+size[2]/2),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile,kind==='glass'?architectureDetailLevel(kind,'box',size):'facade');
         return add(kind,geometry,size,point(along,y,out),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile);
       };
@@ -260,6 +277,20 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
         stats.routeFacingFrontages++;
         if(weaveFront)stats.curatedWeaveFrontages++;
         buildStreetGroundOrder(f,streetFrontageDesign(b,frontage),{shopH,side,building:b,stats,lights:lightAnchors});
+        // Four addressed buildings receive two actual narrow up-light fixtures.
+        // Their sources, housings and static transport share this exact anchor.
+        if(weaveFront&&(b.id.endsWith('-0')||b.id.endsWith('-2'))){
+          for(const sideSign of [-1,1]){
+            // Exchange roofs cross this facade at y=6.1–6.81 m. Mount
+            // their uplights above that real roof, rather than shining through it.
+            const along=sideSign*f.span*.36,y=shopH+(b.id.endsWith('-2')?3.0:.34);
+            f.put('metal',[.24,.25,.28],along,y,.62,0x3f5456,.9);
+            f.put('lamp',[.18,.025,.18],along,y+.14,.65,0xffffff,.42);
+            lightAnchors.push({id:'upper-grazer-'+b.id+'-'+sideSign,position:f.point(along,y+.19,.65),
+              target:f.point(along,Math.min(b.height-2,y+11),.58),color:b.x< -200?0xe4c696:0xb4ced3,
+              intensity:145,range:16,angle:.29,penumbra:.72,practical:true,role:'facade',surfaceY:0,building:b.id});
+          }
+        }
         continue;
       }
       // Ground-floor frames are thick enough to cast real street-level shadows.
@@ -330,6 +361,10 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
       const baseDetailed=floor<(b.archetype==='civic'?4:hero?Math.min(floorCount,8):detail?2:0);
       for(let side=0;side<4;side++){
         const frontage=routeFacingFacade(b,side),detailed=baseDetailed||!!frontage&&floor<5,f=face(side*Math.PI/2,w,d),count=Math.max(1,Math.floor((f.span-.65)/(b.style===4?4.4:3.35))),bay=(f.span-.65)/count;
+        if(b.id.startsWith('block-')||b.id.startsWith('arcology-')){
+          buildDowntownStoreyOrder(f,b,{bottom,centre,floorH,floor,side,stats});
+          continue;
+        }
         if(frontage){
           buildStreetStoreyOrder(f,streetFrontageDesign(b,frontage),{bottom,centre,floorH,floor,stats});
           continue;
@@ -474,7 +509,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
     // Only substantial opaque architecture needs to enter shadow passes. Thin
     // slats and letters remain inexpensive, receive lighting and retain depth.
-    mesh.castShadow=['concrete','darkConcrete','metal'].includes(batch.kind)&&batch.geometry==='box';
+    mesh.castShadow=['concrete','darkConcrete','metal'].includes(batch.kind)&&['box','wall-pier','wall-spandrel'].includes(batch.geometry);
     mesh.receiveShadow=true;mesh.frustumCulled=true;mesh.computeBoundingBox();mesh.computeBoundingSphere();
     mesh.userData.urbanArchitecture=true;mesh.userData.sector=batch.sector;
     group.add(mesh);visibility.add(mesh,{level:batch.level});sectors.add(batch.sector);stats.drawBatches++;

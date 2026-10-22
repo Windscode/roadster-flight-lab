@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -85,7 +86,7 @@ check('The report retains the measured severe outcomes at every tested interval'
 check('All passive cases remain finite with no significant peak mechanical energy creation',cases.every(c=>!c.fault&&c.peakMechanicalEnergyGainFraction<.005),{limitFraction:.005,scope:'Screen for energy injection only; deformation and damage energy are not modelled.'});
 check('Suspension travel, damping, grip, lift and motor ratings retain the declared 3.15 values',DEFAULT_PARAMS.suspensionMin===.24&&DEFAULT_PARAMS.suspensionRest===.37&&DEFAULT_PARAMS.suspensionDamping===5800&&DEFAULT_PARAMS.tireMu===1.25&&DEFAULT_PARAMS.liftNozzleMax===20000&&DEFAULT_PARAMS.maxMotorForce===24000);
 check('20 km/h 2 cm ordinary road cases stay upright',cases.filter(c=>c.nominalInitialSpeedKmh===20).every(c=>c.maxTiltDeg<15&&!c.fault));
-const bytes=gzipSync(Buffer.from(trace.join('\n')+'\n'),{level:9}),traceName='contact-convergence-3.16.ndjson.gz';writeFileSync(new URL('../qa/'+traceName,import.meta.url),bytes);
+const bytes=gzipSync(Buffer.from(trace.join('\n')+'\n'),{level:9}),traceName=`contact-convergence-${REPORT_VERSION}.ndjson.gz`;writeFileSync(new URL('../qa/'+traceName,import.meta.url),bytes);
 const sources=['dist/physics.js','dist/wheel-contact-envelope.js','dist/contact-step-schedule.js','dist/simulation-safety.js','tests/contact-geometry-oracle-3.16.mjs'];
 const report={schema:'roadster-independent-contact-convergence',version:1,createdAt:new Date().toISOString(),modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:checks.every(c=>c.passed)?'geometry-and-diagnostic-regressions-passed-contact-trajectories-not-converged':'failed',
   baseline:JSON.parse(readFileSync(new URL('./fixtures/physics-3.15-before/provenance.json',import.meta.url),'utf8')),sourceHashes:Object.fromEntries(sources.map(p=>[p,hash(readFileSync(new URL('../'+p,import.meta.url)))])),checks,geometryChecks,cases,convergence,
@@ -93,5 +94,5 @@ const report={schema:'roadster-independent-contact-convergence',version:1,create
   energyScope:'Translation, body/wheel rotation, gravity and suspension spring potential. The stored spring compression is the last force-evaluation value. No drive/regen input in these declared passive fixtures. Energy screens are not a complete deformable tyre, restitution or damage validation.',
   trace:{file:traceName,format:'gzip UTF-8 NDJSON; one row per actual integrator slice, with caller step and dt',samples:trace.length,bytes:bytes.length,sha256:hash(bytes)},
   limits:['Neither severe fixture has a converged complete impact trajectory. Agreement at 60/120/240 Hz caller intervals alone was a false impression and is explicitly contradicted by finer references.','The 120 Hz product input interval is retained; hard contact can use the same solver at 960 Hz internally. This is not a claim of three pure 60/120/240 Hz solvers agreeing.','The continuous crowned support envelope is a radius-R sphere clipped to the existing finite tyre width, not a measured tyre profile; independent 20-sided rigid wheel stops retain their facets. Tyre deformation, rim damage and suspension structural failure are outside this model.','Full-width finite response and lower penetration do not establish that a real car could safely cross a 10 cm curb at 90 km/h.','Both 90 km/h 10 cm fixtures retain unresolved post-impact trajectory convergence. This is an open physical/numerical limitation, not reclassified as normal or accepted.']};
-writeFileSync(new URL('../qa/contact-convergence-3.16.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL(`../qa/contact-convergence-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');
 assert.ok(checks.every(c=>c.passed),checks.filter(c=>!c.passed).map(c=>c.name).join('\n'));

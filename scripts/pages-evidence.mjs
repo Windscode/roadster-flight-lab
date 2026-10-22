@@ -4,6 +4,9 @@
 import {createHash} from 'node:crypto';
 import {readFileSync,lstatSync,mkdirSync,copyFileSync,constants} from 'node:fs';
 import {resolve,relative,dirname,sep} from 'node:path';
+// Publication v2 keeps this immutable legacy API for archived list checks;
+// availability coverage is an explicit separate contract, never skip-missing.
+export {assertPublicationEvidenceCoverage} from './publication-contract.mjs';
 
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 function evidenceCategory(name){

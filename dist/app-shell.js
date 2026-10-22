@@ -18,7 +18,7 @@ export function createApplicationShell({initialSim}) {
     clearTimeout(toastTimer);toastTimer=setTimeout(()=>node.classList.add('hidden'),duration);
   };
   const research=createResearchConsole({mount:$('research-console-root'),getSim,getContext,getSceneConfiguration:()=>live?.getSceneConfiguration?.()||{version:1,context:getContext()},
-    getLiveAvailable:available,
+    getLiveAvailable:()=>available()&&live?.canUseLiveResearch?.()!==false,
     onEnterLab:()=>live?.switchContext?.('lab'),onReturnCity:()=>live?.switchContext?.('city'),
     onOpenStudy:()=>openStudy(),onEvent:(type,detail)=>live?.logEvent?.(type,detail),onToast:toast,
     onBeforeRun:program=>live?.beforeResearchRun?.(program),
@@ -41,6 +41,7 @@ export function createApplicationShell({initialSim}) {
     finishStudy();
   }
   async function openStudy(){
+    if(live?.canUseLiveResearch?.()===false){toast('请先返回原现场，再打开数值研究。');return;}
     if(studyOpen)return;
     research.cancel?.('开始标准数值研究');research.close();
     live?.beforeStudy?.();studyOpen=true;const generation=++studyGeneration;
@@ -52,7 +53,8 @@ export function createApplicationShell({initialSim}) {
       if(studyOpen&&generation===studyGeneration){study.open();study.root.querySelector('button')?.focus({preventScroll:true});}
     }catch(error){finishStudy();toast('数值研究面板未能载入：'+error.message,8500);}
   }
-  function openResearch(tab='experiments'){
+  function openResearch(tab=research.getState().tab||'experiments'){
+    if(live?.canUseLiveResearch?.()===false){toast('请先返回原现场；当前练习与复盘在浮卡中继续。');return;}
     closeStudy();live?.beforeResearch?.();research.open(tab);
   }
   function attachLive(adapter){live=adapter;}

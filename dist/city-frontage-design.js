@@ -1,3 +1,5 @@
+import {buildStreetDisplay,displayRecipe} from './street-display.js';
+import {routeServiceBay,buildRouteServicePortal} from './city-route-detail.js';
 // Authored facade orders share the original closed building envelopes. These
 // are exterior shop/portal compositions, not rooms or new collision volumes.
 export function streetFrontageDesign(building,frontage){
@@ -51,7 +53,11 @@ export function buildStreetGroundOrder(f,design,{shopH,side,building,stats,light
       closed=service?j===count-1:d.order==='market'?j===count-1&&count>5:false;
     const opaqueEnd=closed||portal&&tallOrder;
     stats.shopfronts++;
-    if(closed){
+    if(routeServiceBay(building,side,j,count)){
+      buildRouteServicePortal(f.put,{x,width:w,shopH,trim:d.trim,base:d.base});
+      stats.routeServicePortals=(stats.routeServicePortals||0)+1;
+      stats.serviceBays++;
+    }else if(closed){
       f.put('shutter',[w,shopH-.84,.12],x,shopH/2+.06,-.24,d.base,.91);stats.shutterPanels++;stats.serviceBays++;
       for(const end of [-1,1])f.put('metal',[.13,2.70,.16],x+end*(w/2-.10),1.76,.20,d.trim,.9);
       f.put('signs',[1.04,.34,1],x-w*.30,3.14,.42,0xffffff,.90,'plane',7);
@@ -65,16 +71,25 @@ export function buildStreetGroundOrder(f,design,{shopH,side,building,stats,light
       f.put('metal',[opening+.18,.15,.58],x,shopH-.65,.10,d.trim,.90);stats.facadePortals++;
     }else{
       const sill=d.order==='gallery'?.48:d.order==='market'?.60:.34;
-      // A dim sealed display panel gives selected occupied shop bays a lower
-      // luminance than the sparse upper windows. This is an exterior backing,
-      // not an invented interior, and supplies no unbaked world illumination.
-      f.put(!portal&&(j+side)%3!==2?'displayGlass':'glass',[w,shopH-sill-.64,.09],x,(shopH+sill)/2-.12,-.34,d.glass,.98);
+      const detailed=d.family!=='downtown'||portal&&side===0&&Math.abs(building.style||0)%3===0;
+      if(detailed){
+        const display=buildStreetDisplay(f.put,{x,width:w,height:shopH-sill-.64,sill,
+          recipe:displayRecipe(d.order),variant:j+side,door:portal||j%3===0,trim:d.trim});
+        stats.shallowShowcases=(stats.shallowShowcases||0)+1;
+        stats.showcaseRecipes??={};stats.showcaseRecipes[display.recipe]=(stats.showcaseRecipes[display.recipe]||0)+1;
+        if(display.door)stats.recessedShopDoors=(stats.recessedShopDoors||0)+1;
+      }else{
+        // Retained ordinary streets use the less costly sealed window module;
+        // the addressed continuous streets carry the complete shallow display.
+        f.put((j+side)%3!==2?'displayGlass':'glass',[w,shopH-sill-.64,.09],x,(shopH+sill)/2-.12,-.34,d.glass,.98);
+        if(portal||j%3===0){
+          const doorX=x+(j%2?-.28:.28)*w;
+          f.put('edges',[.07,shopH-.70,.17],doorX,shopH/2+.05,-.12,d.trim,.92);
+          f.put('edges',[.035,.28,.08],doorX+(j%2?.40:-.40),1.06,-.01,0xc0b9a2,.93);
+        }
+      }
       f.put(d.order==='gallery'?'concrete':'ceramic',[w,sill-.20,.36],x,(sill+.20)/2,.19,d.base,.92);
-      // Shop window + offset door; proportions vary with actual business use.
-      const doorX=x+(j%2?-.28:.28)*w;
-      f.put('edges',[.07,shopH-.70,.17],doorX,shopH/2+.05,-.12,d.trim,.92);
       f.put('edges',[w,.085,.18],x,shopH-1.0,-.12,d.trim,.88);
-      f.put('edges',[.055,.52,.08],doorX+(j%2?.46:-.46),1.36,.02,0xc0b9a2,.93);
       if(d.order==='market')f.put('ceramic',[w-.25,.16,.70],x,shopH-.90,.10,d.wall,.89);
     }
     if(portal||j===0||d.order==='market'&&j%2===0){
@@ -134,14 +149,56 @@ export function buildStreetStoreyOrder(f,d,{bottom,centre,floorH,floor,stats}){
       f.put('concrete',[ww,floorH-.14,.30],x,centre,.14,d.base,.93);
       f.put('glass',[ww*.46,Math.max(.8,wh*.62),.09],x,wy,-.10,glass,.94);
     }else{
-      const lighted=(j*5+floor*7)%17===3;
+      const cell=(j*19+floor*11+Math.floor(f.span)*3)%37,lighted=cell<7||floor%5===1&&j%4===1;
       f.put(lighted?'litGlass':'glass',[ww,wh,.08],x,wy,-.33,lighted?0x7d8176:glass,.97);stats.recessedWindows++;
       if(lighted)stats.backlitWindowPanels++;
+      if(cell%5===2)f.put('ceramic',[ww*.43,wh*.78,.025],x-ww*.22,wy+.08,-.274,0x8b9284,.58,'plane');
       f.put('edges',[.055,wh,.13],x,wy,-.15,trim,.89);
       if(industrial)f.put('edges',[ww,.065,.15],x,wy+wh*.14,-.12,trim,.91);
       f.put('concrete',[ww,Math.max(.20,floorH-wh-.08),.44],x,bottom+(floorH-wh)/2,.14,wall,.91);
       f.put('edges',[ww,.08,.25],x,bottom+(floorH-wh)+.07,.30,trim,.91);
     }
     if(paired&&floor%2===1)f.putDetail('concrete',[ww,.25,.48],x,bottom+floorH-.14,.17,wall,.95);
+  }
+}
+
+// Ordinary towers use the same substantial wall/window proportions as the
+// addressed streets. This replaces continuous black ribbon glazing on the
+// generic floors; its metre-scale bays remain readable above the detail LOD.
+// There are five coherent orders, chosen once per retained building, rather
+// than random decorative pieces on every floor.
+export const DOWNTOWN_FACADE_STYLES=Object.freeze([
+    {wall:0xb7b5a1,base:0x8b9a94,glass:0x3f616b,bay:6.9,window:.68,sill:.90},
+    {wall:0xc2ae8d,base:0x927b62,glass:0x435861,bay:6.0,window:.62,sill:1.05},
+    {wall:0x8da8a5,base:0x4f7477,glass:0x3b626e,bay:7.5,window:.78,sill:.74},
+    {wall:0xc0b8a6,base:0x776d66,glass:0x3e5664,bay:7.1,window:.59,sill:.94},
+    {wall:0xa7b5a7,base:0x657d75,glass:0x3c6067,bay:6.4,window:.72,sill:.86},
+  ].map(d=>Object.freeze(d)));
+export function buildDowntownStoreyOrder(f,b,{bottom,centre,floorH,floor,side,stats}){
+  const styles=DOWNTOWN_FACADE_STYLES;
+  const style=Math.abs(b.style||0)%styles.length,d=styles[style],count=Math.max(2,Math.round((f.span-.6)/d.bay)),bay=(f.span-.6)/count;
+  const frameWidth=bay*(1-d.window),windowWidth=bay-frameWidth-.10,windowH=Math.max(.8,floorH-d.sill-.30);
+  stats.downtownStoreyOrders??={};stats.downtownStoreyOrders[style]=(stats.downtownStoreyOrders[style]||0)+1;
+  for(let j=0;j<=count;j++){
+    const pw=j===0||j===count?frameWidth/2:frameWidth,x=Math.max(-f.span/2+pw/2,Math.min(f.span/2-pw/2,-f.span/2+.3+j*bay));
+    f.put('concrete',[pw,floorH,.55],x,centre,.10,d.wall,.96,'wall-pier');
+  }
+  // The sill/lintel backing is one continuous member behind the projecting
+  // piers. Splitting that hidden backing into a box for every pane adds no
+  // exposed shape, but multiplies the same coplanar triangles. Keep the real
+  // front and horizontal reveals; selected coloured infills are flush skins.
+  f.put('concrete',[f.span-.08,d.sill,.46],0,bottom+d.sill/2,.10,d.wall,.94,'wall-spandrel');
+  f.put('concrete',[f.span-.08,.30,.48],0,bottom+floorH-.15,.10,d.wall,.96,'wall-spandrel');
+  if(style===4&&floor%3===0)f.put('ceramic',[f.span-.08,.22,.20],0,bottom+d.sill-.13,.29,d.base,.94);
+  for(let j=0;j<count;j++){
+    const x=-f.span/2+.3+(j+.5)*bay,cell=(j*17+Math.floor(floor/2)*13+side*7+Math.floor(b.seed*997))%43,occupied=cell<9||floor%7===2&&j%5<2;
+    const accentPanel=style===2&&j%4===3||style===3&&j%3===1;
+    if(accentPanel)f.put('ceramic',[windowWidth,d.sill-.10,1],x,bottom+d.sill/2,.338,d.base,.94,'plane');
+    f.put(occupied?'litGlass':'glass',[windowWidth,windowH,.075],x,bottom+d.sill+windowH/2,-.26,occupied?0x9ca498:d.glass,.97);
+    stats.recessedWindows++;if(occupied)stats.backlitWindowPanels++;
+    if(cell%7===2)f.put('ceramic',[windowWidth*.46,windowH*.72,.018],x-windowWidth*.24,bottom+d.sill+windowH*.61,-.215,0x969b89,.58,'plane');
+    // Window split retires as detail. The wide structural pier and enclosing
+    // wall area above stay as facade/mass, avoiding a distant black rectangle.
+    if(style===0||style===1)f.putDetail('edges',[.075,windowH,.14],x,bottom+d.sill+windowH/2,-.08,d.base,.88);
   }
 }

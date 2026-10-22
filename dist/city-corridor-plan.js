@@ -17,13 +17,18 @@ export function createRouteCorridorPlan(streets){
       // One 12 cm support per footway, with a bevelled visual edge wholly
       // inside its contact box. A surface finish never adds hidden road steps.
       add(leg.id+'-walk-'+side,size(leg.to-leg.from,3,.12),point((leg.from+leg.to)/2,side*(h+1.5),.06),leg.stone);
-      for(let along=leg.from+5,index=0;along<leg.to-3;along+=leg.step,index++){
+      // Opposing lamps used to share the same stations. The 36 m boulevard
+      // spacing then produced bright paired pools and an unlit middle. Use
+      // the same count of mounted lamps, staggered by half a spacing, with a
+      // broader lower-intensity cone instead of lifting global exposure.
+      for(let station=leg.from+5,index=0;station<leg.to-3;station+=leg.step,index++){
+        const along=Math.min(station+(side>0?leg.step/2:0),leg.to-4);
         const outer=side*(h+2.56),inner=side*(h+.50),position=point(along,outer,3.76),poleId=leg.id+'-lamp-'+side+'-'+index;
         add(poleId,[.14,7.28,.14],position,'steel','corridor-fixture');
         add(poleId+'-arm',size(.18,2.2,.12),point(along,side*(h+1.55),7.42),'steel','corridor-fixture');
         add(poleId+'-head',size(.47,.88,.12),point(along,inner,7.40),'steel','corridor-fixture');
         lights.push({id:poleId,position:point(along,inner,7.30),target:point(along+3,side*(h*.38),.08),
-          color:leg.id==='foundry-main'?0xd1deea:leg.id==='canal-link'?0xf2cc9c:0xe8d3b4,intensity:1750,range:29,practical:true,role:'street',lensSize:size(.38,.70,.035)});
+          color:leg.id==='foundry-main'?0xd1deea:leg.id==='canal-link'?0xf2cc9c:0xe8d3b4,intensity:1120,range:32,angle:1.12,penumbra:.45,practical:true,role:'street',lensSize:size(.38,.70,.035)});
       }
       // Street cabinets and seats are sparse, protected by the same pavement,
       // and backed by matching conservative furniture collision volumes.

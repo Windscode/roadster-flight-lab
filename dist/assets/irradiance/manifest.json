@@ -1,16 +1,20 @@
 {
   "version": 1,
-  "createdAt": "2026-10-20T18:27:16.382Z",
+  "createdAt": "2026-10-21T04:30:44.804Z",
   "sourceHashes": {
     "dist/city-data.js": "86d39546dd361ca7a277493bcb448b4ef5aea64acdc38559d2c65ad051b632ec",
-    "dist/city-continuity.js": "6a10d343288698d4dd35e3eeab13d6a5be8930ae87e5f6a19600fe0c969125df",
+    "dist/city-continuity.js": "031d7b465f7ad2a35dd9d9e187aa995cf996037e1242871993e75f613d1d8547",
     "dist/city-street-sections.js": "36f27904785fb5a357825a41de49d945380a548c0c71a0363f024a34e45f1de1",
+    "dist/city-street-edge.js": "9a1208ec25d71b7ca2948467b8db5b25cb2fd727cff5a91e0a432e75ed082ad9",
+    "dist/city-corridor-plan.js": "4d121702e283329d7399fa42994642b3d1e2b4d3e58521cb9045eef607edb3f1",
+    "dist/city-frontage-design.js": "0df9e2c53eaaf986ad635ea0e1338036225e7a89f5f4d0b28dd2702facb4a0b9",
+    "dist/street-display.js": "1a33eb1fdc499f094665f2d469ecc04f23cafc85371bcdf7206d1f63a7f82b35",
     "dist/street-life.js": "ca9705e7d2ada742fc6fb2587d5a60baf9082e2f77e30bf4e87ad89adddabcfe",
     "dist/city-plan.js": "6b370c9f951354de5a00263cb524e1a2df7cfc00e8b6cf6d2df020b82cf71ab4",
     "dist/city-landmarks.js": "c59b9c67908e6e4c90d8f14356cb4c937a58e4a868c63e35eb9594b133aeb884",
-    "dist/urban-architecture.js": "ab712d8dc12b3cf1197e89ecdcd714aea7f9f7d37132c61b754a188b2cb60b59",
+    "dist/urban-architecture.js": "cfefc8658b3c9edced2fe719e705a4e0f72c2d3f507af7f04cc1c12faf6af44c",
     "dist/irradiance-math.js": "f4c9de47c61ebf8a661d9cfddfbcf0a47c77266438f43909090cd1032b1637f9",
-    "scripts/bake-indirect.mjs": "0df874e24a3e630f3f3d519749ebda4ca9aa023e8cc8f53036f683b8b6da26d6"
+    "scripts/bake-indirect.mjs": "18ab3719aa1b7a1f4e5616445949eb74b0bd20a010e4895c03a3eda52c005e16"
   },
   "algorithm": "Offline diffuse path tracing / explicit sun next-event estimation / cosine hemisphere / order-2 real SH",
   "bounces": 3,
@@ -87,7 +91,7 @@
       "file": "city.bin",
       "validProbes": 8320,
       "bytes": 691200,
-      "sha256": "7ef049b42d625bfade82bafa88570388293183468ebfbd34f06e9cee076a9c62"
+      "sha256": "39f7f5db1f543c37f07084be40f726d1533fc128e5a3ac67c4563b4e609e38bd"
     },
     {
       "id": "lower-market",
@@ -114,25 +118,32 @@
       "file": "lower-market.bin",
       "validProbes": 3593,
       "bytes": 331344,
-      "sha256": "daa613162a828c2803d98b51b7a31facdfb5ba744b640cf7fc4779d662e08617"
+      "sha256": "73107583744b7f94cb1035102db899e1a50ad2bef925a4abbc40c334153d73d5"
     }
   ],
   "totalProbes": 14202,
   "validProbes": 11913,
-  "staticEnvelopes": 2251,
-  "seconds": 213.25717163299998,
-  "geometrySHA256": "f0fa382ea22d2b439b48ef5569c4b4ada025c5fea22cb119e0c2e952a38b3051",
-  "geometryCanonicalSHA256": "68e4ea47a2b76a895596fb59c4ff6f0f46b9ef0c6a1640475a5abec8340f4a2a",
+  "staticEnvelopes": 2367,
+  "seconds": 192.16209145000002,
+  "geometrySHA256": "776ee1f0005cb26aad452d5e791954f7d52146ef3135fc5bb9fc5ca644378498",
+  "geometryCanonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
   "geometryHashQuantization": 1e-9,
   "materialModel": {
-    "version": "3.14",
-    "source": "dist/urban-architecture.js / URBAN_MATERIAL_PALETTE",
-    "wallTintSRGB": [
+    "version": "3.17",
+    "source": "dist/urban-architecture.js / URBAN_MATERIAL_PALETTE; dist/city-frontage-design.js / DOWNTOWN_FACADE_STYLES",
+    "retainedWallTintSRGB": [
       9477021,
       11773332,
       9214364,
       11050644,
       9542039
+    ],
+    "downtownWallTintSRGB": [
+      12039585,
+      12758669,
+      9283749,
+      12630182,
+      10991015
     ],
     "wallDiffuseScale": 0.76,
     "roadTintSRGB": 9607324,
@@ -141,9 +152,9 @@
       0.06984488376582869,
       0.07376618803434053
     ],
-    "assumption": "Static envelope averages including 3.14 civic/service/mineral embankment materials; scanned asphalt baseline average is rescaled by the current linear material tint. Individual windows, metal, shop interiors and textured facade variation are averaged."
+    "assumption": "Static envelope averages include retained civic/service/mineral materials, remodelled downtown walls and four sealed public frontages. Scanned asphalt baseline average is rescaled by the current linear material tint. Individual windows, metal, shop interiors and textured facade variation are averaged."
   },
-  "materialModelSHA256": "390d17c76ae16626b490fe429a11aba2e79da2b781cb256f2c3f9f662614ba71",
+  "materialModelSHA256": "370cc1fd9ffb8c770d03244d0812b2d349f73d3ba39e255d770b6c3ff274a6ac",
   "limitations": [
     "Static shared solid envelopes and average diffuse reflectances; fine facade, foliage and animated people are not path-traced.",
     "Three surface events; not an unlimited-bounce solution, hardware ray tracing or DDGI.",

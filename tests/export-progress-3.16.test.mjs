@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {writeFileSync,readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
@@ -73,4 +74,4 @@ try{
   });
 }finally{URL.createObjectURL=original.create;URL.revokeObjectURL=original.revoke;dom.window.close();}
 const files=['dist/export-encoder.js','dist/export-worker.js','dist/export-download.js','dist/input-session.js','tests/export-progress-3.16.test.mjs'];
-writeFileSync('qa/export-progress-3.16.json',JSON.stringify({modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,checks,measurements,sourceHashes:Object.fromEntries(files.map(p=>[p,createHash('sha256').update(readFileSync(p)).digest('hex')])),scope:'Actual cooperative encoder, immutable received-event journal and DOM download manager; browser handoff is simulated here. Native download measurement is reported separately. No claim about the earlier browser tool timeout.'},null,2)+'\n');
+writeFileSync(`qa/export-progress-${REPORT_VERSION}.json`,JSON.stringify({modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,checks,measurements,sourceHashes:Object.fromEntries(files.map(p=>[p,createHash('sha256').update(readFileSync(p)).digest('hex')])),scope:'Actual cooperative encoder, immutable received-event journal and DOM download manager; browser handoff is simulated here. Native download measurement is reported separately. No claim about the earlier browser tool timeout.'},null,2)+'\n');

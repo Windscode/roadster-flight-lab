@@ -1,6 +1,6 @@
 // Lossless storage for large reviewed repository assets and numerical evidence.
 // Runtime consumers still receive the original bytes and original file names.
-import {readFileSync,writeFileSync,mkdirSync,existsSync,lstatSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync,existsSync,lstatSync,statSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {gzipSync,gunzipSync} from 'node:zlib';
 import {resolve,dirname,relative,sep} from 'node:path';
@@ -28,8 +28,50 @@ export function readPayloadManifest(root=defaultRoot){
   if(manifest.schema!=='roadster.repository-payloads'||manifest.version!==1||!Array.isArray(manifest.files))throw Error('Unsupported payload manifest');
   return manifest;
 }
-export function restorePayloads({root=defaultRoot,strict=false}={}){
-  root=resolve(root);const manifest=readPayloadManifest(root);let restored=0,verified=0,bytes=0;const modified=[];
+// Verification is deliberately separate from restoration. A prepared workspace
+// may read an existing logical-file symlink to preserved evidence, but archive
+// paths and directory components remain subject to the original safePath rule.
+// No path accepted by this helper is ever passed to a writing operation.
+function existingReadOnlyLogicalPath(root,name){
+  root=resolve(root);
+  if(typeof name!=='string'||!name||name.includes('\\'))throw Error('Invalid payload path');
+  const target=resolve(root,name),rel=relative(root,target);
+  if(rel==='..'||rel.startsWith('..'+sep)||rel!==name.split('/').join(sep))throw Error('Payload outside repository: '+name);
+  for(let path=dirname(target);path!==root;path=dirname(path))if(lstatSync(path,{throwIfNoEntry:false})?.isSymbolicLink())throw Error('Symlink in payload directory: '+name);
+  const entry=lstatSync(target,{throwIfNoEntry:false});
+  if(!entry)throw Error('Missing logical payload; restore explicitly into a writable checkout: '+name);
+  const file=statSync(target,{throwIfNoEntry:false});
+  if(!file?.isFile())throw Error('Logical payload is not an existing regular file: '+name);
+  return{target,bytes:file.size,symbolicLink:entry.isSymbolicLink()};
+}
+export function verifyPayloads({root=defaultRoot,manifest:selection=null}={}){
+  root=resolve(root);
+  if(!existsSync(safePath(root,manifestPath)))throw Error('Missing payload manifest: '+manifestPath);
+  // A caller may supply an explicit, independently checked publication subset.
+  // The default remains the complete archival contract, with no missing skip.
+  const manifest=selection??readPayloadManifest(root);let verified=0,bytes=0,logicalSymlinks=0,segments=0;
+  if(manifest.schema!=='roadster.repository-payloads'||manifest.version!==1||!Array.isArray(manifest.files))throw Error('Unsupported selected payload manifest');
+  for(const entry of manifest.files){
+    if(!Number.isSafeInteger(entry.bytes)||entry.bytes<0||entry.bytes>100*1024*1024||entry.encoding!=='gzip'||!Array.isArray(entry.parts)||!Number.isSafeInteger(entry.compressedBytes)||entry.compressedBytes<0)throw Error('Invalid payload entry: '+entry.path);
+    const logical=existingReadOnlyLogicalPath(root,entry.path);
+    const compressed=Buffer.concat(entry.parts.map(part=>{
+      const data=readFileSync(safePath(root,part.path));
+      if(data.length!==part.bytes||digest(data)!==part.sha256)throw Error('Corrupt payload segment: '+part.path);
+      segments++;return data;
+    }));
+    if(compressed.length!==entry.compressedBytes||digest(compressed)!==entry.compressedSha256)throw Error('Compressed payload identity mismatch: '+entry.path);
+    const original=gunzipSync(compressed,{maxOutputLength:entry.bytes+1});
+    if(original.length!==entry.bytes||digest(original)!==entry.sha256||gitBlob(original)!==entry.gitBlobSha)throw Error('Archived payload identity mismatch: '+entry.path);
+    if(logical.bytes!==entry.bytes)throw Error('Existing logical payload identity mismatch: '+entry.path);
+    const current=readFileSync(logical.target);
+    if(current.length!==entry.bytes||digest(current)!==entry.sha256||gitBlob(current)!==entry.gitBlobSha)throw Error('Existing logical payload identity mismatch: '+entry.path);
+    verified++;bytes+=current.length;if(logical.symbolicLink)logicalSymlinks++;
+  }
+  return{mode:'verify',restored:0,verified,archivesVerified:verified,files:manifest.files.length,bytes,segments,logicalSymlinks};
+}
+export function restorePayloads({root=defaultRoot,strict=false,manifest:selection=null}={}){
+  root=resolve(root);const manifest=selection??readPayloadManifest(root);let restored=0,verified=0,bytes=0;const modified=[];
+  if(manifest.schema!=='roadster.repository-payloads'||manifest.version!==1||!Array.isArray(manifest.files))throw Error('Unsupported selected payload manifest');
   for(const entry of manifest.files){
     const target=safePath(root,entry.path);
     if(!Number.isSafeInteger(entry.bytes)||entry.bytes<0||entry.bytes>100*1024*1024||entry.encoding!=='gzip'||!Array.isArray(entry.parts))throw Error('Invalid payload entry: '+entry.path);
@@ -38,7 +80,7 @@ export function restorePayloads({root=defaultRoot,strict=false}={}){
       if(data.length!==part.bytes||digest(data)!==part.sha256)throw Error('Corrupt payload segment: '+part.path);
       return data;
     }));
-    if(digest(compressed)!==entry.compressedSha256)throw Error('Compressed payload identity mismatch: '+entry.path);
+    if(compressed.length!==entry.compressedBytes||digest(compressed)!==entry.compressedSha256)throw Error('Compressed payload identity mismatch: '+entry.path);
     const data=gunzipSync(compressed,{maxOutputLength:entry.bytes+1});
     if(data.length!==entry.bytes||digest(data)!==entry.sha256||gitBlob(data)!==entry.gitBlobSha)throw Error('Restored payload identity mismatch: '+entry.path);
     if(existsSync(target)){
@@ -70,6 +112,7 @@ export function packPayloads({root=defaultRoot,paths}={}){
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const mode=process.argv[2]||'restore';
   if(mode==='restore')console.log(JSON.stringify(restorePayloads()));
+  else if(mode==='verify')console.log(JSON.stringify(verifyPayloads()));
   else if(mode==='pack')console.log(JSON.stringify(packPayloads({paths:process.argv.length>3?process.argv.slice(3):undefined})));
-  else throw Error('Usage: node scripts/repository-payloads.mjs [restore|pack [reviewed logical paths...]]');
+  else throw Error('Usage: node scripts/repository-payloads.mjs [verify|restore|pack [reviewed logical paths...]]');
 }

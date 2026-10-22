@@ -1,0 +1,98 @@
+{
+  "schema": "roadster-street-detail-3.18",
+  "createdAt": "2026-10-21T03:10:43.706Z",
+  "status": "failed",
+  "checks": [
+    {
+      "name": "The whole 3.17 physical city and its road clearances remain identical",
+      "status": "passed",
+      "detail": {
+        "geometryCanonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
+        "baselineCommit": "d9a4fbfd434fe49cdbeae18c32f624360e9dc4e9",
+        "buildings": 114,
+        "streets": 12,
+        "scope": "Exact shared solids, so new facade work does not open rooms or expand map bounds."
+      }
+    },
+    {
+      "name": "Shallow showcases use separated glazing, returns and usable-scale contents within the existing recess",
+      "status": "passed",
+      "detail": {
+        "recipes": [
+          {
+            "recipe": "books",
+            "depthM": 0.62,
+            "glassToBackM": 0.5349999999999999,
+            "handleHeightM": 1.06,
+            "doorWidthM": 1.1
+          },
+          {
+            "recipe": "daily",
+            "depthM": 0.62,
+            "glassToBackM": 0.5349999999999999,
+            "handleHeightM": 1.06,
+            "doorWidthM": 1.1
+          },
+          {
+            "recipe": "workshop",
+            "depthM": 0.62,
+            "glassToBackM": 0.5349999999999999,
+            "handleHeightM": 1.06,
+            "doorWidthM": 1.1
+          },
+          {
+            "recipe": "gallery",
+            "depthM": 0.62,
+            "glassToBackM": 0.5349999999999999,
+            "handleHeightM": 1.06,
+            "doorWidthM": 1.1
+          }
+        ],
+        "glazing": [
+          {
+            "name": "Urban / clear exterior showcase glazing",
+            "opacity": 0.19,
+            "roughness": 0.14
+          }
+        ],
+        "scope": "Actual geometry/material separation. Visual usefulness, street rhythm and legibility are judged in matched native views, not by object count."
+      }
+    },
+    {
+      "name": "Selective upper facade light originates at actual finite fixtures and reaches external receivers",
+      "status": "failed",
+      "error": {
+        "message": "Expected values to be strictly equal:\n\n1 !== 0\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/city-street-detail-3.18.test.mjs:49:86\n    at check (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/city-street-detail-3.18.test.mjs:17:53)\n    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/city-street-detail-3.18.test.mjs:44:7"
+      }
+    },
+    {
+      "name": "Night direct and bounced transport are rebaked from these same sources",
+      "status": "passed",
+      "detail": [
+        {
+          "folder": "night-irradiance",
+          "identity": "57d577dad3076032db3daddb539f3e49580501e1e82bbc54053a9563625ab714",
+          "anchorSHA256": "2edf5e53201b588aac0fcd53193f60e5f57cfce96443840bdba9583acd2ce0db"
+        },
+        {
+          "folder": "night-direct-irradiance",
+          "identity": "66222b96fb25c71f9d7ba66eafe7b2d2ad177fd56e68818f24f7b669af8bbb63",
+          "anchorSHA256": "2edf5e53201b588aac0fcd53193f60e5f57cfce96443840bdba9583acd2ce0db"
+        }
+      ]
+    }
+  ],
+  "sourceHashes": {
+    "dist/street-display.js": "1a33eb1fdc499f094665f2d469ecc04f23cafc85371bcdf7206d1f63a7f82b35",
+    "dist/city-frontage-design.js": "0df9e2c53eaaf986ad635ea0e1338036225e7a89f5f4d0b28dd2702facb4a0b9",
+    "dist/city-street-edge.js": "9a1208ec25d71b7ca2948467b8db5b25cb2fd727cff5a91e0a432e75ed082ad9",
+    "dist/urban-architecture.js": "8a94e60b618530ec6413d79887d19123c2baab9c0dbeb9a351b7b9d4dbbd3e93",
+    "dist/city-environment.js": "17cd43f2766908b50b3b6fae2f104ab14bf695fba90bed96eb184dd2f1e770fb"
+  },
+  "limits": [
+    "The 3.17 final batch repair was geometry-equivalent; this intentional 3.18 facade edit is not. Its old equivalence report remains historical evidence.",
+    "Current whole-scene and fifteen-view draw/triangle budgets are checked separately without raising ceilings.",
+    "No object count or scalar audit substitutes for complete-street, corner, night and continuous driving observations."
+  ]
+}

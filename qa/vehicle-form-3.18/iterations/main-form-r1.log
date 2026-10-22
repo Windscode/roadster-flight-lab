@@ -1,0 +1,56 @@
+node:internal/child_process:1160
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync git EPERM
+    at Object.spawnSync (node:internal/child_process:1160:20)
+    at spawnSync (node:child_process:928:24)
+    at execFileSync (node:child_process:971:15)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/vehicle-form-3.18.test.mjs:16:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -1,
+  code: 'EPERM',
+  syscall: 'spawnSync git',
+  path: 'git',
+  spawnargs: [
+    'show',
+    'd9a4fbfd434fe49cdbeae18c32f624360e9dc4e9:dist/vehicle.js'
+  ],
+  error: [Circular *1],
+  status: 0,
+  signal: null,
+  output: [
+    null,
+    Buffer(98377) [Uint8Array] [
+      105, 109, 112, 111, 114, 116,  32, 123, 118, 101, 104, 105,
+       99, 108, 101,  66, 114,  97, 107, 101,  83, 105, 103, 110,
+       97, 108, 125,  32, 102, 114, 111, 109,  32,  39,  46,  47,
+      118, 101, 104, 105,  99, 108, 101,  45, 108, 105, 103, 104,
+      116,  45, 115, 116,  97, 116, 101,  46, 106, 115,  39,  59,
+       13,  10, 105, 109, 112, 111, 114, 116,  32, 123,  97, 116,
+      116,  97,  99, 104,  82, 101,  99, 101, 105, 118, 101, 114,
+       80, 108,  97, 110, 101,  83, 104,  97, 100, 111, 119, 115,
+      125,  32, 102, 114,
+      ... 98277 more items
+    ],
+    Buffer(0) [Uint8Array] []
+  ],
+  pid: 12,
+  stdout: Buffer(98377) [Uint8Array] [
+    105, 109, 112, 111, 114, 116,  32, 123, 118, 101, 104, 105,
+     99, 108, 101,  66, 114,  97, 107, 101,  83, 105, 103, 110,
+     97, 108, 125,  32, 102, 114, 111, 109,  32,  39,  46,  47,
+    118, 101, 104, 105,  99, 108, 101,  45, 108, 105, 103, 104,
+    116,  45, 115, 116,  97, 116, 101,  46, 106, 115,  39,  59,
+     13,  10, 105, 109, 112, 111, 114, 116,  32, 123,  97, 116,
+    116,  97,  99, 104,  82, 101,  99, 101, 105, 118, 101, 114,
+     80, 108,  97, 110, 101,  83, 104,  97, 100, 111, 119, 115,
+    125,  32, 102, 114,
+    ... 98277 more items
+  ],
+  stderr: Buffer(0) [Uint8Array] []
+}
+
+Node.js v24.19.0

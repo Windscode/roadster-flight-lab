@@ -61,7 +61,7 @@ await test('Projected footprint and inspection context change actual geometry wh
   assert.ok(vehicleProjectedPixels({distance:20,fov:50,height:2160})>vehicleProjectedPixels({distance:20,fov:50,height:1080}));
   evidence.geometryBudgets=costs;evidence.physicalGeometry={wheelbaseMetres:VEHICLE_GEOMETRY.wheelbaseHalf*2,trackMetres:VEHICLE_GEOMETRY.wheelTrackHalf*2,radiusMetres:VEHICLE_GEOMETRY.tyreRadius};
 });
-await test('Street/headlight pool uses finite shadowed lights at real anchors, with bounded update rate',()=>{
+await test('Street/headlight pool retains finite real shadowed lights, refreshes moving poses in the same frame and avoids unchanged idle work',()=>{
   const scene=new THREE.Scene(),vehicle=new THREE.Group();scene.add(vehicle);vehicle.position.set(-200,.7,-300);
   const anchors=Array.from({length:8},(_,i)=>({position:[-209+i%2*18,7.3,-320+Math.floor(i/2)*14],color:0xffccaa,intensity:1600,range:28}));
   const lights=createCityPracticalLights(scene,anchors);lights.setVehicleRoot(vehicle);lights.setEnabled(true);let time=0;const cadence=[];
@@ -73,10 +73,14 @@ await test('Street/headlight pool uses finite shadowed lights at real anchors, w
     // clock, then distinguish a pending movement update from an idle scene.
     time+=.1;assert.equal(lights.wantsShadowUpdate(time),true);
     vehicle.position.x+=.05;lights.update(time+1/240,{x:-200,y:2,z:-300});
-    const early=lights.wantsShadowUpdate(time+1/240);assert.equal(early,false,'Motion must not bypass the configured shadow-rate cap');
-    time+=1/budget.hz+1e-6;const moved=lights.wantsShadowUpdate(time);assert.equal(moved,true,'Pending motion must update at the next permitted interval');
+    // 3.18 intentionally repairs the old moving-lamp/depth-camera mismatch.
+    // The prior global rate cap reproduced stale depth maps while lamps moved
+    // every display frame. Keep the finite pool and no-idle-work contracts;
+    // motion itself must now refresh in the same displayed pose.
+    const early=lights.wantsShadowUpdate(time+1/240);assert.equal(early,true,'Moving lights must refresh depth in the same displayed frame');
+    time+=1/budget.hz+1e-6;const repeated=lights.wantsShadowUpdate(time);assert.equal(repeated,false,'A completed movement update must not be regenerated solely because the old interval elapsed');
     const beforeIdle=lights.stats.updates;time+=1;lights.update(time,{x:-200,y:2,z:-300});assert.equal(lights.wantsShadowUpdate(time),false,'An unchanged scene must not regenerate the same shadow map');
-    cadence.push({quality,minimumIntervalS:1/budget.hz,motionUpdated:moved,prematureUpdate:early,idleAdditionalUpdates:lights.stats.updates-beforeIdle});
+    cadence.push({quality,idleDirtyIntervalS:1/budget.hz,motionSameFrame:early,unnecessaryDelayedRepeat:repeated,idleAdditionalUpdates:lights.stats.updates-beforeIdle});
   }
   lights.setEnabled(false);assert.equal(lights.getLights().length,0);evidence.lightBudgets=CITY_PRACTICAL_LIGHT_BUDGET;evidence.lightCadence=cadence;lights.dispose();
 });

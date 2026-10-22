@@ -115,11 +115,14 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
     }
     stats.shadowMaps=stats.streetSpots+stats.headlightSpots;
   }
-  function wantsShadowUpdate(time){
+  function wantsShadowUpdate(time,{casterChanged=false}={}){
     if(!enabled)return false;
-    const needed=(shadowDirty||time<lastShadow)&&(time<lastShadow||time-lastShadow>=1/profile.hz);
+    // Headlight transforms change in update(); their depth maps must change in
+    // the very same displayed frame. A moving car also changes street occlusion.
+    const moving=shadowDirty&&vehicleMatrixReady||casterChanged;
+    const needed=moving||((shadowDirty||time<lastShadow)&&(time<lastShadow||time-lastShadow>=1/profile.hz));
     if(!needed)return false;
-    pool.concat(heads).forEach(({light})=>{if(light.visible)light.shadow.needsUpdate=true;});lastShadow=time;shadowDirty=false;stats.updates++;return true;
+    pool.concat(heads).forEach(({light})=>{if(light.visible)light.shadow.needsUpdate=true;});lastShadow=time;shadowDirty=false;stats.updates++;stats.motionCoherent=true;if(moving)stats.motionUpdates=(stats.motionUpdates||0)+1;return true;
   }
   return {stats,configure,update,wantsShadowUpdate,setVehicleRoot(root){vehicle=root;vehicleMatrixReady=false;shadowDirty=true;},
     setEnabled(value){enabled=!!value;stats.enabled=enabled;pool.forEach(({light},i)=>light.visible=enabled&&i<profile.street);heads.forEach(({light},i)=>light.visible=enabled&&!!vehicle&&i<profile.heads);shadowDirty=true;lastSelect=-Infinity;},

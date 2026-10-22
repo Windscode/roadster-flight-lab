@@ -109,11 +109,11 @@ pass('Finite-tank hold loses support as pressure and temperature fall and conser
   assert.equal(t.stabilizationMode,'off');assert.equal(t.holdActive,false);assert.equal(t.holdPositionTarget,null);assert.equal(t.holdQuaternionTarget,null);
   if(input.frontJets||input.rearJets){assert.equal(t.stabilizationActive,false);for(let i=0;i<4;i++)close(t.nozzles[i].command,(i<2?input.frontJets:input.rearJets)?20000:0,1e-8,'manual pair precedence');s.step(dt);assert.equal(s.telemetry().stabilizationActive,false);}
  }
- const s=airborne();s.setStabilizationMode('hold');s.setMode('manual');assert.equal(s.stabilizationMode,'level');s.setStabilizationMode('hold');s.setSuction(true);assert.equal(s.stabilizationMode,'level');
- s.setStabilizationMode('hold');s.reset();assert.equal(s.stabilizationMode,'level');assert.equal(s.telemetry().holdPositionTarget,null);
+ const s=airborne();s.setStabilizationMode('hold');s.setMode('manual');assert.equal(s.stabilizationMode,'off');assert.equal(s.airStabilization,false);s.setStabilizationMode('hold');s.setSuction(true);assert.equal(s.stabilizationMode,'off');assert.equal(s.airStabilization,false);
+ s.setStabilizationMode('hold');s.reset();assert.equal(s.stabilizationMode,'off');assert.equal(s.airStabilization,false);assert.equal(s.telemetry().holdPositionTarget,null);
  const h=airborne();h.setMode('hover');h.setStabilizationMode('hold');h.body.applyImpulse(new Vec3(800,0,0));run(h,.5);const position=vector(h.body.position),velocity=vector(h.body.velocity);h.setStabilizationMode('off');assert.deepEqual(vector(h._positionTarget),position);assert.equal(h._heightTarget,position.y);assert.deepEqual(vector(h.body.velocity),velocity);
 }
-pass('Deliberate pilot inputs release research hold to manual attitude control, explicit raw-valve API inputs retain priority, and mode/suction/reset commands release stale references');
+pass('Pilot input, mode, suction and reset release research hold without implicitly arming G; explicit raw valves retain priority and stale world references clear');
 {
  const s=new RoadsterSim();run(s,2);s.setStabilizationMode('hold');const target=s.telemetry().holdPositionTarget;const t=run(s,2);
  assert.equal(t.holdActive,false);assert.equal(t.holdStatus,'surface');assert.equal(t.thrustN,0);assert.deepEqual(t.holdPositionTarget,target);

@@ -1,0 +1,472 @@
+{
+  "schema": "roadster-vehicle-display-3.14",
+  "status": "passed",
+  "modelVersion": "3.17.0",
+  "modelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+  "asOf": "2026-10-21T01:55:29.073Z",
+  "checks": [
+    {
+      "name": "Frozen 3.13 exterior restores the published bytes and independent layout",
+      "status": "passed",
+      "detail": {
+        "baselineCommit": "1dde9a3df081297978d7cc98409be86bcc6daa23",
+        "restoredSourceSHA256": "70515d7eec676d7a36f121701d0a7be17be6b19c0b4a826bfc794c279ccbb5b2",
+        "scope": "Frozen geometry/material code; the comparison uses the current renderer, not a frozen 3.13 rendering pipeline."
+      }
+    },
+    {
+      "name": "Two-seat display is inspection-only and swaps complete visible cabin identities",
+      "status": "passed",
+      "detail": {
+        "experimentalSeats": 1,
+        "officialStudyFrontSeats": 2,
+        "hiddenOEMStructureClaim": false,
+        "physicsWrites": false,
+        "inspectionOnly": true
+      }
+    },
+    {
+      "name": "Lamp off, DRL and low-beam affect bounded emissive roles while retaining wells and optical covers",
+      "status": "passed",
+      "detail": {
+        "states": {
+          "off": {
+            "whiteLight": 0,
+            "lampGuide": 0,
+            "lampEmitter": 0,
+            "tailLight": 0
+          },
+          "drl": {
+            "whiteLight": 1,
+            "lampGuide": 1.15,
+            "lampEmitter": 0,
+            "tailLight": 1.25
+          },
+          "low-beam": {
+            "whiteLight": 2.4,
+            "lampGuide": 1.9,
+            "lampEmitter": 0.44,
+            "tailLight": 1.25
+          }
+        },
+        "guideWinding": [
+          {
+            "quality": "balanced",
+            "triangles": 312,
+            "downwardWinding": 0
+          },
+          {
+            "quality": "high",
+            "triangles": 672,
+            "downwardWinding": 0
+          },
+          {
+            "quality": "ultra",
+            "triangles": 1184,
+            "downwardWinding": 0
+          }
+        ],
+        "addedTextureSamplers": 0,
+        "internalOptics": "inferred, not manufacturer optical data"
+      }
+    },
+    {
+      "name": "Rubber, coated dark alloy, machined silver, rotor and cabin finishes remain distinct without added texture samplers",
+      "status": "passed",
+      "detail": {
+        "rubber": {
+          "color": "171a1c",
+          "metalness": 0,
+          "roughness": 0.85
+        },
+        "wheelDark": {
+          "color": "353f47",
+          "metalness": 0.21,
+          "roughness": 0.36
+        },
+        "wheelSilver": {
+          "color": "b5bdc2",
+          "metalness": 0.86,
+          "roughness": 0.34
+        },
+        "rotor": {
+          "color": "68737a",
+          "metalness": 0.78,
+          "roughness": 0.58
+        },
+        "seatFabric": {
+          "color": "bec4c4",
+          "metalness": 0,
+          "roughness": 0.94
+        },
+        "seatBolster": {
+          "color": "cdd1cf",
+          "metalness": 0,
+          "roughness": 0.69
+        }
+      }
+    },
+    {
+      "name": "Tail installation surrounds unchanged nozzle positions and nozzle geometry",
+      "status": "passed",
+      "detail": {
+        "ports": [
+          {
+            "name": "rear propulsion nozzle 1",
+            "centre": [
+              -0.48,
+              -0.035,
+              -2.322
+            ],
+            "bounds": {
+              "min": [
+                -0.5524000036716461,
+                -0.10740000367164611,
+                -2.322399999989895
+              ],
+              "max": [
+                -0.40759999632835386,
+                0.03740000367164613,
+                -2.21650000025332
+              ]
+            }
+          },
+          {
+            "name": "rear propulsion nozzle 2",
+            "centre": [
+              -0.16,
+              -0.035,
+              -2.322
+            ],
+            "bounds": {
+              "min": [
+                -0.23240000367164612,
+                -0.10740000367164611,
+                -2.322399999989895
+              ],
+              "max": [
+                -0.08759999632835389,
+                0.03740000367164613,
+                -2.21650000025332
+              ]
+            }
+          },
+          {
+            "name": "rear propulsion nozzle 3",
+            "centre": [
+              0.16,
+              -0.035,
+              -2.322
+            ],
+            "bounds": {
+              "min": [
+                0.08759999632835389,
+                -0.10740000367164611,
+                -2.322399999989895
+              ],
+              "max": [
+                0.23240000367164612,
+                0.03740000367164613,
+                -2.21650000025332
+              ]
+            }
+          },
+          {
+            "name": "rear propulsion nozzle 4",
+            "centre": [
+              0.48,
+              -0.035,
+              -2.322
+            ],
+            "bounds": {
+              "min": [
+                0.40759999632835386,
+                -0.10740000367164611,
+                -2.322399999989895
+              ],
+              "max": [
+                0.5524000036716461,
+                0.03740000367164613,
+                -2.21650000025332
+              ]
+            }
+          }
+        ],
+        "apertureRays": [
+          {
+            "quality": "balanced",
+            "port": 1,
+            "oldPanelZ": -2.3005193698596247,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3167479914151983,
+            "retainedPanelZ": -2.2582632876790023
+          },
+          {
+            "quality": "balanced",
+            "port": 2,
+            "oldPanelZ": -2.3018634962937283,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3166939231210857,
+            "retainedPanelZ": -2.257879207032792
+          },
+          {
+            "quality": "balanced",
+            "port": 3,
+            "oldPanelZ": -2.3018269048644058,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.316703385237381,
+            "retainedPanelZ": -2.2580789676977036
+          },
+          {
+            "quality": "balanced",
+            "port": 4,
+            "oldPanelZ": -2.2997165523700303,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3169459539017807,
+            "retainedPanelZ": -2.2613902648172495
+          },
+          {
+            "quality": "high",
+            "port": 1,
+            "oldPanelZ": -2.3005617074930385,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.316903669057184,
+            "retainedPanelZ": -2.2582290059289076
+          },
+          {
+            "quality": "high",
+            "port": 2,
+            "oldPanelZ": -2.3018683279453693,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3168517099036956,
+            "retainedPanelZ": -2.257878588716507
+          },
+          {
+            "quality": "high",
+            "port": 3,
+            "oldPanelZ": -2.3018358544285147,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3168610594222705,
+            "retainedPanelZ": -2.2580669121365244
+          },
+          {
+            "quality": "high",
+            "port": 4,
+            "oldPanelZ": -2.2997301699724284,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3170992622092803,
+            "retainedPanelZ": -2.261337193461645
+          },
+          {
+            "quality": "ultra",
+            "port": 1,
+            "oldPanelZ": -2.3005680535355784,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3171650012766976,
+            "retainedPanelZ": -2.2582259361117374
+          },
+          {
+            "quality": "ultra",
+            "port": 2,
+            "oldPanelZ": -2.301869034344395,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3171143252529007,
+            "retainedPanelZ": -2.257878470659226
+          },
+          {
+            "quality": "ultra",
+            "port": 3,
+            "oldPanelZ": -2.3018364084904195,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3171230855421987,
+            "retainedPanelZ": -2.258063353382981
+          },
+          {
+            "quality": "ultra",
+            "port": 4,
+            "oldPanelZ": -2.2997196783991716,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.317348913554942,
+            "retainedPanelZ": -2.2613319918031136
+          }
+        ],
+        "sharedPhotoVisiblePortReturns": true,
+        "forceModelChanges": 0,
+        "outletRadiusChanges": 0,
+        "scope": "Visible ports remain a common longitudinal actuator representation, not four new independent forces. Surrounds are authored installation geometry, not a disclosed OEM internal mechanism."
+      }
+    },
+    {
+      "name": "Identity, LOD, lamps and cutaway cycling preserve wheel, wing and glass geometry state",
+      "status": "passed",
+      "detail": {
+        "cycles": 18,
+        "independentGlassPanels": 5,
+        "independentLampCovers": 2,
+        "unchangedTyreRadiusM": 0.372,
+        "unchangedDimensionStations": true,
+        "maximumSurfaceDeltaM": 0.002836855553878387,
+        "changedLocalSidePanel": "3.16 rounds only the cross-section transitions; fixed width/arch stations and the existing tyre clearance gate remain"
+      }
+    },
+    {
+      "name": "Photographic cameras reproduce the declared normalized landmark residuals and keep a separate technical rig",
+      "status": "passed",
+      "detail": {
+        "views": [
+          {
+            "id": "photo-side",
+            "sourceSHA256": "133de595f3cb7742f5bb2c24d8e9c41aef06dcd1a63507e2daaddc1c4a71c16a",
+            "rmsImageDiagonalPercent": 2.505087546567586,
+            "landmarks": 10
+          },
+          {
+            "id": "photo-front",
+            "sourceSHA256": "ba430d2177eba7f84f8d70d16af95ae758e2323d8c4d22df08ce58c0844aa647",
+            "rmsImageDiagonalPercent": 1.6036144371528596,
+            "landmarks": 8
+          },
+          {
+            "id": "photo-front-quarter",
+            "sourceSHA256": "342e862f7239479b0d1994d1f842e50d05e926b8fd4c9158c02cc9f011bcc71b",
+            "rmsImageDiagonalPercent": 2.248302756236817,
+            "landmarks": 11
+          }
+        ],
+        "metricCADClaim": false,
+        "geometryImprovementClaim": false
+      }
+    },
+    {
+      "name": "All new geometry has finite unit normals and bounded incremental LOD costs against the 3.15 task baseline",
+      "status": "passed",
+      "detail": {
+        "costs": {
+          "balanced": {
+            "baselineVersion": "3.15.0",
+            "historical313": {
+              "quality": "balanced",
+              "geometryQuality": "balanced",
+              "projectedPixels": null,
+              "drawables": 82,
+              "meshes": 82,
+              "vertices": 45934,
+              "triangles": 55383,
+              "shadowMeshes": 5
+            },
+            "before": {
+              "quality": "balanced",
+              "geometryQuality": "balanced",
+              "projectedPixels": null,
+              "drawables": 86,
+              "meshes": 86,
+              "vertices": 47973,
+              "triangles": 57364,
+              "shadowMeshes": 5
+            },
+            "after": {
+              "quality": "balanced",
+              "geometryQuality": "balanced",
+              "projectedPixels": null,
+              "drawables": 86,
+              "meshes": 86,
+              "vertices": 45077,
+              "triangles": 59639,
+              "shadowMeshes": 5
+            },
+            "triangleDelta": 2275,
+            "drawablesDelta": 0
+          },
+          "high": {
+            "baselineVersion": "3.15.0",
+            "historical313": {
+              "quality": "high",
+              "geometryQuality": "high",
+              "projectedPixels": null,
+              "drawables": 152,
+              "meshes": 148,
+              "vertices": 150740,
+              "triangles": 228677,
+              "shadowMeshes": 124
+            },
+            "before": {
+              "quality": "high",
+              "geometryQuality": "high",
+              "projectedPixels": null,
+              "drawables": 156,
+              "meshes": 152,
+              "vertices": 154406,
+              "triangles": 232992,
+              "shadowMeshes": 127
+            },
+            "after": {
+              "quality": "high",
+              "geometryQuality": "high",
+              "projectedPixels": null,
+              "drawables": 157,
+              "meshes": 153,
+              "vertices": 153640,
+              "triangles": 238598,
+              "shadowMeshes": 123
+            },
+            "triangleDelta": 5606,
+            "drawablesDelta": 1
+          },
+          "ultra": {
+            "baselineVersion": "3.15.0",
+            "historical313": {
+              "quality": "ultra",
+              "geometryQuality": "ultra",
+              "projectedPixels": null,
+              "drawables": 152,
+              "meshes": 148,
+              "vertices": 229863,
+              "triangles": 372521,
+              "shadowMeshes": 124
+            },
+            "before": {
+              "quality": "ultra",
+              "geometryQuality": "ultra",
+              "projectedPixels": null,
+              "drawables": 156,
+              "meshes": 152,
+              "vertices": 235656,
+              "triangles": 380456,
+              "shadowMeshes": 127
+            },
+            "after": {
+              "quality": "ultra",
+              "geometryQuality": "ultra",
+              "projectedPixels": null,
+              "drawables": 157,
+              "meshes": 153,
+              "vertices": 239815,
+              "triangles": 394512,
+              "shadowMeshes": 123
+            },
+            "triangleDelta": 14056,
+            "drawablesDelta": 1
+          }
+        },
+        "meaning": "Resource costs only, not visual quality or GPU performance."
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/vehicle.js": "2c5bd25456264409bcdd7c613e3fc1636e53c8973e552a99c6e5d691d30c1c0b",
+    "dist/vehicle-inspection.js": "752ede2c30207d797ba8fa0ac0246c59d6ce83ba389e2277aa8a830c8c8de6e1",
+    "dist/vehicle-display-study.js": "3eb0019219cea0a95d3f1860eb06f7c10f99e980d8600725524450c4dabe6749",
+    "dist/vehicle-study-capture.js": "31f1f93dd062ab0452988bbbe81ed730252a13e21499440df148ec83606dee2c",
+    "dist/vehicle-reference-3.13.js": "31257f22ae30c1df7392c8a7dcafea1a91017e0b000299b10716ef01ebbb99a3",
+    "dist/vehicle-reference-layout-3.13.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "dist/vehicle-reference-3.15.js": "2747bba7a03d626ceb0661ec5771d8fc6e4c82c0e147402b1ca3fb47386f2009",
+    "dist/vehicle-reference-layout-3.15.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "dist/i18n-vehicle-314-en.js": "58af4e0083cb98e37e7cae89089c1bf4fcf91401e53894eaaf85a56e04c21868",
+    "tests/vehicle-display-3.14.test.mjs": "da83a8101e61a68a75d3518516c5a94b3d7fdd3eebcbd54920f44b3495ee39c7"
+  },
+  "limitations": [
+    "Geometry/material parameters, camera projection and identity isolation are tested. No real GPU pixel or perceived-detail acceptance is implied.",
+    "This structural test does not acquire images; current matched WebGL captures and visual review are separate evidence.",
+    "Same-camera studio/daylight plus actual city wet-night frames, full optical orbit and steering/suspension/wing motion remain target-device checks."
+  ]
+}

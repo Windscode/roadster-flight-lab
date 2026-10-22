@@ -23,7 +23,7 @@ const actual={},lightingVariants=[];let time=1,coldStart=null;
 function checkLightingVariant(quality,night){
   let staticMaterials=0;
   for(const material of environmentMaterials){
-    assert.equal(material.defines.CSM_CASCADES,CITY_RENDER_PRESETS[quality].shadowCascades);
+    assert.equal(material.defines.CSM_CASCADES,night?1:CITY_RENDER_PRESETS[quality].shadowCascades);
     const variant=material.userData.cityLightingVariant,shader={vertexShader:THREE.ShaderLib.physical.vertexShader,fragmentShader:THREE.ShaderLib.physical.fragmentShader,uniforms:{}};
     assert.equal(variant.quality,quality);assert.equal(variant.night,night);material.onBeforeCompile(shader,renderer);
     const source=shader.vertexShader+'\n'+shader.fragmentShader;
@@ -82,7 +82,7 @@ assert.equal(environment.wantsShadowUpdate(time+.008,camera.position),false);
 assert.equal(environment.wantsShadowUpdate(time+.017,camera.position),false);
 assert.equal(environment.wantsShadowUpdate(time+.034,camera.position),true);
 assert.equal(environment.wantsShadowUpdate(time+.035,new THREE.Vector3(400,12,180)),true);
-record('Balanced shadow cadence caps at 30 Hz and refreshes immediately after a teleport');
+record('Stationary balanced fallback caps at 30 Hz and refreshes immediately after a teleport; moving display-pose refresh is checked separately');
 for(const floor of geometry.filter(g=>g.kind==='floor')){
   const visible=environment.root.getObjectByName(floor.id);assert.ok(visible);assert.equal(visible.position.y,floor.position[1]+floor.size[1]/2);assert.equal(visible.userData.renderDetail,'mass');
   assert.ok(visible.geometry.attributes.position.count>100);camera.position.set(0,500,0);environment.update(time+=1,camera.position);assert.equal(visible.visible,true);

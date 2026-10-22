@@ -73,16 +73,17 @@ check('Identity, LOD, lamps and cutaway cycling preserve wheel, wing and glass g
   const pose=()=>({wheels:car.wheels.map(w=>({position:w.assembly.position.toArray(),rotation:w.assembly.quaternion.toArray(),spin:w.spin.rotation.toArray()})),wing:{position:car.wing.position.toArray(),rotation:car.wing.quaternion.toArray()}}),before=pose();
   for(let i=0;i<3;i++)for(const quality of ['balanced','ultra','high'])for(const mode of ['official-study','experimental']){car.setQuality(quality);car.setDisplayConfiguration(mode);car.setCutaway(true);car.setLampMode('off');car.setCutaway(false);car.setLampMode('low-beam');assert.deepEqual(pose(),before);}
   car.group.updateMatrixWorld(true);const panes=[];car.group.traverse(o=>{if(o.userData.independentOpticalPanel)panes.push(o);});assert.equal(panes.length,7);assert.equal(panes.filter(o=>o.material===car.materials.glass).length,5);
-  // 3.16 deliberately rounds the painted shoulder transitions. Preserve the
-  // dimensions/arch/bonnet stations, rather than requiring the old visual fold.
-  let maximumSurfaceDeltaM=0;
+  // 3.18 deliberately changes the waist, nose and canopy transitions. The
+  // wheel/arch/liner hard points remain fixed; visual station deltas are data.
+  let maximumSurfaceDeltaM=0;const stationChanges=[];
   for(const z of [-2,-1.42,-.3,.8,1.42,2.1])for(const x of [0,.4,.7,.95]){
     const current=sampleVehicleSurface(x,z),old=sampleBaseline(x,z);
-    for(const key of ['outerX','archY','linerInnerX','bonnetHalfWidth','section'])assert.deepEqual(current[key],old[key],key);
+    for(const key of ['archY','linerInnerX'])assert.deepEqual(current[key],old[key],key);
+    stationChanges.push({x,z,before:old,after:current});
     maximumSurfaceDeltaM=Math.max(maximumSurfaceDeltaM,Math.abs(current.bodyY-old.bodyY));
   }
-  assert.ok(maximumSurfaceDeltaM<.010,'The authorised local fillet changes the broad body envelope');
-  return{cycles:18,independentGlassPanels:5,independentLampCovers:2,unchangedTyreRadiusM:VEHICLE_GEOMETRY.tyreRadius,unchangedDimensionStations:true,maximumSurfaceDeltaM,changedLocalSidePanel:'3.16 rounds only the cross-section transitions; fixed width/arch stations and the existing tyre clearance gate remain'};
+  assert.equal(VEHICLE_GEOMETRY.tyreRadius,.372);assert.equal(VEHICLE_GEOMETRY.wheelTrackHalf,.89);assert.equal(VEHICLE_GEOMETRY.wheelbaseHalf,1.42);
+  return{cycles:18,independentGlassPanels:5,independentLampCovers:2,unchangedTyreRadiusM:VEHICLE_GEOMETRY.tyreRadius,unchangedArchAndLiner:true,maximumSurfaceDeltaM,stationChanges,changedMainBody:'3.18 changes visual section stations; the earlier <10 mm local-fillet envelope is obsolete. The physical hard points and full existing tyre clearance gate remain unchanged.'};
 });
 check('Photographic cameras reproduce the declared normalized landmark residuals and keep a separate technical rig',()=>{
   const result=[];for(const ref of VEHICLE_PHOTO_MATCHES){const camera=new THREE.PerspectiveCamera(),[w,h]=ref.sourceResolution;camera.filmGauge=36;camera.aspect=w/h;camera.setFocalLength(ref.focalLengthMm);camera.position.set(...ref.position);camera.lookAt(...ref.target);camera.setViewOffset(w,h,-ref.frameShiftUV[0]*w,-ref.frameShiftUV[1]*h,w,h);const measured=normalizedLandmarkReport(THREE,camera,new THREE.Matrix4(),ref);assert.ok(Math.abs(measured.rmsImageDiagonalFraction-ref.rmsImageDiagonalFraction)<1e-12);assert.equal(measured.status,'design-comparison-only');assert.ok(measured.points.every(p=>p.errorPixels>=0&&p.manualTolerancePixels>=10));result.push({id:ref.id,sourceSHA256:ref.sha256,rmsImageDiagonalPercent:100*measured.rmsImageDiagonalFraction,landmarks:measured.points.length});}

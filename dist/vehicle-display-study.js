@@ -49,10 +49,10 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.4866687973518529,
-          0.6984016987214609
+          0.486668797351853,
+          0.6984016987214607
         ],
-        "errorImageDiagonalFraction": 0.008733746418821796
+        "errorImageDiagonalFraction": 0.008733746418821735
       },
       {
         "id": "rear-axle",
@@ -68,9 +68,9 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         "manualTolerancePixels": 12,
         "projectedUV": [
           0.841151315966681,
-          0.6523910197724078
+          0.6523910197724077
         ],
-        "errorImageDiagonalFraction": 0.023674300818657647
+        "errorImageDiagonalFraction": 0.023674300818657658
       },
       {
         "id": "front-tyre-top",
@@ -85,10 +85,10 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.48574298144842787,
-          0.537428630218601
+          0.4857429814484279,
+          0.5374286302186009
         ],
-        "errorImageDiagonalFraction": 0.00889928952384593
+        "errorImageDiagonalFraction": 0.008899289523845874
       },
       {
         "id": "rear-tyre-top",
@@ -103,16 +103,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.8422235257980206,
-          0.4989308206759445
+          0.8422235257980207,
+          0.4989308206759444
         ],
-        "errorImageDiagonalFraction": 0.022642318175275733
+        "errorImageDiagonalFraction": 0.022642318175275636
       },
       {
         "id": "nose",
         "pointM": [
-          0.855,
-          -0.026,
+          0.8664885673915688,
+          -0.006748432915607131,
           2.3
         ],
         "photoUV": [
@@ -121,15 +121,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.36859632289654565,
-          0.6226661203281569
+          0.36850817924329515,
+          0.6151584692241915
         ],
-        "errorImageDiagonalFraction": 0.01960091101843738
+        "errorImageDiagonalFraction": 0.01965685546362331
       },
       {
         "id": "windshield-base",
         "pointM": [
-          0.775,
+          0.885,
           0.28,
           0.8
         ],
@@ -139,10 +139,10 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.5644428281670486,
-          0.4628882175634546
+          0.5663616099449571,
+          0.4701110867857326
         ],
-        "errorImageDiagonalFraction": 0.057181031160402435
+        "errorImageDiagonalFraction": 0.058878906588283667
       },
       {
         "id": "roof-vertex",
@@ -158,15 +158,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         "manualTolerancePixels": 12,
         "projectedUV": [
           0.6894228101874076,
-          0.2943097819411633
+          0.2943097819411632
         ],
-        "errorImageDiagonalFraction": 0.00855414152970056
+        "errorImageDiagonalFraction": 0.00855414152970059
       },
       {
         "id": "rear-window-corner",
         "pointM": [
-          0.775,
-          0.35,
+          0.7605984151695713,
+          0.477201958809474,
           -1.48
         ],
         "photoUV": [
@@ -175,16 +175,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.8452484060890344,
-          0.40624904143246765
+          0.8450303631818021,
+          0.35286768635724375
         ],
-        "errorImageDiagonalFraction": 0.03468241105711458
+        "errorImageDiagonalFraction": 0.03286425011535225
       },
       {
         "id": "rear-shoulder",
         "pointM": [
-          1.047,
-          0.35,
+          1.0034885673915686,
+          0.3893600244652815,
           -1.42
         ],
         "photoUV": [
@@ -193,16 +193,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.8493713939300418,
-          0.4230245025205316
+          0.8476561414333897,
+          0.4038002502800389
         ],
-        "errorImageDiagonalFraction": 0.006581506951969251
+        "errorImageDiagonalFraction": 0.008839413945617639
       },
       {
         "id": "tail",
         "pointM": [
-          0.95,
-          0.225,
+          0.9064885673915686,
+          0.2547031006475261,
           -2.3
         ],
         "photoUV": [
@@ -211,14 +211,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.9491316184759169,
-          0.45871016502902057
+          0.9471000539240438,
+          0.44381960861899056
         ],
-        "errorImageDiagonalFraction": 0.008579953304331712
+        "errorImageDiagonalFraction": 0.007893437382401709
       }
     ],
-    "rmsImageDiagonalFraction": 0.025050875465675825,
-    "cameraFit": "Assumed 50 mm pinhole, fitted yaw/elevation/distance and image framing to hand-marked public image landmarks. Not recovered EXIF/intrinsics or CAD validation."
+    "rmsImageDiagonalFraction": 0.02524958266082094,
+    "cameraFit": "Original assumed 50 mm camera, pose and framing retained unchanged from 3.14. 3.18 updates the model points from the actual loft and top skin without refitting the camera. Residuals combine annotation, view fit and geometry; they do not isolate CAD accuracy or form improvement.",
+    "geometryLandmarksRevision": "3.18 actual loft and top-skin samples; photo point associations remain authored hypotheses"
   },
   {
     "id": "photo-front",
@@ -250,8 +251,8 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
       {
         "id": "roof-left",
         "pointM": [
-          -0.65,
-          0.631,
+          -0.6515856166743224,
+          0.598,
           0.04
         ],
         "photoUV": [
@@ -260,16 +261,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 10,
         "projectedUV": [
-          0.4001379368657116,
-          0.2838070020058879
+          0.39992517237486175,
+          0.29457795840058876
         ],
-        "errorImageDiagonalFraction": 0.007291714821560948
+        "errorImageDiagonalFraction": 0.009597408000299089
       },
       {
         "id": "roof-right",
         "pointM": [
-          0.65,
-          0.631,
+          0.6515856166743224,
+          0.598,
           0.04
         ],
         "photoUV": [
@@ -278,15 +279,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 10,
         "projectedUV": [
-          0.6001623760613689,
-          0.28372752011198105
+          0.6003744288130962,
+          0.2944813351462773
         ],
-        "errorImageDiagonalFraction": 0.009324614026833175
+        "errorImageDiagonalFraction": 0.01123717400458705
       },
       {
         "id": "windshield-left",
         "pointM": [
-          -0.775,
+          -0.885,
           0.28,
           0.8
         ],
@@ -296,15 +297,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 10,
         "projectedUV": [
-          0.3718091399638211,
-          0.41309637315263537
+          0.35336151044101005,
+          0.41312244748625343
         ],
-        "errorImageDiagonalFraction": 0.02645913591337236
+        "errorImageDiagonalFraction": 0.010457668232838812
       },
       {
         "id": "windshield-right",
         "pointM": [
-          0.775,
+          0.885,
           0.28,
           0.8
         ],
@@ -314,16 +315,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 10,
         "projectedUV": [
-          0.6311854890754691,
-          0.4127297642367843
+          0.6495526609135449,
+          0.41270380362403813
         ],
-        "errorImageDiagonalFraction": 0.026491954462374383
+        "errorImageDiagonalFraction": 0.010607457546075958
       },
       {
         "id": "nose-left",
         "pointM": [
-          -0.655,
-          -0.022,
+          -0.62,
+          -0.01,
           2.3
         ],
         "photoUV": [
@@ -332,16 +333,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 10,
         "projectedUV": [
-          0.37198656717780443,
-          0.5822726278324614
+          0.3790983892388353,
+          0.5771194540298329
         ],
-        "errorImageDiagonalFraction": 0.0007383435359300002
+        "errorImageDiagonalFraction": 0.007059101270736582
       },
       {
         "id": "nose-right",
         "pointM": [
-          0.655,
-          -0.022,
+          0.62,
+          -0.01,
           2.3
         ],
         "photoUV": [
@@ -350,16 +351,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 10,
         "projectedUV": [
-          0.6383145422240897,
-          0.581542070941612
+          0.631233220421981,
+          0.5764380037126109
         ],
-        "errorImageDiagonalFraction": 0.0023413878640052687
+        "errorImageDiagonalFraction": 0.005386716424436379
       },
       {
         "id": "shoulder-left",
         "pointM": [
-          -1.034,
-          0.272,
+          -0.9904885673915687,
+          0.24933438869964186,
           1.42
         ],
         "photoUV": [
@@ -368,16 +369,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 10,
         "projectedUV": [
-          0.31577850254819495,
-          0.43070226070928175
+          0.3237119570144208,
+          0.43935050647242824
         ],
-        "errorImageDiagonalFraction": 0.017865487320529488
+        "errorImageDiagonalFraction": 0.012870630336082087
       },
       {
         "id": "shoulder-right",
         "pointM": [
-          1.034,
-          0.272,
+          0.9904885673915687,
+          0.24933438869964186,
           1.42
         ],
         "photoUV": [
@@ -386,14 +387,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 10,
         "projectedUV": [
-          0.6896254460813752,
-          0.43012238098150773
+          0.6817361152662501,
+          0.4387708090151222
         ],
-        "errorImageDiagonalFraction": 0.01378526273315402
+        "errorImageDiagonalFraction": 0.009734964509322543
       }
     ],
-    "rmsImageDiagonalFraction": 0.016036144371528574,
-    "cameraFit": "Assumed 50 mm pinhole, fitted yaw/elevation/distance and image framing to hand-marked public image landmarks. Not recovered EXIF/intrinsics or CAD validation."
+    "rmsImageDiagonalFraction": 0.009871268815526928,
+    "cameraFit": "Original assumed 50 mm camera, pose and framing retained unchanged from 3.14. 3.18 updates the model points from the actual loft and top skin without refitting the camera. Residuals combine annotation, view fit and geometry; they do not isolate CAD accuracy or form improvement.",
+    "geometryLandmarksRevision": "3.18 actual loft and top-skin samples; photo point associations remain authored hypotheses"
   },
   {
     "id": "photo-front-quarter",
@@ -435,10 +437,10 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.5377821263777505,
+          0.5377821263777502,
           0.638291856785875
         ],
-        "errorImageDiagonalFraction": 0.013799469122061139
+        "errorImageDiagonalFraction": 0.013799469122061264
       },
       {
         "id": "rear-axle",
@@ -453,10 +455,10 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.7452786274424695,
+          0.7452786274424693,
           0.5720508206615817
         ],
-        "errorImageDiagonalFraction": 0.03515221869389765
+        "errorImageDiagonalFraction": 0.03515221869389782
       },
       {
         "id": "front-tyre-top",
@@ -471,16 +473,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.53785188611155,
+          0.5378518861115499,
           0.5342171232214843
         ],
-        "errorImageDiagonalFraction": 0.009772943204903435
+        "errorImageDiagonalFraction": 0.009772943204903524
       },
       {
         "id": "nose-near",
         "pointM": [
-          0.655,
-          -0.022,
+          0.62,
+          -0.01,
           2.3
         ],
         "photoUV": [
@@ -489,16 +491,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.3925373273238296,
-          0.6013800010991028
+          0.38586823499487666,
+          0.5970788195313537
         ],
-        "errorImageDiagonalFraction": 0.006798201556678398
+        "errorImageDiagonalFraction": 0.011373965568222615
       },
       {
         "id": "nose-far",
         "pointM": [
-          -0.655,
-          -0.022,
+          -0.62,
+          -0.01,
           2.3
         ],
         "photoUV": [
@@ -507,15 +509,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.1670425564727915,
-          0.5812564038123303
+          0.1724518363848324,
+          0.5783720598071109
         ],
-        "errorImageDiagonalFraction": 0.01876194405772324
+        "errorImageDiagonalFraction": 0.015007163457966105
       },
       {
         "id": "windshield-near",
         "pointM": [
-          0.775,
+          0.885,
           0.28,
           0.8
         ],
@@ -525,15 +527,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.575781615396019,
-          0.4877057086036233
+          0.5947078813307514,
+          0.4884194965270062
         ],
-        "errorImageDiagonalFraction": 0.030390769623797196
+        "errorImageDiagonalFraction": 0.04557831201209519
       },
       {
         "id": "windshield-far",
         "pointM": [
-          -0.775,
+          -0.885,
           0.28,
           0.8
         ],
@@ -543,16 +545,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.3362092285371612,
-          0.4786704410497594
+          0.3209244410880102,
+          0.47809398837122774
         ],
-        "errorImageDiagonalFraction": 0.03665038891765083
+        "errorImageDiagonalFraction": 0.025895348717769738
       },
       {
         "id": "roof-vertex",
         "pointM": [
-          0.65,
-          0.631,
+          0.6515856166743224,
+          0.598,
           0.04
         ],
         "photoUV": [
@@ -561,16 +563,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.6173707248536879,
-          0.3961605465293753
+          0.6175909786869779,
+          0.40398202982448006
         ],
-        "errorImageDiagonalFraction": 0.020131745692035873
+        "errorImageDiagonalFraction": 0.01976051074531136
       },
       {
         "id": "rear-window-corner",
         "pointM": [
-          0.775,
-          0.35,
+          0.7605984151695713,
+          0.477201958809474,
           -1.48
         ],
         "photoUV": [
@@ -579,16 +581,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.733077599244347,
-          0.45302044073080616
+          0.7312505368141928,
+          0.4270638430488135
         ],
-        "errorImageDiagonalFraction": 0.022561313541598366
+        "errorImageDiagonalFraction": 0.022398167197368903
       },
       {
         "id": "rear-shoulder",
         "pointM": [
-          1.047,
-          0.35,
+          1.0034885673915686,
+          0.3893600244652815,
           -1.42
         ],
         "photoUV": [
@@ -597,16 +599,16 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.7693292102429131,
-          0.4542622474281608
+          0.7630105983514233,
+          0.4459542228805987
         ],
-        "errorImageDiagonalFraction": 0.017555479179867772
+        "errorImageDiagonalFraction": 0.02360652297119561
       },
       {
         "id": "tail",
         "pointM": [
-          0.95,
-          0.225,
+          0.9064885673915686,
+          0.2547031006475261,
           -2.3
         ],
         "photoUV": [
@@ -615,14 +617,15 @@ export const VEHICLE_PHOTO_MATCHES=Object.freeze([
         ],
         "manualTolerancePixels": 12,
         "projectedUV": [
-          0.7977390979979649,
-          0.47298441007775927
+          0.7918733629033303,
+          0.46716829029124657
         ],
-        "errorImageDiagonalFraction": 0.01229498629904315
+        "errorImageDiagonalFraction": 0.014595948242289793
       }
     ],
-    "rmsImageDiagonalFraction": 0.022483027562368172,
-    "cameraFit": "Assumed 50 mm pinhole, fitted yaw/elevation/distance and image framing to hand-marked public image landmarks. Not recovered EXIF/intrinsics or CAD validation."
+    "rmsImageDiagonalFraction": 0.023906281440671775,
+    "cameraFit": "Original assumed 50 mm camera, pose and framing retained unchanged from 3.14. 3.18 updates the model points from the actual loft and top skin without refitting the camera. Residuals combine annotation, view fit and geometry; they do not isolate CAD accuracy or form improvement.",
+    "geometryLandmarksRevision": "3.18 actual loft and top-skin samples; photo point associations remain authored hypotheses"
   }
 ]);
 export const VEHICLE_CABIN_REFERENCE=Object.freeze({id:'photo-cabin',name:'官方座舱匹配（估计）',file:'Roadster-03-Carousel-Slide-4-Desktop.jpg',sourceURL:'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Roadster-03-Carousel-Slide-4-Desktop.jpg',sha256:'ff5202948ce91631a5a9cf290c844baaa9cb739db74a9080488da1705552bfd2',sourceResolution:[2200,1040],position:[0,.49,-.70],target:[0,.23,.55],focalLengthMm:18,filmGaugeMm:36,frameShiftUV:[0,0],landmarks:[],rmsImageDiagonalFraction:null,cameraFit:'Visual framing estimate only; cabin depth and unexposed interior surfaces are not calibrated. 18 mm is an authored comparison lens, not recovered Tesla camera metadata.'});

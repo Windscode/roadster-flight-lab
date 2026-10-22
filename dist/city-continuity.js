@@ -1,8 +1,9 @@
 import {createStreetSectionFinishes} from './city-street-sections.js';
+import {createCrosstownStreetEdge} from './city-street-edge.js';
 // Authored 3.14 public-space pass. Road centrelines, legal widths, the 114
 // building parcels and the 113 elevated segments are retained. Raised elements
 // enter the same collision/lighting geometry; markings are optical finishes.
-export const CITY_CONTINUITY_VERSION='city-continuity-3.16-1';
+export const CITY_CONTINUITY_VERSION='city-continuity-3.17-1';
 const distance=(p,a,b)=>{const dx=b[0]-a[0],dz=b[2]-a[2],t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[2]-a[2])*dz)/(dx*dx+dz*dz)));return{distance:Math.hypot(p[0]-a[0]-dx*t,p[2]-a[2]-dz*t),y:a[1]+(b[1]-a[1])*t,t};};
 export function roadOccupancy(position,streets,routes=[],margin=.6){
   for(const road of [...streets,...routes])for(let i=1;i<road.points.length;i++){
@@ -25,7 +26,7 @@ export function backgroundLightLayout(streets,routes,plannedDistrictAt){
 
 export function createCityContinuity(streets,routes,buildings,reservations=[]){
   const solids=[],finishes=[],signs=[],lights=[],coverage=[];
-  const box=(id,size,position,material='continuity-stone',rotation=[0,0,0],kind='continuity-structure')=>{const item={id:'continuity-'+id,kind,size,position,rotation,data:{material,project:CITY_CONTINUITY_VERSION}};solids.push(item);return item;};
+  const box=(id,size,position,material='continuity-stone',rotation=[0,0,0],kind='continuity-structure')=>{const item={id:'continuity-'+id,kind,size,position,rotation,data:{material,project:'city-continuity-3.16-1'}};solids.push(item);return item;};
   const finish=(id,size,position,material='paint',rotation=[0,0,0])=>finishes.push({id:'continuity-'+id,size,position,material,rotation});
   const line=(id,a,b,width=.1,material='paint',height=.006)=>finish(id,[width,height,Math.hypot(b[0]-a[0],b[2]-a[2])],[(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2],material,[0,Math.atan2(b[0]-a[0],b[2]-a[2]),0]);
   const arrow=(id,x,y,z,yaw)=>{
@@ -90,6 +91,8 @@ export function createCityContinuity(streets,routes,buildings,reservations=[]){
   lights.push({id:'crosstown-shelter-soffit',position:[-76,3.045,-143.28],target:[-76,.14,-141.8],intensity:95,range:9,color:0xc9e0e1,angle:.95,practical:true,role:'soffit',lensSize:[2.8,.028,.10]});
   const sections=createStreetSectionFinishes(streets,routes,buildings,reservations);
   finishes.push(...sections.finishes);
+  const streetEdge=createCrosstownStreetEdge();
+  solids.push(...streetEdge.solids);finishes.push(...streetEdge.finishes);signs.push(...streetEdge.signs);lights.push(...streetEdge.lights);
 
   // South approach: vehicle apron and parking stay north of the inherited
   // 12 m accessible ramp. A walking/service route is stated, not blocked off.
@@ -188,5 +191,5 @@ export function createCityContinuity(streets,routes,buildings,reservations=[]){
     box('boundary-sign-'+id,[.16,3,.16],[position[0],1.5,position[2]],'steel');
   }
   const connectionCoverage=routes.flatMap(route=>route.points.slice(1).map((b,i)=>({routeId:route.id,segment:i,from:route.points[i],to:b,widthM:route.width,sharedSlab:true,railAndPaint:'retained actual tangent',nativeDrive:'pending-final-build'})));
-  return {version:CITY_CONTINUITY_VERSION,solids,finishes,signs,lights,coverage,streetSections:sections,connectorFootways,connectionCoverage,routeSequence:['weave-main','crosstown-link','foundry-main','terrace-link','terrace-west','forum-west-link','forum-main','forum-cross-322','forum-court','canal-link','south-quay-entry'],limits:'Base street pass plus authored maintenance/civic/waterfront transitions. Not final all-street art, physical driving coverage or GPU/performance acceptance.'};
+  return {version:CITY_CONTINUITY_VERSION,solids,finishes,signs,lights,coverage,streetSections:sections,streetEdge:{version:streetEdge.version,frontages:streetEdge.frontages,limits:streetEdge.limits},connectorFootways,connectionCoverage,routeSequence:['weave-main','crosstown-link','foundry-main','terrace-link','terrace-west','forum-west-link','forum-main','forum-cross-322','forum-court','canal-link','south-quay-entry'],limits:'Base street pass plus authored maintenance/civic/waterfront transitions. Not final all-street art, physical driving coverage or GPU/performance acceptance.'};
 }

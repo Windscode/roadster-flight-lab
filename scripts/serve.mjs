@@ -1,7 +1,7 @@
-import {restorePayloads} from './repository-payloads.mjs';
+import {prepareDependencies} from './prepare-dependencies.mjs';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {MODEL_BUILD_ID} from '../dist/model-build.js';
-restorePayloads();
+prepareDependencies({purpose:'runtime'});
 import http from 'node:http';
 import path from 'node:path';
 import fs from 'node:fs';

@@ -6,7 +6,7 @@ import {CityNavigator,CITY_NAV_DESTINATIONS,CITY_NAV_ROADS} from './city-navigat
 const L=(zh,en)=>getLanguage()==='en'?en:zh;
 export function createCityMap(onWaypoint=()=>{},{navigator=new CityNavigator()}={}){
  const canvas=document.getElementById('city-plan-canvas'),g=canvas.getContext('2d'),detail=document.getElementById('city-plan-detail'),buttons=document.getElementById('city-plan-nodes');
- let state=null,target=null,markedTarget=null;const extent=640,margin=32,w=canvas.width,h=canvas.height,s=(w-2*margin)/(extent*2),px=x=>w/2-x*s,pz=z=>h/2-z*s;
+ let state=null,target=null,markedTarget=null,surfaceRoute=null;const extent=640,margin=32,w=canvas.width,h=canvas.height,s=(w-2*margin)/(extent*2),px=x=>w/2-x*s,pz=z=>h/2-z*s;
  const destinations=CITY_NAV_DESTINATIONS,selectionNodes=destinations.map(d=>({...CITY_NODES.find(n=>n.id===d.id),...d,description:d.note}));
  const routeNode={id:CITY_BENCHMARK_ROUTE.id,label:CITY_BENCHMARK_ROUTE.name,labelEn:'Weave–Quay loop start',position:CITY_BENCHMARK_ROUTE.points[0],description:CITY_BENCHMARK_ROUTE.instructions.join(' ')};
  const navStatus=document.createElement('p');navStatus.className='field-help';navStatus.setAttribute('data-no-i18n','');navStatus.setAttribute('role','status');navStatus.dataset.cityNavigation='';detail.after(navStatus);
@@ -24,6 +24,7 @@ export function createCityMap(onWaypoint=()=>{},{navigator=new CityNavigator()}=
   for(const r of CITY_ROUTES)line(r.points,r.width,'#d9b37c',[9,5]);
   for(const r of CITY_NAV_ROADS.filter(r=>['skyway','south-arrival','test-center-access'].includes(r.id)))line(r.points,r.width,r.id==='skyway'?'#d9b37c':'#799b9e',r.id==='skyway'?[9,5]:[]);
   const benchmarkSelected=target?.id===CITY_BENCHMARK_ROUTE.id;line(CITY_BENCHMARK_ROUTE.points,benchmarkSelected?4.5:2.4,benchmarkSelected?'#d8efc0':'#9abaa488',[5,4]);
+  if(surfaceRoute)line(surfaceRoute.route.waypoints.map(p=>[p.x,0,p.z]),7,'#f0cf8d');
   if(nav.path?.length>1)line(nav.path,6.5,nav.status==='airborne'?'#91aeae':'#bdf2cf',nav.offRoute?[5,4]:[]);
   g.font='17px Microsoft YaHei, sans-serif';g.textAlign='center';for(const d of CITY_DISTRICTS){g.fillStyle=d.color;g.fillText(tr(d.label),px((d.bounds[0]+d.bounds[2])/2),pz(d.bounds[3])+23);}
   for(const loc of CITY_LOCATIONS){g.fillStyle='#a6c5a3';g.beginPath();g.arc(px(loc.position[0]),pz(loc.position[2]),5,0,Math.PI*2);g.fill();}
@@ -38,5 +39,5 @@ export function createCityMap(onWaypoint=()=>{},{navigator=new CityNavigator()}=
  function paintButtons(){buttons.replaceChildren();selectionNodes.forEach((n,i)=>{const b=document.createElement('button');b.className='city-node-button';b.textContent=(i+1)+' / '+(getLanguage()==='en'?n.labelEn:n.label);b.onclick=()=>select(n);buttons.append(b);});const b=document.createElement('button');b.className='city-node-button';b.textContent=L('★ / 织桥 · 南岸环线起点','★ / Weave–Quay loop start');b.onclick=()=>select(routeNode);buttons.append(b);}
  canvas.onclick=e=>{const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width*w,y=(e.clientY-rect.top)/rect.height*h,node=selectionNodes.find(n=>Math.hypot(px(n.position[0])-x,pz(n.position[2])-y)<25);if(node)select(node);};
  onLanguageChange(()=>{paintButtons();if(target)select(target);else draw(state);});paintButtons();select(selectionNodes[0]);
- return{update:draw,navigator,setDestination,get navigation(){return navigator.getState();},get waypoint(){return markedTarget;}};
+ return{update:draw,navigator,setDestination,setSurfaceRoute(descriptor){surfaceRoute=descriptor?JSON.parse(JSON.stringify(descriptor)):null;draw(state);},get navigation(){return navigator.getState();},get waypoint(){return markedTarget;}};
 }

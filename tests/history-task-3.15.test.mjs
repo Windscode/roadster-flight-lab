@@ -5,12 +5,13 @@ import {createHash} from 'node:crypto';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {MODEL_BUILD_ID} from '../dist/model-build.js';
 import {parseLandingArchive,loadLandingLibrary,LANDING_LIBRARY_KEY,reexecuteLandingTask} from '../dist/landing-challenge.js';
-// Explicit 3.16 review: prior task solvers/builds are not installed in the live
+// Explicit 3.19 review: prior task solvers/builds are not installed in the live
 // application. Exact archived results and algorithms remain viewable/exportable;
 // changing a version label cannot enable historical execution.
-assert.equal(MODEL_VERSION,'3.16.0','Review historical task compatibility for each new model.');
+// Audit and snapshot-state boundaries: docs/history-contract-review-3.19.md.
+assert.equal(MODEL_VERSION,'3.19.0','Review historical task compatibility for each new model.');
 const checks=[],sources=[];let totalWrites=0;
-for(const [relativePath,version] of [['qa/landing-task-fixtures-3.14.json','3.14.0'],['qa/height-study-fixtures-3.15.json','3.15.0']]){
+for(const [relativePath,version] of [['qa/landing-task-fixtures-3.14.json','3.14.0'],['qa/height-study-fixtures-3.15.json','3.15.0'],['qa/landing-task-fixtures-3.16.json','3.16.0'],['qa/landing-task-fixtures-3.17.json','3.17.0']]){
   const path=new URL('../'+relativePath,import.meta.url),raw=readFileSync(path,'utf8'),original=parseLandingArchive(raw);
   assert.equal(original.records.length,3);assert(original.records.every(record=>record.identity.modelVersion===version));
   // The pretty-printed 3.15 fixture exceeds the existing 4 MiB storage cap.

@@ -33,10 +33,10 @@ function normalTurn(sample,z){
   }
   return{peakNormalTurningRadPerM:peak,totalNormalTurningDeg:THREE.MathUtils.radToDeg(total),xRangeM:[lo,hi],samples:n+1};
 }
-check('Transverse shoulder curvature is spread over a wider physical band at four fixed stations',()=>{
+check('Transverse shoulder curvature retains the broad continuous band across the changed main sections',()=>{
   const sections=[-1.42,.9,1.42,1.8].map(z=>({zM:z,before:normalTurn(beforeSurface,z),after:normalTurn(sampleVehicleSurface,z)}));
-  for(const row of sections){assert.ok(row.after.peakNormalTurningRadPerM<row.before.peakNormalTurningRadPerM*.35);assert.ok(Math.abs(row.after.totalNormalTurningDeg-row.before.totalNormalTurningDeg)<3);}
-  return{sections,meaning:'Lower local peak normal curvature while retaining the firm wedge and total section turning; a geometric observation, not a perceptual image score.'};
+  for(const row of sections){assert.ok(row.after.peakNormalTurningRadPerM<row.before.peakNormalTurningRadPerM*.35);}
+  return{sections,meaning:'The local curvature bound remains. Total section turning is recorded, not held within the former 3-degree equality: 3.18 intentionally changes shoulder height and width. This diagnostic is not a shape-accuracy or image-quality score.'};
 });
 
 const meshes=root=>{const list=[];root.traverse(o=>{if(o.isMesh)list.push(o);});return list;};

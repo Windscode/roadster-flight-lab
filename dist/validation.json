@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-20T19:30:20.529Z",
-  "model": "Roadster Flight Lab 3.16.0",
+  "generatedAt": "2026-10-21T06:38:12.640Z",
+  "model": "Roadster Flight Lab 3.19.0",
   "scope": "软件内部动力学验收，不代表Tesla真实车辆标定",
   "physics": {
     "status": "passed",
@@ -10,132 +10,132 @@
       {
         "test": "Asymmetric torque-free rotation conserves world angular momentum and rotational energy",
         "status": "PASS",
-        "ms": 487
+        "ms": 363
       },
       {
         "test": "Rotational midpoint integration shows second-order step-size convergence",
         "status": "PASS",
-        "ms": 586
+        "ms": 539
       },
       {
         "test": "10 s ground rest: four contacts, no translation or rotational drift",
         "status": "PASS",
-        "ms": 631
+        "ms": 608
       },
       {
         "test": "1 s free fall follows gravity without hidden altitude or attitude forces",
         "status": "PASS",
-        "ms": 75
+        "ms": 62
       },
       {
         "test": "Motor acceleration, friction-limited braking and steering turn the actual body",
         "status": "PASS",
-        "ms": 459
+        "ms": 571
       },
       {
         "test": "Bench-fed hover tracks height, translates and returns to a low-speed hold",
         "status": "PASS",
-        "ms": 780
+        "ms": 750
       },
       {
         "test": "Ceiling pressure holds for 10 s, permits tire-driven movement, then releases",
         "status": "PASS",
-        "ms": 944
+        "ms": 948
       },
       {
         "test": "Suction requires a nearby supporting surface: no magnetic capture in free air",
         "status": "PASS",
-        "ms": 30
+        "ms": 50
       },
       {
         "test": "Finite gas consumption equals summed nozzle impulse divided by effective exhaust velocity",
         "status": "PASS",
-        "ms": 169
+        "ms": 177
       },
       {
         "test": "Exhausted gas removes all thrust; prolonged finite hover loses support",
         "status": "PASS",
-        "ms": 837
+        "ms": 703
       },
       {
         "test": "A full roll is a six-DOF actuator maneuver with inversion, ballistic descent and recovery",
         "status": "PASS",
-        "ms": 793
+        "ms": 679
       },
       {
         "test": "180° arch traversal continuously climbs from ground and stops upside down",
         "status": "PASS",
-        "ms": 5654
+        "ms": 4358
       },
       {
         "test": "Mode takeover, non-finite input guards and scenario resets remain finite",
         "status": "PASS",
-        "ms": 1236
+        "ms": 1182
       },
       {
         "test": "Normal test runs reject a hidden recovery instead of accepting a shortened simulation",
         "status": "PASS",
-        "ms": 186
+        "ms": 163
       },
       {
         "test": "Collision geometry exposes every static collider, including arch and boundaries",
         "status": "PASS",
-        "ms": 11
+        "ms": 12
       },
       {
         "test": "Released accelerator coasts with mild regeneration instead of hidden hard braking",
         "status": "PASS",
-        "ms": 288
+        "ms": 199
       },
       {
         "test": "Valve output has finite rise and decay, and consumed gas follows delivered force",
         "status": "PASS",
-        "ms": 65
+        "ms": 52
       },
       {
         "test": "Adiabatic blowdown cools the tank and has lower pressure than the equal-mass isothermal case",
         "status": "PASS",
-        "ms": 150
+        "ms": 133
       },
       {
         "test": "After a roll, hover does not retain opposing side jets in the allocator null space",
         "status": "PASS",
-        "ms": 579
+        "ms": 668
       },
       {
         "test": "A ground-origin automatic roll with adequate finite impulse returns to a gentle landing before fuel loses support",
         "status": "PASS",
-        "ms": 682
+        "ms": 633
       },
       {
         "test": "Twenty-Hz telemetry is uniform at 30, 60 and 144 display frames per second",
         "status": "PASS",
-        "ms": 545
+        "ms": 420
       },
       {
         "test": "Power exhaustion removes motor, fan and jet authority even with an external gas supply",
         "status": "PASS",
-        "ms": 89
+        "ms": 53
       },
       {
         "test": "A slow altitude integral rejects a constant unmodelled vertical load without pose correction",
         "status": "PASS",
-        "ms": 2005
+        "ms": 1725
       },
       {
         "test": "CSV schema contains quaternion, gas temperature and both nozzle command and delivered force",
         "status": "PASS",
-        "ms": 26
+        "ms": 21
       },
       {
         "test": "World-space exhaust preserves force sign and does not attach old gas to a moving vehicle",
         "status": "PASS",
-        "ms": 70
+        "ms": 62
       },
       {
         "test": "Mist emission count is frame-rate independent and rear outlets share one actuator force",
         "status": "PASS",
-        "ms": 108
+        "ms": 102
       }
     ]
   },
@@ -152,142 +152,14 @@
     "stepConvergence": "second order"
   },
   "browserVisualQA": {
-    "status": "native-scopes-verified-with-retained-physical-and-coverage-limits",
-    "modelVersion": "3.16.0",
+    "status": "not-performed-graphics-unavailable",
+    "modelVersion": "3.19.0",
     "currentEvidence": {
-      "report": "qa/native-acceptance-3.16.json",
-      "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
-      "sourceIdentityCurrent": true,
-      "scope": [
-        "Final local evidence aggregation for target runtime 28e9bc41. Assembly rereads original evidence and hashes; it does not rerun tests, physics or browsers, and performs no remote operations.",
-        "New 28e9 evidence includes the original-resolution fourteen-frame matrix, two actual current vehicle studio views and one continuous native city drive to the lower Foundry entrance, with original conditions, source guards and explicit limitations.",
-        "Native controls and research/UI were actually captured on 81926b47. Target applicability is a separately documented implementation-inheritance inference: 170/172 sources unchanged, with the production physics and ordinary-scene blocks unchanged. Original PNGs, downloads, timestamps and build IDs remain 81926.",
-        "X trigger timing, application routing, action-local motion, global quaternion travel, finite/bench supply, observation windows and physical outcomes remain separate. Both ground-start WE1 full-pitch/recovery failures remain failures.",
-        "ANGLE SwiftShader is actual WebGL software-GPU execution. It does not establish user-hardware FPS, keyboard rollover, human handling, universal latency or routes beyond the observed lower entrance.",
-        "Numerical contact and finite-recovery records clarify remaining boundaries. They are not counted as native route, pixel or hardware certification.",
-        "Route arrival, complete stored physical-step inputs, 20 Hz state curves, sparse contact telemetry and external automation journals have separate coverage. Observed compound contacts and missing returned journal lines are not removed or relabelled."
-      ],
-      "openGates": [
-        {
-          "id": "route-compound-contact-pairs-and-forces",
-          "status": "not-captured-contact-samples-retained",
-          "blockingFinalization": false,
-          "summary": "25 samples have positive final-slice compound contacts; 26 have any positive internal microstep. The body includes wheel bump-stop cylinders and chassis boxes. Read-only saved-pose geometry supports front-wheel hard-stop/ground contact as an inference; actual contact pair/shape, point, force, impulse and continuous duration were not captured. This route is not certified compound-contact-free or shell-impact-free.",
-          "evidence": [
-            "qa/city-drive-native-3.16/review.json",
-            "qa/city-drive-native-3.16/rigid-contact-readonly.json"
-          ]
-        },
-        {
-          "id": "route-external-journal-gaps",
-          "status": "unresolved-retained",
-          "blockingFinalization": false,
-          "summary": "All 1130 requested native driving events match application receipts and original record values. Eight external returned lines are absent; the collector reports 1245 telemetry observations but the original journal contains 1244 lines. No missing timestamps or observations were fabricated.",
-          "evidence": [
-            "qa/city-drive-native-3.16/review.json"
-          ]
-        },
-        {
-          "id": "upper-city-route-and-other-crossings",
-          "status": "not-verified",
-          "blockingFinalization": false,
-          "summary": "The continuous Weave-Crosstown route reached the existing lower Foundry entrance and stopped within the original 8 m arrival radius. Upper ascent, maintenance court, the transverse z=-100 crossing and full drive-flight challenge are not validated by this run.",
-          "evidence": [
-            "qa/city-drive-native-3.16/review.json"
-          ]
-        },
-        {
-          "id": "ground-full-pitch-and-g-recovery",
-          "status": "failed-retained",
-          "blockingFinalization": false,
-          "summary": "Both native ground-start groups stop near 196 degrees and finish inverted, wheel support 0, rigid contact count 4 and G limited. High-altitude bench success does not pass these cases.",
-          "evidence": [
-            "qa/native-controls-3.16/final-81926/summary.json"
-          ]
-        },
-        {
-          "id": "high-speed-10cm-step-full-trajectory-convergence",
-          "status": "not-converged-retained",
-          "blockingFinalization": false,
-          "summary": "90 km/h / 10 cm complete trajectories remain sensitive through 60-1920 Hz. Lower contact equation depths or SAT peaks do not imply complete convergence; the old single-wheel step-only SAT was smaller even though its all-solid maximum was larger.",
-          "evidence": [
-            "qa/contact-convergence-3.16.json"
-          ]
-        },
-        {
-          "id": "finite-supply-native-flight-or-ground-flip",
-          "status": "not-verified",
-          "blockingFinalization": false,
-          "summary": "Native X and high-altitude WE1 use 350 bar bench external supply. Numerical early recovery cancels the original task and uses zero external supply; neither certifies arbitrary finite-supply maneuvers.",
-          "evidence": [
-            "qa/finite-recovery-3.16.json",
-            "qa/native-controls-3.16/final-81926/summary.json"
-          ]
-        },
-        {
-          "id": "menu-refusal-text-pixels",
-          "status": "not-captured",
-          "blockingFinalization": false,
-          "summary": "Actual application rejection and product visible-state implementation are verified. The original 08 menu PNG does not independently display the refusal text.",
-          "evidence": [
-            "qa/native-controls-3.16/final-81926/x-menu-refusal.json.gz"
-          ]
-        },
-        {
-          "id": "entire-native-climb-continuous-contact-coverage",
-          "status": "not-verified",
-          "blockingFinalization": false,
-          "summary": "Final 7.0333 sim seconds of the climb are sparse observations. The later high-altitude pitch/recovery has contiguous zero-contact samples, with an explicit 0.4917 sim-second W-only marked-head gap.",
-          "evidence": [
-            "qa/native-controls-3.16/final-81926/summary.json"
-          ]
-        },
-        {
-          "id": "hardware-gpu-performance-and-human-handling",
-          "status": "not-verified",
-          "blockingFinalization": false,
-          "summary": "Software WebGL pixels do not establish user GPU FPS, driver behavior, hardware keyboard rollover or human handling feel.",
-          "evidence": [
-            "qa/capture-matrix-native-3.16/report.json"
-          ]
-        },
-        {
-          "id": "all-city-quality-and-all-views",
-          "status": "partial-visual-coverage-limits-retained",
-          "blockingFinalization": false,
-          "summary": "Dark high facades, clipped lamps, repeated distant building forms, weak material cues on the flat road fitting and simplified nose/interior remain. Two new vehicle views do not recapture all older views.",
-          "evidence": [
-            "qa/capture-matrix-native-3.16/report.json",
-            "qa/vehicle-final-28e9-3.16/visual-review.json"
-          ]
-        },
-        {
-          "id": "resource-console-errors",
-          "status": "observed-retained",
-          "blockingFinalization": false,
-          "summary": "Controls retains one unspecified resource 404, UI two unspecified resource 404s, and route one unspecified resource 404; matrix and vehicle diagnostics preserve their observed URLs when available. Unknown URLs are not inferred and console output is not labelled empty.",
-          "evidence": [
-            "qa/native-controls-3.16/final-81926/report.json",
-            "qa/native-ui-3.16/final-81926/report.json",
-            "qa/capture-matrix-native-3.16/report.json",
-            "qa/vehicle-final-28e9-3.16/capture-result-28e9.json",
-            "qa/city-drive-native-3.16/browser-errors.ndjson"
-          ]
-        },
-        {
-          "id": "public-publication-and-deployment",
-          "status": "blocked-separate-authorized-action",
-          "blockingFinalization": false,
-          "summary": "The exact synthetic blob was retried successfully. A different original-QA tree batch containing real device/archive metadata was denied by automatic approval review; that action remains stopped. Read-only public identity verification still reports 3.13, with no claimed remote branch or deployment change.",
-          "evidence": [
-            "qa/publication-blocker-3.16.json",
-            "qa/publication-current-site-final-3.16.json"
-          ]
-        }
-      ]
+      "report": "qa/native-acceptance-3.19.json",
+      "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+      "sourceIdentityCurrent": true
     },
-    "reason": "Target 28e9 has the complete original 1280x720 fourteen-frame matrix with 28 passing ordinary/export draw audits, two actual new vehicle studio views, and one continuous native drive from Weave via Crosstown to the existing lower Foundry entrance. The route arrived and stopped, saved 22848 physical steps and exported the original record; compound-contact samples and external journal gaps are retained. Trusted short X, pause/input release, conditional high-altitude pitch/G recovery, research lifecycle and downloads were actually observed on 81926 with bounded source-inheritance evidence. Both ground WE1 full-pitch/recovery cases remain failed, severe-step trajectories remain unconverged, and hardware performance, upper-route travel and finite-supply native flight remain unverified. This is final assembled local evidence, not universal functional acceptance or public deployment.",
-    "captureInstructions": "docs/release-3.16.md",
+    "captureInstructions": "docs/release-3.19.md",
     "bodyStripeSource": "qa/body-stripe-source-3.11.json",
     "historicalReports": [
       "docs/candidate-capture-3.15.md",
@@ -298,7 +170,7 @@
       "qa/browser.json",
       "qa/city-3.4-browser-assets.json"
     ],
-    "historyScope": "The user ran the 3.15 candidate on their own computer. Those observations do not certify the final 3.16 whole-city route, full manual airborne pitch turn, high-speed step handling or hardware-GPU matrix. Earlier Euler-angle samples are not cumulative turns. Paused and software-GPU HUD readings are not route frame-time acceptance."
+    "historyScope": "The user ran an earlier candidate on their own computer, but the build at the time of the newly reported symptoms is unverified. Historical observations do not certify the 3.19.0 whole-city route, manual airborne pitch turn, high-speed step handling or hardware-GPU performance. Earlier Euler-angle samples are not cumulative turns. Paused and software-GPU HUD readings are not route frame-time acceptance."
   },
   "realVehicleValidation": {
     "status": "not_performed",
@@ -309,10 +181,10 @@
     "syntaxParser": "Node/V8 SourceTextModule (parse only)",
     "researchPanelIds": 100,
     "samePageLab": true,
-    "fixedUiElements": 231,
-    "modulesChecked": 161,
+    "fixedUiElements": 234,
+    "modulesChecked": 180,
     "meshCount": 192,
-    "vertices": 164231,
+    "vertices": 164227,
     "externalRuntimeModules": 0,
     "carPhysicsIntegrationFrames": 120
   },
@@ -414,7 +286,7 @@
         {
           "name": "Repeated quality round trip replaces 1 / 2 / 3 cascade systems and invalidates disposed CSM uniform caches",
           "status": "passed",
-          "disposedMaterialProgramStates": 864
+          "disposedMaterialProgramStates": 972
         },
         {
           "name": "Balanced allocates no cube camera and evaluates daytime SH at vertices; mutually exclusive weather programs retain contact AO and one atlas each for night bounce/direct, with unchanged 3-read / 6-transition-read budgets",
@@ -423,84 +295,84 @@
             {
               "quality": "balanced",
               "weather": "clear-day",
-              "materialCount": 72,
+              "materialCount": 81,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "wet-night",
-              "materialCount": 72,
-              "staticNightMaterials": 72,
+              "materialCount": 81,
+              "staticNightMaterials": 81,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "clear-day",
-              "materialCount": 72,
+              "materialCount": 81,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "high",
               "weather": "clear-day",
-              "materialCount": 72,
+              "materialCount": 81,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "high",
               "weather": "wet-night",
-              "materialCount": 72,
-              "staticNightMaterials": 72,
+              "materialCount": 81,
+              "staticNightMaterials": 81,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "high",
               "weather": "clear-day",
-              "materialCount": 72,
+              "materialCount": 81,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "ultra",
               "weather": "clear-day",
-              "materialCount": 72,
+              "materialCount": 81,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "ultra",
               "weather": "wet-night",
-              "materialCount": 72,
-              "staticNightMaterials": 72,
+              "materialCount": 81,
+              "staticNightMaterials": 81,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "ultra",
               "weather": "clear-day",
-              "materialCount": 72,
+              "materialCount": 81,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "clear-day",
-              "materialCount": 72,
+              "materialCount": 81,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "wet-night",
-              "materialCount": 72,
-              "staticNightMaterials": 72,
+              "materialCount": 81,
+              "staticNightMaterials": 81,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             },
             {
               "quality": "balanced",
               "weather": "clear-day",
-              "materialCount": 72,
+              "materialCount": 81,
               "staticNightMaterials": 0,
               "scope": "Actual material shader-source bindings; GPU linking and active-uniform arrays are gated separately"
             }
@@ -514,48 +386,48 @@
           "views": [
             {
               "view": "weave-street",
-              "drawCalls": 338,
-              "triangles": 414722,
-              "instances": 37660,
-              "shadowDrawCalls": 49,
-              "shadowTriangles": 132456
+              "drawCalls": 330,
+              "triangles": 430834,
+              "instances": 42632,
+              "shadowDrawCalls": 56,
+              "shadowTriangles": 117750
             },
             {
               "view": "foundry-avenue",
-              "drawCalls": 99,
-              "triangles": 74622,
-              "instances": 6542,
-              "shadowDrawCalls": 31,
+              "drawCalls": 102,
+              "triangles": 69984,
+              "instances": 9202,
+              "shadowDrawCalls": 25,
               "shadowTriangles": 7800
             },
             {
               "view": "civic-terrace",
-              "drawCalls": 122,
-              "triangles": 181770,
-              "instances": 16779,
-              "shadowDrawCalls": 46,
+              "drawCalls": 116,
+              "triangles": 173278,
+              "instances": 16661,
+              "shadowDrawCalls": 40,
               "shadowTriangles": 60828
             },
             {
               "view": "aerial",
-              "drawCalls": 139,
-              "triangles": 258896,
-              "instances": 27769,
-              "shadowDrawCalls": 37,
-              "shadowTriangles": 59316
+              "drawCalls": 135,
+              "triangles": 240238,
+              "instances": 28159,
+              "shadowDrawCalls": 34,
+              "shadowTriangles": 52452
             },
             {
               "view": "botanical",
-              "drawCalls": 138,
-              "triangles": 261972,
-              "instances": 25293,
-              "shadowDrawCalls": 77,
+              "drawCalls": 133,
+              "triangles": 253912,
+              "instances": 25732,
+              "shadowDrawCalls": 71,
               "shadowTriangles": 103164
             }
           ]
         },
         {
-          "name": "Balanced shadow cadence caps at 30 Hz and refreshes immediately after a teleport",
+          "name": "Stationary balanced fallback caps at 30 Hz and refreshes immediately after a teleport; moving display-pose refresh is checked separately",
           "status": "passed"
         },
         {
@@ -565,12 +437,12 @@
         {
           "name": "All unrelated original geometry retains exact identity; three explicitly approved tower profiles preserve original parcels, and the daylight bake matches the entire current city",
           "status": "passed",
-          "geometrySHA256": "f0fa382ea22d2b439b48ef5569c4b4ada025c5fea22cb119e0c2e952a38b3051",
-          "canonicalSHA256": "68e4ea47a2b76a895596fb59c4ff6f0f46b9ef0c6a1640475a5abec8340f4a2a",
+          "geometrySHA256": "776ee1f0005cb26aad452d5e791954f7d52146ef3135fc5bb9fc5ca644378498",
+          "canonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
           "retainedGeometryCanonicalSHA256": "96d05d9e509be1dbae4a93885b4cdcfe3cae65867d44600017b6c03999159c91",
           "geometryContract": {
-            "currentPhysicalCount": 2251,
-            "currentPhysicalCanonicalSHA256": "68e4ea47a2b76a895596fb59c4ff6f0f46b9ef0c6a1640475a5abec8340f4a2a",
+            "currentPhysicalCount": 2367,
+            "currentPhysicalCanonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
             "approved315GeometryChanges": [
               {
                 "changeId": "foundry-terrace-vehicle-mouth-3.15",
@@ -747,7 +619,7 @@
               },
               "scope": "Only these 31 exact physical records may be removed before comparing the frozen 3.15/3.14/3.13 historical identities. Source values, order and every original object remain strict; no prefix/category exclusion and no visual/GPU/native traversal claim."
             },
-            "historicalComparisonNormalization": "First verify the 31 exact 3.16 supports (13 continuity, 18 street furnishing) and remove only those verified records, recovering the independently restored 3.15 full city hash. Then restore the two explicitly checked 3.15 paving pieces to their frozen original box. The unchanged inherited historical counts/hashes still apply to every remaining record; they are not the full-current geometry identity.",
+            "historicalComparisonNormalization": "First verify and reverse exactly the 116 new shared street-edge envelopes and 66 moved lamp-support records in the frozen 3.17 fixture, recovering the full 3.16 geometry identity. First verify the 31 exact 3.16 supports (13 continuity, 18 street furnishing) and remove only those verified records, recovering the independently restored 3.15 full city hash. Then restore the two explicitly checked 3.15 paving pieces to their frozen original box. The unchanged inherited historical counts/hashes still apply to every remaining record; they are not the full-current geometry identity.",
             "sourceCommit": "1dde9a3df081297978d7cc98409be86bcc6daa23",
             "sourcePhysicsSHA256": "d6fbfe7e3ed5c3503c91334d40672cd855ab5169437371a5bdda47f644ca27d8",
             "sourceCitySHA256": "ba228d0e2b51ce357062346c6452e63514b93ba39c2ffa52eb38359ffec1f9b9",
@@ -1489,9 +1361,203 @@
               "reason": "The historical exclusion list did not include 105 explicit 3.14 additions, and the old unconditional geometry identity could not represent three intentionally redesigned anchor towers (9 changed and 6 replaced original tier IDs). All other original physical geometry is unchanged.",
               "rawLog": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b'\n- '77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146'\n\n    at file:///workspace/scratch/177e9ccd012e/roadster-flight-lab/qa/render-budget-check.mjs:95:8 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'b6500b1ac51f5dcf329f18e3fc62e747745c5b716f7de8890ae022aa1354843b',\n  expected: '77b01ed0326054921b66e45e24262e7471fc3e6d2c41ab5b0cc2da7b3ae8e146',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n"
             },
-            "scope": "Exact geometry identity, three explicit tower profiles, one explicit vehicle-mouth paving split and 31 exact new street supports only; not GPU, aesthetics, driving or performance acceptance."
+            "scope": "Exact geometry identity, three explicit tower profiles, one explicit vehicle-mouth paving split and 31 exact new street supports only; not GPU, aesthetics, driving or performance acceptance.",
+            "approved317StreetChanges": {
+              "changeId": "city-street-edge-lighting-3.17",
+              "sourceCommit": "a0fce89e55efe6eaa54210987ef07cf9dfd7171e",
+              "addedIds": [
+                "street-edge-north-reading-core",
+                "street-edge-north-reading-foot",
+                "street-edge-north-reading-roof",
+                "street-edge-north-reading-pier-0",
+                "street-edge-north-reading-pier-1",
+                "street-edge-north-reading-pier-2",
+                "street-edge-north-reading-pier-3",
+                "street-edge-north-reading-pier-4",
+                "street-edge-north-reading-pier-5",
+                "street-edge-north-reading-pier-6",
+                "street-edge-north-reading-pier-7",
+                "street-edge-north-reading-awning-0",
+                "street-edge-north-reading-brace-0--1",
+                "street-edge-north-reading-brace-0-1",
+                "street-edge-north-reading-awning-1",
+                "street-edge-north-reading-brace-1--1",
+                "street-edge-north-reading-brace-1-1",
+                "street-edge-north-reading-awning-2",
+                "street-edge-north-reading-brace-2--1",
+                "street-edge-north-reading-brace-2-1",
+                "street-edge-north-reading-awning-3",
+                "street-edge-north-reading-brace-3--1",
+                "street-edge-north-reading-brace-3-1",
+                "street-edge-north-reading-awning-4",
+                "street-edge-north-reading-brace-4--1",
+                "street-edge-north-reading-brace-4-1",
+                "street-edge-north-reading-awning-5",
+                "street-edge-north-reading-brace-5--1",
+                "street-edge-north-reading-brace-5-1",
+                "street-edge-north-reading-awning-6",
+                "street-edge-north-reading-brace-6--1",
+                "street-edge-north-reading-brace-6-1",
+                "street-edge-north-daily-core",
+                "street-edge-north-daily-foot",
+                "street-edge-north-daily-roof",
+                "street-edge-north-daily-pier-0",
+                "street-edge-north-daily-pier-1",
+                "street-edge-north-daily-pier-2",
+                "street-edge-north-daily-pier-3",
+                "street-edge-north-daily-pier-4",
+                "street-edge-north-daily-pier-5",
+                "street-edge-north-daily-pier-6",
+                "street-edge-north-daily-pier-7",
+                "street-edge-north-daily-awning-0",
+                "street-edge-north-daily-brace-0--1",
+                "street-edge-north-daily-brace-0-1",
+                "street-edge-north-daily-awning-1",
+                "street-edge-north-daily-brace-1--1",
+                "street-edge-north-daily-brace-1-1",
+                "street-edge-north-daily-awning-2",
+                "street-edge-north-daily-brace-2--1",
+                "street-edge-north-daily-brace-2-1",
+                "street-edge-north-daily-awning-3",
+                "street-edge-north-daily-brace-3--1",
+                "street-edge-north-daily-brace-3-1",
+                "street-edge-north-daily-awning-4",
+                "street-edge-north-daily-brace-4--1",
+                "street-edge-north-daily-brace-4-1",
+                "street-edge-north-daily-awning-5",
+                "street-edge-north-daily-brace-5--1",
+                "street-edge-north-daily-brace-5-1",
+                "street-edge-north-daily-awning-6",
+                "street-edge-north-daily-brace-6--1",
+                "street-edge-north-daily-brace-6-1",
+                "street-edge-south-workshop-core",
+                "street-edge-south-workshop-foot",
+                "street-edge-south-workshop-roof",
+                "street-edge-south-workshop-pier-0",
+                "street-edge-south-workshop-pier-1",
+                "street-edge-south-workshop-pier-2",
+                "street-edge-south-workshop-pier-3",
+                "street-edge-south-workshop-pier-4",
+                "street-edge-south-workshop-pier-5",
+                "street-edge-south-workshop-pier-6",
+                "street-edge-south-workshop-awning-0",
+                "street-edge-south-workshop-brace-0--1",
+                "street-edge-south-workshop-brace-0-1",
+                "street-edge-south-workshop-awning-1",
+                "street-edge-south-workshop-brace-1--1",
+                "street-edge-south-workshop-brace-1-1",
+                "street-edge-south-workshop-awning-2",
+                "street-edge-south-workshop-brace-2--1",
+                "street-edge-south-workshop-brace-2-1",
+                "street-edge-south-workshop-awning-3",
+                "street-edge-south-workshop-brace-3--1",
+                "street-edge-south-workshop-brace-3-1",
+                "street-edge-south-workshop-awning-4",
+                "street-edge-south-workshop-brace-4--1",
+                "street-edge-south-workshop-brace-4-1",
+                "street-edge-south-workshop-awning-5",
+                "street-edge-south-workshop-brace-5--1",
+                "street-edge-south-workshop-brace-5-1",
+                "street-edge-south-gallery-core",
+                "street-edge-south-gallery-foot",
+                "street-edge-south-gallery-roof",
+                "street-edge-south-gallery-pier-0",
+                "street-edge-south-gallery-pier-1",
+                "street-edge-south-gallery-pier-2",
+                "street-edge-south-gallery-pier-3",
+                "street-edge-south-gallery-pier-4",
+                "street-edge-south-gallery-pier-5",
+                "street-edge-south-gallery-awning-0",
+                "street-edge-south-gallery-brace-0--1",
+                "street-edge-south-gallery-brace-0-1",
+                "street-edge-south-gallery-awning-1",
+                "street-edge-south-gallery-brace-1--1",
+                "street-edge-south-gallery-brace-1-1",
+                "street-edge-south-gallery-awning-2",
+                "street-edge-south-gallery-brace-2--1",
+                "street-edge-south-gallery-brace-2-1",
+                "street-edge-south-gallery-awning-3",
+                "street-edge-south-gallery-brace-3--1",
+                "street-edge-south-gallery-brace-3-1",
+                "street-edge-south-gallery-awning-4",
+                "street-edge-south-gallery-brace-4--1",
+                "street-edge-south-gallery-brace-4-1"
+              ],
+              "movedIds": [
+                "corridor-crosstown-link-lamp-1-0",
+                "corridor-crosstown-link-lamp-1-0-arm",
+                "corridor-crosstown-link-lamp-1-0-head",
+                "corridor-crosstown-link-lamp-1-1",
+                "corridor-crosstown-link-lamp-1-1-arm",
+                "corridor-crosstown-link-lamp-1-1-head",
+                "corridor-crosstown-link-lamp-1-2",
+                "corridor-crosstown-link-lamp-1-2-arm",
+                "corridor-crosstown-link-lamp-1-2-head",
+                "corridor-crosstown-link-lamp-1-3",
+                "corridor-crosstown-link-lamp-1-3-arm",
+                "corridor-crosstown-link-lamp-1-3-head",
+                "corridor-crosstown-link-lamp-1-4",
+                "corridor-crosstown-link-lamp-1-4-arm",
+                "corridor-crosstown-link-lamp-1-4-head",
+                "corridor-crosstown-link-lamp-1-5",
+                "corridor-crosstown-link-lamp-1-5-arm",
+                "corridor-crosstown-link-lamp-1-5-head",
+                "corridor-crosstown-link-lamp-1-6",
+                "corridor-crosstown-link-lamp-1-6-arm",
+                "corridor-crosstown-link-lamp-1-6-head",
+                "corridor-crosstown-link-lamp-1-7",
+                "corridor-crosstown-link-lamp-1-7-arm",
+                "corridor-crosstown-link-lamp-1-7-head",
+                "corridor-foundry-main-lamp-1-0",
+                "corridor-foundry-main-lamp-1-0-arm",
+                "corridor-foundry-main-lamp-1-0-head",
+                "corridor-foundry-main-lamp-1-1",
+                "corridor-foundry-main-lamp-1-1-arm",
+                "corridor-foundry-main-lamp-1-1-head",
+                "corridor-foundry-main-lamp-1-2",
+                "corridor-foundry-main-lamp-1-2-arm",
+                "corridor-foundry-main-lamp-1-2-head",
+                "corridor-foundry-main-lamp-1-3",
+                "corridor-foundry-main-lamp-1-3-arm",
+                "corridor-foundry-main-lamp-1-3-head",
+                "corridor-foundry-main-lamp-1-4",
+                "corridor-foundry-main-lamp-1-4-arm",
+                "corridor-foundry-main-lamp-1-4-head",
+                "corridor-foundry-main-lamp-1-5",
+                "corridor-foundry-main-lamp-1-5-arm",
+                "corridor-foundry-main-lamp-1-5-head",
+                "corridor-foundry-main-lamp-1-6",
+                "corridor-foundry-main-lamp-1-6-arm",
+                "corridor-foundry-main-lamp-1-6-head",
+                "corridor-canal-link-lamp-1-0",
+                "corridor-canal-link-lamp-1-0-arm",
+                "corridor-canal-link-lamp-1-0-head",
+                "corridor-canal-link-lamp-1-1",
+                "corridor-canal-link-lamp-1-1-arm",
+                "corridor-canal-link-lamp-1-1-head",
+                "corridor-canal-link-lamp-1-2",
+                "corridor-canal-link-lamp-1-2-arm",
+                "corridor-canal-link-lamp-1-2-head",
+                "corridor-canal-link-lamp-1-3",
+                "corridor-canal-link-lamp-1-3-arm",
+                "corridor-canal-link-lamp-1-3-head",
+                "corridor-canal-link-lamp-1-4",
+                "corridor-canal-link-lamp-1-4-arm",
+                "corridor-canal-link-lamp-1-4-head",
+                "corridor-canal-link-lamp-1-5",
+                "corridor-canal-link-lamp-1-5-arm",
+                "corridor-canal-link-lamp-1-5-head",
+                "corridor-canal-link-lamp-1-6",
+                "corridor-canal-link-lamp-1-6-arm",
+                "corridor-canal-link-lamp-1-6-head"
+              ],
+              "removedIds": [],
+              "baselineSHA256": "68e4ea47a2b76a895596fb59c4ff6f0f46b9ef0c6a1640475a5abec8340f4a2a",
+              "currentSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
+              "scope": "Four low closed public frontages and physical half-station light staggering only. All 114 building parcels, roads, ramps, contact surfaces and retained 3.16 support additions remain unchanged."
+            }
           },
-          "newSharedEntities": 294,
+          "newSharedEntities": 410,
           "newSharedEntityIds": [
             "landmark-quay-entry-pier--1",
             "landmark-quay-entry-seat-plinth--1",
@@ -1786,7 +1852,123 @@
             "street-connector-seat-4",
             "street-connector-planter-5",
             "street-connector-trunk-5",
-            "street-connector-seat-5"
+            "street-connector-seat-5",
+            "street-edge-north-reading-core",
+            "street-edge-north-reading-foot",
+            "street-edge-north-reading-roof",
+            "street-edge-north-reading-pier-0",
+            "street-edge-north-reading-pier-1",
+            "street-edge-north-reading-pier-2",
+            "street-edge-north-reading-pier-3",
+            "street-edge-north-reading-pier-4",
+            "street-edge-north-reading-pier-5",
+            "street-edge-north-reading-pier-6",
+            "street-edge-north-reading-pier-7",
+            "street-edge-north-reading-awning-0",
+            "street-edge-north-reading-brace-0--1",
+            "street-edge-north-reading-brace-0-1",
+            "street-edge-north-reading-awning-1",
+            "street-edge-north-reading-brace-1--1",
+            "street-edge-north-reading-brace-1-1",
+            "street-edge-north-reading-awning-2",
+            "street-edge-north-reading-brace-2--1",
+            "street-edge-north-reading-brace-2-1",
+            "street-edge-north-reading-awning-3",
+            "street-edge-north-reading-brace-3--1",
+            "street-edge-north-reading-brace-3-1",
+            "street-edge-north-reading-awning-4",
+            "street-edge-north-reading-brace-4--1",
+            "street-edge-north-reading-brace-4-1",
+            "street-edge-north-reading-awning-5",
+            "street-edge-north-reading-brace-5--1",
+            "street-edge-north-reading-brace-5-1",
+            "street-edge-north-reading-awning-6",
+            "street-edge-north-reading-brace-6--1",
+            "street-edge-north-reading-brace-6-1",
+            "street-edge-north-daily-core",
+            "street-edge-north-daily-foot",
+            "street-edge-north-daily-roof",
+            "street-edge-north-daily-pier-0",
+            "street-edge-north-daily-pier-1",
+            "street-edge-north-daily-pier-2",
+            "street-edge-north-daily-pier-3",
+            "street-edge-north-daily-pier-4",
+            "street-edge-north-daily-pier-5",
+            "street-edge-north-daily-pier-6",
+            "street-edge-north-daily-pier-7",
+            "street-edge-north-daily-awning-0",
+            "street-edge-north-daily-brace-0--1",
+            "street-edge-north-daily-brace-0-1",
+            "street-edge-north-daily-awning-1",
+            "street-edge-north-daily-brace-1--1",
+            "street-edge-north-daily-brace-1-1",
+            "street-edge-north-daily-awning-2",
+            "street-edge-north-daily-brace-2--1",
+            "street-edge-north-daily-brace-2-1",
+            "street-edge-north-daily-awning-3",
+            "street-edge-north-daily-brace-3--1",
+            "street-edge-north-daily-brace-3-1",
+            "street-edge-north-daily-awning-4",
+            "street-edge-north-daily-brace-4--1",
+            "street-edge-north-daily-brace-4-1",
+            "street-edge-north-daily-awning-5",
+            "street-edge-north-daily-brace-5--1",
+            "street-edge-north-daily-brace-5-1",
+            "street-edge-north-daily-awning-6",
+            "street-edge-north-daily-brace-6--1",
+            "street-edge-north-daily-brace-6-1",
+            "street-edge-south-workshop-core",
+            "street-edge-south-workshop-foot",
+            "street-edge-south-workshop-roof",
+            "street-edge-south-workshop-pier-0",
+            "street-edge-south-workshop-pier-1",
+            "street-edge-south-workshop-pier-2",
+            "street-edge-south-workshop-pier-3",
+            "street-edge-south-workshop-pier-4",
+            "street-edge-south-workshop-pier-5",
+            "street-edge-south-workshop-pier-6",
+            "street-edge-south-workshop-awning-0",
+            "street-edge-south-workshop-brace-0--1",
+            "street-edge-south-workshop-brace-0-1",
+            "street-edge-south-workshop-awning-1",
+            "street-edge-south-workshop-brace-1--1",
+            "street-edge-south-workshop-brace-1-1",
+            "street-edge-south-workshop-awning-2",
+            "street-edge-south-workshop-brace-2--1",
+            "street-edge-south-workshop-brace-2-1",
+            "street-edge-south-workshop-awning-3",
+            "street-edge-south-workshop-brace-3--1",
+            "street-edge-south-workshop-brace-3-1",
+            "street-edge-south-workshop-awning-4",
+            "street-edge-south-workshop-brace-4--1",
+            "street-edge-south-workshop-brace-4-1",
+            "street-edge-south-workshop-awning-5",
+            "street-edge-south-workshop-brace-5--1",
+            "street-edge-south-workshop-brace-5-1",
+            "street-edge-south-gallery-core",
+            "street-edge-south-gallery-foot",
+            "street-edge-south-gallery-roof",
+            "street-edge-south-gallery-pier-0",
+            "street-edge-south-gallery-pier-1",
+            "street-edge-south-gallery-pier-2",
+            "street-edge-south-gallery-pier-3",
+            "street-edge-south-gallery-pier-4",
+            "street-edge-south-gallery-pier-5",
+            "street-edge-south-gallery-awning-0",
+            "street-edge-south-gallery-brace-0--1",
+            "street-edge-south-gallery-brace-0-1",
+            "street-edge-south-gallery-awning-1",
+            "street-edge-south-gallery-brace-1--1",
+            "street-edge-south-gallery-brace-1-1",
+            "street-edge-south-gallery-awning-2",
+            "street-edge-south-gallery-brace-2--1",
+            "street-edge-south-gallery-brace-2-1",
+            "street-edge-south-gallery-awning-3",
+            "street-edge-south-gallery-brace-3--1",
+            "street-edge-south-gallery-brace-3-1",
+            "street-edge-south-gallery-awning-4",
+            "street-edge-south-gallery-brace-4--1",
+            "street-edge-south-gallery-brace-4-1"
           ]
         }
       ]
@@ -1800,7 +1982,7 @@
         "Supported combined pitch/roll attitudes converge to their captured pose and position, reject an external impulse, and retain finite braking overshoot",
         "Unsupported attitudes, absent power, empty gas and undersized nozzles cannot freeze or support the vehicle; feasibility and residual expose the limitation",
         "Finite-tank hold loses support as pressure and temperature fall and conserves every kilogram of delivered nozzle mass flow without hidden replenishment",
-        "Deliberate pilot inputs release research hold to manual attitude control, explicit raw-valve API inputs retain priority, and mode/suction/reset commands release stale references",
+        "Pilot input, mode, suction and reset release research hold without implicitly arming G; explicit raw valves retain priority and stale world references clear",
         "Tire contact, hull contact and ceiling adhesion inhibit hold thrust without repeatedly relatching the captured world reference",
         "Hold is independent of 30/60/144 Hz render cadence and converges when the actual physical integration step is halved"
       ]
@@ -1889,7 +2071,7 @@
         },
         {
           "name": "geometry remains finite; The current release uses a visible draw/triangle budget rather than a global allocated batch limit",
-          "count": 174792,
+          "count": 212088,
           "status": "passed"
         }
       ]
@@ -1911,6 +2093,7 @@
       "checks": [
         "Isotropic radiance integrates to pi times radiance on six normals without double cosine convolution",
         "Directional SH evaluation agrees with the independent Three.js irradiance implementation across 64 normals",
+        "Current palettes, concrete response and road reflectance agree; all original bake sources or exact reviewed 3.19 deltas retain byte-identical generated inputs",
         "Every stored probe has finite coefficients, consistent validity, exact dimensions and verified data, full current canonical geometry and material identities",
         "Four city locations retain nonnegative bounce energy and agree with a 1536-ray transport reference within the documented spot-check tolerance",
         "Contact AO affects only indirect diffuse; spatial probe samples use explicit LOD in divergent geometry branches",
@@ -1943,7 +2126,7 @@
         {
           "test": "Every authored position and normal is finite; nonzero normals are unit length",
           "status": "PASS",
-          "ms": 15
+          "ms": 14
         },
         {
           "test": "Full suspension travel is represented directly, without shrinking or visually clamping tyres",
@@ -1953,22 +2136,22 @@
         {
           "test": "Whole tyre sweep clears arch, roof, inner wheelhouse and isolated thrust duct",
           "status": "PASS",
-          "ms": 1161
+          "ms": 938
         },
         {
           "test": "Continuous pressure chamber has an airtight roof, isolated wheel/jet cutouts and surface-following seal",
           "status": "PASS",
-          "ms": 3
+          "ms": 2
         },
         {
           "test": "Cabin glazing, body aperture, individual LED lenses and suspension articulation exist",
           "status": "PASS",
-          "ms": 0
+          "ms": 1
         },
         {
           "test": "Pressed door has interior surface samples and each lamp is an actual opening in paint",
           "status": "PASS",
-          "ms": 37
+          "ms": 27
         },
         {
           "test": "All 20 physical seal segments and interpolation correction survive exterior rebuilding",
@@ -1978,7 +2161,7 @@
         {
           "test": "Render profiles reduce actual geometry and preserve articulated object identities and state",
           "status": "PASS",
-          "ms": 441
+          "ms": 351
         },
         {
           "test": "Separate glazing panels share continuous derivative normals at every quality",
@@ -1993,7 +2176,7 @@
         {
           "test": "Late-created force nozzles use the selected profile and switching back reuses cached geometry",
           "status": "PASS",
-          "ms": 12
+          "ms": 11
         }
       ],
       "sweep": {
@@ -2008,7 +2191,7 @@
         ],
         "tyreRadiusM": 0.372,
         "minimumArchLinerMarginM": 0.017689963530136996,
-        "minimumRoofMarginM": 0.027008761704893858,
+        "minimumRoofMarginM": 0.03947827420982758,
         "minimumInnerWallMarginM": 0.07619499326628021,
         "minimumLiftDuctMarginM": 0.0709447795558538
       }
@@ -2023,6 +2206,1597 @@
         "113 authored road segments match their visible top, and the 8 m upper district supports all wheels",
         "the market street is physically traversable beneath its raised footbridge"
       ]
+    },
+    "continuousSurfaceRoute319": {
+      "status": "passed-numerical",
+      "checks": [
+        "One serializable authored map controls material identity and per-wheel friction without interpreting puddle colour as grip",
+        "Same 60 km/h city initial state and full brake produce a longer local-wet stop with real per-wheel ABS and recorded sound work",
+        "Same-input corner uses actual local grip in the existing steering envelope; it does not add a fictitious yaw force",
+        "Four real wheel contact points cross a half-width wet boundary independently; elevated surfaces retain their legacy condition",
+        "Low-speed stopping is quiet at rest, and genuine light and heavier touchdown each emit one bounded onset through continuous support",
+        "Contact sound changes under equal-speed severe sliding, stays silent in air/rest, and reading all feedback leaves every physical step identical",
+        "Legacy dry/wet/split selection explicitly clears authored route conditions and preserves its old world-X contract",
+        "A declared numerical driver traverses the entire existing-city route, left turn and final stop under both surface maps without relocation"
+      ],
+      "report": "qa/surface-route-3.19/numerical-report.json",
+      "scope": "Shared authored surface, same-input braking/cornering, per-wheel boundary, contact audio onset and complete numerical route; actual audio device, rendered driving and native keyboard are separate."
+    },
+    "routeVisualBinding319": {
+      "status": "passed-structure",
+      "checks": [],
+      "report": "qa/route-visuals-3.19/report.json",
+      "scope": "Material/contact descriptor binding and finite original near-street geometry, with unchanged render budgets. Not final pixels or GPU timing."
+    },
+    "driverHeadFeedback319": {
+      "status": "passed-numerical-camera-math",
+      "checks": [
+        "Actual RoadsterSim trajectories and complete snapshots are identical with head/audio feedback enabled or disabled at every fixed step",
+        "Offset is bounded, follows local acceleration direction and never introduces camera rotation",
+        "Pause freezes the presentation state; repeated frames do not integrate it, and seek/reset clears old inertial memory",
+        "The production main camera updater leaves fixed/orbit/chase/top and review camera poses independent of head feedback"
+      ],
+      "report": "qa/driver-feedback-3.19.json",
+      "scope": "Complete snapshots remain equal with read-only audio/head feedback; actual main camera math confines small translation to cockpit. Comfort and native motion remain unmeasured."
+    },
+    "learningLoop319": {
+      "status": "passed-numerical",
+      "checks": [],
+      "report": "qa/learning-loop-3.19/report.json",
+      "scope": "Real hard-landing, envelope and success records, exact replay, same-state child practice and event comparison. Human inputs differ and are not strict controller A/B."
+    },
+    "routeUI319": {
+      "status": "passed-dom-and-solver",
+      "checks": [
+        "Both declared route input sequences create complete current-model records with ordered checkpoints and per-wheel surface events",
+        "Moving away from a prepared start cannot begin a route record, and review/practice actions cannot reset or start the live car",
+        "Read-only completion fixtures require ordered route progress, four wheels, low linear/angular speed, limited tilt and a continuous half-second stop",
+        "An external recording stop is respected by the next fixed step before any display refresh; the original record remains inspectable",
+        "Cancelling route guidance keeps it hidden on subsequent updates while retaining the explicitly prepared physical surface"
+      ],
+      "report": "qa/route-experience-3.19/report.json",
+      "scope": "Actual route UI, complete numerical drive, checkpoint/stop/record ownership and exact selected record under DOM. No native browser rendering."
+    },
+    "learningUI319": {
+      "status": "passed-dom",
+      "checks": [],
+      "report": "qa/learning-loop-3.19/ui-report.json",
+      "scope": "Actual result/review/practice/comparison controls and retained panel/record selection under DOM. Native rendered acceptance remains separate."
+    },
+    "learningMain319": {
+      "status": "passed-production-function-integration",
+      "checks": [],
+      "report": "qa/learning-loop-3.19/main-integration-report.json",
+      "scope": "Actual main source functions and callbacks with solver, input session, task UI and camera math; outer graphics/research adapters are fixtures. Full live resources and presentation restore exactly."
+    },
+    "continuousControl318": {
+      "status": "passed-bounded-sequences",
+      "checks": [
+        {
+          "name": "Moving X, released/held W, slope and G transitions finish on four loaded wheels and remain drive for five more seconds",
+          "passed": true,
+          "cases": [
+            {
+              "id": "X-W-half-second-release-Gfalse",
+              "finished": {
+                "elapsed": 4.091666666666779,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -0.12380872642344978,
+                "roll": -0.4816388084511017,
+                "verticalMps": 0.048623416779989874,
+                "normalLoads": [
+                  4959.538783434079,
+                  6317.188455001684,
+                  4290.857331041165,
+                  5648.507002608784
+                ],
+                "state": "completed"
+              },
+              "postFinishS": 5.008333333333198,
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -0.00013281958114079708,
+                "roll": 6.233358543048264e-13,
+                "position": {
+                  "x": -3.2451070301115914,
+                  "y": 0.5970089754089775,
+                  "z": 30.67443076632779
+                },
+                "velocity": {
+                  "x": 4.863790020932154e-9,
+                  "y": -2.2123101670889122e-8,
+                  "z": 0.00003169190906132674
+                },
+                "thrustN": 1.6014575361153545e-88,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "roll",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 2.499999999999994,
+                  "elapsedS": 4.091666666666779,
+                  "peakCgHeightM": 3.8902210173403415,
+                  "actualPitchTravelDeg": -1.2073816954402636,
+                  "actualRollTravelDeg": 359.51798282178214,
+                  "externalGasKg": 148.43316599401493,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 6.5916666666667725,
+                  "decisionAtSimTimeS": 6.583333333333439,
+                  "finalCgHeightM": 0.5943313939057194,
+                  "finalVerticalSpeedMps": 0.048623416779989874,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "X-W-two-seconds-held-Gfalse",
+              "finished": {
+                "elapsed": 3.8250000000001734,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 1.1343747132370978,
+                "roll": 1.0331756247925612,
+                "verticalMps": -0.13463040186417854,
+                "normalLoads": [
+                  4112.693620421757,
+                  4946.988172683425,
+                  13229.464313141514,
+                  7997.131836561524
+                ],
+                "state": "completed"
+              },
+              "postFinishS": 5.008333333333066,
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 0.8792269168659207,
+                "roll": 3.736939841480629e-8,
+                "position": {
+                  "x": -4.272403724795432,
+                  "y": 0.5956060755831735,
+                  "z": 309.8181710387507
+                },
+                "velocity": {
+                  "x": -0.2793501693614134,
+                  "y": -0.00040764667643888815,
+                  "z": 55.88770170019109
+                },
+                "thrustN": 3.684885100716758e-87,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "roll",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 3.9999999999999885,
+                  "elapsedS": 3.8250000000001734,
+                  "peakCgHeightM": 3.8780327853987533,
+                  "actualPitchTravelDeg": -1.065874210889839,
+                  "actualRollTravelDeg": 361.03341504529493,
+                  "externalGasKg": 147.5806008200808,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 7.825000000000162,
+                  "decisionAtSimTimeS": 7.816666666666829,
+                  "finalCgHeightM": 0.5991616397020901,
+                  "finalVerticalSpeedMps": -0.13463040186417854,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "X-W-half-second-release-Gtrue",
+              "finished": {
+                "elapsed": 4.091666666666779,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -0.12380872642344978,
+                "roll": -0.4816388084511017,
+                "verticalMps": 0.048623416779989874,
+                "normalLoads": [
+                  4959.538783434079,
+                  6317.188455001684,
+                  4290.857331041165,
+                  5648.507002608784
+                ],
+                "state": "completed"
+              },
+              "postFinishS": 5.008333333333198,
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -0.00013281958114079708,
+                "roll": 6.233358543048264e-13,
+                "position": {
+                  "x": -3.2451070301115914,
+                  "y": 0.5970089754089775,
+                  "z": 30.67443076632779
+                },
+                "velocity": {
+                  "x": 4.863790020932154e-9,
+                  "y": -2.2123101670889122e-8,
+                  "z": 0.00003169190906132674
+                },
+                "thrustN": 1.6014575361153545e-88,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "roll",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 2.499999999999994,
+                  "elapsedS": 4.091666666666779,
+                  "peakCgHeightM": 3.8902210173403415,
+                  "actualPitchTravelDeg": -1.2073816954402636,
+                  "actualRollTravelDeg": 359.51798282178214,
+                  "externalGasKg": 148.43316599401493,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 6.5916666666667725,
+                  "decisionAtSimTimeS": 6.583333333333439,
+                  "finalCgHeightM": 0.5943313939057194,
+                  "finalVerticalSpeedMps": 0.048623416779989874,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "X-W-two-seconds-held-Gtrue",
+              "finished": {
+                "elapsed": 3.8250000000001734,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 1.1343747132370978,
+                "roll": 1.0331756247925612,
+                "verticalMps": -0.13463040186417854,
+                "normalLoads": [
+                  4112.693620421757,
+                  4946.988172683425,
+                  13229.464313141514,
+                  7997.131836561524
+                ],
+                "state": "completed"
+              },
+              "postFinishS": 5.008333333333066,
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 0.8792269168659207,
+                "roll": 3.736939841480629e-8,
+                "position": {
+                  "x": -4.272403724795432,
+                  "y": 0.5956060755831735,
+                  "z": 309.8181710387507
+                },
+                "velocity": {
+                  "x": -0.2793501693614134,
+                  "y": -0.00040764667643888815,
+                  "z": 55.88770170019109
+                },
+                "thrustN": 3.684885100716758e-87,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "roll",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 3.9999999999999885,
+                  "elapsedS": 3.8250000000001734,
+                  "peakCgHeightM": 3.8780327853987533,
+                  "actualPitchTravelDeg": -1.065874210889839,
+                  "actualRollTravelDeg": 361.03341504529493,
+                  "externalGasKg": 147.5806008200808,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 7.825000000000162,
+                  "decisionAtSimTimeS": 7.816666666666829,
+                  "finalCgHeightM": 0.5991616397020901,
+                  "finalVerticalSpeedMps": -0.13463040186417854,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "X-moving-five-degree-slope",
+              "finished": {
+                "elapsed": 2.374999999999865,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 4.7421673100527,
+                "roll": -0.8576189893454599,
+                "verticalMps": 0.7709803113294924,
+                "normalLoads": [
+                  4581.409270583477,
+                  5572.9657041209775,
+                  3781.5100103520813,
+                  4773.066443889508
+                ],
+                "state": "completed"
+              },
+              "postFinishS": 5.008333333333096,
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 5.124861575221129,
+                "roll": -0.09030900722609246,
+                "position": {
+                  "x": -1.2261406031054194,
+                  "y": 3.9686123133628985,
+                  "z": 38.50791745077128
+                },
+                "velocity": {
+                  "x": -0.00006070540744549743,
+                  "y": -0.0003129195620326938,
+                  "z": -0.003570794520931147
+                },
+                "thrustN": 1.5922620719497428e-87,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "roll",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 1.9999999999999953,
+                  "elapsedS": 2.374999999999865,
+                  "peakCgHeightM": 4.26041328259784,
+                  "actualPitchTravelDeg": -3.732713891671996,
+                  "actualRollTravelDeg": 359.145406155721,
+                  "externalGasKg": 79.6780491366,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 4.374999999999861,
+                  "decisionAtSimTimeS": 4.367708333333194,
+                  "finalCgHeightM": 2.5213715516009145,
+                  "finalVerticalSpeedMps": 0.7709803113294924,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "X-G-on-off-during-rotation",
+              "finished": {
+                "elapsed": 4.091666666666779,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -0.12380872642344978,
+                "roll": -0.4816388084511017,
+                "verticalMps": 0.048623416779989874,
+                "normalLoads": [
+                  4959.538783434079,
+                  6317.188455001684,
+                  4290.857331041165,
+                  5648.507002608784
+                ],
+                "state": "completed"
+              },
+              "postFinishS": 5.008333333333198,
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -0.00013281958114079708,
+                "roll": 6.233358543048264e-13,
+                "position": {
+                  "x": -3.2451070301115914,
+                  "y": 0.5970089754089775,
+                  "z": 30.67443076632779
+                },
+                "velocity": {
+                  "x": 4.863790020932154e-9,
+                  "y": -2.2123101670889122e-8,
+                  "z": 0.00003169190906132674
+                },
+                "thrustN": 1.6014575361153545e-88,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "roll",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 2.499999999999994,
+                  "elapsedS": 4.091666666666779,
+                  "peakCgHeightM": 3.8902210173403415,
+                  "actualPitchTravelDeg": -1.2073816954402636,
+                  "actualRollTravelDeg": 359.51798282178214,
+                  "externalGasKg": 148.43316599401493,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 6.5916666666667725,
+                  "decisionAtSimTimeS": 6.583333333333439,
+                  "finalCgHeightM": 0.5943313939057194,
+                  "finalVerticalSpeedMps": 0.048623416779989874,
+                  "aborted": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "G off after sustained translation captures now and brakes without returning to an old world position",
+          "passed": true,
+          "old": {
+            "x": 0,
+            "y": 0.5970093908740407,
+            "z": 0
+          },
+          "releasedAt": {
+            "x": 1.1837395002145373e-15,
+            "y": 3.993496889452761,
+            "z": 37.362426791536386
+          },
+          "captured": {
+            "x": 1.1837395002145373e-15,
+            "y": 3.993496889452761,
+            "z": 37.362426791536386
+          },
+          "final": {
+            "x": 3.2518465959108618e-15,
+            "y": 3.9934470472638774,
+            "z": 47.71709684899844
+          },
+          "maxBackwardSpeed": -0.010226463941434134
+        },
+        {
+          "name": "G-off driving traverses an actual ramp/contact launch without automatic mode change or jet requests",
+          "passed": true,
+          "noContact": 87,
+          "maxTilt": 13.72761789539299,
+          "maxCommand": 0,
+          "rigid": 12
+        },
+        {
+          "name": "Explicit H/E assistance is visible with G off; H to DRIVE stops requests while real valve lag decays",
+          "passed": true,
+          "active": {
+            "owner": "flight-assist",
+            "requestedWrench": [
+              -2.0973342186670547e-12,
+              21566.98979925192,
+              -0.00003984089909142746,
+              -1.4843725219698324e-10,
+              -3.8149117021291346e-19,
+              -3.6963222991436477e-13
+            ],
+            "automaticForceRequested": true,
+            "explicitManeuver": null,
+            "positionPolicy": "captured-after-braking",
+            "positionTarget": {
+              "x": 0,
+              "y": 0.5970093908740407,
+              "z": 0
+            },
+            "heightTarget": 4,
+            "valveResidualOnly": false,
+            "commandForceN": 21565.696869958992,
+            "actualForceN": 21564.713759838258,
+            "gSemantics": "Level attitude, heading and captured height; horizontal velocity damping. No world-XZ position lock.",
+            "offSemantics": "G off disables G only. Explicit H/E flight assist and X/U/L actions retain their declared controller. H to DRIVE closes automatic flight requests.",
+            "collisionTakeover": false,
+            "contactPolicy": "Existing ordinary flight-assist references recapture at hull contact; explicit research hold retains its requested world target."
+          },
+          "final": {
+            "owner": "driver",
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "automaticForceRequested": false,
+            "explicitManeuver": null,
+            "positionPolicy": "none",
+            "positionTarget": null,
+            "heightTarget": null,
+            "valveResidualOnly": false,
+            "commandForceN": 0,
+            "actualForceN": 9.161454346575409e-14,
+            "gSemantics": "Level attitude, heading and captured height; horizontal velocity damping. No world-XZ position lock.",
+            "offSemantics": "G off disables G only. Explicit H/E flight assist and X/U/L actions retain their declared controller. H to DRIVE closes automatic flight requests.",
+            "collisionTakeover": false,
+            "contactPolicy": "Existing ordinary flight-assist references recapture at hull contact; explicit research hold retains its requested world target."
+          },
+          "valveTailObserved": true
+        },
+        {
+          "name": "Bounded U cases preserve real rotation, four-wheel handoff and subsequent driving",
+          "passed": true,
+          "cases": [
+            {
+              "id": "U-base-W",
+              "accepted": true,
+              "finished": {
+                "elapsed": 4.916666666666824,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 1.0026915936109564,
+                "roll": 0.0007757079458322113,
+                "verticalMps": -0.20602366233778277,
+                "normalLoads": [
+                  5335.028143590406,
+                  5334.638454061625,
+                  10227.045659490452,
+                  10210.465393750394
+                ],
+                "state": "completed"
+              },
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 0.9721475914063241,
+                "roll": 1.1448795515398184e-10,
+                "position": {
+                  "x": -0.0004883585106646548,
+                  "y": 0.5962833988948799,
+                  "z": 161.32127841349964
+                },
+                "velocity": {
+                  "x": 0.0001232986644692425,
+                  "y": -0.00034213734316010163,
+                  "z": 47.06395546571835
+                },
+                "thrustN": 9.712113887563222e-88,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "pitch",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 2.499999999999994,
+                  "elapsedS": 4.916666666666824,
+                  "peakCgHeightM": 6.134276307653003,
+                  "actualPitchTravelDeg": 359.55302553493095,
+                  "actualRollTravelDeg": 0.0007234886965029601,
+                  "externalGasKg": 191.88738691313856,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 7.416666666666818,
+                  "decisionAtSimTimeS": 7.408333333333484,
+                  "finalCgHeightM": 0.5861879862072014,
+                  "finalVerticalSpeedMps": -0.20602366233778277,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "U-18mps",
+              "accepted": true,
+              "finished": {
+                "elapsed": 4.925000000000131,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -0.19501395133053212,
+                "roll": 0.000656196097251853,
+                "verticalMps": -0.21433198759972338,
+                "normalLoads": [
+                  7763.863956055427,
+                  7762.819909101962,
+                  7055.386590109043,
+                  7054.342543155573
+                ],
+                "state": "completed"
+              },
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -0.16965868340483709,
+                "roll": 4.92851744459094e-9,
+                "position": {
+                  "x": -0.0013229445991568168,
+                  "y": 0.597007149954962,
+                  "z": 141.71435595385213
+                },
+                "velocity": {
+                  "x": -0.00005882791286041568,
+                  "y": 3.0520944551401704e-7,
+                  "z": 9.342056847485278
+                },
+                "thrustN": 9.709645467228959e-88,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "pitch",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 1.9999999999999953,
+                  "elapsedS": 4.925000000000131,
+                  "peakCgHeightM": 6.152511283935178,
+                  "actualPitchTravelDeg": 359.80498605438385,
+                  "actualRollTravelDeg": 0.0006809913457508752,
+                  "externalGasKg": 192.20209462946175,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 6.925000000000127,
+                  "decisionAtSimTimeS": 6.916666666666793,
+                  "finalCgHeightM": 0.5860788402491912,
+                  "finalVerticalSpeedMps": -0.21433198759972338,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "U-lateral-1mps",
+              "accepted": true,
+              "finished": {
+                "elapsed": 4.908333333333464,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 0.030342508683355175,
+                "roll": -1.2289936427387143,
+                "verticalMps": -0.21416708034035167,
+                "normalLoads": [
+                  6611.392403858795,
+                  8113.616036417696,
+                  6722.484923766483,
+                  8224.708556325382
+                ],
+                "state": "completed"
+              },
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -2.1438591007339592e-10,
+                "roll": 4.282886521478979e-13,
+                "position": {
+                  "x": 3.3766946599872627,
+                  "y": 0.5970089771354403,
+                  "z": -8.311748990936463
+                },
+                "velocity": {
+                  "x": 7.780661830744375e-12,
+                  "y": -1.4880639623845886e-13,
+                  "z": -6.616281825524787e-8
+                },
+                "thrustN": 9.712585930888367e-88,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "pitch",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 1.9999999999999953,
+                  "elapsedS": 4.908333333333464,
+                  "peakCgHeightM": 6.131686747936507,
+                  "actualPitchTravelDeg": 360.02979378415836,
+                  "actualRollTravelDeg": -0.8397653863655845,
+                  "externalGasKg": 191.61195780466096,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 6.908333333333459,
+                  "decisionAtSimTimeS": 6.900000000000126,
+                  "finalCgHeightM": 0.585959181044586,
+                  "finalVerticalSpeedMps": -0.21416708034035167,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "U-wind-12-cross",
+              "accepted": true,
+              "finished": {
+                "elapsed": 4.900000000000133,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 0.03192229390141551,
+                "roll": -0.4328407246667639,
+                "verticalMps": -0.2143637699181965,
+                "normalLoads": [
+                  7121.816309834503,
+                  7583.914731242803,
+                  7238.793078408855,
+                  7700.891499817155
+                ],
+                "state": "completed"
+              },
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 5.448266266123508e-7,
+                "roll": -0.020997101429058865,
+                "position": {
+                  "x": 0.6508234810666284,
+                  "y": 0.5970091041605333,
+                  "z": -8.185114880426301
+                },
+                "velocity": {
+                  "x": 0.0023378045725383277,
+                  "y": -1.809260699376469e-13,
+                  "z": 3.4407964360738e-7
+                },
+                "thrustN": 9.710466181377172e-88,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "pitch",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 1.9999999999999953,
+                  "elapsedS": 4.900000000000133,
+                  "peakCgHeightM": 6.117073336846032,
+                  "actualPitchTravelDeg": 360.0319045350503,
+                  "actualRollTravelDeg": -0.43270565760517576,
+                  "externalGasKg": 191.26100049678507,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 6.900000000000128,
+                  "decisionAtSimTimeS": 6.8916666666667945,
+                  "finalCgHeightM": 0.5860544249292057,
+                  "finalVerticalSpeedMps": -0.2143637699181965,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "U-wind-12-head",
+              "accepted": true,
+              "finished": {
+                "elapsed": 4.908333333333466,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 0.035005824348741006,
+                "roll": 0.0006470315544553381,
+                "verticalMps": -0.2119062230563955,
+                "normalLoads": [
+                  7330.592852966591,
+                  7330.172157449559,
+                  7446.557501253063,
+                  7446.136805736024
+                ],
+                "state": "completed"
+              },
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 0.003368923178017435,
+                "roll": 9.793791325443664e-8,
+                "position": {
+                  "x": -0.0008592922936403244,
+                  "y": 0.5970090151824823,
+                  "z": -8.885025482559946
+                },
+                "velocity": {
+                  "x": -9.801927907809494e-9,
+                  "y": -3.354479190778558e-13,
+                  "z": -0.0002363906919988855
+                },
+                "thrustN": 9.710776472963668e-88,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "pitch",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 1.9999999999999953,
+                  "elapsedS": 4.908333333333466,
+                  "peakCgHeightM": 6.1226012154076495,
+                  "actualPitchTravelDeg": 360.03500582933594,
+                  "actualRollTravelDeg": 0.0006499473602376404,
+                  "externalGasKg": 191.57919959425638,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 6.908333333333462,
+                  "decisionAtSimTimeS": 6.900000000000128,
+                  "finalCgHeightM": 0.5861741998121891,
+                  "finalVerticalSpeedMps": -0.2119062230563955,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "U-slope-5",
+              "accepted": true,
+              "finished": {
+                "elapsed": 5.099999999999716,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 5.0484642712794106,
+                "roll": 0.0005288552896121359,
+                "verticalMps": -0.6114458695920696,
+                "normalLoads": [
+                  7271.347370135542,
+                  7271.093171355542,
+                  7379.808540525654,
+                  7379.554341745631
+                ],
+                "state": "completed"
+              },
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": 5.170888097987678,
+                "roll": -0.00004058934248337293,
+                "position": {
+                  "x": -0.0007320863369813575,
+                  "y": -2.213931081732527,
+                  "z": -32.158872591728986
+                },
+                "velocity": {
+                  "x": -0.00002233887563037292,
+                  "y": -0.2558043653095138,
+                  "z": -2.9238575797069855
+                },
+                "thrustN": 1.4077961541536e-87,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "pitch",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 1.9999999999999953,
+                  "elapsedS": 5.099999999999716,
+                  "peakCgHeightM": 6.106410661618256,
+                  "actualPitchTravelDeg": 359.92454705736384,
+                  "actualRollTravelDeg": 0.001085049827676664,
+                  "externalGasKg": 198.20934460182633,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 7.099999999999712,
+                  "decisionAtSimTimeS": 7.096874999999712,
+                  "finalCgHeightM": -0.5848810592679533,
+                  "finalVerticalSpeedMps": -0.6114458695920696,
+                  "aborted": false
+                }
+              }
+            },
+            {
+              "id": "U-combined-boundary",
+              "accepted": true,
+              "finished": {
+                "elapsed": 5.583333333333016,
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -5.193945123455653,
+                "roll": -1.7659286152427347,
+                "verticalMps": -1.7682459537295543,
+                "normalLoads": [
+                  5951.296598901291,
+                  13124.33307420549,
+                  5587.051617716309,
+                  8574.894120371817
+                ],
+                "state": "completed"
+              },
+              "final": {
+                "mode": "drive",
+                "contacts": 4,
+                "pitch": -5.167093194723696,
+                "roll": -0.00542110814504546,
+                "position": {
+                  "x": 5.44635505031822,
+                  "y": -14.480632232791956,
+                  "z": 172.36595292130863
+                },
+                "velocity": {
+                  "x": 0.07635351954583094,
+                  "y": -1.3127226116604827,
+                  "z": 15.004578300873899
+                },
+                "thrustN": 1.889070278892146e-87,
+                "commandN": 0,
+                "fault": null,
+                "feedback": {
+                  "name": "pitch",
+                  "state": "completed",
+                  "phase": "land",
+                  "startedAtSimTimeS": 1.9999999999999953,
+                  "elapsedS": 5.583333333333016,
+                  "peakCgHeightM": 5.176187233121255,
+                  "actualPitchTravelDeg": 359.9327789408725,
+                  "actualRollTravelDeg": -1.8401274942975907,
+                  "externalGasKg": 217.76606926451524,
+                  "onboardGasKg": 0,
+                  "reason": "wheel-supported-landing",
+                  "endedAtSimTimeS": 7.5833333333330115,
+                  "decisionAtSimTimeS": 7.582291666666345,
+                  "finalCgHeightM": -7.395276463581871,
+                  "finalVerticalSpeedMps": -1.7682459537295543,
+                  "aborted": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "U rejects outside the declared envelope and default finite budget without changing body state or consuming gas",
+          "passed": true,
+          "refused": [
+            {
+              "id": "finite-350",
+              "supply": "finite",
+              "accepted": false,
+              "status": "受控后翻预检：剩余冲量 110.6 kN·s 低于后翻 / 回稳预算 114.8 kN·s",
+              "gasUsed": 0,
+              "poseUntouched": true
+            },
+            {
+              "id": "speed-18.2",
+              "speed": 18.2,
+              "accepted": false,
+              "status": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围",
+              "gasUsed": 0,
+              "poseUntouched": true
+            },
+            {
+              "id": "lateral-1.1",
+              "lateral": 1.1,
+              "accepted": false,
+              "status": "受控后翻预检：横向速度超过已验证的 1 m/s；先停止侧滑",
+              "gasUsed": 0,
+              "poseUntouched": true
+            },
+            {
+              "id": "wind-12.1",
+              "wind": 12.1,
+              "accepted": false,
+              "status": "受控后翻预检：规定风峰值超过本轮 12 m/s 受控动作范围",
+              "gasUsed": 0,
+              "poseUntouched": true
+            },
+            {
+              "id": "slope-5.5",
+              "slope": 5.5,
+              "accepted": false,
+              "status": "受控后翻预检：支撑面坡度超过本轮 5° 受控动作范围",
+              "gasUsed": 0,
+              "poseUntouched": true
+            },
+            {
+              "id": "held-steer",
+              "steer": 0.1,
+              "accepted": false,
+              "status": "受控后翻预检：转向 / 偏航仍在持续；回直并稳定后再启动",
+              "gasUsed": 0,
+              "poseUntouched": true
+            }
+          ],
+          "envelope": {
+            "policy": "bounded-pitch-envelope-318",
+            "maxHorizontalSpeedMps": 18,
+            "maxLateralSpeedMps": 1,
+            "maxSteerInput": 0.08,
+            "maxYawRateRadS": 0.25,
+            "maxSlopeDeg": 5,
+            "maxWindPeakMps": 12,
+            "scope": "Bounded model operating guard. Combined limits require sampled clearance and real supply/torque margins; not an arbitrary-condition safety certificate."
+          }
+        },
+        {
+          "name": "Explicit DRIVE interruption changes references only and never silently restarts U",
+          "passed": true,
+          "final": {
+            "owner": "driver",
+            "requestedWrench": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "automaticForceRequested": false,
+            "explicitManeuver": null,
+            "positionPolicy": "none",
+            "positionTarget": null,
+            "heightTarget": null,
+            "valveResidualOnly": false,
+            "commandForceN": 0,
+            "actualForceN": 1.860280127186411e-48,
+            "gSemantics": "Level attitude, heading and captured height; horizontal velocity damping. No world-XZ position lock.",
+            "offSemantics": "G off disables G only. Explicit H/E flight assist and X/U/L actions retain their declared controller. H to DRIVE closes automatic flight requests.",
+            "collisionTakeover": false,
+            "contactPolicy": "Existing ordinary flight-assist references recapture at hull contact; explicit research hold retains its requested world target."
+          },
+          "scope": "Pilot explicitly chose free driving/fall. This does not promise a collision-free emergency landing."
+        },
+        {
+          "name": "Airborne action cancel retains current flight height instead of launching toward the H takeoff preset",
+          "passed": true,
+          "at": {
+            "x": 3.0710595895342347e-18,
+            "y": 1.2786974560861506,
+            "z": 2.0981653289788555e-9
+          },
+          "mode": "hover",
+          "heightTarget": 1.2786974560861506,
+          "ownership": {
+            "owner": "flight-assist",
+            "requestedWrench": [
+              0,
+              31500.461628960173,
+              0,
+              0.0000071344874942093965,
+              -1.1864081850844477e-20,
+              7.924089324481353e-13
+            ],
+            "automaticForceRequested": true,
+            "explicitManeuver": null,
+            "positionPolicy": "captured-after-braking",
+            "positionTarget": {
+              "x": 3.0710595895342347e-18,
+              "y": 1.2786974560861506,
+              "z": 2.0981653289788555e-9
+            },
+            "heightTarget": 1.2786974560861506,
+            "valveResidualOnly": false,
+            "commandForceN": 31499.168699667243,
+            "actualForceN": 34452.06155807969,
+            "gSemantics": "Level attitude, heading and captured height; horizontal velocity damping. No world-XZ position lock.",
+            "offSemantics": "G off disables G only. Explicit H/E flight assist and X/U/L actions retain their declared controller. H to DRIVE closes automatic flight requests.",
+            "collisionTakeover": false,
+            "contactPolicy": "Existing ordinary flight-assist references recapture at hull contact; explicit research hold retains its requested world target."
+          },
+          "scope": "Cancel releases the explicit action into the already declared H/E assistance; H to DRIVE separately releases that assistance."
+        },
+        {
+          "name": "G pitch-override full state exports and continues exactly",
+          "passed": true,
+          "snapshotRecoveryStatus": "pilot-pitch"
+        }
+      ],
+      "report": "qa/control-continuity-3.19/report.json",
+      "scope": "Continuous input and post-completion four-wheel/zero-request observations; native evidence, severe step failure and manual E+1 remain separate."
+    },
+    "controlTransitionGuards318": {
+      "status": "passed-bounded-entry-and-exit",
+      "report": "qa/control-continuity-3.19/entry-guards-final.json",
+      "scope": "Moving H/E entry brakes before position capture; pre-held Q cannot bypass explicit X/U four-wheel handover; exiting research hold does not implicitly enable G. Explicit G level and research world targets remain separate."
+    },
+    "vehicleShape318": {
+      "status": "passed",
+      "report": "qa/vehicle-main-form-3.19.json",
+      "scope": "Current main-form constraints and retained physical hardpoints; matched views remain separate."
+    },
+    "streetDetail318": {
+      "status": "passed",
+      "checks": [
+        {
+          "name": "The whole 3.17 physical city and its road clearances remain identical",
+          "status": "passed",
+          "detail": {
+            "geometryCanonicalSHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9",
+            "baselineCommit": "d9a4fbfd434fe49cdbeae18c32f624360e9dc4e9",
+            "buildings": 114,
+            "streets": 12,
+            "scope": "Exact shared solids, so new facade work does not open rooms or expand map bounds."
+          }
+        },
+        {
+          "name": "Shallow showcases use separated glazing, returns and usable-scale contents within the existing recess",
+          "status": "passed",
+          "detail": {
+            "recipes": [
+              {
+                "recipe": "books",
+                "depthM": 0.62,
+                "glassToBackM": 0.5349999999999999,
+                "handleHeightM": 1.06,
+                "doorWidthM": 1.1
+              },
+              {
+                "recipe": "daily",
+                "depthM": 0.62,
+                "glassToBackM": 0.5349999999999999,
+                "handleHeightM": 1.06,
+                "doorWidthM": 1.1
+              },
+              {
+                "recipe": "workshop",
+                "depthM": 0.62,
+                "glassToBackM": 0.5349999999999999,
+                "handleHeightM": 1.06,
+                "doorWidthM": 1.1
+              },
+              {
+                "recipe": "gallery",
+                "depthM": 0.62,
+                "glassToBackM": 0.5349999999999999,
+                "handleHeightM": 1.06,
+                "doorWidthM": 1.1
+              }
+            ],
+            "glazing": [
+              {
+                "name": "Urban / clear exterior showcase glazing",
+                "opacity": 0.19,
+                "roughness": 0.14
+              }
+            ],
+            "scope": "Actual geometry/material separation. Visual usefulness, street rhythm and legibility are judged in matched native views, not by object count."
+          }
+        },
+        {
+          "name": "Selective upper facade light originates at actual finite fixtures and reaches external receivers",
+          "status": "passed",
+          "detail": {
+            "fixtures": [
+              {
+                "id": "upper-grazer-market-front--1-0--1",
+                "source": [
+                  -209.85,
+                  4.930000000000001,
+                  -354.88
+                ],
+                "receiver": [
+                  -209.92000000000002,
+                  15.74,
+                  -354.88
+                ],
+                "intensity": 145,
+                "rangeM": 16,
+                "coefficients": [
+                  0.0039062107595039352,
+                  0.0028432830453929917,
+                  0.0015355898549554066,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0.6032305472889214,
+                  0.43908413886698217,
+                  0.23713894760089743,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "id": "upper-grazer-market-front--1-0-1",
+                "source": [
+                  -209.85,
+                  4.930000000000001,
+                  -385.12
+                ],
+                "receiver": [
+                  -209.92000000000002,
+                  15.74,
+                  -385.12
+                ],
+                "intensity": 145,
+                "rangeM": 16,
+                "coefficients": [
+                  0.0039062107595039352,
+                  0.0028432830453929917,
+                  0.0015355898549554066,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0.6032305472889214,
+                  0.43908413886698217,
+                  0.23713894760089743,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "id": "upper-grazer-market-front--1-2--1",
+                "source": [
+                  -209.85,
+                  7.590000000000001,
+                  -254.88
+                ],
+                "receiver": [
+                  -209.92000000000002,
+                  18.4,
+                  -254.88
+                ],
+                "intensity": 145,
+                "rangeM": 16,
+                "coefficients": [
+                  0.0039062107595039352,
+                  0.0028432830453929917,
+                  0.0015355898549554066,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0.6032305472889214,
+                  0.43908413886698217,
+                  0.23713894760089743,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "id": "upper-grazer-market-front--1-2-1",
+                "source": [
+                  -209.85,
+                  7.590000000000001,
+                  -285.12
+                ],
+                "receiver": [
+                  -209.92000000000002,
+                  18.4,
+                  -285.12
+                ],
+                "intensity": 145,
+                "rangeM": 16,
+                "coefficients": [
+                  0.0039062107595039352,
+                  0.0028432830453929917,
+                  0.0015355898549554066,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0.6032305472889214,
+                  0.43908413886698217,
+                  0.23713894760089743,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "id": "upper-grazer-market-front-1-0--1",
+                "source": [
+                  -190.15,
+                  4.930000000000001,
+                  -385.12
+                ],
+                "receiver": [
+                  -190.07999999999998,
+                  15.74,
+                  -385.12
+                ],
+                "intensity": 145,
+                "rangeM": 16,
+                "coefficients": [
+                  0,
+                  0,
+                  0,
+                  0.002297997669289481,
+                  0.003107591994689257,
+                  0.003279781952104342,
+                  0,
+                  0,
+                  0,
+                  0.35487649721445175,
+                  0.4799009923225785,
+                  0.5064920414605284,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "id": "upper-grazer-market-front-1-0-1",
+                "source": [
+                  -190.15,
+                  4.930000000000001,
+                  -354.88
+                ],
+                "receiver": [
+                  -190.07999999999998,
+                  15.74,
+                  -354.88
+                ],
+                "intensity": 145,
+                "rangeM": 16,
+                "coefficients": [
+                  0,
+                  0,
+                  0,
+                  0.002297997669289481,
+                  0.003107591994689257,
+                  0.003279781952104342,
+                  0,
+                  0,
+                  0,
+                  0.35487649721445175,
+                  0.4799009923225785,
+                  0.5064920414605284,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "id": "upper-grazer-market-front-1-2--1",
+                "source": [
+                  -190.15,
+                  7.590000000000001,
+                  -285.12
+                ],
+                "receiver": [
+                  -190.07999999999998,
+                  18.4,
+                  -285.12
+                ],
+                "intensity": 145,
+                "rangeM": 16,
+                "coefficients": [
+                  0,
+                  0,
+                  0,
+                  0.002297997669289481,
+                  0.003107591994689257,
+                  0.003279781952104342,
+                  0,
+                  0,
+                  0,
+                  0.35487649721445175,
+                  0.4799009923225785,
+                  0.5064920414605284,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "id": "upper-grazer-market-front-1-2-1",
+                "source": [
+                  -190.15,
+                  7.590000000000001,
+                  -254.88
+                ],
+                "receiver": [
+                  -190.07999999999998,
+                  18.4,
+                  -254.88
+                ],
+                "intensity": 145,
+                "rangeM": 16,
+                "coefficients": [
+                  0,
+                  0,
+                  0,
+                  0.002297997669289481,
+                  0.003107591994689257,
+                  0.003279781952104342,
+                  0,
+                  0,
+                  0,
+                  0.35487649721445175,
+                  0.4799009923225785,
+                  0.5064920414605284,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            ],
+            "scope": "Authored intensity, finite cone and static-envelope transport. Not photometric calibration; nearby direct pools remain bounded and far diffuse uses probes."
+          }
+        },
+        {
+          "name": "Night direct and bounced transport are rebaked from these same sources",
+          "status": "passed",
+          "detail": [
+            {
+              "folder": "night-irradiance",
+              "identity": "52e7667b29eca75b1bb15071bcc460d4470e67f4c944c163a2c6df50835c0d5b",
+              "anchorSHA256": "72b71f47d8bad78c80dd9a4f46ee68bb780aa40fce2ae1e179fcc2489b8ecf0e"
+            },
+            {
+              "folder": "night-direct-irradiance",
+              "identity": "cc1e3ea3cf9c2aed395b26678caafd58e3470cf2ecc3ab7de09720817304c75b",
+              "anchorSHA256": "72b71f47d8bad78c80dd9a4f46ee68bb780aa40fce2ae1e179fcc2489b8ecf0e"
+            }
+          ]
+        }
+      ],
+      "report": "qa/city-street-detail-3.19.json",
+      "scope": "Existing whole city, shallow physical displays and finite light/source transport. Visual street quality remains separate."
+    },
+    "shadowMotion318": {
+      "status": "passed-bounded-scheduler-and-matrices",
+      "checks": [
+        {
+          "name": "Moving and turning headlamps use depth cameras from the same displayed pose at 120 Hz",
+          "status": "passed",
+          "detail": {
+            "comparisons": [
+              {
+                "quality": "balanced",
+                "before": {
+                  "staleFrames": 203,
+                  "maxStaleCameraPositionM": 1.0023340900241229
+                },
+                "after": {
+                  "staleFrames": 0,
+                  "maxStaleCameraPositionM": 0
+                }
+              },
+              {
+                "quality": "high",
+                "before": {
+                  "staleFrames": 197,
+                  "maxStaleCameraPositionM": 0.852634386988411
+                },
+                "after": {
+                  "staleFrames": 0,
+                  "maxStaleCameraPositionM": 0
+                }
+              },
+              {
+                "quality": "ultra",
+                "before": {
+                  "staleFrames": 189,
+                  "maxStaleCameraPositionM": 0.6835449921120275
+                },
+                "after": {
+                  "staleFrames": 0,
+                  "maxStaleCameraPositionM": 0
+                }
+              }
+            ],
+            "scope": "Actual Three light/shadow camera matrices and retained 3.17 scheduler; no pixel or target-GPU timing inference."
+          }
+        },
+        {
+          "name": "A wheel steering change or body turn at fixed position invalidates shadow depth",
+          "status": "passed",
+          "detail": {
+            "motionInputs": [
+              "steering",
+              "suspension",
+              "body rotation"
+            ],
+            "scope": "Depth invalidation only, separate from the native input/video evidence."
+          }
+        },
+        {
+          "name": "Laboratory depth projection has an integral texel origin throughout continuous follow motion",
+          "status": "passed",
+          "detail": {
+            "rows": [
+              {
+                "quality": "balanced",
+                "maxFraction": 2.5224267119483557e-13,
+                "maxDirectionChange": 4.965068306494546e-16,
+                "shadowSize": 1024,
+                "normalBias": 0.032
+              },
+              {
+                "quality": "high",
+                "maxFraction": 3.801403636316536e-13,
+                "maxDirectionChange": 4.965068306494546e-16,
+                "shadowSize": 1536,
+                "normalBias": 0.032
+              },
+              {
+                "quality": "ultra",
+                "maxFraction": 5.115907697472721e-13,
+                "maxDirectionChange": 4.965068306494546e-16,
+                "shadowSize": 2048,
+                "normalBias": 0.032
+              }
+            ],
+            "scope": "Independent coordinate projection of actual shadow cameras. Does not prove absence of all temporal aliasing."
+          }
+        },
+        {
+          "name": "Daylight camera rotations and vehicle motion refresh cascades while wet night keeps real practical shadows",
+          "status": "passed",
+          "detail": {
+            "frames": 90,
+            "scope": "Real environment scheduler, light owners, weather transitions and matrices; GPU sampling remains a separate native observation."
+          }
+        }
+      ],
+      "report": "qa/shadow-motion-3.19/report.json",
+      "scope": "Retained 3.17 moving-headlamp counterexample, same-display-pose refresh and laboratory texel alignment. Not a universal pixel flicker or user-GPU timing pass."
+    },
+    "windMatrix318": {
+      "status": "passed",
+      "report": "qa/wind-matrix-3.19/validation/report.json",
+      "scope": "Same-state bounded seeds, strength and direction cases, including gas and tail failures; not a population reliability claim."
+    },
+    "exportDeadline318": {
+      "status": "passed",
+      "report": "qa/export-deadline-3.19/report.json",
+      "scope": "Bounded application preparation and cancellation. Browser disk completion and historical external-tool hangs are separate."
+    },
+    "controlledPitch317": {
+      "status": "passed",
+      "checks": [
+        "Original X keeps quick rotation and low peak height; landing now confirms four-wheel load transfer",
+        "Controlled pitch completes a real revolution, lands and restores driving with W held",
+        "Default finite 100/350 bar supplies refuse U for impulse deficit without drawing any gas",
+        "Ground W then E+1 is still an explicitly recorded failed manual trajectory",
+        "Declared manual height boundary is bracketed by complete same-condition trajectories",
+        "Mid-pitch full-state continuation replays exactly",
+        "Invalid pitch trajectory snapshot is rejected before integration",
+        "Pitch reference torque and its required companion lift are jointly reachable",
+        "No nozzle capacity, mass, inertia law, manual rate or original X profile was increased"
+      ],
+      "report": "qa/pitch-maneuver-3.19.json",
+      "scope": "Actual continuous W before U, physical takeoff, quaternion inversion and full-turn milestones, landing and resumed driving. Ground WE1 failures and a narrowly specified altitude bracket remain separate; finite tank preflight refusals are retained."
+    },
+    "contactImpulse317": {
+      "status": "passed-with-severe-trajectory-failure",
+      "checks": [
+        "Independent Coulomb slider matches v0-mu*g*t for mass, step and direction variants",
+        "The unmodified solver demonstrably violates the same independent friction oracle",
+        "Contact work equals the actual solver kinetic jump at fixed pose",
+        "Corrected real-car tangential impulses stay inside their own contact normal budget",
+        "Ordinary seam, braking and steering preserve the full 3.16 physical trajectory",
+        "Severe failures retain complete 480/960/1920 Hz before and after trajectories",
+        "Real delivered 3.16 laboratory task retains original bytes and export but refuses undeclared current-model migration",
+        "A genuine current-model laboratory snapshot independently refuses a changed collision world before integration",
+        "Continuous current-city route classifies every rigid pair by wheel stop or hull",
+        "Original city history stays read-only and the referenced input route is explicitly a new current-model experiment"
+      ],
+      "report": "qa/contact-impulse-3.19.json",
+      "scope": "Actual Coulomb impulse fix, independent analytic sliding oracle, unchanged ordinary driving traces and a continuous current-city pair/shape/work ledger. Severe 90 km/h step trajectories still do not converge; passing accounting is not physical acceptance."
+    },
+    "vehicleForm317": {
+      "status": "passed",
+      "checks": [],
+      "report": "qa/vehicle-form-3.19.json",
+      "scope": "Actual shoulder/nose surface geometry, independent raycasts, revised 3.18 main-form geometry and retained receiver-plane shadow correction. Matched rendered images and their capture conditions are reported separately."
+    },
+    "cityStreets317": {
+      "status": "passed",
+      "checks": [],
+      "report": "qa/city-streets-3.19.json",
+      "scope": "Existing-city frontage and facade changes, physical light placement, no virtual night sun, preserved roads and source-bound irradiance. Visual quality and sustained software-renderer timings are separate evidence."
+    },
+    "cityBatch317": {
+      "status": "historical-evidence-retained",
+      "report": "qa/city-batch-equivalence-3.17.json",
+      "scope": "The original 3.17 batch-only equivalence remains intact as historical evidence. 3.18 intentionally authors new facade geometry; current street-detail checks and unchanged fifteen-view draw/triangle ceilings replace an inapplicable unchanged-instance assertion. This is not a current GPU timing claim."
+    },
+    "windPair317": {
+      "status": "passed",
+      "checks": [
+        "Wind seed declares the exact schedule; different seeds change it without using rendering time",
+        "Strong wind A/B uses identical complete physical initial state, wind, control rate and all-step metrics",
+        "A declared wind result re-executes through the same solver with exact decisions and terminal state",
+        "Calm and gust conditions remain separate; a different schedule cannot be called the same-condition winner",
+        "Finite supply failures and cancelled partial wind runs are retained and never promoted",
+        "Wind records round-trip through the existing task archive and retain both full physical traces"
+      ],
+      "report": "qa/wind-response-3.19/report.json",
+      "scope": "Seeded prescribed wind A/B through the same landing solver and record library; complete-state matching, exact re-execution, fixed-window error/gas metrics, finite failure and cancellation. One seed is not a reliability estimate and height error includes takeoff settling."
+    },
+    "windWorkspace317": {
+      "status": "passed",
+      "checks": [
+        "Worker failure preserves the actual frozen wind seed, schedule, declared A/B graphs and original source record",
+        "A cancelled one-second window shows its actual time/sample count and no four-second metric; partial raw statistics remain"
+      ],
+      "report": "qa/wind-workspace-3.19.json",
+      "scope": "Actual partial-window solver records show measured duration/sample count and no misleading complete-window metrics. An intentionally failing Worker preserves the exact requested seed, schedule and A/B graphs while the old record stays unchanged. Native operation is separate."
     },
     "contactConvergence316": {
       "status": "passed",
@@ -2041,13 +3815,13 @@
         "Suspension travel, damping, grip, lift and motor ratings retain the declared 3.15 values",
         "20 km/h 2 cm ordinary road cases stay upright"
       ],
-      "report": "qa/contact-convergence-3.16.json",
+      "report": "qa/contact-convergence-3.19.json",
       "scope": "Independent swept tyre support, convex SAT overlap and 60/120/240/480/960/1920 Hz matched actual-solver traces. Reduced overlap does not establish converged high-speed obstacle handling; adverse trajectories are retained."
     },
     "brakingFootprint316": {
       "status": "passed",
       "checks": [
-        "The defect is reproduced by the frozen support query in the same unchanged wheel force pass and identical complete initial snapshots",
+        "The frozen support reproduces the defect with unchanged legacy wheel forces, audited read-only additions and identical complete initial snapshots",
         "The original six perturbed 100/200/300 km/h braking cases retain the unchanged stopping and 0.01 degree yaw limits",
         "Both branches keep four supporting tyres, zero rigid impacts and zero contact refinement, isolating the contact patch selection",
         "The original per-wheel force, brake budget, torque and grip limits remain satisfied with no suppression of the actual contact moment",
@@ -2055,7 +3829,7 @@
         "The crown-to-shoulder transition stays continuous and its contact point lies on the declared rounded envelope and static face",
         "A finite face-to-edge contact is continuous while a point beyond the actual tyre width supplies no support"
       ],
-      "report": "qa/braking-footprint-3.16.json",
+      "report": "qa/braking-footprint-3.19.json",
       "scope": "Frozen three-section contact-query counterexample, continuous crowned support geometry and retained original high-speed braking/yaw gates; this does not establish calibrated real tyre compliance."
     },
     "pitchForceAccounting316": {
@@ -2069,7 +3843,7 @@
         "Original and projected wrench objectives and the unavailable force direction remain auditable",
         "Research pose hold is excluded from the pilot-rate projection and retains its infeasible original request"
       ],
-      "report": "qa/pitch-force-accounting-3.16.json",
+      "report": "qa/pitch-force-accounting-3.19.json",
       "scope": "Every actual integration slice independently accounts for vertical gravity, nozzle, aerodynamic and damping contributions; original and feasible-request projection share initial state, bounds and timing, and the gas penalty is retained."
     },
     "contactStepContract316": {
@@ -2082,7 +3856,7 @@
         "Input evidence includes wheel and rigid contacts and retains brief contacts from earlier microsteps",
         "A failure inside an unfinished contact-refined tick records its partial integration without fabricating a completed control step"
       ],
-      "report": "qa/contact-step-contract-3.16.json",
+      "report": "qa/contact-step-contract-3.19.json",
       "scope": "Actual contact refinement retains 120 Hz product input-provider, physicalStep, recording and noisy/delayed observation clocks; noisy observations are held over microsteps while ideal feedback recalculates from each integration slice. Explicit short-contact diagnostics, integrated gas accounting and exact replay are retained; no hardware timing claim."
     },
     "inputActionEvidence316": {
@@ -2103,7 +3877,7 @@
         "G-off release holds its attained pitch instead of pretending to be level",
         "The report separates contact-assisted travel from a continuous airborne turn"
       ],
-      "report": "qa/input-action-evidence-3.16.json",
+      "report": "qa/input-action-evidence-3.19.json",
       "scope": "Actual solver and received-event journal: action receipts, full quaternion travel and bounded recovery. Native browser observations are separately reported; accumulated body-axis travel alone is not a clean flip certificate."
     },
     "finiteRecovery316": {
@@ -2118,19 +3892,19 @@
         "Recovery reasons, the untouched requested stages and measured recovery evidence survive result archive round-trip",
         "The simple near-level calm forecast is not silently extended to wind or failed-nozzle tasks"
       ],
-      "report": "qa/finite-recovery-3.16.json",
+      "report": "qa/finite-recovery-3.19.json",
       "scope": "Same onboard gas, earlier original-task abort and existing landing controller; recovery outcome is separate from original task completion. External supply remains zero in finite cases."
     },
     "vehicleFinish316": {
       "status": "passed",
       "checks": [],
-      "report": "qa/vehicle-finish-3.16.json",
+      "report": "qa/vehicle-finish-3.19.json",
       "scope": "Existing geometry, display identity, curvature and material-role constraints with frozen 3.15 reference. Matched actual WebGL pictures are reported separately."
     },
     "cityQuality316": {
       "status": "passed",
       "checks": [],
-      "report": "qa/city-quality-3.16.json",
+      "report": "qa/city-quality-3.19.json",
       "scope": "Existing continuous street corridor, ground use, real lighting and independent collision checks. Native route driving and hardware-GPU performance are separate gates."
     },
     "cityGlazingBudget316": {
@@ -2140,13 +3914,13 @@
         "Every outward glass vertex, normal, metre UV, tint, emission, reflection parameter and LOD matches the retained generator",
         "The actual glass shader carries instance response through the inherited exterior hooks and preserves scene-versus-explicit environment selection"
       ],
-      "report": "qa/city-glazing-budget-3.16.json",
-      "scope": "Actual authored window instances retain their external front plane, UV, LOD, colour, emission, and reflection response while removing hidden geometry and redundant opaque-glass batches; original fifteen-view submission budgets remain unchanged. Native pixels and GPU timing are separately reported."
+      "report": "qa/city-glazing-budget-3.19.json",
+      "scope": "Unchanged parcels retain the frozen front-plane, UV, LOD, colour, emission and reflection contract. Explicitly rebuilt 3.18 street frontages are excluded from that old artwork equality and checked by the new street-detail contract. Original fifteen-view submission ceilings are unchanged; native pixels and GPU timing remain separate."
     },
     "reflectionFeedback316": {
       "status": "passed",
       "checks": [],
-      "report": "qa/reflection-feedback-3.16.json",
+      "report": "qa/reflection-feedback-3.19.json",
       "scope": "Frozen 3.15 feedback-loop counterexample, detached active sampler during reflection writes, exact restoration and half-written cache invalidation. Actual WebGL draw errors and switch-matrix results are separately retained."
     },
     "captureScheduler316": {
@@ -2163,7 +3937,7 @@
         "candidate-render-exception-retains-existing-aborted-export-audit",
         "matrix-preserves-current-export-audit-and-ordinary-prefix-separately"
       ],
-      "report": "qa/capture-scheduler-3.16.json",
+      "report": "qa/capture-scheduler-3.19.json",
       "scope": "Exact frozen/current frame functions under controlled callbacks: paused PNG requests retain rAF/cancellation without duplicate rendering, active stepping continues, and failure phase/current export audit are separate from ordinary partial audit. Original 20 s deadline and fourteen cases remain unchanged; native PNG/GPU results are separate."
     },
     "exportProgress316": {
@@ -2176,7 +3950,7 @@
         "Dedicated-worker protocol transfers exact records and cancels by terminating its worker",
         "A superseded asynchronous snapshot cannot replace or relabel a newer export"
       ],
-      "report": "qa/export-progress-3.16.json",
+      "report": "qa/export-progress-3.19.json",
       "scope": "Exact JSON and raw data, cooperative preparation, worker protocol, cancellation, visible failure and browser-handoff distinction; actual browser download timing is reported separately."
     },
     "researchWorkspace316": {
@@ -2190,7 +3964,7 @@
         "Locale and workspace changes preserve the historical archive and editable graph bytes",
         "Existing complete task records survive the new cooperative export unchanged"
       ],
-      "report": "qa/research-workspace-3.16.json",
+      "report": "qa/research-workspace-3.19.json",
       "scope": "Existing library, same solver, operating and analysis workspaces, actual stored metrics, compatibility and saved/completed state. Native layout is separately captured."
     },
     "cityGeometryScope315": {
@@ -2223,8 +3997,8 @@
         "All 31 exact additions keep declared carriageways open and all three original Foundry crossings retain their full 32 m opening",
         "The exact 8 m opening reconstructs both immutable historical identities with every other entity retained"
       ],
-      "report": "qa/city-geometry-scope-3.16.json",
-      "scope": "Retained exact 3.15 vehicle-mouth split and unchanged historical geometry, plus the explicitly reviewed 31 added shared 3.16 solids, rejected mutations, carriageway widths and three Foundry cross-road rays; no rendered-route acceptance."
+      "report": "qa/city-geometry-scope-3.19.json",
+      "scope": "Retained exact historical vehicle-mouth split, 31 added shared 3.16 solids, and the explicitly reviewed 3.17 addition of 116 street-edge solids plus 66 lamp-base relocations. Reconstructed historical geometry, rejected mutations, carriageway widths and Foundry cross-road rays remain checked; no rendered-route acceptance."
     },
     "cityHandoff315": {
       "status": "passed",
@@ -2236,7 +4010,7 @@
         "Context change, pilot takeover and disposal restore scoped settings exactly once after retaining the terminal",
         "Main adapter cancels city ownership before releasing the old inputs"
       ],
-      "report": "qa/city-flight-handoff-3.16.json",
+      "report": "qa/city-flight-handoff-3.19.json",
       "scope": "Actual application-shell/research/city ownership handoff under DOM events; refused starts leave full physical/control state unchanged. Native key/focus timing remains open."
     },
     "pilotSequences315": {
@@ -2255,7 +4029,7 @@
         "Historical G pitch suppression remains in Before traces and the same sequence physically pitches in the candidate",
         "All sequence integrations remain finite and commands/forces stay within actual nozzle capacities"
       ],
-      "report": "qa/pilot-sequences-3.16.json",
+      "report": "qa/pilot-sequences-3.19.json",
       "scope": "18 paired received-DOM-event sequences through InputSession, driverAxes and actual 120 Hz solver. Not hardware keyboard or native main-page/GPU acceptance."
     },
     "pilotInput315": {
@@ -2281,7 +4055,7 @@
         "Releasing G pitch clears the active override immediately without snapping the body",
         "Toggling G during a held pitch request keeps that request live, then levels on release"
       ],
-      "report": "qa/pilot-input-recovery-3.16.json",
+      "report": "qa/pilot-input-recovery-3.19.json",
       "scope": "Recorded DOM-shaped events, pressed sets and matched actual 120 Hz physics; native keyboard hardware and rendered flight remain unaccepted."
     },
     "contactSteering315": {
@@ -2299,7 +4073,7 @@
         "Default lift-off regen remains 2600 N and its slower curb impact is distinguished from initial speed",
         "All cases retain the original grip and suspension bounds and finite integration"
       ],
-      "report": "qa/contact-steering-3.16.json",
+      "report": "qa/contact-steering-3.19.json",
       "scope": "Collision-wheel steering synchronization, production regeneration and retained physical upsets; not arbitrary obstacle recovery."
     },
     "inputSession315": {
@@ -2313,7 +4087,7 @@
         "Main integration wires release and resets wall-clock baseline; context loss rejects pending capture and aborts matrix. Source integration only, not native focus/context-loss proof.",
         "Focus/pause release is a recorded public command; export and complete fixed-input replay reproduce the full physical continuation exactly."
       ],
-      "report": "qa/input-session-3.16.json",
+      "report": "qa/input-session-3.19.json",
       "scope": "Input lifecycle and bounded trace contracts; actual focus/context-loss behavior remains a native-browser gate."
     },
     "landingReserve315": {
@@ -2327,7 +4101,7 @@
         "Tilt, fast lateral travel and missing lower surface make the advisory unavailable.",
         "Production default lift-off regeneration is identified from actual forces, not disabled in the default test."
       ],
-      "report": "qa/landing-reserve-3.16.json",
+      "report": "qa/landing-reserve-3.19.json",
       "scope": "Read-only vertical near-level gas forecast using current trim, pressure and thermal model; not six-axis recovery or real-car safety."
     },
     "cityNavigation315": {
@@ -2341,7 +4115,7 @@
         "central test lane to real terrace ramp",
         "south arrival ends before accessibility ramp"
       ],
-      "report": "qa/city-navigation-3.16.json",
+      "report": "qa/city-navigation-3.19.json",
       "scope": "Layer-aware authored-road paths, entrances and rejoin geometry; selected destinations only, no native route certificate."
     },
     "cityFlightUI315": {
@@ -2364,7 +4138,7 @@
         "protectedRawExportAvailable",
         "localeDoesNotAlterResults"
       ],
-      "report": "qa/city-flight-ui-3.16.json",
+      "report": "qa/city-flight-ui-3.19.json",
       "scope": "Isolated DOM/storage plus actual solver; no native play, GPU or frame-time acceptance."
     },
     "cityFlight315": {
@@ -2372,7 +4146,7 @@
       "checks": [
         "Actual solver complete route, failures, recorded input replay, cancellation and protected storage"
       ],
-      "report": "qa/city-flight-3.16.json",
+      "report": "qa/city-flight-3.19.json",
       "scope": "One actual-solver drive/takeoff/swept-gate/platform task with retained failures and complete input replay; no native play or finite success claim."
     },
     "cityVehicleEntry315": {
@@ -2380,7 +4154,7 @@
       "checks": [
         "Default-regeneration matched entry passage meets the original 2 cm continuity criterion; original 12 cm failure retained"
       ],
-      "report": "qa/city-entry-3.16-comparison.json",
+      "report": "qa/city-entry-3.19-comparison.json",
       "scope": "Same low-speed initial state and controls, only the evidenced shared paving opening changes; not a full-city driving acceptance."
     },
     "historicalTask315": {
@@ -2389,9 +4163,13 @@
         "Original 3.14.0 task outcomes, algorithms, physical endpoints and full controller I/O survive read and export without storage writes.",
         "Reexecution refuses unavailable 3.14.0 model/build explicitly; historical identities and bytes are never relabelled as current.",
         "Original 3.15.0 task outcomes, algorithms, physical endpoints and full controller I/O survive read and export without storage writes.",
-        "Reexecution refuses unavailable 3.15.0 model/build explicitly; historical identities and bytes are never relabelled as current."
+        "Reexecution refuses unavailable 3.15.0 model/build explicitly; historical identities and bytes are never relabelled as current.",
+        "Original 3.16.0 task outcomes, algorithms, physical endpoints and full controller I/O survive read and export without storage writes.",
+        "Reexecution refuses unavailable 3.16.0 model/build explicitly; historical identities and bytes are never relabelled as current.",
+        "Original 3.17.0 task outcomes, algorithms, physical endpoints and full controller I/O survive read and export without storage writes.",
+        "Reexecution refuses unavailable 3.17.0 model/build explicitly; historical identities and bytes are never relabelled as current."
       ],
-      "report": "qa/history-task-3.16.json",
+      "report": "qa/history-task-3.19.json",
       "scope": "Original 3.14 complete task records/algorithms remain readable/exportable; unavailable old solver is explicitly rejected before reexecution."
     },
     "heightResearch315": {
@@ -2409,7 +4187,7 @@
         "Real Worker scan returns partial cancelled work, releases its task slot and accepts the next request",
         "Isolated UI copy/edit/scan/select/held-out/live redecision and refresh preserve graphs, full results and persistent warnings"
       ],
-      "report": "qa/research-value-3.16.json",
+      "report": "qa/research-value-3.19.json",
       "scope": "Frozen conditions, bounded scan, non-dominated tradeoffs, independent validation wind and non-refilling task exit; actual solver evidence."
     },
     "visualLifecycle315": {
@@ -2421,7 +4199,7 @@
         "Tail brake signal includes actual regen deceleration, uses .9/.6 hysteresis and cannot turn on from aerodynamic deceleration alone.",
         "Brake optical state survives driving LOD and does not alter nozzle geometry, thrust or material roughness."
       ],
-      "report": "qa/visual-lifecycle-3.16.json",
+      "report": "qa/visual-lifecycle-3.19.json",
       "scope": "Actual Three object lifecycle, lighting mode and regeneration brake signals; no rendered pixels, GPU memory or FPS acceptance."
     },
     "framebufferAndMatrix314": {
@@ -2441,7 +4219,7 @@
         "Cancel preserves the exact prefix, leaves missing frames explicit, and still creates an archive",
         "A missing PNG fails immediately and never substitutes a successful frame or a blank image"
       ],
-      "report": "qa/framebuffer-matrix-3.16.json",
+      "report": "qa/framebuffer-matrix-3.19.json",
       "scope": "Actual Three target construction, GL-interface and archive/PNG fixtures. Target-GPU framebuffer and color draws remain required."
     },
     "trimAndFailure314": {
@@ -2453,8 +4231,8 @@
         "Low finite gas and hard landing remain physical outcomes, not fabricated solver failures",
         "Research height outer loop obeys layer, expiry, slew, authority and continuation contracts"
       ],
-      "report": "qa/physics-controls-deepening-3.16.json",
-      "independentOracle": "qa/trim-independent-3.16.json",
+      "report": "qa/physics-controls-deepening-3.19.json",
+      "independentOracle": "qa/trim-independent-3.19.json",
       "scope": "Bounded static wrench and preserved solver-failure states. Static feasibility is not dynamic recovery."
     },
     "cameraAndClearance314": {
@@ -2466,7 +4244,7 @@
         "Actual vendor OrbitControls rotate an independent desired camera without inventing zoom at an obstruction",
         "World CG altitude, CG down-ray and estimated physical-envelope distances remain distinct on ground/roof/bridge/tilt"
       ],
-      "report": "qa/camera-clearance-3.16.json",
+      "report": "qa/camera-clearance-3.19.json",
       "scope": "Actual OrbitControls and independent OBB/ray geometry. No native camera feel, visibility or recovery-height acceptance."
     },
     "contactFixtures314": {
@@ -2475,7 +4253,7 @@
         "120 Hz contact fixtures complete with bounded energy and penetration diagnostics; adverse physical outcomes retained"
       ],
       "fixtureOutcomeStatus": "completed-with-adverse-physical-outcomes",
-      "report": "qa/contact-regressions-3.16.json",
+      "report": "qa/contact-regressions-3.19.json",
       "scope": "Actual 120 Hz solver contact and steering fixtures with retained upsets and precondition failures; not realistic-speed obstacle certification."
     },
     "vehicleDisplay314": {
@@ -2490,7 +4268,7 @@
         "Photographic cameras reproduce the declared normalized landmark residuals and keep a separate technical rig",
         "All new geometry has finite unit normals and bounded incremental LOD costs against the 3.15 task baseline"
       ],
-      "report": "qa/vehicle-display-3.16.json",
+      "report": "qa/vehicle-display-3.19.json",
       "scope": "Actual new geometry, material roles, display-only identity and independent nozzle-hole rays. Artistic result remains unaccepted."
     },
     "vehicleCapture314": {
@@ -2501,7 +4279,7 @@
         "Archive failure returns a readable failure JSON without claiming image export",
         "Orbit duration, cancellation, errors and track cleanup are explicit"
       ],
-      "report": "qa/vehicle-study-capture-3.16.json",
+      "report": "qa/vehicle-study-capture-3.19.json",
       "scope": "Same-condition still/video transaction and failure fixtures; synthetic capture bytes, not native images."
     },
     "cityContinuity314": {
@@ -2517,7 +4295,7 @@
         "Authored industrial exhaust stacks retain their primary silhouette at 120 m in balanced without promoting all thin details",
         "Distant geography starts outside the reachable workspace, preserves four perimeter walls and remains a low-detail whole"
       ],
-      "report": "qa/city-continuity-3.16.json",
+      "report": "qa/city-continuity-3.19.json",
       "scope": "Twelve-street and 113-route geometry preservation, independent SAT/rays, real instance transforms and low-detail primary masses. Native driving, pixels and performance remain pending."
     },
     "boundedResearchInterface314": {
@@ -2531,7 +4309,7 @@
         "Actual Worker scheduling rejects concurrent/duplicate jobs and cooperatively returns a cancelled partial physical result",
         "UI ignores stale Worker callbacks, closes malformed/cancel-post failures and keeps protected bytes untouched"
       ],
-      "report": "qa/research-boundaries-3.16.json",
+      "report": "qa/research-boundaries-3.19.json",
       "scope": "Data-only AST/state contracts, actual Node Worker generation/cancellation, isolated DOM error paths; not native browser/GPU execution."
     },
     "researchPlatform314": {
@@ -2551,7 +4329,7 @@
         "Capacity boundary never evicts history, and maximum legal rate requests survive save/import/reload",
         "Full task graph/results export, reload and deterministic re-execution preserve statistics and control decisions without display decimation"
       ],
-      "report": "qa/research-platform-3.16.json",
+      "report": "qa/research-platform-3.19.json",
       "scope": "Isolated storage failure/quarantine transactions, bounded height AST, actual-solver same-task decisions and landing success/failure; no GPU play acceptance."
     },
     "samplerBudget313": {
@@ -2561,7 +4339,7 @@
         "Atlas dimensions respect the supplied 3D texture limit; malformed depth layouts fail explicitly",
         "Real city bindMaterial chain selects mutually exclusive weather transport, preserves static/dynamic distinction and retires stale tables through high/balanced/high and day/night cycles"
       ],
-      "report": "qa/sampler-budget-3.16.json",
+      "report": "qa/sampler-budget-3.19.json",
       "scope": "Exact final source and offline active sampler reflection, never target-GPU acceptance."
     },
     "actualProgramCapture313": {
@@ -2578,7 +4356,7 @@
         "Vehicle coverage requires the main camera and actual PBR color material, never reflection, depth or normal passes",
         "An interrupted capture never retains a passed verdict"
       ],
-      "report": "qa/render-program-diagnostics-3.16.json",
+      "report": "qa/render-program-diagnostics-3.19.json",
       "scope": "GL-interface contract tests, not a real GPU run."
     },
     "quickRoll313": {
@@ -2589,18 +4367,18 @@
         "Fast reference is independent of comfort sliders; nozzle torque and short-takeoff authority remain physical",
         "Quick-roll practice uses E, then Z, then G through real input APIs, with a sustained recovery window and complete curves",
         "Low pressure, torque loss, ceiling, descent and unstable initial conditions reject without physical mutation",
-        "Repeated X cannot restart a running roll; G cancels to a level heading reference without changing body state",
+        "Repeated X cannot restart a running roll; G preserves the explicitly requested X until its physical completion",
         "A real main-nozzle fault during rotation is a failed program and retains its physical recovery controller",
         "Current fast-roll snapshots continue exactly and legacy 3.12 profile is preserved during explicit current-model mapping"
       ],
-      "report": "qa/x-flip-3.16.json",
-      "curves": "qa/x-flip-curves-3.16.json",
+      "report": "qa/x-flip-3.19.json",
+      "curves": "qa/x-flip-curves-3.19.json",
       "scope": "Frozen 3.9/3.12 and current actual-solver traces, finite/bench, real manual input and failure boundaries."
     },
     "opticalSurfacesAndQuay313": {
       "status": "passed",
       "checks": [],
-      "report": "qa/visual-quality-3.16.json",
+      "report": "qa/visual-quality-3.19.json",
       "scope": "Actual geometry, material sorting and shared collision/bake identities; after-pixels still pending."
     },
     "historicalRecompute313": {
@@ -2609,7 +4387,7 @@
         "Original 3.12 rolling/gas, mid-roll and city histories stay readable/exportable with original bytes and journals; undeclared current-model migration is explicitly refused.",
         "Retained legacy X profile is unchanged; a genuine current-model city state independently refuses the old geometry signature before integration."
       ],
-      "report": "qa/history-compatibility-3.12-to-3.16.json"
+      "report": "qa/history-compatibility-3.12-to-3.19.json"
     },
     "cornerBraking312": {
       "status": "passed",
@@ -2622,8 +4400,8 @@
         "Gamepad centre/edge/full-scale continuity and keyboard priority are exercised through the real input mapper",
         "Blended braking snapshots replay exactly and reset clears the new brake diagnostics"
       ],
-      "report": "qa/braking-controls-3.16.json",
-      "curves": "qa/braking-controls-curves-3.16.json",
+      "report": "qa/braking-controls-3.19.json",
+      "curves": "qa/braking-controls-curves-3.19.json",
       "scope": "Three matched actual-solver stages, per-wheel loads/slip/force demand and passive work. No human driving acceptance."
     },
     "chaseCamera312": {
@@ -2631,13 +4409,13 @@
       "checks": [
         "chase framing preserves its specified distance across speed and update rate; horizontal transport is invariant, vertical filtering and physical state are retained."
       ],
-      "report": "qa/chase-camera-3.16.json",
+      "report": "qa/chase-camera-3.19.json",
       "scope": "Deterministic camera kinematics, not rendered driving feel or measured FPS."
     },
     "reflectionStability312": {
       "status": "passed",
       "checks": [],
-      "report": "qa/reflection-stability-3.16.json",
+      "report": "qa/reflection-stability-3.19.json",
       "scope": "CPU pass submission, shader weighting and state restoration. Matched WebGL motion and GPU cost remain open."
     },
     "gRecoveryGrid312": {
@@ -2648,7 +4426,7 @@
         "Schema/range validation is grid-specific; missing, cancelled, failed, duplicate and foreign-identity results cannot become successful cells",
         "Saved wheel/slip column names match physical driver-relative wheel IDs under actual split-road response"
       ],
-      "report": "qa/research-recovery-grid-3.16.json",
+      "report": "qa/research-recovery-grid-3.19.json",
       "scope": "Ordinary G levelling under actual wind/nozzle conditions at sixteen sampled initial attitudes/heights. No interpolated safety boundary."
     },
     "repositoryPayloads311": {
@@ -2657,10 +4435,13 @@
         "Every packed asset and full evidence file reconstructs byte-for-byte from only checked-in segments",
         "Repeated restoration preserves identical files",
         "Local edits are preserved, and strict publication declines unreviewed edits",
-        "Existing and dangling symbolic links are refused without writing outside the checkout",
-        "Corrupt segments fail even when an already restored file exists"
+        "Existing and dangling symbolic links are refused during restoration without writing outside the checkout",
+        "Read-only verification checks archives and existing logical bytes, accepting only matching existing file symlinks without changing them or their targets",
+        "Read-only verification rejects missing, dangling and differing logical files without restoring or replacing them",
+        "Corrupt segments fail in restore and verify even when an already restored file exists",
+        "Read-only verification rejects a missing manifest"
       ],
-      "report": "qa/repository-payloads-3.16.json",
+      "report": "qa/repository-payloads-3.19.json",
       "scope": "Byte-identical source/archive restoration, not physical or graphical acceptance."
     },
     "vehicleDynamics311": {
@@ -2673,8 +4454,8 @@
         "Manual full rotation, X and G recovery use bounded actual nozzles; the new default and maneuver preset have explicit different costs",
         "Finite gas, overhead clearance, low altitude and G key semantics remain physical; mid-roll snapshots continue exactly"
       ],
-      "report": "qa/vehicle-dynamics-3.16.json",
-      "curves": "qa/vehicle-dynamics-curves-3.16.json",
+      "report": "qa/vehicle-dynamics-3.19.json",
+      "curves": "qa/vehicle-dynamics-curves-3.19.json",
       "scope": "120 Hz actual solver, matched baseline source, causal ablations, per-wheel and flight traces. Real keyboard/camera experience remains open."
     },
     "controlPreferences311": {
@@ -2703,16 +4484,16 @@
         "Physical failure, cancellation and unmatched conditions remain distinct from successful execution",
         "Twenty results fit the existing history budget without deleting earlier records"
       ],
-      "report": "qa/research-robustness-3.16.json",
+      "report": "qa/research-robustness-3.19.json",
       "scope": "Twenty paired seeded numerical experiments, bounded success and preserved failures; not a population reliability estimate."
     },
     "historicalRecompute311": {
       "status": "passed",
       "checks": [
         "Actual 3.9, 3.10 and 3.11 histories retain their source identity and all existing state/parameters",
-        "3.16.0 explicitly refuses unavailable old-model exact replay and undeclared complete-state migration; retained legacy values are never silently mapped."
+        "3.19.0 explicitly refuses unavailable old-model exact replay and undeclared complete-state migration; retained legacy values are never silently mapped."
       ],
-      "report": "qa/history-compatibility-3.16.json"
+      "report": "qa/history-compatibility-3.19.json"
     },
     "visualMechanisms311": {
       "status": "passed",
@@ -2723,7 +4504,7 @@
         "Seven diagnostic frames are synchronously copied, immutable and bound to the correct original bytes before PNG encoding",
         "Static direct night field has source/geometry identities, independent inverse-square/cone/occlusion checks and nonzero far fixture illumination"
       ],
-      "report": "qa/visual-regressions-3.16.json",
+      "report": "qa/visual-regressions-3.19.json",
       "scope": "Shadow-plane and light-transport oracles plus capture-state fixtures; matched rendered after-images remain pending."
     },
     "cityLighting310": {
@@ -2734,7 +4515,7 @@
         "Balanced uses the coarser field, 3D sampling uses three explicit-LOD reads per field, and day mode contributes no night bounce or direct-light multiplier",
         "Fixed-camera pool is vehicle-independent, responds to view direction, keeps overlapping light during handoff and does not refresh static paused shadows"
       ],
-      "report": "qa/city-lighting-3.16.json",
+      "report": "qa/city-lighting-3.19.json",
       "scope": "Light selection, transitions, baked-field sampling and shared authored collision identity; actual after-pixels and GPU timing pending"
     },
     "vehicleSurface310": {
@@ -2746,7 +4527,7 @@
         "Cutaway and capture preparation restore authored glass opacity without drift or a wheel/wing pose change",
         "The interior mirror remains below the actual glazing mesh instead of breaking the windscreen silhouette"
       ],
-      "report": "qa/vehicle-surface-3.16.json",
+      "report": "qa/vehicle-surface-3.19.json",
       "scope": "Frozen reference identity, surface normals, material state and physical motion envelope; not a rendered-image verdict"
     },
     "inspectionCapture310": {
@@ -2759,17 +4540,17 @@
         "Five-file ZIP binds original/comparison bytes and JSON by one captureId",
         "Standalone comparison PNG remains available; unavailable canvas and missing PNG reject without a success bundle"
       ],
-      "report": "qa/inspection-capture-3.16.json",
+      "report": "qa/inspection-capture-3.19.json",
       "scope": "Canvas and ZIP transaction fixture; no actual WebGL pixels"
     },
     "history310": {
       "status": "passed",
       "checks": [
         "Actual 3.9 history is immutable and exportable; both exact replay and undeclared current-model migration are refused before import.",
-        "Unknown 3.16.0 build requires explicit recomputation and retains source identity and physical state.",
+        "Unknown 3.19.0 build requires explicit recomputation and retains source identity and physical state.",
         "Historical compatibility checks fail closed before advancing physics."
       ],
-      "report": "qa/history-original-3.9-to-3.16.json"
+      "report": "qa/history-original-3.9-to-3.19.json"
     },
     "controlCapture310": {
       "status": "passed",
@@ -2783,7 +4564,7 @@
         "Pilot takeover, an unmet speed gate and obstacle preflight keep failed/cancelled evidence without initializing a faster car or deleting city colliders",
         "Operator vertical-setting changes survive cancellation, and an externally ended recorder links its exact prefix instead of showing the previous run"
       ],
-      "report": "qa/control-capture-3.16.json",
+      "report": "qa/control-capture-3.19.json",
       "scope": "Continuous actual fixed-step solver inputs, including complete city collision world; not human driving or real browser performance"
     },
     "boundedDriveAndFlightControls": {
@@ -2796,7 +4577,7 @@
         "G recovers level after manual pose changes and unsealed F arming, while real adhesion and finite thrust retain authority",
         "New wheel, release-braking and recovery states preserve complete snapshot replay across display rates with seeded sensing and nozzle derating"
       ],
-      "report": "qa/physics-controls-3.16.json",
+      "report": "qa/physics-controls-3.19.json",
       "scope": "Actual fixed-step physics, original 3.8 fixture comparison and authored city bend; no human driving or GPU acceptance"
     },
     "reproductionConsistency": {
@@ -2817,7 +4598,7 @@
         "The original 3.8 archive remains readable and exportable; the current model refuses an undeclared full-state migration",
         "Road study names include the actual road condition and both driver aids without changing recorded numeric requests"
       ],
-      "report": "qa/reproduction-verdict-3.16.json"
+      "report": "qa/reproduction-verdict-3.19.json"
     },
     "corridorAndReflection": {
       "status": "passed",
@@ -2830,7 +4611,7 @@
         "Authored frontage orders cover every route family and added ordinary-street ground facades retain outward-facing doorway fixtures",
         "A near road fixture retains a slot when nearby door lights compete for the balanced budget"
       ],
-      "report": "qa/visual-corridor-3.16.json",
+      "report": "qa/visual-corridor-3.19.json",
       "scope": "Canonical route geometry, exact projection and pass culling; not pixels or FPS"
     },
     "physicalResearch": {
@@ -2844,7 +4625,7 @@
         "The finite-rate wing actuator generates no zero-q force and fixed/active choices change drag and rear wheel load in the physical state",
         "Seeded delay/noise changes the actual feedback solution, nozzle derating changes allocation, and onboard/external gas accounting stays distinct"
       ],
-      "report": "qa/physics-research-3.16.json"
+      "report": "qa/physics-research-3.19.json"
     },
     "liveExperimentReplay": {
       "status": "passed",
@@ -2864,7 +4645,7 @@
         "Imported replay validates finite state, command allowlist and exact step totals without executing content",
         "Program compressed CSV and standard historical CSV identify the stored report and truthful sample interval"
       ],
-      "report": "qa/experiment-records-3.16.json"
+      "report": "qa/experiment-records-3.19.json"
     },
     "publicRoadStudies": {
       "status": "passed",
@@ -2874,7 +4655,7 @@
         "Fixed-retracted and active wing standard comparison drives real actuator deployment and dynamic-pressure forces",
         "New road protocols preserve full-resolution statistic identity and deterministic rerun, with historical archives explicitly recomputed as requests"
       ],
-      "report": "qa/research-road-3.16.json"
+      "report": "qa/research-road-3.19.json"
     },
     "performanceBookkeeping": {
       "status": "passed",
@@ -2885,7 +4666,7 @@
         "Asynchronous GPU queries are attributed to their original frame once, and disjoint queries are discarded with evidence",
         "Explicit diagnostic frames are excluded from paused and driving statistics and cannot advance a performance capture"
       ],
-      "report": "qa/performance-meter-3.16.json",
+      "report": "qa/performance-meter-3.19.json",
       "scope": "Measurement bookkeeping with a GL query facade, not actual GPU or FPS"
     },
     "visualStructure": {
@@ -2894,60 +4675,67 @@
         "The full benchmark loop follows canonical supported roads and preserves the overall city",
         "Wing mesh reads the physical deployment exactly and ignores display speed/brake targets",
         "Projected footprint and inspection context change actual geometry while preserving wheel state",
-        "Street/headlight pool uses finite shadowed lights at real anchors, with bounded update rate",
+        "Street/headlight pool retains finite real shadowed lights, refreshes moving poses in the same frame and avoids unchanged idle work",
         "Wet reflection has no balanced pass, respects its cap and restores renderer state on failure",
         "Weather preset switches actual GI, physical lights and water without changing city geometry",
         "Inspection retains six calibrated views, adds two close-ups and freezes the actual 3.8 model source"
       ],
-      "report": "qa/visual-upgrade-3.16.json",
+      "report": "qa/visual-upgrade-3.19.json",
       "scope": "Geometry, light/reflection state and budget tests; no pixel acceptance"
     }
   },
-  "totalAcceptanceChecks": 607,
+  "totalAcceptanceChecks": 676,
   "sourceIdentity": {
-    "modelBuildId": "28e9bc415a0509990cb88dcbb0a95117f013969e2283260208df5921c54b1d8f",
+    "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
     "sourceHashes": {
-      "app-shell.js": "9631522c21495bdce2d057f5180da70603e12bcb4aad89d94d625d6903107238",
+      "app-shell.js": "01318ff38479f85b56dcff8b022f0129ea1e60aa70ca614d1f68820592161711",
       "app.js": "05a02808e030921721d0c658620b9d9726efe6ae188574d79da4865dbf860546",
-      "audio.js": "80b39ba94e8b7ff56dc526229188b7927e8b53b68894e52ad32818257d689141",
+      "audio.js": "29248d7c1f64c5a2a05d13dbff396ccdb470b14b663fdb2bb7358991d50b6007",
       "bounded-height-controller.js": "e310531ade879e91d6921c785b8cc73aa029839cafa37c46a321ff0c8b9697e0",
       "capture-archive.js": "ff0bcf04e26dbc506eabb4569edd8be1b3e167e6e567d84a38c7ca61db1160c2",
       "car-radio.js": "c8ac1e1a4aa8ed52e6b2b67eb7d627c85464930bcd0bc91ed6e6587c86389f78",
       "chase-camera.js": "083c515420ea4342487e8b6bd74a6443e2ba856c91506f8951024989c79ef76c",
-      "city-continuity.js": "6a10d343288698d4dd35e3eeab13d6a5be8930ae87e5f6a19600fe0c969125df",
-      "city-corridor-plan.js": "640a9f8d3d6ca9403338b419f973c3856d2164edba6b4854f76a7a87e8a96428",
+      "city-behavior-monitor.js": "7286d31478f7ec26c32909b7be256e7ba08fa4245f4b127de178b108a4037095",
+      "city-continuity.js": "031d7b465f7ad2a35dd9d9e187aa995cf996037e1242871993e75f613d1d8547",
+      "city-corridor-plan.js": "4d121702e283329d7399fa42994642b3d1e2b4d3e58521cb9045eef607edb3f1",
       "city-data.js": "86d39546dd361ca7a277493bcb448b4ef5aea64acdc38559d2c65ad051b632ec",
-      "city-environment.js": "c9a9b5d129a99fea9424a0cd7dd42cc2fe41204a2adfe73485cecefda1b1c92f",
+      "city-environment.js": "4839766012a86708c61f6f88009a0df5790c454cdd19ffe2575d17798d041039",
       "city-exterior-materials.js": "0624d58b56c5ed03e68f9481cefa0d6c900b765d60471bd6c116a1a40518e264",
-      "city-flight-challenge.js": "1fc92edfafb05ba2ff1f78d56a2aad9ef1cf3e0b16d8e3994a38f9dae935cd3c",
-      "city-flight-ui.js": "ec1a35b2c88dd8397e381da99628b518d956bc77973403fa223413bf18a56f4b",
-      "city-frontage-design.js": "ed686c122ce5ae318f9088697301d2639a8e0b339c0e8cf05f33c58a6858a2a9",
+      "city-flight-challenge.js": "a0df7dc49ac72d98acbb260cca30195ca72660d6f7b34a2ff556dac0b71d2a8d",
+      "city-flight-review.js": "4a8f60a88b379149317a1a67cbf137c4052f88f9b17cde399f7e3c93a6830f50",
+      "city-flight-ui.js": "6ed6a19a2074577a50845e7b4b881c490703c520d908030f862b7ae6d1ec7463",
+      "city-frontage-design.js": "98f0e8f779a2c182e076c10e88f886e03b3afe44c3f1dd20e2cb6398307d1607",
       "city-horizon.js": "6e36815298a6f4d596b1d881237bedaf8e701a724b50c695894efd457537bef2",
       "city-landmarks.js": "c59b9c67908e6e4c90d8f14356cb4c937a58e4a868c63e35eb9594b133aeb884",
-      "city-map.js": "85921b8d48cbde9b2c9df82e7e9627bfcc31d6d6a0712b888b6b3de6657c0ac0",
-      "city-material-lighting.js": "4b6f64b660311a84e58ee5f76cb4ae87eb7c9fbff4812e393262a02f7a014ff6",
+      "city-map.js": "9f3c9c03c0d3a1cae9b4d9cbeb2d4c8d456302564c2ee5495ef9a9dd543d6bb2",
+      "city-material-lighting.js": "0433957213054d2cd658856edd9ac22d509e09cb769599fbf2301e8dc8ef263b",
       "city-navigation.js": "3cdc9251e94256e6f285f020c0e96a3b9e1eebec99c7d8ccb99de82ba2061153",
       "city-night-transport.js": "fff2703b2a8a26f4f059043a3cff09598389d29c3216be9946a5105e92022cb9",
       "city-plan.js": "6b370c9f951354de5a00263cb524e1a2df7cfc00e8b6cf6d2df020b82cf71ab4",
-      "city-practical-lights.js": "2058413c6e8b9f8785efd1d239f4701fb47fab6bed9bc6470ed9655033812118",
-      "city-render-budget.js": "c7cb69daf59a80af4ff4009badb3b819c2429a75c88036b7ce84e576e40ccb3f",
+      "city-practical-lights.js": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7",
+      "city-render-budget.js": "0d97a5bbce09a63ce70dcb89a74ef9a5a24f7be4853c59b0299095ec5aa271d7",
       "city-review.js": "473086fa0694cb94d8be50b276b3cb5834cb6696863b8792ef35af60e9f5e02a",
+      "city-route-detail.js": "c7bd3293238e56801934a64dfbc503197d61215adcb9b840e37cdca651fab754",
+      "city-street-edge.js": "9a1208ec25d71b7ca2948467b8db5b25cb2fd727cff5a91e0a432e75ed082ad9",
       "city-street-sections.js": "36f27904785fb5a357825a41de49d945380a548c0c71a0363f024a34e45f1de1",
       "contact-ao-pass.js": "b9b95f465bdab91bb1bbe91920b32ea60d12095088ad4cb617e3f1da934f238c",
+      "contact-friction.js": "165882c28194bff55250891e778e07751027babbc892f054eedf354e13ca817d",
+      "contact-ledger.js": "031a00a892ebbe0408b9fa3c465f95e9760009e7aeead8f0faec73d87ac34c40",
       "contact-step-schedule.js": "0a11ded3273469b16332c86b84419794589514a293c9e071a2abfa6face23c4d",
       "control-observation.js": "8920e824d32dbece63aade3f0ab4da5c294225aa46419d6e556e603f2ed75cc8",
       "controls.js": "eb14d7f191cddd3d6ccd608a1d2b9df52b2466a1a2d43fdc953de04fc8f135e1",
       "cube-probe-target.js": "17c87dfc424dc1e50e5622c115da3852724be97d7f71cb1a387a753ecd6cbc81",
+      "driver-feedback.js": "69d553e5dfc537e365df5df58afbe49dfaca3eaba0174375e93ec3bcae642ab7",
       "driving-capture.js": "53f78df5e38078dfb0010c7e82bf8313d8a0829032720f60530e8e4938f321e2",
       "environment.js": "f5f90b08d2f9aa0ad4addcc9a09e11d772b970da329a1cdd909c7a8d846c12a5",
       "exhaust.js": "375429cd7095567bd9d8602c92825643defcd5525ec9b062b5e3ad9276c8dd10",
-      "experiment-console.js": "092d4d9882828856cd2e1b8bd3430a96f8de06fce2cba1385eff51e7971f1088",
-      "experiment-records.js": "2dcbb4c7cdeea98bd49c5820877ab48f771b0c221bdc0ebabc9ae586ba3ba44b",
+      "experiment-console.js": "e1d6ade6037cef7e3eb08814313220c9ed334b097cba3fea8ad550f783ce7767",
+      "experiment-records.js": "f306f68fa7fe4a3d5741e925d6542bd810a497e23cadec83d90d543b21e6eb5e",
       "experiment-replay-worker.js": "8bed7be5c1a0ea4fefab0a9c0c967af0ffde054314a01702857b59064e395262",
       "experiment-reproduction.js": "4165dd4b5699f39487acecdae456b1cf43729ee9b82f89a542d49ae675306fd9",
       "experiment-worker.js": "279002966a94b68c6c4215124764640f748f06d4710ee52313a357e355e48a1e",
-      "export-download.js": "518de941b393e307a46ab7b624fba0ac1ea9dfaef5f5bc0848ac7d16f57e4cb7",
-      "export-encoder.js": "1a6d64d4ac78512404f18ab60cc939de9de6b2b0bbdafb0ce72e2b1dcff9356a",
+      "export-download.js": "2e4a4f2650367063a2a80c7e7789150c99ccb73266be924bcbc61640f0c0ace1",
+      "export-encoder.js": "8ec6913b785a619647c7fd2f1f7057b5b04d51924cbac924fc29a134d5f3cf25",
       "export-worker.js": "9347c78bb8a6a16544cfc372480887351728b5a2238c38db0f944d65b7a9d5c3",
       "finite-program-recovery.js": "de1b20b28ea02b147a5bfa2aa9682f4fd42e4ddbd2977cf3b475f2c34d7e4c8c",
       "flight-programs.js": "461ca94a631d6c376a216a2c26e5249115d541b268974fc224edbb64998ce648",
@@ -2961,6 +4749,9 @@
       "i18n-release-314-en.js": "1944b2adb818290f90b9e043cb61438e771043276ee756183642922ca37fe2e7",
       "i18n-release-315-en.js": "6d991d25c43af232aa13959392e1b22fd519a6f8b530f6f68682c7f17036a0b6",
       "i18n-release-316-en.js": "3ae5869206e0e1bab9dd9db375f314119a447a4af1f34361fe5293743a0ac287",
+      "i18n-release-317-en.js": "60941a3e3243d3e4be04de57a99631d90039eea56759ab17397f1ac9875b1a2f",
+      "i18n-release-318-en.js": "f5de085af67cbfad1785c626950f924686c46cd088594b1316a1f5c2a32942d7",
+      "i18n-release-319-en.js": "a43bd3fca8fd3952bee92d6e6c6cf1d91c8f3065eafb310b3ac70245162b3df3",
       "i18n-render-313-en.js": "68f1219d1b228f681978dc0432e08439607505b2d07a08b292fd82cc5b087405",
       "i18n-research-en.js": "b50b1ce81f16b85b48e78c6402540c1a8040590902c20730f856275093e5304c",
       "i18n-vehicle-310-en.js": "2f33aa6393043244ff73a9f3a2fa0e654bed7a2427c99b9c150e89203e55e4d6",
@@ -2968,35 +4759,37 @@
       "i18n-visual-311-en.js": "511d5dbc6c59c1d0e53618b6d8426cad218954cc7cab54be9f90b64ca2fd9154",
       "i18n-visual-en.js": "da4952997fd47df297b8ccbfcebc394bd7c7bdb5caba127e53830f2a9b14ee73",
       "i18n.js": "6735cf85a82021768a89d1dec541c7b2f16eeb426decab129c53257f9135ef4b",
-      "index.html": "e91631d69aa1008460af155a15b002e6637a1977015858c9fcae9d244748b28c",
+      "index.html": "7c196bbc73203ed0f928a18e3f71528af63b17a2aa703579da8e4ca85d682c20",
       "indirect-lighting.js": "87ea771788d4d9b177fd475b053a8537a5254176791c24d733b7407966efb885",
-      "input-session.js": "fcdd8e4d4cf4d4a20887f088da94bd7dae34a682bff9edc83709c809bd670536",
+      "input-session.js": "853df1e5a6ce0a5610aa42628e8f3e273e11dafd102d792796353fa0f84e9340",
       "inspection-capture.js": "eb9c412e11b81c54bbcafd62e8de29930d003790e410bbd9194778138db5168e",
       "inspection-diagnostics-capture.js": "f9bb86d2bc10544ddfb09e4546690a58fd7200a45db0dcb6df733cff59a20baa",
       "irradiance-math.js": "f4c9de47c61ebf8a661d9cfddfbcf0a47c77266438f43909090cd1032b1637f9",
-      "landing-challenge.js": "e08102fca7bfbcb649372e3cec91470cdd7a364422aa5f9b075037c7c8899b6b",
-      "landing-research-ui.js": "f196e56d47c69b6b3ac9e6ed8ceb9c9039dd93fda62931ece6e6ec5bb2a42322",
-      "landing-research-worker.js": "418a74822e9e4c0f73c7e1decc839799e95e9504077ab396881bcf28acbbcc52",
+      "landing-archive-store.js": "d8cc93a4fec4d511f9adec79be267fcf2d72d07d2ec967ca2bf0032f64587e19",
+      "landing-challenge.js": "4e69b12040f93bd151a39bfd65b513f2b6a58fe3f97da9fc70946ae21b6bf978",
+      "landing-research-ui.js": "f61f9eb969029b6e34e27cdcee181ffab5dd225740ee40ba377dd759456fe87e",
+      "landing-research-worker.js": "8d85383c00163a5ae65b0e22cf5e5a547f5e08ad05919857c26aff390ff622b8",
       "landing-reserve.js": "391347f411d35af207058b1360a971a2ae3acc90a475d53422248ed1cda651df",
       "local-probe-sun.js": "518069c383e4815dcaf796576d969a568356ddfc202e922055d17bbd871a1f1a",
       "locale-bootstrap.js": "2bfa0300dbed844c2e80616e79ed7fdef4f06210adaa7aa6c66f6f4b66c1d7c1",
-      "main.js": "e0fd7ea7753e4c663bfc4fe3e2b2feeb9f44b5bfa61823a4f7a773605b9eac00",
+      "main.js": "1ee6fff0433672c5525d1799a2769ccca75cd7b24cb269c6a81d156f8e9ee80a",
       "night-city-lighting.js": "00c3d8dd0cca95eeb398af6459379431aa7b2b8fe2683c5ff241c62ae2ad845f",
       "night-direct-lighting.js": "ccc6b213f2f44e97035ff064939ae498be4295ebe6655576488989a6fb70e234",
       "night-direct-transport.js": "964f62fab051aecd75c5d3d65acf6d31c1a51ff84a037fda3c2ad7f593a74938",
       "night-field-atlas.js": "afe38d53e75b49f3609fb1156dc4961bb20e73d04939227ee987b54790239ba7",
-      "operation-hud.js": "974f0d7d86724439e79f00d83587a0863ff772098b6acc2ba731c6d2842f71f0",
+      "operation-hud.js": "96e479d0eff989c1b270fd500ec4db19c0edb7d05ad9cf4b31e1201d95238c7f",
       "pavement-surface-material.js": "c2b28f5548988a98bacbc801f4db41a97589fecf3cabe3a6a4ba97a4fa806da8",
       "performance-meter.js": "0febb4a02352075265ab0c83e9eb2f9afec351b289974dc0918d744c6dc6f7d7",
-      "physics.js": "4717c20baa2a568ea85c32657279eef84f8dd9d7caf3971b58579b2c4166e2c0",
+      "physics.js": "3aa89a4a111b7a4001220f284077c6f5fe51d58d8b3fa7f6105dfce208aec107",
       "pilot-input-intent.js": "97470ee5a7be87a2e8034ff1d39fdeceb7931f47becef79af8162ff31447a378",
+      "pitch-maneuver.js": "f79bf31dad0486b039aac9b4e4d407af64b3fb37f91ebb5864cdfe767c715df7",
       "receiver-plane-shadows.js": "20ccb80518fd5056b64216c82db72f83b0cdf47326352ca491746a23e8eee741",
       "render-capture-matrix.js": "244ccc6973e6addc720eb670f89cbc0dea12d815e7fc1ae070921adc7e51eace",
       "render-profiles.js": "4442bc45eab81e0a98c66551afba46b2049f916e66abaa7274f3a9c4b30f9719",
       "render-program-diagnostics.js": "8c961ee03fcbff9b862df1c0f8aae931468f8405bc4b660523321242892adc70",
       "research-comparison.js": "0c58e5785b457ecfec8d6f05e18bece610a72de0a4010a5a29637190fa78ac77",
-      "research-console.css": "40aa4ce28017d40dd57235773bfab08cd6249c138fc68f72f7d415009315110a",
-      "research-console.js": "d4a80ba3314a0547db3f1f8d38f87def6813ed07a5ff58b5f11b7901ba90a0fb",
+      "research-console.css": "20578bd504c1df5946c3f58daf05cc590d21a70c355cf63c5e3557e7800f667d",
+      "research-console.js": "007ae50232ae8d504b4f76ac5b0e62eb4ec56bad13ad4a648f2214f68a6a3671",
       "research-entry.js": "dd4c073e1c659c847e13718d24c0880d9befd162273b630c03aa06618fef3987",
       "research-i18n-3.14.js": "c3b8718531309130155ca55ddd8933af91fc0540ad39b4067225498254158064",
       "research-lab.js": "6f775a2ca38dbd99f13f65555326440ee18cfeca89610dad4fd1972a6521bee9",
@@ -3010,28 +4803,32 @@
       "research-workbench.js": "850163f60c802083162621b5677a9276cacec13b09bf5c910aae0be88430f723",
       "research.css": "87091394e00fa0acc14c499142192468398f925fae26b8f8d5bef3c4a94cec17",
       "research.html": "a088f6e56ef218bf546961026a500587a0f23f7b4987f6fae61f31d9f9c6bce9",
-      "road-surface-material.js": "c73da629769b4bbe1cbcce06006ede15564daa779d20e9e3b1a8afce90bbf833",
+      "road-surface-material.js": "6e80a21c898ecea1de77b740d116ee619ff4e2c30b610bff5e09649009a08c80",
+      "route-experience.js": "b6fc36df04054cb543d6d348a23a85435c087f273286e9caedc80782fdbd2447",
+      "route-surface.js": "88dac46da14b15557447faec956e1f08c45840216545bb09a9c1eaf7177e4b44",
       "runtime-identity.js": "147c924df8e30f61228fe5b97cecbeba2d0eb0d14a5a91227295bd51578d12bc",
-      "simulation-safety.js": "982a07afe5a57d7ec852bd3eccf014e080f9e23d119447e4f134b265feff7912",
-      "simulation-snapshot.js": "44b213653bf85b7aa7cc16f724a2121e2840820b62e78c60355bb7e7e1aeec70",
+      "shadow-motion.js": "d875855b6e037f5fc73dab34f5232f672de8d5a39f1764db7caa6e167f493aa6",
+      "simulation-safety.js": "0c68b858ff1ac919338706119bdc97131e99bc66baae4ff622021e66e6881d94",
+      "simulation-snapshot.js": "80e3fa5fa82ca23795750aac18aeb3482933578d8963aa1660fc19fdf4f017c3",
       "stable-fxaa-shader.js": "07109f48c213c693c19e7903449b23c59d9de5d494890ff073953fa27e837574",
       "static-city-broadphase.js": "02e290e83ffd4d341211b75a70f2408010006001fb600a2d0a279fb8d8c45a14",
+      "street-display.js": "1a33eb1fdc499f094665f2d469ecc04f23cafc85371bcdf7206d1f63a7f82b35",
       "street-life.js": "ca9705e7d2ada742fc6fb2587d5a60baf9082e2f77e30bf4e87ad89adddabcfe",
-      "style.css": "d1fa674efc57b15e66a1303f731baed510718a01c8634aaa265c07eaf6e23b95",
+      "style.css": "d227bb08ed10ade8861bad7668fcb7c8141ee0fb570d3abbe998fcbccef82f32",
       "task-setting-scope.js": "476afdecaf8510218dafb979f7613c2883beadd3ddc67997b18b37e90928608f",
       "telemetry.js": "d698282add7fd8a81a91e9183c823525183f3e83f67147a84aae0ac993f22fcf",
       "tire-dynamics.js": "de2336ef6ff88d276a414a2e90a2a6a7c29e8b18bed5767a6031bb14782c388d",
       "trim-feasibility.js": "5ebfbc9057b1555c1f32f57e70b4c5e43ff0cffddbbddebed4fd1623acf2f0ac",
       "ui-preferences.js": "0ec10f97794ae9a420b850251092f131b0ee7d38deffa1671da8379b56968a32",
-      "urban-architecture.js": "ab712d8dc12b3cf1197e89ecdcd714aea7f9f7d37132c61b754a188b2cb60b59",
+      "urban-architecture.js": "cfefc8658b3c9edced2fe719e705a4e0f72c2d3f507af7f04cc1c12faf6af44c",
       "vehicle-clearance.js": "2cd62f637d74a8186b8712afb4942450e61a8d9f689b90f1fea94ba2073a6d87",
-      "vehicle-display-study.js": "3eb0019219cea0a95d3f1860eb06f7c10f99e980d8600725524450c4dabe6749",
-      "vehicle-inspection.css": "669fe86a7a031b4da6f4370844c66d1d543b6d44f12d1a596ecbbb713db8cc5b",
-      "vehicle-inspection.html": "a7763d289339327226169d9ef572560f6d6ea973462d3f87b85e1a4ed9a2572b",
-      "vehicle-inspection.js": "752ede2c30207d797ba8fa0ac0246c59d6ce83ba389e2277aa8a830c8c8de6e1",
+      "vehicle-display-study.js": "5a0efda354afb89f5735826d1f0ed4e249b74778a6bbeda03fd1db837120be86",
+      "vehicle-inspection.css": "4db0aeef4691bded7ed8a9d6642641b8d2e40ecc0d1eee2859f4a0dc26e0f9d9",
+      "vehicle-inspection.html": "d248a94676be81e4a2a29bcddb66e2f4619a3ddb87408e5d9b5b322d9bf1ab8b",
+      "vehicle-inspection.js": "31dc17eb64babe2fd26c30f98a2ff3e762ce070ff1a50f4689050d270fd1efe7",
       "vehicle-layout.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
       "vehicle-light-state.js": "a191269ed32dc2e79b78c47a4230d8e6e7a4e52aebfd2d07e6fd8bcfb5bdea10",
-      "vehicle-models.js": "cadf5e3eebe35159a330867d00ec542659fc37aaae0da9b69789f9fe6b4de15a",
+      "vehicle-models.js": "476e8066da018610373a9cc75932b5cb148cca50059774278162ad1845b1f2eb",
       "vehicle-reference-3.13.js": "31257f22ae30c1df7392c8a7dcafea1a91017e0b000299b10716ef01ebbb99a3",
       "vehicle-reference-3.15.js": "2747bba7a03d626ceb0661ec5771d8fc6e4c82c0e147402b1ca3fb47386f2009",
       "vehicle-reference-3.7.js": "c15443cf9c69af3a2d0c6867a1000645deff12e2db2cc4eab1916134da54cd07",
@@ -3044,7 +4841,7 @@
       "vehicle-reference-layout-3.9.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
       "vehicle-study-capture.js": "31f1f93dd062ab0452988bbbe81ed730252a13e21499440df148ec83606dee2c",
       "vehicle-surface-diagnostics.js": "d612c5f281ac80332a634e16631d124cc23ce1713f51caee62b4f78909515ff3",
-      "vehicle.js": "b7e7703513ad42631d429951d97de0e6bc9a23c5da53ef831e9b1784b5a61247",
+      "vehicle.js": "9b197c22e595f559dd8769dc167a1646a6ac686f3b30ceb1435725ccd1507bc9",
       "vendor/addons/controls/OrbitControls.js": "d3b6283dcec39e541db397bdd868fec380e118f3053ec26e9873252a14b7b5d6",
       "vendor/addons/csm/CSM.js": "6876eaa29c95daeb82e846788e84bde03126e066165c34286ee2ee18ea58c018",
       "vendor/addons/csm/CSMFrustum.js": "632b096b39c503ebe1c3f83e63dca25c51af2103ff0ca467ebf5dc1855196989",
@@ -3074,18 +4871,21 @@
       "vendor/cannon-es.js": "f0700cbd3a482954949b9d58c1b0f76dcc74767750297647a39d8c40dd63d37c",
       "vendor/three.core.js": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20",
       "vendor/three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
-      "visual-presets.js": "e04bf7f7b38fea0a8256415873af6820a3bbee3dcd5dc44ee65bd15de561e20e",
+      "visual-presets.js": "29e63a9677714ee0770b0ae13f27a629e7676fccfbb899afc5b25a32c95d0b88",
       "wet-road-reflection.js": "69e9f1280bd8bf0d2119e156fba83ccc99c31c1b7a60e03df9670cc6c5264683",
       "wheel-contact-envelope.js": "d7dddaa5777ea9b56f73c979d8e17e31b38cca9a5a80b5746a32540ebfb806b9",
+      "wind-control-study.js": "ae6565050fdb49352f6e3d01a2a5cdf6587cd7cf8252a33a7370604d0928bce1",
       "wind-lab-data.js": "27ce72f8053b99037462be6c4b62d37d371021d6e02fca96d4392587d9f2ab41",
-      "wind-laboratory.js": "5d6197be6b23900fa7b73fbd4aef5bd60cc219305dd79ce883588a539ef43f3d"
+      "wind-laboratory.js": "50ca542dc229897ecf056d67ae462521ea221322b5b97dec39b31955243bb9ea",
+      "wind-matrix-study.js": "aaacc44113d28895e0f900293c0781af14947c83d1810b8dc47fa023a767faec",
+      "wind-response-chart.js": "c9c7f24d2229814148e9db083da7eea5342dd9d0851b7aa1c02a5caaa1b46a32"
     }
   },
   "offlineShaderValidation": {
     "scope": "Offline final source syntax, stage-interface and active sampler array reflection; not WebGL driver, framebuffer, rendered-pixel or FPS validation.",
     "postProcessing": {
-      "report": "qa/render-shader-validation-3.16.json",
-      "createdAt": "2026-10-20T19:38:36.948Z",
+      "report": "qa/render-shader-validation-3.19.json",
+      "createdAt": "2026-10-21T06:48:35.894Z",
       "sourceHashesCurrent": true,
       "status": "passed_with_documented_compiler_normalization",
       "programPairs": 18,
@@ -3100,8 +4900,8 @@
       ]
     },
     "cityLighting": {
-      "report": "qa/city-shaders-3.16.json",
-      "createdAt": "2026-10-20T19:38:36.362Z",
+      "report": "qa/city-shaders-3.19.json",
+      "createdAt": "2026-10-21T06:48:35.315Z",
       "sourceHashesCurrent": true,
       "status": "passed_with_documented_compiler_normalization",
       "programPairs": 152,
@@ -3125,7 +4925,7 @@
     "scope": "DOM events with actual application/controller code and explicit graphics/Worker facades. No actual browser layout, WebGL execution or FPS validation.",
     "acceptanceGroups": 87,
     "mainPage": {
-      "report": "qa/same-page-ui-3.16.json",
+      "report": "qa/same-page-ui-3.19.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.",
@@ -3160,7 +4960,7 @@
       ]
     },
     "advancedStudy": {
-      "report": "qa/research-panel-dom-3.16.json",
+      "report": "qa/research-panel-dom-3.19.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM events and state, with actual deterministic solver reports through an asynchronous Worker API facade. Historical-version fixtures test storage only. Canvas is stubbed; no browser layout, actual Worker-thread scheduling, GPU pixels or FPS evidence.",
@@ -3177,7 +4977,7 @@
       ]
     },
     "liveExperiments": {
-      "report": "qa/experiment-console-dom-3.16.json",
+      "report": "qa/experiment-console-dom-3.19.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "Actual console DOM and actual fixed-step RoadsterSim replay/A-B. Canvas and asynchronous Worker endpoints are facades; no browser layout, Worker-thread performance, WebGL pixels or FPS evidence.",
@@ -3197,7 +4997,7 @@
       ]
     },
     "withoutWebGL": {
-      "report": "qa/no-webgl-research-3.16.json",
+      "report": "qa/no-webgl-research-3.19.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.",
@@ -3209,7 +5009,7 @@
       ]
     },
     "workflow": {
-      "report": "qa/research-workflow-3.16.json",
+      "report": "qa/research-workflow-3.19.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM text/events and actual numerical Roadster solver reports through a Worker endpoint facade. No browser layout, GPU pixels, native Worker timing or FPS acceptance.",
@@ -3228,7 +5028,7 @@
       ]
     },
     "vehicleInspection": {
-      "report": "qa/vehicle-inspection-3.16-dom.json",
+      "report": "qa/vehicle-inspection-3.19-dom.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM interface and metadata regression, plus actual inspection matrix state handling through a no-draw renderer facade. Not a real-browser, GPU, image or performance result.",
@@ -3243,7 +5043,7 @@
       ]
     },
     "robustnessStudy": {
-      "report": "qa/research-robustness-3.16-dom.json",
+      "report": "qa/research-robustness-3.19-dom.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM contracts and actual solver reports through a Worker facade; no layout, native Worker timing, graphics or FPS acceptance.",
@@ -3255,7 +5055,7 @@
       ]
     },
     "recoveryGridStudy": {
-      "report": "qa/research-recovery-grid-3.16-dom.json",
+      "report": "qa/research-recovery-grid-3.19-dom.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "JSDOM DOM/state/storage contracts and actual solver through Worker facade; no WebGL pixels, native Worker throughput, layout or FPS acceptance.",
@@ -3267,7 +5067,7 @@
       ]
     },
     "researchSafety": {
-      "report": "qa/research-safety-3.16-dom.json",
+      "report": "qa/research-safety-3.19-dom.json",
       "sourceHashesCurrent": true,
       "status": "passed",
       "scope": "Isolated DOM/storage + actual 120 Hz solver; Canvas/Worker scheduling facades. No user archive was modified. No native 3D, GPU or frame-time claim.",

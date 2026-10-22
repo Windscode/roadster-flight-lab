@@ -1,13 +1,17 @@
-import {restorePayloads} from './repository-payloads.mjs';
-restorePayloads();
-import {readFileSync,existsSync,readdirSync,writeFileSync} from 'node:fs';
+import {readPlan,hash,identity} from './recovery-publication.mjs';
+import {MODEL_BUILD_ID,MODEL_SOURCE_HASHES} from '../dist/model-build.js';
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
+import {readFileSync,existsSync,readdirSync,writeFileSync,mkdirSync} from 'node:fs';
 import {resolve,dirname,relative,extname} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {execFileSync} from 'node:child_process';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
-const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-const dist=resolve(root,'dist');
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),dist=resolve(root,'dist');
+const {verification}=readPlan();
+const publication={verification,planSha256:hash(readFileSync(resolve(root,'publication/recovery-plan.json')))};
+const fileIdentity=p=>identity(relative(root,p).split('\\').join('/'));
+const originalValidation=fileIdentity(resolve(dist,'validation.json'));
 const html=readFileSync(resolve(dist,'index.html'),'utf8');
 const main=['main.js','app-shell.js'].map(name=>readFileSync(resolve(dist,name),'utf8')).join('\n');
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
@@ -51,5 +55,8 @@ let meshCount=0,vertices=0;car.group.traverse(o=>{if(o.geometry){meshCount++;con
 car.group.traverse(o=>{const n=o.geometry?.attributes.normal;if(n)for(let i=0;i<n.count;i++)assert.ok(Math.abs(Math.hypot(n.getX(i),n.getY(i),n.getZ(i))-1)<.0005,'Non-unit surface normal in '+o.name);});
 car.setCutaway(true);car.setCutaway(false);car.setColor('#e9ece3');car.dispose();
 const result={status:'passed',syntaxParser:typeof vm.SourceTextModule==='function'?'Node/V8 SourceTextModule (parse only)':'node --check',researchPanelIds:researchIds.length,samePageLab:true,fixedUiElements:ids.length,modulesChecked:imports.size,meshCount,vertices,externalRuntimeModules:0,carPhysicsIntegrationFrames:120};
-const report=JSON.parse(readFileSync(resolve(dist,'validation.json'),'utf8'));report.integration=result;writeFileSync(resolve(dist,'validation.json'),JSON.stringify(report,null,2)+'\n');
+// Publication checks are new evidence, never an overwrite of the old report.
+assert.deepEqual(fileIdentity(resolve(dist,'validation.json')),originalValidation,'Original validation changed during static checks');
+mkdirSync(resolve(root,'.runtime'),{recursive:true});
+writeFileSync(resolve(root,'.runtime/publication-check.json'),JSON.stringify({schema:'roadster.publication-static-check',version:1,createdAt:new Date().toISOString(),modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'recovered-runtime-static-check',originalValidation,integration:result,publication},null,2)+'\n');
 console.log(JSON.stringify(result));

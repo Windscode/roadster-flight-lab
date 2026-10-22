@@ -1,3 +1,4 @@
+import {exportJson,exportFile} from './export-download.js';
 import * as THREE from './vendor/three.module.js';
 import {OrbitControls} from './vendor/addons/controls/OrbitControls.js';
 import {HDRLoader} from './vendor/addons/loaders/HDRLoader.js';
@@ -13,6 +14,7 @@ import {captureInspectionPair} from './inspection-capture.js';
 import {captureArchive} from './capture-archive.js';
 import {createRenderProgramDiagnostics} from './render-program-diagnostics.js';
 import './i18n-render-313-en.js';
+import './i18n-release-318-en.js';
 import {captureInspectionDiagnostics} from './inspection-diagnostics-capture.js';
 import {attachReceiverPlaneShadows,receiverPlaneShadowEnabled,RECEIVER_PLANE_SHADOW_MODEL} from './receiver-plane-shadows.js';
 import {createVehicleSurfaceDiagnostics,VEHICLE_SURFACE_MODES} from './vehicle-surface-diagnostics.js';
@@ -33,6 +35,7 @@ const BASELINES=Object.freeze({
   '3.8':{version:'3.8.0',commit:'a25b228a6d56f358cba24106ce897e1cb5c99bc1',sourceSHA256:'3f532f879f1a86af187a7f89a8f860de61175bdef27d78a783e2ba7fb62763f7',load:()=>import('./vehicle-reference-3.8.js')}
 });
 const baselineCache=new Map(),baselineLoading=new Map();let baselineVersion='3.15';
+let cachedGraphicsDevice=null;
 let renderer,renderPrograms,scene,camera,controls,car,surfaceDiagnostics,inspectionKeyLight,baseline=null,baselineGeometry=null,baselineActive=false,cut=false,sealed=false,sweep=false,lightMode='studio',viewId='front-quarter',lastTime=performance.now(),frameId,captureBusy=false,photoReference=null,photoAligned=false,activeFocalLength=RIG.focalLengthMm,captureAbort=null,deploymentIdentity=null;
 const inspectionViews=[...RIG.cameras,...VEHICLE_EXTRA_TECHNICAL_VIEWS];
 if(typeof fetch==='function')fetch('./deployment.json',{cache:'no-store'}).then(response=>response.ok?response.json():null).then(value=>{deploymentIdentity=value;}).catch(()=>{});
@@ -42,11 +45,12 @@ const reference=$('reference-links');RIG.sources.forEach(source=>{const a=docume
 const sim=new RoadsterSim();sim.setWing?.({mode:'fixed',deployment:0});
 function fail(message){$('inspection-failure').hidden=false;$('inspection-failure').textContent=message;stage.dataset.graphics='unavailable';for(const b of document.querySelectorAll('button,input,select'))if(!b.matches('[data-language-select]'))b.disabled=true;$('capture-meta').disabled=false;$('ready').textContent='三维不可用；官方参考和状态 JSON 仍可查看。';}
 function selected(id,group){for(const name of group)$(name).classList.toggle('selected',name===id);}
-function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function download(blob,name){return exportFile(blob,name,blob?.type||'application/octet-stream');}
 function graphicsDevice(){
   if(!renderer)return null;
+  if(cachedGraphicsDevice)return cachedGraphicsDevice;
   const gl=renderer.getContext(),extension=gl.getExtension('WEBGL_debug_renderer_info');
-  return{vendor:gl.getParameter(gl.VENDOR),renderer:gl.getParameter(gl.RENDERER),unmaskedVendor:extension?gl.getParameter(extension.UNMASKED_VENDOR_WEBGL):null,unmaskedRenderer:extension?gl.getParameter(extension.UNMASKED_RENDERER_WEBGL):null,webglVersion:gl.getParameter(gl.VERSION),contextAttributes:gl.getContextAttributes()};
+  return cachedGraphicsDevice={vendor:gl.getParameter(gl.VENDOR),renderer:gl.getParameter(gl.RENDERER),unmaskedVendor:extension?gl.getParameter(extension.UNMASKED_VENDOR_WEBGL):null,unmaskedRenderer:extension?gl.getParameter(extension.UNMASKED_RENDERER_WEBGL):null,webglVersion:gl.getParameter(gl.VERSION),contextAttributes:gl.getContextAttributes(),queryStage:'renderer-creation; reused by metadata export without GPU readback'};
 }
 function metadata({referenceActive=baselineActive,association=null}={}){
   const original=BASELINES[baselineVersion],size=stage.getBoundingClientRect(),sourceIdentityMatches=deploymentIdentity?.modelBuildId===MODEL_BUILD_ID&&deploymentIdentity?.modelVersion===MODEL_VERSION;
@@ -67,9 +71,10 @@ function metadata({referenceActive=baselineActive,association=null}={}){
     limits:(association?'These conditions were frozen beside the named rendered frame; keep the PNG and companion JSON together. ':'This is the state at this JSON export click. It is not associated with any previous PNG and does not attest that a framebuffer was captured. ')+
       'PNG exports require live WebGL. No automatic quality/FPS verdict. Dimensions, lens match and internal equipment are engineering assumptions. Frozen references retain original geometry/material code under the same current light rig; they are not old renderer pipelines.'};
 }
-$('capture-meta').onclick=()=>download(new Blob([JSON.stringify(metadata(),null,2)],{type:'application/json'}),'roadster-surface-current-state-'+viewId+'-'+(baselineActive?baselineVersion:'current')+'.json');
+$('capture-meta').onclick=()=>exportJson(()=>metadata(),'roadster-surface-current-state-'+viewId+'-'+(baselineActive?baselineVersion:'current')+'.json');
 try{
   renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.92;renderer.outputColorSpace=THREE.SRGBColorSpace;stage.append(renderer.domElement);
+  graphicsDevice();
   scene=new THREE.Scene();scene.background=new THREE.Color(0x111820);surfaceDiagnostics=createVehicleSurfaceDiagnostics(scene);
   camera=new THREE.PerspectiveCamera(35,1,.04,100);camera.filmGauge=RIG.filmGaugeMm;renderPrograms=createRenderProgramDiagnostics(renderer,{primaryCamera:camera});
   controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.addEventListener('start',()=>{photoAligned=false;viewId='user-orbit';$('view-caption').textContent=t('自由环视')+' / '+activeFocalLength+' mm';});controls.minDistance=1.2;controls.maxDistance=14;controls.maxPolarAngle=Math.PI*.97;

@@ -226,10 +226,10 @@ try{
         Object.assign(emittedTHREE.ShaderChunk,THREE.ShaderChunk);
         const name='baseline-3.12-'+quality+'-wet-night-instanced-'+kind;
         await compile(name,{...shader,defines:{...material.defines}},{shaderType:'MeshStandardMaterial',shaderName:name,instancing:true,instancingColor:true,shadowMapEnabled:true,shadowMapType:THREE.PCFSoftShadowMap,numDirLights:profile.shadowCascades,numDirLightShadows:0,numHemiLights:1,numSpotLights:spots,numSpotLightShadows:spots,envMap:true,envMapMode:THREE.CubeUVReflectionMapping,envMapCubeUVHeight:1024,combine:THREE.MultiplyOperation,opaque:true},
-          {baselineCommit:commit,expectedLegacyOverflow:quality!=='balanced',quality,weather:'wet-night',material:kind,instanced:true,spotShadows:spots,dayGIReady:0,probeSunActive:0,unchangedSurfaceInjector:true});
+          {baselineCommit:commit,expectedLegacyOverflow:quality!=='balanced',quality,weather:'wet-night',material:kind,instanced:true,spotShadows:spots,dayGIReady:0,probeSunActive:0,unchangedSurfaceInjector:false,surfaceInjector:'Current road/exterior source with the original texture-sampler count; no frozen surface-source byte equivalence.'});
       }finally{csm.remove();csm.dispose();material.dispose();}
     }
-    baseline={commit,sourceHashes:hashes,scope:'Frozen published lighting shader code and exact unconditional injection order; asset coefficients do not affect sampler liveness; material texture injectors are unchanged.'};
+    baseline={commit,sourceHashes:hashes,scope:'Frozen published lighting shader code and exact unconditional injection order, combined with the current road/exterior surface injector and retained original texture-sampler count. This is not a byte-exact full historical surface shader. Asset coefficients do not affect sampler liveness.'};
   }
   // The lab shares Three.js with the city, whose CSM rewrites ShaderChunk
   // globally. Its ordinary single-key materials must still compile without

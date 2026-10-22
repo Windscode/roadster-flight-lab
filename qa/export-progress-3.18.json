@@ -1,0 +1,202 @@
+{
+  "modelVersion": "3.18.0",
+  "modelBuildId": "4a9cc90a2c8f4f74ef8765e36571bb49df0b3d7652a64cd8b3014eac88ee40d4",
+  "checks": [
+    {
+      "name": "Chunked JSON preserves supported data and native JSON normalization without double toJSON",
+      "status": "passed"
+    },
+    {
+      "name": "Large preparation yields to the event loop and cancellation stops before file handoff",
+      "status": "passed"
+    },
+    {
+      "name": "Preparation, browser handoff and disk completion are recorded as distinct states",
+      "status": "passed"
+    },
+    {
+      "name": "Cancel, visible preparation failure and browser retry preserve an honest outcome",
+      "status": "passed"
+    },
+    {
+      "name": "Dedicated-worker protocol transfers exact records and cancels by terminating its worker",
+      "status": "passed"
+    },
+    {
+      "name": "A superseded asynchronous snapshot cannot replace or relabel a newer export",
+      "status": "passed"
+    }
+  ],
+  "measurements": {
+    "synthetic40000": {
+      "bytes": 6219750,
+      "elapsedMs": 643.639192,
+      "chunks": 95
+    },
+    "inputHandoff": {
+      "status": "handed-off",
+      "filename": "input.json",
+      "elapsedMs": 29.883904999999913,
+      "snapshotMs": 0.2125300000000152,
+      "serializeMs": 13.569266000000198,
+      "blobMs": 0.18096300000001975,
+      "bytes": 634,
+      "visited": 52,
+      "characters": 634,
+      "error": null,
+      "browserCompletion": "unobservable",
+      "serializer": "cooperative-main-thread",
+      "workerSerializeMs": null,
+      "postMessageMs": 0,
+      "compatibilityScanMs": 0.005308000000013635,
+      "queueWaitMs": 12.959871000000021,
+      "phase": "browser-handoff",
+      "deadlineMs": 30000,
+      "events": [
+        {
+          "phase": "queued",
+          "atMs": 0.1711880000000292
+        },
+        {
+          "phase": "snapshot",
+          "atMs": 12.993110999999999
+        },
+        {
+          "phase": "compatibility-scan",
+          "atMs": 14.801627999999937
+        },
+        {
+          "phase": "cooperative-encode",
+          "atMs": 14.805323000000044
+        },
+        {
+          "phase": "blob",
+          "atMs": 28.23519999999985
+        },
+        {
+          "phase": "browser-click",
+          "atMs": 29.742381999999907
+        },
+        {
+          "phase": "browser-handoff",
+          "atMs": 29.764075000000048
+        }
+      ]
+    },
+    "workerProtocol": {
+      "scope": "Worker transport fixture, not native worker performance",
+      "completed": {
+        "status": "handed-off",
+        "filename": "worker.json",
+        "elapsedMs": 4.871514000000161,
+        "snapshotMs": 0.0524790000001758,
+        "serializeMs": 2.1728049999999257,
+        "blobMs": 0.0007610000000113359,
+        "bytes": 57,
+        "visited": 18,
+        "characters": 57,
+        "error": null,
+        "browserCompletion": "unobservable",
+        "serializer": "worker",
+        "workerSerializeMs": 1,
+        "postMessageMs": 0.07679499999994732,
+        "compatibilityScanMs": 0.13178800000014235,
+        "queueWaitMs": 1.6929120000002058,
+        "phase": "browser-handoff",
+        "deadlineMs": 30000,
+        "events": [
+          {
+            "phase": "queued",
+            "atMs": 0.010726000000204294
+          },
+          {
+            "phase": "snapshot",
+            "atMs": 1.694244000000026
+          },
+          {
+            "phase": "compatibility-scan",
+            "atMs": 2.2060660000001917
+          },
+          {
+            "phase": "worker-start",
+            "atMs": 2.338365000000067
+          },
+          {
+            "phase": "worker-wait",
+            "atMs": 2.5804800000000796
+          },
+          {
+            "phase": "worker-complete",
+            "atMs": 4.279421000000184
+          },
+          {
+            "phase": "blob",
+            "atMs": 4.388374999999996
+          },
+          {
+            "phase": "browser-click",
+            "atMs": 4.852004000000079
+          },
+          {
+            "phase": "browser-handoff",
+            "atMs": 4.853206
+          }
+        ]
+      },
+      "cancelled": {
+        "status": "cancelled",
+        "filename": "worker-cancel.json",
+        "elapsedMs": 2.0602460000000065,
+        "snapshotMs": 0.04706099999998514,
+        "serializeMs": 0,
+        "blobMs": 0,
+        "bytes": 0,
+        "visited": 0,
+        "characters": 0,
+        "error": null,
+        "browserCompletion": "unobservable",
+        "serializer": null,
+        "workerSerializeMs": null,
+        "postMessageMs": 0,
+        "compatibilityScanMs": 0,
+        "queueWaitMs": 1.4960249999999178,
+        "phase": "cancelled",
+        "deadlineMs": 30000,
+        "events": [
+          {
+            "phase": "queued",
+            "atMs": 0.008413000000018656
+          },
+          {
+            "phase": "snapshot",
+            "atMs": 1.4971869999999399
+          },
+          {
+            "phase": "compatibility-scan",
+            "atMs": 1.8912210000000869
+          },
+          {
+            "phase": "worker-start",
+            "atMs": 1.9192330000000766
+          },
+          {
+            "phase": "worker-wait",
+            "atMs": 1.9748970000000554
+          },
+          {
+            "phase": "cancelled",
+            "atMs": 2.0680979999999636
+          }
+        ]
+      }
+    }
+  },
+  "sourceHashes": {
+    "dist/export-encoder.js": "8ec6913b785a619647c7fd2f1f7057b5b04d51924cbac924fc29a134d5f3cf25",
+    "dist/export-worker.js": "9347c78bb8a6a16544cfc372480887351728b5a2238c38db0f944d65b7a9d5c3",
+    "dist/export-download.js": "2e4a4f2650367063a2a80c7e7789150c99ccb73266be924bcbc61640f0c0ace1",
+    "dist/input-session.js": "853df1e5a6ce0a5610aa42628e8f3e273e11dafd102d792796353fa0f84e9340",
+    "tests/export-progress-3.16.test.mjs": "ef994035d54f74fa97dbee48e916b63e60b41db25a189f4b7e3f14a229ddc090"
+  },
+  "scope": "Actual cooperative encoder, immutable received-event journal and DOM download manager; browser handoff is simulated here. Native download measurement is reported separately. No claim about the earlier browser tool timeout."
+}

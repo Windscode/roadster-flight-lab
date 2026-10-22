@@ -1,0 +1,8 @@
+{
+  "schema": "roadster-development-failure-note",
+  "scope": "First numerical execution of the new wind A/B experiment, before its first passing result",
+  "observedFailure": "Controller state does not match bounded interface/hash",
+  "cause": "The original graph's hash-bound zero controller state was passed unchanged into the different B graph. The existing controller correctly rejected it.",
+  "fix": "A retains its full original controller state; B constructs its own validated zero state. The study explicitly requires all numerical initial controller slots, last output and last step to be zero/null. Physical snapshots stay identical.",
+  "evidenceType": "Development note derived from the actual exception; not a raw execution log or a passing test"
+}

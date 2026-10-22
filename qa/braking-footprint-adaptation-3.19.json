@@ -1,0 +1,96 @@
+{
+  "schema": "roadster-braking-footprint-test-adaptation",
+  "version": 1,
+  "modelVersion": "3.19.0",
+  "modelBuildId": "8ccb2ab0d967509682aae900ba5a9067bd986d8468f5d5f57f48256fcb857579",
+  "status": "passed",
+  "runtimeModified": false,
+  "rootCause": "The historical exact _wheels source-body comparison rejects the explicitly added 3.19 surface/contact diagnostic code, while the original paired complete initial snapshots and physical outcomes match.",
+  "originalFailureReport": "qa/development-3.19/braking-footprint-before-test-adaptation/braking-footprint-3.19.json",
+  "originalFailureReportSha256": "08b78068ee57b07e26f2cb8c12828eeb91825e2640628b8c203f29ce2950f533",
+  "originalCasesExactlyUnchanged": true,
+  "originalGeometryChecksExactlyUnchanged": true,
+  "originalTraceByteForByteUnchanged": true,
+  "trace": {
+    "file": "braking-footprint-3.19.ndjson.gz",
+    "samples": 6648,
+    "bytes": 3011773,
+    "sha256": "6257af174abffd25d1227988528ee8af6bcdccfe1040ef17827bf6e345fceda6"
+  },
+  "fullStateComparisonSteps": 3322,
+  "excludedWheelDiagnosticFields": [
+    "slipPowerW",
+    "contactNormalSpeedMps"
+  ],
+  "allOtherSnapshotFieldsExactlyCompared": true,
+  "auditedSourceAdditions": [
+    {
+      "name": "steering contact normal",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "cornering contact normal",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "tyre contact normal",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "onset collection",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "previous contact diagnostics",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "reset new diagnostic fields",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "airtime without support",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "contact metadata and onset observation",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "contact feedback publication",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    },
+    {
+      "name": "slip power projection",
+      "occurrences": 1,
+      "expectedOccurrences": 1
+    }
+  ],
+  "normalizedForceBodySha256": "804b2e0654020ad017c33817cc3334d655ac9fd2d76756e3f6926705947ebe65",
+  "projectedLegacyForceBodySha256": "5ce34477141ade0cda312197c9c6c48a332bdac0ae1570f9c56851a295374b39",
+  "frozenForceBodySha256": "5ce34477141ade0cda312197c9c6c48a332bdac0ae1570f9c56851a295374b39",
+  "unchangedAcceptance": "Original speeds, perturbations, initial states, 0.01 degree yaw, 0.025 second old defect onset, stop, force/torque/grip budgets and geometry tolerances retained. Frozen fixtures unchanged.",
+  "sourceHashes": {
+    "dist/physics.js": "3aa89a4a111b7a4001220f284077c6f5fe51d58d8b3fa7f6105dfce208aec107",
+    "dist/simulation-snapshot.js": "80e3fa5fa82ca23795750aac18aeb3482933578d8963aa1660fc19fdf4f017c3",
+    "dist/wheel-contact-envelope.js": "d7dddaa5777ea9b56f73c979d8e17e31b38cca9a5a80b5746a32540ebfb806b9",
+    "dist/tire-dynamics.js": "de2336ef6ff88d276a414a2e90a2a6a7c29e8b18bed5767a6031bb14782c388d",
+    "tests/fixtures/wheel-support-three-station-before-3.16.mjs": "cf4da2df7e85b2ccf8bbc7fdaf10b9463948a9b82246882a6ef6f8c638508cda",
+    "tests/fixtures/wheel-force-pass-before-crown-3.16.mjs": "078330a0994f7197bbd591aa44c1cf5837c96a56eecaeec02dfe491585c138fa",
+    "tests/braking-footprint-3.16.test.mjs": "edcbe6a7ba9c982f879549fedec8c818dea9e71cabca3a10b9e2b760d8c4dbdf"
+  },
+  "scope": "Numerical test adaptation for the six original unmapped dry braking cases; no native-key, rendered-frame or general cross-model identity claim.",
+  "verifiedAdaptedReport": "qa/development-3.19/braking-footprint-before-test-adaptation/braking-footprint-3.19-adapted-targeted-pass.json",
+  "verifiedAdaptedReportSha256": "9a33216c28ab5f5507f00dbf840d6f18455dd6c9393d8f47c0e0d25ec2091a59",
+  "currentReportPath": "qa/braking-footprint-3.19.json",
+  "currentReportMayBeRegenerated": "The preserved targeted report is the hash-bound comparison source. A subsequent full regression may regenerate the current report timestamp."
+}

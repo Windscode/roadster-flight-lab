@@ -150,7 +150,7 @@ pass('Non-level Z/B command continuous full roll in either direction, retain fin
     assert.ok(32-minimumHeightM<baselineLossM*.50,'Use available braking thrust instead of prolonging a fast fall at the ordinary comfort cap');
     assert.ok(peakVerticalForceN>s.body.mass*(s.params.gravity+10),'The improvement must come from real additional upward nozzle force');
     assert.equal(t.stabilizationMode,levelTakeover?'level':'off');assert.equal(t.mode,'hover');
-    if(levelTakeover)close(t.heightWorld,32,.06,'G-level takeover recovers the saved flight height through force control');
+    if(levelTakeover)close(t.heightWorld,release.heightM,.06,'G-level takeover captures the achieved height now and never returns to the obsolete pre-roll altitude');
     results.push({levelTakeover,originHeightM:32,heldRollS:3.4,minimumHeightM,heightLossM:32-minimumHeightM,peakVerticalForceN,release,arrest,finalHeightM:t.heightWorld});
   }
   const low=flat(20);let firstContact=null;

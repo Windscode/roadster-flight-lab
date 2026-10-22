@@ -1,0 +1,20 @@
+PASS Production W+E+1 mapping preserves all three normalized requests
+PASS Historical G pitch loss is reproduced through the actual solver
+PASS Held G+W+E+1 now changes physical pitch without dropping translation/ascent
+PASS G+W+E+2 independently requests the opposite physical pitch
+PASS G remains armed during pitch override and returns to level after release
+PASS G-off pitch still holds the achieved attitude after release
+PASS Z/B keep their established G lateral-translation meaning, including simultaneous pitch
+PASS air-g-on-z physical trajectory remains exactly the historical no-pitch path
+PASS air-g-on-we physical trajectory remains exactly the historical no-pitch path
+PASS Grounded pitch without takeoff is explicitly reported instead of silently discarded
+PASS Simultaneous grounded W+E+1 reaches the hover pitch control path
+PASS Raw wrench mode accepts 1/2 pitch separately from W/S axial thrust
+PASS Every solver case remains finite within the actual nozzle capacities
+PASS pilot input release changes no body state/current nozzle force and retains automatic references
+PASS raw-valves input release changes no body state/current nozzle force and retains automatic references
+PASS pose-hold input release changes no body state/current nozzle force and retains automatic references
+PASS maneuver input release changes no body state/current nozzle force and retains automatic references
+PASS Releasing G pitch clears the active override immediately without snapping the body
+PASS Toggling G during a held pitch request keeps that request live, then levels on release
+{"checks":19,"cases":28,"samples":10920,"beforePitch":0,"afterPitch":34.5948793169862,"traceBytes":1967497}

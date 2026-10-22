@@ -1,0 +1,57 @@
+{
+  "status": "passed",
+  "modelVersion": "3.19.0",
+  "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+  "asOf": "2026-10-21T06:40:56.710Z",
+  "scope": "Synthetic canvas, ZIP and recorder failure lifecycle tests. No WebGL pixels, actual video, transparency or performance result.",
+  "checks": [
+    {
+      "name": "Exactly 24 immediate copy/frame-condition associations survive asynchronous PNG and ZIP encoding",
+      "status": "passed",
+      "detail": {
+        "frames": 24,
+        "files": 26,
+        "zipOpenAndCRC": "Python standard-library ZipFile.testzip; all 26 entries readable",
+        "scope": "Synthetic canvas copy/ZIP contract only. PNG entries contain declared fixture markers, not actual pixels."
+      }
+    },
+    {
+      "name": "Cancellation and prepare/PNG/draw failures keep exact partial outcomes instead of success",
+      "status": "passed",
+      "detail": {
+        "cancelledFrames": 3,
+        "prepareFailureFrames": 5,
+        "pngFailureFrames": 0,
+        "drawFailureFrames": 24,
+        "drawFailurePreserved": [
+          1286
+        ]
+      }
+    },
+    {
+      "name": "Archive failure returns a readable failure JSON without claiming image export",
+      "status": "passed",
+      "detail": {
+        "fallback": "failure JSON",
+        "frameConditionsRetained": 24,
+        "imagesExported": false
+      }
+    },
+    {
+      "name": "Orbit duration, cancellation, errors and track cleanup are explicit",
+      "status": "passed",
+      "detail": {
+        "completeRequestedS": 12,
+        "cancelledAtS": 3,
+        "failedAtFrame": 0,
+        "tracksClosed": 3,
+        "videoEvidence": false
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/vehicle-study-capture.js": "31f1f93dd062ab0452988bbbe81ed730252a13e21499440df148ec83606dee2c",
+    "dist/vehicle-display-study.js": "5a0efda354afb89f5735826d1f0ed4e249b74778a6bbeda03fd1db837120be86",
+    "tests/vehicle-study-capture-3.14.test.mjs": "00a924871338d0ceb162b40e0cee68505292e6dce7071981d3439cc3c1e23e90"
+  }
+}

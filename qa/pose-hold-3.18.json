@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "model": "Roadster engineering approximation",
+  "checks": [
+    "The city defaults to continuous external supply; finite research defaults and the boolean stabilization API remain explicit and compatible",
+    "Hold captures the exact world position and quaternion once, preserves initial velocities and brakes through finite-response physical valves",
+    "Newton and angular-momentum balances reconstruct the held vehicle response solely from delivered nozzle force, r × F torque and gravity",
+    "Supported combined pitch/roll attitudes converge to their captured pose and position, reject an external impulse, and retain finite braking overshoot",
+    "Unsupported attitudes, absent power, empty gas and undersized nozzles cannot freeze or support the vehicle; feasibility and residual expose the limitation",
+    "Finite-tank hold loses support as pressure and temperature fall and conserves every kilogram of delivered nozzle mass flow without hidden replenishment",
+    "Pilot input, mode, suction and reset release research hold without implicitly arming G; explicit raw valves retain priority and stale world references clear",
+    "Tire contact, hull contact and ceiling adhesion inhibit hold thrust without repeatedly relatching the captured world reference",
+    "Hold is independent of 30/60/144 Hz render cadence and converges when the actual physical integration step is halved"
+  ],
+  "values": {
+    "externalSupply": {
+      "throughputKg": 76.27580125124071,
+      "vehicleGasMassChangeKg": 0
+    },
+    "firstStep": {
+      "velocityErrorMps": 9.87267952378302e-19,
+      "momentumErrorNms": 5.403611389200639e-15
+    },
+    "tracking": [
+      {
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "yawRad": 0.5,
+        "peakPositionErrorM": 0.4996471534509027,
+        "positionErrorM": 0.00020801286352531805,
+        "attitudeErrorDeg": 0.00000452328567192474,
+        "speedMps": 0.00012505193364654687,
+        "impulseRecoveryPositionErrorM": 0.00019586229098654152
+      },
+      {
+        "pitchDeg": 10,
+        "rollDeg": 20,
+        "yawRad": 0.9,
+        "peakPositionErrorM": 0.4868604254370689,
+        "positionErrorM": 0.00024339057156879055,
+        "attitudeErrorDeg": 0.000004207681211828216,
+        "speedMps": 0.0001218814683401768,
+        "impulseRecoveryPositionErrorM": 0.00024367491784090496
+      },
+      {
+        "pitchDeg": -12,
+        "rollDeg": -22,
+        "yawRad": -0.7,
+        "peakPositionErrorM": 0.6617284078707116,
+        "positionErrorM": 0.00028330700266786295,
+        "attitudeErrorDeg": 0.0000017978454894799817,
+        "speedMps": 0.0002172119176643106,
+        "impulseRecoveryPositionErrorM": 0.00025556310700189334
+      }
+    ],
+    "unsupported": [
+      {
+        "rollDeg": 70,
+        "positionErrorM": 2.3189993763221786,
+        "verticalSpeedMps": -4.155174617882584,
+        "wrenchResidual": 1.773579062544607
+      },
+      {
+        "rollDeg": 180,
+        "positionErrorM": 4.9337737879214885,
+        "verticalSpeedMps": -9.768621835586892,
+        "wrenchResidual": 0.6473299783438448
+      }
+    ],
+    "depletion": {
+      "supportLost": {
+        "time": 5.408333333333392,
+        "pressureBar": 12.142220698098196
+      },
+      "consumedKg": 246.08287437059403,
+      "massBalanceErrorKg": -2.5579538487363607e-13,
+      "finalPositionErrorM": 27.619738713279595,
+      "finalVerticalSpeedMps": -22.836922127841923
+    },
+    "timestep": {
+      "render30Vs60": 0,
+      "render144Vs60": 0,
+      "referenceHz": 960,
+      "error60Hz": 0.021979849833901742,
+      "error120Hz": 0.010292591693236612,
+      "error240Hz": 0.004417878333476504,
+      "errorDefinition": "position norm + velocity norm + quaternion angle (mixed-unit convergence diagnostic)"
+    }
+  },
+  "limits": "Synthetic disturbance acceptance and exact static trim for the model nozzle layout; not an OEM controller identification or an arbitrary-attitude flight guarantee."
+}

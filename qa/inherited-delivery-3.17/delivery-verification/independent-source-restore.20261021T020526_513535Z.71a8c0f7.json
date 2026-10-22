@@ -1,0 +1,180 @@
+{
+  "schema": "roadster.independent-source-restore",
+  "version": 1,
+  "startedAt": "2026-10-21T02:05:26.513574+00:00",
+  "status": "passed",
+  "bundle": "/workspace/scratch/4a18da1d1c35/delivery-317/Roadster_Flight_Lab_3.17_Full_History.bundle",
+  "restoreDirectory": "/workspace/scratch/4a18da1d1c35/independent-restore-317",
+  "expected": {
+    "commit": "d9a4fbfd434fe49cdbeae18c32f624360e9dc4e9",
+    "tree": "7d80ab07f0ae7f63076ba32082eacac7559f6516",
+    "build": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+    "bundleBytes": 409431772,
+    "bundleSha256": "2eca542911e7612e7cb662f7323c6967583f4170f12bb60905293063eaf3bcd9",
+    "baseline": "a0fce89e55efe6eaa54210987ef07cf9dfd7171e",
+    "branch": "improve/roadster-3.17",
+    "payloadFiles": 44
+  },
+  "steps": [
+    {
+      "name": "clone",
+      "command": [
+        "git",
+        "clone",
+        "--config",
+        "core.autocrlf=false",
+        "--branch",
+        "improve/roadster-3.17",
+        "/workspace/scratch/4a18da1d1c35/delivery-317/Roadster_Flight_Lab_3.17_Full_History.bundle",
+        "/workspace/scratch/4a18da1d1c35/independent-restore-317"
+      ],
+      "cwd": "/workspace/scratch/4a18da1d1c35",
+      "exitCode": 0,
+      "wallSeconds": 6.937249947004602,
+      "stdout": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.01-clone.stdout.log",
+      "stderr": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.01-clone.stderr.log",
+      "stdoutBytes": 0,
+      "stderrBytes": 2189
+    },
+    {
+      "name": "fsck",
+      "command": [
+        "git",
+        "fsck",
+        "--full"
+      ],
+      "cwd": "/workspace/scratch/4a18da1d1c35/independent-restore-317",
+      "exitCode": 0,
+      "wallSeconds": 5.339083523998852,
+      "stdout": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.02-fsck.stdout.log",
+      "stderr": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.02-fsck.stderr.log",
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "name": "identity",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "HEAD^{tree}"
+      ],
+      "cwd": "/workspace/scratch/4a18da1d1c35/independent-restore-317",
+      "exitCode": 0,
+      "wallSeconds": 0.0024332809989573434,
+      "stdout": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.03-identity.stdout.log",
+      "stderr": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.03-identity.stderr.log",
+      "stdoutBytes": 82,
+      "stderrBytes": 0
+    },
+    {
+      "name": "baseline-ancestor",
+      "command": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "a0fce89e55efe6eaa54210987ef07cf9dfd7171e",
+        "HEAD"
+      ],
+      "cwd": "/workspace/scratch/4a18da1d1c35/independent-restore-317",
+      "exitCode": 0,
+      "wallSeconds": 0.004869947995757684,
+      "stdout": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.04-baseline-ancestor.stdout.log",
+      "stderr": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.04-baseline-ancestor.stderr.log",
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "name": "strict-payload-restore",
+      "command": [
+        "node",
+        "--input-type=module",
+        "-e",
+        "import {restorePayloads} from \"./scripts/repository-payloads.mjs\"; console.log(JSON.stringify(restorePayloads({strict:true})));"
+      ],
+      "cwd": "/workspace/scratch/4a18da1d1c35/independent-restore-317",
+      "exitCode": 0,
+      "wallSeconds": 1.306745724999928,
+      "stdout": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.05-strict-payload-restore.stdout.log",
+      "stderr": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.05-strict-payload-restore.stderr.log",
+      "stdoutBytes": 83,
+      "stderrBytes": 0
+    },
+    {
+      "name": "candidate-preflight",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "scripts/package-candidate-3.17.py",
+        "--check-only",
+        "--expect-commit",
+        "d9a4fbfd434fe49cdbeae18c32f624360e9dc4e9"
+      ],
+      "cwd": "/workspace/scratch/4a18da1d1c35/independent-restore-317",
+      "exitCode": 0,
+      "wallSeconds": 1.710434307999094,
+      "stdout": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.06-candidate-preflight.stdout.log",
+      "stderr": "independent-source-restore.20261021T020526_513535Z.71a8c0f7.06-candidate-preflight.stderr.log",
+      "stdoutBytes": 1727,
+      "stderrBytes": 0
+    }
+  ],
+  "scope": "Independent local clone exclusively from the supplied full bundle. No network clone, source edits, model-build regeneration, browser execution, full regression, commit or publication.",
+  "freshDirectoryAssertedAbsent": true,
+  "bundleIdentity": {
+    "bytes": 409431772,
+    "sha256": "2eca542911e7612e7cb662f7323c6967583f4170f12bb60905293063eaf3bcd9"
+  },
+  "restoredIdentity": {
+    "commit": "d9a4fbfd434fe49cdbeae18c32f624360e9dc4e9",
+    "tree": "7d80ab07f0ae7f63076ba32082eacac7559f6516"
+  },
+  "payloadRestore": {
+    "restored": 44,
+    "verified": 0,
+    "files": 44,
+    "bytes": 167309717,
+    "preservedLocalEdits": []
+  },
+  "candidatePreflight": {
+    "status": "committed-candidate-preflight-passed",
+    "identity": {
+      "application": "roadster-flight-lab",
+      "modelVersion": "3.17.0",
+      "modelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+      "sourceCommit": "d9a4fbfd434fe49cdbeae18c32f624360e9dc4e9",
+      "sourceTree": "7d80ab07f0ae7f63076ba32082eacac7559f6516",
+      "sourceRepository": "https://github.com/Windscode/roadster-flight-lab",
+      "delivery": "private-local-candidate",
+      "publicDeploymentPerformed": false,
+      "baselineCommit": "a0fce89e55efe6eaa54210987ef07cf9dfd7171e",
+      "sourceParents": [
+        "a0fce89e55efe6eaa54210987ef07cf9dfd7171e"
+      ],
+      "sourceHistoryCommits": 20,
+      "sourceHistoryScope": "Complete non-shallow ancestor history retained; source bundle and full original evidence are separate deliverables.",
+      "payloadManifestSha256": "e235bd0ffc1706786d47634de29a1a5d3e74dc6509f533895bfa8f93e332dfa4",
+      "verifiedRuntimePayloads": 7
+    },
+    "runtimeFiles": 248,
+    "runtimeBytes": 102363391,
+    "sourceFiles": 178,
+    "selectedEvidence": [
+      "qa/pitch-maneuver-3.17.json",
+      "qa/contact-impulse-3.17.json",
+      "qa/vehicle-form-3.17.json",
+      "qa/city-streets-3.17.json",
+      "qa/wind-response-3.17/report.json",
+      "qa/native-acceptance-3.17.json",
+      "qa/wind-response-3.17/records.json",
+      "qa/physics-pitch-summary-3.17.png",
+      "qa/physics-contact-summary-3.17.png",
+      "qa/vehicle-form-3.17/candidate/front-quarter.png",
+      "qa/city-native-3.17/candidate/crosstown-clear-day.png",
+      "qa/city-native-3.17/final-after-batch/crosstown-wet-night.png",
+      "qa/research-native-3.17/layout-verified/wind-analysis.png"
+    ],
+    "omittedOptionalEvidence": [],
+    "outputCreated": false
+  },
+  "finishedAt": "2026-10-21T02:05:42.177245+00:00"
+}

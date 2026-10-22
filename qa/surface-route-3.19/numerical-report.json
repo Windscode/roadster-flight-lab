@@ -1,0 +1,1657 @@
+{
+  "schema": "roadster-surface-route-acceptance",
+  "version": 1,
+  "modelVersion": "3.19.0",
+  "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+  "createdAt": "2026-10-21T06:44:22.799Z",
+  "scope": "Numerical full-city physics and read-only audio state. No claim of native keyboard, GPU frame timing, driver comfort or audible-device acceptance.",
+  "checks": [
+    {
+      "name": "One serializable authored map controls material identity and per-wheel friction without interpreting puddle colour as grip",
+      "status": "PASS"
+    },
+    {
+      "name": "Same 60 km/h city initial state and full brake produce a longer local-wet stop with real per-wheel ABS and recorded sound work",
+      "status": "PASS"
+    },
+    {
+      "name": "Same-input corner uses actual local grip in the existing steering envelope; it does not add a fictitious yaw force",
+      "status": "PASS"
+    },
+    {
+      "name": "Four real wheel contact points cross a half-width wet boundary independently; elevated surfaces retain their legacy condition",
+      "status": "PASS"
+    },
+    {
+      "name": "Low-speed stopping is quiet at rest, and genuine light and heavier touchdown each emit one bounded onset through continuous support",
+      "status": "PASS"
+    },
+    {
+      "name": "Contact sound changes under equal-speed severe sliding, stays silent in air/rest, and reading all feedback leaves every physical step identical",
+      "status": "PASS"
+    },
+    {
+      "name": "Legacy dry/wet/split selection explicitly clears authored route conditions and preserves its old world-X contract",
+      "status": "PASS"
+    },
+    {
+      "name": "A declared numerical driver traverses the entire existing-city route, left turn and final stop under both surface maps without relocation",
+      "status": "PASS"
+    }
+  ],
+  "evidence": {
+    "descriptors": [
+      {
+        "descriptor": {
+          "schema": "roadster-route-surface",
+          "version": 1,
+          "id": "weave-learning-route",
+          "presetId": "dry-day",
+          "label": "织桥街 · 干燥日间",
+          "labelEn": "Weave street · dry day",
+          "groundY": 0,
+          "contactToleranceM": 0.08,
+          "route": {
+            "lengthM": 302.5,
+            "start": {
+              "x": -200,
+              "y": 0.62,
+              "z": -380,
+              "yaw": 0
+            },
+            "waypoints": [
+              {
+                "x": -200,
+                "z": -380
+              },
+              {
+                "x": -200,
+                "z": -132.5
+              },
+              {
+                "x": -145,
+                "z": -132.5
+              }
+            ],
+            "widthM": 10
+          },
+          "preparation": {
+            "lighting": "day",
+            "application": "explicit-paused-preparation",
+            "physics": "per-wheel-contact-map"
+          },
+          "calibration": {
+            "referenceDryMu": 1.25,
+            "interpretation": "mu = vehicle tireMu × authored gripScale; illustrative engineering assumptions, no OEM calibration",
+            "heightGeometry": "flush surfaces; no added collision bumps",
+            "opticalPolicy": "opticalWetness is independent of moisture and gripScale; lighting changes do not alter this descriptor"
+          },
+          "materials": {
+            "asphalt": {
+              "kind": "asphalt",
+              "label": "干沥青",
+              "labelEn": "Dry asphalt",
+              "gripScale": 1,
+              "moisture": 0,
+              "opticalWetness": 0,
+              "roughness": 0.84,
+              "rollingTexture": 1
+            },
+            "damp": {
+              "kind": "asphalt",
+              "label": "干沥青",
+              "labelEn": "Dry asphalt",
+              "gripScale": 1,
+              "moisture": 0,
+              "opticalWetness": 0,
+              "roughness": 0.84,
+              "rollingTexture": 1
+            },
+            "metal": {
+              "kind": "metal",
+              "label": "检修钢板",
+              "labelEn": "Service plate",
+              "gripScale": 0.72,
+              "moisture": 0,
+              "opticalWetness": 0,
+              "roughness": 0.52,
+              "rollingTexture": 0.76
+            },
+            "patch": {
+              "kind": "patch",
+              "label": "修补沥青",
+              "labelEn": "Asphalt repair",
+              "gripScale": 0.9,
+              "moisture": 0,
+              "opticalWetness": 0,
+              "roughness": 0.91,
+              "rollingTexture": 1.22
+            }
+          },
+          "regions": [
+            {
+              "id": "weave-straight",
+              "materialId": "asphalt",
+              "bounds": {
+                "minX": -205,
+                "maxX": -195,
+                "minZ": -387,
+                "maxZ": -123.5
+              },
+              "priority": 0
+            },
+            {
+              "id": "weave-turn-east",
+              "materialId": "asphalt",
+              "bounds": {
+                "minX": -205,
+                "maxX": -139,
+                "minZ": -141.5,
+                "maxZ": -123.5
+              },
+              "priority": 1
+            },
+            {
+              "id": "bridge-service-plate",
+              "materialId": "metal",
+              "bounds": {
+                "minX": -204.5,
+                "maxX": -195.5,
+                "minZ": -321.15,
+                "maxZ": -318.85
+              },
+              "priority": 20
+            },
+            {
+              "id": "shelter-runoff",
+              "materialId": "damp",
+              "bounds": {
+                "minX": -205,
+                "maxX": -195,
+                "minZ": -310,
+                "maxZ": -265
+              },
+              "priority": 10
+            },
+            {
+              "id": "utility-asphalt-repair",
+              "materialId": "patch",
+              "bounds": {
+                "minX": -203,
+                "maxX": -197,
+                "minZ": -249,
+                "maxZ": -244
+              },
+              "priority": 20
+            },
+            {
+              "id": "half-width-damp",
+              "materialId": "damp",
+              "bounds": {
+                "minX": -200,
+                "maxX": -195,
+                "minZ": -221,
+                "maxZ": -194
+              },
+              "priority": 10
+            },
+            {
+              "id": "turn-approach-damp",
+              "materialId": "damp",
+              "bounds": {
+                "minX": -205,
+                "maxX": -195,
+                "minZ": -170,
+                "maxZ": -139
+              },
+              "priority": 10
+            },
+            {
+              "id": "turn-exit-damp",
+              "materialId": "damp",
+              "bounds": {
+                "minX": -195,
+                "maxX": -161,
+                "minZ": -141.5,
+                "maxZ": -123.5
+              },
+              "priority": 10
+            }
+          ]
+        },
+        "descriptorHash": "fnv1a32-fe252d57",
+        "fileSha256": "14ea0f43a180db4cc5a466ca515d53a86c161cff92c7d138ee44af4d52974d5f"
+      },
+      {
+        "descriptor": {
+          "schema": "roadster-route-surface",
+          "version": 1,
+          "id": "weave-learning-route",
+          "presetId": "after-rain",
+          "label": "织桥街 · 雨后局部潮湿",
+          "labelEn": "Weave street · after rain",
+          "groundY": 0,
+          "contactToleranceM": 0.08,
+          "route": {
+            "lengthM": 302.5,
+            "start": {
+              "x": -200,
+              "y": 0.62,
+              "z": -380,
+              "yaw": 0
+            },
+            "waypoints": [
+              {
+                "x": -200,
+                "z": -380
+              },
+              {
+                "x": -200,
+                "z": -132.5
+              },
+              {
+                "x": -145,
+                "z": -132.5
+              }
+            ],
+            "widthM": 10
+          },
+          "preparation": {
+            "lighting": "overcast",
+            "application": "explicit-paused-preparation",
+            "physics": "per-wheel-contact-map"
+          },
+          "calibration": {
+            "referenceDryMu": 1.25,
+            "interpretation": "mu = vehicle tireMu × authored gripScale; illustrative engineering assumptions, no OEM calibration",
+            "heightGeometry": "flush surfaces; no added collision bumps",
+            "opticalPolicy": "opticalWetness is independent of moisture and gripScale; lighting changes do not alter this descriptor"
+          },
+          "materials": {
+            "asphalt": {
+              "kind": "asphalt",
+              "label": "干沥青",
+              "labelEn": "Dry asphalt",
+              "gripScale": 1,
+              "moisture": 0,
+              "opticalWetness": 0,
+              "roughness": 0.84,
+              "rollingTexture": 1
+            },
+            "damp": {
+              "kind": "asphalt",
+              "label": "潮湿沥青",
+              "labelEn": "Damp asphalt",
+              "gripScale": 0.56,
+              "moisture": 0.65,
+              "opticalWetness": 0.72,
+              "roughness": 0.32,
+              "rollingTexture": 1.12
+            },
+            "metal": {
+              "kind": "metal",
+              "label": "潮湿检修钢板",
+              "labelEn": "Damp service plate",
+              "gripScale": 0.42,
+              "moisture": 0.4,
+              "opticalWetness": 0.48,
+              "roughness": 0.27,
+              "rollingTexture": 0.76
+            },
+            "patch": {
+              "kind": "patch",
+              "label": "微潮修补面",
+              "labelEn": "Damp asphalt repair",
+              "gripScale": 0.76,
+              "moisture": 0.24,
+              "opticalWetness": 0.18,
+              "roughness": 0.64,
+              "rollingTexture": 1.22
+            }
+          },
+          "regions": [
+            {
+              "id": "weave-straight",
+              "materialId": "asphalt",
+              "bounds": {
+                "minX": -205,
+                "maxX": -195,
+                "minZ": -387,
+                "maxZ": -123.5
+              },
+              "priority": 0
+            },
+            {
+              "id": "weave-turn-east",
+              "materialId": "asphalt",
+              "bounds": {
+                "minX": -205,
+                "maxX": -139,
+                "minZ": -141.5,
+                "maxZ": -123.5
+              },
+              "priority": 1
+            },
+            {
+              "id": "bridge-service-plate",
+              "materialId": "metal",
+              "bounds": {
+                "minX": -204.5,
+                "maxX": -195.5,
+                "minZ": -321.15,
+                "maxZ": -318.85
+              },
+              "priority": 20
+            },
+            {
+              "id": "shelter-runoff",
+              "materialId": "damp",
+              "bounds": {
+                "minX": -205,
+                "maxX": -195,
+                "minZ": -310,
+                "maxZ": -265
+              },
+              "priority": 10
+            },
+            {
+              "id": "utility-asphalt-repair",
+              "materialId": "patch",
+              "bounds": {
+                "minX": -203,
+                "maxX": -197,
+                "minZ": -249,
+                "maxZ": -244
+              },
+              "priority": 20
+            },
+            {
+              "id": "half-width-damp",
+              "materialId": "damp",
+              "bounds": {
+                "minX": -200,
+                "maxX": -195,
+                "minZ": -221,
+                "maxZ": -194
+              },
+              "priority": 10
+            },
+            {
+              "id": "turn-approach-damp",
+              "materialId": "damp",
+              "bounds": {
+                "minX": -205,
+                "maxX": -195,
+                "minZ": -170,
+                "maxZ": -139
+              },
+              "priority": 10
+            },
+            {
+              "id": "turn-exit-damp",
+              "materialId": "damp",
+              "bounds": {
+                "minX": -195,
+                "maxX": -161,
+                "minZ": -141.5,
+                "maxZ": -123.5
+              },
+              "priority": 10
+            }
+          ]
+        },
+        "descriptorHash": "fnv1a32-2a74cc71",
+        "fileSha256": "054d5d6253656ba0f3aeba99cd9364c5b117eb9f7d36daa04830792ec12e441d"
+      }
+    ],
+    "braking": [
+      {
+        "preset": "dry-day",
+        "initial": {
+          "position": {
+            "x": -200,
+            "y": 0.5969084996819642,
+            "z": -307
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 16.666666666666668
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "gasMass": 249.55820028489444,
+          "gasTemperature": 293.15,
+          "energy": 0.00022222222222222172,
+          "wheels": [
+            {
+              "omega": 45.04504504504505,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 45.04504504504505,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 45.04504504504505,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 45.04504504504505,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        "initialSpeedKmh": 60,
+        "input": {
+          "brake": 1
+        },
+        "stopDistanceM": 15.43201725735911,
+        "stopTimeS": 1.6833333333333333,
+        "absActiveS": 1.5666666666666635,
+        "minAbsPressure": 0.02,
+        "maximumGrip": 0.9808769226074218,
+        "slipWorkJ": 36514.768605055106,
+        "final": {
+          "timeS": 2.6833333333333265,
+          "position": {
+            "x": -200,
+            "y": 0.6006591577831858,
+            "z": -291.56798319842824
+          },
+          "velocity": {
+            "x": 0,
+            "y": -0.027733501486491712,
+            "z": 0.06028713385193847
+          },
+          "headingDeg": 0,
+          "speedKmh": 0.23889697683659558,
+          "contacts": 4,
+          "slipPowerW": 2106.6921897440034,
+          "slipGain": 0.0005836273185514962,
+          "roadGain": 1.5731027921514642e-7,
+          "absGain": 0,
+          "wheels": [
+            {
+              "id": "FR",
+              "point": {
+                "x": -200.89,
+                "y": -8.115253261054001e-17,
+                "z": -290.15381695358536
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 7555.595940186312,
+              "slip": -0.04299327895492592,
+              "slipPowerW": 620.4155220870169,
+              "abs": false
+            },
+            {
+              "id": "FL",
+              "point": {
+                "x": -199.11,
+                "y": -8.115253261054001e-17,
+                "z": -290.15381695358536
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 7555.595940186312,
+              "slip": -0.04299327895492592,
+              "slipPowerW": 620.4155220870169,
+              "abs": false
+            },
+            {
+              "id": "RR",
+              "point": {
+                "x": -200.89,
+                "y": -8.115253261054001e-17,
+                "z": -292.9947053273979
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 3026.502250367946,
+              "slip": -0.12653362350746236,
+              "slipPowerW": 432.9305727849847,
+              "abs": false
+            },
+            {
+              "id": "RL",
+              "point": {
+                "x": -199.11,
+                "y": -8.115253261054001e-17,
+                "z": -292.9947053273979
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 3026.502250367946,
+              "slip": -0.12653362350746236,
+              "slipPowerW": 432.9305727849847,
+              "abs": false
+            }
+          ],
+          "contactEvent": null
+        }
+      },
+      {
+        "preset": "after-rain",
+        "initial": {
+          "position": {
+            "x": -200,
+            "y": 0.5969084996819642,
+            "z": -307
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 16.666666666666668
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "gasMass": 249.55820028489444,
+          "gasTemperature": 293.15,
+          "energy": 0.00022222222222222172,
+          "wheels": [
+            {
+              "omega": 45.04504504504505,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 45.04504504504505,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 45.04504504504505,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 45.04504504504505,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        "initialSpeedKmh": 60,
+        "input": {
+          "brake": 1
+        },
+        "stopDistanceM": 23.626335571682148,
+        "stopTimeS": 2.6916666666666664,
+        "absActiveS": 2.4916666666666605,
+        "minAbsPressure": 0.02,
+        "maximumGrip": 0.9810935974121093,
+        "slipWorkJ": 45766.32470943694,
+        "final": {
+          "timeS": 3.691666666666656,
+          "position": {
+            "x": -200,
+            "y": 0.5969950360779268,
+            "z": -283.37366442847633
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0.00005034758675410985,
+            "z": 0.08211622770060403
+          },
+          "headingDeg": 0,
+          "speedKmh": 0.2956184752871071,
+          "contacts": 4,
+          "slipPowerW": 1471.6804846827897,
+          "slipGain": 0.00041460627427519574,
+          "roadGain": 1.4441436625484235e-7,
+          "absGain": 0,
+          "wheels": [
+            {
+              "id": "FR",
+              "point": {
+                "x": -200.89,
+                "y": -8.088148206741863e-17,
+                "z": -281.95747434897834
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 0.7000000000000001,
+              "loadN": 6728.361566192197,
+              "slip": -0.09219199119032956,
+              "slipPowerW": 427.5609580789774,
+              "abs": false
+            },
+            {
+              "id": "FL",
+              "point": {
+                "x": -199.11,
+                "y": -8.088148206741863e-17,
+                "z": -281.95747434897834
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 0.7000000000000001,
+              "loadN": 6728.361566192197,
+              "slip": -0.09219199119032956,
+              "slipPowerW": 427.5609580789774,
+              "abs": false
+            },
+            {
+              "id": "RR",
+              "point": {
+                "x": -200.89,
+                "y": -8.088148206741863e-17,
+                "z": -284.79776960002806
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 0.7000000000000001,
+              "loadN": 4059.7274588431997,
+              "slip": -0.1261745839243448,
+              "slipPowerW": 308.27928426241743,
+              "abs": false
+            },
+            {
+              "id": "RL",
+              "point": {
+                "x": -199.11,
+                "y": -8.088148206741863e-17,
+                "z": -284.79776960002806
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 0.7000000000000001,
+              "loadN": 4059.7274588431997,
+              "slip": -0.1261745839243448,
+              "slipPowerW": 308.27928426241743,
+              "abs": false
+            }
+          ],
+          "contactEvent": null
+        }
+      }
+    ],
+    "corner": [
+      {
+        "preset": "dry-day",
+        "initial": {
+          "position": {
+            "x": -201.5,
+            "y": 0.5969084996819642,
+            "z": -300
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 12.5
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "gasMass": 249.55820028489444,
+          "gasTemperature": 293.15,
+          "energy": 0.00022222222222222172,
+          "wheels": [
+            {
+              "omega": 33.78378378378378,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 33.78378378378378,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 33.78378378378378,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 33.78378378378378,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        "input": {
+          "steer": 0.75,
+          "throttle": 0.02
+        },
+        "seconds": 1,
+        "headingDeg": 26.509391287461085,
+        "steeringCentreDeg": 8.05789468632168,
+        "endPosition": {
+          "x": -199.0025841466597,
+          "y": 0.6008633507035152,
+          "z": -288.0281306161328
+        },
+        "bodySlipDeg": 0.7904113356517385
+      },
+      {
+        "preset": "after-rain",
+        "initial": {
+          "position": {
+            "x": -201.5,
+            "y": 0.5969084996819642,
+            "z": -300
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 12.5
+          },
+          "angularVelocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "gasMass": 249.55820028489444,
+          "gasTemperature": 293.15,
+          "energy": 0.00022222222222222172,
+          "wheels": [
+            {
+              "omega": 33.78378378378378,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 33.78378378378378,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 33.78378378378378,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            },
+            {
+              "omega": 33.78378378378378,
+              "rotation": 0,
+              "normal": 5399.991382311543,
+              "force": [
+                0,
+                0
+              ]
+            }
+          ]
+        },
+        "input": {
+          "steer": 0.75,
+          "throttle": 0.02
+        },
+        "seconds": 1,
+        "headingDeg": 15.873668133178171,
+        "steeringCentreDeg": 4.707921781096767,
+        "endPosition": {
+          "x": -199.97757015408448,
+          "y": 0.5969536034502745,
+          "z": -287.6810256142599
+        },
+        "bodySlipDeg": 0.3893309805113165
+      }
+    ],
+    "cornerInterpretation": "The existing steering aid intentionally limits the wet-road wheel angle. Same human input is not a fixed-wheel-angle tyre-identification experiment.",
+    "crossBoundary": {
+      "splitObserved": true,
+      "final": {
+        "timeS": 2.999999999999992,
+        "position": {
+          "x": -200.08529455784856,
+          "y": 0.5970080916584641,
+          "z": -213.57330117166686
+        },
+        "velocity": {
+          "x": 0.000006915873615082662,
+          "y": 0.0000074414997470329935,
+          "z": -0.00023866853816865746
+        },
+        "headingDeg": 356.38134226892964,
+        "speedKmh": 0.0008599847425037829,
+        "contacts": 4,
+        "slipPowerW": 0.001437258895584156,
+        "slipGain": 0,
+        "roadGain": 1.0097977114614442e-13,
+        "absGain": 0,
+        "wheels": [
+          {
+            "id": "FR",
+            "point": {
+              "x": -201.063145934822,
+              "y": -2.227924125947262e-17,
+              "z": -212.21228094395005
+            },
+            "surfaceId": "weave-straight",
+            "material": "asphalt",
+            "mu": 1.25,
+            "loadN": 5382.519353303419,
+            "slip": 0.00002593990221210793,
+            "slipPowerW": 0.00030802208168123,
+            "abs": false
+          },
+          {
+            "id": "FL",
+            "point": {
+              "x": -199.28669485752988,
+              "y": -2.227924125947262e-17,
+              "z": -212.0999351830563
+            },
+            "surfaceId": "half-width-damp",
+            "material": "damp",
+            "mu": 0.7000000000000001,
+            "loadN": 5382.49289170012,
+            "slip": 0.000059894805333575515,
+            "slipPowerW": 0.0004104957318061193,
+            "abs": false
+          },
+          {
+            "id": "RR",
+            "point": {
+              "x": -200.88389764101666,
+              "y": -2.227924125947262e-17,
+              "z": -215.04661863153066
+            },
+            "surfaceId": "weave-straight",
+            "material": "asphalt",
+            "mu": 1.25,
+            "loadN": 5406.380283634772,
+            "slip": 0.000025629149484715155,
+            "slipPowerW": 0.0003078616502128473,
+            "abs": false
+          },
+          {
+            "id": "RL",
+            "point": {
+              "x": -199.10744656372455,
+              "y": -2.227924125947262e-17,
+              "z": -214.93427287063685
+            },
+            "surfaceId": "half-width-damp",
+            "material": "damp",
+            "mu": 0.7000000000000001,
+            "loadN": 5406.3538220314795,
+            "slip": 0.00005965104390024421,
+            "slipPowerW": 0.00041087943188395927,
+            "abs": false
+          }
+        ],
+        "contactEvent": null
+      }
+    },
+    "parking": {
+      "final": {
+        "timeS": 5.000000000000038,
+        "position": {
+          "x": -199.9999989099809,
+          "y": 0.5970089771353853,
+          "z": -207.89669005839724
+        },
+        "velocity": {
+          "x": -6.801661959856151e-12,
+          "y": 9.621306096924528e-14,
+          "z": 2.49850587056403e-8
+        },
+        "headingDeg": 359.9843415585324,
+        "speedKmh": 8.994621467387141e-8,
+        "contacts": 4,
+        "slipPowerW": 2.202757318115743e-12,
+        "slipGain": 0,
+        "roadGain": 1.3899699697206592e-20,
+        "absGain": 0,
+        "wheels": [
+          {
+            "id": "FR",
+            "point": {
+              "x": -200.89038695047006,
+              "y": -1.6389215421121156e-25,
+              "z": -206.47693334094097
+            },
+            "surfaceId": "weave-straight",
+            "material": "asphalt",
+            "mu": 1.25,
+            "loadN": 5394.416586110649,
+            "slip": -4.113219867227658e-8,
+            "slipPowerW": 5.506887983234484e-13,
+            "abs": false
+          },
+          {
+            "id": "FL",
+            "point": {
+              "x": -199.11038701694252,
+              "y": -1.6389215421121156e-25,
+              "z": -206.4764468823274
+            },
+            "surfaceId": "half-width-damp",
+            "material": "damp",
+            "mu": 0.7000000000000001,
+            "loadN": 5394.416586110834,
+            "slip": -6.1904125277425445e-9,
+            "slipPowerW": 5.506887983234406e-13,
+            "abs": false
+          },
+          {
+            "id": "RR",
+            "point": {
+              "x": -200.88961080301914,
+              "y": -1.6389215421121156e-25,
+              "z": -209.31693323488378
+            },
+            "surfaceId": "weave-straight",
+            "material": "asphalt",
+            "mu": 1.25,
+            "loadN": 5394.4163862882115,
+            "slip": -4.113219482169487e-8,
+            "slipPowerW": 5.506898607344232e-13,
+            "abs": false
+          },
+          {
+            "id": "RL",
+            "point": {
+              "x": -199.1096108694916,
+              "y": -1.6389215421121156e-25,
+              "z": -209.3164467762702
+            },
+            "surfaceId": "half-width-damp",
+            "material": "damp",
+            "mu": 0.7000000000000001,
+            "loadN": 5394.416386288396,
+            "slip": -6.1904103714168455e-9,
+            "slipPowerW": 5.506898607344311e-13,
+            "abs": false
+          }
+        ],
+        "contactEvent": null
+      }
+    },
+    "landing": [
+      {
+        "initialHeightM": 0.82,
+        "events": [
+          {
+            "id": 1,
+            "kind": "touchdown",
+            "timeS": 1.141666666666665,
+            "physicalStep": 137,
+            "wheelIds": [
+              "FR",
+              "FL",
+              "RR",
+              "RL"
+            ],
+            "normalEnergyJ": 2122.806994522695,
+            "normalImpulseNs": 191.0579779951758,
+            "normalSpeedMps": 1.3893207555932143,
+            "position": {
+              "x": -200,
+              "y": 0.7157895545013134,
+              "z": -307
+            },
+            "measurement": "sum of 1/2 × quarter vehicle mass × incoming wheel normal speed squared; onset spring impulse only"
+          }
+        ],
+        "played": [
+          {
+            "id": 1,
+            "timeS": 1.141666666666665,
+            "kind": "touchdown",
+            "gain": 0.0570960929898537,
+            "hz": 81.93593800676419,
+            "normalEnergyJ": 2122.806994522695
+          }
+        ],
+        "final": {
+          "timeS": 5.000000000000038,
+          "position": {
+            "x": -200,
+            "y": 0.5970089771888486,
+            "z": -307
+          },
+          "velocity": {
+            "x": 0,
+            "y": -6.348622461191178e-10,
+            "z": 0
+          },
+          "headingDeg": 0,
+          "speedKmh": 2.285504086028824e-9,
+          "contacts": 4,
+          "slipPowerW": 0,
+          "slipGain": 0,
+          "roadGain": 0,
+          "absGain": 0,
+          "wheels": [
+            {
+              "id": "FR",
+              "point": {
+                "x": -200.89,
+                "y": 0,
+                "z": -305.58
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 5394.416486050224,
+              "slip": 0,
+              "slipPowerW": 0,
+              "abs": false
+            },
+            {
+              "id": "FL",
+              "point": {
+                "x": -199.11,
+                "y": 0,
+                "z": -305.58
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 5394.416486050224,
+              "slip": 0,
+              "slipPowerW": 0,
+              "abs": false
+            },
+            {
+              "id": "RR",
+              "point": {
+                "x": -200.89,
+                "y": 0,
+                "z": -308.42
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 5394.416486050224,
+              "slip": 0,
+              "slipPowerW": 0,
+              "abs": false
+            },
+            {
+              "id": "RL",
+              "point": {
+                "x": -199.11,
+                "y": 0,
+                "z": -308.42
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 5394.416486050224,
+              "slip": 0,
+              "slipPowerW": 0,
+              "abs": false
+            }
+          ],
+          "contactEvent": {
+            "id": 1,
+            "kind": "touchdown",
+            "timeS": 1.141666666666665,
+            "physicalStep": 137,
+            "wheelIds": [
+              "FR",
+              "FL",
+              "RR",
+              "RL"
+            ],
+            "normalEnergyJ": 2122.806994522695,
+            "normalImpulseNs": 191.0579779951758,
+            "normalSpeedMps": 1.3893207555932143,
+            "position": {
+              "x": -200,
+              "y": 0.7157895545013134,
+              "z": -307
+            },
+            "measurement": "sum of 1/2 × quarter vehicle mass × incoming wheel normal speed squared; onset spring impulse only"
+          }
+        }
+      },
+      {
+        "initialHeightM": 1.6,
+        "events": [
+          {
+            "id": 1,
+            "kind": "touchdown",
+            "timeS": 1.4208333333333274,
+            "physicalStep": 170,
+            "wheelIds": [
+              "FR",
+              "FL",
+              "RR",
+              "RL"
+            ],
+            "normalEnergyJ": 18698.292960907387,
+            "normalImpulseNs": 89.62294558038386,
+            "normalSpeedMps": 4.123331471902046,
+            "position": {
+              "x": -200,
+              "y": 0.7170125476575344,
+              "z": -307
+            },
+            "measurement": "sum of 1/2 × quarter vehicle mass × incoming wheel normal speed squared; onset spring impulse only"
+          }
+        ],
+        "played": [
+          {
+            "id": 1,
+            "timeS": 1.4208333333333274,
+            "kind": "touchdown",
+            "gain": 0.08899975315800976,
+            "hz": 60.6668312279935,
+            "normalEnergyJ": 18698.292960907387
+          }
+        ],
+        "final": {
+          "timeS": 5.000000000000032,
+          "position": {
+            "x": -200.00000000002248,
+            "y": 0.5970089773766923,
+            "z": -306.9999999414082
+          },
+          "velocity": {
+            "x": 1.935765257303147e-18,
+            "y": -1.8611326692424393e-9,
+            "z": -2.215548216555571e-8
+          },
+          "headingDeg": 0,
+          "speedKmh": 8.004065525855026e-8,
+          "contacts": 4,
+          "slipPowerW": 1.2205298659256386e-30,
+          "slipGain": 0,
+          "roadGain": 2.926920696742402e-20,
+          "absGain": 0,
+          "wheels": [
+            {
+              "id": "FR",
+              "point": {
+                "x": -200.89000000002247,
+                "y": -1.2102577450259039e-28,
+                "z": -305.57999994122355
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 5394.416352031317,
+              "slip": 1.7195858223435835e-8,
+              "slipPowerW": 3.0513227872593083e-31,
+              "abs": false
+            },
+            {
+              "id": "FL",
+              "point": {
+                "x": -199.1100000000225,
+                "y": -1.2102577450259039e-28,
+                "z": -305.57999994122355
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 5394.416352031317,
+              "slip": 1.719585822343582e-8,
+              "slipPowerW": 3.0513227872593083e-31,
+              "abs": false
+            },
+            {
+              "id": "RR",
+              "point": {
+                "x": -200.89000000002247,
+                "y": -1.2102577450259039e-28,
+                "z": -308.4199999412236
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 5394.416607435735,
+              "slip": 1.719586314508347e-8,
+              "slipPowerW": 3.051326542368885e-31,
+              "abs": false
+            },
+            {
+              "id": "RL",
+              "point": {
+                "x": -199.1100000000225,
+                "y": -1.2102577450259039e-28,
+                "z": -308.4199999412236
+              },
+              "surfaceId": "shelter-runoff",
+              "material": "damp",
+              "mu": 1.25,
+              "loadN": 5394.416607435735,
+              "slip": 1.7195863145083453e-8,
+              "slipPowerW": 3.051326542368885e-31,
+              "abs": false
+            }
+          ],
+          "contactEvent": {
+            "id": 1,
+            "kind": "touchdown",
+            "timeS": 1.4208333333333274,
+            "physicalStep": 170,
+            "wheelIds": [
+              "FR",
+              "FL",
+              "RR",
+              "RL"
+            ],
+            "normalEnergyJ": 18698.292960907387,
+            "normalImpulseNs": 89.62294558038386,
+            "normalSpeedMps": 4.123331471902046,
+            "position": {
+              "x": -200,
+              "y": 0.7170125476575344,
+              "z": -307
+            },
+            "measurement": "sum of 1/2 × quarter vehicle mass × incoming wheel normal speed squared; onset spring impulse only"
+          }
+        }
+      }
+    ],
+    "feedbackIsolation": {
+      "steps": 360,
+      "physicalEquality": "exact every fixed step and complete final snapshot",
+      "sameSpeedSoundComparison": {
+        "normal": {
+          "motorHz": 184.5941153505741,
+          "motorGain": 0.00016741758132847047,
+          "harmonicGain": 1.6584997951405339e-7,
+          "roadGain": 0.0009679012345679015,
+          "roadCutoff": 623.2971972499743,
+          "slipGain": 0,
+          "slipCutoff": 650,
+          "slipPowerW": 0,
+          "normalLoadN": 21603.79008268928,
+          "absGain": 0,
+          "impact": null,
+          "jetGain": 0,
+          "fanGain": 0,
+          "accelerating": false,
+          "regenerating": false
+        },
+        "slide": {
+          "motorHz": 184.5941153505741,
+          "motorGain": 0.00016741758132847047,
+          "harmonicGain": 1.6584997951405339e-7,
+          "roadGain": 0.0009679012345679015,
+          "roadCutoff": 623.2971972499743,
+          "slipGain": 0.045,
+          "slipCutoff": 2550,
+          "slipPowerW": 73872.0904366642,
+          "normalLoadN": 21603.79008268928,
+          "absGain": 0,
+          "impact": null,
+          "jetGain": 0,
+          "fanGain": 0,
+          "accelerating": false,
+          "regenerating": false
+        },
+        "air": {
+          "motorHz": 184.5941153505741,
+          "motorGain": 0.00016741758132847047,
+          "harmonicGain": 1.6584997951405339e-7,
+          "roadGain": 0,
+          "roadCutoff": 350,
+          "slipGain": 0,
+          "slipCutoff": 650,
+          "slipPowerW": 0,
+          "normalLoadN": 0,
+          "absGain": 0,
+          "impact": null,
+          "jetGain": 0,
+          "fanGain": 0,
+          "accelerating": false,
+          "regenerating": false
+        }
+      }
+    },
+    "continuousRoute": {
+      "scope": "Actual full-city physical integration with a deterministic numerical driver feedback policy. Steering/throttle/brake are applied as ordinary inputs; no pose is set after the initial preparation. This is not native keyboard acceptance or strict controller A/B: the same driver policy reacts to different trajectories and therefore emits different input sequences.",
+      "runs": [
+        {
+          "preset": "dry-day",
+          "descriptorHash": "fnv1a32-fe252d57",
+          "start": {
+            "x": -200,
+            "y": 0.5969084996819642,
+            "z": -380
+          },
+          "finish": {
+            "x": -145.2353637291283,
+            "y": 0.5970089771292525,
+            "z": -132.50000007893635
+          },
+          "routeLengthM": 302.5,
+          "actualDrivenDistanceM": 297.44236323677796,
+          "durationS": 45.483333333333334,
+          "physicalSteps": 5458,
+          "minimumWheelContacts": 4,
+          "rigidContactSteps": 0,
+          "visitedRegions": [
+            "weave-straight",
+            "bridge-service-plate",
+            "shelter-runoff",
+            "utility-asphalt-repair",
+            "half-width-damp",
+            "turn-approach-damp",
+            "weave-turn-east",
+            "turn-exit-damp"
+          ],
+          "visitedMaterials": [
+            "asphalt",
+            "metal",
+            "damp",
+            "patch"
+          ],
+          "final": {
+            "timeS": 46.48333333333134,
+            "position": {
+              "x": -145.2353637291283,
+              "y": 0.5970089771292525,
+              "z": -132.50000007893635
+            },
+            "velocity": {
+              "x": 2.6131273504394245e-7,
+              "y": -2.2519848326622918e-10,
+              "z": 1.6538423140041042e-12
+            },
+            "headingDeg": 89.99997617991721,
+            "speedKmh": 9.407261955125737e-7,
+            "contacts": 4,
+            "slipPowerW": 3.4858076227926007e-10,
+            "slipGain": 0,
+            "roadGain": 6.22668016212818e-20,
+            "absGain": 0,
+            "wheels": [
+              {
+                "id": "FR",
+                "point": {
+                  "x": -143.81536412282477,
+                  "y": -1.02683014766706e-16,
+                  "z": -131.60999948858722
+                },
+                "surfaceId": "weave-turn-east",
+                "material": "asphalt",
+                "mu": 1.25,
+                "loadN": 5394.428605592067,
+                "slip": -2.2585517677183644e-8,
+                "slipPowerW": 8.714387128912311e-11,
+                "abs": false
+              },
+              {
+                "id": "FL",
+                "point": {
+                  "x": -143.81536338280958,
+                  "y": 8.339287695810446e-18,
+                  "z": -133.38999948858708
+                },
+                "surfaceId": "weave-turn-east",
+                "material": "asphalt",
+                "mu": 1.25,
+                "loadN": 5394.428605577499,
+                "slip": -2.258583598441162e-8,
+                "slipPowerW": 8.714509944422606e-11,
+                "abs": false
+              },
+              {
+                "id": "RR",
+                "point": {
+                  "x": -146.65536412282455,
+                  "y": 8.339287695394716e-18,
+                  "z": -131.61000066928563
+                },
+                "surfaceId": "weave-turn-east",
+                "material": "asphalt",
+                "mu": 1.25,
+                "loadN": 5394.404370293216,
+                "slip": -2.258598469279624e-8,
+                "slipPowerW": 8.714528169816353e-11,
+                "abs": false
+              },
+              {
+                "id": "RL",
+                "point": {
+                  "x": -146.65536338280936,
+                  "y": -1.0268301476712094e-16,
+                  "z": -133.39000066928548
+                },
+                "surfaceId": "weave-turn-east",
+                "material": "asphalt",
+                "mu": 1.25,
+                "loadN": 5394.404370278664,
+                "slip": -2.258630300002378e-8,
+                "slipPowerW": 8.714650984774735e-11,
+                "abs": false
+              }
+            ],
+            "contactEvent": null
+          },
+          "progress": {
+            "distanceM": 302.26463627087173,
+            "lateralDistanceM": 7.893635256550624e-8,
+            "segment": 1,
+            "remainingM": 0.23536372912829506
+          }
+        },
+        {
+          "preset": "after-rain",
+          "descriptorHash": "fnv1a32-2a74cc71",
+          "start": {
+            "x": -200,
+            "y": 0.5969084996819642,
+            "z": -380
+          },
+          "finish": {
+            "x": -145.23409255318617,
+            "y": 0.597008977130795,
+            "z": -132.5000000981809
+          },
+          "routeLengthM": 302.5,
+          "actualDrivenDistanceM": 297.44322916510794,
+          "durationS": 44.95,
+          "physicalSteps": 5394,
+          "minimumWheelContacts": 4,
+          "rigidContactSteps": 0,
+          "visitedRegions": [
+            "weave-straight",
+            "bridge-service-plate",
+            "shelter-runoff",
+            "utility-asphalt-repair",
+            "half-width-damp",
+            "turn-approach-damp",
+            "weave-turn-east",
+            "turn-exit-damp"
+          ],
+          "visitedMaterials": [
+            "asphalt",
+            "metal",
+            "damp",
+            "patch"
+          ],
+          "final": {
+            "timeS": 45.949999999998035,
+            "position": {
+              "x": -145.23409255318617,
+              "y": 0.597008977130795,
+              "z": -132.5000000981809
+            },
+            "velocity": {
+              "x": 1.8537913563605151e-7,
+              "y": -2.392806299444706e-10,
+              "z": 3.4971096794728774e-13
+            },
+            "headingDeg": 89.99997582314819,
+            "speedKmh": 6.673654442292261e-7,
+            "contacts": 4,
+            "slipPowerW": 2.3906791395690817e-20,
+            "slipGain": 0,
+            "roadGain": 2.8240396121687566e-21,
+            "absGain": 0,
+            "wheels": [
+              {
+                "id": "FR",
+                "point": {
+                  "x": -143.8140929512846,
+                  "y": -5.891278181983022e-17,
+                  "z": -131.60999949898968
+                },
+                "surfaceId": "weave-turn-east",
+                "material": "asphalt",
+                "mu": 1.25,
+                "loadN": 5394.428382199314,
+                "slip": 7.700279242541285e-8,
+                "slipPowerW": 9.753712339085886e-21,
+                "abs": false
+              },
+              {
+                "id": "FL",
+                "point": {
+                  "x": -143.8140922001857,
+                  "y": -5.891278181983062e-17,
+                  "z": -133.3899994989895
+                },
+                "surfaceId": "weave-turn-east",
+                "material": "asphalt",
+                "mu": 1.25,
+                "loadN": 5394.428382209726,
+                "slip": 7.700315278646939e-8,
+                "slipPowerW": 9.753705918915513e-21,
+                "abs": false
+              },
+              {
+                "id": "RR",
+                "point": {
+                  "x": -146.65409295128438,
+                  "y": 5.210952062509423e-17,
+                  "z": -131.6100006973722
+                },
+                "surfaceId": "weave-turn-east",
+                "material": "asphalt",
+                "mu": 1.25,
+                "loadN": 5394.404593603525,
+                "slip": 7.700233401762106e-8,
+                "slipPowerW": 2.1996865688447064e-21,
+                "abs": false
+              },
+              {
+                "id": "RL",
+                "point": {
+                  "x": -146.6540922001855,
+                  "y": 5.210952062509423e-17,
+                  "z": -133.39000069737202
+                },
+                "surfaceId": "weave-turn-east",
+                "material": "asphalt",
+                "mu": 1.25,
+                "loadN": 5394.404593613938,
+                "slip": 7.700269437867763e-8,
+                "slipPowerW": 2.199686568844714e-21,
+                "abs": false
+              }
+            ],
+            "contactEvent": null
+          },
+          "progress": {
+            "distanceM": 302.2659074468138,
+            "lateralDistanceM": 9.818089097279907e-8,
+            "segment": 1,
+            "remainingM": 0.23409255318617994
+          }
+        }
+      ],
+      "fullTrace": "qa/surface-route-3.19/route-drive.json"
+    }
+  }
+}

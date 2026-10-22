@@ -1,0 +1,46 @@
+PASS scripts/repository-payloads.mjs
+PASS scripts/model-build.mjs
+PASS tests/physics.test.mjs
+PASS tests/braking.test.mjs
+PASS tests/vehicle-geometry.test.mjs
+PASS tests/city-seal.test.mjs
+PASS tests/handling-controls.test.mjs
+PASS tests/air-stabilization.test.mjs
+PASS: The city defaults to continuous external supply; finite research defaults and the boolean stabilization API remain explicit and compatible
+PASS: Hold captures the exact world position and quaternion once, preserves initial velocities and brakes through finite-response physical valves
+PASS: Newton and angular-momentum balances reconstruct the held vehicle response solely from delivered nozzle force, r × F torque and gravity
+PASS: Supported combined pitch/roll attitudes converge to their captured pose and position, reject an external impulse, and retain finite braking overshoot
+PASS: Unsupported attitudes, absent power, empty gas and undersized nozzles cannot freeze or support the vehicle; feasibility and residual expose the limitation
+PASS: Finite-tank hold loses support as pressure and temperature fall and conserves every kilogram of delivered nozzle mass flow without hidden replenishment
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'off' !== 'level'
+
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/pose-hold.test.mjs:112:79
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'off',
+  expected: 'level',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:17
+    if(result.error||result.status!==0){process.stdout.write(stdout);process.stderr.write(stderr);throw new Error(path+' failed',{cause:result.error});}
+                                                                                                        ^
+
+Error: tests/pose-hold.test.mjs failed
+    at run (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:17:105)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:34:12 {
+  [cause]: undefined
+}
+
+Node.js v24.19.0

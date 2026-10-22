@@ -1,5 +1,6 @@
-// Shared assertions reviewed for the 3.16 history contract. The new contact and
-// observer integration contract has no declared historical full-state migrator.
+// Shared assertions reviewed for 3.19. Control ownership/target capture, the
+// contact/observer contracts and route/feedback state have no declared historical
+// full-state migrator to 3.19. See docs/history-contract-review-3.19.md.
 // Keep old identities/bytes and reject before physical import or stepping.
 // These do not manufacture a
 // migration: historical bytes stay readable/exportable and an unavailable old
@@ -12,7 +13,7 @@ import {EXPERIMENT_LIBRARY_KEY,ExperimentPlayback,executeExperiment,validateExpe
 export const unavailableModelReason=version=>'原模型 '+version+' 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。';
 
 export async function assertHistoricalReadOnly({source,bytes,path,createSim}){
-  assert.equal(MODEL_VERSION,'3.16.0','A later release must explicitly review this no-migrator contract.');
+  assert.equal(MODEL_VERSION,'3.19.0','A later release must explicitly review this no-migrator contract.');
   validateExperimentRecord(source);assert.notEqual(source.identity.modelVersion,MODEL_VERSION);
   const before=JSON.stringify(source),reason=unavailableModelReason(source.identity.modelVersion),eligibility=replayEligibility(source);
   assert.deepEqual(eligibility,{exact:false,recompute:false,migrationRequired:false,reason});

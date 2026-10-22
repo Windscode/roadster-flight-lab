@@ -62,7 +62,7 @@ function rememberMotion(sim){
 }
 export function motionDiagnostics(sim){const motion=get(sim).motion??newMotion(sim,'not-observed');const {lastQuaternion,...travel}=motion;return{schema:'roadster-actual-attitude-travel',version:1,...travel,scope:'Actual quaternion increments in the previous body frame. Signed/absolute axis travel is not an Euler angle or proof of a clean single-axis 360-degree maneuver.'};}
 export function noteManeuverAction(sim,name,result,previousManeuver=null){
-  const journal=get(sim),accepted=result!==false&&['roll','land','ramp'].includes(name)&&sim._maneuver?.name===name;
+  const journal=get(sim),accepted=result!==false&&['roll','pitch','land','ramp'].includes(name)&&sim._maneuver?.name===name;
   journal.maneuverAction={name,accepted,nameRequested:name,state:name==='cancel'?'cancelled':accepted?'accepted':'rejected',simTimeS:sim.simTime,reason:sim.status};
   if(name==='cancel'){if(journal.maneuverRun?.state==='running')noteManeuverEnd(sim,'cancelled','pilot-or-controller-cancel',previousManeuver);return;}
   if(!accepted)return;

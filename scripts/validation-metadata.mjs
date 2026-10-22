@@ -31,10 +31,10 @@ export function enrichValidationReport(report){
   const nativeCurrent=native?.modelBuildId===MODEL_BUILD_ID;
   report.browserVisualQA={status:nativeCurrent?native.status:'current_release_final_capture_pending',modelVersion:MODEL_VERSION,
     currentEvidence:native?{report:nativeFile,modelBuildId:native.modelBuildId,sourceIdentityCurrent:nativeCurrent,scope:native.scope,openGates:native.openGates}:null,
-    reason:nativeCurrent?native.summary:'The user supplied actual 3.15 candidate images and native observations. Actual Chrome WebGL2/SwiftShader rendering is available in this development environment and intermediate 3.16 frames were inspected; final same-source captures are reported separately once completed. Software-rendered pixels do not establish performance or driver behavior on the user GPU.',
-    captureInstructions:'docs/release-3.16.md',bodyStripeSource:'qa/body-stripe-source-3.11.json',
+    reason:nativeCurrent?native.summary:`The user supplied earlier candidate images and native observations. Chrome WebGL2/SwiftShader rendering is available in this development environment; ${MODEL_VERSION} evidence is reported with each recording's actual build. Software-rendered pixels do not establish performance or driver behavior on the user GPU.`,
+    captureInstructions:`docs/release-${REPORT_VERSION}.md`,bodyStripeSource:'qa/body-stripe-source-3.11.json',
     historicalReports:['docs/candidate-capture-3.15.md','qa/visual-evidence-3.14.json','qa/visual-evidence-3.13.json','qa/browser-live-3.12.json','qa/browser-release-3.9.json','qa/browser.json','qa/city-3.4-browser-assets.json'],
-    historyScope:'The user ran the 3.15 candidate on their own computer. Those observations do not certify the final 3.16 whole-city route, full manual airborne pitch turn, high-speed step handling or hardware-GPU matrix. Earlier Euler-angle samples are not cumulative turns. Paused and software-GPU HUD readings are not route frame-time acceptance.'};
+    historyScope:`The user ran an earlier candidate on their own computer, but the build at the time of the newly reported symptoms is unverified. Historical observations do not certify the ${MODEL_VERSION} whole-city route, manual airborne pitch turn, high-speed step handling or hardware-GPU performance. Earlier Euler-angle samples are not cumulative turns. Paused and software-GPU HUD readings are not route frame-time acceptance.`};
   report.offlineShaderValidation={scope:'Offline final source syntax, stage-interface and active sampler array reflection; not WebGL driver, framebuffer, rendered-pixel or FPS validation.',
     postProcessing:shaderEvidence(`qa/render-shader-validation-${REPORT_VERSION}.json`),
     cityLighting:shaderEvidence(`qa/city-shaders-${REPORT_VERSION}.json`)};

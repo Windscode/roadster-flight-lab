@@ -1,7 +1,7 @@
 const now=()=>globalThis.performance?.now?.()??Date.now();
 const cancelled=()=>Object.assign(new Error('Export cancelled'),{name:'AbortError'});
 const turn=()=>new Promise(resolve=>setTimeout(resolve,0));
-const check=signal=>{if(signal?.aborted)throw cancelled();};
+const check=signal=>{if(signal?.aborted)throw signal.reason?.name?signal.reason:cancelled();};
 const unsupported=value=>value===undefined||typeof value==='function'||typeof value==='symbol';
 
 function jsonValue(value,key){

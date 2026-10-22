@@ -1,0 +1,178 @@
+{
+  "schema": "roadster-city-core-selector-review-3.17",
+  "status": "passed",
+  "createdAt": "2026-10-21T01:39:44.590Z",
+  "changedSource": "tests/city-continuity-3.14.test.mjs",
+  "changedSourceSHA256": "e384e8286fbadf67c916e750e514c3f6584d598299a57507ef1fd3005acd887a",
+  "productSourceUnchanged": {
+    "urbanSHA256": "a4819cc5230ed7af1e41800cc7d66a420b3bfa0d518fef12108fd5b100dcefb7",
+    "modelBuildId": "26692f4324d2392ae7ac5981709299e2f6da29929259221445a7ba49591781d4",
+    "modelBuildModuleSHA256": "aa42c10155b6cd409981c52d23beff9baca2f571c9207993174784bfb3484fd7"
+  },
+  "oldFailure": "qa/city-dev-attempts-3.17/continuity-core-label-after-batch-failed.json",
+  "attempt2Provenance": "qa/city-dev-attempts-3.17/continuity-core-label-attempt2-provenance.json",
+  "identifiedTowers": [
+    {
+      "id": "arcology-west",
+      "topM": 122,
+      "tiers": [
+        {
+          "bottom": 0,
+          "top": 30.954838709677418,
+          "w": 45,
+          "d": 64,
+          "x": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        {
+          "bottom": 30.954838709677418,
+          "top": 91.65161290322581,
+          "w": 35,
+          "d": 43,
+          "x": -3,
+          "z": 4,
+          "yaw": 0
+        },
+        {
+          "bottom": 91.65161290322581,
+          "top": 122,
+          "w": 20,
+          "d": 43,
+          "x": -8,
+          "z": 4,
+          "yaw": 0
+        }
+      ],
+      "actualPrimaryCoreInstances": 32,
+      "actualMaterialNames": [
+        "Urban / aged mineral plaster"
+      ],
+      "allStoreyHeightsAndCentresExactWithinM": 0.0002,
+      "balancedPrimaryCoresVisible": true
+    },
+    {
+      "id": "arcology-east",
+      "topM": 116,
+      "tiers": [
+        {
+          "bottom": 0,
+          "top": 23.641379310344824,
+          "w": 47,
+          "d": 58,
+          "x": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        {
+          "bottom": 23.641379310344824,
+          "top": 96.75862068965517,
+          "w": 40,
+          "d": 26,
+          "x": 0,
+          "z": 10,
+          "yaw": 0
+        },
+        {
+          "bottom": 96.75862068965517,
+          "top": 116,
+          "w": 19,
+          "d": 26,
+          "x": 10,
+          "z": 10,
+          "yaw": 0
+        }
+      ],
+      "actualPrimaryCoreInstances": 30,
+      "actualMaterialNames": [
+        "Urban / aged mineral plaster"
+      ],
+      "allStoreyHeightsAndCentresExactWithinM": 0.0002,
+      "balancedPrimaryCoresVisible": true
+    },
+    {
+      "id": "arcology-spire",
+      "topM": 142,
+      "tiers": [
+        {
+          "bottom": 0,
+          "top": 34.977777777777774,
+          "w": 39,
+          "d": 44,
+          "x": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        {
+          "bottom": 34.977777777777774,
+          "top": 130.53333333333333,
+          "w": 18,
+          "d": 40,
+          "x": -7,
+          "z": 0,
+          "yaw": 0
+        },
+        {
+          "bottom": 130.53333333333333,
+          "top": 142,
+          "w": 18,
+          "d": 27,
+          "x": -7,
+          "z": 5,
+          "yaw": 0
+        }
+      ],
+      "actualPrimaryCoreInstances": 37,
+      "actualMaterialNames": [
+        "Urban / aged mineral plaster"
+      ],
+      "allStoreyHeightsAndCentresExactWithinM": 0.0002,
+      "balancedPrimaryCoresVisible": true
+    }
+  ],
+  "selector": "Actual closed 12-triangle mineral boxes, identical opaque material response and mass LOD; no dependency on darkConcrete batch labels. Storey count, every height/centre, x/z dimensions, physical tier boundaries and visible flags remain strict.",
+  "searchScope": "rg over tests/qa JS, MJS and HTML for darkConcrete, recessed concrete, aged mineral and name/concrete selectors; frozen fixture source retained.",
+  "searchFindings": [
+    {
+      "file": "tests/city-continuity-3.14.test.mjs",
+      "classification": "Only failing old darkConcrete batch-name selector; replaced by actual closed shape/material response/mass LOD."
+    },
+    {
+      "file": "tests/city-quality-3.16.test.mjs",
+      "classification": "Selects the retained canonical aged mineral plaster material; unchanged, gate passes."
+    },
+    {
+      "file": "tests/sampler-budget-3.13.test.mjs",
+      "classification": "Selects the retained canonical aged mineral plaster material; unchanged, gate passes."
+    },
+    {
+      "file": "tests/city-batch-budget-3.17.test.mjs",
+      "classification": "Uses two names only to address the frozen old response proof; not a current shape selector, untouched."
+    },
+    {
+      "file": "tests/fixtures/urban-architecture-before-budget-3.16.mjs and qa/fixtures/urban-architecture-before-batch-3.17.mjs",
+      "classification": "Frozen provenance source definitions, never adapted."
+    }
+  ],
+  "reports": [
+    {
+      "file": "qa/city-continuity-3.17.json",
+      "status": "passed",
+      "checks": 9,
+      "sha256": "16ed40aa0c6421f336e36c2f2d1756a7a7027d7a753d965ada284032542faa5e"
+    },
+    {
+      "file": "qa/city-quality-3.17.json",
+      "status": "passed",
+      "checks": 6,
+      "sha256": "52f3decc52ae1412545958e5ec51604d71611fe9a74eea12af10b989fcafbd72"
+    },
+    {
+      "file": "qa/sampler-budget-3.17.json",
+      "status": "passed",
+      "checks": 3,
+      "sha256": "ec1f6bce9ef1e0a77e13e5deae616cc96bbdeaff8b250e2b7dd20cc0222fe3d2"
+    }
+  ],
+  "scope": "QA identification correction only. Storey count, x/z sizes, actual tier boundaries and visible checks retain their original requirements; per-storey height/centre checks were added at 0.2 mm tolerance. No runtime source, threshold, geometry, bake, PNG, performance record or build identity changed."
+}

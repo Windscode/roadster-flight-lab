@@ -1,4 +1,5 @@
 import {vehicleBrakeSignal} from './vehicle-light-state.js';
+import {attachReceiverPlaneShadows} from './receiver-plane-shadows.js';
 import * as THREE from './vendor/three.module.js';
 import {SEAL_OUTLINE,SKIRT_MAX_EXTENSION,SKIRT_BASE_Y} from './vehicle-layout.js';
 import {vehicleProjectedPixels,chooseVehicleGeometryProfile,VEHICLE_INSPECTION_RIG} from './visual-presets.js';
@@ -64,9 +65,13 @@ function interpolate(keys,z){
   }
 }
 
-const WIDTH = [[-2.30,.950],[-2.06,.995],[-1.42,1.047],[-.68,.988],[-.12,.971],[.55,.977],[1.42,1.034],[1.96,.947],[2.30,.855]];
-const SHOULDER = [[-2.30,.225],[-2.02,.309],[-1.42,.350],[-.76,.330],[0,.307],[.73,.286],[1.42,.272],[1.95,.090],[2.30,-.026]];
-const DECK = [[-2.30,.237],[-1.90,.306],[-1.48,.311],[.55,.265],[1.09,.228],[1.54,.154],[2.30,-.010]];
+// 3.18: stations follow the visible swept waist and broad nose corners.
+// Wheel centres, tyre envelope and all force geometry remain separate.
+const WIDTH = [[-2.30,.950],[-2.06,.995],[-1.42,1.047],[-.68,.988],[-.12,.971],[.55,.977],[1.42,1.034],[1.96,.989],[2.30,.910]];
+const SHOULDER = [[-2.30,.270],[-2.02,.309],[-1.86,.319],[-1.42,.405],[-.76,.384],[0,.342],[.73,.286],[1.42,.265],[1.95,.120],[2.30,.008]];
+const DECK = [[-2.30,.267],[-2.02,.292],[-1.90,.306],[-1.78,.343],[-1.48,.373],[.55,.265],[1.09,.228],[1.54,.154],[2.30,-.010]];
+const SILL_TOP=[[-.972,-.205],[-.60,-.239],[.10,-.293],[.972,-.315]];
+const sillTopAt=z=>interpolate(SILL_TOP,z);
 const widthAt = z => interpolate(WIDTH,z);
 const shoulderAt = z => interpolate(SHOULDER,z) - .019;
 export const VEHICLE_GEOMETRY = Object.freeze({
@@ -75,7 +80,7 @@ export const VEHICLE_GEOMETRY = Object.freeze({
   suspensionMinimum:.24,suspensionMaximum:.41,maxSteer:.49,
   archCentreY:-.22,archLongRadius:.452,archVerticalRadius:.435,
   linerInnerX:.54,linerOuterX:1.040,
-  model:'v11 / 3.16: radiused fascia and shoulders, crowned split spokes, readable dielectric glazing and recessed rear cassettes; independent reconstruction, not OEM CAD',
+  model:'v13 / 3.18: rising waist, long canopy-to-quarter transition, broad angular nose cheeks and deep rising rockers; open rear installation retained; independent reconstruction, not OEM CAD',
   surfaceConstruction:'Shape-preserving longitudinal stations; broad radiused transverse blends with retained shut lines; no per-vertex wheel-arch uplift; analytic derivative normals',
   referenceRig:VEHICLE_INSPECTION_RIG.id
 });
@@ -93,7 +98,7 @@ function archCrown(z){
 // function added a local soft maximum against an elliptical arch after forming
 // the hood, which introduced a second curvature ridge. This single designed
 // section clears the retained wheel sweep without a reactive vertex uplift.
-const bonnetHalfWidthAt=z=>lerp(.718,.647,clamp((z-.80)/1.50,0,1));
+const bonnetHalfWidthAt=z=>lerp(.718,.620,clamp((z-.80)/1.50,0,1));
 function bodySection(z){
   const width=widthAt(z),crease=lerp(.66,bonnetHalfWidthAt(z)/width,smoothstep(.55,.82,z));
   return{width,crease,ridge:crease+.105,center:interpolate(DECK,z),shoulder:interpolate(SHOULDER,z)};
@@ -109,15 +114,55 @@ function bodySurfaceY(x,z){
   const panel=lerp(deck,risingFacet,smoothstep(crease-.025,crease+.030,f));
   return lerp(panel,shoulderFacet,smoothstep(ridge-.032,ridge+.044,f));
 }
-const fenderEdgeY=z=>Math.max(shoulderAt(z),bodySurfaceY(widthAt(z),z));
+// The top skin used to meet the door at identical positions but nearly 90°
+// different normals. A 44 mm wide elliptical return, with depth matched to the local top slope, is now part
+// of the actual side skin. It preserves the existing maximum width stations
+// and arch apertures; no hidden overlapping fillet is placed over a sharp box.
+const SHOULDER_RETURN=Object.freeze({radiusX:.053,startAngle:.18});
+const bodyOuterXAt=z=>widthAt(z)-SHOULDER_RETURN.radiusX*(1-Math.sin(SHOULDER_RETURN.startAngle));
+const fenderEdgeY=z=>bodySurfaceY(bodyOuterXAt(z),z);
+const shoulderReturnAt=z=>{
+  const {radiusX:rx,startAngle:a}=SHOULDER_RETURN,{width,ridge}=bodySection(z);
+  // Match the actual outer deck derivative, so the two skins have one
+  // tangent at their shared edge rather than merely coincident positions.
+  const ry=(.019/(width*(1-ridge)))*rx/Math.tan(a);
+  return{rx,ry,a,bottom:fenderEdgeY(z)-ry*Math.cos(a)};
+};
 const sideSurfaceX=(z,y)=>{
-  const t=clamp((fenderEdgeY(z)-y)/(fenderEdgeY(z)+.315),0,1);
+  const {rx,ry,a,bottom:shoulderBottom}=shoulderReturnAt(z),width=widthAt(z);
+  if(y>shoulderBottom){
+    const q=clamp((y-shoulderBottom)/ry,-1,1);
+    return width-rx+rx*Math.sqrt(Math.max(0,1-q*q));
+  }
+  const t=clamp((shoulderBottom-y)/(shoulderBottom+.315),0,1);
   const door=Math.exp(-(((z+.03)/.89)**4)),haunch=Math.max(Math.exp(-(((z-1.42)/.48)**2)),Math.exp(-(((z+1.42)/.51)**2)));
-  return widthAt(z)+.012*Math.sin(t*PI)+.009*haunch*Math.sin(t*PI)-.037*t*t-.012*door*Math.sin(t*PI)**2-.006*door*smoothstep(.50,.72,t);
+  // Zero endpoint slopes retain tangent continuity at the rolled shoulder.
+  // The lower pressing is a shallow continuous concavity, not a flat door box.
+  const wave=Math.sin(t*PI)**2;
+  return width+(.012+.009*haunch-.028*door)*wave-.037*t*t-.006*door*smoothstep(.50,.72,t);
+};
+const sidePanelY=(u,top,base)=>{
+  const span=top-base;if(span<.10)return lerp(top,base,u);
+  const shoulderBand=Math.min(.075,span*.45);
+  return u<.20?lerp(top,top-shoulderBand,u*5):lerp(top-shoulderBand,base,(u-.20)/.80);
 };
 // Read-only geometry specification lets the suspension acceptance test sample
 // the same surface as the renderer, instead of duplicating an optimistic box.
-export const sampleVehicleSurface=(x,z)=>({bodyY:bodySurfaceY(x,z),outerX:widthAt(z),archY:archCrown(z),linerInnerX:VEHICLE_GEOMETRY.linerInnerX,bonnetHalfWidth:bonnetHalfWidthAt(z),section:bodySection(z)});
+export const sampleVehicleSurface=(x,z)=>({bodyY:bodySurfaceY(x,z),outerX:widthAt(z),archY:archCrown(z),linerInnerX:VEHICLE_GEOMETRY.linerInnerX,bonnetHalfWidth:bonnetHalfWidthAt(z),section:bodySection(z),topSkinEdgeX:bodyOuterXAt(z),topSkinEdgeY:fenderEdgeY(z)});
+
+export const sampleVehicleSide=(z,y)=>({x:sideSurfaceX(z,y),shoulderReturn:SHOULDER_RETURN,edgeX:bodyOuterXAt(z),edgeY:fenderEdgeY(z)});
+
+const canopyKeys=[[-1.78,.346],[-1.57,.443],[-1.40,.524],[-1.15,.601],[-.85,.642],[-.58,.658],[-.22,.660],[.04,.624],[.29,.524],[.80,.280]];
+const canopyW=[[-1.78,.789],[-1.57,.775],[-1.12,.677],[-.65,.650],[-.02,.650],[.27,.678],[.55,.782],[.80,.885]];
+const canopyEdge=z=>interpolate(canopyKeys,z)-.026*(1-smoothstep(.25,.80,z))*smoothstep(-1.78,-1.10,z);
+const canopySurface=(u,z)=>{
+  const w=interpolate(canopyW,z),edge=canopyEdge(z),endBlend=(1-smoothstep(.30,.80,z))*smoothstep(-1.78,-1.15,z);
+  return[u*w,edge+.030*(1-u*u)*endBlend,z];
+};
+
+// The inspection reference uses the same loft, never a stale second set of
+// invented canopy points. u is the normalized transverse coordinate.
+export const sampleVehicleCanopy=(u,z)=>canopySurface(u,z);
 
 function material(color, metalness = .0, roughness = .5, extras = {}) {
   return new THREE.MeshStandardMaterial({color, metalness, roughness, ...extras});
@@ -141,7 +186,7 @@ function setGraphNormals(mesh,sideSurface=0){
   const p=mesh.geometry.attributes.position,n=mesh.geometry.attributes.normal,delta=.0005,q=new THREE.Vector3();
   for(let i=0;i<p.count;i++){
     const x=p.getX(i),y=p.getY(i),z=p.getZ(i);
-    if(sideSurface){
+    if(sideSurface&&Math.abs(y-fenderEdgeY(z))>1e-6){
       const dy=(sideSurfaceX(z,y+delta)-sideSurfaceX(z,y-delta))/(2*delta),dz=(sideSurfaceX(z+delta,y)-sideSurfaceX(z-delta,y))/(2*delta);
       q.set(sideSurface,-dy,-dz).normalize();
     }else{
@@ -177,7 +222,13 @@ function gridGeometry(fn,nu,nv,reverse,analyticNormals=false) {
       const u=i/nu,v=j/nv,ua=clamp(u-delta,0,1),ub=clamp(u+delta,0,1),va=clamp(v-delta,0,1),vb=clamp(v+delta,0,1);
       const a=fn(ua,v),b=fn(ub,v),c=fn(u,va),d=fn(u,vb);
       du.set(b[0]-a[0],b[1]-a[1],b[2]-a[2]);dv.set(d[0]-c[0],d[1]-c[1],d[2]-c[2]);n.crossVectors(du,dv);
-      if(n.lengthSq()>1e-24){n.normalize().multiplyScalar(reverse?-1:1);normal.setXYZ(j*(nu+1)+i,n.x,n.y,n.z);}
+      if(n.lengthSq()<=1e-24){
+        // A ruled return can collapse to its attached edge. Use the limiting
+        // interior tangent there, never leave a zero lighting normal.
+        const uu=clamp(u,.005,.995),vv=clamp(v,.005,.995),aa=fn(uu-delta,vv),bb=fn(uu+delta,vv),cc=fn(uu,vv-delta),dd=fn(uu,vv+delta);
+        du.set(bb[0]-aa[0],bb[1]-aa[1],bb[2]-aa[2]);dv.set(dd[0]-cc[0],dd[1]-cc[1],dd[2]-cc[2]);n.crossVectors(du,dv);
+      }
+      if(n.lengthSq()>1e-40){n.normalize().multiplyScalar(reverse?-1:1);normal.setXYZ(j*(nu+1)+i,n.x,n.y,n.z);}
     }
   }
   return g;
@@ -880,20 +931,25 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
   // weave stable in a moving camera. These finishes are visual estimates, not
   // manufacturer optical measurements; glazing uses a dielectric reflection.
   mats.carbon.color.setHex(0x31373b);mats.carbon.roughness=.41;
+  // City and the inspection page already compose this correction; the wind
+  // laboratory previously missed that path. Install it once at the common
+  // factory so the same shaded vehicle keeps real shadows in every context.
+  for(const mat of Object.values(mats))if(mat.isMeshStandardMaterial)attachReceiverPlaneShadows(mat);
 
   // Three continuous panels leave a genuine cabin aperture, rather than a
   // solid bonnet sheet hidden beneath an opaque glass bubble. Fine surface
   // sampling is concentrated around actual fender curvature and cabin edges.
   for(const side of [-1,1])for(const panel of [
     {a:.80,b:2.30,f:0,n:88,name:'front clamshell'},
-    {a:-2.30,b:-1.57,f:0,n:52,name:'rear clamshell'},
-    {a:-1.57,b:.80,f:.918,n:72,name:'door shoulder'}
+    {a:-2.30,b:-1.78,f:0,n:52,name:'rear clamshell'},
+    {a:-1.78,b:.80,f:.918,n:72,name:'door shoulder'}
   ]){
     const bands=panel.f?[[0,1,8]]:[[0,1,16],[1,2,3],[2,3,6],[3,4,3],[4,5,7]];
     for(const [a,b,columns]of bands){
       const panelMesh=grid(shell,mats.paint,(u,v)=>{
         const z=lerp(panel.b,panel.a,v),section=bodySection(z);
-        const stations=panel.f?[panel.f,1]:[0,section.crease-.025,section.crease+.030,section.ridge-.032,section.ridge+.044,1];
+        const edge=bodyOuterXAt(z)/section.width;
+        const stations=panel.f?[panel.f,edge]:[0,section.crease-.025,section.crease+.030,section.ridge-.032,section.ridge+.044,edge];
         const x=side*lerp(stations[a],stations[b],u)*section.width;
         return[x,bodySurfaceY(x,z),z];
       },columns,panel.n,side<0,panel.name);
@@ -912,8 +968,8 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     for(let segment=0;segment<edges.length-1;segment++){
       const centre=segment===1?-1.42:segment===3?1.42:null;
       const sidePanel=grid(shell,mats.paint,(u,v)=>{
-        const z=lerp(edges[segment],edges[segment+1],v),top=fenderEdgeY(z),base=centre===null?lower:archY+archRY*Math.sqrt(Math.max(0,1-((z-centre)/archRadius)**2));
-        const y=lerp(top,base,u);return[side*sideSurfaceX(z,y),y,z];
+        const z=lerp(edges[segment],edges[segment+1],v),top=fenderEdgeY(z),base=centre===null?(segment===2?sillTopAt(z):lower):archY+archRY*Math.sqrt(Math.max(0,1-((z-centre)/archRadius)**2));
+        const y=sidePanelY(u,top,base);return[side*sideSurfaceX(z,y),y,z];
       },24,centre===null?36:88,side>0,side<0?'right sculpted door and fenders':'left sculpted door and fenders');
       setGraphNormals(sidePanel,side);
     }
@@ -941,50 +997,47 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
       },3,64,side>0,'isolated wheelhouse bulkhead');
     }
     // Flush doors, hinge cuts and narrow frameless glass seals.
-    const seamPoints=[[.63,.270],[.54,-.291],[-.72,-.291],[-.88,.312]],doorSeam=[];
+    const seamPoints=[[.63,fenderEdgeY(.63)-.020],[.54,sillTopAt(.54)+.018],[-.72,sillTopAt(-.72)+.018],[-.88,fenderEdgeY(-.88)-.020]],doorSeam=[];
     for(let edge=0;edge<seamPoints.length-1;edge++)for(let i=0;i<=24;i++){
       const f=i/24,z=lerp(seamPoints[edge][0],seamPoints[edge+1][0],f),y=lerp(seamPoints[edge][1],seamPoints[edge+1][1],f);
       doorSeam.push([side*(sideSurfaceX(z,y)+.0026),y,z]);
     }
     curve(shell,doorSeam,.0016,mats.seam,'door shut line',false);
-    box(shell,.003,.010,.102,mats.black,[side*(sideSurfaceX(-.72,.257)+.001),.257,-.72],.0014,'flush door handle');
+    const handleY=fenderEdgeY(-.72)-.047;
+    box(shell,.003,.010,.102,mats.black,[side*(sideSurfaceX(-.72,handleY)+.001),handleY,-.72],.0014,'flush door handle');
     const marker=box(shell,.012,.018,.118,mats.black,[side*.965,.123,.928],.005,'fender camera housing');
     marker.rotation.y=side*.06;
     box(shell,.014,.012,.042,mats.amberLight,[side*.972,.123,.971],.004,'side indicator');
-    // A shallow folded rocker follows the body, instead of a 149 mm high
-    // rectangular slab with exposed square ends beneath the whole door.
+    // The official side silhouette has a substantial dark sill whose upper
+    // edge rises toward the rear wheel. It is an enclosed sculpted volume,
+    // not a thin horizontal rail or an extra strip over the painted door.
     for(const face of ['outer','lower','upper'])grid(underbody,mats.carbon,(u,v)=>{
-      const z=lerp(.972,-.972,v),t=Math.sin(v*PI),outer=.946+.033*t,upper=-.304+.014*(1-t),bottom=-.350-.039*t;
-      if(face==='outer')return[side*(outer-.012*Math.sin(u*PI)),lerp(upper,bottom,u),z];
+      const z=lerp(.972,-.972,v),t=Math.sin(v*PI),upper=sillTopAt(z)+.004,bottom=-.386-.026*t,outer=sideSurfaceX(z,upper)+.006;
+      if(face==='outer')return[side*(outer-.020*Math.sin(u*PI)-.016*u*u),lerp(upper,bottom,u),z];
       return[side*lerp(.845,outer,u),face==='upper'?upper:bottom+.009*(1-u),z];
     },6,42,side<0,'folded carbon rocker '+face);
-    for(const z of [-.972,.972])polygon(underbody,[[side*.845,-.290,z],[side*.946,-.290,z],[side*.946,-.350,z],[side*.845,-.341,z]],mats.carbon,'closed rocker end return',true);
+    for(const z of [-.972,.972]){const upper=sillTopAt(z)+.004,outer=sideSurfaceX(z,upper)+.006;polygon(underbody,[[side*.845,upper,z],[side*outer,upper,z],[side*(outer-.016),-.386,z],[side*.845,-.377,z]],mats.carbon,'closed rocker end return',true);}
   }
 
   // The photographs show a shallow compound-curved canopy, not a flat top
   // stretched between two triangular side windows. The crown fades into both
   // the windscreen and backlight landing edges without a floating glass lip.
-  // The official side study has a long nearly level crest and a clean windscreen
-  // landing. Redistributed stations remove the former round bubble crown.
-  const canopyKeys=[[-1.57,.340],[-1.40,.417],[-1.15,.543],[-.85,.635],[-.58,.658],[-.22,.660],[.04,.624],[.29,.524],[.80,.280]];
-  const canopyW=[[-1.57,.775],[-1.12,.677],[-.65,.650],[-.02,.650],[.27,.678],[.80,.775]];
-  const canopyEdge=z=>interpolate(canopyKeys,z)-.026*(1-smoothstep(.25,.80,z))*smoothstep(-1.57,-1.10,z);
-  const canopySurface=(u,z)=>{
-    const w=interpolate(canopyW,z),edge=canopyEdge(z),endBlend=(1-smoothstep(.30,.80,z))*smoothstep(-1.57,-1.15,z);
-    return[u*w,edge+.030*(1-u*u)*endBlend,z];
-  };
+  // The same fitted front view supports a broader screen landing, while
+  // the roof crest needs no global width/height increase. Keep the crest
+  // hard points, and lengthen the visibly premature rear falloff
+  // into the rising rear quarter. The fixed wing mounting stays unobstructed.
   const sideGlassSurface=(side,u,z)=>{
     const top=canopyEdge(z),w=interpolate(canopyW,z),lowerX=widthAt(z)-.078,lowerY=Math.min(bodySurfaceY(lowerX,z)+.004,top-.004);
     return[side*lerp(w,lowerX,u),lerp(top,lowerY,u)+.008*Math.sin(u*PI),z];
   };
-  for(const [front,back,name] of [[.8,.04,'compound curved windscreen'],[.04,-.76,'panoramic roof glazing'],[-.76,-1.57,'curved rear backlight']]){
+  for(const [front,back,name] of [[.8,.04,'compound curved windscreen'],[.04,-.76,'panoramic roof glazing'],[-.76,-1.78,'curved rear backlight']]){
     independentTransparentPanel(grid(shell,mats.glass,(u,v)=>canopySurface(lerp(-1,1,u),lerp(front,back,v)),48,40,false,name));
   }
   for(const z of [.04,-.76])grid(shell,mats.seam,(u,v)=>{
     const p=canopySurface(lerp(-1,1,u),z+lerp(-.0025,.0025,v));p[1]+=.0017;return p;
   },36,2,false,'flush glazing panel joint');
   grid(shell,mats.seam,(u,v)=>{
-    const x=lerp(-.775,.775,u),z=lerp(-1.57,-1.594,v),y=lerp(canopyEdge(-1.57)+.0015,bodySurfaceY(x,-1.594)+.0015,v);
+    const x=lerp(-.789,.789,u),z=lerp(-1.78,-1.798,v),y=lerp(canopyEdge(-1.78)+.0015,bodySurfaceY(x,-1.798)+.0015,v);
     return[x,y,z];
   },36,4,false,'sealed rear glass landing');
   // Flush lower black frit and a cowl / wiper pocket, rather than an exposed
@@ -997,11 +1050,11 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     // It follows the existing pane, without altering canopy shape or opacity.
     for(const edge of [0,1]){const frit=grid(shell,mats.seam,(u,v)=>{const z=lerp(.80,-1.48,v),p=sideGlassSurface(side,edge===0?u*.035:1-u*.035,z);p[0]+=side*.00035;p[1]+=.00035;return p;},2,72,side<0,'side glazing ceramic edge frit');frit.castShadow=false;}
     grid(shell,mats.black,(u,v)=>{
-      const z=lerp(.80,-1.53,v),w=interpolate(canopyW,z),h=canopyEdge(z);
+      const z=lerp(.80,-1.76,v),w=interpolate(canopyW,z),h=canopyEdge(z);
       return[side*(w+lerp(-.012,.019,u)),h+.003-lerp(0,.015,u),z];
     },5,72,side<0,'flat windscreen aperture gasket');
     grid(shell,mats.paint,(u,v)=>{
-      const z=lerp(.80,-1.55,v),w=interpolate(canopyW,z),h=canopyEdge(z);
+      const z=lerp(.80,-1.76,v),w=interpolate(canopyW,z),h=canopyEdge(z);
       return[side*(w+lerp(-.005,.015,u)),h+.006-.010*u*u,z];
     },5,72,side<0,'flush sculpted roof rail');
     grid(shell,mats.seam,(u,v)=>{
@@ -1012,8 +1065,8 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     },2,18,side<0,'flush window division pillar');
     // Broad C-pillar facets flow into the rear quarter without an SUV-like roof.
     grid(shell,mats.paint,(u,v)=>{
-      const start=lerp(-.94,-1.45,u),end=lerp(-1.61,-1.76,u),z=lerp(start,end,v),outer=widthAt(z),inner=interpolate(canopyW,Math.max(z,-1.57));
-      const iy=canopyEdge(Math.max(z,-1.57));
+      const start=lerp(-1.04,-1.45,u),end=lerp(-1.78,-1.88,u),z=lerp(start,end,v),outer=bodyOuterXAt(z),inner=interpolate(canopyW,Math.max(z,-1.78));
+      const iy=canopyEdge(Math.max(z,-1.78));
       const windowInset=lerp(.014,.088,smoothstep(0,1,v)),x=lerp(inner+windowInset,outer,u);
       return[side*x,lerp(iy,bodySurfaceY(outer,z),smoothstep(0,1,u))+.006*Math.sin(u*PI)*Math.sin(v*PI),z];
     },12,30,side<0,'curved rear buttress',true);
@@ -1021,67 +1074,79 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
   // Panel lines on the front service lid and rear deck.
   for(const side of [-1,1]) {
     recessedBonnetJoint(shell,t=>{const z=lerp(2.30,.80,t);return[side*bonnetHalfWidthAt(z),z,'x'];},'bonnet joint',mats.paint,mats.seam);
-    curve(shell,[[side*.87,.237,-2.30],[side*.884,.297,-2.025]],.0022,mats.seam,'rear bumper joint',false);
+    curve(shell,[[side*.87,bodySurfaceY(side*.87,-2.30)+.002,-2.30],[side*.884,bodySurfaceY(side*.884,-2.025)+.002,-2.025]],.0022,mats.seam,'rear bumper joint',false);
   }
-  const rearSeam=[];for(let i=0;i<=20;i++){const x=lerp(-.925,.925,i/20);rearSeam.push([x,.299,-2.04]);}
+  const rearSeam=[];for(let i=0;i<=20;i++){const x=lerp(-.925,.925,i/20);rearSeam.push([x,bodySurfaceY(x,-2.04)+.002,-2.04]);}
   curve(shell,rearSeam,.0023,mats.seam,'rear deck trailing joint');
   recessedBonnetJoint(shell,t=>[lerp(-bonnetHalfWidthAt(1.0),bonnetHalfWidthAt(1.0),t),1.0,'z'],'service lid transverse joint',mats.paint,mats.seam,40);
 
-  // Front fascia: a very thin horizontal DRL and recessed triangular projectors.
+  // Swept front section: the official black upper trim remains a closed
+  // surface, with a separately recessed lower opening. The previous almost
+  // square 1.31 m mouth and flat leading edge exaggerated a rectangular slab.
+  // Width, curvature and return depths are authored from visible photos only.
+  const fasciaWidth=t=>lerp(.610,.674,smoothstep(0,1,t));
+  const fasciaY=t=>lerp(-.037,-.382,t);
+  const noseZ=(x,t)=>2.318+.047*(1-(x/.855)**2)+.014*t;
   grid(shell,mats.black,(u,v)=>{
-    const y=lerp(-.039,-.397,v),w=lerp(.643,.700,v),x=lerp(-w,w,u);
-    return[x,y,2.270+.010*(1-(x/w)**2)];
-  },36,12,true,'recessed front central aperture');
+    const w=fasciaWidth(v),x=lerp(-w,w,u);
+    return[x,fasciaY(v),2.268+.012*(1-(x/w)**2)];
+  },36,12,true,'recessed front central aperture',true);
   grid(shell,mats.frontPanel,(u,v)=>{
-    const y=lerp(-.041,-.211,v),w=lerp(.643,.675,v),x=lerp(-w,w,u);
-    return[x,y,2.296+.020*(1-(x/w)**2)+.005*Math.sin(v*PI)];
-  },36,12,true,'closed curved black nose panel');
-  box(shell,1.355,.009,.014,mats.black,[0,-.218,2.307],.004,'front panel lower seal');
-  const frontFrame=[[-.655,-.025,2.313],[.655,-.025,2.313],[.715,-.416,2.352],[-.715,-.416,2.352]];
-  for(let edge=0;edge<4;edge++)grid(shell,mats.black,(u,v)=>{
-    const a=frontFrame[edge],b=frontFrame[(edge+1)%4],x=lerp(a[0],b[0],v),y=lerp(a[1],b[1],v);
-    return[x*(1-u*.022),y+(y>-.1?-.014:.014)*u,lerp(lerp(a[2],b[2],v),2.275,u)];
-  },4,24,false,'radiused front aperture return');
+    const t=v*.435,w=fasciaWidth(t)-.007,x=lerp(-w,w,u);
+    return[x,fasciaY(t)-.005,noseZ(x,t)+.007*Math.sin(v*PI)];
+  },36,12,true,'closed curved black nose panel',true);
+  grid(shell,mats.black,(u,v)=>{
+    const t=.443,w=fasciaWidth(t),x=lerp(-w,w,u);
+    return[x,fasciaY(t)+lerp(-.0045,.0045,v),noseZ(x,t)+.001];
+  },36,2,true,'front panel lower seal',true);
+  // Each return follows the real swept opening edge; black is not a decal.
+  for(const edge of ['top','bottom','left','right'])grid(shell,mats.black,(u,v)=>{
+    const t=edge==='top'?0:edge==='bottom'?1:v,w=fasciaWidth(t),x=edge==='left'?-w:edge==='right'?w:lerp(-w,w,v),y=fasciaY(t);
+    return[x*(1-u*.022),y+(edge==='top'?-.014:edge==='bottom'?.014:0)*u,lerp(noseZ(x,t),2.275,u)];
+  },4,24,false,'radiused front aperture return',true);
   grid(shell,mats.paint,(u,v)=>{
-    const x=lerp(-.655,.655,u),y=lerp(bodySurfaceY(x,2.3),-.025,v);
-    return[x,y,lerp(2.30,2.313,v)];
-  },36,6,true,'folded nose leading edge');
+    const x=lerp(-.618,.618,u),y=lerp(bodySurfaceY(x,2.3),-.026,v);
+    return[x,y,lerp(2.30,noseZ(x,0),v)];
+  },36,6,true,'folded nose leading edge',true);
   for(const side of [-1,1]) {
     grid(shell,mats.paint,(u,v)=>{
-      const y=lerp(bodySurfaceY(side*lerp(.655,.855,Math.sin(u*PI/2)),2.30),-.283,v),inner=.655+.058*v,outer=sideSurfaceX(2.30,y),x=lerp(inner,outer,Math.sin(u*PI/2));
-      return[side*x,y,2.30+(.013+.025*v)*Math.cos(u*PI/2)];
+      const blend=u,inner=.618+.058*v,topX=lerp(.618,bodyOuterXAt(2.30),blend);
+      const y=lerp(bodySurfaceY(side*topX,2.30),-.283,v),outer=sideSurfaceX(2.30,y),x=lerp(inner,outer,blend);
+      return[side*x,y,lerp(noseZ(inner,v*.72),2.30,blend)+.004*Math.sin(u*PI)*Math.sin(v*PI)];
     },16,20,side>0,'compound curved front bumper cheek',true);
-    const upperReturn=grid(shell,mats.paint,(u,v)=>{const x=lerp(.655,.855,Math.sin(u*PI/2));return[side*x,bodySurfaceY(side*x,2.30),2.30+.013*Math.cos(u*PI/2)*v];},16,3,side<0,'rounded bumper upper return',true);
-    setGraphNormals(upperReturn);
+    grid(shell,mats.paint,(u,v)=>{
+      const blend=u,x=lerp(.618,bodyOuterXAt(2.30),blend);
+      return[side*x,bodySurfaceY(side*x,2.30),lerp(2.30,lerp(noseZ(.618,0),2.30,blend),v)];
+    },16,3,side<0,'rounded bumper upper return',true);
     grid(underbody,mats.carbon,(u,v)=>{
-      const y=lerp(-.283,-.418,v),x=lerp(.714+.004*v,sideSurfaceX(2.30,y)+.012,Math.sin(u*PI/2));
-      return[side*x,y,2.30+(.038+.015*v)*Math.cos(u*PI/2)];
-    },12,10,side>0,'wrapped carbon lower bumper');
+      const blend=u,y=lerp(-.283,-.395,v),inner=.676+.006*v,x=lerp(inner,sideSurfaceX(2.30,y)+.012,blend);
+      return[side*x,y,lerp(noseZ(inner,.72+.28*v),2.30,blend)];
+    },12,10,side>0,'wrapped carbon lower bumper',true);
   }
   for(const side of [-1,1]){
     grid(underbody,mats.black,(u,v)=>{
-      const y=lerp(-.203,-.413,u),z=lerp(2.318,2.034,v),x=.716+.051*v;
+      const y=lerp(-.197,-.390,u),z=lerp(noseZ(.678,.75),2.034,v),x=.678+.070*v;
       return[side*x,y,z];
     },5,12,side>0,'sealed front intake side return');
     grid(underbody,mats.liner,(u,v)=>{
-      const x=side*lerp(.716,.844,u),z=lerp(2.300,2.026,v);return[x,-.371-.032*(1-v),z];
+      const x=side*lerp(.678,.844,u),z=lerp(2.300,2.026,v);return[x,-.368-.020*(1-v),z];
     },5,12,side<0,'front bumper lower closure');
   }
   HEADLIGHTS.forEach(outline=>recessedLamp(shell,outline,mats));
   // A shallow extruded ribbon has the photograph's flat optical face. Tubes
   // made both lamps look like surface-mounted neon and rounded the silhouette.
-  grid(shell,mats.black,(u,v)=>{const x=lerp(-.653,.653,u);return[x,-.022+lerp(-.010,.010,v),2.315+.008*(1-(x/.653)**2)];},40,2,true,'front light recessed bezel');
-  grid(shell,mats.whiteLight,(u,v)=>{const x=lerp(-.647,.647,u);return[x,-.022+lerp(-.0035,.0035,v),2.317+.008*(1-(x/.647)**2)];},40,2,true,'front light blade');
-  curve(underbody,[[-.85,-.412,2.283],[-.71,-.425,2.363],[0,-.425,2.388],[.71,-.425,2.363],[.85,-.412,2.283]],.008,mats.carbon,'front splitter outer lip');
-  solidXZ(underbody,[[-.851,2.275],[-.719,2.363],[0,2.388],[.719,2.363],[.851,2.275],[.83,1.988],[-.83,1.988]],.027,-.414,mats.carbon,'front ground effect splitter');
+  grid(shell,mats.black,(u,v)=>{const x=lerp(-.616,.616,u);return[x,-.022+lerp(-.010,.010,v),noseZ(x,0)+.002];},40,2,true,'front light recessed bezel',true);
+  grid(shell,mats.whiteLight,(u,v)=>{const x=lerp(-.610,.610,u);return[x,-.022+lerp(-.0035,.0035,v),noseZ(x,0)+.004];},40,2,true,'front light blade',true);
+  curve(underbody,[[-.85,-.390,2.283],[-.684,-.402,2.367],[0,-.402,2.397],[.684,-.402,2.367],[.85,-.390,2.283]],.008,mats.carbon,'front splitter outer lip');
+  solidXZ(underbody,[[-.851,2.275],[-.684,2.367],[0,2.397],[.684,2.367],[.851,2.275],[.83,1.988],[-.83,1.988]],.027,-.391,mats.carbon,'front ground effect splitter');
   box(underbody,1.22,.018,.041,mats.black,[0,-.306,2.296],.006,'recessed front intake aero vane');
   for(const side of [-1,1])for(let j=0;j<3;j++)box(underbody,.010,.122,.018,mats.black,[side*(.474+j*.047),-.310,2.307],.003,'front intake fin');
 
   // Rear valance, continuous red blade, four main cold-gas nozzles and diffuser.
-  const rearValanceZ=(x,y)=>{const v=(.219-y)/.642,w=lerp(.942,.827,smoothstep(.55,1,v)),edge=(Math.abs(x)/w)**4;
+  const rearValanceZ=(x,y)=>{const v=(.260-y)/.683,w=lerp(.942,.827,smoothstep(.55,1,v)),edge=(Math.abs(x)/w)**4;
     return-2.309+.025*edge+.018*v+.044*smoothstep(.10,.30,v)*(1-smoothstep(.86,1,v))*(1-edge);};
   const rearValance=grid(underbody,mats.carbon,(u,v)=>{
-    const y=lerp(.219,-.423,v),w=lerp(.942,.827,smoothstep(.55,1,v)),x=lerp(-w,w,u);
+    const y=lerp(.260,-.423,v),w=lerp(.942,.827,smoothstep(.55,1,v)),x=lerp(-w,w,u);
     return[x,y,rearValanceZ(x,y)];
   },40,20,false,'contoured rear carbon valance');
   // The old uncut back panel crossed the mouths of the hollow nozzle bells.
@@ -1090,16 +1155,25 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
   const rearMountApertures=Array.from({length:4},(_,j)=>Array.from({length:24},(_,k)=>{const a=k*TAU/24;return[(j-1.5)*.32+.113*Math.cos(a),-.035+.113*Math.sin(a)];}));
   const fanMountApertures=Array.from({length:4},(_,j)=>Array.from({length:20},(_,k)=>{const a=k*TAU/20;return[(j-1.5)*.32+.103*Math.cos(a),-.256+.103*Math.sin(a)];}));
   cutSurfaceOpenings(rearValance,[...rearMountApertures,...fanMountApertures],{axes:[0,1],role:'rear-port-and-extraction-duct'});
+  // A folded carbon surround gives the open installation a continuous mouth
+  // and an actual recessed wall. The official outlets remain exposed at their
+  // existing centres; neither an opaque cover nor emissive paint fakes depth.
+  const rearMouth=[[-.766,-.402],[-.824,-.336],[-.824,-.012],[-.726,.126],[.726,.126],[.824,-.012],[.824,-.336],[.766,-.402],[-.766,-.402]];
+  for(let edge=0;edge<rearMouth.length-1;edge++)grid(underbody,mats.carbon,(u,v)=>{
+    const a=rearMouth[edge],b=rearMouth[edge+1],x=lerp(a[0],b[0],v),y=lerp(a[1],b[1],v),inset=.018*Math.sin(u*PI/2);
+    const centreY=-.138,dy=y-centreY,length=Math.hypot(x,dy);
+    return[x-x/length*inset,y-dy/length*inset,lerp(-2.345,rearValanceZ(x,y)+.005,u)];
+  },2,3,false,'folded rear installation perimeter return',true);
   // Official rear imagery has a dark lower valance underneath the red
   // optical strip. Painted corner returns, rather than a white full-width
   // apron, preserve the floating deck and the width of the exposed diffuser.
   for(const side of [-1,1])grid(shell,mats.paint,(u,v)=>{
-    const x=side*lerp(.790+.018*v,.940,u),edge=Math.abs(x)/.940,y=lerp(.215,-.056-.045*u,v),z=-2.322+.037*edge**4+.006*Math.sin(v*PI);
+    const x=side*lerp(.790+.018*v,.940,u),edge=Math.abs(x)/.940,y=lerp(.261,-.056-.045*u,v),z=-2.322+.037*edge**4+.006*Math.sin(v*PI);
     return[x,y,z];
   },12,14,side<0,'sculpted rear painted corner return');
-  grid(shell,mats.black,(u,v)=>{const x=lerp(-.911,.911,u),edge=(Math.abs(x)/.911)**4;return[x,.222+lerp(-.016,.017,v),-2.321+.018*edge];},48,3,false,'recessed rear optical channel');
-  grid(shell,mats.tailLight,(u,v)=>{const x=lerp(-.897,.897,u),edge=(Math.abs(x)/.897)**4;return[x,.222+lerp(-.008,.008,v),-2.324+.018*edge];},48,3,false,'full width rear light');
-  curve(shell,[[-.884,.241,-2.306],[0,.244,-2.318],[.884,.241,-2.306]],.004,mats.paint,'rear trailing lip');
+  grid(shell,mats.black,(u,v)=>{const x=lerp(-.911,.911,u),edge=(Math.abs(x)/.911)**4;return[x,.264+lerp(-.016,.017,v),-2.321+.018*edge];},48,3,false,'recessed rear optical channel');
+  grid(shell,mats.tailLight,(u,v)=>{const x=lerp(-.897,.897,u),edge=(Math.abs(x)/.897)**4;return[x,.264+lerp(-.008,.008,v),-2.324+.018*edge];},48,3,false,'full width rear light');
+  curve(shell,[[-.884,.281,-2.306],[0,.284,-2.318],[.884,.281,-2.306]],.004,mats.paint,'rear trailing lip');
   box(underbody,.382,.112,.019,mats.chrome,[0,.112,-2.336],.009,'embossed rear plate surround');
   box(underbody,.366,.104,.014,mats.black,[0,.112,-2.350],.007,'rear RDSTR plate');
   const letters=new THREE.Group();underbody.add(letters);vectorLabel(letters,'RDSTR',.057,mats.chrome,[0,.082,-2.335]);

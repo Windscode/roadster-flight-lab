@@ -13,6 +13,7 @@ import {RoadsterSim} from '../dist/physics.js';
 import {canonicalGeometryJSON} from '../dist/irradiance-math.js';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {MODEL_BUILD_ID} from '../dist/model-build.js';
+import {CITY_CHANGES_317_CONTRACT,partitionCityGeometry} from '../qa/city-geometry-scope.mjs';
 const checks=[],sha=b=>createHash('sha256').update(b).digest('hex'),v=a=>new THREE.Vector3(...a),near=(a,b,e=2e-4)=>a.length===b.length&&a.every((x,i)=>Math.abs(x-b[i])<e);
 const check=async(name,fn)=>{try{checks.push({name,status:'passed',detail:await fn()});}catch(error){checks.push({name,status:'failed',error:{name:error.name,message:error.message,actual:error.actual??null,expected:error.expected??null}});}};
 // An independent separating-axis test over actual oriented volumes. It does
@@ -36,13 +37,21 @@ await check('The inherited 114 parcels, 12 streets and 113 route segments retain
   assert.deepEqual(original.size,[3,.12,352]);assert.deepEqual(original.position,[110.5,.06,314]);
   const replacementIds=['plan-foundry-paving-110.5-south','plan-foundry-paving-110.5-north'];
   const sort=list=>[...list].sort((a,b)=>a.id.localeCompare(b.id));
-  assert.deepEqual(sort(CITY_PLAN_SOLIDS.filter(g=>!replacementIds.includes(g.id))),sort(beforeEntry.solids.filter(g=>g.id!==original.id)),'Every unrelated authored solid remains byte-equivalent as data');
+  // 3.17 translates the exact 66 frozen pole/arm/head records to stagger
+  // opposite-side light coverage. Check every authored property first, then
+  // restore only those named positions for this historical identity compare.
+  // No lamp-prefix exclusion and no change to any road or parcel is allowed.
+  partitionCityGeometry(geometry);
+  const moved=new Map(CITY_CHANGES_317_CONTRACT.changed.map(r=>[r.after.id,r]));
+  const frozenCorridor=new Map(CITY_CHANGES_317_CONTRACT.corridorBefore.map(r=>[r.id,r]));
+  const restoredPlan=CITY_PLAN_SOLIDS.map(g=>{if(!moved.has(g.id))return g;const old=frozenCorridor.get(g.id),change=moved.get(g.id);assert.ok(old);assert.deepEqual(g,{...old,position:change.after.position},'An admitted lamp has an unrelated authoring change: '+g.id);return old;});
+  assert.deepEqual(sort(restoredPlan.filter(g=>!replacementIds.includes(g.id))),sort(beforeEntry.solids.filter(g=>g.id!==original.id)),'Every unrelated authored solid remains byte-equivalent as data');
   assert.deepEqual(CITY_PLAN_SOLIDS.find(g=>g.id===replacementIds[0]),{...original,id:replacementIds[0],size:[3,.12,160.5],position:[110.5,.06,218.25]});
   assert.deepEqual(CITY_PLAN_SOLIDS.find(g=>g.id===replacementIds[1]),{...original,id:replacementIds[1],size:[3,.12,183.5],position:[110.5,.06,398.25]});
   assert.equal(CITY_BUILDINGS.length,114);assert.equal(CITY_STREETS.length,12);assert.equal(CITY_ROUTES.reduce((n,r)=>n+r.points.length-1,0),113);assert.equal(CITY.extent,620);
   assert.equal(sha(JSON.stringify(CITY_BUILDINGS)),BASELINE_313.buildings.SHA256);assert.equal(sha(JSON.stringify(CITY_STREETS)),BASELINE_313.streets.SHA256);assert.equal(sha(JSON.stringify(CITY_ROUTES)),BASELINE_313.routes.SHA256);
   const slabs=CITY_COLLIDERS.filter(g=>g.kind==='urban-road');assert.equal(slabs.length,113);assert.equal(sha(JSON.stringify(slabs)),BASELINE_313.slabs.SHA256);
-  return{baseline:BASELINE_313,physicalPerimeterM:620,scope:'Exact original authoring identity and road-box transforms; not native driving or collision response.'};
+  return{baseline:BASELINE_313,physicalPerimeterM:620,explicit317TranslatedLampIDs:[...moved.keys()],scope:'Exact original authoring identity and road-box transforms after restoring only the separately verified named 3.17 lamp translations; not native driving or collision response.'};
 });
 await check('All streets and every elevated connection have explicit coverage; new solids leave the full declared lanes and inherited slabs open',()=>{
   assert.deepEqual(CITY_CONTINUITY.coverage.map(r=>r.id),CITY_STREETS.map(r=>r.id));assert.equal(CITY_CONTINUITY.connectionCoverage.length,113);
@@ -107,11 +116,26 @@ await check('The three redesigned anchor towers share exact storey transition he
   const result=[];environment.setQuality('balanced');camera.position.set(0,120,0);camera.updateMatrixWorld(true);environment.update(900,camera.position);
   for(const b of CITY_BUILDINGS.filter(b=>b.id.startsWith('arcology-'))){const tiers=geometry.filter(g=>g.kind==='building'&&[b.id,b.id+'-tier-1',b.id+'-tier-2'].includes(g.id)),{shopH,floorCount,floorH}=buildingStoreys(b),massing=buildingMassing(b);assert.equal(tiers.length,3);assert.equal(massing.at(-1).top,b.height);
     for(const tier of massing.slice(0,-1))assert.ok(Math.abs((tier.top-shopH)/floorH-Math.round((tier.top-shopH)/floorH))<1e-9);
-    const cores=instances.filter(r=>r.mesh.name.startsWith('Urban ')&&r.mesh.name.includes('/ darkConcrete /')&&r.size[0]>4&&r.size[2]>4&&r.size[1]>1&&r.position[1]>=b.baseY&&r.position[1]<b.baseY+b.height&&massing.some(t=>near([r.position[0],r.position[2]],[b.x+t.x,b.z+t.z])));
+    // 3.17 batches the two actually identical mineral responses together on
+    // downtown parcels. The old darkConcrete name is no longer a shape ID.
+    // Select real closed opaque mineral boxes at the mass tier; the retained
+    // storey count, dimensions, physical boundaries and visibility below must
+    // still all match. A missing/changed core cannot pass by being relabelled.
+    const cores=instances.filter(r=>{
+      const mesh=r.mesh,m=mesh.material;
+      return mesh.userData.urbanArchitecture===true&&mesh.geometry.index?.count===36&&mesh.userData.renderDetail==='mass'&&
+        m.isMeshStandardMaterial===true&&m.userData.exteriorSurface==='concrete'&&m.roughness===.90&&m.metalness===0&&m.color.getHex()===0xffffff&&m.emissive.getHex()===0&&m.opacity===1&&m.transparent===false&&m.side===THREE.FrontSide&&
+        r.size[0]>4&&r.size[2]>4&&r.size[1]>1&&r.position[1]>=b.baseY&&r.position[1]<b.baseY+b.height&&massing.some(t=>near([r.position[0],r.position[2]],[b.x+t.x,b.z+t.z]));
+    });
     assert.equal(cores.length,floorCount+1,b.id+' missing real floor cores');
+    for(const [floor,core]of [...cores].sort((a,b)=>a.position[1]-b.position[1]).entries()){
+      const expectedHeight=floor===0?shopH:floorH-.13,expectedCentre=b.baseY+(floor===0?shopH/2:shopH+(floor-.5)*floorH);
+      assert.ok(Math.abs(core.size[1]-expectedHeight)<2e-4,b.id+' wrong core height at storey '+floor);
+      assert.ok(Math.abs(core.position[1]-expectedCentre)<2e-4,b.id+' wrong core centre at storey '+floor);
+    }
     for(const core of cores){const physical=tiers.find(t=>core.position[1]>=t.position[1]-t.size[1]/2-1e-5&&core.position[1]<=t.position[1]+t.size[1]/2+1e-5);assert.ok(physical);assert.ok(near([core.position[0],core.position[2]],[physical.position[0],physical.position[2]]));assert.ok(Math.abs(core.size[0]-(physical.size[0]-2.8))<2e-4);assert.ok(Math.abs(core.size[2]-(physical.size[2]-2.8))<2e-4);assert.ok(core.position[1]-core.size[1]/2>=physical.position[1]-physical.size[1]/2-.001);assert.ok(core.position[1]+core.size[1]/2<=physical.position[1]+physical.size[1]/2+.001);assert.equal(core.mesh.userData.renderDetail,'mass');assert.equal(core.mesh.visible,true);}
-    result.push({id:b.id,topM:b.height,tiers:massing,actualPrimaryCoreInstances:cores.length,balancedPrimaryCoresVisible:true});}
-  return{towers:result,scope:'Rendered core matrices, floor boundaries and shared physical massing; not a 120 m four-direction pixel or visible skyline judgement.'};
+    result.push({id:b.id,topM:b.height,tiers:massing,actualPrimaryCoreInstances:cores.length,actualMaterialNames:[...new Set(cores.map(r=>r.mesh.material.name))],allStoreyHeightsAndCentresExactWithinM:2e-4,balancedPrimaryCoresVisible:true});}
+  return{towers:result,coreSelection:'Actual closed 12-triangle mineral boxes, identical opaque material response and mass LOD; no dependency on darkConcrete batch labels. Storey count, every height/centre, x/z dimensions, physical tier boundaries and visible flags remain strict.',scope:'Rendered core matrices, floor boundaries and shared physical massing; not a 120 m four-direction pixel or visible skyline judgement.'};
 });
 await check('Authored industrial exhaust stacks retain their primary silhouette at 120 m in balanced without promoting all thin details',()=>{
   environment.setQuality('balanced');camera.position.set(0,120,0);camera.updateMatrixWorld(true);environment.update(950,camera.position);const rows=[];

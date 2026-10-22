@@ -1,0 +1,787 @@
+{
+  "schema": "roadster-final-delivery-verification",
+  "version": 1,
+  "createdAt": "2026-10-21T07:17:05.191115+00:00",
+  "status": "source-numerical-integration-and-distribution-verified-native-acceptance-incomplete",
+  "identity": {
+    "modelVersion": "3.19.0",
+    "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+    "sourceCommit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+    "sourceTree": "6b7116a98136fef215cc00a54e5591076f52023c",
+    "branch": "improve/roadster-3.19",
+    "parentCommit": "eb2ca9d67f5b9fe7a81907f5304646e585a535e6",
+    "baselineTree": "33f4463d70b8490ec74735a28df58ac8e3fea255",
+    "ancestorCommits": 22,
+    "runtimeSourceFiles": 191,
+    "runtimeSourceBytes": 5374018,
+    "trackedWorktreeDiffExitCode": 0,
+    "runtimeWorkingBytesMatchIndependentRecoveredHashes": true
+  },
+  "publication": {
+    "publicGitPushPerformed": false,
+    "publicWebsiteDeploymentPerformed": false,
+    "delivery": "private local candidate",
+    "privateLibrarySaveStatusFile": "ROADSTER_3.19_SAVE_STATUS.json",
+    "note": "Local links and this verification are not confirmation of persistent saving; the actual save result is recorded separately after the one authorized batch.",
+    "privateLibraryStatus": "save-not-confirmed-preparation-failed",
+    "privateLibraryAttemptCount": 1,
+    "privateLibrarySuccessReceipts": 0,
+    "automaticApprovalRejectionObserved": false,
+    "furtherPrivateSaveRetry": false
+  },
+  "acceptance": {
+    "implementation": "Both continuous-route and review/practice/comparison flows are connected to the existing city, solver, recorder and UI.",
+    "fullRegression": {
+      "status": "passed",
+      "command": [
+        "node",
+        "scripts/validate.mjs"
+      ],
+      "attempt": 4,
+      "exitCode": 0,
+      "durationSeconds": 639.857,
+      "startedAt": "2026-10-21T06:37:56.108506+00:00",
+      "finishedAt": "2026-10-21T06:48:35.965756+00:00",
+      "optionalEntrypointsActuallyEnabled": [
+        "JSDOM production integration",
+        "independent Python trim oracle",
+        "offline GLSL validator"
+      ],
+      "failuresPreserved": "Attempts 1-3, tail preflight and earlier 6d83/8ccb stage evidence remain in source history and focused evidence."
+    },
+    "numericalRoute": {
+      "status": "passed",
+      "nominalPolylineLengthM": 302.5,
+      "brakingStopCriterion": "speed < 0.36 km/h",
+      "braking": [
+        {
+          "preset": "dry-day",
+          "initialSpeedKmh": 60,
+          "stopDistanceM": 15.43201725735911,
+          "stopTimeS": 1.6833333333333333,
+          "absActiveS": 1.5666666666666635
+        },
+        {
+          "preset": "after-rain",
+          "initialSpeedKmh": 60,
+          "stopDistanceM": 23.626335571682148,
+          "stopTimeS": 2.6916666666666664,
+          "absActiveS": 2.4916666666666605
+        }
+      ],
+      "conditions": [
+        {
+          "presetId": "dry-day",
+          "descriptorHash": "fnv1a32-fe252d57",
+          "fileSha256": "14ea0f43a180db4cc5a466ca515d53a86c161cff92c7d138ee44af4d52974d5f"
+        },
+        {
+          "presetId": "after-rain",
+          "descriptorHash": "fnv1a32-2a74cc71",
+          "fileSha256": "054d5d6253656ba0f3aeba99cd9364c5b117eb9f7d36daa04830792ec12e441d"
+        }
+      ],
+      "scope": "Matched initial/input braking and steering probes; whole-route driver adapts to the state and is not strict A/B or native human input. Surface calibration is an engineering approximation, no aquaplaning model."
+    },
+    "feedback": {
+      "status": "passed-numerical-and-camera-math",
+      "sourceReport": "qa/driver-feedback-3.19.json",
+      "physicalStateInvariantWhenFeedbackEnabled": true,
+      "audioDeviceListening": "not-performed",
+      "cockpitComfort": "not-performed"
+    },
+    "learning": {
+      "status": "passed-numerical-and-production-function-integration",
+      "originalLiveUnchanged": true,
+      "oldModelReadOnly": true,
+      "practiceExcludedFromFormalRanking": true,
+      "cases": [
+        {
+          "id": "city-mvhqypng-1",
+          "status": "failed",
+          "reason": "hard_or_tilted_landing",
+          "durationS": 18.78333333333333,
+          "firstContact": {
+            "step": 2254,
+            "timeS": 18.78333333333333,
+            "position": {
+              "x": 400.0000774949453,
+              "y": 8.669730735864293,
+              "z": 304.99514053507716
+            },
+            "preContactVerticalMps": -7.943737291193822,
+            "verticalMps": -7.52490033084899,
+            "rollDeg": -4.43252896511018e-11,
+            "pitchDeg": 0.001109689444902511,
+            "wheelObjects": [
+              "upper-city-terrace",
+              "upper-city-terrace",
+              "upper-city-terrace",
+              "upper-city-terrace"
+            ]
+          },
+          "gate": {
+            "direction": "forward",
+            "fraction": 0.7675079365285602,
+            "position": {
+              "x": 400.0000713702267,
+              "y": 11.896501643840704,
+              "z": 280
+            },
+            "forwardSpeedMps": 15.119049590706124,
+            "envelopeHalfWidthM": 1.0225715933632387,
+            "envelopeHalfHeightM": 0.8234998345921376,
+            "inside": true,
+            "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+            "step": 1306,
+            "timeS": 10.881395899471071
+          }
+        },
+        {
+          "id": "city-mvhqyr86-2",
+          "status": "failed",
+          "reason": "gate_envelope_outside",
+          "durationS": 10.883333333333333,
+          "firstContact": null,
+          "gate": null
+        },
+        {
+          "id": "city-mvhqys46-3",
+          "status": "completed",
+          "reason": "stable_platform_landing",
+          "durationS": 21.366666666666667,
+          "firstContact": {
+            "step": 2480,
+            "timeS": 20.666666666666668,
+            "position": {
+              "x": 400.0000774970112,
+              "y": 8.701990002904992,
+              "z": 304.363264653057
+            },
+            "preContactVerticalMps": -0.29991741106975234,
+            "verticalMps": -0.3210221848323249,
+            "rollDeg": -7.359754293589918e-11,
+            "pitchDeg": 0.00025010726363286875,
+            "wheelObjects": [
+              "upper-city-terrace",
+              "upper-city-terrace",
+              "upper-city-terrace",
+              "upper-city-terrace"
+            ]
+          },
+          "gate": {
+            "direction": "forward",
+            "fraction": 0.7675079365285602,
+            "position": {
+              "x": 400.0000713702267,
+              "y": 11.896501643840704,
+              "z": 280
+            },
+            "forwardSpeedMps": 15.119049590706124,
+            "envelopeHalfWidthM": 1.0225715933632387,
+            "envelopeHalfHeightM": 0.8234998345921376,
+            "inside": true,
+            "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+            "step": 1306,
+            "timeS": 10.881395899471071
+          }
+        }
+      ],
+      "reviewPracticeComparisons": [
+        {
+          "sourceRunId": "city-mvhqypng-1",
+          "reason": "hard_or_tilted_landing",
+          "practiceRunId": "city-mvhqyvbq-4",
+          "eventStep": 2254,
+          "reviewStartsAtStep": 1894,
+          "reproductionStatus": "matched",
+          "sameInitialState": true,
+          "sameConditions": true,
+          "sameModel": true,
+          "strictControllerAB": false,
+          "metrics": [
+            {
+              "key": "touchdown-descent",
+              "label": "触地前下降速度",
+              "labelEn": "Pre-contact descent",
+              "unit": "m/s",
+              "a": 7.943737291193822,
+              "b": 0.29991741106975234,
+              "delta": -7.64381988012407
+            },
+            {
+              "key": "touchdown-tilt",
+              "label": "触地最大倾角",
+              "labelEn": "Maximum contact tilt",
+              "unit": "°",
+              "a": 0.001109689444902511,
+              "b": 0.00025010726363286875,
+              "delta": -0.0008595821812696422
+            },
+            {
+              "key": "gas",
+              "label": "喷口通过气量",
+              "labelEn": "Nozzle gas throughput",
+              "unit": "kg",
+              "a": 628.8627265713404,
+              "b": 731.0791995722187,
+              "delta": 102.2164730008783
+            },
+            {
+              "key": "height",
+              "label": "全程最高高度",
+              "labelEn": "Peak world height",
+              "unit": "m",
+              "a": 11.999809752389488,
+              "b": 11.999809752389488,
+              "delta": 0
+            }
+          ],
+          "firstViolationMeasurements": [
+            {
+              "key": "descent",
+              "label": "触地前下降速度",
+              "labelEn": "Pre-contact descent",
+              "actual": 7.943737291193822,
+              "operator": "≤",
+              "threshold": 1.4,
+              "unit": "m/s",
+              "violated": true
+            },
+            {
+              "key": "tilt",
+              "label": "触地倾角",
+              "labelEn": "Contact tilt",
+              "actual": 0.001109689444902511,
+              "operator": "≤",
+              "threshold": 8,
+              "unit": "°",
+              "violated": false
+            }
+          ]
+        },
+        {
+          "sourceRunId": "city-mvhqyr86-2",
+          "reason": "gate_envelope_outside",
+          "practiceRunId": "city-mvhqyxl2-5",
+          "eventStep": 1306,
+          "reviewStartsAtStep": 946,
+          "reproductionStatus": "matched",
+          "sameInitialState": true,
+          "sameConditions": true,
+          "sameModel": true,
+          "strictControllerAB": false,
+          "metrics": [
+            {
+              "key": "touchdown-descent",
+              "label": "触地前下降速度",
+              "labelEn": "Pre-contact descent",
+              "unit": "m/s",
+              "a": null,
+              "b": 0.29991741106975234,
+              "delta": null
+            },
+            {
+              "key": "touchdown-tilt",
+              "label": "触地最大倾角",
+              "labelEn": "Maximum contact tilt",
+              "unit": "°",
+              "a": null,
+              "b": 0.00025010726363286875,
+              "delta": null
+            },
+            {
+              "key": "gas",
+              "label": "喷口通过气量",
+              "labelEn": "Nozzle gas throughput",
+              "unit": "kg",
+              "a": 266.70970204441295,
+              "b": 731.0791995722187,
+              "delta": 464.3694975278058
+            },
+            {
+              "key": "height",
+              "label": "全程最高高度",
+              "labelEn": "Peak world height",
+              "unit": "m",
+              "a": 17.665993184630313,
+              "b": 11.999809752389488,
+              "delta": -5.666183432240825
+            }
+          ],
+          "firstViolationMeasurements": [
+            {
+              "key": "gate-width",
+              "label": "含余量的横向半包络",
+              "labelEn": "Lateral half envelope + margin",
+              "actual": 1.072571685453272,
+              "operator": "≤",
+              "threshold": 5.5,
+              "unit": "m",
+              "violated": false
+            },
+            {
+              "key": "gate-height",
+              "label": "含余量的竖向半包络",
+              "labelEn": "Vertical half envelope + margin",
+              "actual": 6.344389010589864,
+              "operator": "≤",
+              "threshold": 2.7,
+              "unit": "m",
+              "violated": true
+            }
+          ]
+        },
+        {
+          "sourceRunId": "city-mvhqys46-3",
+          "reason": "stable_platform_landing",
+          "practiceRunId": "city-mvhqz0a1-6",
+          "eventStep": 2564,
+          "reviewStartsAtStep": 2204,
+          "reproductionStatus": "matched",
+          "sameInitialState": true,
+          "sameConditions": true,
+          "sameModel": true,
+          "strictControllerAB": false,
+          "metrics": [
+            {
+              "key": "touchdown-descent",
+              "label": "触地前下降速度",
+              "labelEn": "Pre-contact descent",
+              "unit": "m/s",
+              "a": 0.29991741106975234,
+              "b": 0.29991741106975234,
+              "delta": 0
+            },
+            {
+              "key": "touchdown-tilt",
+              "label": "触地最大倾角",
+              "labelEn": "Maximum contact tilt",
+              "unit": "°",
+              "a": 0.00025010726363286875,
+              "b": 0.00025010726363286875,
+              "delta": 0
+            },
+            {
+              "key": "gas",
+              "label": "喷口通过气量",
+              "labelEn": "Nozzle gas throughput",
+              "unit": "kg",
+              "a": 731.0791995722187,
+              "b": 731.0791995722187,
+              "delta": 0
+            },
+            {
+              "key": "height",
+              "label": "全程最高高度",
+              "labelEn": "Peak world height",
+              "unit": "m",
+              "a": 11.999809752389488,
+              "b": 11.999809752389488,
+              "delta": 0
+            }
+          ],
+          "firstViolationMeasurements": []
+        }
+      ],
+      "costInterpretation": "Hard source: 628.8627265713404 kg to its 18.783333 s failure end; successful child: 731.0791995722187 kg to its 21.366667 s success end. Different commands and duration; not equal-window efficiency, finite-reservoir success, or strict controller A/B.",
+      "demonstrationCommandDifference": {
+        "hardVersusSuccess": "At the same end-of-travel phase, source script called setMode(drive); successful child called existing startManeuver(land).",
+        "envelopeVersusSuccess": "Pose-target world height 18 m versus 12 m using the existing controller interface.",
+        "evidence": "qa/learning-loop-3.19/input-journal.json and tests/city-learning-3.19.test.mjs",
+        "boundary": "Numerical public-command demonstration; no body-state overwrite inside attempts and no claim of native human key operation."
+      }
+    },
+    "native": {
+      "schema": "roadster.native-acceptance",
+      "version": 1,
+      "modelVersion": "3.19.0",
+      "modelBuildId": "b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230",
+      "status": "not-performed-graphics-unavailable",
+      "createdAt": "2026-10-21T06:38:47.121277+00:00",
+      "environment": {
+        "surface": "permitted managed cloud browser",
+        "url": "http://terminal.local:4173/",
+        "GL_VENDOR": "Disabled",
+        "GL_RENDERER": "Disabled",
+        "reportedError": "Could not create a WebGL context; BindToCurrentSequence failed; Error creating WebGL context."
+      },
+      "observed": {
+        "applicationShell": "Research fallback is visible; no rendered frames or FPS reported",
+        "sourceOfObservation": "Current page accessibility tree and captured browser error tool output",
+        "screenshotAttachment": "Browser screenshot was captured and saved to its documented shared directory, but the matching main-container file remained missing after a five-second poll. No broken image link or reconstructed image is supplied.",
+        "finalRecheck": "After reloading the final b734 source preview, two actual WebGL context creation errors reported Disabled vendor and renderer. A subsequent DOM snapshot showed the graphics-unavailable research fallback, no running 3D, and no FPS data.",
+        "visibleHeading": "当前图形环境不可用，研究仍可继续",
+        "visibleFrameStatus": "三维未运行 · 无帧率数据"
+      },
+      "notPerformed": [
+        "Final native X then drive; pre-held Q then X; G wall/toggle; H release sequences",
+        "Continuous 302.5 m rendered dry/wet route with audible tyre, ABS and touchdown feedback",
+        "Rendered hard-landing/envelope/success review, practice and comparison",
+        "Final day/night and corner/back-side visual acceptance",
+        "User GPU continuous-motion shadow, frame-time and dedicated-memory measurements"
+      ],
+      "numericalEvidence": [
+        "qa/control-continuity-3.19/report.json",
+        "qa/surface-route-3.19/numerical-report.json",
+        "qa/route-experience-3.19/report.json",
+        "qa/learning-loop-3.19/report.json",
+        "qa/learning-loop-3.19/main-integration-report.json"
+      ],
+      "claimBoundary": "Numerical, DOM, camera-math and offline shader passes are not native input, actual pixels, audio-device comfort or user-GPU performance passes. Existing 3.18 images/videos are not relabelled as final 3.19.",
+      "finalBuildRecheckedAt": "2026-10-21T06:38:13.288Z"
+    },
+    "gpu": {
+      "status": "unmeasured",
+      "preregisteredBudget": "docs/experience-budget-3.19.md",
+      "p50MsMaximum": 16.7,
+      "p95MsMaximum": 25,
+      "p99MsMaximum": 50,
+      "totalDedicatedMemoryGiBMaximum": 8,
+      "addedMemoryMiBMaximum": 128,
+      "limitsUnchanged": true,
+      "userActualResolutionConfirmed": false,
+      "softwareRenderingNotSubstituted": true
+    },
+    "candidate": {
+      "status": "passed-independent-unpack-launch-and-http",
+      "receipt": "ROADSTER_3.19_CANDIDATE_START.json",
+      "launcherCheckExitCode": 0,
+      "httpVerifiedFiles": 10,
+      "ownServerStopped": true,
+      "ownExtractionRemoved": true,
+      "firstSandboxBindFailureRetained": "ROADSTER_3.19_CANDIDATE_START_attempt01.json",
+      "claimBoundary": "Fresh extraction, actual launcher hash verification and actual loopback HTTP. No browser/WebGL, native key, sound device or GPU acceptance."
+    },
+    "history": {
+      "status": "passed",
+      "receipt": "ROADSTER_3.19_HISTORY_VERIFY.json",
+      "routes": [
+        "full independently imported into fresh bare repository",
+        "original 3.18 full plus verified/unbundled 3.19 incremental in another fresh bare repository"
+      ],
+      "fsckExitCodes": [
+        0,
+        0,
+        0
+      ],
+      "objectAlternates": [],
+      "bothCommitTreeAndSourceManifestMatch": true,
+      "readOnlyInputsUnchanged": true,
+      "temporaryDirectoriesRemoved": true,
+      "fullRestoration": {
+        "restored": true,
+        "sha256": "381584314b1c59d0ffc30e21749174bdeeb59b814100c42a49093336df52a310",
+        "bytes": 720511956,
+        "alreadyPresentIdentical": false
+      },
+      "durationSeconds": 46.40883029499673,
+      "warningBoundary": "count-objects recorded temporary non-object-file warnings. The three fsck commands themselves completed with no stdout/stderr."
+    }
+  },
+  "artifacts": [
+    {
+      "filename": "Roadster_Flight_Lab_3.19_candidate.zip",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/Roadster_Flight_Lab_3.19_candidate.zip",
+      "bytes": 87075462,
+      "sha256": "401a6081f573f543fc14bdc061f0ef9a6447894187bd9e4eb7c1e52c94ccbff9"
+    },
+    {
+      "filename": "Roadster_Flight_Lab_3.19_full.bundle",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/Roadster_Flight_Lab_3.19_full.bundle",
+      "bytes": 720511956,
+      "sha256": "381584314b1c59d0ffc30e21749174bdeeb59b814100c42a49093336df52a310"
+    },
+    {
+      "filename": "Roadster_Flight_Lab_3.19_incremental.bundle",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/Roadster_Flight_Lab_3.19_incremental.bundle",
+      "bytes": 63667172,
+      "sha256": "42cf8d085a9d8db56014639352888c4a73525080671082f37387ea480fbc47c0"
+    },
+    {
+      "filename": "ROADSTER_3.19_REPORT.md",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_REPORT.md",
+      "bytes": 18770,
+      "sha256": "67547db6df2f5481112dfe61732b8ea1e2932656e71a102ce4223d58e6dbce3a"
+    },
+    {
+      "filename": "ROADSTER_3.19_HANDOFF.md",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_HANDOFF.md",
+      "bytes": 10469,
+      "sha256": "fea2aaed11f4cc24960a7c2e5bb565bff16280e96b41fb2d757c15d19884f7bb"
+    },
+    {
+      "filename": "START_HERE_3.19.md",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/START_HERE_3.19.md",
+      "bytes": 6798,
+      "sha256": "e27476afb1523fc5eb84926b687b3bca07d04f3900b87363d7c2480470db095c"
+    },
+    {
+      "filename": "Roadster_3.19_Evidence.zip",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/Roadster_3.19_Evidence.zip",
+      "bytes": 24411102,
+      "sha256": "dd64fc8786bdd8a30ef61ec4b626d029d04fba856b1698924e8f9c3eeef1bdd2"
+    },
+    {
+      "filename": "Roadster_3.19_Numerical_Route_Surface_Braking.png",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/Roadster_3.19_Numerical_Route_Surface_Braking.png",
+      "bytes": 486393,
+      "sha256": "c42540ee401eeb52bf10c5fe8e0bd8f8b24c5c2879709d2b985a5eb8342544c1"
+    },
+    {
+      "filename": "Roadster_3.19_Numerical_Landing_Practice.png",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/Roadster_3.19_Numerical_Landing_Practice.png",
+      "bytes": 628968,
+      "sha256": "f2d273a2de9ecadde0f393a5a807686cb6c876210add2268f6976ab70739dfa9"
+    },
+    {
+      "filename": "ROADSTER_3.19_SAVE_STATUS.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_SAVE_STATUS.json",
+      "bytes": 6938,
+      "sha256": "763fd1c0355da03cbf96e53a9dcc7ecb34ca5a002072c201b48a31e4bb5fe3c0",
+      "generatedAfterSaveAttempt": true,
+      "persistence": "local-only"
+    }
+  ],
+  "verificationReceipts": [
+    {
+      "filename": "ROADSTER_3.19_CANDIDATE_START.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_CANDIDATE_START.json",
+      "bytes": 6576,
+      "sha256": "44368b61c8606191e0c420a0a5e2b33fc735eaed118f5ed8d44341f47c9ca5ae"
+    },
+    {
+      "filename": "ROADSTER_3.19_CANDIDATE_START_attempt01.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_CANDIDATE_START_attempt01.json",
+      "bytes": 2381,
+      "sha256": "4be3a834365e3aed3e10da1632c1745f4ceeeb6a931669aad74445eb9d1d3ee1"
+    },
+    {
+      "filename": "ROADSTER_3.19_DUPLICATE_CLEANUP.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_DUPLICATE_CLEANUP.json",
+      "bytes": 2056,
+      "sha256": "f139f63c192f5c9af272aa65a569ea997c6c414ed71c4f09b2fc40fa3c49a007"
+    },
+    {
+      "filename": "ROADSTER_3.19_EVIDENCE_PACKAGE.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_EVIDENCE_PACKAGE.json",
+      "bytes": 737,
+      "sha256": "0e5b5e4a13d20c452e595cf506d59b9fda7c85805d342f3a76c7e34db03a9d68"
+    },
+    {
+      "filename": "ROADSTER_3.19_FULL_GENERATION.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_FULL_GENERATION.json",
+      "bytes": 4236,
+      "sha256": "c592894d0df9b707b8f1c886a08e075965f599612890e041227e2df317a47326"
+    },
+    {
+      "filename": "ROADSTER_3.19_HISTORY_VERIFY.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_HISTORY_VERIFY.json",
+      "bytes": 111538,
+      "sha256": "2a8da6ba576476f1c0606e62ab417f27ee7a72d9d61f469d3cca6b628402932d"
+    },
+    {
+      "filename": "ROADSTER_3.19_INCREMENTAL_GENERATION.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_INCREMENTAL_GENERATION.json",
+      "bytes": 2589,
+      "sha256": "3846fabb89d9b797e5adb4cd888bcfb50f0464780b8318bcd2f93501f6d0bbb9"
+    },
+    {
+      "filename": "ROADSTER_3.19_PACKAGE.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_PACKAGE.json",
+      "bytes": 3845,
+      "sha256": "f35abbeb32261e84e7c8bea1160230f91645f0eb67aab33d40d67035d80af897"
+    },
+    {
+      "filename": "ROADSTER_3.19_PACKAGE_PREFLIGHT.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_PACKAGE_PREFLIGHT.json",
+      "bytes": 3984,
+      "sha256": "678327380d76b8eee160b4c24e35f13153fd9f23e7d9703125c8b3344881fe97"
+    },
+    {
+      "filename": "ROADSTER_3.19_RESTORE_DUPLICATES_CLEANUP.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_RESTORE_DUPLICATES_CLEANUP.json",
+      "bytes": 1519,
+      "sha256": "fcb8f74d92d89f1a66e7bd364d395f61f45e1763d28fe6731e6c0a9258555825"
+    },
+    {
+      "filename": "ROADSTER_3.19_STAGING_CLEANUP.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_STAGING_CLEANUP.json",
+      "bytes": 423,
+      "sha256": "8442f405d3a3eb395b1e94608b08c6acf1b79f3aa8a90232dc7c8da6a92fdb14"
+    },
+    {
+      "filename": "ROADSTER_3.19_WORKTREE_EVIDENCE.json",
+      "localPath": "/workspace/scratch/229ab6206851/deliverables-319/ROADSTER_3.19_WORKTREE_EVIDENCE.json",
+      "bytes": 20541,
+      "sha256": "829ca4afd5624e8c837bd73f75b4659e81cb964da877e8c8bdd9046a6929b058"
+    }
+  ],
+  "committedEvidence": [
+    {
+      "path": "qa/final-regression-3.19/attempt-04.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 774,
+      "sha256": "ba9e184c6cc83e3728ca0f25cc043b0158bd074c1e56f12618ea1a3cd35f4dc7",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/final-regression-3.19/attempt-04.log",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 5066,
+      "sha256": "0972d2441795ae2d3585bf5f577b4e45d1709be9b71c5a22129e4b5aa45320f1",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/native-acceptance-3.19.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 2411,
+      "sha256": "c78fe59aa14658d99dabaaf1a872fa86b2f63b587e4d22624e9a8bb885d43868",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/surface-route-3.19/numerical-report.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 49565,
+      "sha256": "e3748ad7adfbabf07fbda9ec32304aa8090eb780fb2d9b6173f799cc8892395e",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/surface-route-3.19/route-drive.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 7020154,
+      "sha256": "a1b781c13ffdd629a59f56fa9ae0070bdfd18d303365b3897daf9b874989a83b",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/route-experience-3.19/report.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 7627,
+      "sha256": "056cc53f87fb6d222bd6b07f7b3e00f9c72156d6e606da93104a26529c7aad0e",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/learning-loop-3.19/report.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 57157,
+      "sha256": "9e0166ed13936c446777c4ad3bf62728eee446e2a605da6ed65112dbfc1e0bd7",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/learning-loop-3.19/ui-report.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 1875,
+      "sha256": "f1db81e718992ccb0dea733b4fbde5ad90738243f118d1b7d9c805721be3f2ef",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/learning-loop-3.19/main-integration-report.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 2672,
+      "sha256": "dc1f61218c3221f4f9349868b40b560c0b6b1426bc803d127115f47e70e2b3d3",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/driver-feedback-3.19.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 3845,
+      "sha256": "35b7200e4804d6fc52f6967857ce6c13b16b8d549048579a6eac175e827f793f",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/city-shaders-3.19.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 640183,
+      "sha256": "56992023c4ab7ee06513a33909d078500b814bbd8806d163fde1be56340cd37d",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/render-shader-validation-3.19.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 13031,
+      "sha256": "29855e8a9dbd5b921b40a4fffc39e9bac809fbf59905e6daaed2dc524ef31714",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/original-preservation-3.19.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 680,
+      "sha256": "4a1e4116f3e02b4d733c5445c7124c244518db6a96a33fae7e21084ab71a4dec",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/experience-3.19/numerical-figures-manifest.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 2825,
+      "sha256": "618cc86df94450760e067f002c3d5e0c280d60d1aef838e02b3441a9e9c44e87",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "qa/experience-3.19/final-city-assets-verify.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 20284,
+      "sha256": "2ccb3e4e06e3df41011a2c0d4a2280ac6b70e4763dde16f694d8682186314558",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "docs/experience-budget-3.19.md",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 2385,
+      "sha256": "5e3345bd136b98ee32f108c87423bf52679a785cf09bb0a6d6ff351d116abec3",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "dist/model-build.js",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 18618,
+      "sha256": "00011a797c9fcdc3f2834203313cac48605d0b3179ad98288dd4ab6bd736d2a5",
+      "presentInEvidenceZip": true
+    },
+    {
+      "path": "dist/validation.json",
+      "commit": "4ff324f036b76e886dc958d7de1f17a2a8efff53",
+      "bytes": 268601,
+      "sha256": "2e1ff2679f7e75a46a392c671340110eb1e7c7400a137d0eb28585f6fdc9c3ca",
+      "presentInEvidenceZip": true
+    }
+  ],
+  "recordIdentityPolicy": "Records generated before commit retain original null sourceCommit/sourceTree. Their actual modelBuildId and source hashes are bound to this final commit by independent recovered-source verification; source fields were not retrospectively relabelled.",
+  "evidenceScope": {
+    "archive": "Roadster_3.19_Evidence.zip",
+    "zipEntries": 242,
+    "gitBlobFiles": 228,
+    "postCommitReceipts": 12,
+    "everyContentSha256Verified": true,
+    "allCommittedEvidenceInFullAndIncremental": true,
+    "currentCityShaderReport": "repo/qa/city-shaders-3.19.json",
+    "earlierStagesRemainLabelled": true,
+    "figuresAreNumericalNotRenderedGameplay": true
+  },
+  "workingCopyStorage": {
+    "readonlyBaselineReferences": "Existing 3.18 baseline files/objects remain preserved; development copy uses readonly historical links/alternates. Delivered full history is independent.",
+    "generatedEvidenceNotExpanded": 68,
+    "manifest": "ROADSTER_3.19_WORKTREE_EVIDENCE.json",
+    "recoveryRule": "Before rerunning complete tests in this same development copy, restore the listed committed blobs and clear their skip-worktree flag, refusing to overwrite differing existing data. Fresh bundle clones naturally contain all committed files."
+  },
+  "retainedLimitations": [
+    "Final native X/held-Q-X/G-wall-toggle/H-release sequences not performed because WebGL is unavailable.",
+    "Manual E+1 inverted failure remains distinct from automatic U.",
+    "Severe 90 km/h step nonconvergence remains; contact peaks are not damage.",
+    "Old 12/12 finite 100 bar task failures remain; 30 nominal constant-pressure successes do not establish finite-resource success.",
+    "Earlier approximately 80 percent height-error benefit mostly came from takeoff convergence, not general wind immunity.",
+    "Final day/night/corner/back-side and continuous-driving pixels, actual audio comfort and user-GPU continuous shadow motion remain unaccepted."
+  ],
+  "selfHashPolicy": "This VERIFY does not hash itself. SAVE_STATUS identifies the exact earlier VERIFY bytes offered to the failed preparation attempt; it is not a saved-file confirmation. The final local VERIFY includes the save status and updated report hashes.",
+  "postSaveEditorialRevision": {
+    "at": "2026-10-21T07:19:29.192759+00:00",
+    "previousVerifySha256OfferedForSaving": "96ed164190ebf73bc2d8cc433823983aa1905bf8eef1f3df3bd0dd400c2fcb2d",
+    "updatedFiles": [
+      "ROADSTER_3.19_REPORT.md",
+      "ROADSTER_3.19_HANDOFF.md",
+      "ROADSTER_3.19_VERIFY.json"
+    ],
+    "newLocalReceipt": "ROADSTER_3.19_SAVE_STATUS.json",
+    "purpose": "Record actual failed persistence and explain the already-recorded demonstration command differences, without changing runtime, source commit, archives or original experiment records.",
+    "uploadedAgain": false
+  }
+}

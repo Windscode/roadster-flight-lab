@@ -1,0 +1,688 @@
+{
+  "schema": "roadster.reflection-stability",
+  "version": 1,
+  "modelVersion": "3.17.0",
+  "generatedAt": "2026-10-21T01:54:51.323Z",
+  "verificationType": "CPU submission cadence, material composition and pass-state verification; no WebGL context or framebuffer",
+  "sourceSha256": {
+    "dist/wet-road-reflection.js": "69e9f1280bd8bf0d2119e156fba83ccc99c31c1b7a60e03df9670cc6c5264683",
+    "dist/road-surface-material.js": "c73da629769b4bbe1cbcce06006ede15564daa779d20e9e3b1a8afce90bbf833",
+    "dist/city-environment.js": "dd3a3c8d3adabd46f6661f1908701c57524a6523debf8acb36b0c3f5a21934e9"
+  },
+  "checks": [
+    {
+      "name": "The 3.11 fixture reconstructs the published source byte-for-byte after its sole import rewrite",
+      "status": "passed"
+    },
+    {
+      "name": "A moving vehicle at a fixed camera uses the existing high/ultra capture budgets instead of the idle timer",
+      "status": "passed"
+    },
+    {
+      "name": "Actual selected-light fade values also invalidate a fixed view with a motionless car",
+      "status": "passed"
+    },
+    {
+      "name": "The production practical pool fade is observed without moving the camera or changing lamp power assumptions",
+      "status": "passed"
+    },
+    {
+      "name": "An actually static scene keeps the former idle reuse and motion cannot exceed either cap at high call rates",
+      "status": "passed"
+    },
+    {
+      "name": "Real Roadster wheel, physical-wing display, seal deformation and brake-lamp changes are detected with an unchanged root",
+      "status": "passed"
+    },
+    {
+      "name": "Root-parent movement, visibility and LOD membership changes are captured even with unchanged local root coordinates",
+      "status": "passed"
+    },
+    {
+      "name": "Fixed-pose lens changes invalidate the old projection without changing the original 400 m bounded pass",
+      "status": "passed"
+    },
+    {
+      "name": "The camera-domain coefficient fades inside the old district instead of switching from one to zero at its edge",
+      "status": "passed"
+    },
+    {
+      "name": "Cached texture frames update the blend every displayed frame without spending an extra capture",
+      "status": "passed"
+    },
+    {
+      "name": "Shader fade weights the entire planar/environment replacement and preserves the five existing reflection taps",
+      "status": "passed"
+    },
+    {
+      "name": "A failed pass preserves the last good projection and all existing visibility/render state while disabling invalid reflection data",
+      "status": "passed"
+    },
+    {
+      "name": "Balanced, disabled/disposed state and a rewound clock do not leave a stale enabled coefficient",
+      "status": "passed"
+    }
+  ],
+  "evidence": {
+    "baseline": {
+      "publishedCommit": "ab9372b56a01c2a47b18d32baf48162f3cd8f86c",
+      "recoveredEquivalentTreeCommit": "96346a65497c994061d3bedda56464067e5e31ef",
+      "sourcePath": "dist/wet-road-reflection.js",
+      "sourceGitBlob": "ec47723bdd2f588be9ec575ff48f66f978fa2bf9",
+      "sourceSha256": "c5ee35789069abaa256a20cd3d8a88b738dc769b8b10b38f901b2b9433299764",
+      "fixturePath": "qa/fixtures/baseline-3.11/wet-road-reflection.js",
+      "fixtureSha256": "bb5fe56a4e72066e5e138aa2d4be06d3d6fab849e822d5cc7f5e0f2f69bf3ca0",
+      "adaptation": {
+        "from": "from './vendor/three.module.js'",
+        "to": "from '../../../dist/vendor/three.module.js'",
+        "occurrences": 1
+      },
+      "purpose": "Frozen published 3.11 reflection scheduling, camera-domain gate and pass-state logic for CPU A/B. The sole adaptation redirects the unchanged vendored Three.js import. This is not a frozen rendered scene or pixel baseline.",
+      "fixtureVerified": true
+    },
+    "fixedCameraVehicleMotion": {
+      "vehicleSpeedMps": 10,
+      "rootStartM": [
+        -200,
+        0.74,
+        -275
+      ],
+      "cameraPositionM": [
+        -200,
+        2,
+        -300
+      ],
+      "cameraTargetM": [
+        -200,
+        2,
+        -260
+      ],
+      "rows": [
+        {
+          "before": {
+            "quality": "high",
+            "mode": "vehicle",
+            "attemptedRefreshHz": 60,
+            "durationS": 2,
+            "configuredMaximumHz": 12,
+            "targetSize": [
+              512,
+              288
+            ],
+            "captures": 6,
+            "captureTimesS": [
+              0,
+              0.35,
+              0.7,
+              1.05,
+              1.4166666666666667,
+              1.7833333333333334
+            ],
+            "minimumIntervalS": 0.35,
+            "maximumIntervalS": 0.3666666666666667,
+            "meanInterCaptureHz": 2.803738317757009,
+            "dynamicRefreshes": null
+          },
+          "after": {
+            "quality": "high",
+            "mode": "vehicle",
+            "attemptedRefreshHz": 60,
+            "durationS": 2,
+            "configuredMaximumHz": 12,
+            "targetSize": [
+              512,
+              288
+            ],
+            "captures": 25,
+            "captureTimesS": [
+              0,
+              0.08333333333333333,
+              0.16666666666666666,
+              0.25,
+              0.3333333333333333,
+              0.4166666666666667,
+              0.5,
+              0.5833333333333334,
+              0.6666666666666666,
+              0.75,
+              0.8333333333333334,
+              0.9166666666666666,
+              1,
+              1.0833333333333333,
+              1.1666666666666667,
+              1.25,
+              1.3333333333333333,
+              1.4166666666666667,
+              1.5,
+              1.5833333333333333,
+              1.6666666666666667,
+              1.75,
+              1.8333333333333333,
+              1.9166666666666667,
+              2
+            ],
+            "minimumIntervalS": 0.08333333333333326,
+            "maximumIntervalS": 0.08333333333333348,
+            "meanInterCaptureHz": 12,
+            "dynamicRefreshes": 24
+          }
+        },
+        {
+          "before": {
+            "quality": "ultra",
+            "mode": "vehicle",
+            "attemptedRefreshHz": 60,
+            "durationS": 2,
+            "configuredMaximumHz": 20,
+            "targetSize": [
+              768,
+              432
+            ],
+            "captures": 6,
+            "captureTimesS": [
+              0,
+              0.35,
+              0.7,
+              1.05,
+              1.4166666666666667,
+              1.7833333333333334
+            ],
+            "minimumIntervalS": 0.35,
+            "maximumIntervalS": 0.3666666666666667,
+            "meanInterCaptureHz": 2.803738317757009,
+            "dynamicRefreshes": null
+          },
+          "after": {
+            "quality": "ultra",
+            "mode": "vehicle",
+            "attemptedRefreshHz": 60,
+            "durationS": 2,
+            "configuredMaximumHz": 20,
+            "targetSize": [
+              768,
+              432
+            ],
+            "captures": 41,
+            "captureTimesS": [
+              0,
+              0.05,
+              0.1,
+              0.15,
+              0.2,
+              0.25,
+              0.3,
+              0.35,
+              0.4,
+              0.45,
+              0.5,
+              0.55,
+              0.6,
+              0.65,
+              0.7,
+              0.75,
+              0.8,
+              0.85,
+              0.9,
+              0.95,
+              1,
+              1.05,
+              1.1,
+              1.15,
+              1.2,
+              1.25,
+              1.3,
+              1.35,
+              1.4,
+              1.45,
+              1.5,
+              1.55,
+              1.6,
+              1.65,
+              1.7,
+              1.75,
+              1.8,
+              1.85,
+              1.9,
+              1.95,
+              2
+            ],
+            "minimumIntervalS": 0.04999999999999982,
+            "maximumIntervalS": 0.050000000000000044,
+            "meanInterCaptureHz": 20,
+            "dynamicRefreshes": 40
+          }
+        }
+      ]
+    },
+    "fixedCameraLightFade": {
+      "intensityRamp": [
+        0,
+        1000
+      ],
+      "gainRamp": [
+        0,
+        1
+      ],
+      "before": {
+        "quality": "high",
+        "mode": "light",
+        "attemptedRefreshHz": 60,
+        "durationS": 2,
+        "configuredMaximumHz": 12,
+        "targetSize": [
+          512,
+          288
+        ],
+        "captures": 6,
+        "captureTimesS": [
+          0,
+          0.35,
+          0.7,
+          1.05,
+          1.4166666666666667,
+          1.7833333333333334
+        ],
+        "minimumIntervalS": 0.35,
+        "maximumIntervalS": 0.3666666666666667,
+        "meanInterCaptureHz": 2.803738317757009,
+        "dynamicRefreshes": null
+      },
+      "after": {
+        "quality": "high",
+        "mode": "light",
+        "attemptedRefreshHz": 60,
+        "durationS": 2,
+        "configuredMaximumHz": 12,
+        "targetSize": [
+          512,
+          288
+        ],
+        "captures": 25,
+        "captureTimesS": [
+          0,
+          0.08333333333333333,
+          0.16666666666666666,
+          0.25,
+          0.3333333333333333,
+          0.4166666666666667,
+          0.5,
+          0.5833333333333334,
+          0.6666666666666666,
+          0.75,
+          0.8333333333333334,
+          0.9166666666666666,
+          1,
+          1.0833333333333333,
+          1.1666666666666667,
+          1.25,
+          1.3333333333333333,
+          1.4166666666666667,
+          1.5,
+          1.5833333333333333,
+          1.6666666666666667,
+          1.75,
+          1.8333333333333333,
+          1.9166666666666667,
+          2
+        ],
+        "minimumIntervalS": 0.08333333333333326,
+        "maximumIntervalS": 0.08333333333333348,
+        "meanInterCaptureHz": 12,
+        "dynamicRefreshes": 24
+      },
+      "identityChangeRespectsRateCap": true
+    },
+    "actualPracticalPool": {
+      "quality": "high",
+      "attemptedRefreshHz": 60,
+      "durationS": 2,
+      "captureTimesS": [
+        0,
+        0.08333333333333333,
+        0.16666666666666666,
+        0.25,
+        0.3333333333333333,
+        0.4166666666666667,
+        0.5,
+        0.5833333333333334,
+        0.6666666666666666,
+        0.75,
+        0.8333333333333334,
+        0.9166666666666666,
+        1,
+        1.0833333333333333,
+        1.1666666666666667,
+        1.25,
+        1.3333333333333333,
+        1.4166666666666667,
+        1.7833333333333334
+      ],
+      "firstCaptureLights": [
+        {
+          "id": "fixture-a",
+          "intensity": 0,
+          "gain": 0
+        }
+      ],
+      "lastCaptureLights": [
+        {
+          "id": "fixture-a",
+          "intensity": 1749.99999911052,
+          "gain": 0.9999999994917258
+        }
+      ],
+      "sourceLightCount": 1
+    },
+    "staticAndCap": [
+      {
+        "quality": "high",
+        "staticCaptureTimesS": [
+          0,
+          0.35,
+          0.7,
+          1.05,
+          1.4166666666666667,
+          1.7833333333333334
+        ],
+        "highFrequencyAttempts": {
+          "quality": "high",
+          "mode": "vehicle",
+          "attemptedRefreshHz": 1000,
+          "durationS": 1,
+          "configuredMaximumHz": 12,
+          "targetSize": [
+            512,
+            288
+          ],
+          "captures": 12,
+          "captureTimesS": [
+            0,
+            0.084,
+            0.168,
+            0.252,
+            0.336,
+            0.42,
+            0.504,
+            0.588,
+            0.672,
+            0.756,
+            0.84,
+            0.924
+          ],
+          "minimumIntervalS": 0.08399999999999996,
+          "maximumIntervalS": 0.08400000000000007,
+          "meanInterCaptureHz": 11.904761904761903,
+          "dynamicRefreshes": 11
+        }
+      },
+      {
+        "quality": "ultra",
+        "staticCaptureTimesS": [
+          0,
+          0.35,
+          0.7,
+          1.05,
+          1.4166666666666667,
+          1.7833333333333334
+        ],
+        "highFrequencyAttempts": {
+          "quality": "ultra",
+          "mode": "vehicle",
+          "attemptedRefreshHz": 1000,
+          "durationS": 1,
+          "configuredMaximumHz": 20,
+          "targetSize": [
+            768,
+            432
+          ],
+          "captures": 21,
+          "captureTimesS": [
+            0,
+            0.05,
+            0.1,
+            0.15,
+            0.2,
+            0.25,
+            0.3,
+            0.35,
+            0.4,
+            0.45,
+            0.5,
+            0.55,
+            0.6,
+            0.65,
+            0.7,
+            0.75,
+            0.8,
+            0.85,
+            0.9,
+            0.95,
+            1
+          ],
+          "minimumIntervalS": 0.04999999999999993,
+          "maximumIntervalS": 0.050000000000000044,
+          "meanInterCaptureHz": 20,
+          "dynamicRefreshes": 20
+        }
+      }
+    ],
+    "realVehicleSubtree": {
+      "rootUnchanged": true,
+      "visibleObjects": 222,
+      "distinctMaterials": 39,
+      "mutations": [
+        {
+          "id": "wheel-spin",
+          "timeS": 0.1,
+          "reason": "dynamic-source"
+        },
+        {
+          "id": "physical-wing-display",
+          "timeS": 0.2,
+          "reason": "dynamic-source"
+        },
+        {
+          "id": "seal-buffer-deformation",
+          "timeS": 0.30000000000000004,
+          "reason": "dynamic-source"
+        },
+        {
+          "id": "brake-lamp",
+          "timeS": 0.4,
+          "reason": "dynamic-source"
+        },
+        {
+          "id": "paint-colour",
+          "timeS": 0.5,
+          "reason": "dynamic-source"
+        }
+      ],
+      "wholeCityTraversedForInvalidation": false
+    },
+    "sceneMembership": {
+      "parentWorldTransform": true,
+      "hiddenAndRestoredChild": true,
+      "replacedVisibleObject": true
+    },
+    "lensInvalidation": {
+      "beforeFovRefreshAt100ms": false,
+      "afterFovRefreshAt100ms": true,
+      "subviewRefresh": true,
+      "mainFarM": 2300,
+      "reflectionFarM": 400
+    },
+    "domainFade": {
+      "domain": {
+        "minX": -245,
+        "maxX": 145,
+        "minZ": -425,
+        "maxZ": -105,
+        "minY": 0.16,
+        "maxY": 18,
+        "horizontalFadeM": 12,
+        "lowerFadeEndY": 0.56,
+        "upperFadeStartY": 14
+      },
+      "heightSweep": [
+        {
+          "cameraHeightM": 14,
+          "beforeDomainCoefficient": 1,
+          "afterDomainCoefficient": 1
+        },
+        {
+          "cameraHeightM": 15,
+          "beforeDomainCoefficient": 1,
+          "afterDomainCoefficient": 0.84375
+        },
+        {
+          "cameraHeightM": 16,
+          "beforeDomainCoefficient": 1,
+          "afterDomainCoefficient": 0.5
+        },
+        {
+          "cameraHeightM": 17,
+          "beforeDomainCoefficient": 1,
+          "afterDomainCoefficient": 0.15625
+        },
+        {
+          "cameraHeightM": 17.5,
+          "beforeDomainCoefficient": 1,
+          "afterDomainCoefficient": 0.04296875
+        },
+        {
+          "cameraHeightM": 17.9,
+          "beforeDomainCoefficient": 1,
+          "afterDomainCoefficient": 0.0018437500000000329
+        },
+        {
+          "cameraHeightM": 17.99,
+          "beforeDomainCoefficient": 1,
+          "afterDomainCoefficient": 0.0000187187500000352
+        },
+        {
+          "cameraHeightM": 18.01,
+          "beforeDomainCoefficient": 0,
+          "afterDomainCoefficient": 0
+        }
+      ],
+      "horizontalEdges": [
+        {
+          "axis": "x",
+          "boundaryM": -245,
+          "weightOutside": 0,
+          "weightAt1cmInside": 0.0000020821759259221393,
+          "weightAt6mInside": 0.5,
+          "weightAt12mInside": 1
+        },
+        {
+          "axis": "x",
+          "boundaryM": 145,
+          "weightOutside": 0,
+          "weightAt1cmInside": 0.0000020821759259221393,
+          "weightAt6mInside": 0.5,
+          "weightAt12mInside": 1
+        },
+        {
+          "axis": "z",
+          "boundaryM": -425,
+          "weightOutside": 0,
+          "weightAt1cmInside": 0.0000020821759259221393,
+          "weightAt6mInside": 0.5,
+          "weightAt12mInside": 1
+        },
+        {
+          "axis": "z",
+          "boundaryM": -105,
+          "weightOutside": 0,
+          "weightAt1cmInside": 0.000002082175925928056,
+          "weightAt6mInside": 0.5,
+          "weightAt12mInside": 1
+        }
+      ],
+      "existingFixedViews": [
+        {
+          "id": "weave-entry",
+          "weight": 1
+        },
+        {
+          "id": "exchange",
+          "weight": 1
+        },
+        {
+          "id": "viaduct",
+          "weight": 1
+        },
+        {
+          "id": "junction",
+          "weight": 1
+        },
+        {
+          "id": "canal",
+          "weight": 1
+        },
+        {
+          "id": "crosstown",
+          "weight": 1
+        },
+        {
+          "id": "foundry-south",
+          "weight": 1
+        }
+      ],
+      "interpretation": "Coefficients of the planar-for-environment specular replacement, not measured pixel luminance or brightness improvement."
+    },
+    "cachedFrameBlend": {
+      "initialHeightM": 16,
+      "nextHeightM": 16.08,
+      "initialCoefficient": 0.5,
+      "nextCoefficient": 0.47001600000000066,
+      "additionalCaptures": 0,
+      "outsideDisabled": true
+    },
+    "shaderWeighting": {
+      "replacementWeightedAsAWhole": true,
+      "planarTextureReads": 5,
+      "extraTextureReads": 0,
+      "exampleSamples": [
+        {
+          "weight": 0,
+          "linearSpecularExample": 0.24
+        },
+        {
+          "weight": 0.25,
+          "linearSpecularExample": 0.273
+        },
+        {
+          "weight": 0.5,
+          "linearSpecularExample": 0.30600000000000005
+        },
+        {
+          "weight": 0.75,
+          "linearSpecularExample": 0.33899999999999997
+        },
+        {
+          "weight": 1,
+          "linearSpecularExample": 0.3720000000000001
+        }
+      ],
+      "scope": "Material hook wiring and scalar composition only; this test does not compile a GPU shader or produce pixels."
+    },
+    "failureRecovery": {
+      "rendererStateRestored": true,
+      "dedicatedCullingRestored": true,
+      "genericHiddenPreserved": true,
+      "oldProjectionPreserved": true,
+      "invalidTextureDisabled": true,
+      "failedSourceChangeRetried": true
+    },
+    "lifecycle": {
+      "balancedAdditionalPasses": 0,
+      "disabledCoefficient": 0,
+      "disposedCoefficient": 0,
+      "clockRewindInvalidates": true
+    }
+  },
+  "actualScreenshots": null,
+  "actualGpuFrameTimes": null,
+  "remainingAcceptance": "Same camera/resolution/quality/weather WebGL captures of moving reflected car, wheel/wing and light fades; continuous boundary crossings; actual driven p50/p95/p99 frame times after warmup. The cap and target dimensions are unchanged, but previously stale fixed views can now consume more of that existing budget."
+}

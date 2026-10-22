@@ -1,0 +1,74 @@
+PASS scripts/repository-payloads.mjs
+PASS scripts/model-build.mjs
+PASS tests/physics.test.mjs
+PASS tests/braking.test.mjs
+PASS tests/vehicle-geometry.test.mjs
+PASS tests/city-seal.test.mjs
+PASS tests/handling-controls.test.mjs
+PASS tests/air-stabilization.test.mjs
+PASS tests/pose-hold.test.mjs
+PASS tests/flight-controls-3.7.test.mjs
+PASS tests/flight-programs.test.mjs
+PASS tests/wind-laboratory.test.mjs
+PASS tests/physics-research-3.8.test.mjs
+PASS tests/experiment-records.test.mjs
+PASS tests/research-road-3.8.test.mjs
+PASS tests/performance-meter.test.mjs
+PASS tests/physics-controls-3.9.test.mjs
+PASS tests/reproduction-verdict-3.9.test.mjs
+PASS tests/visual-corridor-3.9.test.mjs
+PASS tests/city-lighting-3.10.test.mjs
+PASS tests/vehicle-surface-3.10.test.mjs
+PASS tests/inspection-capture-3.10.test.mjs
+PASS tests/history-compatibility-3.10.test.mjs
+PASS tests/control-capture-3.10.test.mjs
+PASS tests/vehicle-dynamics-3.11.test.mjs
+PASS tests/ui-response-3.11.test.mjs
+PASS tests/capture-detail-3.11.test.mjs
+PASS tests/research-robustness-3.11.test.mjs
+PASS tests/history-compatibility-3.11.test.mjs
+PASS tests/visual-regressions-3.11.test.mjs
+PASS tests/braking-corner-3.12.test.mjs
+PASS tests/chase-camera-3.12.test.mjs
+PASS tests/reflection-stability-3.12.test.mjs
+PASS tests/research-recovery-grid-3.12.test.mjs
+PASS tests/sampler-budget-3.13.test.mjs
+PASS tests/render-program-diagnostics-3.13.test.mjs
+PASS tests/x-flip-3.13.test.mjs
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: bonnetHalfWidth
++ actual - expected
+
++ 0.6918666666666667
+- 0.6990666666666667
+      ^
+
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/visual-quality-3.13.test.mjs:20:112
+    at check (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/visual-quality-3.13.test.mjs:14:112)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/tests/visual-quality-3.13.test.mjs:16:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0.6918666666666667,
+  expected: 0.6990666666666667,
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:17
+    if(result.error||result.status!==0){process.stdout.write(stdout);process.stderr.write(stderr);throw new Error(path+' failed',{cause:result.error});}
+                                                                                                        ^
+
+Error: tests/visual-quality-3.13.test.mjs failed
+    at run (file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:17:105)
+    at file:///workspace/scratch/550d690c6c6d/roadster-flight-lab/scripts/validate.mjs:63:19 {
+  [cause]: undefined
+}
+
+Node.js v24.19.0

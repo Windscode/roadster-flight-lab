@@ -1,0 +1,9 @@
+PASS: The city defaults to continuous external supply; finite research defaults and the boolean stabilization API remain explicit and compatible
+PASS: Hold captures the exact world position and quaternion once, preserves initial velocities and brakes through finite-response physical valves
+PASS: Newton and angular-momentum balances reconstruct the held vehicle response solely from delivered nozzle force, r × F torque and gravity
+PASS: Supported combined pitch/roll attitudes converge to their captured pose and position, reject an external impulse, and retain finite braking overshoot
+PASS: Unsupported attitudes, absent power, empty gas and undersized nozzles cannot freeze or support the vehicle; feasibility and residual expose the limitation
+PASS: Finite-tank hold loses support as pressure and temperature fall and conserves every kilogram of delivered nozzle mass flow without hidden replenishment
+PASS: Pilot input, mode, suction and reset release research hold without implicitly arming G; explicit raw valves retain priority and stale world references clear
+PASS: Tire contact, hull contact and ceiling adhesion inhibit hold thrust without repeatedly relatching the captured world reference
+PASS: Hold is independent of 30/60/144 Hz render cadence and converges when the actual physical integration step is halved

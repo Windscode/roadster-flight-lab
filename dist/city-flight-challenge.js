@@ -3,6 +3,8 @@
  * changes thrust, mass, gas, control targets or the collision world. */
 import {ExperimentRecorder,contentLabel,canonicalJSON,currentExperimentIdentity,validateExperimentRecord} from './experiment-records.js';
 import {readProtectedArchive,writeArchiveCandidate} from './research-storage.js';
+import {createCityRunId,violationMeasurements} from './city-flight-review.js';
+import {CityBehaviorMonitor} from './city-behavior-monitor.js';
 
 const copy=v=>JSON.parse(JSON.stringify(v));
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
@@ -48,7 +50,7 @@ export function sweepCityGate(previous,current,previousEnvelope,currentEnvelope,
 function contacts(sim){return sim.world.contacts.filter(c=>c.bi===sim.body||c.bj===sim.body).map(c=>({objectId:(c.bi===sim.body?c.bj:c.bi).userData?.id??'unnamed',wheelStop:(c.bi===sim.body?c.si:c.sj)?.material===sim._wheelStopMaterial}));}
 function support(t){return(t.wheelStates??[]).filter(w=>w.contact);}
 function inRectangle(p,b){return p.x>=b.minX&&p.x<=b.maxX&&p.z>=b.minZ&&p.z<=b.maxZ;}
-function conditions(sim){return{params:copy(sim.params),wind:sim.getWind?.()??null,nozzleFault:copy(sim._nozzleFault??null),observation:copy(sim._observationConfig??null)};}
+function conditions(sim){return{params:copy(sim.params),wind:sim.getWind?.()??null,nozzleFault:copy(sim._nozzleFault??null),observation:copy(sim._observationConfig??null),surface:copy(sim.getRouteSurface?.()??null)};}
 function startedInZone(t){const r=CITY_FLIGHT_ROUTE.start;return Math.hypot(t.position.x-r.center[0],t.position.z-r.center[2])<=r.radiusM&&Math.abs(t.position.y-(CITY_FLIGHT_ROUTE.surfaceY+.60))<.35;}
 export function cityFlightStartCheck(sim,{task=makeCityFlightTask({supplyMode:sim.params.supplyMode})}={}){
  validateCityFlightTask(task);const t=sim.telemetry(),issues=[],platform=sim.getWorldGeometry().find(g=>g.id===CITY_FLIGHT_ROUTE.surfaceId),s=support(t);
@@ -62,9 +64,12 @@ export function cityFlightStartCheck(sim,{task=makeCityFlightTask({supplyMode:si
  if(t.supplyMode!==task.supplyMode)issues.push('supply_mismatch');if(t.fault)issues.push('solver_fault');
  return{ok:issues.length===0,issues,taskId:contentLabel(task),start:copy(CITY_FLIGHT_ROUTE.start),supplyMode:task.supplyMode,currentSupplyMode:t.supplyMode,currentPressureBar:t.pressureBar,currentGasMassKg:t.gasMass,teleport:false};
 }
-const FORBIDDEN_COMMANDS=['reset','refillGas','setParam','setWind','clearWind','setSupplyMode','setNozzleFault','clearNozzleFault','setObservation','setRoadSurface'];
+const FORBIDDEN_COMMANDS=['reset','refillGas','setParam','setWind','clearWind','setSupplyMode','setNozzleFault','clearNozzleFault','setObservation','setRoadSurface','setRouteSurface'];
 export class CityFlightChallenge{
- constructor(sim,{task=makeCityFlightTask({supplyMode:sim.params.supplyMode}),onEvent=()=>{},onFinish=()=>{},getSceneConfiguration=()=>null}={}){
+ constructor(sim,{task=makeCityFlightTask({supplyMode:sim.params.supplyMode}),onEvent=()=>{},onFinish=()=>{},getSceneConfiguration=()=>null,attemptClass='official',runId=createCityRunId(),parentRunId=null}={}){
+  if(!['official','practice'].includes(attemptClass)||typeof runId!=='string'||runId.length>120||parentRunId!==null&&(typeof parentRunId!=='string'||parentRunId.length>120))throw Error('Invalid city attempt lineage');
+  this.runId=runId;this.parentRunId=parentRunId;this.attemptClass=attemptClass;
+  this.monitor=new CityBehaviorMonitor({onEvent:event=>this.event('behavior_notice',event)});
   this.sim=sim;this.task=freeze(copy(validateCityFlightTask(task)));this.onEvent=onEvent;this.onFinish=onFinish;this.started=false;this.finished=false;this.phase='ready';this.step=0;this.events=[];this.violations=[];this.restorers=[];this.airborneDwell=0;this.airborne=false;this.gatePassed=false;this.stableTime=0;this.pending=false;
   this.recorder=new ExperimentRecorder({getSim:()=>sim,getContext:()=> 'city',getSceneConfiguration,onFinish:r=>{this.liveExperiment=r;}});
   this.summary={statisticsHz:120,count:0,groundDistanceM:0,pathDistanceM:0,peakSpeedMps:0,minimumWorldCgHeightM:null,maximumWorldCgHeightM:null,minimumHullGapEstimateM:null,saturationSeconds:0,gasThroughputKg:0,onboardDischargedKg:0,externalSupplyKg:0,firstContact:null,landingErrorM:null,stableLandingAtS:null,gateCrossing:null,driveCheckpointAtS:null,takeoffAtS:null,hullCollision:false};
@@ -74,7 +79,7 @@ export class CityFlightChallenge{
  start(){
   if(this.started)throw Error('City task already started');const check=cityFlightStartCheck(this.sim,{task:this.task});if(!check.ok){const error=Error(check.issues.join(', '));error.issues=check.issues;throw error;}
   this.frozenConditions=conditions(this.sim);this.conditionsLabel=contentLabel({...this.frozenConditions,initialGasMassKg:this.sim.gasMass,initialGasTemperatureK:this.sim.gasTemperature});this.conditionText=canonicalJSON(this.frozenConditions);this.previous=this.sim.telemetry();this.previousEnvelope=physicalEnvelope(this.sim);this.startSimTime=this.sim.simTime;this.initialStep=this.sim._stepCount;
-  this.installGuards();try{this.initialSnapshot=this.recorder.start({name:CITY_FLIGHT_ROUTE.name,kind:'city-flight-challenge',program:{schema:'roadster.city-flight-program',version:1,task:this.task},lineage:{taskId:contentLabel(this.task)}});}catch(error){for(const restore of this.restorers.splice(0))restore();throw error;}
+  this.installGuards();try{this.initialSnapshot=this.recorder.start({name:CITY_FLIGHT_ROUTE.name,kind:'city-flight-challenge',program:{schema:'roadster.city-flight-program',version:1,task:this.task},lineage:{taskId:contentLabel(this.task),runId:this.runId,parentRunId:this.parentRunId,attemptClass:this.attemptClass}});}catch(error){for(const restore of this.restorers.splice(0))restore();throw error;}
   this.started=true;this.phase='drive';this.event('start',{taskId:contentLabel(this.task),conditionsLabel:this.conditionsLabel,supplyMode:this.task.supplyMode,rules:CITY_FLIGHT_ROUTE.rules});return this;
  }
  beforeStep(input={}){
@@ -91,6 +96,7 @@ export class CityFlightChallenge{
   if(!t.position||!Object.values(t.position).every(finite)||!Object.values(t.velocity).every(finite)){this.fail('non_finite_state');return this.getState();}
   const expectedTime=this.startSimTime+this.step*DT;if(Math.abs(t.simTime-expectedTime)>1e-7||this.sim._stepCount!==this.initialStep+this.step){this.fail('fixed_step_discontinuity',{expectedTime,actualTime:t.simTime});return this.getState();}
   const jump=Math.hypot(...['x','y','z'].map(a=>t.position[a]-this.previous.position[a]-t.velocity[a]*DT));if(jump>.10){this.fail('physical_discontinuity',{residualM:jump});return this.getState();}
+  this.monitor.update(t);
   const envelope=physicalEnvelope(this.sim),stats=this.summary,delta=Math.hypot(...['x','y','z'].map(a=>t.position[a]-this.previous.position[a])),time=this.step*DT,tilt=Math.max(Math.abs(t.rollDeg),Math.abs(t.pitchDeg)),wheels=support(t),hull=contacts(this.sim).filter(c=>!c.wheelStop),distance=Math.hypot(t.position.x-400,t.position.z-305);
   stats.count++;stats.pathDistanceM+=delta;if(this.previous.contactCount>=3&&t.contactCount>=3&&!this.airborne)stats.groundDistanceM+=Math.hypot(t.position.x-this.previous.position.x,t.position.z-this.previous.position.z);
   stats.peakSpeedMps=Math.max(stats.peakSpeedMps,norm(t.velocity));stats.minimumWorldCgHeightM=Math.min(stats.minimumWorldCgHeightM??Infinity,t.position.y);stats.maximumWorldCgHeightM=Math.max(stats.maximumWorldCgHeightM??-Infinity,t.position.y);stats.minimumHullGapEstimateM=Math.min(stats.minimumHullGapEstimateM??Infinity,...envelope.slice(0,32).map(p=>p.y-CITY_FLIGHT_ROUTE.surfaceY));
@@ -122,21 +128,27 @@ export class CityFlightChallenge{
   this.previous=t;this.previousEnvelope=envelope;
   if(time>=CITY_FLIGHT_ROUTE.timeoutS)this.finish('timeout','task_timeout');return this.getState();
  }
- fail(reason,detail={}){this.violations.push({step:this.step,timeS:this.step*DT,reason,detail:copy(detail)});this.event('violation',{reason,...detail});return this.finish('failed',reason);}
+ fail(reason,detail={}){
+  const t=this.sim.telemetry(),observed={position:copy(t.position),velocity:copy(t.velocity),rollDeg:t.rollDeg,pitchDeg:t.pitchDeg,contactCount:t.contactCount};
+  const evidence={...detail,observed,measurements:violationMeasurements(reason,detail,t,this.summary,CITY_FLIGHT_ROUTE)};
+  this.violations.push({step:this.step,timeS:this.step*DT,reason,detail:copy(evidence)});this.event('violation',{reason,...evidence});return this.finish('failed',reason);
+ }
  finish(status='cancelled',reason='pilot_cancel'){
   if(this.finished||!this.started)return this.result??null;
   this.finished=true;this.pending=false;this.event('finish',{status,reason});const live=this.recorder.active?this.recorder.finish(status,reason):this.liveExperiment;for(const restore of this.restorers.splice(0))restore();
   if(live?.status==='failed'&&status==='completed'){status='failed';reason='record_terminal_failure';}
   this.phase=status;const summary={...this.summary,landingSucceeded:status==='completed',gasRemainingKg:live?.summary.gasRemainingKg??null,clearanceMeaning:'Minimum world-Y corner gap of the four actual hull boxes above the declared flat 8 m terrace; an estimate, not city AGL or recovery height.',supplyMeaning:this.task.supplyMode==='bench'?'External regulated flow; not an onboard tank consumption result.':'Actual finite onboard discharge; no refill during the attempt.'};
-  this.result={schema:'roadster.city-flight-result',version:1,id:'city-'+Date.now().toString(36)+'-'+contentLabel({initial:this.initialSnapshot.stateLabel,steps:this.step,status}).slice(-8),identity:identity(),task:this.task,taskId:contentLabel(this.task),conditionsLabel:this.conditionsLabel,frozenConditions:this.frozenConditions,collisionIdentity:this.initialSnapshot.physical.geometrySignature,status,reason,durationS:this.step*DT,stepCount:this.step,supplyMode:this.task.supplyMode,summary,events:this.events,violations:this.violations,liveExperimentId:live?.id??null,liveExperiment:live,sampling:{statisticsHz:120,statisticsCount:summary.count,curveHz:20,curveSource:'liveExperiment.samples',gateDetection:'every acknowledged 120 Hz physical step; linear segment crossing',completeInputs:true},score:{eligible:status==='completed',ordering:['completed without a collision or violation','durationS ascending','gasThroughputKg ascending'],timeS:status==='completed'?this.step*DT:null,gasKg:status==='completed'?summary.gasThroughputKg:null}};
+  this.result={schema:'roadster.city-flight-result',version:1,id:this.runId,runId:this.runId,parentRunId:this.parentRunId,attemptClass:this.attemptClass,identity:identity(),task:this.task,taskId:contentLabel(this.task),conditionsLabel:this.conditionsLabel,frozenConditions:this.frozenConditions,collisionIdentity:this.initialSnapshot.physical.geometrySignature,status,reason,durationS:this.step*DT,stepCount:this.step,supplyMode:this.task.supplyMode,summary,events:this.events,violations:this.violations,liveExperimentId:live?.id??null,liveExperiment:live,sampling:{statisticsHz:120,statisticsCount:summary.count,curveHz:20,curveSource:'liveExperiment.samples',gateDetection:'every acknowledged 120 Hz physical step; linear segment crossing',completeInputs:true},score:{eligible:status==='completed'&&this.attemptClass==='official',class:this.attemptClass,ordering:['completed without a collision or violation','durationS ascending','gasThroughputKg ascending'],timeS:status==='completed'?this.step*DT:null,gasKg:status==='completed'?summary.gasThroughputKg:null}};
   try{this.onFinish(this.result);}catch{}return this.result;
  }
  cancel(reason='pilot_takeover'){return this.finish('cancelled',reason);}
- getState(){return{running:this.started&&!this.finished,phase:this.phase,step:this.step,timeS:this.step*DT,authority:'pilot through existing drive / hover controls; challenge observes only',taskId:contentLabel(this.task),supplyMode:this.task.supplyMode,gatePassed:this.gatePassed,stableSeconds:this.stableTime,summary:{...this.summary},result:this.result??null};}
+ getState(){return{runId:this.runId,parentRunId:this.parentRunId,attemptClass:this.attemptClass,running:this.started&&!this.finished,phase:this.phase,step:this.step,timeS:this.step*DT,authority:'pilot through existing drive / hover controls; challenge observes only',taskId:contentLabel(this.task),supplyMode:this.task.supplyMode,gatePassed:this.gatePassed,stableSeconds:this.stableTime,summary:{...this.summary},result:this.result??null};}
 }
 export function validateCityFlightResult(r){
  if(r?.schema!=='roadster.city-flight-result'||r.version!==1||typeof r.id!=='string'||r.id.length>120||!['completed','failed','timeout','cancelled'].includes(r.status)||!Number.isInteger(r.stepCount)||r.stepCount<0||r.stepCount>CITY_FLIGHT_ROUTE.timeoutS*120||!r.identity||r.identity.taskProtocol!==CITY_FLIGHT_PROTOCOL||!r.summary||!Array.isArray(r.events)||!Array.isArray(r.violations)||r.events.length>10000||r.violations.length>100)throw Error('Invalid city-flight result');
  validateCityFlightTask(r.task);validateExperimentRecord(r.liveExperiment);
+ if(r.attemptClass!==undefined&&!['official','practice'].includes(r.attemptClass)||r.runId!==undefined&&r.runId!==r.id||r.parentRunId!==undefined&&r.parentRunId!==null&&(typeof r.parentRunId!=='string'||r.parentRunId.length>120))throw Error('Invalid attempt lineage');
+ if(r.attemptClass==='practice'&&r.score?.eligible)throw Error('Practice cannot enter formal rankings');
  if(r.taskId!==contentLabel(r.task)||r.liveExperimentId!==r.liveExperiment.id||r.stepCount!==r.liveExperiment.stepCount||Math.abs(r.durationS-r.stepCount/120)>1e-9||r.supplyMode!==r.task.supplyMode||r.collisionIdentity!==r.liveExperiment.initialSnapshot.physical.geometrySignature||r.identity.modelVersion!==r.liveExperiment.identity.modelVersion||r.identity.modelBuildId!==r.liveExperiment.identity.modelBuildId)throw Error('City task / physical record identity mismatch');
  if(r.conditionsLabel!==contentLabel({...r.frozenConditions,initialGasMassKg:r.liveExperiment.initialSnapshot.physical.state.gasMass,initialGasTemperatureK:r.liveExperiment.initialSnapshot.physical.state.gasTemperature})||canonicalJSON(r.frozenConditions?.params)!==canonicalJSON(r.liveExperiment.initialSnapshot.physical.params))throw Error('Frozen city conditions do not match the initial physical state');
  let lastEvent=-1;for(const event of r.events){if(!Number.isInteger(event.step)||event.step<lastEvent||event.step>r.stepCount||!finite(event.timeS)||Math.abs(event.timeS-event.step/120)>1e-8)throw Error('Invalid city event sequence');lastEvent=event.step;}
@@ -146,4 +158,4 @@ export function validateCityFlightResult(r){
 export function parseCityFlightArchive(raw){if(typeof raw!=='string'||new TextEncoder().encode(raw).length>12*1024*1024)throw Error('City task archive exceeds 12 MiB');let value=JSON.parse(raw);if(value?.schema==='roadster.city-flight-result')value={schema:'roadster.city-flight-library',version:1,records:[value]};if(value?.schema!=='roadster.city-flight-library'||value.version!==1||!Array.isArray(value.records)||value.records.length>128)throw Error('Unsupported city task archive');const ids=new Set();for(const r of value.records){validateCityFlightResult(r);if(ids.has(r.id))throw Error('Duplicate city result ID');ids.add(r.id);}return value;}
 export function loadCityFlightLibrary(storage){return readProtectedArchive(storage,CITY_FLIGHT_LIBRARY_KEY,{parse:parseCityFlightArchive,empty:()=>({schema:'roadster.city-flight-library',version:1,records:[]}),maxBytes:4*1024*1024});}
 export function saveCityFlightLibrary(storage,value,{protectedRaw=null,expectedRaw}={}){if(value.records.length>32)throw Error('32 city results already stored; new complete result stays in this session and remains exportable');return writeArchiveCandidate(storage,CITY_FLIGHT_LIBRARY_KEY,value,{parse:parseCityFlightArchive,maxBytes:4*1024*1024,protectedRaw,expectedRaw}).value;}
-export function bestCityFlight(records,task,conditionsLabel){const key=contentLabel(task),current=identity();return records.filter(r=>r.status==='completed'&&r.summary.landingSucceeded&&r.taskId===key&&r.conditionsLabel===conditionsLabel&&r.identity.modelVersion===current.modelVersion&&r.identity.modelBuildId===current.modelBuildId).sort((a,b)=>a.durationS-b.durationS||a.summary.gasThroughputKg-b.summary.gasThroughputKg)[0]??null;}
+export function bestCityFlight(records,task,conditionsLabel){const key=contentLabel(task),current=identity();return records.filter(r=>r.attemptClass!=='practice'&&r.status==='completed'&&r.summary.landingSucceeded&&r.taskId===key&&r.conditionsLabel===conditionsLabel&&r.identity.modelVersion===current.modelVersion&&r.identity.modelBuildId===current.modelBuildId).sort((a,b)=>a.durationS-b.durationS||a.summary.gasThroughputKg-b.summary.gasThroughputKg)[0]??null;}

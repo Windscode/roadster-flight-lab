@@ -1,3 +1,4 @@
+import {createShadowMotionTracker,SHADOW_MOTION_POLICY} from './shadow-motion.js';
 import {backgroundLightLayout} from './city-continuity.js';
 import {buildCityHorizon} from './city-horizon.js';
 import * as THREE from './vendor/three.module.js';
@@ -13,6 +14,7 @@ import {buildCityLandmarks} from './city-landmarks.js';
 import {createIndirectLighting,makeSunlessEnvironment} from './indirect-lighting.js';
 import {architectureDetailLevel,cityRenderProfile,createCityVisibility} from './city-render-budget.js';
 import {attachRoadSurface} from './road-surface-material.js';
+import {createRouteBridgeDetails} from './city-route-detail.js';
 import {createLocalProbeSun} from './local-probe-sun.js';
 import {CITY_WEATHER_PRESETS,CITY_BENCHMARK_ROUTE} from './visual-presets.js';
 import {createCityPracticalLights,cityPracticalRoadHeight} from './city-practical-lights.js';
@@ -50,10 +52,21 @@ export function createEnvironment(scene,renderer,geometry,camera){
   mats['forecourt-mineral']=new THREE.MeshStandardMaterial({name:'City / flush mineral forecourt',color:0x505950,roughness:.94,metalness:0});
   mats['forecourt-border']=new THREE.MeshStandardMaterial({name:'City / forecourt basalt datum',color:0x35463e,roughness:.93,metalness:0});
   mats['boundary-aggregate']=new THREE.MeshStandardMaterial({name:'City / peripheral mineral embankment',color:0x737a6e,roughness:.97,metalness:0});
+  mats['civic-plaster']=new THREE.MeshStandardMaterial({name:'City / public frontage pale mineral',color:0xc0bba4,roughness:.86});
+  mats['sandstone-plaster']=new THREE.MeshStandardMaterial({name:'City / public frontage sandstone',color:0xaf9270,roughness:.89});
+  mats['oxide-plaster']=new THREE.MeshStandardMaterial({name:'City / workshop terracotta',color:0x8e6750,roughness:.88});
+  mats['warm-display']=new THREE.MeshStandardMaterial({name:'City / sealed warm display backing',color:0x50636a,roughness:.22,emissive:0xe3c79f,emissiveIntensity:.065,envMapIntensity:.8});
+  mats['cool-display']=new THREE.MeshStandardMaterial({name:'City / sealed cool display backing',color:0x415c67,roughness:.22,emissive:0xaacdd4,emissiveIntensity:.05,envMapIntensity:.8});
+  mats['display-warm-backing']=new THREE.MeshStandardMaterial({color:0x656151,roughness:.91});
+  mats['display-cool-backing']=new THREE.MeshStandardMaterial({color:0x5b6e6a,roughness:.91});
+  mats['display-timber']=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.74});
+  mats['display-goods']=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.62});
+  mats['display-glazing']=new THREE.MeshStandardMaterial({color:0xb6c9c5,roughness:.14,transparent:true,opacity:.19,depthWrite:false,envMapIntensity:.85});
+  mats['display-glazing'].name='City / clear shallow display glass';
   const pavementSurfaces=Object.entries(CITY_PAVEMENT_SPECIFICATIONS).map(([name,options])=>attachPavementSurface(mats[name],options));
   const plannedGeometry=new Map([...CITY_PLAN_SOLIDS,...CITY_CONTINUITY.solids].map(g=>[g.id,g]));
   const roadSurface=attachRoadSurface(mats.road,{albedo,normal,roughness:rough});
-  const add=(size,pos,mat=mats.steel,rot=[0,0,0],shadow=true,level=null)=>{const a=buckets.get(mat)||[];a.push({size,pos,rot,shadow,level});buckets.set(mat,a);};
+  const add=(size,pos,mat=mats.steel,rot=[0,0,0],shadow=true,level=null,tint=null)=>{const a=buckets.get(mat)||[];a.push({size,pos,rot,shadow,level,tint});buckets.set(mat,a);};
   const geometryById=new Map(geometry.map(g=>[g.id,g]));
   for(const g of geometry){
     if(['building','podium','street-prop','landmark'].includes(g.kind))continue;
@@ -68,7 +81,9 @@ export function createEnvironment(scene,renderer,geometry,camera){
     else{const items=buckets.get(mat)||[];items.push({size:g.size,pos:g.position,quaternion:g.quaternion,shadow:true,level:plannedGeometry.get(g.id)?.data.renderDetail});buckets.set(mat,items);}
   }
   const horizon=buildCityHorizon(THREE,root);
-  for(const item of CITY_CONTINUITY.finishes)add(item.size,item.position,mats[item.material]||mats.paint,item.rotation,false,item.renderDetail||null);
+  for(const item of CITY_CONTINUITY.finishes)add(item.size,item.position,mats[item.material]||mats.paint,item.rotation,false,item.renderDetail||null,item.tint??null);
+  const routeDetails=createRouteBridgeDetails();
+  for(const item of routeDetails.items)add(item.size,item.position,mats[item.material]||mats.steel,item.rotation,item.shadow,item.renderDetail);
   const architecture=buildUrbanArchitecture(THREE,root,CITY_BUILDINGS);
   const streetLife=buildStreetLife(THREE,root),landmarks=buildCityLandmarks(THREE,root,mats.road);
   for(let z=-80;z<84;z+=12)add([.11,.013,5],[200,14.014,z],mats.paint,undefined,false);
@@ -269,7 +284,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
     }
     for(const [cell,batch]of cells){
       const mesh=new THREE.InstancedMesh(unit,mat,batch.items.length);mesh.name='Street structures / '+cell;mesh.castShadow=batch.items[0].shadow;mesh.receiveShadow=true;
-      batch.items.forEach((v,i)=>{temp.position.set(...v.pos);if(v.quaternion)temp.quaternion.set(...v.quaternion);else temp.rotation.set(...(v.rot||[0,0,0]));temp.scale.set(...v.size);temp.updateMatrix();mesh.setMatrixAt(i,temp.matrix);});mesh.computeBoundingSphere();root.add(mesh);visibility.add(mesh,{level:batch.level});
+      batch.items.forEach((v,i)=>{temp.position.set(...v.pos);if(v.quaternion)temp.quaternion.set(...v.quaternion);else temp.rotation.set(...(v.rot||[0,0,0]));temp.scale.set(...v.size);temp.updateMatrix();mesh.setMatrixAt(i,temp.matrix);if(v.tint!==null&&v.tint!==undefined)mesh.setColorAt(i,new THREE.Color(v.tint));});mesh.computeBoundingSphere();root.add(mesh);visibility.add(mesh,{level:batch.level});
     }
   }
   for(const mesh of root.children){if(mesh.isMesh&&!mesh.isInstancedMesh)visibility.add(mesh,{level:mesh.userData.renderDetail||((mesh===streetSurface)?'mass':mesh===cableMesh?'detail':'facade')});}
@@ -287,8 +302,9 @@ export function createEnvironment(scene,renderer,geometry,camera){
   let lastShadowTime=-Infinity,lastProbeTime=-Infinity,probeFace=-1,cubeTarget=null,cube=null,vehicleRoot=null;
   const lastShadowPoint=new THREE.Vector3(Infinity,Infinity,Infinity),lastProbe=new THREE.Vector3(Infinity,Infinity,Infinity);
   const originalMaterials=new Map(),staticMaterials=new Set(),probeMaterials=new Map(),particleAmbient=new THREE.Color(.70,.74,.76);
+  let shadowConfiguration=null;const shadowMotion=createShadowMotionTracker();
   const renderStats={quality,shadowCascades:1,shadowSize:1024,shadowHz:30,shadowUpdates:0,shadowUpdatedThisFrame:false,pointLights:0,spotShadowMaps:0,planarReflectionPasses:0,practicalLights:practicals.stats,wetRoadReflection:wetReflection.stats,probeSize:0,probeFacesPerFrame:0,probeFacesRendered:0,probeCaptures:0,probePendingFace:-1,probeShadowMode:'Dedicated local sun depth; one physical direct sun in cube faces',probeSun:probeSun.stats,lastProbeCpuMs:0,visibility:visibility.stats};
-  const stats={continuity:{version:CITY_CONTINUITY.version,streetCoverage:CITY_CONTINUITY.coverage,connectionSegments:CITY_CONTINUITY.connectionCoverage.length,backgroundLightsExcluded:backgroundLights.excluded,streetSections:{version:CITY_CONTINUITY.streetSections.version,forecourts:CITY_CONTINUITY.streetSections.forecourts,laneSections:CITY_CONTINUITY.streetSections.laneSections,limits:CITY_CONTINUITY.streetSections.limits},connectorFootways:CITY_CONTINUITY.connectorFootways,horizon:horizon.stats},cityPlan:{districts:CITY_PLAN.districts.length,nodes:CITY_NODES.length,streets:CITY_STREETS.length,version:CITY_PLAN.version},corridor:{version:'3.9',sharedSolids:CITY_ROUTE_CORRIDOR.solids.length,fixtures:CITY_ROUTE_CORRIDOR.lights.length,legs:CITY_ROUTE_CORRIDOR.legs},indirectLighting:indirect.stats,nightIndirectLighting:nightIndirect.stats,nightDirectLighting:nightDirect.stats,lightingDiagnostics:{selectionAnchor:'Main viewing camera, including fixed and paused views',practicals:practicals.stats,nightField:nightIndirect.stats,nightDirectField:nightDirect.stats,lastReflection:null},roadSurface:roadSurface.model,buildings:CITY_BUILDINGS.length,architecture:architecture.stats,streetLife:streetLife.stats,landmarks:landmarks.stats,routes:CITY_ROUTES.length,shadowCascades:1,benchmarkRoute:{id:CITY_BENCHMARK_ROUTE.id,lengthMetres:CITY_BENCHMARK_ROUTE.lengthMetres,estimatedDurationS:CITY_BENCHMARK_ROUTE.estimatedDurationS},weatherPreset,wetReflections:false,daylight:'CC0 measured midday sky / calibrated sun + baked diffuse',vehicleLocalProbe:false,renderBudget:renderStats,liveScene:{}};
+  const stats={continuity:{version:CITY_CONTINUITY.version,streetEdge:CITY_CONTINUITY.streetEdge,streetCoverage:CITY_CONTINUITY.coverage,connectionSegments:CITY_CONTINUITY.connectionCoverage.length,backgroundLightsExcluded:backgroundLights.excluded,streetSections:{version:CITY_CONTINUITY.streetSections.version,forecourts:CITY_CONTINUITY.streetSections.forecourts,laneSections:CITY_CONTINUITY.streetSections.laneSections,limits:CITY_CONTINUITY.streetSections.limits},connectorFootways:CITY_CONTINUITY.connectorFootways,horizon:horizon.stats},cityPlan:{districts:CITY_PLAN.districts.length,nodes:CITY_NODES.length,streets:CITY_STREETS.length,version:CITY_PLAN.version},corridor:{version:'3.9',sharedSolids:CITY_ROUTE_CORRIDOR.solids.length,fixtures:CITY_ROUTE_CORRIDOR.lights.length,legs:CITY_ROUTE_CORRIDOR.legs},indirectLighting:indirect.stats,nightIndirectLighting:nightIndirect.stats,nightDirectLighting:nightDirect.stats,lightingDiagnostics:{selectionAnchor:'Main viewing camera, including fixed and paused views',practicals:practicals.stats,nightField:nightIndirect.stats,nightDirectField:nightDirect.stats,lastReflection:null},roadSurface:roadSurface.model,preparedRoute:roadSurface.routeState,routeDetails:{version:routeDetails.version,anchors:routeDetails.anchors,textureBytesAdded:routeDetails.textureBytesAdded,limits:routeDetails.limits},buildings:CITY_BUILDINGS.length,architecture:architecture.stats,streetLife:streetLife.stats,landmarks:landmarks.stats,routes:CITY_ROUTES.length,shadowCascades:1,benchmarkRoute:{id:CITY_BENCHMARK_ROUTE.id,lengthMetres:CITY_BENCHMARK_ROUTE.lengthMetres,estimatedDurationS:CITY_BENCHMARK_ROUTE.estimatedDurationS},weatherPreset,wetReflections:false,daylight:'CC0 measured midday sky / calibrated sun + baked diffuse',vehicleLocalProbe:false,renderBudget:renderStats,liveScene:{}};
   scene.fog=new THREE.FogExp2(0xa2b5bf,.00055);
   function calibrateShadowBias(){
     csm?.lights.forEach(l=>{const camera=l.shadow.camera,texel=(camera.right-camera.left)/l.shadow.mapSize.x;l.shadow.normalBias=Math.min(.065,Math.max(.005,texel*.40));});
@@ -299,11 +315,23 @@ export function createEnvironment(scene,renderer,geometry,camera){
     const variant=cityLightingVariant({quality,night:presentation.night,isStatic:staticMaterials.has(mat)});
     mat.userData.cityLightingVariant=variant;
     mat.onBeforeCompile=function(shader,r){base.compile?.call(this,shader,r);shadowCompile.call(this,shader,r);injectCityMaterialLighting(shader,{variant,indirect,nightIndirect,nightDirect,probeSun});};
-    mat.customProgramCacheKey=()=>base.key+'|vesper-csm-'+profile.shadowCascades+'|'+variant.key+'|'+indirect.shaderKey+'|'+nightIndirect.shaderKey+'|'+nightDirect.shaderKey+'|receiver-plane-pcf-3.11';
+    mat.customProgramCacheKey=()=>base.key+'|vesper-csm-'+csm.cascades+'|'+variant.key+'|'+indirect.shaderKey+'|'+nightIndirect.shaderKey+'|'+nightDirect.shaderKey+'|receiver-plane-pcf-3.11';
     mat.needsUpdate=true;
   }
   function setupMaterials(){root.traverse(o=>{if(o.isMesh)for(const mat of Array.isArray(o.material)?o.material:[o.material])if(mat?.isMeshStandardMaterial)staticMaterials.add(mat);});scene.traverse(o=>{if(!o.isMesh)return;for(const mat of Array.isArray(o.material)?o.material:[o.material])if(mat?.isMeshStandardMaterial&&(!originalMaterials.has(mat)||mat.userData.cityLightingVariant?.isStatic!==staticMaterials.has(mat)))bindMaterial(mat);});probeSun.refreshCasters();}
   function createShadows(){
+    const night=presentation.night,cascades=night?1:profile.shadowCascades,size=night?1024:profile.shadowSize,far=night?105:profile.shadowFar;
+    const configuration=[night,cascades,size,far,quality==='balanced'?'vertex':'fragment'].join('|');
+    // No sun is evaluated at night. High and ultra use the same transport
+    // shader structure and zero-intensity CSM placeholder, so retain its
+    // uniforms/program cache across that switch. Recreating a three-cascade
+    // daylight system here used to dispose every city material needlessly.
+    if(night&&csm&&configuration===shadowConfiguration){
+      for(const mat of originalMaterials.keys())mat.userData.cityLightingVariant=cityLightingVariant({quality,night:true,isStatic:staticMaterials.has(mat)});
+      renderStats.nightShadowSystemReuses=(renderStats.nightShadowSystemReuses||0)+1;
+      Object.assign(renderStats,{shadowCascades:cascades,shadowSize:size,shadowHz:profile.shadowHz,nightSunShadowMaps:0});stats.shadowCascades=cascades;
+      return;
+    }
     if(csm){
       csm.remove();csm.lights.forEach(l=>{l.shadow.map?.dispose();l.shadow.mapPass?.dispose();});csm.dispose();
       // CSM.dispose removes its shader uniforms. Returning to an earlier
@@ -311,10 +339,14 @@ export function createEnvironment(scene,renderer,geometry,camera){
       // Material disposal clears renderer program state, retaining textures.
       for(const mat of originalMaterials.keys())mat.dispose();
     }
-    csm=new CSM({camera,parent:scene,cascades:profile.shadowCascades,maxFar:profile.shadowFar,mode:'custom',customSplitsCallback:(count,near,far,out)=>{if(count===1)out.push(1);else if(count===2)out.push(38/far,1);else out.push(22/far,82/far,1);},shadowMapSize:profile.shadowSize,shadowBias:-.00001,lightDirection:new THREE.Vector3(-.554,-.743,-.376).normalize(),lightIntensity:presentation.sunIntensity,lightMargin:220,lightFar:650});
-    csm.fade=true;csm.updateFrustums();csm.lights.forEach(l=>{l.color.set(presentation.sunColor);l.castShadow=!presentation.night;l.shadow.radius=2;});calibrateShadowBias();
+    csm=new CSM({camera,parent:scene,cascades,maxFar:far,mode:'custom',customSplitsCallback:(count,near,far,out)=>{if(count===1)out.push(1);else if(count===2)out.push(38/far,1);else out.push(22/far,82/far,1);},shadowMapSize:size,shadowBias:-.00001,lightDirection:new THREE.Vector3(-.554,-.743,-.376).normalize(),lightIntensity:presentation.sunIntensity,lightMargin:220,lightFar:650});
+    // CSM's constructor defaults with `options.lightIntensity || 3`, so an
+    // authored zero is lost there. Explicitly apply the actual preset after
+    // construction; the night placeholder must never add a hidden sun.
+    csm.fade=true;csm.updateFrustums();csm.lights.forEach(l=>{l.intensity=presentation.sunIntensity;l.color.set(presentation.sunColor);l.castShadow=!presentation.night;l.shadow.radius=2;});calibrateShadowBias();
     for(const mat of originalMaterials.keys())bindMaterial(mat);setupMaterials();
-    lastShadowTime=-Infinity;Object.assign(renderStats,{shadowCascades:profile.shadowCascades,shadowSize:profile.shadowSize,shadowHz:profile.shadowHz});stats.shadowCascades=profile.shadowCascades;
+    shadowConfiguration=configuration;
+    lastShadowTime=-Infinity;Object.assign(renderStats,{shadowCascades:cascades,shadowSize:size,shadowHz:profile.shadowHz});stats.shadowCascades=cascades;
   }
   function restoreVehicleEnvironment(){
     for(const [material,original]of probeMaterials){material.envMap=original.envMap;material.envMapIntensity=original.intensity;material.needsUpdate=true;}
@@ -374,7 +406,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
       // CSM tracks the last compiled shader per material. Retire its program
       // tables together with the transport variant so returning to a cached
       // weather cannot skip onBeforeCompile and leave stale CSM uniforms.
-      for(const mat of originalMaterials.keys()){mat.dispose();bindMaterial(mat);}
+      createShadows();
     }
     return true;
   }
@@ -382,17 +414,22 @@ export function createEnvironment(scene,renderer,geometry,camera){
   setQuality('balanced');setWeatherPreset('clear-day');
   ready.then(()=>{collectEmissives();setWeatherPreset(weatherPreset);});
   let lastSceneStats=-Infinity;
-  return {root,ready,setDay,setWeatherPreset,get weatherPreset(){return weatherPreset;},getPresentation:()=>({...presentation}),getBenchmarkRoute:()=>CITY_BENCHMARK_ROUTE,getPracticalLightAnchors:()=>lightAnchors.filter(a=>a.practical).map(a=>structuredClone(a)),setVehicleRoot:r=>practicals.setVehicleRoot(r),setQuality,stats,exposureAt:(p,sunVisible)=>presentation.night?presentation.exposure:Math.min(2.0,indirect.exposureAt(p,sunVisible))*presentation.exposure/.90,setContactAO:t=>indirect.setContactAO(t),
+  return {root,ready,setDay,setWeatherPreset,get weatherPreset(){return weatherPreset;},getPresentation:()=>({...presentation}),setRouteSurfaceDescription:value=>roadSurface.setRouteSurfaceDescription(value),getRouteSurfaceDescription:()=>roadSurface.getRouteSurfaceDescription(),getBenchmarkRoute:()=>CITY_BENCHMARK_ROUTE,getPracticalLightAnchors:()=>lightAnchors.filter(a=>a.practical).map(a=>structuredClone(a)),setVehicleRoot:r=>practicals.setVehicleRoot(r),setQuality,stats,exposureAt:(p,sunVisible)=>presentation.night?presentation.exposure:Math.min(2.0,indirect.exposureAt(p,sunVisible))*presentation.exposure/.90,setContactAO:t=>indirect.setContactAO(t),
     particleLighting(){return {ambient:particleAmbient,lights:[]};},
     resize(){csm.updateFrustums();calibrateShadowBias();indirect.resize();lastShadowTime=-Infinity;},
-    wantsShadowUpdate(time,p){
-      // Move shadow cameras only when their maps will be refreshed. Moving the
-      // CSM light transform while reusing its old map makes shadows swim.
+    wantsShadowUpdate(time,p,displayPose={}){
+      const motion=shadowMotion.sample(p,{...displayPose,camera});
       const teleported=lastShadowPoint.distanceToSquared(p)>225;
-      const sunNeeded=!presentation.night&&(teleported||time-lastShadowTime>=1/profile.shadowHz),localNeeded=practicals.wantsShadowUpdate(time);
+      const sunNeeded=!presentation.night&&(teleported||motion.casterChanged||motion.cameraChanged||time-lastShadowTime>=1/profile.shadowHz);
+      const localNeeded=practicals.wantsShadowUpdate(time,{casterChanged:motion.casterChanged});
       const needed=sunNeeded||localNeeded;
-      renderStats.shadowUpdatedThisFrame=needed;
-      if(needed){if(sunNeeded){camera.updateMatrixWorld();csm.update();}lastShadowTime=time;lastShadowPoint.copy(p);renderStats.shadowUpdates++;}
+      Object.assign(renderStats,{shadowUpdatedThisFrame:needed,shadowPolicy:SHADOW_MOTION_POLICY,
+        shadowMotion:motion,shadowIdleHz:profile.shadowHz});
+      if(needed){
+        if(sunNeeded){camera.updateMatrixWorld();csm.update();lastShadowTime=time;}
+        lastShadowPoint.copy(p);renderStats.shadowUpdates++;
+        if(motion.casterChanged||motion.cameraChanged)renderStats.motionShadowUpdates=(renderStats.motionShadowUpdates||0)+1;
+      }
       return needed;
     },
     update(time,p){

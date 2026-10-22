@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "createdAt": "2026-10-21T06:38:51.702Z",
+  "checks": [
+    "Frame percentiles retain a 1.5 s long frame, exclude explicitly paused intervals, and do not invent GPU samples",
+    "Active warmup and steady-state windows are separate, pause time is excluded, and completion freezes the requested capture",
+    "Cancellation retains partial evidence and configuration/resolution changes are visible in exported comparison conditions",
+    "Asynchronous GPU queries are attributed to their original frame once, and disjoint queries are discarded with evidence",
+    "Explicit diagnostic frames are excluded from paused and driving statistics and cannot advance a performance capture"
+  ],
+  "scope": "Unit validation of timing statistics, phased capture and a deterministic GL query facade.",
+  "limitations": "No real browser, rAF scheduler, WebGL driver or GPU was measured. These checks do not constitute FPS or visual acceptance."
+}

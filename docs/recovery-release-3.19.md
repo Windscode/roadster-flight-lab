@@ -1,0 +1,13 @@
+# 3.19 recovered publication — 2026-10-22
+
+This release restores the verified 3.19 candidate, not 3.20. Its 191 JavaScript/HTML/CSS source files and all candidate assets retain their original bytes and build identity. Original source commit: `4ff324f036b76e886dc958d7de1f17a2a8efff53`; source tree: `6b7116a98136fef215cc00a54e5591076f52023c`; build: `b734be6afe0bc10ed38c403081625b48931e4e24df72512796e7e51797b7d230`.
+
+The recovery publication commit has the existing public main as its parent. It does not claim to reproduce the original unpublished Git ancestry. Existing public history, tests, QA and payload chunks remain in the repository. Recovered scripts/tests/docs were overlaid from the publicly preserved upload-object recovery branch; exact provenance is recorded separately. Original candidate ZIP and recovery workspaces remain on the user's computer.
+
+The website publishes the full candidate runtime, licenses, source browsing copies and available small reports. `availability.json` classifies every literal QA/docs reference in the unchanged original validation report as online, repository-only, or unrecovered. Unrecovered means no local original bytes were available; it is not a successful archive or Library save. No unavailable file is given a fabricated hash or download URL. Large existing repository evidence remains in Git, although not all of it is copied into the website. The complete original 3.19 payload manifest is retained as historical metadata; it is not a claim that all its chunks were recovered.
+
+Checks run for this release validate runtime hashes, static dependency closure, syntax, geometry and 120 physics integration frames. Selected driver feedback and moving-shadow mathematical regressions are run separately. These do not constitute a full original regression, live GPU rendering, audible sound, or high-refresh shadow acceptance. Earlier user-computer 3.19 route driving is historical evidence, not a new GPU test of this publication. The missing 3.20 implementation is not included or relabelled.
+
+Known open limits remain: manual E+1 can invert without recovery; severe 90km/h 10cm step contact is not converged; default finite-gas U can refuse; high-refresh dynamic shadow and full physical gamepad/audio acceptance are not completed here.
+
+Publication scripts were adapted only to recovery scope. The old publication helpers are retained under `scripts/*-original-publication.mjs`. The original Pages workflow and permission declarations are unchanged. Missing runtime, hash mismatches and unclassified historical references fail the recovery publication gate.

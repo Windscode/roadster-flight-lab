@@ -7,7 +7,7 @@ export const CITY_WEATHER_PRESETS=Object.freeze({
     description:'实测日间天空、太阳阴影与按当前街道包络重烘焙的漫反射光场。'}),
   'wet-night':Object.freeze({id:'wet-night',name:'湿夜',night:true,wetness:1,exposure:1.02,
     backgroundIntensity:.88,environmentIntensity:.46,fog:0x14202c,fogDensity:.00125,
-    sunIntensity:0,sunColor:0xaac6ef,ambientIntensity:.09,bloomStrength:.14,
+    sunIntensity:0,sunColor:0xaac6ef,ambientIntensity:.14,bloomStrength:.14,
     description:'粗糙潮湿沥青与局部积水；近场实时灯光与远场静态直接光互补，并叠加独立反射光场。湿夜曝光固定。'})
 });
 

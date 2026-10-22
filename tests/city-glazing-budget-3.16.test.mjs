@@ -1,9 +1,10 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import * as THREE from '../dist/vendor/three.module.js';
 import {CITY_BUILDINGS} from '../dist/city-data.js';
-import {buildUrbanArchitecture as current} from '../dist/urban-architecture.js';
+import {buildUrbanArchitecture as current,routeFacingFacade,backgroundGroundFrontage} from '../dist/urban-architecture.js';
 import {buildUrbanArchitecture as previous} from './fixtures/urban-architecture-before-budget-3.16.mjs';
 
 // Reconstruct both real InstancedMesh trees. No copied generator formula is
@@ -15,7 +16,14 @@ const fixture=readFileSync(new URL('./fixtures/urban-architecture-before-budget-
 assert.equal(sha(fixture),provenance.fixtureSHA256);
 let restored=fixture;for(const file of provenance.changedOnlyImportSpecifiers)restored=restored.replaceAll("'../../dist/"+file+"'","'./"+file+"'");
 assert.equal(sha(restored),provenance.originalSHA256,'Only import relocation may differ from the retained original');
-const before=previous(THREE,new THREE.Group(),CITY_BUILDINGS),after=current(THREE,new THREE.Group(),CITY_BUILDINGS);
+// 3.17 remodelled downtown upper walls; 3.18 also authors the addressed
+// ground-floor showcase and upper-occupancy modules. Those shapes cannot be
+// declared equal to the old art. Keep exact representation equality for every
+// building that uses neither edited module, and retain the whole-city budgets
+// plus city-street-detail-3.18 checks for the deliberately edited parcels.
+const redesigned=CITY_BUILDINGS.filter(b=>b.id.startsWith('block-')||b.id.startsWith('arcology-')||b.archetype!=='foundry'&&[0,1,2,3].some(side=>routeFacingFacade(b,side)||backgroundGroundFrontage(b,side)));
+const retained=CITY_BUILDINGS.filter(b=>!redesigned.includes(b));
+const before=previous(THREE,new THREE.Group(),retained),after=current(THREE,new THREE.Group(),retained);
 await Promise.all([before.ready,after.ready]);
 assert.equal(before.stats.instances,after.stats.instances,'No authored instance may be removed to pass a budget');
 const matrix=new THREE.Matrix4(),normalMatrix=new THREE.Matrix3(),colour=new THREE.Color();
@@ -63,7 +71,7 @@ for(const pane of old.panes){
   // Three. Explicit material maps use the preserved per-instance parameter.
   assert.ok(Math.abs(match.env-pane.env)<6e-8);
 }
-assert.ok(now.panes.every(p=>p.used));assert.ok(converted>20000);assert.ok(unchangedBoxes>0);assert.ok(errors.vertexM<.0001);assert.ok(errors.normal<1e-7);assert.equal(errors.uv,0);
+assert.ok(now.panes.every(p=>p.used));assert.ok(converted>0,'Retained sealed-recess glazing still exercises the hidden-face conversion');assert.ok(unchangedBoxes>0);assert.ok(errors.vertexM<.0001);assert.ok(errors.normal<1e-7);assert.equal(errors.uv,0);
 checks.push({name:'Every outward glass vertex, normal, metre UV, tint, emission, reflection parameter and LOD matches the retained generator',status:'passed',comparedPanes:old.panes.length,convertedHiddenFaceBoxes:converted,unchangedFullBoxes:unchangedBoxes,maxErrors:errors,positionToleranceM:.0001,scope:'Comparison uses the actual Float32 instance matrices; front planes differ only by sub-0.1 mm transform rounding. Hidden side/back faces in solid sealed recesses are removed; full freestanding clerestory boxes are retained.'});
 const material=now.panes[0].material,shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});
 assert.ok(shader.vertexShader.includes('vUrbanGlazing=urbanGlazing;'));assert.ok(shader.fragmentShader.includes('totalEmissiveRadiance*=vUrbanGlazing.rgb;'));
@@ -75,5 +83,5 @@ assert.equal(material.userData.windowBacklight,true);assert.equal(material.emiss
 checks.push({name:'The actual glass shader carries instance response through the inherited exterior hooks and preserves scene-versus-explicit environment selection',status:'passed',newSamplerUniforms:0,newAttributeLocations:1,emissionEnvironmentStates:['initial ×1','clear day ×0','wet night ×2.1'],scope:'Source hook and material state checks only; actual GPU link/draw validation is separate.'});
 const files=['dist/urban-architecture.js','dist/city-exterior-materials.js','dist/city-render-budget.js','dist/city-frontage-design.js','tests/city-glazing-budget-3.16.test.mjs','tests/fixtures/urban-architecture-before-budget-3.16.mjs','tests/fixtures/urban-architecture-before-budget-3.16.provenance.json'];
 const bufferBytes=kit=>kit.group.children.reduce((bytes,mesh)=>bytes+mesh.instanceMatrix.array.byteLength+(mesh.instanceColor?.array.byteLength||0)+Object.values(mesh.geometry.attributes).reduce((n,attribute)=>n+attribute.array.byteLength,0)+(mesh.geometry.index?.array.byteLength||0),0);
-const report={schema:'roadster-city-glazing-budget-preservation-3.16',status:'passed',createdAt:new Date().toISOString(),original:provenance,checks,allocation:{before:{triangles:before.stats.triangles,batches:before.stats.drawBatches,actualBufferBytes:bufferBytes(before)},after:{triangles:after.stats.triangles,batches:after.stats.drawBatches,actualBufferBytes:bufferBytes(after)}},sourceHashes:Object.fromEntries(files.map(file=>[file,sha(readFileSync(new URL('../'+file,import.meta.url)))])),scope:'The full 15-view budget is separately checked against unchanged 3.5 thresholds. This independent representation-preservation test cannot replace final source-bound GPU frames, validate hidden geometry from an impossible position inside a closed building, or measure hardware performance.'};
-writeFileSync(new URL('../qa/city-glazing-budget-3.16.json',import.meta.url),JSON.stringify(report,null,2)+'\n');before.dispose();after.dispose();console.log(JSON.stringify({status:report.status,checks:checks.length,allocation:report.allocation,maxErrors:errors},null,2));
+const report={schema:'roadster-city-glazing-budget-preservation-3.17',status:'passed',createdAt:new Date().toISOString(),original:provenance,retainedBuildingIDs:retained.map(b=>b.id),intentionallyRemodelledBuildingIDs:redesigned.map(b=>b.id),checks,allocation:{before:{triangles:before.stats.triangles,batches:before.stats.drawBatches,actualBufferBytes:bufferBytes(before)},after:{triangles:after.stats.triangles,batches:after.stats.drawBatches,actualBufferBytes:bufferBytes(after)}},sourceHashes:Object.fromEntries(files.map(file=>[file,sha(readFileSync(new URL('../'+file,import.meta.url)))])),scope:'Every retained building is compared exactly. The 3.17 block/arcology and 3.18 addressed-street redesigns are explicitly excluded from old-art equality and validated separately; their original historical reports remain unchanged. The full 15-view budget still covers all parcels against unchanged 3.5 thresholds. This independent representation-preservation test cannot replace final source-bound GPU frames, validate hidden geometry from an impossible position inside a closed building, or measure hardware performance.'};
+writeFileSync(new URL(`../qa/city-glazing-budget-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');before.dispose();after.dispose();console.log(JSON.stringify({status:report.status,checks:checks.length,allocation:report.allocation,maxErrors:errors},null,2));

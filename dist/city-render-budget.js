@@ -17,6 +17,7 @@ export function cityRenderProfile(quality='balanced', overrides={}) {
 // Classifying before batching lets a distant railing leave the draw list while
 // retaining its building, floors and load-bearing street silhouette.
 export function architectureDetailLevel(kind,geometry,size) {
+  if(geometry==='wall-pier'||geometry==='wall-spandrel')geometry='box';
   const sorted=[...size].sort((a,b)=>a-b);
   if(geometry==='box'&&((sorted[1]>3&&sorted[2]>8)||(sorted[0]>.65&&sorted[1]>2.6)))return 'mass';
   if(kind==='signs'||kind==='rooms'||kind==='glass')return 'facade';
@@ -50,7 +51,7 @@ export function createCityVisibility(THREE,{quality='balanced'}={}) {
       // Different show/hide distances prevent edge flicker while orbiting.
       mesh.visible=d<range+(mesh.visible?10:0);
       const shadowRange=level==='mass'?profile.shadowFar+310:level==='facade'?profile.shadowFar*.70:level==='vegetation'?(profile.giMode==='vertex'?0:profile.shadowFar*.26):profile.giMode==='vertex'?0:profile.detailDistance*.40;
-      mesh.castShadow=entry.shadow&&mesh.visible&&d<shadowRange;
+      mesh.castShadow=entry.shadow&&mesh.visible&&d<shadowRange+(mesh.castShadow?6:0);
       const triangles=mesh.isInstancedMesh?(mesh.geometry.index?.count||mesh.geometry.attributes.position.count)/3*mesh.count:entry.triangleCount;
       if(mesh.visible){stats.activeBatches++;stats.activeTriangles+=triangles;}
       if(mesh.castShadow){stats.shadowBatches++;stats.shadowTriangles+=triangles;}

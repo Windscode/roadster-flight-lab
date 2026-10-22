@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readPlan,verifyPlan} from '../scripts/recovery-publication.mjs';
+const {plan}=readPlan();
+const change=fn=>{const p=structuredClone(plan);fn(p);assert.throws(()=>verifyPlan(p));};
+change(p=>p.runtime.pop());
+change(p=>p.runtime[0].sha256='0'.repeat(64));
+change(p=>p.runtime.push(p.runtime[0]));
+change(p=>p.historicalReferences.pop());
+change(p=>{const e=p.historicalReferences.find(x=>x.status==='unrecovered');e.status='online';});
+change(p=>{const e=p.historicalReferences.find(x=>x.status==='unrecovered');e.sha256='0'.repeat(64);});
+change(p=>p.onlineEvidence[0].path='../outside');
+console.log('PASS: exact runtime, missing/hash/duplicate, unclassified reference, false online/hash, unsafe path (7 negative cases)');

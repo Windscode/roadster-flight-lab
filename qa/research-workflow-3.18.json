@@ -1,0 +1,144 @@
+{
+  "status": "passed",
+  "modelVersion": "3.18.0",
+  "modelBuildId": "4a9cc90a2c8f4f74ef8765e36571bb49df0b3d7652a64cd8b3014eac88ee40d4",
+  "scope": "JSDOM text/events and actual numerical Roadster solver reports through a Worker endpoint facade. No browser layout, GPU pixels, native Worker timing or FPS acceptance.",
+  "sourceHashes": {
+    "dist/research-lab.js": "6f775a2ca38dbd99f13f65555326440ee18cfeca89610dad4fd1972a6521bee9",
+    "dist/research-panel.html": "8122431c7b5a2d5d33a4d835618bebe016bc767ee7fd57994d8e4cb86f2acc1e",
+    "dist/research-study.js": "149b1e530c386b2614aacd299857e209848a7f9d037899b7feccd544d58b03cb",
+    "dist/research-protocol.js": "934ecf255b0431177bc3c5b8574a38887c285bf64814fc009d7f9f2a52f26c8b",
+    "dist/experiment-worker.js": "279002966a94b68c6c4215124764640f748f06d4710ee52313a357e355e48a1e",
+    "dist/research-console.js": "d4a80ba3314a0547db3f1f8d38f87def6813ed07a5ff58b5f11b7901ba90a0fb",
+    "dist/experiment-console.js": "092d4d9882828856cd2e1b8bd3430a96f8de06fce2cba1385eff51e7971f1088",
+    "dist/i18n.js": "6735cf85a82021768a89d1dec541c7b2f16eeb426decab129c53257f9135ef4b",
+    "dist/i18n-research-en.js": "b50b1ce81f16b85b48e78c6402540c1a8040590902c20730f856275093e5304c",
+    "qa/research-workflow-3.10-check.mjs": "02bd2c52417f46a25727155e02a74250fc040a219dab31bca80175becfd5a463",
+    "qa/fixtures/standard-brake-wet-3.8.json": "4755f37a5cf7a8930e359bfc7f7b98b84b6b527a2ab34f1839f6579a94dc8813"
+  },
+  "evidence": [
+    {
+      "name": "Input-only numeric edits immediately save the valid next-run request; partial edits keep it and rebuilding restores it independently of historical selection",
+      "status": "PASS",
+      "selectedResultKind": "brake",
+      "pendingKind": "steer",
+      "pendingSpeedKmh": 60,
+      "pendingAngleDeg": 3,
+      "eventPath": "input only; no numeric change or later select change",
+      "invalidIntermediateValuesPreserveLastValid": true,
+      "disposedListenerCannotWrite": true,
+      "liveStateUnchanged": true
+    },
+    {
+      "name": "Load historical configuration copies all request controls without running, changing the live vehicle or overwriting the selected response",
+      "status": "PASS",
+      "sourceVersion": "3.8.0",
+      "currentModel": "3.18.0",
+      "executionStarted": false
+    },
+    {
+      "name": "Running the loaded history creates a new current-model record with declared provenance and explicit wet-road / assist labels",
+      "status": "PASS",
+      "historicalDistanceM": 47.660222531435814,
+      "currentDistanceM": 47.5837695922227,
+      "historicalLockedSeconds": 3.933333333333322,
+      "currentLockedSeconds": 3.933333333333322,
+      "sourceConfiguration": {
+        "id": "actual-3.8-wet-brake",
+        "runId": "R-5b30e971",
+        "modelVersion": "3.8.0",
+        "modelBuildId": "4accaa4482dc396a2d9fe5d09492e79bf5f2db4ede830f52a50a7f44758a9d4f",
+        "protocolVersion": "flat-lab-3",
+        "edited": false
+      },
+      "completedAttempt": "mvhmyhu1-roadster-study-2-1"
+    },
+    {
+      "name": "Selected old history and the exact completed pending request survive reopening and rebuilding independently",
+      "status": "PASS",
+      "selectedId": "actual-3.8-wet-brake",
+      "completedAttempt": "mvhmyhu1-roadster-study-2-1",
+      "selectionIsNotExecutionIdentity": true
+    },
+    {
+      "name": "Editing while a frozen request runs cannot mark the new request as completed; restoring the executed conditions finds the real batch",
+      "status": "PASS",
+      "executedSpeedKmh": 81,
+      "editedSpeedKmh": 83,
+      "editedConfigurationWasNotFalselyCompleted": true
+    },
+    {
+      "name": "Failure and a partially cancelled pair keep distinct execution states, frozen requests and returned reports",
+      "status": "PASS",
+      "failedAttempt": "mvhmyjgj-roadster-study-3-2",
+      "cancelledAttempt": "mvhmyjpe-roadster-study-3-3",
+      "returned": 1,
+      "requested": 2
+    },
+    {
+      "name": "Interrupted browser execution is not reported as successful and a build mismatch cannot inherit a completed status",
+      "status": "PASS",
+      "interruptedRetained": true,
+      "historicalBuildDoesNotCountAsCurrentExecution": true
+    },
+    {
+      "name": "English research panels, chart labels and prompts use presentation strings while JSON/CSV, user names and physical state stay unchanged",
+      "status": "PASS",
+      "language": "en",
+      "catalogEntries": 915,
+      "catalogPatterns": 94,
+      "rawHistoryUnchanged": true,
+      "graphicsAcceptance": false
+    },
+    {
+      "name": "Switching back restores Chinese presentation and preserves editable numeric configuration",
+      "status": "PASS",
+      "language": "zh",
+      "numericConfigurationUnchanged": true
+    },
+    {
+      "name": "The real 20-second roll completes and persists 400 samples; input-only selection of 8 seconds changes execution identity and survives rebuilding",
+      "status": "PASS",
+      "actualDurationS": 20,
+      "samples": 400,
+      "outcome": "stable_landing",
+      "supplyMode": "bench",
+      "tankLitres": 600,
+      "completedAttempt": "mvhmym72-roadster-study-6-1",
+      "inputOnlyDraftDurationS": 8,
+      "changedRequestDoesNotInheritCompletedStatus": true,
+      "fullReportReloaded": true,
+      "liveStateUnchanged": true
+    },
+    {
+      "name": "Old 8-second request-format records and drafts retain their window and raw exports; imported frozen controls show the actual first request in both languages",
+      "status": "PASS",
+      "fixtureScope": "Current 8-second numerical report with a simulated legacy request format; not an old-model run.",
+      "legacyActualDurationS": 8,
+      "legacyActualSamples": 160,
+      "legacyReportUnchanged": true,
+      "jsonAndCSVUnchanged": true,
+      "legacyDraftWithoutWindowOrProtocolKeeps8": true,
+      "importedWindow": {
+        "visible": 8,
+        "pending": 8,
+        "worker": 8,
+        "actualDurationS": 8,
+        "samples": 160,
+        "outcome": "stable_landing"
+      },
+      "englishOptions": [
+        {
+          "value": "20",
+          "text": "20 s · Standard window"
+        },
+        {
+          "value": "8",
+          "text": "8 s · Historical window"
+        }
+      ],
+      "realHistoricalBrakeUnchanged": true,
+      "liveStateUnchanged": true
+    }
+  ]
+}
