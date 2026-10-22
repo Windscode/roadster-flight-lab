@@ -12,12 +12,17 @@ const git=args=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();
 const commit=git(['rev-parse','HEAD']),tree=git(['rev-parse','HEAD^{tree}']);
 for(const e of [...plan.runtime,...plan.onlineEvidence])assert.equal(git(['rev-parse','HEAD:'+e.path]),git(['hash-object',e.path]),'Not committed: '+e.path);
 mkdirSync(out);
-for(const e of plan.runtime){copyTo(out,e.path,e.path.slice(5));if(/\.(js|html|css|md)$/.test(e.path))copyTo(out,e.path);}
+for(const e of plan.runtime){
+  // The original candidate deployment metadata remains available verbatim.
+  // The site-root deployment.json is separately generated from actual HEAD.
+  if(e.path!=='dist/deployment.json')copyTo(out,e.path,e.path.slice(5));
+  if(/\.(js|html|css|md)$/.test(e.path)||e.path==='dist/deployment.json')copyTo(out,e.path);
+}
 for(const e of plan.onlineEvidence)copyTo(out,e.path);
 const put=(p,v)=>writeFileSync(resolve(out,p),typeof v==='string'?v:JSON.stringify(v,null,2)+'\n');
 put('availability.json',plan);
 put('availability.html','<!doctype html><meta charset="utf-8"><title>3.19 recovery availability</title><h1>Roadster 3.19 recovered release</h1><p>Runtime bytes match the original 3.19 candidate. This is a recovery publication, not recovery of the complete original development history. Historical reports are unchanged; their unavailable evidence is explicitly listed.</p><p><a href="availability.json">File hashes and online / repository-only / unrecovered references</a> · <a href="docs/recovery-release-3.19.md">Recovery scope and limits</a> · <a href="index.html">Drive</a></p>');
-const manifest={schema:'roadster.recovered-evidence',version:1,publicationCommit:commit,publicationTree:tree,originalDevelopment:plan.source,runtime:plan.runtime,files:plan.onlineEvidence,fileCount:plan.onlineEvidence.length,bytes:plan.onlineEvidence.reduce((s,e)=>s+e.bytes,0),historicalReferences:plan.historicalReferences,scope:'Only copied evidence is counted. Unrecovered references have no online URL and no fabricated hash. See availability.json.'};
+const manifest={schema:'roadster.recovered-evidence',version:1,publicationCommit:commit,publicationTree:tree,originalDevelopment:plan.source,runtime:plan.runtime.map(e=>({...e,sitePath:e.path==='dist/deployment.json'?e.path:e.path.slice(5)})),files:plan.onlineEvidence,fileCount:plan.onlineEvidence.length,bytes:plan.onlineEvidence.reduce((s,e)=>s+e.bytes,0),historicalReferences:plan.historicalReferences,scope:'Only copied evidence is counted. Unrecovered references have no online URL and no fabricated hash. Original candidate deployment metadata is at dist/deployment.json; root deployment.json is generated from actual HEAD. See availability.json.'};
 put('evidence-manifest.json',manifest);
 put('deployment.json',{application:'roadster-flight-lab',modelVersion:plan.source.modelVersion,modelBuildId:plan.source.modelBuildId,sourceCommit:commit,sourceTree:tree,publicationCommit:commit,publicationTree:tree,originalDevelopment:plan.source,evidenceManifest:{path:'evidence-manifest.json',sha256:hash(JSON.stringify(manifest,null,2)+'\n')},availability:{path:'availability.json',page:'availability.html'},recoveryPublication:true});
 put('publication-check.json',check);
