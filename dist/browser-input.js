@@ -50,7 +50,10 @@ export function installBrowserInput(shell,{win=window,doc=document}={}){
   const canonical=new Set(ACTIONS.flatMap(a=>a.keys));
   function ingress(e){if(e[marker])return;if(dialog.open){if(captureAction&&e.type==='keydown'){e.preventDefault();e.stopImmediatePropagation();if(e.code==='Escape'){captureAction=null;status('');return;}guarded(()=>{sharedInputs.bindKey(captureAction,e.code);captureAction=null;save();});return;}if(e.type==='keyup')sharedInputs.keyUp(e.code);e.stopImmediatePropagation();return;}
     if(e.type==='keyup'&&(sharedInputs.physical.has(e.code)||sharedInputs.blocked.has(e.code))){e.stopImmediatePropagation();target=e.target;try{sharedInputs.keyUp(e.code);}finally{target=null;}return;}
-    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    // The legacy shell also listens to raw codes (including research 3–9).
+    // Returning here lets Ctrl+R reset the car and Ctrl+F toggle its fan.
+    // Stop only propagation: browser/OS shortcuts keep their native default.
+    if(e.ctrlKey||e.metaKey||e.altKey){e.stopImmediatePropagation();return;}
     // Preserve editing and native tab/escape behavior, but release anything held
     // before focus entered an editor; never turn typing into driving.
     if(e.target?.closest?.('input,select,textarea,[contenteditable="true"]'))return;
@@ -60,11 +63,11 @@ export function installBrowserInput(shell,{win=window,doc=document}={}){
   function safetyRelease(reason){stopCalibration(reason);sharedInputs.release(reason);if(win.roadsterLab?.getState?.().paused===false)doc.getElementById('pause-btn')?.click();}
   const disconnect=()=>safetyRelease('gamepad-disconnected'),blur=()=>safetyRelease('window-blur'),visibility=()=>{if(doc.hidden)safetyRelease('document-hidden');};
   win.addEventListener('gamepaddisconnected',disconnect);win.addEventListener('blur',blur);doc.addEventListener('visibilitychange',visibility);
-  function tick(){if(disposed)return;const p=pad();const panel=dialog.open||doc.body.classList.contains('body-menu')||doc.querySelector('.drawer:not(.hidden),#help-modal:not(.hidden)')||shell.studyOpen||doc.activeElement?.matches('input,select,textarea');
+  function tick(){if(disposed)return;const p=pad();const panel=dialog.open||doc.body.classList.contains('body-menu')||doc.querySelector('.drawer:not(.hidden),#help-modal:not(.hidden)')||shell.studyOpen||doc.activeElement?.matches('input,select,textarea,[contenteditable="true"]');
     sharedInputs.enabled=!panel&&!doc.hidden;
     // Continuous axes are gated here; discrete pause/map events still traverse
     // the original shell's guards, so a controller can close its pause menu.
-    sharedInputs.poll(p,{enabled:!dialog.open&&!doc.hidden});
+    sharedInputs.poll(p,{enabled:!dialog.open&&!doc.hidden,continuousEnabled:sharedInputs.enabled});
     if(dialog.open)$('device').textContent=p?`${p.id} · ${p.axes.length} axes / ${p.buttons.length} buttons`:text('未检测到手柄（在页面激活后按一次手柄按钮）。','No gamepad (press a pad button after activating this page).');raf=win.requestAnimationFrame(tick);}
   const unlisten=onLanguageChange(render);render();raf=win.requestAnimationFrame(tick);
   win.roadsterInputs={open,close,getState:()=>({profile:sharedInputs.getProfile(),journal:sharedInputs.export(),calibration:{active:calibration.active,phase:calibration.phase,samples:calibration.samples,frames:calFrames},settingsOpen:dialog.open}),bindKey:(id,code)=>{pause();sharedInputs.bindKey(id,code);save();}};

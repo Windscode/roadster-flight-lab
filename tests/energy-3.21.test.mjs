@@ -1,3 +1,5 @@
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
+const release=MODEL_VERSION.split('.').slice(0,2).join('.'),reportDir=`qa/resource-${release}`;
 import assert from 'node:assert/strict';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {RoadsterSim} from '../dist/physics.js';
@@ -48,4 +50,4 @@ const invalid=new RoadsterSim();invalid.body.velocity.x=NaN;
 const invalidResult=invalid.advanceFixed({},DT);assert.equal(invalidResult.failure.kind,'non-finite-state');checkAccounting(invalidResult);assert.equal(invalidResult.energyAccounting.seconds,0);
 results.push({name:'pre-step-failure-no-phantom-energy',kind:invalidResult.failure.kind,bookedSeconds:invalidResult.energyAccounting.seconds});
 for(const cause of ['refill','param','reset','timeout','supply']){const s=new RoadsterSim();prepareResourceRoute(s,true);prepare(s);completeResourcePreparation(s,true);const m=new ResourceMission(s,{descriptorHash:s.getRouteSurface().descriptorHash});if(cause==='refill'){s.advanceFixed({boost:true,throttle:.1},DT);m.check(s);s.refillGas();}if(cause==='param')s.setParam('tireMu',1.3);if(cause==='reset')s.reset('city');if(cause==='timeout')s.simTime+=66;if(cause==='supply')s.setSupplyMode('bench');assert(m.check(s),cause+' must fail');results.push({name:'mission-rejects-'+cause,reason:m.failure.reason,scope:cause==='timeout'?'labelled time-boundary fixture':'production mutation'});}
-mkdirSync('qa/resource-3.21',{recursive:true});writeFileSync('qa/resource-3.21/energy.json',JSON.stringify({status:'passed',modelBuildId:MODEL_BUILD_ID,results,scope:'Actual solver steps and explicitly labelled boundary fixtures. No native/GPU/audio acceptance.'},null,2)+'\n');console.log(JSON.stringify({status:'passed',results}));
+mkdirSync(reportDir,{recursive:true});writeFileSync(`${reportDir}/energy.json`,JSON.stringify({status:'passed',modelBuildId:MODEL_BUILD_ID,results,scope:'Actual solver steps and explicitly labelled boundary fixtures. No native/GPU/audio acceptance.'},null,2)+'\n');console.log(JSON.stringify({status:'passed',results}));

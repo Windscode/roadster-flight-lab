@@ -1,3 +1,5 @@
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
+const release=MODEL_VERSION.split('.').slice(0,2).join('.'),reportDir=`qa/resource-${release}`;
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 import {mkdirSync, writeFileSync} from 'node:fs';
@@ -94,6 +96,6 @@ try{
   const exported=await(await fetch(downloadedUrl)).json();assert.equal(exported.schema,'roadster-resource-summary-1');assert.deepEqual(exported.runs,ui.getState().resourceHistory);assert.match(exported.scope,/summaries/);
   doc.querySelector('[data-export="close"]').click();
   checks.push({name:'Rejected storage preserves in-memory result; actual summary encoder exports exact retained runs',browserDownloadClaim:'unobservable; DOM handoff only'});
-  mkdirSync('qa/resource-3.21',{recursive:true});writeFileSync('qa/resource-3.21/dom-lifecycle.json',JSON.stringify({status:'passed',identity:currentExperimentIdentity(),scope:'JSDOM with production route UI, simulation, recorder and exact playback. Explicit host scene-switch adapter. No browser graphics, native keyboard/gamepad, audible device or GPU acceptance.',checks},null,2)+'\n');
-  console.log(JSON.stringify({status:'passed',checks:checks.length,report:'qa/resource-3.21/dom-lifecycle.json'}));
+  mkdirSync(reportDir,{recursive:true});writeFileSync(`${reportDir}/dom-lifecycle.json`,JSON.stringify({status:'passed',identity:currentExperimentIdentity(),scope:'JSDOM with production route UI, simulation, recorder and exact playback. Explicit host scene-switch adapter. No browser graphics, native keyboard/gamepad, audible device or GPU acceptance.',checks},null,2)+'\n');
+  console.log(JSON.stringify({status:'passed',checks:checks.length,report:`${reportDir}/dom-lifecycle.json`}));
 }finally{ui.dispose();setLanguage('zh',{persist:false});globalThis.document=originalDocument;if(originalStorage===undefined)delete globalThis.localStorage;else globalThis.localStorage=originalStorage;dom.window.close();}

@@ -130,7 +130,7 @@ export function applyResourceWheels(dt,input) {
     const accounting=this._driveAccounting={torqueBudgetNm:Math.abs(pilotDriveForce*p.wheelRadius),requestedTorqueNm:0,postTcsTorqueNm:0,actualTorqueNm:0,
       mechanicalPowerLimitW:motorPower,mechanicalPowerW:0,electricalPowerW:0,mechanicalWorkJ:0,electricalWorkJ:0,
       powerLimited:false,airbornePolicy:p.tractionAssist?'unloaded-drive-cut':'equal-four-wheel-shares',shares:[...shares],corneringDriveScale,corneringTractionActive:corneringDriveScale<.98,steeringSurfaceMu:steeringMu,steeringSpeedMps:planarSpeed,
-      brakeMechanicalWorkJ:0,liftOffBrakeMechanicalWorkJ:0,electricalRecoveredWorkJ:0,rollingLossWorkJ:0};
+      brakeMechanicalWorkJ:0,liftOffBrakeMechanicalWorkJ:0,electricalRecoveredWorkJ:0,rollingLossWorkJ:0,motorBrakingWorkJ:0};
     for(let i=0;i<4;i++) {
       const w=this.wheelStates[i],c=contactByWheel.get(w),effectiveMass=b.mass/n;
       const driveTorque=totalTorque*shares[i],maxDrivePowerW=motorPower*shares[i];
@@ -149,7 +149,7 @@ export function applyResourceWheels(dt,input) {
         this._motorWork+=result.driveWorkJ/.9;this._brakeDissipationJ+=result.brakeEnergyJ;
         accounting.brakeMechanicalWorkJ+=result.brakeEnergyJ;accounting.liftOffBrakeMechanicalWorkJ+=result.regenBrakeEnergyJ;accounting.rollingLossWorkJ+=result.rollingBrakeEnergyJ;
         this._motorForceN+=w.driveTorqueNm/p.wheelRadius;
-        accounting.postTcsTorqueNm+=Math.abs(w.postTcsTorqueRequestNm);accounting.actualTorqueNm+=Math.abs(w.driveTorqueNm);accounting.mechanicalWorkJ+=result.driveWorkJ;accounting.powerLimited||=w.drivePowerLimited;
+        accounting.postTcsTorqueNm+=Math.abs(w.postTcsTorqueRequestNm);accounting.actualTorqueNm+=Math.abs(w.driveTorqueNm);accounting.mechanicalWorkJ+=result.driveWorkJ;accounting.motorBrakingWorkJ+=result.motorBrakingWorkJ;accounting.powerLimited||=w.drivePowerLimited;
         w.longitudinalForceN=0;w.lateralForceN=0;w.gripUse=0;w.slipRatio=null;continue;
       }
       const mu=this._surfaceMu(w.contactPointWorld,w.contactNormalWorld?.y??1),capacity=mu*w.normalLoadN;
@@ -185,7 +185,7 @@ export function applyResourceWheels(dt,input) {
       // gyroscopic cross terms remain outside this reduced four-wheel model.
       b.torque.vadd(b.quaternion.vmult(V(Math.cos(w.steer),0,-Math.sin(w.steer))).scale(-result.spinMomentumChangeNms/dt),b.torque);
       this._motorWork+=result.driveWorkJ/.9;
-      accounting.postTcsTorqueNm+=Math.abs(w.postTcsTorqueRequestNm);accounting.actualTorqueNm+=Math.abs(w.driveTorqueNm);accounting.mechanicalWorkJ+=result.driveWorkJ;accounting.powerLimited||=w.drivePowerLimited;
+      accounting.postTcsTorqueNm+=Math.abs(w.postTcsTorqueRequestNm);accounting.actualTorqueNm+=Math.abs(w.driveTorqueNm);accounting.mechanicalWorkJ+=result.driveWorkJ;accounting.motorBrakingWorkJ+=result.motorBrakingWorkJ;accounting.powerLimited||=w.drivePowerLimited;
       w.slipPowerW=Math.max(0,result.tireEnergyJ/dt)+Math.max(0,-flat*c.vlat);
       this._brakeDissipationJ+=result.brakeEnergyJ;this._tireDissipationJ+=result.tireEnergyJ+Math.max(0,-flat*c.vlat)*dt;
       accounting.brakeMechanicalWorkJ+=result.brakeEnergyJ;accounting.liftOffBrakeMechanicalWorkJ+=result.regenBrakeEnergyJ;accounting.rollingLossWorkJ+=result.rollingBrakeEnergyJ;
@@ -197,6 +197,7 @@ export function applyResourceWheels(dt,input) {
     accounting.chargePowerW=accounting.electricalRecoveredWorkJ/dt;
     accounting.chargePowerLimitW=charge.electricalPowerW;
     accounting.chargeLimitReason=charge.reason;
+    accounting.motorBrakingPowerW=accounting.motorBrakingWorkJ/dt;
     accounting.totalRetardingForceN=this.wheelStates.reduce((sum,w)=>sum+(w.contact?w.brakeTorqueNm/p.wheelRadius:0),0);
     // The original accumulator grouped every passive wheel loss as brake heat.
     // Generator conversion loss remains heat; recovered electricity and tyre

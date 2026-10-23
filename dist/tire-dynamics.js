@@ -20,7 +20,7 @@ export function lateralTireForce({vlong,vlat,normalLoadN,mu,cornerStiffness,rela
 }
 export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTorqueNm,brakeTorqueNm,regenTorqueNm=0,rollingTorqueNm=0,radius,inertia,effectiveMass,gravityLong=0,absEnabled=true,tcsEnabled=true,maxDrivePowerW=Infinity,regenMechanicalPowerW=Infinity,regenMechanicalEnergyJ=Infinity}){
   const n=Math.max(1,Math.ceil(dt*600)),h=dt/n,capacity=Math.max(0,normalLoadN*mu);
-  let speed=vlong,impulse=0,latImpulse=0,brakeEnergy=0,regenBrakeEnergy=0,rollingBrakeEnergy=0,tireEnergy=0,driveWork=0,actualDrive=0,actualBrake=0,actualRegenBrake=0,actualRollingBrake=0,postTcsRequest=0;
+  let speed=vlong,impulse=0,latImpulse=0,brakeEnergy=0,regenBrakeEnergy=0,rollingBrakeEnergy=0,tireEnergy=0,driveWork=0,motorBrakingWork=0,actualDrive=0,actualBrake=0,actualRegenBrake=0,actualRollingBrake=0,postTcsRequest=0;
   w.angularVelocityRadS??=0;w.absPressure??=1;w.tcsFactor??=1;
   const startingOmega=w.angularVelocityRadS;
   w.absActive=false;w.tcsActive=false;w.drivePowerLimited=false;
@@ -88,7 +88,11 @@ export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTor
     actualRegenBrake+=Math.abs(appliedBrake)*regenFraction*h;
     actualRollingBrake+=Math.abs(appliedBrake)*rollingFraction*h;
     tireEnergy+=Math.max(0,fx*(radius*omega1-next.v))*h;
+    // Opposing axle torque removes wheel work even when it is not routed to
+    // the regenerative-brake channel. Keep that sink explicit; it cannot be
+    // counted as battery recovery without a generator/charge allocation.
     driveWork+=Math.max(0,drive*midOmega)*h;
+    motorBrakingWork+=Math.max(0,-drive*midOmega)*h;
     actualDrive+=drive*h;actualBrake+=Math.abs(appliedBrake)*h;
     // The root solve has finite tolerance. Enforce the remaining lateral
     // budget against the force actually integrated, so that tolerance cannot
@@ -102,5 +106,5 @@ export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTor
   w.regenBrakeTorqueNm=actualRegenBrake/dt;w.rollingBrakeTorqueNm=actualRollingBrake/dt;w.serviceBrakeTorqueNm=Math.max(0,w.brakeTorqueNm-w.regenBrakeTorqueNm-w.rollingBrakeTorqueNm);
   w.postTcsTorqueRequestNm=postTcsRequest/dt;w.driveMechanicalPowerW=driveWork/dt;
   w.wheelEnergyJ=.5*inertia*w.angularVelocityRadS**2;
-  return{longitudinalForceN:impulse/dt,lateralForceN:latImpulse/dt,brakeEnergyJ:brakeEnergy,regenBrakeEnergyJ:regenBrakeEnergy,rollingBrakeEnergyJ:rollingBrakeEnergy,tireEnergyJ:tireEnergy,driveWorkJ:driveWork,spinMomentumChangeNms:inertia*(w.angularVelocityRadS-startingOmega)};
+  return{longitudinalForceN:impulse/dt,lateralForceN:latImpulse/dt,brakeEnergyJ:brakeEnergy,regenBrakeEnergyJ:regenBrakeEnergy,rollingBrakeEnergyJ:rollingBrakeEnergy,tireEnergyJ:tireEnergy,driveWorkJ:driveWork,motorBrakingWorkJ:motorBrakingWork,spinMomentumChangeNms:inertia*(w.angularVelocityRadS-startingOmega)};
 }

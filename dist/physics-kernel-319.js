@@ -780,7 +780,9 @@ export class RoadsterSim {
       const from=b.pointToWorldFrame(pad);
       if(!this._raySurface(from,from.vadd(down.scale(.85))))continue;
       const alignment=-this._ray.hitNormalWorld.dot(down);if(alignment<.62)continue;
-      const seal=clamp((alignment-.62)/.30,0,1)*pressure/p.suctionPressurePa;
+      // Zero pressure is a valid disabled-cap setting, not an invalid
+      // contact. Avoid 0/0 contaminating the rigid-body force accumulator.
+      const seal=p.suctionPressurePa>0?clamp((alignment-.62)/.30,0,1)*pressure/p.suctionPressurePa:0;
       const force=p.suctionPressurePa*p.suctionArea/4*seal*this._fanLevel;
       this._sealDistanceSum+=this._ray.distance;this._sealDistanceCount++;
       this._applyWorldForce(this._ray.hitNormalWorld.scale(-force),pad);

@@ -5,7 +5,7 @@ import {energySummary,validateEnergyLedger} from './energy-model.js';
 // Budgets are a game scenario; they are not specifications of a real Roadster.
 export const RESOURCE_ROUTE=Object.freeze({id:'weave-finite-1',initialKWh:.12,initialPressureBar:100,tankLitres:600,deadlineS:65,minimumFinishKWh:.005,minimumGasKg:5});
 const copy=x=>structuredClone(x);
-const snapshotBudget=t=>({motorElectricalJ:t.energyAccounting.motorElectricalJ,fanJ:t.energyAccounting.fanJ,auxiliaryJ:t.energyAccounting.auxiliaryJ,recoveredJ:t.energyAccounting.recoveredJ,regenMechanicalJ:t.energyAccounting.regenMechanicalJ,regenLossJ:t.energyAccounting.regenLossJ,frictionBrakeJ:t.energyAccounting.frictionBrakeJ,rollingLossJ:t.energyAccounting.rollingLossJ,tireDissipationJ:t.energyAccounting.tireDissipationJ});
+const snapshotBudget=t=>({motorElectricalJ:t.energyAccounting.motorElectricalJ,motorBrakingHeatJ:t.energyAccounting.motorBrakingHeatJ,fanJ:t.energyAccounting.fanJ,auxiliaryJ:t.energyAccounting.auxiliaryJ,recoveredJ:t.energyAccounting.recoveredJ,regenMechanicalJ:t.energyAccounting.regenMechanicalJ,regenLossJ:t.energyAccounting.regenLossJ,frictionBrakeJ:t.energyAccounting.frictionBrakeJ,rollingLossJ:t.energyAccounting.rollingLossJ,tireDissipationJ:t.energyAccounting.tireDissipationJ});
 const resourceSample=t=>({simTime:t.simTime,energyKWh:t.energyKWh,gasMass:t.gasMass,onboardGasConsumedKg:t.onboardGasConsumedKg,externalGasSuppliedKg:t.externalGasSuppliedKg,energyAccounting:copy(t.energyAccounting)});
 function failureResourceSample(t){
   // The safety kernel has already reset the live car. Only the preserved

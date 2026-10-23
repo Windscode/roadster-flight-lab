@@ -1,4 +1,6 @@
-# Ongoing development after 3.21
+# Ongoing development after 3.22
+
+3.22 has implemented and regression-tested concrete input, energy-recording, zero-pressure adhesion, light allocation/shadow invalidation and cockpit articulation fixes. The local 3.21 baseline is commit `94e5b73`. See [the release scope](release-3.22.md). Continue from the actual Git tree and retain archived reports. Keep tool output bounded; inspect and test locally, then publish final changes in batches.
 
 The baseline is the actual Git source. 3.19 main was verified as `5f1ba5dcbff0180abda1b7fb0e4782fd30f549fe` at this handoff. The two 3.21 recovered packages are independent development histories; stage2 is the implemented foundation, with new lifecycle, accounting, comparison and publication fixes. No recovered 3.20 functionality is assumed.
 

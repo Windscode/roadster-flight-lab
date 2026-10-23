@@ -1,5 +1,6 @@
 // 3.21 is a new implementation on the recovered 3.19 kernel, not recovered 3.20.
-// The original rigid-body/contact/control code is retained byte-for-byte.
+// The original rigid-body/contact/control model is retained, with bounded
+// fixes documented in the current release.
 import {RoadsterSim as Kernel,DEFAULT_PARAMS as KERNEL_PARAMS} from './physics-kernel-319.js';
 import {applyResourceWheels} from './resource-wheels.js';
 import {RESOURCE_DEFAULTS,validateResourceParams,createEnergyLedger,validateEnergyLedger,energySummary} from './energy-model.js';
@@ -67,6 +68,7 @@ export class RoadsterSim extends Kernel{
     const a=this._driveAccounting,l=this._resourceLedger,s=this._resourceSlice;
     l.seconds+=s.dt;l.motorMechanicalJ+=a.mechanicalWorkJ;l.motorElectricalJ+=a.electricalWorkJ;
     l.motorLossJ+=Math.max(0,a.electricalWorkJ-a.mechanicalWorkJ);
+    l.motorBrakingHeatJ+=a.motorBrakingWorkJ??0;
     l.fanJ+=s.fanJ;l.auxiliaryJ+=s.auxiliaryJ;l.unservedAuxiliaryJ+=s.unservedAuxiliaryJ;
     l.regenMechanicalJ+=a.regenMechanicalWorkJ??0;l.recoveredJ+=a.electricalRecoveredWorkJ??0;
     l.regenLossJ+=a.regenConversionLossJ??0;l.frictionBrakeJ+=a.frictionBrakeWorkJ??0;

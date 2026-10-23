@@ -52,7 +52,7 @@ export function normalizeAxis(value,calibration=null,deadzone=.13){
 export class SemanticInput{
   constructor({profile=defaultProfile(),emit=()=>{},record=()=>{}}={}){
     this.profile=validateProfile(profile);this.emit=emit;this.record=record;this.physical=new Map();this.touches=new Map();this.blocked=new Set();this.events=[];this.sequence=0;this.dropped=0;
-    this.padValues={};this.padPressed=new Set();this.padInhibited=true;this.lastPad=null;this.enabled=true;this.releaseListeners=new Set();this.dispatchContext=null;
+    this.padValues={};this.padPressed=new Set();this.padInhibited=true;this.padAxesInhibited=true;this.lastPad=null;this.enabled=true;this.releaseListeners=new Set();this.dispatchContext=null;
   }
   note(type,data={}){const e={sequence:++this.sequence,type,...data};this.events.push(structuredClone(e));if(this.events.length>1600){this.events.shift();this.dropped++;}this.record(e);return e;}
   actionForCode(code){return ACTIONS.find(a=>this.profile.keys[a.id].includes(code));}
@@ -83,7 +83,7 @@ export class SemanticInput{
   }
   release(reason,{notify=true}={}){
     const held=[...new Set([...this.physical.values(),...this.touches.values(),...this.padPressed])];for(const code of this.physical.keys())this.blocked.add(code);this.physical.clear();this.touches.clear();
-    this.padValues={};this.padPressed.clear();this.padInhibited=true;
+    this.padValues={};this.padPressed.clear();this.padInhibited=true;this.padAxesInhibited=true;
     this.note('semantic-release',{reason,held});
     // Accepted-input sessions capture their held keys before compatibility
     // keyups clear them; the release evidence must describe the prior state.
@@ -104,13 +104,18 @@ export class SemanticInput{
     }
     return values;
   }
-  poll(pad,{enabled=true}={}){
+  poll(pad,{enabled=true,continuousEnabled=enabled}={}){
     const identity=pad?.connected?pad.index+':'+pad.id:null;
     if(this.lastPad!==null&&identity!==this.lastPad)this.release(identity?'gamepad-changed':'gamepad-disconnected');
     if(identity!==this.lastPad){this.padInhibited=true;this.note(identity?'gamepad-connected':'gamepad-disconnected',{device:identity});}this.lastPad=identity;
-    if(identity===null){this.padValues={};this.padInhibited=true;return;}
+    if(identity===null){this.padValues={};this.padInhibited=true;this.padAxesInhibited=true;return;}
     const values=this.readPad(pad),neutral=Object.values(values).every(v=>v<.08);
-    if(!enabled){if(this.padPressed.size||Object.values(this.padValues).some(v=>v>0))this.release('gamepad-input-disabled');this.padValues={};this.padInhibited=true;return;}
+    // Panels may keep discrete pause/map actions available, but a stick or
+    // trigger held while editing must not become live when the panel closes.
+    // Rearm continuous channels only after they have all returned to neutral.
+    if(!continuousEnabled)this.padAxesInhibited=true;
+    else if(ACTIONS.every(a=>!a.channel||(values[a.id]??0)<.08))this.padAxesInhibited=false;
+    if(!enabled){if(this.padPressed.size||Object.values(this.padValues).some(v=>v>0))this.release('gamepad-input-disabled');this.padValues={};this.padInhibited=true;this.padAxesInhibited=true;return;}
     if(this.padInhibited){if(neutral)this.padInhibited=false;this.padValues={};return;}
     for(const a of ACTIONS){const value=values[a.id]??0,previous=this.padValues[a.id]??0;
       if(a.channel){if(Math.abs(value-previous)>.015||value===0&&previous!==0)this.dispatch(a.id,value,{source:'gamepad',physical:identity,emit:false});}
@@ -127,7 +132,7 @@ export class SemanticInput{
     // Canonical keys here are only those accepted by the existing shell. A
     // rebound physical key never bypasses its focus/replay/pause guards.
     for(const a of ACTIONS)if(a.channel){digital[a.id]=Number(a.keys.some(k=>keys.has(k)));if(digital[a.id])digitalChannels.add(a.channel);}
-    const values=this.enabled&&!this.padInhibited&&pad?.connected&&pad.index+':'+pad.id===this.lastPad?this.readPad(pad):{};
+    const values=this.enabled&&!this.padInhibited&&!this.padAxesInhibited&&pad?.connected&&pad.index+':'+pad.id===this.lastPad?this.readPad(pad):{};
     // An accepted keyboard/touch command owns its whole channel. Opposing pad
     // drift must not weaken manual pitch, steering or braking.
     for(const a of ACTIONS)if(a.channel){const v=digitalChannels.has(a.channel)?digital[a.id]??0:values[a.id]??0;if(a.channel==='boost')result.boost||=v>.5;else result[a.channel]+=a.sign*v;}

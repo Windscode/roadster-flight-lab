@@ -59,7 +59,13 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
   function resizeShadow(entry,size){if(entry.light.shadow.mapSize.x===size)return;entry.light.shadow.mapSize.set(size,size);entry.light.shadow.map?.dispose();entry.light.shadow.map=null;entry.light.shadow.needsUpdate=true;}
   function configure(q){
     quality=q;profile=PROFILES[q]||PROFILES.balanced;
-    pool.forEach((entry,i)=>{resizeShadow(entry,profile.size);entry.light.visible=enabled&&i<profile.street;});
+    pool.forEach((entry,i)=>{
+      resizeShadow(entry,profile.size);entry.light.visible=enabled&&i<profile.street;
+      // A retired slot must release its fixture. While it is inactive, the
+      // smaller pool can legitimately select that same fixture elsewhere.
+      // Restoring its old assignment on an upgrade would light it twice.
+      if(i>=profile.street){entry.anchor=entry.next=null;entry.gain=0;entry.light.intensity=0;}
+    });
     heads.forEach((entry,i)=>{resizeShadow(entry,profile.headSize);entry.light.visible=enabled&&!!vehicle&&i<profile.heads;});
     Object.assign(stats,{shadowMapSize:profile.size,headlightShadowMapSize:profile.headSize,shadowHz:profile.hz});shadowDirty=true;lastSelect=-Infinity;
   }
@@ -80,7 +86,10 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
         for(const row of ranked){if(chosen.includes(row))continue;const marginal=row.contributions.reduce((sum,v,i)=>sum+Math.max(0,v-covered[i]*.75)*[.25,.31,.26,.09,.09][i],0)*(row.score/Math.max(.00001,row.coverage));if(marginal>bestValue){best=row;bestValue=marginal;}}
         if(!best)break;chosen.push(best);best.contributions.forEach((v,i)=>covered[i]+=v);
       }
-      const desired=chosen.map(row=>row.anchor),occupied=new Set(active.map(e=>e.next||e.anchor).filter(Boolean));
+      // An outgoing fixture still owns a visible light while it fades. A
+      // newly available slot must not select it again until that old light
+      // reaches zero, even when the outgoing slot already has a next target.
+      const desired=chosen.map(row=>row.anchor),occupied=new Set(active.flatMap(e=>[e.anchor,e.next]).filter(Boolean));
       for(const entry of active.filter(e=>!e.anchor&&!e.next)){const next=desired.find(a=>!occupied.has(a));if(next){entry.next=next;occupied.add(next);}}
       const inTransition=active.some(e=>e.anchor!==e.next);
       if(!inTransition){
@@ -105,14 +114,19 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
       vehicle.updateWorldMatrix(true,false);
       if(!vehicleMatrixReady||vehicle.matrixWorld.elements.some((v,i)=>Math.abs(v-lastVehicleMatrix.elements[i])>.0002)){shadowDirty=true;lastVehicleMatrix.copy(vehicle.matrixWorld);vehicleMatrixReady=true;}
       heads.forEach((entry,i)=>{
-        entry.light.visible=i<profile.heads&&(!vehicle.userData.lampMode||vehicle.userData.lampMode==='low-beam');if(!entry.light.visible)return;
+        const visible=i<profile.heads&&(!vehicle.userData.lampMode||vehicle.userData.lampMode==='low-beam');
+        // Motion with lamps off updates the vehicle tracker, but deliberately
+        // does not render those lamp maps. Relighting at rest therefore needs
+        // a fresh depth camera even when the body has not moved this frame.
+        if(visible&&!entry.light.visible){shadowDirty=true;entry.light.shadow.needsUpdate=true;}
+        entry.light.visible=visible;if(!visible)return;
         const side=profile.heads===1?0:(i===0?-1:1);
         position.set(side*.56,-.018,2.327).applyMatrix4(vehicle.matrixWorld);
         point.set(side*.92,-.50,24).applyMatrix4(vehicle.matrixWorld);
         entry.light.position.copy(position);entry.light.target.position.copy(point);entry.light.intensity=profile.heads===1?12500:8000;
         stats.headlightSpots++;
       });
-    }
+    }else heads.forEach(({light})=>light.visible=false);
     stats.shadowMaps=stats.streetSpots+stats.headlightSpots;
   }
   function wantsShadowUpdate(time,{casterChanged=false}={}){
@@ -124,7 +138,7 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
     if(!needed)return false;
     pool.concat(heads).forEach(({light})=>{if(light.visible)light.shadow.needsUpdate=true;});lastShadow=time;shadowDirty=false;stats.updates++;stats.motionCoherent=true;if(moving)stats.motionUpdates=(stats.motionUpdates||0)+1;return true;
   }
-  return {stats,configure,update,wantsShadowUpdate,setVehicleRoot(root){vehicle=root;vehicleMatrixReady=false;shadowDirty=true;},
+  return {stats,configure,update,wantsShadowUpdate,setVehicleRoot(root){vehicle=root;vehicleMatrixReady=false;shadowDirty=true;if(!root)heads.forEach(({light})=>light.visible=false);},
     setEnabled(value){enabled=!!value;stats.enabled=enabled;pool.forEach(({light},i)=>light.visible=enabled&&i<profile.street);heads.forEach(({light},i)=>light.visible=enabled&&!!vehicle&&i<profile.heads);shadowDirty=true;lastSelect=-Infinity;},
     getLights(){return pool.concat(heads).filter(({light})=>light.visible).map(({light})=>light);},
     dispose(){for(const {light}of pool.concat(heads)){light.shadow.map?.dispose();scene.remove(light,light.target);}}

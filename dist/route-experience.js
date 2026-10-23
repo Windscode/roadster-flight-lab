@@ -83,7 +83,7 @@ export function createRouteExperience({mount,hudMount,getSim,getPaused,getContex
     syncRecording(t);
     action('prepare').disabled=getSessionMode()!=='live'||!getPaused()||!!run&&!run.finished;action('start').disabled=getSessionMode()!=='live'||!getPaused()||!active||!descriptor||!preparation||!!run;action('end').disabled=!run||run.finished;action('inspect').disabled=!recordId||!!run&&!run.finished;
     resource('mode').disabled=!!run&&!run.finished;
-    const energy=t.energyAccounting;resource('accounting').textContent=energy?L('电池收支：','Battery balance: ')+f(energy.motorElectricalJ/3600,2)+' Wh '+L('电驱 + ','drive + ')+f((energy.fanJ+energy.auxiliaryJ)/3600,2)+' Wh '+L('风扇/附件 − ','fan/aux − ')+f(energy.recoveredJ/3600,2)+' Wh '+L('回充；轮胎滑移热不回收。','recovered; tyre slip heat is not recovered.'):'';
+    const energy=t.energyAccounting;resource('accounting').textContent=energy?L('电池收支：','Battery balance: ')+f(energy.motorElectricalJ/3600,2)+' Wh '+L('电驱 + ','drive + ')+f((energy.fanJ+energy.auxiliaryJ)/3600,2)+' Wh '+L('风扇/附件 − ','fan/aux − ')+f(energy.recoveredJ/3600,2)+' Wh '+L('回充；反向驱动制动热 ','recovered; opposing-drive heat ')+f((energy.motorBrakingHeatJ??0)/3600,2)+' Wh'+L('（不计入回充），轮胎滑移热不回收。',' (not recovered); tyre slip heat is not recovered.'):'';
     $('condition').disabled=!!run&&!run.finished;
     $('status').textContent=message||(run&&!run.finished?L('记录中 · ','Recording · ')+f(t.simTime-run.startedAt)+' s':L('暂停后准备一组新条件。','Pause to prepare new conditions.'));
     hud.hidden=!active||!descriptor||getSessionMode()!=='live';if(hud.hidden)return;

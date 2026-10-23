@@ -35,14 +35,14 @@ export function brakeBlend({totalBrakeRequest,serviceShares,wheels,totalLoad,cha
     regenShares:regenDemands.map(v=>sum>0?v/sum:0)};
 }
 export function createEnergyLedger(initialEnergyJ,revision=0){
-  return{schema:'roadster-energy-ledger-1',initialEnergyJ,revision,seconds:0,
-    motorMechanicalJ:0,motorElectricalJ:0,motorLossJ:0,fanJ:0,auxiliaryJ:0,
+  return{schema:'roadster-energy-ledger-2',initialEnergyJ,revision,seconds:0,
+    motorMechanicalJ:0,motorElectricalJ:0,motorLossJ:0,motorBrakingHeatJ:0,fanJ:0,auxiliaryJ:0,
     regenMechanicalJ:0,recoveredJ:0,regenLossJ:0,frictionBrakeJ:0,brakeHeatJ:0,
     tireDissipationJ:0,rollingLossJ:0,unservedAuxiliaryJ:0};
 }
 export function validateEnergyLedger(value){
   const keys=Object.keys(createEnergyLedger(0));
-  if(!value||Object.keys(value).length!==keys.length||keys.some(k=>!(k in value))||value.schema!=='roadster-energy-ledger-1')throw Error('Incomplete resource snapshot');
+  if(!value||Object.keys(value).length!==keys.length||keys.some(k=>!(k in value))||value.schema!=='roadster-energy-ledger-2')throw Error('Incomplete resource snapshot');
   for(const k of keys)if(k!=='schema'&&(!Number.isFinite(value[k])||value[k]<0))throw Error('Invalid resource snapshot: '+k);
   if(!Number.isInteger(value.revision))throw Error('Invalid resource revision');
   if(Math.abs(value.regenMechanicalJ-value.recoveredJ-value.regenLossJ)>.02||Math.abs(value.motorElectricalJ-value.motorMechanicalJ-value.motorLossJ)>.02||Math.abs(value.brakeHeatJ-value.frictionBrakeJ-value.regenLossJ)>.02)throw Error('Resource work partition does not close');
@@ -54,5 +54,5 @@ export function energySummary(ledger,remainingJ,capacityJ,drive={}){
     balanceErrorJ:ledger.initialEnergyJ-grossJ+ledger.recoveredJ-remainingJ,
     chargePowerW:drive.chargePowerW??0,chargePowerLimitW:drive.chargePowerLimitW??0,
     chargeLimitReason:drive.chargeLimitReason??'rest',
-    scope:'Battery terminal balance and passive wheel-work partition; not a whole-world energy-conservation certificate.'};
+    scope:'Battery terminal balance and wheel-work partition. Opposing drive torque is unrecovered motor-braking heat, separate from motoring conversion loss and friction brake heat; no whole-world energy certificate.'};
 }

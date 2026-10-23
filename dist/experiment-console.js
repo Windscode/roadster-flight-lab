@@ -2,9 +2,13 @@ import {exportJson,exportFile} from './export-download.js';
 import './research-i18n-3.14.js';
 import {ExperimentRecorder,ExperimentPlayback,EXPERIMENT_LIMITS,EXPERIMENT_LIBRARY_KEY,loadExperimentArchive,saveExperimentArchive,exportExperimentArchive,parseExperimentArchive,experimentCSV,replayEligibility,currentExperimentIdentity,contentLabel} from './experiment-records.js';
 import {CONTROLLER_FIELDS,validateController,hasPilotInput} from './flight-programs.js';
-import {t as tr,onLanguageChange,localizeTree} from './i18n.js';
+import {t as tr,onLanguageChange,localizeTree,registerTranslations} from './i18n.js';
 import {PersistenceState} from './research-storage.js';
 
+registerTranslations({
+  '净用电 / Wh':'Net battery use / Wh','电池供电 / Wh':'Battery discharge / Wh','制动回充 / Wh':'Regeneration / Wh',
+  '净用电 = 电池供电 − 制动回充；负值表示净回充。旧记录或不完整收支以 — 标示，不推算回充。':'Net battery use = discharge − regeneration; negative means net recharge. Legacy or incomplete accounting is shown as —; recharge is not inferred.'
+});
 const clone=v=>JSON.parse(JSON.stringify(v));
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=(v,n=2)=>typeof v==='number'&&Number.isFinite(v)?v.toFixed(n):'—';
@@ -108,8 +112,8 @@ export function createExperimentConsole({mount,getSim,getContext=()=> 'city',get
     $('sampling').textContent=record?`${record.sampling.decimated?'历史展示曲线已抽稀':'完整采样曲线'} · ${record.sampling.storedCount}/${record.sampling.rawCount} 点；${record.sampling.uniform&&record.sampling.storedIntervalS?`当前点间隔 ${fmt(record.sampling.storedIntervalS,4)} s`:'点间隔不均匀，以 timeS 为准'}。指标来源：全部 ${record.summary.count} 个 120 Hz 物理步。`:'';
     $('replay-eligibility').textContent=record?replayEligibility(record).reason:'';
     const analysis=record?.analyses?.at(-1),summaries=analysis?.baseline?[['A',analysis.baseline.summary],['B',analysis.candidate?.summary]]:analysis?.summary?[['原记录',record.summary],['复算',analysis.summary]]:record?[['原记录',record.summary]]:[];
-    const metrics=[['位置 RMS / m','rmsPositionErrorM'],['位置峰值 / m','peakPositionErrorM'],['姿态峰值 / °','peakAttitudeErrorDeg'],['最低高度 / m','minimumHeightM'],['最高速度 / m/s','peakSpeedMps'],['喷口总通过量 / kg','gasThroughputKg'],['车载排出气量 / kg','onboardDischargedKg'],['外供气量 / kg','externalSupplyKg']];
-    $('comparison').innerHTML=summaries.length?`<table><thead><tr><th>固定步统计</th>${summaries.map(([name])=>`<th>${esc(name)}</th>`).join('')}</tr></thead><tbody>${metrics.map(([label,key])=>`<tr><th>${label}</th>${summaries.map(([,s])=>`<td>${fmt(s?.[key],3)}</td>`).join('')}</tr>`).join('')}</tbody></table>${analysis?`<p class="rc-help">${esc(analysis.status)} · ${esc(analysis.reason||analysis.conditions||analysis.note||'数值执行结果')} ${analysis.changed?'声明差异：'+esc(analysis.changed.join(', ')):''}</p>`:''}`:'';
+    const metrics=[['位置 RMS / m','rmsPositionErrorM'],['位置峰值 / m','peakPositionErrorM'],['姿态峰值 / °','peakAttitudeErrorDeg'],['最低高度 / m','minimumHeightM'],['最高速度 / m/s','peakSpeedMps'],['喷口总通过量 / kg','gasThroughputKg'],['车载排出气量 / kg','onboardDischargedKg'],['外供气量 / kg','externalSupplyKg'],['净用电 / Wh','energyUsedKWh',1000,true],['电池供电 / Wh','energyDischargedKWh',1000,true],['制动回充 / Wh','energyRecoveredKWh',1000,true]];
+    $('comparison').innerHTML=summaries.length?`<table><thead><tr><th>固定步统计</th>${summaries.map(([name])=>`<th>${esc(name)}</th>`).join('')}</tr></thead><tbody>${metrics.map(([label,key,scale=1,energy=false])=>`<tr><th>${label}</th>${summaries.map(([,s])=>`<td>${fmt(energy&&s?.energyAccountingComplete!==true?null:s?.[key]*scale,3)}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="rc-help">净用电 = 电池供电 − 制动回充；负值表示净回充。旧记录或不完整收支以 — 标示，不推算回充。</p>${analysis?`<p class="rc-help">${esc(analysis.status)} · ${esc(analysis.reason||analysis.conditions||analysis.note||'数值执行结果')} ${analysis.changed?'声明差异：'+esc(analysis.changed.join(', ')):''}</p>`:''}`:'';
     $('details').textContent=record?JSON.stringify({identity:record.identity,startedAt:record.startedAt,status:record.status,reason:record.reason,initialState:record.initialSnapshot.physical,initialSceneConfiguration:record.initialSnapshot.sceneConfiguration??null,finalSceneConfiguration:record.finalSnapshot.sceneConfiguration??null,sceneConfigurationScope:record.initialSnapshot.sceneConfigurationScope??'未保存视景配置',events:record.events,summary:record.summary,sampling:record.sampling,lastAnalysis:analysis?{identity:analysis.identity,sourceIdentity:analysis.sourceIdentity,status:analysis.status,completedSteps:analysis.completedSteps,requestedSteps:analysis.requestedSteps,execution:analysis.execution,compatibility:analysis.compatibility,reproduction:analysis.reproduction}:null},null,2):'记录后可查看完整原始条件。';
     for(const el of buttons('export-protected'))el.hidden=!protectedRaw;renderReproduction(analysis);drawPlot();paintStatus();localizeTree(mount);
   }

@@ -24,6 +24,10 @@ export const VEHICLE_DRIVER_VIEW=Object.freeze({
   position:Object.freeze([.33,.40,-.15]),target:Object.freeze([.33,.25,20]),
   scope:'Existing experimental cockpit at its left driving seat; authored eye point, not OEM visibility certification.'
 });
+export const VEHICLE_STEERING_PRESENTATION=Object.freeze({
+  ratio:12,maxRoadWheelAngleRad:.49,
+  scope:'Authored 12:1 cockpit display ratio with ±0.49 rad road-wheel limit; not a measured Tesla steering specification. Actual steering telemetry owns the pose.'
+});
 
 // A profile replaces tessellation, never the physical outline or suspension
 // state. Variants are built on demand once and reused across quality changes.
@@ -753,6 +757,7 @@ function buildCockpit(cabin,mats,{official=false}={}){
   curve(cabin,[[0,.575,.150],[0,.525,.150]],.004,mats.black,'rear view mirror stalk',false);
   box(cabin,.150,.050,.021,mats.black,[0,.505,.150],.009,'frameless interior mirror');
   box(cabin,.135,.036,.002,mats.chrome,[0,.505,.137],.007,'mirror reflective glass');
+  return {steering};
 }
 
 function sealOutline(){
@@ -1266,15 +1271,24 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     for(const z of [-1.49,-.94])ring(equipment,.157,.012,mats.black,[side*.285,.032,z],'z',28,'pressure tank clamp');
     curve(equipment,[[side*.28,-.004,-1.73],[side*.58,-.066,-1.77],[side*.63,-.147,-.40],[side*.66,-.145,.91]],.012,mats.copper,'gas supply manifold');
   }
-  buildCockpit(cabin,mats);
-  if(officialCabin){buildCockpit(officialCabin,mats,{official:true});mergeStaticMeshes(officialCabin);}
+  const cockpit=buildCockpit(cabin,mats);
+  const officialCockpit=officialCabin?buildCockpit(officialCabin,mats,{official:true}):null;
+  const cockpitSteering=[cockpit.steering,...(officialCockpit?[officialCockpit.steering]:[])];
+  for(const [root,control] of [[cabin,cockpit],[officialCabin,officialCockpit]]){
+    if(!root)continue;
+    // Keep the moving assembly outside the static cabin batch. Batch its own
+    // materials once, so steering adds a handful of draw calls, not new meshes
+    // on each frame or a cabin rebuild on each input.
+    control.steering.removeFromParent();mergeStaticMeshes(root);
+    root.add(control.steering);mergeStaticMeshes(control.steering);
+    control.steering.userData.presentation={...VEHICLE_STEERING_PRESENTATION};
+  }
   equipment.visible=false;
 
   const wheels=[buildWheel(wheelsRoot,-1,1.42,mats),buildWheel(wheelsRoot,1,1.42,mats),buildWheel(wheelsRoot,-1,-1.42,mats),buildWheel(wheelsRoot,1,-1.42,mats)];
   const suspensions=wheels.map(w=>buildSuspension(wheelsRoot,w,mats));
   mergeStaticMeshes(shell);
   mergeStaticMeshes(equipment);
-  mergeStaticMeshes(cabin);
   mergeStaticMeshes(underbody,false);
   // Tiny gaps and luminous lenses do not cast extra stair-stepped shadows onto
   // the adjacent body. The actual surrounding body still casts full shadows.
@@ -1368,6 +1382,17 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
         w.spin.rotation.x+=((telemetry.speedKmh||0)/3.6/.37)*dt;
       }
     }
+    const frontSteer=ws.slice(0,2).map(w=>w?.steer).filter(Number.isFinite);
+    const roadSteer=Number.isFinite(telemetry.steeringCentreDeg)?telemetry.steeringCentreDeg*PI/180:
+      frontSteer.length?frontSteer.reduce((sum,value)=>sum+value,0)/frontSteer.length:0;
+    const steeringAngle=clamp(roadSteer,-VEHICLE_STEERING_PRESENTATION.maxRoadWheelAngleRad,VEHICLE_STEERING_PRESENTATION.maxRoadWheelAngleRad);
+    for(const yoke of cockpitSteering){
+      // +X is left and the driver looks along +Z. Negative local Z rotation
+      // therefore turns the yoke left for a positive measured road-wheel turn.
+      yoke.rotation.z=-steeringAngle*VEHICLE_STEERING_PRESENTATION.ratio;
+      yoke.userData.roadWheelAngleRad=steeringAngle;
+      yoke.userData.source=Number.isFinite(telemetry.steeringCentreDeg)?'telemetry.steeringCentreDeg':frontSteer.length?'mean front wheel steer':'neutral inspection pose';
+    }
     suspensions.forEach(s=>{if(s.group.visible)s.update();});chamber.update(telemetry,dt);
     const nozzles=telemetry.nozzles||[];
     let rearThrust=0,rearMax=1;
@@ -1438,7 +1463,7 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     mats.whiteLight.emissiveIntensity=value==='off'?0:value==='drl'?1.0:2.4;
     mats.lampGuide.emissiveIntensity=value==='off'?0:value==='drl'?1.15:1.9;
     mats.lampEmitter.emissiveIntensity=value==='low-beam'?.44:0;
-    mats.tailLight.emissiveIntensity=value==='off'?0:1.25;
+    mats.tailLight.emissiveIntensity=brakeSignal?2.4:value==='off'?0:1.25;
     group.userData.lampMode=value;
     return lampMode;
   }
@@ -1454,6 +1479,6 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
   }
   group.userData.pressureChamber={...chamber.root.userData};
   setQuality(initialQuality);setDisplayConfiguration(displayConfiguration);setLampMode('low-beam');
-  return {group,update,setColor,setCutaway,setQuality,setViewBudget,getRenderCost,setDisplayConfiguration,setLampMode,setInteriorView,get interiorView(){return interiorView;},get displayConfiguration(){return displayMode;},get lampMode(){return lampMode;},get quality(){return quality;},dispose,wheels,materials:mats,wing,chamber,suspensions};
+  return {group,update,setColor,setCutaway,setQuality,setViewBudget,getRenderCost,setDisplayConfiguration,setLampMode,setInteriorView,get interiorView(){return interiorView;},get displayConfiguration(){return displayMode;},get lampMode(){return lampMode;},get quality(){return quality;},dispose,wheels,materials:mats,wing,chamber,suspensions,cockpitSteering};
 }
 

@@ -1,0 +1,125 @@
+{
+  "schema": "roadster-night-light-counterexamples-3.22",
+  "baselineCommit": "94e5b73d4bbc30228fd3c15b5186b8832800ea43",
+  "path": "dist/city-practical-lights.js",
+  "sourceSha256": {
+    "before": "0f310408b1dadaeccd37fe5af0d789f1e81f309b3879c4a7acb5ce45e1f59dd7",
+    "after": "94f3d62c2f74aa3ded07473c546b55f9e274f2f458bf9c21d66cd77a1b9fdae0"
+  },
+  "before": {
+    "qualitySequence": [
+      {
+        "quality": "high",
+        "z": 0,
+        "selected": [
+          "lamp-2",
+          "lamp-3",
+          "lamp-4"
+        ]
+      },
+      {
+        "quality": "balanced",
+        "z": 12,
+        "selected": [
+          "lamp-4",
+          "lamp-3"
+        ]
+      },
+      {
+        "quality": "high",
+        "z": 12,
+        "selected": [
+          "lamp-4",
+          "lamp-3",
+          "lamp-4"
+        ]
+      }
+    ],
+    "relightRefresh": false,
+    "headlampDepthErrorsM": [
+      6,
+      6
+    ]
+  },
+  "after": {
+    "qualitySequence": [
+      {
+        "quality": "high",
+        "z": 0,
+        "selected": [
+          "lamp-2",
+          "lamp-3",
+          "lamp-4"
+        ]
+      },
+      {
+        "quality": "balanced",
+        "z": 12,
+        "selected": [
+          "lamp-4",
+          "lamp-3"
+        ]
+      },
+      {
+        "quality": "high",
+        "z": 12,
+        "selected": [
+          "lamp-4",
+          "lamp-3",
+          "lamp-5"
+        ]
+      }
+    ],
+    "relightRefresh": true,
+    "headlampDepthErrorsM": [
+      0,
+      0
+    ]
+  },
+  "scope": "Retained Git source and current source executed through the same actual Three.js light and depth-camera lifecycle. No GPU raster or frame-time claim.",
+  "crossfade": {
+    "before": {
+      "frames": 900,
+      "seed": 7713,
+      "duplicateFrames": 138,
+      "firstDuplicate": {
+        "frame": 70,
+        "ids": [
+          "lamp-5",
+          "lamp-6",
+          "lamp-5"
+        ],
+        "gains": [
+          0.572133789136376,
+          0.9999445484005678,
+          0.38258961070589825
+        ]
+      }
+    },
+    "intermediateSettledOnlyRepair": {
+      "description": "Current source with only the occupied-set union reverted to the initial repair; diagnostic counterexample, not a release.",
+      "frames": 900,
+      "seed": 7713,
+      "duplicateFrames": 65,
+      "firstDuplicate": {
+        "frame": 35,
+        "ids": [
+          "lamp-7",
+          "lamp-6",
+          "lamp-7"
+        ],
+        "gains": [
+          0.2009846360291009,
+          0.9391899373747821,
+          0
+        ]
+      }
+    },
+    "after": {
+      "frames": 900,
+      "seed": 7713,
+      "duplicateFrames": 0,
+      "firstDuplicate": null
+    }
+  }
+}
