@@ -2,6 +2,18 @@ import {getLanguage,t as tr} from './i18n.js';
 import {estimateLandingReserve,controlLimitFeedback} from './landing-reserve.js';
 import {pilotIntentMessage} from './pilot-input-intent.js';
 const f=(n,d=1)=>Number.isFinite(n)?n.toFixed(d):'—';
+function actionReason(reason,en){
+  const labels={
+    'wheel-supported-landing':['四轮承载已确认，驾驶者接管','Four-wheel support confirmed; pilot has control'],
+    'returned-to-start-height':['已回到起始空中高度','Returned to the starting flight height'],
+    'pilot-or-controller-cancel':['驾驶者或控制器取消动作','Cancelled by the pilot or controller'],
+    'control-or-mode-handoff':['切换控制方式，动作已中断','Control mode changed; maneuver interrupted'],
+  };
+  if(labels[reason])return labels[reason][en?1:0];
+  const collision=/^(起跳 \/ 旋转|着陆|回稳)中车身碰撞（.*）；/.exec(reason||'');
+  if(en&&collision){const phase={'起跳 / 旋转':'launch / rotation','着陆':'landing','回稳':'recovery'}[collision[1]];return 'Body collision during '+phase+'; full maneuver aborted, attempting recovery with available actuators';}
+  return tr(reason||'');
+}
 export function createOperationHud({mount,getSim,getContext,getOwner=()=>'',getLastAction=()=>null,onTogglePaused=()=>{},exportInputs=()=>{}}){
   const doc=mount.ownerDocument,node=doc.createElement('aside');node.className='operation-hud';node.setAttribute('data-no-i18n','');
   node.innerHTML='<div class="operation-header"><strong data-operation="identity"></strong><button type="button" id="operation-pause" data-operation="pause" data-requires-graphics></button></div><p data-operation="control-source" role="status"></p><p data-operation="control-target"></p><p data-operation="limits"></p><p data-operation="intent" role="status"></p><p class="operation-action" data-operation="action" role="status" hidden></p><p class="operation-attitude" data-operation="attitude"></p><p class="operation-pitch" data-operation="pitch-envelope" role="status" hidden></p><details class="operation-detail"><summary data-operation="summary"></summary><p data-operation="motion-scope"></p><p data-operation="authority"></p><p data-operation="reserve"></p><p data-operation="scope"></p><button type="button" data-operation="export"></button></details>';
@@ -47,11 +59,13 @@ export function createOperationHud({mount,getSim,getContext,getOwner=()=>'',getL
     const rejected=receipt?.accepted===false&&receipt.simTime>=Math.max(physicsAction?.simTimeS??-Infinity,feedbackRun?.startedAtSimTimeS??-Infinity);
     const action=rejected?receipt:feedbackRun??physicsAction??receipt;
     const actionNames={pitch:L('U 受控后空翻','U controlled backflip'),KeyU:L('U 受控后空翻','U controlled backflip'),roll:L('X 快速滚转','X quick roll'),land:L('L 自动着陆','L auto land'),KeyX:L('X 快速滚转','X quick roll'),KeyG:L('G 回平','G level')};
-    const actionStates={accepted:L('已接收','Accepted'),rejected:L('未执行','Not executed'),running:L('进行中','Running'),completed:L('已完成','Completed'),cancelled:L('已取消','Cancelled'),interrupted:L('已中断','Interrupted'),aborted:L('已中止','Aborted')};
+    const actionStates={accepted:L('已接收','Accepted'),rejected:L('未执行','Not executed'),running:L('进行中','Running'),completed:L('已完成','Completed'),cancelled:L('已取消','Cancelled'),interrupted:L('已中断','Interrupted'),aborted:L('已中止','Aborted'),'aborted-landed':L('未完成 · 已着地','Not completed · landed'),'aborted-recovered':L('未完成 · 已回稳','Not completed · recovered')};
     $('action').hidden=!action;
-    if(action){const hasRun=action===feedbackRun;const state=actionStates[action.state]??action.state??'';
-      $('action').textContent=(actionNames[action.name]||action.name)+' · '+state+(hasRun?' · '+f(action.elapsedS,2)+' s / '+f(action.name==='pitch'?action.actualPitchTravelDeg:action.actualRollTravelDeg,1)+'°':action.reason?' · '+tr(action.reason):'');
-      $('action').title=tr(action.reason||'');$('action').dataset.state=action.state||'';
+    if(action){const hasRun=action===feedbackRun,aborting=hasRun&&action.state==='running'&&t.maneuver?.abortReason;
+      const state=aborting?L('动作中止 · 尝试回稳','Maneuver aborted · attempting recovery'):actionStates[action.state]??action.state??'';
+      const reason=actionReason(aborting||action.reason,en),showReason=!hasRun||aborting||['rejected','aborted','aborted-landed','aborted-recovered','interrupted','cancelled'].includes(action.state);
+      $('action').textContent=(actionNames[action.name]||action.name)+' · '+state+(hasRun?' · '+f(action.elapsedS,2)+' s / '+f(action.name==='pitch'?action.actualPitchTravelDeg:action.actualRollTravelDeg,1)+'°':'')+(showReason&&reason?' · '+reason:'');
+      $('action').title=reason;$('action').dataset.state=aborting?'aborting':action.state||'';
     }
     const pitch=t.manualPitchEnvelope;$('pitch-envelope').hidden=!pitch?.active;
     if(pitch?.active){$('pitch-envelope').textContent=L('手动俯仰 ','Manual pitch ')+f(pitch.requestedRateDegS,0)+'°/s · '+L('一周约 ','one turn ~')+f(pitch.nominalFullTurnS,1)+' s'+(pitch.lowClearanceWarning?' · '+L('净空不足风险；倒置不能持续承重','Low-clearance risk; inversion cannot sustain weight'):'')+' · '+L('U：独立受控后翻','U: separate controlled backflip');$('pitch-envelope').title=L('时间不含回平。这里没有把重力下落量级当作最低安全高度。','Time excludes levelling. A gravity-only drop estimate is not a minimum safe height.');}

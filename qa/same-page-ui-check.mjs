@@ -9,7 +9,7 @@ import * as vm from 'node:vm';
 import {readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
-import {resolve,dirname,relative} from 'node:path';
+import {resolve,dirname,relative,sep} from 'node:path';
 import * as NativeThree from '../dist/vendor/three.module.js';
 import {VEHICLE_DRIVER_VIEW} from '../dist/vehicle.js';
 import {MODEL_VERSION} from '../dist/vehicle-models.js';
@@ -111,6 +111,9 @@ const mocks=new Map([
   ['car-radio.js',{createCarRadio:async()=>({toggle(){},next(){}})}],
 ]);
 const hashBytes=bytes=>createHash('sha256').update(bytes).digest('hex');
+// Mock keys and report paths use URL-style separators on every host. Keep
+// native absolute paths for filesystem access and canonical module identity.
+const relativeModulePath=(from,filename)=>relative(from,filename).split(sep).join('/');
 const modules=new Map(),moduleLoads=new Map(),moduleConstructionCounts=new Map(),loadedSources=new Set(),sourceSnapshots=new Map([['dist/index.html',hashBytes(source)]]);
 for(const name of ['style.css','game.css','research-console.css','research.css']){
   const path='dist/'+name;sourceSnapshots.set(path,hashBytes(await readFile(resolve(root,path))));
@@ -123,10 +126,10 @@ function getModule(filename){
   const pending=Promise.resolve().then(()=>createModule(filename));moduleLoads.set(filename,pending);return pending;
 }
 async function createModule(filename){
-  const key=relative(dist,filename),mock=mocks.get(key);let module;
+  const key=relativeModulePath(dist,filename),mock=mocks.get(key);let module;
   if(mock)module=new vm.SyntheticModule(Object.keys(mock),function(){for(const[name,value]of Object.entries(mock))this.setExport(name,value);},{context,identifier:pathToFileURL(filename).href});
   else{
-    const code=await readFile(filename,'utf8');loadedSources.add(relative(root,filename));sourceSnapshots.set(relative(root,filename),hashBytes(code));
+    const code=await readFile(filename,'utf8'),sourcePath=relativeModulePath(root,filename);loadedSources.add(sourcePath);sourceSnapshots.set(sourcePath,hashBytes(code));
     module=new vm.SourceTextModule(code,{context,identifier:pathToFileURL(filename).href,initializeImportMeta(meta){meta.url=pathToFileURL(filename).href;},importModuleDynamically:async(specifier,referencing)=>{const next=await getModule(resolve(dirname(fileURLToPath(referencing.identifier)),specifier));if(next.status==='unlinked')await next.link(linker);if(next.status==='linked')await next.evaluate();return next;}});
   }
   moduleConstructionCounts.set(filename,(moduleConstructionCounts.get(filename)||0)+1);modules.set(filename,module);return module;

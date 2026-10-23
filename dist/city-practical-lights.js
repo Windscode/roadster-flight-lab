@@ -44,7 +44,7 @@ export function rankCityPracticalAnchors(anchors,p,{direction={x:0,y:0,z:1},prev
 export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}){
   const pool=[],heads=[],position=new THREE.Vector3(),point=new THREE.Vector3();
   let quality='balanced',profile=PROFILES.balanced,enabled=false,vehicle=null,lastSelect=-Infinity,lastShadow=-Infinity,lastTime=null,shadowDirty=true;
-  const forward=new THREE.Vector3(0,0,1),lastVehicleMatrix=new THREE.Matrix4(),lastViewpoint=new THREE.Vector3(Infinity,Infinity,Infinity);let vehicleMatrixReady=false;
+  const forward=new THREE.Vector3(0,0,1),lastVehicleMatrix=new THREE.Matrix4(),lastViewpoint=new THREE.Vector3(Infinity,Infinity,Infinity);let vehicleMatrixReady=false,lastShapeRevision;
   const stats={enabled:false,streetSpots:0,headlightSpots:0,shadowMaps:0,shadowMapSize:256,shadowHz:20,updates:0,selected:[],
     policy:'Main camera coverage on its visible street or ramp layer, 20% selection hysteresis, one occupied-slot crossfade at a time, 2/3/4 bounded shadowed fixtures. Static bounced diffuse stays continuous between direct-light pools.',selectionAnchor:null,selectionDirection:null,selectionSurfaceY:0,transitions:0};
   const add=(isHead,index)=>{
@@ -113,6 +113,9 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
     if(vehicle){
       vehicle.updateWorldMatrix(true,false);
       if(!vehicleMatrixReady||vehicle.matrixWorld.elements.some((v,i)=>Math.abs(v-lastVehicleMatrix.elements[i])>.0002)){shadowDirty=true;lastVehicleMatrix.copy(vehicle.matrixWorld);vehicleMatrixReady=true;}
+      // Local articulation and LOD can change opaque depth at a fixed root.
+      // The vehicle maintains this revision without a per-frame mesh walk.
+      if(vehicle.userData.shadowShapeRevision!==lastShapeRevision){shadowDirty=true;lastShapeRevision=vehicle.userData.shadowShapeRevision;}
       heads.forEach((entry,i)=>{
         const visible=i<profile.heads&&(!vehicle.userData.lampMode||vehicle.userData.lampMode==='low-beam');
         // Motion with lamps off updates the vehicle tracker, but deliberately
@@ -138,7 +141,7 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
     if(!needed)return false;
     pool.concat(heads).forEach(({light})=>{if(light.visible)light.shadow.needsUpdate=true;});lastShadow=time;shadowDirty=false;stats.updates++;stats.motionCoherent=true;if(moving)stats.motionUpdates=(stats.motionUpdates||0)+1;return true;
   }
-  return {stats,configure,update,wantsShadowUpdate,setVehicleRoot(root){vehicle=root;vehicleMatrixReady=false;shadowDirty=true;if(!root)heads.forEach(({light})=>light.visible=false);},
+  return {stats,configure,update,wantsShadowUpdate,setVehicleRoot(root){vehicle=root;vehicleMatrixReady=false;lastShapeRevision=undefined;shadowDirty=true;if(!root)heads.forEach(({light})=>light.visible=false);},
     setEnabled(value){enabled=!!value;stats.enabled=enabled;pool.forEach(({light},i)=>light.visible=enabled&&i<profile.street);heads.forEach(({light},i)=>light.visible=enabled&&!!vehicle&&i<profile.heads);shadowDirty=true;lastSelect=-Infinity;},
     getLights(){return pool.concat(heads).filter(({light})=>light.visible).map(({light})=>light);},
     dispose(){for(const {light}of pool.concat(heads)){light.shadow.map?.dispose();scene.remove(light,light.target);}}

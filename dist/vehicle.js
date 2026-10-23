@@ -1298,6 +1298,39 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
   const jetExhaust=new THREE.Vector3(),shadowDefaults=new WeakMap();
   let time=0,cutaway=false,interiorView=false,exteriorGeometryQuality=null,wingExtension=0,quality='high',geometryQuality='high',projectedPixels=null,displayMode='experimental',lampMode='low-beam';
   const viewPoint=new THREE.Vector3();
+  // Root motion alone misses a parked wing, deforming seal, or a camera-driven
+  // geometry profile change. Observe only the known articulated roots; this
+  // does not traverse the vehicle's meshes in the displayed-frame loop.
+  const shadowShapeNodes=[];let shadowProfile=null,shadowProfileGeometry=null,lastSealRevision=-1,sealCastsShadow=false;
+  group.userData.shadowShapeRevision=0;
+  // Participation is recomputed when a profile changes, not while driving.
+  // Ignore the articulated root's own visibility here: a nozzle can reveal
+  // itself between profile changes, which is handled by the frame sampler.
+  function shadowGeometryVisible(object){
+    for(let parent=object.parent;parent;parent=parent.parent)if(!parent.visible)return false;
+    let casts=false;
+    const visit=node=>{if(node!==object&&!node.visible)return;if(node.isMesh&&node.castShadow)casts=true;for(const child of node.children)visit(child);};
+    visit(object);return casts;
+  }
+  function trackShadowNode(object){
+    const casts=shadowGeometryVisible(object),active=casts&&object.visible;
+    shadowShapeNodes.push({object,position:object.position.clone(),quaternion:object.quaternion.clone(),scale:object.scale.clone(),casts,active});
+    if(active)group.userData.shadowShapeRevision++;
+  }
+  for(const object of [...wheels.flatMap(w=>[w.assembly,w.spin]),...cockpitSteering,wing,...wingStruts,...rearFans.map(j=>j.fan)])trackShadowNode(object);
+  function updateShadowShape(){
+    const sealRevision=chamber.root.userData.sealGeometryUpdates;
+    let changed=sealCastsShadow&&sealRevision!==lastSealRevision;lastSealRevision=sealRevision;
+    for(const state of shadowShapeNodes){
+      const o=state.object,active=state.casts&&o.visible;
+      // Accumulate sub-threshold movement against the last sampled shape,
+      // while ignoring floating-point noise far below any depth-map texel.
+      if(state.active===active&&state.position.distanceToSquared(o.position)<1e-8&&1-Math.abs(state.quaternion.dot(o.quaternion))<1e-10&&state.scale.distanceToSquared(o.scale)<1e-10)continue;
+      if(active||state.active)changed=true;
+      state.position.copy(o.position);state.quaternion.copy(o.quaternion);state.scale.copy(o.scale);state.active=active;
+    }
+    if(changed)group.userData.shadowShapeRevision++;
+  }
 
   function applyProfileObjects(root){
     root.traverse(o=>{
@@ -1312,6 +1345,7 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
   }
 
   function applyDisplayProfile(value){
+    const nextShadowProfile=[value,cutaway,interiorView,displayMode].join('|');
     geometryQuality=value;
     applyGeometryQuality(group,geometryQuality);applyProfileObjects(group);
     const anisotropy=geometryQuality==='balanced'?2:8;
@@ -1326,6 +1360,13 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     for(const wheel of wheels)wheel.spin.traverse(o=>{
       if(o.isLineSegments||[mats.sidewall,mats.seam,mats.chrome].includes(o.material))o.visible=geometryQuality!=='balanced'||cutaway;
     });
+    if(nextShadowProfile!==shadowProfile){
+      shadowProfile=nextShadowProfile;
+      const casters=[];group.traverseVisible(o=>{if(o.isMesh&&o.castShadow)casters.push(o.id,o.geometry.id,o.material.side,o.material.shadowSide,o.material.transparent,o.material.opacity);});
+      const signature=casters.join('|');if(signature!==shadowProfileGeometry){shadowProfileGeometry=signature;group.userData.shadowShapeRevision++;}
+      for(const state of shadowShapeNodes){state.casts=shadowGeometryVisible(state.object);state.active=state.casts&&state.object.visible;}
+      sealCastsShadow=chamber.skirt.visible&&shadowGeometryVisible(chamber.skirt);
+    }
     group.userData.quality=quality;group.userData.geometryQuality=geometryQuality;
   }
   function setQuality(value){
@@ -1401,6 +1442,7 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
       if(!jets[i]){
         jets[i]=nozzleGeometry(jetsRoot,mats,n.id||'force nozzle '+i);
         applyGeometryQuality(jets[i].root,geometryQuality);applyProfileObjects(jets[i].root);
+        trackShadowNode(jets[i].root);
       }
       const jet=jets[i];
       if(n.position)jet.root.position.set(n.position.x,n.position.y,n.position.z);
@@ -1434,6 +1476,7 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     else{wing.position.set(0,.325+wingExtension*.30,-2.065);wing.rotation.x=-wingExtension*.25;}
     wing.userData.deployment=wingExtension;wing.userData.source=hasPhysicalPose?'telemetry.wing.position/incidenceRad':'telemetry.wing.deployment';
     for(const strut of wingStruts){strut.scale.y=1+wingExtension*2.5;strut.position.y=.30+wingExtension*.15;}
+    updateShadowShape();
     brakeSignal=vehicleBrakeSignal(telemetry,brakeSignal);
     mats.tailLight.emissiveIntensity=brakeSignal?2.4:lampMode==='off'?0:1.25;
     group.userData.brakeSignal={active:brakeSignal,source:'service-brake or actual regen deceleration; .9/.6 m/s2 hysteresis',presentationOnly:true};

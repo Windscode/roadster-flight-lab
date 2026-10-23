@@ -2,7 +2,8 @@ import * as CANNON from './vendor/cannon-es.js';
 import {roadWheelAngle,nozzleExhaustVelocity,hoverBudget,rearWingPose,quickRollManeuverProfile,sampleRollManeuver} from './vehicle-models.js';
 import {exportSimulationState,importSimulationState} from './simulation-snapshot.js';
 import {solveStaticWrench,staticWrenchFeasible} from './trim-feasibility.js';
-import {sampleVehicleClearance,sampleQuickRollHeadroom} from './vehicle-clearance.js';
+import {sampleVehicleClearance} from './vehicle-clearance.js';
+import {sampleManeuverHeadroom} from './maneuver-clearance.js';
 import {resetSafetyJournal,noteSafetyInput,rememberValidStep,preserveFailure,getFailureReport,contactDiagnostics,motionDiagnostics,maneuverDiagnostics,noteManeuverAction,noteManeuverEnd} from './simulation-safety.js';
 import {DEFAULT_OBSERVATION,observationConfiguration,measureControlState,controllerBody} from './control-observation.js';
 import {integrateWheel,regularizedSlip,lateralTireForce} from './tire-dynamics.js';
@@ -519,8 +520,6 @@ export class RoadsterSim {
         peakVy+=(rollAccel*Math.max(0,Math.cos(angle))-p.gravity)*step;peakY+=peakVy*step;rotationPeak=Math.max(rotationPeak,peakY);
       }
       const peakRise=launchRise+rotationPeak+1.8;
-      const overhead=sampleQuickRollHeadroom(b.position,(origin,direction,distance)=>this.traceSurface(origin,direction,distance),peakRise+1.5);
-      if(overhead.distanceM!==null&&overhead.distanceM<peakRise+1.2){this.status='滚转预检：快翻旋转 / 制动包络上方净空不足';return false;}
       // Account for takeoff, actual reference angular impulse, the predicted
       // remaining downward speed, then 1.5 s settling and 16% explicit margin.
       // Counting half of g*T again for arrest double-counted the fast profile's
@@ -528,6 +527,8 @@ export class RoadsterSim {
       const launchImpulse=b.mass*(Math.max(0,launchVelocity-b.velocity.y)+p.gravity*launchTime);
       const rotationImpulse=2*b.inertia.z*profile.rateRadS/.59;
       const arrestSpeed=Math.max(0,-estimatedVy),arrestTime=arrestSpeed/netAccel+4*p.valveRiseTime+.15;
+      const overhead=sampleManeuverHeadroom(this,{rangeM:peakRise+1.5,horizonS:launchTime+duration+arrestTime+1.5});
+      if(overhead.distanceM!==null&&overhead.distanceM<peakRise+1.2){this.status='滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足';return false;}
       const arrestImpulse=b.mass*(arrestSpeed+p.gravity*arrestTime),reserveImpulse=b.mass*p.gravity*1.5;
       const requiredImpulse=1.16*(launchImpulse+rotationImpulse+arrestImpulse+reserveImpulse),availableImpulse=this._hoverBudget().impulseNs;
       if(p.supplyMode==='finite'&&availableImpulse<requiredImpulse){this.status=`滚转预检：剩余冲量不足：可用 ${(availableImpulse/1000).toFixed(1)} kN·s，快翻 / 回稳预算 ${(requiredImpulse/1000).toFixed(1)} kN·s`;return false;}
@@ -537,7 +538,7 @@ export class RoadsterSim {
         requiredImpulseNs:requiredImpulse,plannedPeakHeight:origin.y+peakRise,autoLand:grounded,
         preflight:{policy:'quick-roll-1',referenceTorqueNm:referenceTorque,rollTorqueUpperNm:rollTorque,torqueMargin,availableAccelMps2:availableAccel,
           launchImpulseNs:launchImpulse,rotationImpulseNs:rotationImpulse,arrestImpulseNs:arrestImpulse,settlingImpulseNs:reserveImpulse,impulseMargin:1.16,
-          predictedRotationEndVerticalMps:estimatedVy,predictedRotationDisplacementM:estimatedY,availableImpulseNs:Number.isFinite(availableImpulse)?availableImpulse:null}};
+          predictedRotationEndVerticalMps:estimatedVy,predictedRotationDisplacementM:estimatedY,availableImpulseNs:Number.isFinite(availableImpulse)?availableImpulse:null,headroom:overhead}};
       this._heightTarget=origin.y;this.status=grounded?'快翻：短起跳，完成一周后着陆':'快翻：完成一周并返回起始高度';return true;
     }
     if(name==='ramp') {
@@ -912,8 +913,22 @@ export class RoadsterSim {
 
   _controller(dt,input) {
     const b=controllerBody(this),p=this.params,m=b.mass,angles=this._angles(b);
+    const hullContact=this.world.contacts.find(c=>{const shape=c.bi===this.body?c.si:c.bj===this.body?c.sj:null;return shape&&shape.material!==this._wheelStopMaterial;});
+    const maneuver=this._maneuver;
+    if(hullContact&&['roll','pitch','land'].includes(maneuver?.name)&&!maneuver.abortReason){
+      const other=hullContact.bi===this.body?hullContact.bj:hullContact.bi;
+      // A sampled preflight can miss an obstacle or the pilot may steer into
+      // one later. A hull strike invalidates the whole action, including its
+      // landing/recovery tail. Preserve the first failure and an existing
+      // recovery phase/timer: sustained contact must not restart it each slice.
+      const phase=['land','descent'].includes(maneuver.phase)?'着陆':maneuver.phase==='recover'?'回稳':'起跳 / 旋转';
+      maneuver.abortReason=`${phase}中车身碰撞（${other.userData?.id??'障碍物'}）；完整动作已中止，按实际执行器尝试回稳`;
+      if(['climb','rotate'].includes(maneuver.phase)){
+        maneuver.phase=maneuver.originGrounded?'land':'recover';maneuver.time=0;
+        this._heightTarget=maneuver.returnHeight;this._positionTarget.copy(b.position);this._heightIntegral=0;
+      }
+    }
     if(this.mode==='hover'&&this.stabilizationMode!=='hold'&&!this._maneuver){
-      const hullContact=this.world.contacts.some(c=>{const shape=c.bi===this.body?c.si:c.bj===this.body?c.sj:null;return shape&&shape.material!==this._wheelStopMaterial;});
       if(hullContact){
         // Collision is not permission to start a new controller. When H/E
         // assistance was already requested, invalidate its old free-space

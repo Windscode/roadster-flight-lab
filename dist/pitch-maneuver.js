@@ -1,5 +1,5 @@
 import {sampleRollManeuver} from './vehicle-models.js';
-import {sampleQuickRollHeadroom} from './vehicle-clearance.js';
+import {sampleManeuverHeadroom} from './maneuver-clearance.js';
 
 // A commanded angular trajectory, not an animation or a body-state override.
 // Its longer pitch lever arm is accompanied by the actual, much larger Ixx.
@@ -65,13 +65,8 @@ export function startPitchManeuver(sim){
   const peakRise=launchRise+rotationPeak+2.4;
   // Sample the current footprint and its nominal horizontal coast path. These
   // rays reject obvious roofs; they are explicitly not a swept-volume proof.
-  const headroom=[];
-  const sampleTimes=Array.from({length:21},(_,i)=>i*.25);
-  for(const t of sampleTimes){
-    const position={x:origin.x+b.velocity.x*t,y:origin.y,z:origin.z+b.velocity.z*t};
-    headroom.push(sampleQuickRollHeadroom(position,(o,d,r)=>sim.traceSurface(o,d,r),peakRise+2.5));
-  }
-  if(headroom.some(h=>h.distanceM!==null&&h.distanceM<peakRise+2.4))return reject('车长旋转包络 / 预计滑行路径上方净空不足');
+  const headroom=sampleManeuverHeadroom(sim,{rangeM:peakRise+2.5,horizonS:5});
+  if(headroom.distanceM!==null&&headroom.distanceM<peakRise+2.4)return reject('保守净空估计认为车长旋转包络 / 预计滑行路径上方净空不足');
   const launchImpulse=b.mass*(Math.max(0,launchVelocity-b.velocity.y)+p.gravity*launchTime);
   const rotationImpulse=2*b.inertia.x*profile.rateRadS/lever;
   const arrestSpeed=Math.max(0,-estimatedVy),arrestTime=arrestSpeed/netAccel+4*p.valveRiseTime+.15;
@@ -86,6 +81,6 @@ export function startPitchManeuver(sim){
       availableAccelMps2:availableAccel,launchImpulseNs:launchImpulse,rotationImpulseNs:rotationImpulse,arrestImpulseNs:arrestImpulse,
       settlingImpulseNs:reserveImpulse,impulseMargin:1.16,predictedRotationEndVerticalMps:estimatedVy,
       predictedRotationDisplacementM:estimatedY,availableImpulseNs:Number.isFinite(availableImpulse)?availableImpulse:null,
-      headroomEstimated:true,headroomSamples:headroom.length*5,headroomHorizonS:5,headroomScope:'Five upward rays at 0.25 s coast samples through 5 s. Conservative sampled roofs only; no swept-volume or changing-obstacle certificate'}};
+      headroomEstimated:true,headroomSamples:headroom.sampleCount,headroomHorizonS:headroom.horizonS,headroomScope:headroom.method+' '+headroom.notCovered,headroom}};
   sim._heightTarget=origin.y;sim.status='受控后空翻：自动起跳 → 喷口俯仰闭环 → 物理着陆；区别于 E+1 手动定率';return true;
 }

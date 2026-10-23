@@ -189,14 +189,14 @@ export function createWindLaboratory(scene,renderer,camera,geometry=WIND_LAB_GEO
 
   let quality='balanced',profile=QUALITY.balanced,elapsed=0,fanPhase=0,fanClock=0,flowVisible=true,manualPose=undefined,disposed=false;
   const shadowMotion=createShadowMotionTracker(),shadowTarget=new THREE.Vector3(),shadowOffset=new THREE.Vector3(10,20.5,17);
-  let lastShadowTime=-Infinity,environmentTarget=null,environmentCaptured=false;const lastShadowPoint=new THREE.Vector3(Infinity,Infinity,Infinity),windVector=new THREE.Vector3(),windDirection=new THREE.Vector3();
+  let lastShadowTime=-Infinity,environmentTarget=null,environmentCaptured=false,shadowVehicleRoot=null;const lastShadowPoint=new THREE.Vector3(Infinity,Infinity,Infinity),windVector=new THREE.Vector3(),windDirection=new THREE.Vector3();
   const stats={name:'VECTOR / 07',type:'windlab',physicalSolids:geometry.length,dimensions:WIND_LAB_DIMENSIONS,prescribedFlow:{model:'spatially uniform input velocity; passive tracers, no CFD',velocity:{x:0,y:0,z:0},speedMps:0,tracers:0},environmentCapture:{status:'not attempted',size:128,captures:0},renderBudget:{quality:'balanced',shadowCascades:1,shadowSize:1024,shadowHz:20,shadowUpdates:0,shadowUpdatedThisFrame:false,pointLights:0,spotShadowMaps:0,probeFacesPerFrame:0,probeSize:0},liveScene:{}};
   function updateCost(){let allocated=0,draws=0,triangles=0,shadowDraws=0,shadowTriangles=0;group.traverse(o=>{if(!(o.isMesh||o.isLine)||!o.geometry)return;allocated++;let p=o;while(p&&p!==group){if(!p.visible)return;p=p.parent;}draws++;const n=o.isMesh?(o.geometry.index?.count||o.geometry.attributes.position.count)/3*(o.isInstancedMesh?o.count:1):0;triangles+=n;if(o.castShadow){shadowDraws++;shadowTriangles+=n;}});Object.assign(stats.liveScene,{scope:'visible scene objects before camera culling; vehicle excluded',allocatedBatches:allocated,activeDistanceBatches:draws,activeDistanceTriangles:Math.round(triangles),shadowDistanceBatches:shadowDraws,shadowDistanceTriangles:Math.round(shadowTriangles)});}
   function setQuality(name){quality=QUALITY[name]?name:'balanced';profile=QUALITY[quality];detailMeshes.forEach(m=>m.visible=profile.detail);const maxAnisotropy=renderer?.capabilities?.getMaxAnisotropy?.()||4,anisotropy=Math.min(quality==='balanced'?2:8,maxAnisotropy);if(floorMap.anisotropy!==anisotropy){floorMap.anisotropy=anisotropy;floorMap.needsUpdate=true;}if(key.shadow.mapSize.x!==profile.shadowSize){key.shadow.map?.dispose();key.shadow.map=null;key.shadow.mapSize.set(profile.shadowSize,profile.shadowSize);key.shadow.camera.updateProjectionMatrix();}key.shadow.needsUpdate=true;lastShadowTime=-Infinity;Object.assign(stats.renderBudget,{quality,shadowSize:profile.shadowSize,shadowHz:profile.shadowHz});stats.prescribedFlow.tracers=flow.visible?profile.flowCount:0;flowGeometry.setDrawRange(0,profile.flowCount*2);updateCost();}
   function wantsShadowUpdate(time,position,displayPose={}){
     if(disposed)return false;
     const p=finiteVector(position)?position:{x:0,y:0,z:0},t=Number.isFinite(time)?time:elapsed,
-      motion=shadowMotion.sample(p,displayPose),needed=motion.casterChanged||t-lastShadowTime>=1/profile.shadowHz;
+      motion=shadowMotion.sample(p,{...displayPose,shapeRevision:shadowVehicleRoot?.userData.shadowShapeRevision}),needed=motion.casterChanged||t-lastShadowTime>=1/profile.shadowHz;
     Object.assign(stats.renderBudget,{shadowUpdatedThisFrame:needed,shadowPolicy:SHADOW_MOTION_POLICY,shadowMotion:motion,shadowIdleHz:profile.shadowHz});
     if(needed){
       shadowTarget.set(clamp(p.x,-12,12),4.8,clamp(p.z,-26,26));
@@ -239,7 +239,7 @@ export function createWindLaboratory(scene,renderer,camera,geometry=WIND_LAB_GEO
   }
   function dispose(){if(disposed)return;disposed=true;group.removeFromParent();if(scene.environment===environmentTarget?.texture)scene.environment=originalEnvironment;scene.background=originalBackground;scene.fog=originalFog;scene.environmentIntensity=originalEnvironmentIntensity;environmentTarget?.dispose();key.shadow.map?.dispose();key.shadow.mapPass?.dispose();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();for(const t of textures)t.dispose();}
   setQuality('balanced');captureEnvironment();updateCost();
-  return {group,stats,ready:Promise.resolve(stats.environmentCapture),update,setQuality,wantsShadowUpdate,setTargetPose,
+  return {group,stats,ready:Promise.resolve(stats.environmentCapture),update,setQuality,wantsShadowUpdate,setTargetPose,setVehicleRoot(root){shadowVehicleRoot=root;shadowMotion.reset();},
     setFlowVisible(value){flowVisible=!!value;if(!flowVisible){flow.visible=flowArrow.visible=false;stats.prescribedFlow.tracers=0;updateCost();}},
     particleLighting:()=>({ambient,lights:particleLights}),exposureAt:()=>.90,
     resize(){},setDay(){},setContactAO(){},updateReflections(){},captureEnvironment,dispose,

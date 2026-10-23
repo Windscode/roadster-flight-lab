@@ -1,0 +1,1080 @@
+{
+  "schema": "roadster-maneuver-clearance-323",
+  "createdAt": "2026-10-23T13:53:02.487Z",
+  "modelBuildId": "3b80df9d3aa722fc5e382c660cbde7723f23bb66819c37f62bab95b23158020f",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "X rejects roofs along forward, reverse and rotated travel before changing physical state",
+      "status": "passed"
+    },
+    {
+      "name": "The bounded corridor leaves distant, side and sufficiently high roofs outside the rejection envelope",
+      "status": "passed"
+    },
+    {
+      "name": "Open-ground X retains its fast physical turn and four-wheel handoff with five seconds of continued W",
+      "status": "passed"
+    },
+    {
+      "name": "An unforeseen hull collision aborts X, retains physical recovery and never reports completed",
+      "status": "passed"
+    },
+    {
+      "name": "Collision recovery continuation preserves the abort reason and exact physical state",
+      "status": "passed"
+    },
+    {
+      "name": "Late X/U landing, airborne recovery and explicit L collisions preserve phase timing and cannot report success",
+      "status": "passed"
+    },
+    {
+      "name": "Conservative late-corridor refusals stay explicit and retain measured collision-free counterexamples",
+      "status": "passed"
+    },
+    {
+      "name": "U uses the same heading-aligned corridor without changing its pitch profile or force limits",
+      "status": "passed"
+    }
+  ],
+  "cases": [
+    {
+      "id": "roof-rejection",
+      "yaw": 0,
+      "speed": 10,
+      "forward": 10,
+      "path": {
+        "distanceM": 2.7529906091259595,
+        "objectId": "maneuver-test-roof",
+        "nearestTimeS": 0.4,
+        "horizonS": 5,
+        "rangeM": 12,
+        "sampleCount": 255,
+        "stationCount": 51,
+        "stationSpacingM": 1,
+        "surfaceVerticalMps": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; bounded to five seconds and 1285 rays.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "status": "滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足"
+    },
+    {
+      "id": "roof-rejection",
+      "yaw": 1.5707963267948966,
+      "speed": 10,
+      "forward": 10,
+      "path": {
+        "distanceM": 2.7529906091259595,
+        "objectId": "maneuver-test-roof",
+        "nearestTimeS": 0.4,
+        "horizonS": 5,
+        "rangeM": 12,
+        "sampleCount": 255,
+        "stationCount": 51,
+        "stationSpacingM": 1,
+        "surfaceVerticalMps": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; bounded to five seconds and 1285 rays.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "status": "滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足"
+    },
+    {
+      "id": "roof-rejection",
+      "yaw": 0.7853981633974483,
+      "speed": 10,
+      "forward": 10,
+      "path": {
+        "distanceM": 2.7529906091259595,
+        "objectId": "maneuver-test-roof",
+        "nearestTimeS": 0.4,
+        "horizonS": 5,
+        "rangeM": 12,
+        "sampleCount": 255,
+        "stationCount": 51,
+        "stationSpacingM": 1,
+        "surfaceVerticalMps": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; bounded to five seconds and 1285 rays.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "status": "滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足"
+    },
+    {
+      "id": "roof-rejection",
+      "yaw": 0,
+      "speed": -10,
+      "forward": -10,
+      "path": {
+        "distanceM": 2.7529906091259595,
+        "objectId": "maneuver-test-roof",
+        "nearestTimeS": 0.4,
+        "horizonS": 5,
+        "rangeM": 12,
+        "sampleCount": 255,
+        "stationCount": 51,
+        "stationSpacingM": 1,
+        "surfaceVerticalMps": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; bounded to five seconds and 1285 rays.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "status": "滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足"
+    },
+    {
+      "id": "open-corridor-distant",
+      "headroom": {
+        "distanceM": null,
+        "objectId": null,
+        "nearestTimeS": null,
+        "horizonS": 3.9839721035889246,
+        "rangeM": 6.482970505608256,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9959930258972312,
+        "surfaceVerticalMps": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; bounded to five seconds and 1285 rays.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, future steering/throttle changes, wind drift or moving obstacles."
+      }
+    },
+    {
+      "id": "open-corridor-side",
+      "headroom": {
+        "distanceM": null,
+        "objectId": null,
+        "nearestTimeS": null,
+        "horizonS": 3.9839721035889246,
+        "rangeM": 6.482970505608256,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9959930258972312,
+        "surfaceVerticalMps": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; bounded to five seconds and 1285 rays.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, future steering/throttle changes, wind drift or moving obstacles."
+      }
+    },
+    {
+      "id": "open-corridor-high",
+      "headroom": {
+        "distanceM": null,
+        "objectId": null,
+        "nearestTimeS": null,
+        "horizonS": 3.9839721035889246,
+        "rangeM": 6.482970505608256,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9959930258972312,
+        "surfaceVerticalMps": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; bounded to five seconds and 1285 rays.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, future steering/throttle changes, wind drift or moving obstacles."
+      }
+    },
+    {
+      "id": "open-ground",
+      "speed": 0,
+      "yaw": 0,
+      "supplyMode": "bench",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.9416666666666664,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.941666666666749,
+          "peakCgHeightM": 3.8984303284597464,
+          "actualPitchTravelDeg": -0.28319986981071565,
+          "actualRollTravelDeg": 360.57412846709815,
+          "externalGasKg": 148.39903059595676,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.941666666666745,
+          "decisionAtSimTimeS": 5.933333333333411,
+          "finalCgHeightM": 0.5887891208135818,
+          "finalVerticalSpeedMps": 0.06730489872586522,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.8984303284597464,
+      "peakForceRatio": 0.8255443316460939,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9893743125791866,
+        "rollDeg": 6.604504419334e-11,
+        "energyBalanceErrorJ": 0
+      }
+    },
+    {
+      "id": "open-ground",
+      "speed": 10,
+      "yaw": 0,
+      "supplyMode": "bench",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.886068129472161,
+      "peakForceRatio": 0.818111388338584,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9150058769398406,
+        "rollDeg": -2.2280388595215074e-9,
+        "energyBalanceErrorJ": -1.1920928955078125e-7
+      }
+    },
+    {
+      "id": "open-ground",
+      "speed": 30,
+      "yaw": 0,
+      "supplyMode": "bench",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.8,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.8000000000000727,
+          "peakCgHeightM": 3.86181523816324,
+          "actualPitchTravelDeg": 0.437532777323719,
+          "actualRollTravelDeg": 360.8266916613415,
+          "externalGasKg": 146.45380260148295,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.800000000000068,
+          "decisionAtSimTimeS": 5.791666666666735,
+          "finalCgHeightM": 0.5957829773093359,
+          "finalVerticalSpeedMps": -0.12491194773384103,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.86181523816324,
+      "peakForceRatio": 0.8168714844384249,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.8589230407605666,
+        "rollDeg": 5.008578930945937e-7,
+        "energyBalanceErrorJ": 0
+      }
+    },
+    {
+      "id": "open-ground",
+      "speed": 10,
+      "yaw": 1.5707963267948966,
+      "supplyMode": "bench",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.263049683905865,
+          "actualRollTravelDeg": 360.2028539107705,
+          "externalGasKg": 148.06609132770177,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552094,
+          "finalVerticalSpeedMps": -0.019892081256211586,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.886068129472161,
+      "peakForceRatio": 0.818111388338584,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9150058769398525,
+        "rollDeg": -2.2279937026360267e-9,
+        "energyBalanceErrorJ": 0
+      }
+    },
+    {
+      "id": "open-ground",
+      "speed": 10,
+      "yaw": 0,
+      "supplyMode": "finite",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.8884166160417046,
+          "actualPitchTravelDeg": 0.34493582437140624,
+          "actualRollTravelDeg": 360.20752294207597,
+          "externalGasKg": 0,
+          "onboardGasKg": 154.68361349716432,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.6020523578775685,
+          "finalVerticalSpeedMps": -0.0037146862767393042,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.8884166160417046,
+      "peakForceRatio": 0.8159239805107933,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9041398323922286,
+        "rollDeg": -8.140261468175016e-9,
+        "energyBalanceErrorJ": 0
+      }
+    },
+    {
+      "id": "unforeseen-roof",
+      "firstHull": {
+        "elapsedS": 0.6406249999999866,
+        "objectId": "maneuver-test-roof",
+        "kind": "test-fixture",
+        "vehicleShape": 3,
+        "pointWorld": {
+          "x": 0.4885902379436498,
+          "y": 3.3538225584192265,
+          "z": -232.8021011069944
+        },
+        "normal": {
+          "x": 0,
+          "y": -1,
+          "z": 0
+        },
+        "normalFromBody": false,
+        "penetrationM": 0.0038225584192264073,
+        "normalForceN": 1939954.5848369154
+      },
+      "firstAbort": {
+        "elapsedS": 0.6416666666666666,
+        "reason": "起跳 / 旋转中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+      },
+      "completion": {
+        "elapsedS": 3,
+        "feedback": {
+          "name": "roll",
+          "state": "aborted-landed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.000000000000017,
+          "peakCgHeightM": 2.5334290673786217,
+          "actualPitchTravelDeg": 0.7901916761768426,
+          "actualRollTravelDeg": 0.8737974512623345,
+          "externalGasKg": 121.80205267651877,
+          "onboardGasKg": 0,
+          "reason": "起跳 / 旋转中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 5.000000000000012,
+          "decisionAtSimTimeS": 4.998958333333346,
+          "finalCgHeightM": 0.5952989659086032,
+          "finalVerticalSpeedMps": -0.22169703093562546,
+          "aborted": true
+        }
+      },
+      "microHullContacts": 22,
+      "peakHullNormalForceN": 1939954.5848369154,
+      "peakHeightM": 2.5334290673786217,
+      "peakForceRatio": 0.818111388338584,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9270683043743094,
+        "rollDeg": 6.348368844203464e-11,
+        "energyBalanceErrorJ": 0
+      }
+    },
+    {
+      "id": "late-hull-contact",
+      "name": "roll",
+      "initialHeightM": 0.62,
+      "added": {
+        "elapsedS": 1.9,
+        "phase": "land",
+        "centerHeightM": 2.7,
+        "position": {
+          "x": -1.4506273310165834,
+          "y": 2.187705727807352,
+          "z": -239.99999998744124
+        }
+      },
+      "transition": {
+        "before": {
+          "phase": "land",
+          "time": 0.0010416666666666667
+        },
+        "after": {
+          "phase": "land",
+          "time": 0.0020833333333333333,
+          "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+        },
+        "dt": 0.0010416666666666667
+      },
+      "firstHull": {
+        "elapsedS": 1.9010416666666556,
+        "objectId": "maneuver-test-roof",
+        "kind": "test-fixture",
+        "vehicleShape": 3,
+        "pointWorld": {
+          "x": -0.8046076592849308,
+          "y": 2.857316025949229,
+          "z": -241.13989307512412
+        },
+        "normal": {
+          "x": 0.09869411747718976,
+          "y": -0.9951178177358693,
+          "z": 2.6307376257507763e-12
+        },
+        "normalFromBody": false,
+        "penetrationM": 0.24278963906601564,
+        "normalForceN": 10929152.28853455
+      },
+      "firstAbort": {
+        "elapsedS": 1.9083333333333332,
+        "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+      },
+      "completion": {
+        "elapsedS": 4.233333333333333,
+        "feedback": {
+          "name": "roll",
+          "state": "aborted-landed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.233333333333414,
+          "peakCgHeightM": 3.8987418770982725,
+          "actualPitchTravelDeg": 0.10764472267007737,
+          "actualRollTravelDeg": 358.72004645638253,
+          "externalGasKg": 133.6106828851208,
+          "onboardGasKg": 0,
+          "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 6.23333333333341,
+          "decisionAtSimTimeS": 6.225000000000076,
+          "finalCgHeightM": 0.6035288568582768,
+          "finalVerticalSpeedMps": -0.07452971490315488,
+          "aborted": true
+        }
+      },
+      "microHullContacts": 30,
+      "peakHullNormalForceN": 13553689.119414816,
+      "peakHeightM": 3.8987418770982725,
+      "peakForceRatio": 0.8047916677778306,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.03743628944024619,
+        "rollDeg": -1.252773479726228,
+        "energyBalanceErrorJ": 0
+      }
+    },
+    {
+      "id": "late-hull-contact",
+      "name": "roll",
+      "initialHeightM": 4,
+      "added": {
+        "elapsedS": 1.8583333333333334,
+        "phase": "recover",
+        "centerHeightM": 5.743099639865887,
+        "position": {
+          "x": -1.455630856642223,
+          "y": 5.243099639865887,
+          "z": -240
+        }
+      },
+      "transition": {
+        "before": {
+          "phase": "recover",
+          "time": 0.0010416666666666667
+        },
+        "after": {
+          "phase": "recover",
+          "time": 0.0020833333333333333,
+          "reason": "回稳中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+        },
+        "dt": 0.0010416666666666667
+      },
+      "firstHull": {
+        "elapsedS": 1.8593749999999958,
+        "objectId": "maneuver-test-roof",
+        "kind": "test-fixture",
+        "vehicleShape": 3,
+        "pointWorld": {
+          "x": -0.8095027040504913,
+          "y": 5.91150441010427,
+          "z": -241.13988811024146
+        },
+        "normal": {
+          "x": 0.09869268388494402,
+          "y": -0.9951179599161032,
+          "z": 5.591083365970941e-18
+        },
+        "normalFromBody": false,
+        "penetrationM": 0.25381448988686156,
+        "normalForceN": 11439131.572799528
+      },
+      "firstAbort": {
+        "elapsedS": 1.8666666666666667,
+        "reason": "回稳中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+      },
+      "completion": {
+        "elapsedS": 4.016666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "aborted-recovered",
+          "phase": "recover",
+          "startedAtSimTimeS": 0,
+          "elapsedS": 4.016666666666644,
+          "peakCgHeightM": 7.012785289236195,
+          "actualPitchTravelDeg": -1.163113947506199,
+          "actualRollTravelDeg": 361.1913592903525,
+          "externalGasKg": 147.74272139483685,
+          "onboardGasKg": 0,
+          "reason": "回稳中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 4.016666666666644,
+          "decisionAtSimTimeS": 4.008333333333311,
+          "finalCgHeightM": 3.9989826777590523,
+          "finalVerticalSpeedMps": 0.062231152342245716,
+          "aborted": true
+        }
+      },
+      "microHullContacts": 30,
+      "peakHullNormalForceN": 14183539.862275276,
+      "peakHeightM": 7.012785289236195,
+      "peakForceRatio": 0.943562543561028,
+      "postMinContacts": 0,
+      "postMaxCommand": 20983.757890306744,
+      "final": {
+        "mode": "hover",
+        "contacts": 0,
+        "pitchDeg": -0.701895559565615,
+        "rollDeg": 1.314503951339427,
+        "energyBalanceErrorJ": 0
+      }
+    },
+    {
+      "id": "late-hull-contact",
+      "name": "pitch",
+      "initialHeightM": 0.62,
+      "added": {
+        "elapsedS": 2.408333333333333,
+        "phase": "land",
+        "centerHeightM": 3.898775949134299,
+        "position": {
+          "x": 2.634428178094073e-13,
+          "y": 3.398775949134299,
+          "z": -243.19666151532684
+        }
+      },
+      "transition": {
+        "before": {
+          "phase": "land",
+          "time": 0.0010416666666666667
+        },
+        "after": {
+          "phase": "land",
+          "time": 0.0020833333333333333,
+          "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+        },
+        "dt": 0.0010416666666666667
+      },
+      "firstHull": {
+        "elapsedS": 2.4093750000000087,
+        "objectId": "maneuver-test-roof",
+        "kind": "test-fixture",
+        "vehicleShape": 3,
+        "pointWorld": {
+          "x": 0.7100000000003074,
+          "y": 3.8821075371556013,
+          "z": -244.3925927979038
+        },
+        "normal": {
+          "x": -6.069076325408426e-15,
+          "y": -0.9949468906567406,
+          "z": 0.10040261337477392
+        },
+        "normalFromBody": false,
+        "penetrationM": 0.2534904415169874,
+        "normalForceN": 11272202.624395927
+      },
+      "firstAbort": {
+        "elapsedS": 2.4166666666666665,
+        "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+      },
+      "completion": {
+        "elapsedS": 5.283333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "aborted-landed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.283333333333456,
+          "peakCgHeightM": 6.130206890363404,
+          "actualPitchTravelDeg": 359.90211892222027,
+          "actualRollTravelDeg": 0.00005145522011660277,
+          "externalGasKg": 179.70539803403878,
+          "onboardGasKg": 0,
+          "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 7.283333333333451,
+          "decisionAtSimTimeS": 7.275000000000118,
+          "finalCgHeightM": 0.5861236932654855,
+          "finalVerticalSpeedMps": -0.21226925945427105,
+          "aborted": true
+        }
+      },
+      "microHullContacts": 30,
+      "peakHullNormalForceN": 13954624.748316059,
+      "peakHeightM": 6.130206890363404,
+      "peakForceRatio": 0.8519556604517924,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": -0.09788107839463818,
+        "rollDeg": 0.000055367041443953474,
+        "energyBalanceErrorJ": 0
+      }
+    },
+    {
+      "id": "late-hull-contact",
+      "name": "pitch",
+      "initialHeightM": 4,
+      "added": {
+        "elapsedS": 2.1916666666666664,
+        "phase": "recover",
+        "centerHeightM": 5.927539750043489,
+        "position": {
+          "x": -3.496640653720806e-18,
+          "y": 5.427539750043489,
+          "z": -243.20338449893845
+        }
+      },
+      "transition": {
+        "before": {
+          "phase": "recover",
+          "time": 0.0010416666666666667
+        },
+        "after": {
+          "phase": "recover",
+          "time": 0.0020833333333333333,
+          "reason": "回稳中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+        },
+        "dt": 0.0010416666666666667
+      },
+      "firstHull": {
+        "elapsedS": 2.192708333333328,
+        "objectId": "maneuver-test-roof",
+        "kind": "test-fixture",
+        "vehicleShape": 3,
+        "pointWorld": {
+          "x": 0.71,
+          "y": 5.910790139865425,
+          "z": -244.39932550377753
+        },
+        "normal": {
+          "x": 5.16771790019508e-18,
+          "y": -0.9949473908930346,
+          "z": 0.10039765612375184
+        },
+        "normalFromBody": false,
+        "penetrationM": 0.2534046928029869,
+        "normalForceN": 11234963.728342587
+      },
+      "firstAbort": {
+        "elapsedS": 2.2,
+        "reason": "回稳中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+      },
+      "completion": {
+        "elapsedS": 4.191666666666666,
+        "feedback": {
+          "name": "pitch",
+          "state": "aborted-recovered",
+          "phase": "recover",
+          "startedAtSimTimeS": 0,
+          "elapsedS": 4.1916666666666496,
+          "peakCgHeightM": 8.299461359677181,
+          "actualPitchTravelDeg": 360.0234092499282,
+          "actualRollTravelDeg": 0.00012626111836558013,
+          "externalGasKg": 155.88695248340142,
+          "onboardGasKg": 0,
+          "reason": "回稳中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 4.1916666666666496,
+          "decisionAtSimTimeS": 4.183333333333316,
+          "finalCgHeightM": 3.968734116833719,
+          "finalVerticalSpeedMps": 0.1880792963759182,
+          "aborted": true
+        }
+      },
+      "microHullContacts": 30,
+      "peakHullNormalForceN": 13908341.318808675,
+      "peakHeightM": 8.299461359677181,
+      "peakForceRatio": 0.9582361454884151,
+      "postMinContacts": 0,
+      "postMaxCommand": 20174.805729330004,
+      "final": {
+        "mode": "hover",
+        "contacts": 0,
+        "pitchDeg": 0.0234093258270988,
+        "rollDeg": 0.00007497544861939155,
+        "energyBalanceErrorJ": -1.1920928955078125e-7
+      }
+    },
+    {
+      "id": "late-hull-contact",
+      "name": "land",
+      "initialHeightM": 4,
+      "added": {
+        "elapsedS": 0,
+        "phase": "descent",
+        "centerHeightM": 4.5,
+        "position": {
+          "x": 0,
+          "y": 4,
+          "z": -240
+        }
+      },
+      "transition": {
+        "before": {
+          "phase": "descent",
+          "time": 0.008333333333333333
+        },
+        "after": {
+          "phase": "descent",
+          "time": 0.009375,
+          "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+        },
+        "dt": 0.0010416666666666667
+      },
+      "firstHull": {
+        "elapsedS": 0.008333333333333333,
+        "objectId": "maneuver-test-roof",
+        "kind": "test-fixture",
+        "vehicleShape": 3,
+        "pointWorld": {
+          "x": 0.7099763129702619,
+          "y": 4.577526053837419,
+          "z": -241.13985330514
+        },
+        "normal": {
+          "x": 0,
+          "y": -1,
+          "z": 0
+        },
+        "normalFromBody": false,
+        "penetrationM": 0.22752605383741908,
+        "normalForceN": 300288.4539477706
+      },
+      "firstAbort": {
+        "elapsedS": 0.016666666666666666,
+        "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳"
+      },
+      "completion": {
+        "elapsedS": 2.2666666666666666,
+        "feedback": {
+          "name": "land",
+          "state": "aborted-landed",
+          "phase": "descent",
+          "startedAtSimTimeS": 0,
+          "elapsedS": 2.26666666666666,
+          "peakCgHeightM": 4,
+          "actualPitchTravelDeg": 0.204823578152567,
+          "actualRollTravelDeg": 0.01550554805087958,
+          "externalGasKg": 69.12792396656205,
+          "onboardGasKg": 0,
+          "reason": "着陆中车身碰撞（maneuver-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 2.26666666666666,
+          "decisionAtSimTimeS": 2.2583333333333266,
+          "finalCgHeightM": 0.5861570583102365,
+          "finalVerticalSpeedMps": -0.211442246723664,
+          "aborted": true
+        }
+      },
+      "microHullContacts": 34,
+      "peakHullNormalForceN": 10363412.316364441,
+      "peakHeightM": 4,
+      "peakForceRatio": 0.8693293107717626,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.2048192276338979,
+        "rollDeg": 0.0161699917166551,
+        "energyBalanceErrorJ": -1.1920928955078125e-7
+      }
+    },
+    {
+      "id": "conservative-false-refusal",
+      "forwardM": 30,
+      "refusal": "滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.886068129472161,
+      "peakForceRatio": 0.818111388338584,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9150058769398406,
+        "rollDeg": -2.2280388595215074e-9,
+        "energyBalanceErrorJ": -1.1920928955078125e-7
+      },
+      "limitation": "The corridor applies one peak-height envelope through the recovery reserve. These measured late roofs are refused even though the actual vehicle has already descended enough to pass. No collision is claimed or thrust/grip inflated to hide this conservative limit."
+    },
+    {
+      "id": "conservative-false-refusal",
+      "forwardM": 35,
+      "refusal": "滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.886068129472161,
+      "peakForceRatio": 0.818111388338584,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9150058769398406,
+        "rollDeg": -2.2280388595215074e-9,
+        "energyBalanceErrorJ": -1.1920928955078125e-7
+      },
+      "limitation": "The corridor applies one peak-height envelope through the recovery reserve. These measured late roofs are refused even though the actual vehicle has already descended enough to pass. No collision is claimed or thrust/grip inflated to hide this conservative limit."
+    },
+    {
+      "id": "conservative-false-refusal",
+      "forwardM": 40,
+      "refusal": "滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.886068129472161,
+      "peakForceRatio": 0.818111388338584,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9150058769398406,
+        "rollDeg": -2.2280388595215074e-9,
+        "energyBalanceErrorJ": -1.1920928955078125e-7
+      },
+      "limitation": "The corridor applies one peak-height envelope through the recovery reserve. These measured late roofs are refused even though the actual vehicle has already descended enough to pass. No collision is claimed or thrust/grip inflated to hide this conservative limit."
+    },
+    {
+      "id": "conservative-false-refusal",
+      "forwardM": 45,
+      "refusal": "滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 3.886068129472161,
+      "peakForceRatio": 0.818111388338584,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 0.9150058769398406,
+        "rollDeg": -2.2280388595215074e-9,
+        "energyBalanceErrorJ": -1.1920928955078125e-7
+      },
+      "limitation": "The corridor applies one peak-height envelope through the recovery reserve. These measured late roofs are refused even though the actual vehicle has already descended enough to pass. No collision is claimed or thrust/grip inflated to hide this conservative limit."
+    },
+    {
+      "id": "pitch-shared-corridor",
+      "firstHull": null,
+      "firstAbort": null,
+      "completion": {
+        "elapsedS": 4.908333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.9083333333334656,
+          "peakCgHeightM": 6.138326300449333,
+          "actualPitchTravelDeg": 361.4470308510076,
+          "actualRollTravelDeg": 0.000402370135186889,
+          "externalGasKg": 191.89604147093618,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.908333333333461,
+          "decisionAtSimTimeS": 6.900000000000127,
+          "finalCgHeightM": 0.5889913867048862,
+          "finalVerticalSpeedMps": -0.16014335128284274,
+          "aborted": false
+        }
+      },
+      "microHullContacts": 0,
+      "peakHullNormalForceN": 0,
+      "peakHeightM": 6.138326300449333,
+      "peakForceRatio": 0.8724202103047181,
+      "postMinContacts": 4,
+      "postMaxCommand": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "pitchDeg": 1.4470308535047671,
+        "rollDeg": 0.00047539853339605316,
+        "energyBalanceErrorJ": 0
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/physics-kernel-319.js": "f54a5ab6358f42623b05edbf9e87d32335ee5bc334697c120e341ef23d171eb5",
+    "dist/pitch-maneuver.js": "172c03f0c188a5f10a25e795bff465954fe800a141d5c4a0ea6f29c4a6366553",
+    "dist/maneuver-clearance.js": "33963786b37d208ec838b04734964c3b6d0d31a3289ed8616ecb80fff6528b04"
+  },
+  "scope": "Numerical body/contact/actuator evidence. Finite constant-velocity path samples are conservative roof checks, not a collision-proof flight planner. New geometry after acceptance demonstrates the runtime abort fallback. No GPU or native keyboard claim."
+}

@@ -1,6 +1,6 @@
 // Shadow depth belongs to the displayed pose, not the next physics step.
 // Idle refresh budgets may never reuse a moving caster's old depth silhouette.
-export const SHADOW_MOTION_POLICY='display-pose-coherent-3.18';
+export const SHADOW_MOTION_POLICY='display-pose-and-shape-coherent-3.23';
 const vector=v=>v?[v.x,v.y,v.z]:null;
 const rotation=q=>q?[q.x,q.y,q.z,q.w]:null;
 function changed(a,b,epsilon){
@@ -9,10 +9,10 @@ function changed(a,b,epsilon){
 export function createShadowMotionTracker(){
   let previous=null;
   return {
-    sample(position,{quaternion=null,wheelStates=[],camera=null}={}){
+    sample(position,{quaternion=null,wheelStates=[],camera=null,shapeRevision=null}={}){
       const current={p:vector(position),q:rotation(quaternion),w:wheelStates.flatMap(w=>[w.steer||0,w.suspensionLength||0,w.rotation||0]),
-        cp:vector(camera?.position),cq:rotation(camera?.quaternion)};
-      const casterChanged=!previous||changed(current.p,previous.p,.00025)||(current.q&&changed(current.q,previous.q,.00002))||changed(current.w,previous.w,.0002);
+        cp:vector(camera?.position),cq:rotation(camera?.quaternion),shapeRevision};
+      const casterChanged=!previous||changed(current.p,previous.p,.00025)||(current.q&&changed(current.q,previous.q,.00002))||changed(current.w,previous.w,.0002)||current.shapeRevision!==previous.shapeRevision;
       const cameraChanged=!!camera&&(!previous||changed(current.cp,previous.cp,.00025)||changed(current.cq,previous.cq,.00002));
       previous=current;return {casterChanged,cameraChanged,policy:SHADOW_MOTION_POLICY};
     },

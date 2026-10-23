@@ -1,0 +1,75 @@
+{
+  "schema": "roadster-browser-observations-1",
+  "date": "2026-10-23",
+  "modelVersion": "3.23.0",
+  "modelBuildId": "3b80df9d3aa722fc5e382c660cbde7723f23bb66819c37f62bab95b23158020f",
+  "url": "http://127.0.0.1:8080/",
+  "method": "Observed real local WebGL application through browser accessibility, screenshots and ordinary UI input; separate from the automated DOM release gate.",
+  "environment": {
+    "platform": "Windows",
+    "browser": "Chrome 155 in-app browser",
+    "renderer": "ANGLE NVIDIA GeForce RTX 4080 SUPER Direct3D11",
+    "webgl": 2,
+    "hardwareConcurrency": 28,
+    "deviceMemoryGiB": 32
+  },
+  "observations": [
+    {
+      "flow": "Local launch and menu",
+      "result": "Real city rendered; menu displayed 3.23.0. Exported frame conditions identify this exact model build."
+    },
+    {
+      "flow": "X under an overhead structure",
+      "result": "Request rejected with visible conservative-headroom explanation; remained in DRIVE without maneuver thrust."
+    },
+    {
+      "flow": "Moving X on open road",
+      "result": "HUD reported completion in 3.98 s with 360.3 degrees rotation. Later settled at zero pitch/roll, about 0.6 m CG height, four-wheel support, DRIVE, automatic jets off and commanded/actual thrust 0/0 N."
+    },
+    {
+      "flow": "Same-page laboratory and combined controls",
+      "result": "City-to-laboratory transition rendered successfully. Holding W+E+1 for one second reached FLIGHT ASSIST, about 7 km/h, 3.1 m height and 59 degrees pitch. Returning to city restored its prior state."
+    },
+    {
+      "flow": "Finite-resource route recording and export",
+      "result": "Prepared 120 Wh / 100 bar session, accelerated and braked, then ended recording early through the UI. Result correctly said pilot-ended, not successful route completion. Summary saved and exported.",
+      "physicsSteps": 235,
+      "curvePoints": 41,
+      "netWh": 17.838330699333937,
+      "recoveredWh": 0.6321086859853189,
+      "summary": "resource-summary.json",
+      "persistenceStatus": "saved"
+    },
+    {
+      "flow": "Original-condition 3D replay and return",
+      "result": "The recorded 235-step session completed replay. Research panel reported exact reproduction, zero endpoint position/velocity/attitude/angular velocity/gas/temperature/wheel errors, and no missing control comparisons. Return restored the pre-replay state and view.",
+      "endpointPositionErrorM": 0,
+      "numericControlComparisons": 416,
+      "discreteControlComparisons": 157,
+      "missingComparisons": 0
+    },
+    {
+      "flow": "Browser console after tested flows",
+      "result": "Captured error-level log list was empty."
+    }
+  ],
+  "actualFrame": {
+    "image": "roadster-3.23.0-chase-clear-day.png",
+    "conditions": "roadster-3.23.0-chase-clear-day.json",
+    "capturedAt": "2026-10-23T14:04:05.848Z",
+    "source": "actual-webgl-composer-frame",
+    "quality": "high",
+    "environment": "clear-day",
+    "paused": true,
+    "pixelsEdited": false,
+    "sourceIdentityNote": "Local runtime build is verified. Original dist/deployment.json remains archived, so this pre-publication capture correctly reports deployment-build-mismatch and no publication commit. prepare-pages generates current root deployment metadata separately."
+  },
+  "preliminaryBaselineScope": "Before the final 3.23 build, delivered 3.22 was also driven, X-tested, and rendered at high quality with wet-night settings. Those observations informed the audit but do not certify final-build wet-night pixels.",
+  "limits": [
+    "This is an observed workflow report, not an automated assertion log or standardized route benchmark.",
+    "The finite-resource drive was intentionally ended early; it does not claim a complete challenge run.",
+    "Browser-generated combinations do not certify physical keyboard rollover or gamepads.",
+    "No audio-perception acceptance, universal shadow-flicker acceptance or full-city performance certification.",
+    "Paused exported pixels and short HUD FPS readings are not moving-route performance evidence."
+  ]
+}

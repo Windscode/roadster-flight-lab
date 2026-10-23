@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import * as THREE from '../dist/vendor/three.module.js';
 import {createCityPracticalLights,CITY_PRACTICAL_LIGHT_BUDGET} from '../dist/city-practical-lights.js';
@@ -81,5 +82,5 @@ for(const quality of ['balanced','high','ultra']){
 }
 
 const report={schema:'roadster-practical-light-lifecycle-3.22',status:'passed',scope:'Actual Three.js light selection, light transforms and shadow camera matrices; no GPU pixels, FPS or universal shadow-flicker acceptance.',results};
-mkdirSync('qa/rendering-3.22',{recursive:true});writeFileSync('qa/rendering-3.22/practical-light-lifecycle.json',JSON.stringify(report,null,2)+'\n');
+mkdirSync(`qa/rendering-${REPORT_VERSION}`,{recursive:true});writeFileSync(`qa/rendering-${REPORT_VERSION}/practical-light-lifecycle.json`,JSON.stringify(report,null,2)+'\n');
 console.log('PASS practical-light lifecycle: unique fixtures, same-frame relighting depth, bounded idle updates and vehicle detach');

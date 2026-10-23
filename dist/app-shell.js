@@ -7,6 +7,8 @@ import {loadRuntimeIdentity} from './runtime-identity.js';
 export function createApplicationShell({initialSim}) {
   void loadRuntimeIdentity();
   const $=id=>document.getElementById(id);
+  const versionLabel=document.querySelector('.game-wordmark span');
+  if(versionLabel)versionLabel.textContent='CITY + WIND LAB / '+MODEL_VERSION;
   let live=null,study=null,studyPromise=null,studyOpen=false,studyGeneration=0,toastTimer;
   const graphics={status:'initializing',reason:'',startedAt:performance.now(),readyAfterMs:null};
   const getSim=()=>live?.getSim?.()||initialSim;

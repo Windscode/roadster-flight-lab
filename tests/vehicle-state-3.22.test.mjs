@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {createRoadster,VEHICLE_STEERING_PRESENTATION as P} from '../dist/vehicle.js';
 import {RoadsterSim} from '../dist/physics.js';
@@ -59,5 +60,5 @@ check('Actual simulation steering drives the display without changing physical o
 });
 car.dispose();
 const report={modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,status:'passed',scope:'Scene-graph and actual numerical-state correspondence. No WebGL pixel, OEM steering-ratio or native input acceptance.',steeringPresentation:P,checks};
-mkdirSync('qa/vehicle-3.22',{recursive:true});writeFileSync('qa/vehicle-3.22/state-correspondence.json',JSON.stringify(report,null,2)+'\n');
+mkdirSync(`qa/vehicle-${REPORT_VERSION}`,{recursive:true});writeFileSync(`qa/vehicle-${REPORT_VERSION}/state-correspondence.json`,JSON.stringify(report,null,2)+'\n');
 console.log(`${checks.length}/${checks.length} vehicle-state checks passed`);

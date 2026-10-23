@@ -14,6 +14,6 @@ registerTranslations({
   '请先返回原现场，再重放现场实验记录。':'Return to the live scene before replaying a live experiment.',
   '请先暂停，再准备新的路线条件。':'Pause before preparing new route conditions.',
   '请先返回原现场，再准备城市路线。':'Return to the live scene before preparing the city route.',
-  '电驱声随实际轮端负载与等效减速变化；轮胎滑移、ABS 和首次再接地驱动独立合成声。静止不造胎噪；未实现电池回充。':'Electric-drive sound follows actual wheel-end load and equivalent deceleration. Tire slip, ABS and first re-contact drive separate synthesized sounds. No tire noise at rest; battery energy recovery is not implemented.',
+  '电驱声随实际轮端负载与等效减速变化；轮胎滑移、ABS 和首次再接地驱动独立合成声。静止不造胎噪；回充量由实际再生制动功与电池限额决定。':'Electric-drive sound follows actual wheel-end load and equivalent deceleration. Tire slip, ABS and first re-contact drive separate synthesized sounds. No tire noise at rest; battery recovery follows actual regenerative braking work and battery limits.',
   '当前浏览器未提供可用音频输出。':'This browser has no available audio output.',
 });

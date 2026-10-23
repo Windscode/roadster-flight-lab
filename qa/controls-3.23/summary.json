@@ -1,0 +1,551 @@
+{
+  "schema": "roadster-user-feedback-numerical-review-1",
+  "modelVersion": "3.23.0",
+  "createdAt": "2026-10-23T13:53:41.150Z",
+  "sourceHashes": {
+    "dist/physics.js": "1a9565e3dc73f6fcc71cd3df1af8ae2585a7b5eb643b08663e9ece31883e1819",
+    "dist/physics-kernel-319.js": "f54a5ab6358f42623b05edbf9e87d32335ee5bc334697c120e341ef23d171eb5",
+    "dist/resource-wheels.js": "49aa6f015bb42511b5994a4eea56dc524b5e4ddb62434d5b00a4d2cdfad74d6a",
+    "dist/vehicle-models.js": "0f826732b248bc2d0cfaa328bd6ce5314e236130554af706f406651006136bc7",
+    "dist/pilot-input-intent.js": "97470ee5a7be87a2e8034ff1d39fdeceb7931f47becef79af8162ff31447a378",
+    "dist/controls.js": "6c631f1ad1c0e0ba9a0b8f28cefbbe2b72c6fdb3a9c770c0845cd6fedadf2004",
+    "dist/semantic-input.js": "fd0f11b6a8481062b2f8afe3391eda141d560e67a7d9b632b07824afd8e00934"
+  },
+  "checks": {
+    "continuity": [
+      {
+        "name": "Moving X, released/held W, slope and G transitions finish on four loaded wheels and remain drive for five more seconds",
+        "passed": true
+      },
+      {
+        "name": "G off after sustained translation captures now and brakes without returning to an old world position",
+        "passed": true
+      },
+      {
+        "name": "G-off driving traverses an actual ramp/contact launch without automatic mode change or jet requests",
+        "passed": true
+      },
+      {
+        "name": "Explicit H/E assistance is visible with G off; H to DRIVE stops requests while real valve lag decays",
+        "passed": true
+      },
+      {
+        "name": "Bounded U cases preserve real rotation, four-wheel handoff and subsequent driving",
+        "passed": true
+      },
+      {
+        "name": "U rejects outside the declared envelope and default finite budget without changing body state or consuming gas",
+        "passed": true
+      },
+      {
+        "name": "Explicit DRIVE interruption changes references only and never silently restarts U",
+        "passed": true
+      },
+      {
+        "name": "Airborne action cancel retains current flight height instead of launching toward the H takeoff preset",
+        "passed": true
+      },
+      {
+        "name": "G pitch-override full state exports and continues exactly",
+        "passed": true
+      }
+    ],
+    "transition": [
+      {
+        "name": "H entered while coasting brakes then captures its reached point",
+        "passed": true
+      },
+      {
+        "name": "E entered while coasting brakes then captures its reached point",
+        "passed": true
+      },
+      {
+        "name": "Pre-held Q cannot complete roll before its actual turn and four-wheel dwell",
+        "passed": true
+      },
+      {
+        "name": "Pre-held Q cannot complete pitch before its actual turn and four-wheel dwell",
+        "passed": true
+      },
+      {
+        "name": "Leaving explicit pose hold for DRIVE does not arm an unrequested G controller",
+        "passed": true
+      },
+      {
+        "name": "Explicitly enabled G retains its independent level ownership across the mode change",
+        "passed": true
+      },
+      {
+        "name": "suction exits hold without arming G and preserves a previously explicit level request (hold)",
+        "passed": true
+      },
+      {
+        "name": "suction exits hold without arming G and preserves a previously explicit level request (level)",
+        "passed": true
+      },
+      {
+        "name": "reset exits hold without arming G and preserves a previously explicit level request (hold)",
+        "passed": true
+      },
+      {
+        "name": "reset exits hold without arming G and preserves a previously explicit level request (level)",
+        "passed": true
+      }
+    ],
+    "pilotInput": [
+      {
+        "name": "Production W+E+1 mapping preserves all three normalized requests",
+        "passed": true
+      },
+      {
+        "name": "Historical G pitch loss is reproduced through the actual solver",
+        "passed": true
+      },
+      {
+        "name": "Held G+W+E+1 now changes physical pitch without dropping translation/ascent",
+        "passed": true
+      },
+      {
+        "name": "G+W+E+2 independently requests the opposite physical pitch",
+        "passed": true
+      },
+      {
+        "name": "G remains armed during pitch override and returns to level after release",
+        "passed": true
+      },
+      {
+        "name": "G-off pitch still holds the achieved attitude after release",
+        "passed": true
+      },
+      {
+        "name": "Z/B keep their established G lateral-translation meaning, including simultaneous pitch",
+        "passed": true
+      },
+      {
+        "name": "air-g-on-z physical trajectory remains exactly the historical no-pitch path",
+        "passed": true
+      },
+      {
+        "name": "air-g-on-we physical trajectory remains exactly the historical no-pitch path",
+        "passed": true
+      },
+      {
+        "name": "Grounded pitch without takeoff is explicitly reported instead of silently discarded",
+        "passed": true
+      },
+      {
+        "name": "Simultaneous grounded W+E+1 reaches the hover pitch control path",
+        "passed": true
+      },
+      {
+        "name": "Raw wrench mode accepts 1/2 pitch separately from W/S axial thrust",
+        "passed": true
+      },
+      {
+        "name": "Every solver case remains finite within the actual nozzle capacities",
+        "passed": true
+      },
+      {
+        "name": "pilot input release changes no body state/current nozzle force and retains automatic references",
+        "passed": true
+      },
+      {
+        "name": "raw-valves input release changes no body state/current nozzle force and retains automatic references",
+        "passed": true
+      },
+      {
+        "name": "pose-hold input release changes no body state/current nozzle force and retains automatic references",
+        "passed": true
+      },
+      {
+        "name": "maneuver input release changes no body state/current nozzle force and retains automatic references",
+        "passed": true
+      },
+      {
+        "name": "Releasing G pitch clears the active override immediately without snapping the body",
+        "passed": true
+      },
+      {
+        "name": "Toggling G during a held pitch request keeps that request live, then levels on release",
+        "passed": true
+      }
+    ]
+  },
+  "matchedX": [
+    {
+      "version": "3.9",
+      "fixture": "matched flat ground, bench external supply, tank 600 L, no driver input after X",
+      "accepted": true,
+      "initialCgM": 0.5970093908740407,
+      "peakCgM": 13.58404844486799,
+      "riseM": 12.98703905399395,
+      "firstRotateS": 0.6083333333333333,
+      "rotationEndS": 2.6166666666666667,
+      "rotationDurationS": 2.0083333333333333,
+      "completionS": 7.175,
+      "peakRateDegS": 342.37319792936785,
+      "rollTravelDeg": 360.10081516123745,
+      "postObservationS": 4.999999999999841,
+      "postMinContacts": 4,
+      "postCommandMax": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "rollDeg": -5.579910979239553e-13,
+        "pitchDeg": -1.0028352724932755e-12,
+        "heightM": 0.5970089771353301,
+        "thrustN": 2.131296769264629e-83
+      },
+      "scope": "Frozen historical solver in the same declared flat-ground fixture; not a reproduction of the historical browser session reported by the user."
+    },
+    {
+      "version": "3.23",
+      "fixture": "matched flat ground, bench external supply, tank 600 L, no driver input after X",
+      "accepted": true,
+      "initialCgM": 0.5970093908740407,
+      "peakCgM": 3.8987418770982725,
+      "riseM": 3.301732486224232,
+      "firstRotateS": 0.39166666666666666,
+      "rotationEndS": 1.9,
+      "rotationDurationS": 1.5083333333333333,
+      "completionS": 3.9416666666666664,
+      "peakRateDegS": 372.62655311592584,
+      "rollTravelDeg": 360.10081302786216,
+      "postObservationS": 5.000000000000021,
+      "postMinContacts": 4,
+      "postCommandMax": 0,
+      "final": {
+        "mode": "drive",
+        "contacts": 4,
+        "rollDeg": 1.5458471695077466e-13,
+        "pitchDeg": -1.0363530655377062e-12,
+        "heightM": 0.597008977135415,
+        "thrustN": 9.286265461830437e-88
+      },
+      "scope": "Current solver: four-wheel grounded completion plus 5 s observation."
+    }
+  ],
+  "movingX": [
+    {
+      "id": "X-W-half-second-release-Gfalse",
+      "completionS": 4.091666666666779,
+      "peakCgM": 3.8902201943289234,
+      "postObservationS": 5.008333333333198,
+      "postMinContacts": 4,
+      "postMaxCommandN": 0,
+      "finalContacts": 4
+    },
+    {
+      "id": "X-W-two-seconds-held-Gfalse",
+      "completionS": 3.8250000000001734,
+      "peakCgM": 3.8780327853987533,
+      "postObservationS": 5.008333333333066,
+      "postMinContacts": 4,
+      "postMaxCommandN": 0,
+      "finalContacts": 4
+    },
+    {
+      "id": "X-W-half-second-release-Gtrue",
+      "completionS": 4.091666666666779,
+      "peakCgM": 3.8902201943289234,
+      "postObservationS": 5.008333333333198,
+      "postMinContacts": 4,
+      "postMaxCommandN": 0,
+      "finalContacts": 4
+    },
+    {
+      "id": "X-W-two-seconds-held-Gtrue",
+      "completionS": 3.8250000000001734,
+      "peakCgM": 3.8780327853987533,
+      "postObservationS": 5.008333333333066,
+      "postMinContacts": 4,
+      "postMaxCommandN": 0,
+      "finalContacts": 4
+    },
+    {
+      "id": "X-moving-five-degree-slope",
+      "completionS": 2.374999999999865,
+      "peakCgM": 4.260421101243224,
+      "postObservationS": 5.008333333333096,
+      "postMinContacts": 4,
+      "postMaxCommandN": 0,
+      "finalContacts": 4
+    },
+    {
+      "id": "X-G-on-off-during-rotation",
+      "completionS": 4.091666666666779,
+      "peakCgM": 3.8902201943289234,
+      "postObservationS": 5.008333333333198,
+      "postMinContacts": 4,
+      "postMaxCommandN": 0,
+      "finalContacts": 4
+    }
+  ],
+  "pilotCombinations": [
+    {
+      "id": "air-g-on-we1",
+      "requested": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "heldSeconds": 0.65,
+      "holdPitchDeg": 34.5948793169862,
+      "maxPitchDeg": 39.154492959000684,
+      "intent": {
+        "schema": "roadster.pilot-input-intent",
+        "version": 1,
+        "requested": {
+          "throttle": 1,
+          "steer": 0,
+          "lift": 1,
+          "pitch": 1,
+          "roll": 0,
+          "brake": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "controller": "g-pitch-override",
+        "stabilizationMode": "level",
+        "gPitchOverride": true,
+        "contactCount": 0,
+        "pitch": {
+          "requested": 1,
+          "accepted": true,
+          "reason": "accepted",
+          "requestedRateDegS": 60,
+          "referenceRateDegS": 59.99999999999999,
+          "requestedTorqueNm": null
+        },
+        "roll": {
+          "requested": 0,
+          "meaning": "lateral-translation"
+        },
+        "afterPitchRelease": "return-to-level",
+        "limitations": [],
+        "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+      }
+    },
+    {
+      "id": "air-g-off-we1",
+      "requested": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "heldSeconds": 0.65,
+      "holdPitchDeg": 34.5948793169862,
+      "maxPitchDeg": 40.439991592909266,
+      "intent": {
+        "schema": "roadster.pilot-input-intent",
+        "version": 1,
+        "requested": {
+          "throttle": 1,
+          "steer": 0,
+          "lift": 1,
+          "pitch": 1,
+          "roll": 0,
+          "brake": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "controller": "pilot-attitude-rate",
+        "stabilizationMode": "off",
+        "gPitchOverride": false,
+        "contactCount": 0,
+        "pitch": {
+          "requested": 1,
+          "accepted": true,
+          "reason": "accepted",
+          "requestedRateDegS": 60,
+          "referenceRateDegS": 59.99999999999999,
+          "requestedTorqueNm": null
+        },
+        "roll": {
+          "requested": 0,
+          "meaning": "roll-rate"
+        },
+        "afterPitchRelease": "hold-achieved-attitude",
+        "limitations": [],
+        "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+      }
+    },
+    {
+      "id": "air-g-on-we1z",
+      "requested": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 1,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "heldSeconds": 0.65,
+      "holdPitchDeg": 34.59482643413347,
+      "maxPitchDeg": 39.15496825829677,
+      "intent": {
+        "schema": "roadster.pilot-input-intent",
+        "version": 1,
+        "requested": {
+          "throttle": 1,
+          "steer": 0,
+          "lift": 1,
+          "pitch": 1,
+          "roll": 1,
+          "brake": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "controller": "g-pitch-override",
+        "stabilizationMode": "level",
+        "gPitchOverride": true,
+        "contactCount": 0,
+        "pitch": {
+          "requested": 1,
+          "accepted": true,
+          "reason": "accepted",
+          "requestedRateDegS": 60,
+          "referenceRateDegS": 59.99999999999999,
+          "requestedTorqueNm": null
+        },
+        "roll": {
+          "requested": 1,
+          "meaning": "lateral-translation"
+        },
+        "afterPitchRelease": "return-to-level",
+        "limitations": [],
+        "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+      }
+    },
+    {
+      "id": "ground-g-on-we1",
+      "requested": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "heldSeconds": 0.65,
+      "holdPitchDeg": 33.634183048553766,
+      "maxPitchDeg": 38.48670054529117,
+      "intent": {
+        "schema": "roadster.pilot-input-intent",
+        "version": 1,
+        "requested": {
+          "throttle": 1,
+          "steer": 0,
+          "lift": 1,
+          "pitch": 1,
+          "roll": 0,
+          "brake": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "controller": "g-pitch-override",
+        "stabilizationMode": "level",
+        "gPitchOverride": true,
+        "contactCount": 0,
+        "pitch": {
+          "requested": 1,
+          "accepted": true,
+          "reason": "accepted",
+          "requestedRateDegS": 60,
+          "referenceRateDegS": 59.99999999999999,
+          "requestedTorqueNm": null
+        },
+        "roll": {
+          "requested": 0,
+          "meaning": "lateral-translation"
+        },
+        "afterPitchRelease": "return-to-level",
+        "limitations": [],
+        "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+      }
+    },
+    {
+      "id": "ground-g-off-we1",
+      "requested": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "heldSeconds": 0.65,
+      "holdPitchDeg": 33.634183048553766,
+      "maxPitchDeg": 39.48538650748445,
+      "intent": {
+        "schema": "roadster.pilot-input-intent",
+        "version": 1,
+        "requested": {
+          "throttle": 1,
+          "steer": 0,
+          "lift": 1,
+          "pitch": 1,
+          "roll": 0,
+          "brake": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "controller": "pilot-attitude-rate",
+        "stabilizationMode": "off",
+        "gPitchOverride": false,
+        "contactCount": 0,
+        "pitch": {
+          "requested": 1,
+          "accepted": true,
+          "reason": "accepted",
+          "requestedRateDegS": 60,
+          "referenceRateDegS": 59.99999999999999,
+          "requestedTorqueNm": null
+        },
+        "roll": {
+          "requested": 0,
+          "meaning": "roll-rate"
+        },
+        "afterPitchRelease": "hold-achieved-attitude",
+        "limitations": [],
+        "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+      }
+    }
+  ],
+  "knownOpen": [
+    "Low-altitude manual pitch inversion is not certified by pitch-request acceptance; no claim that W+E+1 reproduces the automatic X roll (different axis).",
+    "No native physical keyboard rollover, rendered shadow, target GPU frame-time or human-feel acceptance."
+  ],
+  "commands": [
+    "node tests/control-continuity-3.18.test.mjs",
+    "node tests/control-transition-guards-3.18.test.mjs",
+    "node tests/pilot-input-recovery-3.15.test.mjs",
+    "node scripts/check-control-feedback.mjs"
+  ]
+}

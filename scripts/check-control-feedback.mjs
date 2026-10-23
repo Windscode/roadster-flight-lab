@@ -5,8 +5,9 @@ import {RoadsterSim as V39} from '../qa/fixtures/baseline-3.9-x/physics.js';
 import {flatDynamics,DT} from '../tests/dynamics-fixtures-3.11.mjs';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
-const root=new URL('../',import.meta.url).pathname,out=root+`qa/controls-${release}/`;
+const root=fileURLToPath(new URL('../',import.meta.url)),out=root+`qa/controls-${release}/`;
 const hashes=Object.fromEntries(['dist/physics.js','dist/physics-kernel-319.js','dist/resource-wheels.js','dist/vehicle-models.js','dist/pilot-input-intent.js','dist/controls.js','dist/semantic-input.js'].map(p=>[p,createHash('sha256').update(readFileSync(root+p)).digest('hex')]));
 const x=[];
 for(const [version,Sim]of [['3.9',V39],[release,RoadsterSim]]){

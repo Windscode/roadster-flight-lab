@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {RoadsterSim} from '../dist/physics.js';
 import {integrateWheel} from '../dist/tire-dynamics.js';
@@ -55,6 +56,6 @@ adhesion.setParam('suctionPressurePa',5000);
 for(let k=0;k<120;k++){const t=adhesion.advanceFixed({brake:1},DT);assert.equal(t.fault,null);close(t.energyAccounting.balanceErrorJ,0);}
 assert(adhesion.telemetry().suctionN>0,'A valid pressure cap must restore adhesion on the same physical trajectory');
 results.push({name:'zero-pressure-and-restored-adhesion',physicalSteps:240,restoredSuctionN:adhesion.telemetry().suctionN,contactCount:adhesion.telemetry().contactCount});
-mkdirSync('qa/energy-3.22',{recursive:true});
-writeFileSync('qa/energy-3.22/boundaries.json',JSON.stringify({status:'passed',modelBuildId:MODEL_BUILD_ID,results,scope:'Numerical free-wheel work closure, opposite-throttle vehicle runs, complete-state continuation, route-summary preservation and active adhesion pressure boundary; no whole-world energy certificate or native-device acceptance.'},null,2)+'\n');
+mkdirSync(`qa/energy-${REPORT_VERSION}`,{recursive:true});
+writeFileSync(`qa/energy-${REPORT_VERSION}/boundaries.json`,JSON.stringify({status:'passed',modelBuildId:MODEL_BUILD_ID,results,scope:'Numerical free-wheel work closure, opposite-throttle vehicle runs,complete-state continuation, route-summary preservation and active adhesion pressure boundary; no whole-world energy certificate or native-device acceptance.'},null,2)+'\n');
 console.log(`PASS energy boundaries: ${results.length} cases`);
