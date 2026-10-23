@@ -8,8 +8,9 @@ import {execFileSync} from 'node:child_process';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),dist=resolve(root,'dist');
-const {verification}=readPlan();
-const publication={verification,planSha256:hash(readFileSync(resolve(root,'publication/recovery-plan.json')))};
+const {plan,verification}=readPlan();
+const planBytes=JSON.stringify(plan,null,2)+'\n';
+const publication={verification,planSha256:hash(planBytes)};
 const fileIdentity=p=>identity(relative(root,p).split('\\').join('/'));
 const originalValidation=fileIdentity(resolve(dist,'validation.json'));
 const html=readFileSync(resolve(dist,'index.html'),'utf8');
@@ -58,5 +59,6 @@ const result={status:'passed',syntaxParser:typeof vm.SourceTextModule==='functio
 // Publication checks are new evidence, never an overwrite of the old report.
 assert.deepEqual(fileIdentity(resolve(dist,'validation.json')),originalValidation,'Original validation changed during static checks');
 mkdirSync(resolve(root,'.runtime'),{recursive:true});
-writeFileSync(resolve(root,'.runtime/publication-check.json'),JSON.stringify({schema:'roadster.publication-static-check',version:1,createdAt:new Date().toISOString(),modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:'recovered-runtime-static-check',originalValidation,integration:result,publication},null,2)+'\n');
+writeFileSync(resolve(root,'.runtime/publication-plan.json'),planBytes);
+writeFileSync(resolve(root,'.runtime/publication-check.json'),JSON.stringify({schema:'roadster.publication-static-check',version:1,createdAt:new Date().toISOString(),modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,scope:plan.schema==='roadster.development-publication'?'development-runtime-static-check':'recovered-runtime-static-check',originalValidation,integration:result,publication},null,2)+'\n');
 console.log(JSON.stringify(result));

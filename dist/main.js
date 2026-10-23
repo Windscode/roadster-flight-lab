@@ -18,6 +18,7 @@ import { createRoadster,VEHICLE_DRIVER_VIEW } from './vehicle.js';
 import { createEnvironment } from './city-environment.js';
 import {CITY,CITY_BUILDINGS,CITY_ROUTES,CITY_LOCATIONS,districtAt} from './city-data.js';
 import {driverAxes} from './controls.js';
+import {ACTIONS,sharedInputs} from './semantic-input.js';
 import {resolveVehicleLampMode} from './vehicle-light-state.js';
 import {InputSession} from './input-session.js';
 import {createOperationHud} from './operation-hud.js';
@@ -115,7 +116,7 @@ export async function boot(shell){
   const resourceHistory=[];let nextResourceSample=0;
   const keys=new Set();
   let lastActionResetSequence=0;
-  const inputSession=new InputSession({keys,onEvent:event=>{if(event.type==='input-release'&&['scenario-reset','context-switch'].includes(event.reason))lastActionResetSequence=event.sequence;logEvent('pilot_input_event',event);},onRelease:reason=>{if(!protectedLearningState())sim.releasePilotInput?.(reason);reverseHold=0;}});
+  const inputSession=new InputSession({keys,onEvent:event=>{if(event.type==='input-release'&&['scenario-reset','context-switch'].includes(event.reason))lastActionResetSequence=event.sequence;logEvent('pilot_input_event',event);},onRelease:reason=>{if(programMatrixBusy)return;if(!protectedLearningState())sim.releasePilotInput?.(reason);reverseHold=0;}});
   const operationStack=document.createElement('div');operationStack.className='operation-stack';$('app').append(operationStack);
   const operationHud=createOperationHud({mount:operationStack,getSim:()=>sim,getContext:()=>activeContext,getOwner:()=>researchConsole?.getState().running?'研究流程 / Research program':'',getLastAction:()=>inputSession.lastActionReceipt?.sequence>lastActionResetSequence?inputSession.lastActionReceipt:null,onTogglePaused:()=>{if(graphicsStopped||programMatrixBusy)return;if(paused&&(!started||!$('launch-card').classList.contains('hidden')))start();else setPaused(!paused);operationHud.update(sim.telemetry(),{paused});viewport.focus({preventScroll:true});},exportInputs:()=>exportJson(()=>inputSession.export(getRuntimeIdentity(),{clone:false}),'roadster-input-timeline.json')});
   cityFlight=createCityFlightUI({mount:document.querySelector('#map-drawer .drawer-content'),hudMount:operationStack,scene:contexts.city.scene,getSim:()=>sim,getContext:()=>activeContext,storage:localStorage,
@@ -272,11 +273,12 @@ export async function boot(shell){
     car.group.position.copy(vec(t.position));car.group.quaternion.set(t.quaternion.x,t.quaternion.y,t.quaternion.z,t.quaternion.w);car.update(t,0);
     learningSaved=null;setPaused(true,{releaseInput:false});document.body.dataset.learningSession='live';operationHud.invalidate();syncUi(t);
   }
-  function prepareSurfaceRoute(presetId){
+  function prepareSurfaceRoute(presetId,{prepareSim}={}){
     if(!paused)throw Error('请先暂停，再准备新的路线条件。');
     if(learningSessionMode!=='live')throw Error('请先返回原现场，再准备城市路线。');
     routeExperience?.cancel('new-route-preparation');cityFlight?.cancel('context_change');controlCapture?.cancel('准备新的城市路线。','Prepare new route.');researchConsole?.stopRecording?.('准备新的城市路线','cancelled');researchConsole?.cancel('准备新的城市路线');
     if(activeContext!=='city')switchContext('city',{run:false,openConsole:false});
+    prepareSim?.(sim);
     const descriptor=createRouteSurfacePreset(presetId==='dry-day'?'dry-day':'after-rain'),origin=descriptor.route.start;
     sim.reset('city');sim.setRoadSurface('dry');sim.setRouteSurface(descriptor,{phase:'preparation'});
     sim.body.position.set(origin.x,origin.y,origin.z);sim.body.quaternion.setFromEuler(0,origin.yaw,0);sim.body.previousPosition.copy(sim.body.position);sim.body.interpolatedPosition.copy(sim.body.position);sim.body.previousQuaternion.copy(sim.body.quaternion);sim.body.interpolatedQuaternion.copy(sim.body.quaternion);sim.body.aabbNeedsUpdate=true;
@@ -730,7 +732,7 @@ export async function boot(shell){
   function releaseDiagnosticInput(reason){const released=[...keys];keys.clear();inputSession.note('diagnostic-input-release',{reason,released,physicalReferencePreserved:true});}
   document.addEventListener('focusin',e=>{if(e.target?.matches?.('input,select,textarea,[contenteditable="true"]')){if(programMatrixBusy)releaseDiagnosticInput('editing-focus');else inputSession.release('editing-focus');}});
   window.addEventListener('keyup',e=>{if(inputKeys.includes(e.code)||['KeyG','KeyH','KeyX','KeyU','KeyP','KeyR'].includes(e.code))inputSession.up(e);});window.addEventListener('blur',()=>{if(programMatrixBusy)releaseDiagnosticInput('window-blur');else inputSession.release('window-blur',{pause:true});if(started&&!paused)setPaused(true);});document.addEventListener('visibilitychange',()=>{if(document.hidden){if(programMatrixBusy)releaseDiagnosticInput('document-hidden');else inputSession.release('document-hidden',{pause:true});setPaused(true);}lastTime=performance.now();});
-  $$('[data-touch]').forEach(button=>{button.addEventListener('pointerdown',e=>{e.preventDefault();if(protectedLearningState())return;button.setPointerCapture(e.pointerId);takeOver();ensureRunning();keys.add(button.dataset.touch);});for(const type of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(type,()=>keys.delete(button.dataset.touch));});
+  $$('[data-touch]').forEach(button=>{const action=ACTIONS.find(a=>a.keys.includes(button.dataset.touch));button.addEventListener('pointerdown',e=>{e.preventDefault();if(!action||protectedLearningState()||graphicsStopped||programMatrixBusy||menuOpen||activeDrawer||shell.studyOpen)return;button.setPointerCapture(e.pointerId);takeOver();ensureRunning();sharedInputs.touch(action.id,true,e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(type,e=>{if(action)sharedInputs.touch(action.id,false,e.pointerId);});});
   renderer.domElement.addEventListener('pointerdown',()=>{if(cameraMode!=='orbit')resetCamera('orbit',false);});
   function inputs(dt){
     const editing=document.activeElement?.matches?.('input,select,textarea,[contenteditable="true"]');

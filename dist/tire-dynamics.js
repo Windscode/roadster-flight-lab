@@ -18,9 +18,9 @@ export function lateralTireForce({vlong,vlat,normalLoadN,mu,cornerStiffness,rela
   const rolling=-Math.tanh(cornerStiffness*relaxedSlip/Math.max(1,capacity))*capacity;
   return {forceN:creep+(rolling-creep)*rollingWeight-gravityLateral*effectiveMass,rollingWeight};
 }
-export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTorqueNm,brakeTorqueNm,regenTorqueNm=0,rollingTorqueNm=0,radius,inertia,effectiveMass,gravityLong=0,absEnabled=true,tcsEnabled=true,maxDrivePowerW=Infinity}){
+export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTorqueNm,brakeTorqueNm,regenTorqueNm=0,rollingTorqueNm=0,radius,inertia,effectiveMass,gravityLong=0,absEnabled=true,tcsEnabled=true,maxDrivePowerW=Infinity,regenMechanicalPowerW=Infinity,regenMechanicalEnergyJ=Infinity}){
   const n=Math.max(1,Math.ceil(dt*600)),h=dt/n,capacity=Math.max(0,normalLoadN*mu);
-  let speed=vlong,impulse=0,latImpulse=0,brakeEnergy=0,regenBrakeEnergy=0,tireEnergy=0,driveWork=0,actualDrive=0,actualBrake=0,actualRegenBrake=0,actualRollingBrake=0,postTcsRequest=0;
+  let speed=vlong,impulse=0,latImpulse=0,brakeEnergy=0,regenBrakeEnergy=0,rollingBrakeEnergy=0,tireEnergy=0,driveWork=0,actualDrive=0,actualBrake=0,actualRegenBrake=0,actualRollingBrake=0,postTcsRequest=0;
   w.angularVelocityRadS??=0;w.absPressure??=1;w.tcsFactor??=1;
   const startingOmega=w.angularVelocityRadS;
   w.absActive=false;w.tcsActive=false;w.drivePowerLimited=false;
@@ -75,9 +75,16 @@ export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTor
     const passiveWork=Math.max(0,appliedBrake*midOmega)*h;
     // Attribute the actual passive impulse after ABS and wheel stopping, not
     // the unapplied command. These fractions do not change the force solve.
-    const regenFraction=brake>0?clamp(regenTorqueNm,0,brakeTorqueNm)*w.absPressure/brake:0;
+    let regenFraction=brake>0?clamp(regenTorqueNm,0,brakeTorqueNm)*w.absPressure/brake:0;
+    // Cap the negative motor work after ABS, stopping and the implicit contact
+    // solve. No tyre slip work, requested torque or chassis-energy estimate is
+    // credited. Unaccepted motor torque is an equal friction-brake top-up.
+    const proposed=passiveWork*regenFraction;
+    const accepted=Math.min(proposed,Math.max(0,regenMechanicalPowerW)*h,
+      Math.max(0,regenMechanicalEnergyJ-regenBrakeEnergy));
+    regenFraction=passiveWork>0?accepted/passiveWork:0;
     const rollingFraction=brake>0?rollingTorqueNm/brake:0;
-    brakeEnergy+=passiveWork;regenBrakeEnergy+=passiveWork*regenFraction;
+    brakeEnergy+=passiveWork;regenBrakeEnergy+=passiveWork*regenFraction;rollingBrakeEnergy+=passiveWork*rollingFraction;
     actualRegenBrake+=Math.abs(appliedBrake)*regenFraction*h;
     actualRollingBrake+=Math.abs(appliedBrake)*rollingFraction*h;
     tireEnergy+=Math.max(0,fx*(radius*omega1-next.v))*h;
@@ -95,5 +102,5 @@ export function integrateWheel(w,{dt,vlong,normalLoadN,mu,lateralForceN,driveTor
   w.regenBrakeTorqueNm=actualRegenBrake/dt;w.rollingBrakeTorqueNm=actualRollingBrake/dt;w.serviceBrakeTorqueNm=Math.max(0,w.brakeTorqueNm-w.regenBrakeTorqueNm-w.rollingBrakeTorqueNm);
   w.postTcsTorqueRequestNm=postTcsRequest/dt;w.driveMechanicalPowerW=driveWork/dt;
   w.wheelEnergyJ=.5*inertia*w.angularVelocityRadS**2;
-  return{longitudinalForceN:impulse/dt,lateralForceN:latImpulse/dt,brakeEnergyJ:brakeEnergy,regenBrakeEnergyJ:regenBrakeEnergy,tireEnergyJ:tireEnergy,driveWorkJ:driveWork,spinMomentumChangeNms:inertia*(w.angularVelocityRadS-startingOmega)};
+  return{longitudinalForceN:impulse/dt,lateralForceN:latImpulse/dt,brakeEnergyJ:brakeEnergy,regenBrakeEnergyJ:regenBrakeEnergy,rollingBrakeEnergyJ:rollingBrakeEnergy,tireEnergyJ:tireEnergy,driveWorkJ:driveWork,spinMomentumChangeNms:inertia*(w.angularVelocityRadS-startingOmega)};
 }

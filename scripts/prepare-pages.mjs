@@ -1,13 +1,14 @@
 import {readFileSync,existsSync,mkdirSync,writeFileSync,openSync,closeSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {root,readPlan,copyTo,hash,save} from './recovery-publication.mjs';
+import {root,readPlan,copyTo,hash} from './recovery-publication.mjs';
 import assert from 'node:assert/strict';
 const {plan,verification}=readPlan(),out=resolve(root,'.pages-site');
+const development=plan.schema==='roadster.development-publication';
 assert(!existsSync(out),'Use a fresh output directory; existing output is preserved');
 const check=JSON.parse(readFileSync(resolve(root,'.runtime/publication-check.json'),'utf8'));
 assert.equal(check.integration.status,'passed');assert.equal(check.modelBuildId,plan.source.modelBuildId);
-assert.equal(check.publication.planSha256,hash(readFileSync(resolve(root,'publication/recovery-plan.json'))));
+assert.equal(check.publication.planSha256,hash(JSON.stringify(plan,null,2)+'\n'),'Release files changed after static validation');
 // Use file descriptors rather than captured pipes (Windows process wrapper),
 // and enumerate the committed tree once instead of spawning Git per file.
 mkdirSync(resolve(root,'.runtime'),{recursive:true});
@@ -26,9 +27,10 @@ for(const e of plan.runtime){
 for(const e of plan.onlineEvidence)copyTo(out,e.path);
 const put=(p,v)=>writeFileSync(resolve(out,p),typeof v==='string'?v:JSON.stringify(v,null,2)+'\n');
 put('availability.json',plan);
-put('availability.html','<!doctype html><meta charset="utf-8"><title>3.19 recovery availability</title><h1>Roadster 3.19 recovered release</h1><p>Runtime bytes match the original 3.19 candidate. This is a recovery publication, not recovery of the complete original development history. Historical reports are unchanged; their unavailable evidence is explicitly listed.</p><p><a href="availability.json">File hashes and online / repository-only / unrecovered references</a> · <a href="docs/recovery-release-3.19.md">Recovery scope and limits</a> · <a href="index.html">Drive</a></p>');
-const manifest={schema:'roadster.recovered-evidence',version:1,publicationCommit:commit,publicationTree:tree,originalDevelopment:plan.source,runtime:plan.runtime.map(e=>({...e,sitePath:e.path==='dist/deployment.json'?e.path:e.path.slice(5)})),files:plan.onlineEvidence,fileCount:plan.onlineEvidence.length,bytes:plan.onlineEvidence.reduce((s,e)=>s+e.bytes,0),historicalReferences:plan.historicalReferences,scope:'Only copied evidence is counted. Unrecovered references have no online URL and no fabricated hash. Original candidate deployment metadata is at dist/deployment.json; root deployment.json is generated from actual HEAD. See availability.json.'};
+const version=plan.source.modelVersion.replace(/[^0-9A-Za-z.+-]/g,'');
+put('availability.html',development?`<!doctype html><meta charset="utf-8"><title>Roadster ${version} availability</title><h1>Roadster ${version}</h1><p>This development release contains new source based on the recovered 3.19 release. Earlier reports keep their original versions and do not certify this build. Only the current release checks describe new validation.</p><p><a href="availability.json">Current file hashes and evidence availability</a> · <a href="publication/recovery-plan.json">Preserved 3.19 recovery manifest</a> · <a href="docs/release-${version.split('.').slice(0,2).join('.')}.md">Current release notes</a> · <a href="index.html">Drive</a></p>`:'<!doctype html><meta charset="utf-8"><title>3.19 recovery availability</title><h1>Roadster 3.19 recovered release</h1><p>Runtime bytes match the original 3.19 candidate. This is a recovery publication, not recovery of the complete original development history. Historical reports are unchanged; their unavailable evidence is explicitly listed.</p><p><a href="availability.json">File hashes and online / repository-only / unrecovered references</a> · <a href="docs/recovery-release-3.19.md">Recovery scope and limits</a> · <a href="index.html">Drive</a></p>');
+const manifest={schema:development?'roadster.development-evidence':'roadster.recovered-evidence',version:1,publicationCommit:commit,publicationTree:tree,originalDevelopment:plan.originalDevelopment??plan.source,currentBuild:plan.source,runtime:plan.runtime.map(e=>({...e,sitePath:e.path==='dist/deployment.json'?e.path:e.path.slice(5)})),files:plan.onlineEvidence,fileCount:plan.onlineEvidence.length,bytes:plan.onlineEvidence.reduce((s,e)=>s+e.bytes,0),historicalReferences:plan.historicalReferences,scope:'Only copied evidence is counted. Historical reports retain their original release scope. Unrecovered references have no online URL and no fabricated hash. Original candidate deployment metadata is at dist/deployment.json; root deployment.json is generated from actual HEAD. See availability.json.'};
 put('evidence-manifest.json',manifest);
-put('deployment.json',{application:'roadster-flight-lab',modelVersion:plan.source.modelVersion,modelBuildId:plan.source.modelBuildId,sourceCommit:commit,sourceTree:tree,publicationCommit:commit,publicationTree:tree,originalDevelopment:plan.source,evidenceManifest:{path:'evidence-manifest.json',sha256:hash(JSON.stringify(manifest,null,2)+'\n')},availability:{path:'availability.json',page:'availability.html'},recoveryPublication:true});
+put('deployment.json',{application:'roadster-flight-lab',modelVersion:plan.source.modelVersion,modelBuildId:plan.source.modelBuildId,sourceCommit:commit,sourceTree:tree,publicationCommit:commit,publicationTree:tree,originalDevelopment:plan.originalDevelopment??plan.source,evidenceManifest:{path:'evidence-manifest.json',sha256:hash(JSON.stringify(manifest,null,2)+'\n')},availability:{path:'availability.json',page:'availability.html'},recoveryPublication:!development});
 put('publication-check.json',check);
 console.log(JSON.stringify({status:'ready',commit,tree,...verification}));

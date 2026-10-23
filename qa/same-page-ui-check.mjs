@@ -20,6 +20,7 @@ import {CITY_BENCHMARK_ROUTE} from '../dist/visual-presets.js';
 if(typeof vm.SourceTextModule!=='function')throw new Error('Use node --experimental-vm-modules qa/same-page-ui-check.mjs');
 const jsdomPath=process.env.JSDOM_MODULE_PATH||'/tmp/roadster-dom-qa/node_modules/jsdom/lib/api.js';
 const {JSDOM,VirtualConsole}=await import(pathToFileURL(jsdomPath));
+const jsdomVersion=JSON.parse(await readFile(resolve(dirname(jsdomPath),'../package.json'),'utf8')).version;
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),dist=resolve(root,'dist');
 const source=await readFile(resolve(dist,'index.html'),'utf8'),errors=[],checks=[],values={};
 const noGraphics=process.argv.includes('--graphics-unavailable'),workerRequests=[],expectedGraphicsErrors=[],deploymentRequests=[];
@@ -232,7 +233,7 @@ for(const quality of ['high','ultra','balanced']){
 }
 pass('All three quality changes and context round trips update the active car/environment and restore city AO to the right scene while keeping it disabled in the lab');
 
-click('[data-research-console]');const input=q('[data-rc="program-name"]');assert.ok(input);input.focus();
+click('[data-research-console]');click('[data-rc-tab="programs"]');const input=q('[data-rc="program-name"]');assert.ok(input);input.focus();assert.equal(document.activeElement,input,'Typing test must focus the visible program editor');
 const modeBefore=state().stabilizationMode;key('Digit1',{target:input});key('KeyG',{target:input});key('Digit3',{target:input});key('KeyW',{target:input});tick(1);
 assert.equal(state().driverInput.pitch,0);assert.equal(state().driverInput.throttle,0);assert.equal(state().stabilizationMode,modeBefore);assert.equal(state().research.running,false);
 for(const code of ['Digit1','KeyG','Digit3','KeyW'])key(code,{type:'keyup',target:input});
@@ -552,7 +553,7 @@ const hashes={};for(const filename of [...new Set([...loadedSources,...sourceSna
   const current=hashBytes(await readFile(resolve(root,filename)));if(sourceSnapshots.has(filename))assert.equal(current,sourceSnapshots.get(filename),'Source changed during DOM execution; rerun after freezing '+filename);hashes[filename]=current;
 }
 const report={status:'passed',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,generatedAt:new Date().toISOString(),checks,values,sourceHashes:hashes,
-  environment:{node:process.version,jsdom:'26.1.0',moduleEvaluation:'Actual app.js / app-shell.js / main.js and its non-visual dependency graph in vm.SourceTextModule',physics:'Actual RoadsterSim, no rigid-body/control mock',context:'JSDOM document only'},
+  environment:{node:process.version,jsdom:jsdomVersion,jsdomModule:jsdomPath,moduleEvaluation:'Actual app.js / app-shell.js / main.js and its non-visual dependency graph in vm.SourceTextModule',physics:'Actual RoadsterSim, no rigid-body/control mock',context:'JSDOM document only'},
   excluded:{browser:false,webgl:false,gpuTiming:false,pixelVisualQA:false,independentWorkerExecution:false,actualSolverThroughWorkerFacade:true},
   mocks:[...mocks.keys(),'deployment.json: explicit matching fixture','canvas.toBlob: fake bytes with optional deferred callback'],limits:'DOM interaction, controller integration and renderer/scene routing checks. Rendering, camera pixels, assets, shader execution, browser behavior, GPU performance and visual quality are not validated by these graphics mocks.'};
 await writeFile(resolve(root,noGraphics?`qa/no-webgl-research-${REPORT_VERSION}.json`:`qa/same-page-ui-${REPORT_VERSION}.json`),JSON.stringify(report,null,2)+'\n');

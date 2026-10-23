@@ -1,5 +1,16 @@
 # Development and evidence
 
+## Current 3.21 workflow
+
+The current source is the Git working tree. `dist/` contains editable source, including the retained 3.19 physics kernel and the new 3.21 resource/input adapters. Start with `npm start`; `ROADSTER_PORT` selects a different port. Production dependencies and current assets are present in the checkout. Edited development assets are preserved and reported, never restored over.
+
+Use `npm run model:build` and `npm run test:release` for the current bounded gate. With JSDOM available, set `JSDOM_MODULE_PATH` to its `lib/api.js` to include the real application DOM flows; the test uses an explicit graphics facade and does not establish WebGL pixels. The release report is `qa/release-3.21/validation.json`, also copied to `dist/release-validation.json` for the in-app link. Earlier `dist/validation.json` and versioned reports retain their historical identities.
+
+Publication still uses the existing Pages workflow: static/source checks, committed-file checks, then deployment. A successor development plan captures the current complete runtime tree and current evidence without rewriting `publication/recovery-plan.json`. Git history must advance normally. See [3.21 release scope](release-3.21.md) and [development order](development-plan.md).
+
+The sections below document inherited architecture and historical release procedures. The original comprehensive `validate.mjs` includes older archive fixtures; it is separate from the current release gate and unavailable historical evidence must not be counted as passed.
+
+
 The [project introduction](../README.md) is for playing and understanding the project. This page covers implementation, validation and the existing GitHub Pages delivery path.
 
 ## Local development

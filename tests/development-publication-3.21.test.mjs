@@ -1,0 +1,48 @@
+// Exercise release gates on an isolated successor checkout. No historical
+// manifest, source file or test report in the real repository is modified.
+import assert from 'node:assert/strict';
+import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,copyFileSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join,dirname} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+const root=mkdtempSync(join(tmpdir(),'roadster-publication-'));
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const put=(name,value)=>{mkdirSync(dirname(join(root,name)),{recursive:true});writeFileSync(join(root,name),typeof value==='string'?value:JSON.stringify(value));};
+const identity=path=>{const b=readFileSync(join(root,path));return{path,bytes:b.length,sha256:hash(b)};};
+try{
+  put('package.json',{type:'module'});
+  for(const folder of ['qa','tests','scripts','docs','publication'])mkdirSync(join(root,folder),{recursive:true});
+  put('dist/vehicle-models.js',"export const MODEL_VERSION='3.21.0';\n");
+  put('dist/index.html','<!doctype html><title>successor</title>');
+  put('dist/validation.json',{scope:'historical fixture',report:'qa/unrecovered.json'});
+  put('docs/release-3.21.md','Current release checks');
+  put('qa/result-3.21.json',{status:'passed'});
+  const hashes=Object.fromEntries(['index.html','vehicle-models.js'].map(p=>[p,identity('dist/'+p).sha256]));
+  put('dist/model-build.js',`export const MODEL_SOURCE_HASHES=${JSON.stringify(hashes)};export const MODEL_BUILD_ID='${hash(JSON.stringify(hashes))}';`);
+  const original={schema:'roadster.recovered-publication',version:1,source:{modelVersion:'3.19.0',modelBuildId:'historical-build',commit:'historical-commit'},runtime:[],onlineEvidence:[],historicalReferences:[{path:'qa/unrecovered.json',status:'unrecovered'}]};
+  put('publication/recovery-plan.json',original);
+  const originalBytes=readFileSync(join(root,'publication/recovery-plan.json'));
+  copyFileSync(new URL('../scripts/recovery-publication.mjs',import.meta.url),join(root,'scripts/recovery-publication.mjs'));
+  const {readPlan,verifyPlan}=await import(pathToFileURL(join(root,'scripts/recovery-publication.mjs')));
+  const {plan,verification}=readPlan();
+  assert.equal(verification.status,'passed');
+  assert.equal(plan.schema,'roadster.development-publication');
+  assert.equal(plan.source.modelVersion,'3.21.0');
+  assert.equal(plan.originalDevelopment.modelVersion,'3.19.0');
+  assert(plan.onlineEvidence.some(e=>e.path==='qa/result-3.21.json'));
+  assert(plan.onlineEvidence.some(e=>e.path==='publication/recovery-plan.json'));
+  assert.deepEqual(readFileSync(join(root,'publication/recovery-plan.json')),originalBytes);
+  const rejects=fn=>{const changed=structuredClone(plan);fn(changed);assert.throws(()=>verifyPlan(changed));};
+  rejects(p=>p.runtime.pop());
+  rejects(p=>p.runtime[0].sha256='0'.repeat(64));
+  rejects(p=>p.runtime.push(p.runtime[0]));
+  rejects(p=>p.source.modelBuildId='stale');
+  rejects(p=>p.originalDevelopment.modelVersion='3.21.0');
+  rejects(p=>p.historicalReferences[0].status='online');
+  rejects(p=>p.onlineEvidence[0].path='../outside');
+  put('dist/index.html','changed after validation');
+  assert.throws(()=>verifyPlan(plan),/Runtime changed/);
+  assert.throws(()=>readPlan(),/Original model hash/);
+  console.log('PASS: successor identity, historical preservation, evidence inclusion, 9 corruption/staleness gates');
+}finally{rmSync(root,{recursive:true,force:true});}

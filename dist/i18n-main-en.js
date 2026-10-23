@@ -298,6 +298,8 @@ export const entries={
   "物理测试及完整实现可在项目源码中检查。仿真在本机浏览器运行，不上传你的操纵和遥测记录。按 M 查看城市规划图；按 F9 隐藏或恢复仪表。": "Inspect the physical tests and full implementation in the source. Simulation runs in your browser; controls and telemetry are not uploaded. M opens the city map; F9 toggles instruments.",
   "下载完整项目源码 ↓": "Download complete source ↓",
   "查看数值验证结果 ↗": "View numerical validation ↗",
+  "查看本轮验证与范围 ↗": "Current checks and scope ↗",
+  "历史验证（原构建）↗": "Historical checks (original build) ↗",
   "Three.js · cannon-es · Poly Haven CC0 环境素材": "Three.js · cannon-es · Poly Haven CC0 environment assets",
   "非 Tesla 官方软件，品牌名称仅用于研究对象识别。": "Unofficial software. Tesla names identify the research subject.",
   "街区与路径。": "Districts & connections.",

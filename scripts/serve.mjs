@@ -9,7 +9,9 @@ import {fileURLToPath} from 'node:url';
 import {spawn} from 'node:child_process';
 
 const root=fileURLToPath(new URL('../dist/',import.meta.url));
-const port=8080,host='127.0.0.1',url=`http://${host}:${port}/`,application='roadster-flight-lab-reviewed';
+const port=Number(process.env.ROADSTER_PORT??8080),host='127.0.0.1',application='roadster-flight-lab-reviewed';
+if(!Number.isInteger(port)||port<0||port>65535)throw Error('ROADSTER_PORT must be an integer from 0 to 65535');
+let url=`http://${host}:${port}/`;
 const runtime=fileURLToPath(new URL('../.runtime/',import.meta.url));
 const script=fileURLToPath(import.meta.url);
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.md':'text/plain; charset=utf-8','.hdr':'application/octet-stream','.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml','.glb':'model/gltf-binary','.zip':'application/zip','.mp3':'audio/mpeg','.m4a':'audio/mp4','.ogg':'audio/ogg','.wav':'audio/wav','.bin':'application/octet-stream'};
@@ -34,13 +36,15 @@ const server=http.createServer((req,res)=>{
 server.on('error',async err=>{
   if(err.code==='EADDRINUSE'){
     try{const health=await(await fetch(url+'health',{signal:AbortSignal.timeout(1500)})).json();
-      if(health.application===application){console.log('Roadster Flight Lab is already running: '+url);if(process.argv.includes('--open'))openBrowser();return;}
+      if(health.application===application&&health.version===MODEL_VERSION&&health.modelBuildId===MODEL_BUILD_ID){console.log('Roadster Flight Lab is already running with this build: '+url);if(process.argv.includes('--open'))openBrowser();return;}
+      if(health.application===application){console.error(`Port ${port} runs a different Roadster build. Stop that server or use ROADSTER_PORT to choose another port.`);process.exitCode=1;return;}
     }catch{}
     console.error(`Port ${port} is occupied by another application. Stop that server, then launch again.`);
   }else console.error(err.message);
   process.exitCode=1;
 });
 server.listen(port,host,()=>{
+  url=`http://${host}:${server.address().port}/`;
   fs.mkdirSync(runtime,{recursive:true});fs.writeFileSync(path.join(runtime,'server.json'),JSON.stringify({pid:process.pid,script,url,application}));
   console.log(`ROADSTER FLIGHT LAB ${MODEL_VERSION}\n${url}\nKeep this window open. Ctrl+C stops this local server.`);
   if(process.argv.includes('--open'))openBrowser();

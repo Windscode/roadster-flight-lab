@@ -3,7 +3,7 @@ const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,Number(v)||0));
 // All sounds are synthesised feedback, not an OEM recording or a damage sensor.
 // Tyre noise follows delivered contact work and support, not steering commands.
 export function soundState(t){
-  const speed=Math.abs(t.forwardSpeedKmh||0)/3.6,load=clamp(t.motorLoad),regen=clamp((t.regenForceN||0)/2600);
+  const speed=Math.abs(t.forwardSpeedKmh||0)/3.6,load=clamp(t.motorLoad),regen=clamp((t.energyAccounting?.chargePowerW||0)/46800);
   const wheels=(t.wheelStates||[]).filter(w=>w.contact&&w.normalLoadN>20),normalLoadN=wheels.reduce((sum,w)=>sum+w.normalLoadN,0);
   const contact=t.contactCount>0&&(wheels.length>0||!t.wheelStates),weight=Math.max(1,(t.mass||2200)*9.81);
   const support=clamp(normalLoadN/weight),travel=wheels.length?wheels.reduce((sum,w)=>sum+Math.hypot(w.longitudinalSpeedMps||0,w.lateralSpeedMps||0)*w.normalLoadN,0)/normalLoadN:speed;

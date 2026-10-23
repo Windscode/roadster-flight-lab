@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {RoadsterSim,PHYSICS_HZ} from '../dist/physics.js';
 import {driverAxes} from '../dist/controls.js';
+import {sharedInputs} from '../dist/semantic-input.js';
 import {soundState} from '../dist/audio.js';
 import * as CANNON from '../dist/vendor/cannon-es.js';
 const dt=1/PHYSICS_HZ;
@@ -10,7 +11,8 @@ for(const [key,sign]of [['KeyD',-1],['ArrowRight',-1],['KeyA',1],['ArrowLeft',1]
   const s=flat(),i=driverAxes(new Set([key]));assert.equal(Math.sign(i.steer),sign);s.body.velocity.z=10;s.wheelStates.forEach(w=>w.angularVelocityRadS=10/s.params.wheelRadius);
   for(let k=0;k<120;k++)s.step(dt,{...i,throttle:.2});assert.ok(s.body.position.x*sign>.5,'Driver-right must curve toward local -X');
 }
-const pad={connected:true,axes:[.7,0,.6],buttons:[]};
+const pad={connected:true,index:0,id:'handling-pad',axes:[0,0,0],buttons:[]};
+sharedInputs.poll(pad);pad.axes=[.7,0,.6];sharedInputs.poll(pad);
 assert.equal(driverAxes(new Set(),pad).steer,-(.7-.13)/.87);assert.equal(driverAxes(new Set(),pad).roll,-(.6-.13)/.87);
 assert.equal(driverAxes(new Set(['KeyD']),pad).steer,-1);
 assert.equal(driverAxes(new Set(['KeyB'])).roll,-1);
@@ -48,7 +50,8 @@ const dead=flat();dead._energyUsed=dead.params.batteryKWh;dead.step(dt,{frontJet
 assert.equal(driverAxes(new Set(['Digit1'])).pitch,1);assert.equal(driverAxes(new Set(['Numpad2'])).pitch,-1);
 assert.equal(driverAxes(new Set(['Digit1','Digit2'])).pitch,0);
 assert.equal(driverAxes(new Set(['Digit1'])).frontJets,0);assert.equal(driverAxes(new Set(['Digit2'])).rearJets,0);
-const pitchPad={connected:true,axes:[0,0,0],buttons:[{},{},{},{},{value:.7},{value:.2}]};
+const pitchPad={connected:true,index:1,id:'pitch-pad',axes:[0,0,0],buttons:[]};
+sharedInputs.poll(pitchPad);pitchPad.buttons=[{},{},{},{},{value:.7},{value:.2}];sharedInputs.poll(pitchPad);
 assert.ok(Math.abs(driverAxes(new Set(),pitchPad).pitch-.5)<1e-12);
 assert.equal(driverAxes(new Set(['Digit2']),pitchPad).pitch,-1);
 console.log('PASS: Front/rear pair overrides retain pitch moment, valve lag, pressure limits and gas conservation');
@@ -57,7 +60,8 @@ const rest={forwardSpeedKmh:0,motorLoad:0,regenForceN:0,thrustN:0,suctionN:0,con
 assert.equal(soundState(rest).motorGain,0);assert.equal(soundState(rest).roadGain,0);
 const coast=soundState({...rest,forwardSpeedKmh:100}),pull=soundState({...rest,forwardSpeedKmh:100,motorLoad:.8});
 assert.equal(coast.motorHz,pull.motorHz);assert.ok(pull.motorGain>.02&&coast.motorGain===0);
-assert.ok(soundState({...rest,regenForceN:2500}).motorGain>0);
+assert.equal(soundState({...rest,regenForceN:2500}).motorGain,0,'Requested regeneration without delivered charge must stay silent');
+assert.ok(soundState({...rest,energyAccounting:{chargePowerW:45000}}).motorGain>0);
 assert.equal(soundState({...rest,forwardSpeedKmh:100,contactCount:0}).roadGain,0);
 assert.ok(soundState({...rest,thrustN:40000}).jetGain>0);
 console.log('PASS: EV level responds to actual drive/regen load; rolling and gas sources stay separate and idle is silent');
