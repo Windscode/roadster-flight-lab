@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {RoadsterSim} from '../dist/physics.js';
@@ -6,7 +7,7 @@ import {CityFlightReview,createPracticeAttempt,firstViolationReview,compareCityA
 import {CityBehaviorMonitor} from '../dist/city-behavior-monitor.js';
 import {currentExperimentIdentity,contentLabel} from '../dist/experiment-records.js';
 
-const out='qa/learning-loop-3.19',dt=1/120,q={x:0,y:0,z:0,w:1};
+const out=`qa/learning-loop-${REPORT_VERSION}`,dt=1/120,q={x:0,y:0,z:0,w:1};
 fs.mkdirSync(out,{recursive:true});
 function fixture(){const sim=new RoadsterSim({supplyMode:'bench'},{world:'city'});sim.reset('harbor');for(let i=0;i<240;i++)sim.advanceFixed({brake:1});return sim;}
 const createSim=state=>new RoadsterSim({...state.params},{world:state.worldType});

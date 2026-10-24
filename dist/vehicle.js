@@ -166,6 +166,19 @@ export function sampleVehicleRearCorner(side,u,v){
   return[x,y,-2.30-depth*Math.cos(u*PI/2)];
 }
 
+const frontNoseZ=(x,t)=>2.318+.047*(1-(x/.855)**2)+.014*t;
+// Quarter-ellipse sections turn the nose into the side skin. The old linear
+// x/z interpolation made a planar chamfer and a sharp vertical outer corner.
+// Keep the service opening, leading-edge stations and wheel envelope fixed.
+// The curvature is an authored surface reconstruction, not measured OEM data.
+export function sampleVehicleFrontCorner(side,u,v){
+  const a=u*PI/2,sweep=Math.sin(a),inner=.618+.058*v;
+  const topX=lerp(.618,bodyOuterXAt(2.30),sweep);
+  const y=lerp(bodySurfaceY(side*topX,2.30),-.283,v);
+  return [side*lerp(inner,sideSurfaceX(2.30,y),sweep),y,
+    2.30+(frontNoseZ(inner,v*.72)-2.30)*Math.cos(a)];
+}
+
 const canopyKeys=[[-1.78,.346],[-1.57,.443],[-1.40,.524],[-1.15,.601],[-.85,.642],[-.58,.658],[-.22,.660],[.04,.624],[.29,.524],[.80,.280]];
 const canopyW=[[-1.78,.789],[-1.57,.775],[-1.12,.677],[-.65,.650],[-.02,.650],[.27,.678],[.55,.782],[.80,.885]];
 const canopyEdge=z=>interpolate(canopyKeys,z)-.026*(1-smoothstep(.25,.80,z))*smoothstep(-1.78,-1.10,z);
@@ -1101,7 +1114,7 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
   // Width, curvature and return depths are authored from visible photos only.
   const fasciaWidth=t=>lerp(.610,.674,smoothstep(0,1,t));
   const fasciaY=t=>lerp(-.037,-.382,t);
-  const noseZ=(x,t)=>2.318+.047*(1-(x/.855)**2)+.014*t;
+  const noseZ=frontNoseZ;
   grid(shell,mats.black,(u,v)=>{
     const w=fasciaWidth(v),x=lerp(-w,w,u);
     return[x,fasciaY(v),2.268+.012*(1-(x/w)**2)];
@@ -1124,18 +1137,14 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     return[x,y,lerp(2.30,noseZ(x,0),v)];
   },36,6,true,'folded nose leading edge',true);
   for(const side of [-1,1]) {
+    grid(shell,mats.paint,(u,v)=>sampleVehicleFrontCorner(side,u,v),16,20,side>0,'compound curved front bumper cheek',true);
     grid(shell,mats.paint,(u,v)=>{
-      const blend=u,inner=.618+.058*v,topX=lerp(.618,bodyOuterXAt(2.30),blend);
-      const y=lerp(bodySurfaceY(side*topX,2.30),-.283,v),outer=sideSurfaceX(2.30,y),x=lerp(inner,outer,blend);
-      return[side*x,y,lerp(noseZ(inner,v*.72),2.30,blend)+.004*Math.sin(u*PI)*Math.sin(v*PI)];
-    },16,20,side>0,'compound curved front bumper cheek',true);
-    grid(shell,mats.paint,(u,v)=>{
-      const blend=u,x=lerp(.618,bodyOuterXAt(2.30),blend);
-      return[side*x,bodySurfaceY(side*x,2.30),lerp(2.30,lerp(noseZ(.618,0),2.30,blend),v)];
+      const p=sampleVehicleFrontCorner(side,u,0);
+      return[p[0],p[1],lerp(2.30,p[2],v)];
     },16,3,side<0,'rounded bumper upper return',true);
     grid(underbody,mats.carbon,(u,v)=>{
-      const blend=u,y=lerp(-.283,-.395,v),inner=.676+.006*v,x=lerp(inner,sideSurfaceX(2.30,y)+.012,blend);
-      return[side*x,y,lerp(noseZ(inner,.72+.28*v),2.30,blend)];
+      const sweep=Math.sin(u*PI/2),y=lerp(-.283,-.395,v),inner=.676+.006*v,x=lerp(inner,sideSurfaceX(2.30,y)+.012*v,sweep);
+      return[side*x,y,2.30+(noseZ(inner,.72+.28*v)-2.30)*Math.cos(u*PI/2)];
     },12,10,side>0,'wrapped carbon lower bumper',true);
   }
   for(const side of [-1,1]){

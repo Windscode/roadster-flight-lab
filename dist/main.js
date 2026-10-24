@@ -1,4 +1,5 @@
 import {exportJson,exportFile,getExportState} from './export-download.js';
+import {createRenderPreparation} from './render-preparation.js';
 import * as THREE from './vendor/three.module.js';
 import { OrbitControls } from './vendor/addons/controls/OrbitControls.js';
 import { EffectComposer } from './vendor/addons/postprocessing/EffectComposer.js';
@@ -19,7 +20,7 @@ import { createRoadster,VEHICLE_DRIVER_VIEW } from './vehicle.js';
 import { createEnvironment } from './city-environment.js';
 import {CITY,CITY_BUILDINGS,CITY_ROUTES,CITY_LOCATIONS,districtAt} from './city-data.js';
 import {driverAxes} from './controls.js';
-import {ACTIONS,sharedInputs} from './semantic-input.js';
+import {ACTIONS,sharedInputs,actionKeyLabel} from './semantic-input.js';
 import {resolveVehicleLampMode} from './vehicle-light-state.js';
 import {InputSession} from './input-session.js';
 import {createOperationHud} from './operation-hud.js';
@@ -52,6 +53,7 @@ import './i18n-release-316-en.js';
 import './i18n-release-317-en.js';
 import './i18n-release-318-en.js';
 import './i18n-release-319-en.js';
+import './i18n-release-100-en.js';
 import './i18n-capture-en.js';
 import './i18n-controls-311-en.js';
 import './i18n-render-313-en.js';
@@ -113,11 +115,12 @@ export async function boot(shell){
   let pendingProgramCapture=null,programMatrixBusy=false,previousFrameWasDiagnostic=false,matrixAbort=null,lastMatrixArchive=null,matrixPackaging=false,lastMatrixResult=null;
   let wantedCamera=null,cameraObstruction=null,cameraSolveMode=null;
   let clearanceEstimate=null,clearanceSampleAt=-Infinity;
-  let lampSelection='auto';
+  let lampSelection='auto',renderPreparation=null,preparedEnvironment=null,preparedRevision=null,renderPreparing=false;
+  const preparationInert=[];
   const resourceHistory=[];let nextResourceSample=0;
   const keys=new Set();
   let lastActionResetSequence=0;
-  const inputSession=new InputSession({keys,onEvent:event=>{if(event.type==='input-release'&&['scenario-reset','context-switch'].includes(event.reason))lastActionResetSequence=event.sequence;logEvent('pilot_input_event',event);},onRelease:reason=>{if(programMatrixBusy)return;if(!protectedLearningState())sim.releasePilotInput?.(reason);reverseHold=0;}});
+  const inputSession=new InputSession({keys,onEvent:event=>{if(event.type==='input-release'&&['scenario-reset','context-switch'].includes(event.reason))lastActionResetSequence=event.sequence;logEvent('pilot_input_event',event);},onRelease:reason=>{if(programMatrixBusy||renderPreparing)return;if(!protectedLearningState())sim.releasePilotInput?.(reason);reverseHold=0;}});
   const operationStack=document.createElement('div');operationStack.className='operation-stack';$('app').append(operationStack);
   const operationHud=createOperationHud({mount:operationStack,getSim:()=>sim,getContext:()=>activeContext,getOwner:()=>researchConsole?.getState().running?'研究流程 / Research program':'',getLastAction:()=>inputSession.lastActionReceipt?.sequence>lastActionResetSequence?inputSession.lastActionReceipt:null,onTogglePaused:()=>{if(graphicsStopped||programMatrixBusy)return;if(paused&&(!started||!$('launch-card').classList.contains('hidden')))start();else setPaused(!paused);operationHud.update(sim.telemetry(),{paused});viewport.focus({preventScroll:true});},exportInputs:()=>exportJson(()=>inputSession.export(getRuntimeIdentity(),{clone:false}),'roadster-input-timeline.json')});
   cityFlight=createCityFlightUI({mount:document.querySelector('#map-drawer .drawer-content'),hudMount:operationStack,scene:contexts.city.scene,getSim:()=>sim,getContext:()=>activeContext,storage:localStorage,
@@ -470,7 +473,7 @@ export async function boot(shell){
   }
   function syncVerticalResponse(data){
     if(document.activeElement!==$('vertical-speed-command'))$('vertical-speed-command').value=sim.params.climbRateMps;
-    $('vertical-response-summary-value').textContent='E / Q · '+sim.params.climbRateMps.toFixed(1)+' m/s';$('vertical-speed-value').textContent=format(Number($('vertical-speed-command').value),1)+' m/s';
+    $('vertical-response-summary-value').textContent=actionKeyLabel('liftUp')+' / '+actionKeyLabel('liftDown')+' · '+sim.params.climbRateMps.toFixed(1)+' m/s';$('vertical-speed-value').textContent=format(Number($('vertical-speed-command').value),1)+' m/s';
     const command=data.verticalControl;
     $('vertical-response-status').textContent=command&&data.mode==='hover'?'指令 '+format(command.commandMps,1)+' m/s · 实际垂速 '+format(data.verticalSpeed,1)+' m/s':'按键立即采用设定值；加速度受实际推力限制。';
     for(const [key,d]of Object.entries(CONTROL_RESPONSES)){
@@ -499,6 +502,7 @@ export async function boot(shell){
   $('time-scale').oninput=e=>{scale=+e.target.value;$('time-scale-label').textContent=format(scale,2)+' ×';logEvent('time_scale',{value:scale});};
   $('defaults-btn').onclick=()=>{setVerticalResponse(VERTICAL_RESPONSE.default);for(const [key,d]of Object.entries(CONTROL_RESPONSES))setControlResponse(key,d.default);for(const [key]of params){sim.setParam(key,DEFAULT_PARAMS[key]);$('param-'+key).value=DEFAULT_PARAMS[key];$('param-'+key).dispatchEvent(new Event('input'));}for(const key of ['steeringAssist','tractionAssist','absEnabled','roadSurface','wingMode','wingDeployment','nozzleModel'])sim.setParam(key,DEFAULT_PARAMS[key]);sim.setSupplyMode(DEFAULT_PARAMS.supplyMode);$('supply-mode').value=DEFAULT_PARAMS.supplyMode;sim.setParam('gasModel','adiabatic');$('gas-model').value='adiabatic';sim.setParam('hoverHeight',4);$('target-height').value=4;$('target-height-label').textContent='4.0 m';activateScenario(scenario);toast('默认参数已恢复。');};
   function setQuality(value,{persist=true}={}){
+    renderPreparation?.invalidate();
     meter.markEvent('quality_change',{quality:value});quality=RENDER_PROFILES[value]?value:'balanced';renderProfile=RENDER_PROFILES[quality];governor.setQuality(quality);meter.reset();
     if(persist)try{localStorage.setItem('roadster-quality',quality);}catch{}
     $('quality').value=quality;document.body.dataset.quality=quality;
@@ -512,7 +516,7 @@ export async function boot(shell){
   $('quality').onchange=e=>setQuality(e.target.value);
   function cameraConditions(){const fixed=cameraMode==='fixed'?CITY_CAPTURE_CAMERAS.find(v=>v.id===fixedCameraId):null;const target=fixed?[...fixed.target]:cameraMode==='orbit'?controls.target.toArray():camera.position.clone().addScaledVector(camera.getWorldDirection(new THREE.Vector3()),10).toArray();return {id:fixedCameraId,mode:cameraMode,position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),up:camera.up.toArray(),target,targetMeaning:fixed?'fixed preset look-at':cameraMode==='orbit'?'orbit look-at':'point 10 m along actual optical axis',orbitTarget:controls.target.toArray(),orbitDesiredPosition:cameraMode==='orbit'?orbitCamera.position.toArray():null,fov:camera.fov,near:camera.near,far:camera.far,aspect:camera.aspect,viewOffset:camera.view?.enabled?{...camera.view}:null};}
   function sceneConfiguration(){return {version:3,routeSurface:sim.getRouteSurface?.()??null,driverHead:headFeedback.getState(),learningSessionMode,navigationDestination:cityMap.waypoint?.id??null,exposureLock,lampSelection,vehicleLampMode:car.lampMode,context:activeContext,weatherPreset:activeContext==='city'?weatherPreset:null,quality,routeId:activeContext==='city'?activeBenchmarkRoute:null,camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked};}
-  function visualConditions(){const simState=sim.exportState();return {...getRuntimeIdentity(),collisionIdentity:simState.geometrySignature,clearanceEstimate,cameraObstruction:cameraObstruction?{...cameraObstruction,wantedPosition:wantedCamera?.toArray()}:null,schema:'roadster-visual-conditions',version:2,exposureLock,lampSelection,vehicleLampMode:car.lampMode,brakeSignal:car.group.userData.brakeSignal,resourceHistory:[...resourceHistory],paused,renderState:paused?'paused-preview':'active-simulation',lighting:environment.stats?.lightingDiagnostics||null,sceneStats:environment.stats,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,context:activeContext,weatherPreset,route:activeContext==='city'?activeBenchmarkRoute:null,quality,profile:renderProfile,resolution:{...renderSize,cssWidth:innerWidth,cssHeight:innerHeight,devicePixelRatio:devicePixelRatio||1},camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked,simState,graphicsStartup:shell.graphics,device:meter.device,lastProgramAudit:renderPrograms.snapshot(),comparisonProtocol:CITY_VISUAL_CAPTURE_PROTOCOL,cityReviewRoute:CITY_REVIEW_ROUTE};}
+  function visualConditions(){const simState=sim.exportState();return {...getRuntimeIdentity(),collisionIdentity:simState.geometrySignature,clearanceEstimate,cameraObstruction:cameraObstruction?{...cameraObstruction,wantedPosition:wantedCamera?.toArray()}:null,schema:'roadster-visual-conditions',version:2,exposureLock,lampSelection,vehicleLampMode:car.lampMode,brakeSignal:car.group.userData.brakeSignal,resourceHistory:[...resourceHistory],paused,renderState:paused?'paused-preview':'active-simulation',lighting:environment.stats?.lightingDiagnostics||null,sceneStats:environment.stats,modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,context:activeContext,weatherPreset,route:activeContext==='city'?activeBenchmarkRoute:null,quality,profile:renderProfile,resolution:{...renderSize,cssWidth:innerWidth,cssHeight:innerHeight,devicePixelRatio:devicePixelRatio||1},camera:cameraConditions(),exposure:renderer.toneMappingExposure,autoExposure:$('auto-exposure').checked,simState,graphicsStartup:shell.graphics,renderPreparation:renderPreparation?{...renderPreparation.stats}:null,device:meter.device,lastProgramAudit:renderPrograms.snapshot(),comparisonProtocol:CITY_VISUAL_CAPTURE_PROTOCOL,cityReviewRoute:CITY_REVIEW_ROUTE};}
   function beginPerformanceCapture(durationMs){
     if(activeContext==='lab'&&durationMs>30000){toast('完整路线采样请先进入城市的织桥环线。');return;}
     closePanels();if(menuOpen)closeGameMenu();else if(paused)setPaused(false);
@@ -522,10 +526,11 @@ export async function boot(shell){
   $('performance-capture').onclick=()=>beginPerformanceCapture(30000);
   $('performance-route-capture').onclick=()=>beginPerformanceCapture(150000);
   $('performance-stop').onclick=()=>{meter.stopCapture();toast('采样已停止，已有数据与停止原因均可导出。');};
-  $('performance-export').onclick=()=>download(JSON.stringify(meter.export({...getRuntimeIdentity(),version:MODEL_VERSION,quality,weatherPreset,route:activeBenchmarkRoute,profile:renderProfile,resolution:renderSize,scene:environment.stats,vehicle:car.getRenderCost?.()||null,graphicsStartup:shell.graphics}),null,2),'roadster-performance-'+weatherPreset+'-'+quality+'.json','application/json');
+  $('performance-export').onclick=()=>download(JSON.stringify(meter.export({...getRuntimeIdentity(),version:MODEL_VERSION,quality,weatherPreset,route:activeBenchmarkRoute,profile:renderProfile,resolution:renderSize,scene:environment.stats,vehicle:car.getRenderCost?.()||null,graphicsStartup:shell.graphics,renderPreparation:{...renderPreparation.stats}}),null,2),'roadster-performance-'+weatherPreset+'-'+quality+'.json','application/json');
   $('driving-lamp-mode').onchange=e=>{lampSelection=e.target.value;updateEnvironment(performance.now(),sim.telemetry(),0);logEvent('vehicle_lamp_selection',{selection:lampSelection,applied:car.lampMode});};
   function setCityWeather(value,{record=true}={}){
     if(!CITY_WEATHER_PRESETS[value])return;
+    renderPreparation?.invalidate();
     weatherPreset=value;contexts.city.environment.setWeatherPreset?.(value);const presentation=CITY_WEATHER_PRESETS[value];
     $('weather-preset').value=value;$('day-btn').textContent=presentation.name;
     syncExposureControls();
@@ -704,12 +709,12 @@ export async function boot(shell){
   }
   // Freeze user mutations during the explicitly requested comparison; keyup
   // still clears keys. Capture phase also covers other controller listeners.
-  window.addEventListener('keydown',e=>{if(programMatrixBusy){rejectedKey(e,'capture-running');if(e.code==='Escape')cancelProgramMatrix();e.preventDefault();e.stopImmediatePropagation();keys.clear();}},true);
+  window.addEventListener('keydown',e=>{if(programMatrixBusy||renderPreparing){rejectedKey(e,renderPreparing?'render-preparation':'capture-running');if(programMatrixBusy&&e.code==='Escape')cancelProgramMatrix();e.preventDefault();e.stopImmediatePropagation();keys.clear();}},true);
   window.addEventListener('keydown',e=>{if(protectedLearningState()&&!['Escape','Tab','KeyC','KeyM','F9'].includes(e.code)&&!e.target?.closest?.('.city-flight-panel,.city-review-deck,.city-practice-ready')){e.preventDefault();e.stopImmediatePropagation();keys.clear();}},true);
   for(const type of ['click','input','change','pointerdown'])document.addEventListener(type,e=>{
     if(protectedLearningState()&&e.target?.closest?.('[data-mode],[data-game-command],[data-touch],#engineering-parameters,.vertical-response-card,#benchmark-route-start,#refill-btn,#suction-btn,#record-btn,#control-capture-start,#control-capture-reset')){e.preventDefault();e.stopImmediatePropagation();keys.clear();}
   },{capture:true});
-  for(const event of ['click','input','change','pointerdown','wheel'])document.addEventListener(event,e=>{if(programMatrixBusy&&!e.target?.closest?.('[data-language-select],#render-program-cancel')){e.preventDefault();e.stopImmediatePropagation();}},{capture:true,passive:false});
+  for(const event of ['click','input','change','pointerdown','wheel'])document.addEventListener(event,e=>{if(renderPreparing||programMatrixBusy&&!e.target?.closest?.('[data-language-select],#render-program-cancel')){e.preventDefault();e.stopImmediatePropagation();}},{capture:true,passive:false});
   window.addEventListener('keydown',e=>{if(graphicsStopped||programMatrixBusy){rejectedKey(e,graphicsStopped?'graphics-stopped':'capture-running');return;}
     if(e.code==='Escape'){e.preventDefault();if(shell.studyOpen)closeStudy();else if(activeDrawer)closePanels();else if(researchConsole?.getState().open)researchConsole.close();else if(menuOpen)closeGameMenu();else openGameMenu();return;}
     const target=e.target;if(target instanceof HTMLInputElement||target instanceof HTMLSelectElement||target instanceof HTMLTextAreaElement||target?.isContentEditable){rejectedKey(e,'editing');return;}
@@ -731,8 +736,8 @@ export async function boot(shell){
     if(actions[e.code]){e.preventDefault();inputSession.note('keydown',{code:e.code,repeat:!!e.repeat,accepted:true,reason:'action'});actions[e.code]();}
   });
   function releaseDiagnosticInput(reason){const released=[...keys];keys.clear();inputSession.note('diagnostic-input-release',{reason,released,physicalReferencePreserved:true});}
-  document.addEventListener('focusin',e=>{if(e.target?.matches?.('input,select,textarea,[contenteditable="true"]')){if(programMatrixBusy)releaseDiagnosticInput('editing-focus');else inputSession.release('editing-focus');}});
-  window.addEventListener('keyup',e=>{if(inputKeys.includes(e.code)||['KeyG','KeyH','KeyX','KeyU','KeyP','KeyR'].includes(e.code))inputSession.up(e);});window.addEventListener('blur',()=>{if(programMatrixBusy)releaseDiagnosticInput('window-blur');else inputSession.release('window-blur',{pause:true});if(started&&!paused)setPaused(true);});document.addEventListener('visibilitychange',()=>{if(document.hidden){if(programMatrixBusy)releaseDiagnosticInput('document-hidden');else inputSession.release('document-hidden',{pause:true});setPaused(true);}lastTime=performance.now();});
+  document.addEventListener('focusin',e=>{if(e.target?.matches?.('input,select,textarea,[contenteditable="true"]')){if(programMatrixBusy||renderPreparing)releaseDiagnosticInput('editing-focus');else inputSession.release('editing-focus');}});
+  window.addEventListener('keyup',e=>{if(inputKeys.includes(e.code)||['KeyG','KeyH','KeyX','KeyU','KeyP','KeyR'].includes(e.code))inputSession.up(e);});window.addEventListener('blur',()=>{if(programMatrixBusy||renderPreparing)releaseDiagnosticInput('window-blur');else inputSession.release('window-blur',{pause:true});if(started&&!paused)setPaused(true);});document.addEventListener('visibilitychange',()=>{if(document.hidden){if(programMatrixBusy||renderPreparing)releaseDiagnosticInput('document-hidden');else inputSession.release('document-hidden',{pause:true});setPaused(true);}lastTime=performance.now();});
   $$('[data-touch]').forEach(button=>{const action=ACTIONS.find(a=>a.keys.includes(button.dataset.touch));button.addEventListener('pointerdown',e=>{e.preventDefault();if(!action||protectedLearningState()||graphicsStopped||programMatrixBusy||menuOpen||activeDrawer||shell.studyOpen)return;button.setPointerCapture(e.pointerId);takeOver();ensureRunning();sharedInputs.touch(action.id,true,e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(type,e=>{if(action)sharedInputs.touch(action.id,false,e.pointerId);});});
   renderer.domElement.addEventListener('pointerdown',()=>{if(cameraMode!=='orbit')resetCamera('orbit',false);});
   function inputs(dt){
@@ -940,7 +945,7 @@ export async function boot(shell){
     afterStudy:()=>{if(studyWasRunning&&!menuOpen&&shell.graphics.status==='available')setPaused(false);studyWasRunning=false;viewport.focus({preventScroll:true});},
     onStart:()=>{keys.clear();closePanels();if(menuOpen)closeGameMenu();else ensureRunning();},
     onCancel:reason=>logEvent('program_cancel',{reason}),
-    suspendGraphics:()=>{cityFlight?.cancel('graphics_context_lost');if(programMatrixBusy)releaseDiagnosticInput('graphics-stopped');else inputSession.release('graphics-stopped',{pause:true});matrixAbort?.abort();pendingProgramCapture?.reject?.(Error('WebGL context stopped'));pendingProgramCapture=null;controlCapture?.cancel('图形运行中断；已保留采集区间。','Graphics stopped; captured interval retained.');graphicsStopped=true;captureImageRequested=false;captureBundleRequested=false;setPaused(true);keys.clear();sound?.silence();meter.endGpu();},
+    suspendGraphics:()=>{cityFlight?.cancel('graphics_context_lost');if(programMatrixBusy||renderPreparing)releaseDiagnosticInput('graphics-stopped');else inputSession.release('graphics-stopped',{pause:true});matrixAbort?.abort();pendingProgramCapture?.reject?.(Error('WebGL context stopped'));pendingProgramCapture=null;controlCapture?.cancel('图形运行中断；已保留采集区间。','Graphics stopped; captured interval retained.');graphicsStopped=true;captureImageRequested=false;captureBundleRequested=false;setPaused(true);keys.clear();sound?.silence();meter.endGpu();},
     restoreExperiment:({snapshot,context,sceneConfiguration:recordedScene,allowVersionMismatch=false,validateOnly=false})=>{
       if(learningSessionMode!=='live')throw Error('请先返回原现场，再重放现场实验记录。');
       const name=snapshot?.worldType==='windlab'?'lab':'city';
@@ -973,6 +978,29 @@ export async function boot(shell){
       return sim;
     },
   });
+  renderPreparation=createRenderPreparation(async()=>{
+    const preparingEnvironment=environment,preparingScene=scene,revision=environment.preparationRevision;
+    if(renderer.compileAsync)await renderer.compileAsync(preparingScene,camera);else renderer.compile(preparingScene,camera);
+    if(preparingEnvironment!==environment)return;
+    t=sim.telemetry();updateEnvironment(performance.now(),t,0);
+    environment.wantsShadowUpdate?.(performance.now()/1000,t.position);renderer.shadowMap.needsUpdate=true;
+    await environment.prepareReflections?.(performance.now()/1000,t.position,[car.group,exhaust.mesh,forcesRoot,trail,targetGroup]);
+    if(preparingEnvironment!==environment)return;
+    if(renderer.compileAsync)await renderer.compileAsync(scene,camera);else renderer.compile(scene,camera);
+    composer.render();
+    preparedEnvironment=preparingEnvironment;preparedRevision=revision;
+  },{onBusy:busy=>{
+    // compileAsync polls live material programs. A second quality/weather
+    // change must not dispose those programs while that promise is pending.
+    // Inert preserves each control's own disabled state and keeps the progress
+    // message accessible; the capture guards also cover synthetic events.
+    renderPreparing=busy;
+    if(busy){for(const element of $('app').children)if(element!==$('render-prepare-progress')){preparationInert.push([element,element.inert]);element.inert=true;}}
+    else for(const [element,inert]of preparationInert.splice(0))element.inert=inert;
+    $('render-prepare-progress').classList.toggle('hidden',!busy);
+    if(busy){sound?.silence();meter.markEvent('render_preparation_start',{quality,weatherPreset});}
+    lastTime=performance.now();
+  },onComplete:stats=>meter.markEvent('render_preparation_end',{...stats,quality,weatherPreset})});
   window.addEventListener('resize',resize);setQuality(quality);activateScenario('free');
   // Research references are local; links open only when explicitly selected.
   fetch('./research.json').then(r=>r.json()).then(research=>{
@@ -984,8 +1012,7 @@ export async function boot(shell){
   await Promise.race([environment.ready,new Promise(resolve=>setTimeout(resolve,10000))]);
   $('loading-message').textContent='准备车辆材质、灯光与实时渲染…';
   exhaust.mesh.geometry.instanceCount=1;
-  if(renderer.compileAsync)await renderer.compileAsync(scene,camera);else renderer.compile(scene,camera);
-  updateEnvironment(performance.now(),t,0);environment.wantsShadowUpdate?.(performance.now()/1000,t.position);renderer.shadowMap.needsUpdate=true;composer.render();exhaust.mesh.geometry.instanceCount=0;shell.graphicsReady();window.roadsterReady=true;
+  await renderPreparation.run();exhaust.mesh.geometry.instanceCount=0;shell.graphicsReady();window.roadsterReady=true;
   $('loading-screen').style.opacity='0';setTimeout(()=>$('loading-screen').style.display='none',700);
   $('sim-state').textContent='系统就绪';$('solver-label').textContent='6DOF · 120 Hz / 遥测 20 Hz';syncUi(t);
   // A small read-only diagnostics surface makes the numerical state inspectable.
@@ -993,6 +1020,11 @@ export async function boot(shell){
   let lastRendered=0,captureNotice=false;
   function frame(now){
     if(graphicsStopped)return;requestAnimationFrame(frame);if(document.hidden){lastTime=now;return;}
+    if(!programMatrixBusy&&!renderPreparation.busy&&(preparedEnvironment!==environment||preparedRevision!==environment.preparationRevision))renderPreparation.invalidate();
+    if(!programMatrixBusy&&(renderPreparation.busy||renderPreparation.needed)){
+      if(!renderPreparation.busy)renderPreparation.run().catch(error=>{setPaused(true);shell.graphicsUnavailable('街景准备失败：'+error.message);console.error(error);});
+      lastTime=now;return;
+    }
     // The paused frame is already frozen. Leave rAF and DOM cancellation live,
     // but do not enqueue another city render while its PNG readback is pending.
     // Active-driving exports still advance the original simulation and view.

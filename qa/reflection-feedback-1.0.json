@@ -1,0 +1,155 @@
+{
+  "schema": "roadster.reflection-feedback",
+  "version": 1,
+  "modelVersion": "1.0.0",
+  "generatedAt": "2026-10-24T18:26:10.826Z",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "The frozen 3.15 source is byte-exact after its single relative import adaptation",
+      "status": "passed"
+    },
+    {
+      "name": "The production shader hook retains the same sampler uniform object even when its enabled flag is zero",
+      "status": "passed"
+    },
+    {
+      "name": "Frozen 3.15 exposes the writing target texture to road draws despite its zero enabled flag",
+      "status": "passed"
+    },
+    {
+      "name": "High and ultra detach the sampler for every clear/draw and restore it only after leaving the target",
+      "status": "passed"
+    },
+    {
+      "name": "Cached frames keep the original completed texture without issuing another reflection draw",
+      "status": "passed"
+    },
+    {
+      "name": "Clear and render exceptions restore the exact sampler and caller state, then disable the partially written cache",
+      "status": "passed"
+    },
+    {
+      "name": "Disable/re-enable, quality disposal and recreation preserve balanced and low pass budgets",
+      "status": "passed"
+    },
+    {
+      "name": "The temporary pass restores an arbitrary previous sampler identity rather than substituting its own target",
+      "status": "passed"
+    }
+  ],
+  "sourceSha256": {
+    "dist/wet-road-reflection.js": "69e9f1280bd8bf0d2119e156fba83ccc99c31c1b7a60e03df9670cc6c5264683",
+    "dist/road-surface-material.js": "6e80a21c898ecea1de77b740d116ee619ff4e2c30b610bff5e09649009a08c80",
+    "dist/vendor/three.module.js": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a",
+    "tests/reflection-feedback-3.16.test.mjs": "d6ae0f8c9a9a58a0df029060247073b9e4d4ed875d9531214ddfdd466cf93032"
+  },
+  "evidence": {
+    "baseline": {
+      "sourceCommit": "9f6c8f47a2678beee3915a0320ac2bf93312e96b",
+      "sourcePath": "dist/wet-road-reflection.js",
+      "sourceGitBlob": "9a71edbf5590436e6ac3b1d88e9ab95b64d9b1c1",
+      "sourceSha256": "237baf4e5bc76ad1969f1e04a51d22777d429c0f3a89e295dff80a18f5a27061",
+      "fixturePath": "qa/fixtures/reflection-feedback-3.15/wet-road-reflection.js",
+      "fixtureSha256": "923dd1f67fc2a1abc7363a9b9e3d893fc63f285c8077bb43f4a02ab2e631b45a",
+      "adaptation": {
+        "from": "from './vendor/three.module.js'",
+        "to": "from '../../../dist/vendor/three.module.js'",
+        "occurrences": 1
+      },
+      "purpose": "Frozen 3.15 reflection pass used to reproduce sampler/output texture object alias at the renderer boundary; no simulated GPU and no image acceptance.",
+      "verified": true
+    },
+    "sharedSampler": {
+      "sameUniformObject": true,
+      "sourceTextureReads": 5,
+      "scope": "Shader composition only; actual active-uniform evidence comes from the separate native WebGL capture."
+    },
+    "before": {
+      "enabledDuringDraw": 0,
+      "samplerEqualsWritingTexture": true,
+      "cpuFacadeInventsNoGlError": true,
+      "scope": "Exact JS object identity at renderer.render; this is not a substitute for the independently captured GL1282."
+    },
+    "successfulPasses": [
+      {
+        "quality": "high",
+        "passes": 4,
+        "targetSize": [
+          512,
+          288
+        ],
+        "maximumHz": 12,
+        "aliasDraws": 0,
+        "exactCallerStateRestored": true
+      },
+      {
+        "quality": "ultra",
+        "passes": 4,
+        "targetSize": [
+          768,
+          432
+        ],
+        "maximumHz": 20,
+        "aliasDraws": 0,
+        "exactCallerStateRestored": true
+      }
+    ],
+    "cachedFrames": {
+      "newDraws": 0,
+      "samplerChanges": 0,
+      "completedTexturePreserved": true
+    },
+    "failureRecovery": [
+      {
+        "failAt": "clear",
+        "previousCapture": false,
+        "exactSamplerRestored": true,
+        "partialCacheDisabled": true,
+        "oldProjectionPreserved": true,
+        "retrySucceeded": true
+      },
+      {
+        "failAt": "clear",
+        "previousCapture": true,
+        "exactSamplerRestored": true,
+        "partialCacheDisabled": true,
+        "oldProjectionPreserved": true,
+        "retrySucceeded": true
+      },
+      {
+        "failAt": "render",
+        "previousCapture": false,
+        "exactSamplerRestored": true,
+        "partialCacheDisabled": true,
+        "oldProjectionPreserved": true,
+        "retrySucceeded": true
+      },
+      {
+        "failAt": "render",
+        "previousCapture": true,
+        "exactSamplerRestored": true,
+        "partialCacheDisabled": true,
+        "oldProjectionPreserved": true,
+        "retrySucceeded": true
+      }
+    ],
+    "lifecycle": {
+      "disabledAddsNoDraw": true,
+      "reEnableUsesSameTexture": true,
+      "balancedAndLowDraws": 0,
+      "recreatedTextureIsDistinct": true,
+      "disposedSamplerNull": true
+    },
+    "exactRestoration": {
+      "previousTextureIdentityPreserved": true,
+      "scope": "State preservation contract; ordinary configuration uses the capture target texture."
+    }
+  },
+  "verificationType": "Production material and reflection module on a CPU renderer boundary observer; no WebGL context, getError emulation or pixel acceptance.",
+  "specification": {
+    "url": "https://registry.khronos.org/webgl/specs/latest/1.0/",
+    "section": "Feedback Loops Between Textures and the Framebuffer"
+  },
+  "remainingAcceptance": "Same-condition native WebGL after-capture and 14-frame per-draw audit with zero new GL errors, using the final rebuilt identity. Existing 3.15 failure remains recorded."
+}

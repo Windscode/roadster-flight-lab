@@ -1,0 +1,290 @@
+{
+  "version": "3.24",
+  "status": "passed",
+  "createdAt": "2026-10-24T18:26:37.965Z",
+  "checks": [
+    {
+      "name": "Each sealed shallow display has a mounted source and only its opaque pieces receive it",
+      "status": "passed",
+      "detail": {
+        "recipeVariants": 16,
+        "receiverParts": 368,
+        "crosstownSources": 25,
+        "recessDepthM": 0.62
+      }
+    },
+    {
+      "name": "Local diffuse obeys receiver orientation, downward emission and bounded distance",
+      "status": "passed",
+      "detail": {
+        "near": [
+          6.974419988102319,
+          5.440047590719809,
+          3.6266983938132062
+        ],
+        "far": [
+          1.2192244929973277,
+          0.9509951045379157,
+          0.6339967363586104
+        ],
+        "scope": "Three unshadowed samples of a finite downward shelf bar; diffuse only, confined to authored display receivers. No inter-object visibility, specular, spill or baked transport claim."
+      }
+    },
+    {
+      "name": "Full-city receiver buffers are finite, aligned to visible sources and zero elsewhere",
+      "status": "passed",
+      "detail": {
+        "materials": 9,
+        "visibleSources": 210,
+        "receiverCount": 5704,
+        "zeroCount": 22085,
+        "unlitBatches": 539,
+        "attributeBytes": 889248
+      }
+    },
+    {
+      "name": "Day/night and quality changes preserve one shader term and distinct composed program keys",
+      "status": "passed",
+      "detail": {
+        "variants": [
+          {
+            "quality": "balanced",
+            "weather": "clear-day",
+            "materials": 9
+          },
+          {
+            "quality": "balanced",
+            "weather": "wet-night",
+            "materials": 9
+          },
+          {
+            "quality": "balanced",
+            "weather": "clear-day",
+            "materials": 9
+          },
+          {
+            "quality": "high",
+            "weather": "clear-day",
+            "materials": 9
+          },
+          {
+            "quality": "high",
+            "weather": "wet-night",
+            "materials": 9
+          },
+          {
+            "quality": "high",
+            "weather": "clear-day",
+            "materials": 9
+          },
+          {
+            "quality": "ultra",
+            "weather": "clear-day",
+            "materials": 9
+          },
+          {
+            "quality": "ultra",
+            "weather": "wet-night",
+            "materials": 9
+          },
+          {
+            "quality": "ultra",
+            "weather": "clear-day",
+            "materials": 9
+          },
+          {
+            "quality": "balanced",
+            "weather": "clear-day",
+            "materials": 9
+          },
+          {
+            "quality": "balanced",
+            "weather": "wet-night",
+            "materials": 9
+          },
+          {
+            "quality": "balanced",
+            "weather": "clear-day",
+            "materials": 9
+          }
+        ],
+        "scope": "Real environment material callbacks and cache keys, including CSM/exterior/transport injection. Native GPU compilation and appearance are separate browser checks."
+      }
+    },
+    {
+      "name": "Original external night bake inputs and complete city remain byte-identical",
+      "status": "passed",
+      "detail": {
+        "bakes": [
+          {
+            "folder": "night-irradiance",
+            "originalIdentity": "52e7667b29eca75b1bb15071bcc460d4470e67f4c944c163a2c6df50835c0d5b",
+            "anchorSHA256": "72b71f47d8bad78c80dd9a4f46ee68bb780aa40fce2ae1e179fcc2489b8ecf0e",
+            "geometrySHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9"
+          },
+          {
+            "folder": "night-direct-irradiance",
+            "originalIdentity": "cc1e3ea3cf9c2aed395b26678caafd58e3470cf2ecc3ab7de09720817304c75b",
+            "anchorSHA256": "72b71f47d8bad78c80dd9a4f46ee68bb780aa40fce2ae1e179fcc2489b8ecf0e",
+            "geometrySHA256": "4f7d67bf14ad81d8e0b8e3c59016fc61deef77010f3f38ab745e2efa3937a0b9"
+          }
+        ],
+        "scope": "Shelf lights are local to authored opaque contents and absent from existing street-light anchors; original baked data is retained, not regenerated or duplicated."
+      }
+    },
+    {
+      "name": "Original architecture is unchanged apart from 185 shelf lenses; fifteen view budgets hold",
+      "status": "passed",
+      "detail": {
+        "baselineCommit": "bb2fd93bc54bfcc79f27276b1b946e912d2156aa",
+        "allocatedDrawBatches": 955,
+        "addedLenses": 185,
+        "addedTriangles": 2220,
+        "showcaseAttributeBytes": 870144,
+        "geometryMiBBefore": 17.18,
+        "geometryMiBAfter": 18.02,
+        "views": {
+          "balanced": [
+            {
+              "view": "weave-street",
+              "drawCalls": 185,
+              "triangles": 400654,
+              "instances": 41327,
+              "shadowDrawCalls": 28,
+              "shadowTriangles": 116598
+            },
+            {
+              "view": "foundry-avenue",
+              "drawCalls": 53,
+              "triangles": 50450,
+              "instances": 8485,
+              "shadowDrawCalls": 13,
+              "shadowTriangles": 7140
+            },
+            {
+              "view": "civic-terrace",
+              "drawCalls": 47,
+              "triangles": 90486,
+              "instances": 9783,
+              "shadowDrawCalls": 15,
+              "shadowTriangles": 30156
+            },
+            {
+              "view": "aerial",
+              "drawCalls": 71,
+              "triangles": 217678,
+              "instances": 27489,
+              "shadowDrawCalls": 18,
+              "shadowTriangles": 46992
+            },
+            {
+              "view": "botanical",
+              "drawCalls": 17,
+              "triangles": 19982,
+              "instances": 3390,
+              "shadowDrawCalls": 6,
+              "shadowTriangles": 3972
+            }
+          ],
+          "high": [
+            {
+              "view": "weave-street",
+              "drawCalls": 240,
+              "triangles": 552300,
+              "instances": 58457,
+              "shadowDrawCalls": 66,
+              "shadowTriangles": 223214
+            },
+            {
+              "view": "foundry-avenue",
+              "drawCalls": 77,
+              "triangles": 90156,
+              "instances": 15330,
+              "shadowDrawCalls": 21,
+              "shadowTriangles": 30768
+            },
+            {
+              "view": "civic-terrace",
+              "drawCalls": 123,
+              "triangles": 246618,
+              "instances": 34150,
+              "shadowDrawCalls": 18,
+              "shadowTriangles": 51060
+            },
+            {
+              "view": "aerial",
+              "drawCalls": 128,
+              "triangles": 399318,
+              "instances": 50555,
+              "shadowDrawCalls": 26,
+              "shadowTriangles": 148764
+            },
+            {
+              "view": "botanical",
+              "drawCalls": 47,
+              "triangles": 53060,
+              "instances": 10078,
+              "shadowDrawCalls": 8,
+              "shadowTriangles": 6372
+            }
+          ],
+          "ultra": [
+            {
+              "view": "weave-street",
+              "drawCalls": 303,
+              "triangles": 648760,
+              "instances": 75333,
+              "shadowDrawCalls": 80,
+              "shadowTriangles": 258290
+            },
+            {
+              "view": "foundry-avenue",
+              "drawCalls": 90,
+              "triangles": 98220,
+              "instances": 16347,
+              "shadowDrawCalls": 21,
+              "shadowTriangles": 30768
+            },
+            {
+              "view": "civic-terrace",
+              "drawCalls": 149,
+              "triangles": 283098,
+              "instances": 37678,
+              "shadowDrawCalls": 20,
+              "shadowTriangles": 65544
+            },
+            {
+              "view": "aerial",
+              "drawCalls": 205,
+              "triangles": 591338,
+              "instances": 68035,
+              "shadowDrawCalls": 34,
+              "shadowTriangles": 177696
+            },
+            {
+              "view": "botanical",
+              "drawCalls": 54,
+              "triangles": 64192,
+              "instances": 11397,
+              "shadowDrawCalls": 8,
+              "shadowTriangles": 6372
+            }
+          ]
+        },
+        "scope": "Architecture and existing street furnishings. Full rendered scene and target frame rate require native browser measurement."
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/showcase-lighting.js": "e7cc102042ea534946afa953a423f2a7f827ed1fd107a3e83cc16e1fab9658f6",
+    "dist/street-display.js": "82a25a0d5d06527eb3a133e89a8c1661f0de8e2970fd9b784fa151e3032ada4b",
+    "dist/urban-architecture.js": "595c2a923013494ecc7445bfd42cc4f1c5efc8acd5bef18ad7d827a745c510ca",
+    "dist/city-street-edge.js": "59475e0a58144f1a3af769a6292ad9f23b8944378b7cf9cf67c7de8e455c27f3",
+    "dist/city-environment.js": "6f0c10b1ae5c51ec4ecb6ba6f841791136283228be1790a7e2bf2f57faf211ae"
+  },
+  "limits": [
+    "Three unshadowed samples of a finite downward shelf bar; diffuse only, confined to authored display receivers. No inter-object visibility, specular, spill or baked transport claim.",
+    "The light is authored, not measured photometry. The existing building envelopes remain closed; this does not implement enterable shops.",
+    "Numerical/material and geometry checks do not establish GPU compile, visual legibility or native frame-rate acceptance."
+  ]
+}

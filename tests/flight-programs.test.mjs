@@ -131,7 +131,7 @@ test('actual wind-laboratory beam rejects a roll with insufficient overhead clea
   const state=()=>JSON.stringify([sim.body.position,sim.body.quaternion,sim.body.velocity,sim.body.angularVelocity]);
   const before=state(),initial=sim.telemetry();let result;
   const runner=new FlightProgramRunner({getSim:()=>sim,getContext:()=> 'lab',onFinish:r=>result=r});
-  assert.throws(()=>runner.start(defaultProgramLibrary().programs.find(p=>p.id==='roll-return')),/上方净空不足/);
+  assert.throws(()=>runner.start(defaultProgramLibrary().programs.find(p=>p.id==='roll-return')),/上方净空不足|顶棚预测范围/);
   assert.equal(state(),before);assert.equal(runner.active,null);assert.equal(sim.telemetry().maneuver,null);assert.equal(result.status,'failed');
   physicalResults.push({preset:'roll-return',world:'windlab',scenario:'windlab',initialState:'airborne-CG-22m',status:result.status,reason:result.reason,positionStart:initial.position,positionEnd:sim.telemetry().position,rigidBodyUnchanged:true});
 });

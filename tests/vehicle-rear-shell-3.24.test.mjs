@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -78,5 +79,5 @@ const hash=b=>createHash('sha256').update(b).digest('hex');
 const report={schema:'roadster-rear-shell-3.24',status:'passed',baselineCommit,baselineVehicleSHA256:hash(frozen),vehicleSHA256:hash(readFileSync(new URL('../dist/vehicle.js',import.meta.url))),rows,
   reference:{officialPage:'https://www.tesla.com/roadster',referenceImageAccess:'The official page was read; current rear-image fetches failed. Historical image notes are not treated as newly verified OEM geometry.',baselineDrivingImage:'qa/browser-3.23/roadster-3.23.0-chase-clear-day.png'},
   limits:['Independent wrapping body and cavity reconstruction; no OEM dimensions, hidden mechanism or production configuration claimed.','Existing experimental nozzle and fan locations, physics, wheel and suspension envelope remain unchanged.','Numerical geometry and source checks do not establish pixel quality; native matched views are reviewed separately.']};
-mkdirSync('qa/vehicle-3.24',{recursive:true});writeFileSync('qa/vehicle-3.24/rear-shell.json',JSON.stringify(report,null,2)+'\n');
+mkdirSync(`qa/vehicle-${REPORT_VERSION}`,{recursive:true});writeFileSync(`qa/vehicle-${REPORT_VERSION}/rear-shell.json`,JSON.stringify(report,null,2)+'\n');
 before.dispose();after.dispose();console.log('PASS rear shell: real wrap surfaces, eight open ducts, fixed hardware, normals, cutaway and bounded LOD');

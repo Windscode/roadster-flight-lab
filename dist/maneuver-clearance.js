@@ -30,11 +30,21 @@ export function sampleManeuverHeadroom(sim,{rangeM,horizonS,requiredM=rangeM,env
     if(!support||Math.abs(support.distance-below.distance)>.10||support.normal.y<Math.cos(Math.PI/180)){supportChanged=true;phased=false;break;}
   }
   const envelopeSummary=envelope?{...envelope.summary,...(supportChanged?{active:false,fallbackReasons:[...envelope.summary.fallbackReasons,'support-plane-changes-along-path']}:{})}:null;
+  // Outside the validated phase prediction, a single nominal peak is not a
+  // conservative ceiling test (low gravity can keep climbing after rotation).
+  // Use an open-overhead operating guard for automated X/U instead. Its scan
+  // extends through five seconds of maximum installed jet acceleration using
+  // dry mass. This is deliberately a screening distance, not a trajectory or
+  // an aerodynamic/swept-volume safety proof; manual research is unaffected.
+  const unvalidated=!!envelope&&!phased;
+  const screeningM=unvalidated?Math.max(rangeM,Math.max(0,b.velocity.y)*horizon+
+    .5*Math.max(0,sim._nozzles.reduce((sum,n)=>sum+(n.kind==='lift'?sim.params.liftNozzleMax:n.kind==='roll'?sim.params.sideNozzleMax:sim.params.axialNozzleMax),0)/sim.params.dryMass-sim.params.gravity)*horizon*horizon+3):rangeM;
+  if(envelopeSummary&&unvalidated)Object.assign(envelopeSummary,{operatingGuard:'open-overhead-corridor',screeningRangeM:screeningM});
   let nearest=null,violation=null,sampleCount=0;
   for(let i=0;i<=intervals;i++){
     const timeS=intervals?horizon*i/intervals:0;
-    const stationRequired=phased?envelopeClearanceAt(envelope,timeS,intervals?horizon/intervals/2:0):requiredM;
-    const stationRange=phased?stationRequired:rangeM;
+    const stationRequired=phased?envelopeClearanceAt(envelope,timeS,intervals?horizon/intervals/2:0):unvalidated?screeningM:requiredM;
+    const stationRange=phased?stationRequired:screeningM;
     for(const [x,z]of QUICK_ROLL_HEADROOM_OFFSETS){
       const offsetX=x*cos+z*sin,offsetZ=-x*sin+z*cos;
       const footprintRise=normal?.y>.7?-(normal.x*offsetX+normal.z*offsetZ)/normal.y:0;
@@ -45,8 +55,8 @@ export function sampleManeuverHeadroom(sim,{rangeM,horizonS,requiredM=rangeM,env
     }
   }
   return {distanceM:nearest?.distanceM??null,objectId:nearest?.objectId??null,nearestTimeS:nearest?.timeS??null,blocked:!!violation,violation,
-    horizonS:horizon,rangeM,sampleCount,stationCount:intervals+1,stationSpacingM:intervals?speed*horizon/intervals:0,surfaceVerticalMps,
+    horizonS:horizon,rangeM:screeningM,sampleCount,stationCount:intervals+1,stationSpacingM:intervals?speed*horizon/intervals:0,surfaceVerticalMps,
     envelope:envelopeSummary,supportSampleCount,
-    estimated:true,method:'Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; '+(phased?'phase-dependent force/valve/geometry height prediction with explicit reserves; ':'conservative single peak-height envelope; ')+'bounded to five seconds, 1285 upward rays and 257 support probes.',
+    estimated:true,method:'Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; '+(phased?'phase-dependent force/valve/geometry height prediction with explicit reserves; ':unvalidated?'open-overhead operating guard outside the validated phase domain; ':'legacy single peak-height estimate; ')+'bounded to five seconds, 1285 upward rays and 257 support probes.',
     notCovered:'Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles.'};
 }

@@ -6,6 +6,7 @@ import {ExperimentReproductionCheck} from './experiment-reproduction.js';
 import {writeArchiveCandidate} from './research-storage.js';
 import {getRuntimeIdentity} from './runtime-identity.js';
 import {physicalDiagnosticSnapshot,serializableDiagnostic} from './simulation-safety.js';
+import {assertSnapshotWorldCompatible} from './simulation-snapshot.js';
 
 export const LIVE_PROTOCOL_VERSION='live-fixed-inputs-1';
 export const EXPERIMENT_SCHEMA='roadster.live-experiment';
@@ -87,6 +88,7 @@ export function replayEligibility(record){
   return{exact,recompute:true,reason:exact?'可按原始条件执行当前相同模型 / 构建':'原始模型 / 构建未安装；不能精确重放。可明确选择按当前模型重新计算，并保留来源身份'};
 }
 function canMigrateRecordedState(from,to){
+  if(from==='3.24.0'&&to==='1.0.0')return true;
   const targets={'3.8.0':['3.9.0','3.10.0','3.11.0','3.12.0','3.13.0'],'3.9.0':['3.10.0','3.11.0','3.12.0','3.13.0'],'3.10.0':['3.11.0','3.12.0','3.13.0'],'3.11.0':['3.12.0','3.13.0'],'3.12.0':['3.13.0'],'3.16.0':['3.17.0']};
   return targets[from]?.includes(to)??false;
 }
@@ -95,8 +97,9 @@ export function prepareRecordedStateForCurrentModel(record,sim,{recompute=false}
   const compatibility={model:source.modelVersion===current.modelVersion&&source.modelBuildId===current.modelBuildId?'exact':'current-model-recompute',sourceIdentity:clone(source),executionIdentity:current,conditions:'original-complete-snapshot',migration:null};
   if(physical.modelVersion!==current.modelVersion){
     if(!recompute||!canMigrateRecordedState(source.modelVersion,current.modelVersion)||physical.schemaVersion!==1)throw Error('没有此历史模型的显式状态迁移器');
-    const template=sim.exportState(),added=[...(source.modelVersion==='3.8.0'?['_driveAccounting','_verticalControl','_levelRecovery']:[]),...['_routeSurface','_contactFeedback'].filter(key=>key in template.state)];
-    if(physical.worldType!==template.worldType||physical.geometrySignature!==template.geometrySignature)throw Error('历史场景几何与当前模型不同；不能把不同碰撞世界标作同一原始条件');
+    const template=sim.exportState(),releaseMigration=source.modelVersion==='3.24.0'&&current.modelVersion==='1.0.0',added=releaseMigration?[]:[...(source.modelVersion==='3.8.0'?['_driveAccounting','_verticalControl','_levelRecovery']:[]),...['_routeSurface','_contactFeedback'].filter(key=>key in template.state)];
+    if(releaseMigration)assertSnapshotWorldCompatible(sim,physical);
+    else if(physical.worldType!==template.worldType||physical.geometrySignature!==template.geometrySignature)throw Error('历史场景几何与当前模型不同；不能把不同碰撞世界标作同一原始条件');
     const parameterMapping={};
     // Older E/Q commands used an explicit 3 m/s² acceleration envelope. A new
     // session's stronger default must not silently accelerate an old input log.

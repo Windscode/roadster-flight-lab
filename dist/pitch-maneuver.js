@@ -68,7 +68,7 @@ export function startPitchManeuver(sim,defaultParameters){
   // rays reject obvious roofs; they are explicitly not a swept-volume proof.
   const clearanceEnvelope=createManeuverEnvelope(sim,{name:'pitch',originGrounded:grounded,profile,launchVelocity,launchAccelerationMps2:netAccel,minimumRotationClearanceM},defaultParameters);
   const headroom=sampleManeuverHeadroom(sim,{rangeM:peakRise+2.5,requiredM:peakRise+2.4,horizonS:5,envelope:clearanceEnvelope});
-  if(headroom.blocked)return reject((headroom.envelope.active?'分阶段净空估计':'保守净空估计')+'认为车长旋转包络 / 预计滑行路径上方净空不足');
+  if(headroom.blocked)return reject(headroom.envelope?.operatingGuard==='open-overhead-corridor'?'当前工况超出已验证的顶棚预测范围，请在露天开阔区域自动后翻；手动研究仍可用。':'分阶段净空估计认为车长旋转包络 / 预计滑行路径上方净空不足');
   const launchImpulse=b.mass*(Math.max(0,launchVelocity-b.velocity.y)+p.gravity*launchTime);
   const rotationImpulse=2*b.inertia.x*profile.rateRadS/lever;
   const arrestSpeed=Math.max(0,-estimatedVy),arrestTime=arrestSpeed/netAccel+4*p.valveRiseTime+.15;

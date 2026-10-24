@@ -1,0 +1,388 @@
+{
+  "status": "passed",
+  "createdAt": "2026-10-24T18:26:41.125Z",
+  "checks": [
+    {
+      "name": "Every retained half-float coefficient is identical; independent trilinear samples preserve edge/clamp/direction/height interpolation",
+      "status": "passed",
+      "detail": [
+        {
+          "kind": "bounce",
+          "checkedHalfValues": 5405040,
+          "comparisons": 6300,
+          "maximumError": 7.105427357601002e-15
+        },
+        {
+          "kind": "stationary direct",
+          "checkedHalfValues": 5405040,
+          "comparisons": 6300,
+          "maximumError": 4.804490139065365e-14
+        }
+      ]
+    },
+    {
+      "name": "Atlas dimensions respect the supplied 3D texture limit; malformed depth layouts fail explicitly",
+      "status": "passed",
+      "detail": {
+        "currentFine": [
+          162,
+          81,
+          30
+        ],
+        "testedRejectLimit": 161,
+        "WebGL2Minimum3DSize": 256
+      }
+    },
+    {
+      "name": "Real city bindMaterial chain selects mutually exclusive weather transport, preserves static/dynamic distinction and retires stale tables through high/balanced/high and day/night cycles",
+      "status": "passed",
+      "detail": {
+        "sequence": 9,
+        "roadProgramDisposals": 9,
+        "sceneGraphOnly": true
+      }
+    }
+  ],
+  "evidence": {
+    "atlases": [
+      {
+        "kind": "bounce",
+        "checkedHalfValues": 5405040,
+        "comparisons": 6300,
+        "maximumError": 7.105427357601002e-15,
+        "qualities": [
+          {
+            "quality": "balanced",
+            "size": [
+              108,
+              53,
+              30
+            ],
+            "activeBytes": 1373760,
+            "paddingBytes": 158400,
+            "cacheBytes": 1373760
+          },
+          {
+            "quality": "high",
+            "size": [
+              162,
+              81,
+              30
+            ],
+            "activeBytes": 3149280,
+            "paddingBytes": 356160,
+            "cacheBytes": 4523040
+          },
+          {
+            "quality": "ultra",
+            "size": [
+              162,
+              81,
+              30
+            ],
+            "activeBytes": 3149280,
+            "paddingBytes": 356160,
+            "cacheBytes": 4523040
+          },
+          {
+            "quality": "balanced",
+            "size": [
+              108,
+              53,
+              30
+            ],
+            "activeBytes": 1373760,
+            "paddingBytes": 158400,
+            "cacheBytes": 4523040
+          },
+          {
+            "quality": "high",
+            "size": [
+              162,
+              81,
+              30
+            ],
+            "activeBytes": 3149280,
+            "paddingBytes": 356160,
+            "cacheBytes": 4523040
+          }
+        ],
+        "sourceIdentity": "52e7667b29eca75b1bb15071bcc460d4470e67f4c944c163a2c6df50835c0d5b"
+      },
+      {
+        "kind": "stationary direct",
+        "checkedHalfValues": 5405040,
+        "comparisons": 6300,
+        "maximumError": 4.804490139065365e-14,
+        "qualities": [
+          {
+            "quality": "balanced",
+            "size": [
+              108,
+              53,
+              30
+            ],
+            "activeBytes": 1373760,
+            "paddingBytes": 158400,
+            "cacheBytes": 1373760
+          },
+          {
+            "quality": "high",
+            "size": [
+              162,
+              81,
+              30
+            ],
+            "activeBytes": 3149280,
+            "paddingBytes": 356160,
+            "cacheBytes": 4523040
+          },
+          {
+            "quality": "ultra",
+            "size": [
+              162,
+              81,
+              30
+            ],
+            "activeBytes": 3149280,
+            "paddingBytes": 356160,
+            "cacheBytes": 4523040
+          },
+          {
+            "quality": "balanced",
+            "size": [
+              108,
+              53,
+              30
+            ],
+            "activeBytes": 1373760,
+            "paddingBytes": 158400,
+            "cacheBytes": 4523040
+          },
+          {
+            "quality": "high",
+            "size": [
+              162,
+              81,
+              30
+            ],
+            "activeBytes": 3149280,
+            "paddingBytes": 356160,
+            "cacheBytes": 4523040
+          }
+        ],
+        "sourceIdentity": "cc1e3ea3cf9c2aed395b26678caafd58e3470cf2ecc3ab7de09720817304c75b"
+      }
+    ],
+    "switches": {
+      "sequence": [
+        {
+          "quality": "high",
+          "weather": "wet-night",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|fragment|night-atlas|dynamic|ao-1",
+              "isStatic": false
+            }
+          ]
+        },
+        {
+          "quality": "balanced",
+          "weather": "wet-night",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|vertex|night-atlas|static|ao-0",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|vertex|night-atlas|static|ao-0",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|vertex|night-atlas|dynamic|ao-0",
+              "isStatic": false
+            }
+          ]
+        },
+        {
+          "quality": "high",
+          "weather": "wet-night",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|fragment|night-atlas|dynamic|ao-1",
+              "isStatic": false
+            }
+          ]
+        },
+        {
+          "quality": "ultra",
+          "weather": "wet-night",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|fragment|night-atlas|dynamic|ao-1",
+              "isStatic": false
+            }
+          ]
+        },
+        {
+          "quality": "ultra",
+          "weather": "clear-day",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|fragment|day-sh|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|fragment|day-sh|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|fragment|day-sh|dynamic|ao-1",
+              "isStatic": false
+            }
+          ]
+        },
+        {
+          "quality": "high",
+          "weather": "clear-day",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|fragment|day-sh|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|fragment|day-sh|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|fragment|day-sh|dynamic|ao-1",
+              "isStatic": false
+            }
+          ]
+        },
+        {
+          "quality": "high",
+          "weather": "wet-night",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|fragment|night-atlas|dynamic|ao-1",
+              "isStatic": false
+            }
+          ]
+        },
+        {
+          "quality": "high",
+          "weather": "clear-day",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|fragment|day-sh|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|fragment|day-sh|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|fragment|day-sh|dynamic|ao-1",
+              "isStatic": false
+            }
+          ]
+        },
+        {
+          "quality": "high",
+          "weather": "wet-night",
+          "entries": [
+            {
+              "material": "City / scanned asphalt + local puddles",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Urban / aged mineral plaster",
+              "key": "city-lighting-3.17|fragment|night-atlas|static|ao-1",
+              "isStatic": true
+            },
+            {
+              "material": "Roadster / glass",
+              "key": "city-lighting-3.17|fragment|night-atlas|dynamic|ao-1",
+              "isStatic": false
+            }
+          ]
+        }
+      ],
+      "roadProgramDisposals": 9,
+      "materialCount": 120,
+      "sceneGraphOnly": true
+    }
+  },
+  "sourceHashes": {
+    "dist/city-environment.js": "6f0c10b1ae5c51ec4ecb6ba6f841791136283228be1790a7e2bf2f57faf211ae",
+    "dist/city-material-lighting.js": "0433957213054d2cd658856edd9ac22d509e09cb769599fbf2301e8dc8ef263b",
+    "dist/night-field-atlas.js": "afe38d53e75b49f3609fb1156dc4961bb20e73d04939227ee987b54790239ba7",
+    "dist/night-city-lighting.js": "00c3d8dd0cca95eeb398af6459379431aa7b2b8fe2683c5ff241c62ae2ad845f",
+    "dist/night-direct-lighting.js": "ccc6b213f2f44e97035ff064939ae498be4295ebe6655576488989a6fb70e234",
+    "dist/indirect-lighting.js": "87ea771788d4d9b177fd475b053a8537a5254176791c24d733b7407966efb885",
+    "tests/sampler-budget-3.13.test.mjs": "5669acb347c8af50de4dcee1bb29a662aa060a72319406dc4f7b88c2d3073730"
+  },
+  "limits": [
+    "CPU storage/interpolation and real JavaScript shader-binding lifecycle checks; no WebGL context, GPU link/draw, image, FPS or target-device acceptance.",
+    "Actual driver active-uniform arrays, LINK_STATUS, VALIDATE_STATUS and draws are captured separately by the live render diagnostics.",
+    "Atlas padding adds bounded CPU/GPU storage; source transport resolution, coefficients, light budgets and material maps remain unchanged."
+  ]
+}

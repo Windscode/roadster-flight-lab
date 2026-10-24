@@ -56,6 +56,9 @@ export class PerformanceMeter{
       if(capture.elapsedMs>=capture.durationMs){capture.complete=true;capture.endedAt=new Date().toISOString();}
       if(capture.frames.length+capture.warmupFrames.length>=50000){capture.stopped=true;capture.stopReason='采样达到 50000 帧上限，部分记录已保留';}
     }
+    // Preparation and exports may render between animation frames. Retaining
+    // this reference let timed postprocessing mutate an already captured frame.
+    this.current=null;
     return frame;
   }
   reset(){this.frames.length=0;this.gpuSamples.length=0;this.last=null;}

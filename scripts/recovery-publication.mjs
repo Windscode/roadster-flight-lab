@@ -10,7 +10,7 @@ import {MODEL_VERSION} from '../dist/vehicle-models.js';
 export const root=fileURLToPath(new URL('../',import.meta.url));
 export const hash=b=>createHash('sha256').update(b).digest('hex');
 export function safe(name){assert(typeof name==='string'&&!name.includes('\\')&&!name.startsWith('/')&&!name.split('/').some(x=>!x||x==='.'||x==='..'||x==='.git'),'Unsafe release path');return resolve(root,name);}
-export function files(folder){return readdirSync(safe(folder),{withFileTypes:true}).flatMap(e=>{const p=folder+'/'+e.name;assert(!e.isSymbolicLink(),'Symlink in release');return e.isDirectory()?files(p):[p];}).sort();}
+export function files(folder){return readdirSync(safe(folder),{withFileTypes:true}).filter(e=>e.name!=='node_modules').flatMap(e=>{const p=folder+'/'+e.name;assert(!e.isSymbolicLink(),'Symlink in release');return e.isDirectory()?files(p):[p];}).sort();}
 export function identity(path){const b=readFileSync(safe(path));return{path,bytes:b.length,sha256:hash(b)};}
 export const recoveryPlanPath='publication/recovery-plan.json';
 const referencesInValidation=()=>{const references=new Set();const visit=v=>{if(typeof v==='string'&&/^(qa|docs)\//.test(v))references.add(v.replace(/:\d+(?::\d+)?$/,'').split(/[?#]/)[0]);else if(v&&typeof v==='object')Object.values(v).forEach(visit);};visit(JSON.parse(readFileSync(safe('dist/validation.json'),'utf8')));return [...references].sort();};

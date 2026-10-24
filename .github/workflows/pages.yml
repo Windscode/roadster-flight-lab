@@ -13,7 +13,28 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source and regression baselines
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+      - name: Install pinned test-only DOM runtime
+        run: npm ci --prefix tests/dom --ignore-scripts --no-audit --no-fund
+      - name: Validate physics, controls, research, interface and publication
+        env:
+          JSDOM_MODULE_PATH: ${{ github.workspace }}/tests/dom/node_modules/jsdom/lib/api.js
+        run: npm run test:release
+
   build:
+    needs: verify
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source

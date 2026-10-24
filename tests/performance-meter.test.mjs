@@ -28,6 +28,7 @@ function fixture({timer=false,capacity=400}={}){
 {
   const {meter,frame}=fixture();for(let ms=1;ms<=100;ms++)frame(ms);frame(1500);frame(20000,{active:false});
   const summary=meter.snapshot();assert.equal(summary.samples,101);assert.equal(summary.frameMedianMs,51);assert.equal(summary.frameP95Ms,96);assert.equal(summary.frameP99Ms,100);
+  assert.equal(meter.current,null,'Completed frames cannot receive later preparation/export pass timings');
   assert.deepEqual(summary.longFrames,{over50Ms:51,over100Ms:1,over250Ms:1,maxMs:1500});
   assert.equal(summary.gpuExecution.samples,0);assert.equal(summary.gpuMs,null);assert.equal(summary.gpuTimerSupported,false);
   assert.equal(summary.cpuSubmission.submission.samples,101);assert.ok(summary.cpuSubmission.submission.p50Ms>=0);

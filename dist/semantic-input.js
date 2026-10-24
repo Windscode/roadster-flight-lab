@@ -2,6 +2,8 @@
 // The stable 3.19 shell receives canonical events at this compatibility boundary;
 // the journal explicitly distinguishes physical ingress from accepted actions.
 const def=(id,label,en,code,keys,channel=null,sign=1)=>({id,label,en,code,keys,channel,sign});
+export const inputKeyName=code=>code.replace(/^Key|^Digit/,'').replace('Space','SPACE').replace('ShiftLeft','SHIFT').replace('ShiftRight','R-SHIFT').replace('ArrowUp','↑').replace('ArrowDown','↓').replace('ArrowLeft','←').replace('ArrowRight','→');
+export const actionKeyLabel=(id,profile=sharedInputs.profile)=>profile.keys[id].map(inputKeyName).join(' / ');
 export const ACTIONS=Object.freeze([
   def('forward','前进','Forward','KeyW',['KeyW','ArrowUp'],'throttle'),
   def('reverse','后退 / 减速','Reverse / slow','KeyS',['KeyS','ArrowDown'],'throttle',-1),

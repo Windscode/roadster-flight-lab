@@ -52,8 +52,9 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
     light.name=(isHead?'Roadster headlamp ':'City practical ')+index;
     light.castShadow=true;light.shadow.camera.near=.10;light.shadow.camera.far=light.distance;
     light.shadow.bias=-.00008;light.shadow.normalBias=isHead?.004:.014;light.shadow.radius=2;
-    light.shadow.autoUpdate=false;light.shadow.needsUpdate=true;light.visible=false;scene.add(light,light.target);
-    return {light,anchor:null,gain:0,next:null,index};
+    light.shadow.autoUpdate=false;light.shadow.needsUpdate=true;light.visible=false;
+    light.position.set(0,-100,0);light.target.position.set(0,-101,0);scene.add(light,light.target);
+    return {light,anchor:null,gain:0,next:null,index,emitting:false};
   };
   for(let i=0;i<4;i++)pool.push(add(false,i));for(let i=0;i<2;i++)heads.push(add(true,i));
   function resizeShadow(entry,size){if(entry.light.shadow.mapSize.x===size)return;entry.light.shadow.mapSize.set(size,size);entry.light.shadow.map?.dispose();entry.light.shadow.map=null;entry.light.shadow.needsUpdate=true;}
@@ -66,8 +67,8 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
       // Restoring its old assignment on an upgrade would light it twice.
       if(i>=profile.street){entry.anchor=entry.next=null;entry.gain=0;entry.light.intensity=0;}
     });
-    heads.forEach((entry,i)=>{resizeShadow(entry,profile.headSize);entry.light.visible=enabled&&!!vehicle&&i<profile.heads;});
-    Object.assign(stats,{shadowMapSize:profile.size,headlightShadowMapSize:profile.headSize,shadowHz:profile.hz});shadowDirty=true;lastSelect=-Infinity;
+    heads.forEach((entry,i)=>{resizeShadow(entry,profile.headSize);entry.light.visible=enabled&&i<profile.heads;if(i>=profile.heads){entry.emitting=false;entry.light.intensity=0;}});
+    Object.assign(stats,{shadowMapSize:profile.size,headlightShadowMapSize:profile.headSize,shadowHz:profile.hz,shaderLightSlots:profile.street+profile.heads});shadowDirty=true;lastSelect=-Infinity;
   }
   function update(time,p,camera=null){
     const dt=lastTime===null?1/60:Math.max(0,Math.min(.10,time-lastTime));lastTime=time;
@@ -105,9 +106,13 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
         entry.anchor=entry.next;entry.gain=0;
         if(entry.anchor){const a=entry.anchor;entry.light.position.set(...a.position);entry.light.target.position.set(...(a.target||[a.position[0],Math.max(0,a.position[1]-10),a.position[2]]));entry.light.color.set(a.color||0xffd0a2);entry.light.distance=Math.min(32,a.range||28);entry.light.shadow.camera.far=entry.light.distance;entry.light.angle=a.angle||.90;entry.light.penumbra=a.penumbra??.55;shadowDirty=true;}
       }
-      entry.light.visible=active&&!!entry.anchor;
-      entry.light.intensity=(entry.anchor?.intensity||1500)*entry.gain;
-      if(entry.light.visible){stats.streetSpots++;stats.selected.push({id:entry.anchor.id||'fixture-'+anchors.indexOf(entry.anchor),role:entry.anchor.role||'street',position:[...entry.anchor.position],target:[...(entry.anchor.target||[entry.anchor.position[0],0,entry.anchor.position[2]])],intensity:entry.light.intensity,gain:entry.gain});}
+      // Keep the shader light/shadow counts stable across district boundaries.
+      // Empty slots emit zero and reuse their depth allocation; toggling
+      // Object3D.visible used to compile a new city-wide shader combination
+      // during driving. Only occupied emitters request depth refreshes.
+      entry.emitting=active&&!!entry.anchor;entry.light.visible=active;
+      entry.light.intensity=entry.emitting?(entry.anchor.intensity||1500)*entry.gain:0;
+      if(entry.emitting){stats.streetSpots++;stats.selected.push({id:entry.anchor.id||'fixture-'+anchors.indexOf(entry.anchor),role:entry.anchor.role||'street',position:[...entry.anchor.position],target:[...(entry.anchor.target||[entry.anchor.position[0],0,entry.anchor.position[2]])],intensity:entry.light.intensity,gain:entry.gain});}
     });
     stats.headlightSpots=0;
     if(vehicle){
@@ -121,15 +126,15 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
         // Motion with lamps off updates the vehicle tracker, but deliberately
         // does not render those lamp maps. Relighting at rest therefore needs
         // a fresh depth camera even when the body has not moved this frame.
-        if(visible&&!entry.light.visible){shadowDirty=true;entry.light.shadow.needsUpdate=true;}
-        entry.light.visible=visible;if(!visible)return;
+        if(visible&&!entry.emitting){shadowDirty=true;entry.light.shadow.needsUpdate=true;}
+        entry.emitting=visible;entry.light.visible=i<profile.heads;if(!visible){entry.light.intensity=0;return;}
         const side=profile.heads===1?0:(i===0?-1:1);
         position.set(side*.56,-.018,2.327).applyMatrix4(vehicle.matrixWorld);
         point.set(side*.92,-.50,24).applyMatrix4(vehicle.matrixWorld);
         entry.light.position.copy(position);entry.light.target.position.copy(point);entry.light.intensity=profile.heads===1?12500:8000;
         stats.headlightSpots++;
       });
-    }else heads.forEach(({light})=>light.visible=false);
+    }else heads.forEach(entry=>{entry.emitting=false;entry.light.intensity=0;entry.light.visible=entry.index<profile.heads;});
     stats.shadowMaps=stats.streetSpots+stats.headlightSpots;
   }
   function wantsShadowUpdate(time,{casterChanged=false}={}){
@@ -139,11 +144,11 @@ export function createCityPracticalLights(scene,anchors,{surfaceHeight=()=>0}={}
     const moving=shadowDirty&&vehicleMatrixReady||casterChanged;
     const needed=moving||((shadowDirty||time<lastShadow)&&(time<lastShadow||time-lastShadow>=1/profile.hz));
     if(!needed)return false;
-    pool.concat(heads).forEach(({light})=>{if(light.visible)light.shadow.needsUpdate=true;});lastShadow=time;shadowDirty=false;stats.updates++;stats.motionCoherent=true;if(moving)stats.motionUpdates=(stats.motionUpdates||0)+1;return true;
+    pool.concat(heads).forEach(({light,emitting})=>{if(emitting)light.shadow.needsUpdate=true;});lastShadow=time;shadowDirty=false;stats.updates++;stats.motionCoherent=true;if(moving)stats.motionUpdates=(stats.motionUpdates||0)+1;return true;
   }
-  return {stats,configure,update,wantsShadowUpdate,setVehicleRoot(root){vehicle=root;vehicleMatrixReady=false;lastShapeRevision=undefined;shadowDirty=true;if(!root)heads.forEach(({light})=>light.visible=false);},
-    setEnabled(value){enabled=!!value;stats.enabled=enabled;pool.forEach(({light},i)=>light.visible=enabled&&i<profile.street);heads.forEach(({light},i)=>light.visible=enabled&&!!vehicle&&i<profile.heads);shadowDirty=true;lastSelect=-Infinity;},
-    getLights(){return pool.concat(heads).filter(({light})=>light.visible).map(({light})=>light);},
+  return {stats,configure,update,wantsShadowUpdate,setVehicleRoot(root){vehicle=root;vehicleMatrixReady=false;lastShapeRevision=undefined;shadowDirty=true;if(!root)heads.forEach(entry=>{entry.emitting=false;entry.light.intensity=0;});},
+    setEnabled(value){enabled=!!value;stats.enabled=enabled;for(const [entries,count]of [[pool,profile.street],[heads,profile.heads]])entries.forEach((entry,i)=>{entry.light.visible=enabled&&i<count;if(!enabled){entry.emitting=false;entry.light.intensity=0;}});shadowDirty=true;lastSelect=-Infinity;},
+    getLights(){return pool.concat(heads).filter(({light,emitting})=>light.visible&&emitting).map(({light})=>light);},
     dispose(){for(const {light}of pool.concat(heads)){light.shadow.map?.dispose();scene.remove(light,light.target);}}
   };
 }

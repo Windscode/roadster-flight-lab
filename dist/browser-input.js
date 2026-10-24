@@ -1,9 +1,9 @@
-import {ACTIONS,sharedInputs,GamepadCalibration,defaultProfile} from './semantic-input.js';
+import {ACTIONS,sharedInputs,GamepadCalibration,defaultProfile,inputKeyName,actionKeyLabel} from './semantic-input.js';
 import {getLanguage,onLanguageChange} from './i18n.js';
 const STORE='roadster-actions-3.21',marker=Symbol('semantic-dispatch');
 const label=a=>getLanguage()==='en'?a.en:a.label;
 const text=(zh,en)=>getLanguage()==='en'?en:zh;
-const keyName=code=>code.replace(/^Key|^Digit/,'').replace('Space','SPACE').replace('ShiftLeft','SHIFT').replace('ShiftRight','R-SHIFT');
+const keyName=inputKeyName;
 export function installBrowserInput(shell,{win=window,doc=document}={}){
   let target=null,disposed=false,captureAction=null,raf=0,calRaf=0,calFrames=0;
   const calibration=new GamepadCalibration();
@@ -27,6 +27,11 @@ export function installBrowserInput(shell,{win=window,doc=document}={}){
     $('deadzone').value=profile.calibration.deadzone;
   }
   function renderHelp(){
+    for(const node of doc.querySelectorAll('[data-action-key]')){node.dataset.noI18n='';node.textContent=actionKeyLabel(node.dataset.actionKey);}
+    const driving=doc.querySelector('.drive-hint');
+    if(driving){driving.dataset.noI18n='';driving.textContent=`${actionKeyLabel('forward')} ${text('前进','drive')} · ${actionKeyLabel('brake')} ${text('制动','brake')} · ${actionKeyLabel('flight')} ${text('飞行','flight')}`;}
+    const viewport=doc.getElementById('viewport');
+    if(viewport)viewport.setAttribute('aria-label',text('三维驾驶场景。','3D driving view. ')+['forward','brake','flight','liftUp','liftDown','pause'].map(id=>actionKeyLabel(id)+' '+label(ACTIONS.find(a=>a.id===id))).join(' · '));
     for(const b of openButtons)b.textContent=text('输入与手柄设置','Input & gamepad settings');
     const grid=doc.querySelector('#help-modal .help-grid');if(grid){grid.dataset.noI18n='';grid.replaceChildren();for(const a of ACTIONS){const item=doc.createElement('div'),kbd=doc.createElement('kbd'),name=doc.createElement('span');kbd.textContent=sharedInputs.profile.keys[a.id].map(keyName).join(' / ');name.textContent=' '+label(a);item.append(kbd,name);grid.append(item);}}
     const hint=doc.querySelector('.keyboard-hint');if(hint){hint.dataset.noI18n='';hint.textContent=['forward','left','reverse','right','brake','liftUp','pitchUp'].map(id=>{const a=ACTIONS.find(x=>x.id===id);return sharedInputs.profile.keys[id].map(keyName).join('/')+' '+label(a);}).join(' · ');}

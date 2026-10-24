@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -127,4 +128,4 @@ await check('Original architecture is unchanged apart from 185 shelf lenses; fif
 globalThis.fetch=savedFetch;architecture.dispose();street.dispose();const resources=new Set();scene.traverse(o=>{if(o.geometry)resources.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])resources.add(m);});for(const resource of resources)resource.dispose?.();
 const files=['dist/showcase-lighting.js','dist/street-display.js','dist/urban-architecture.js','dist/city-street-edge.js','dist/city-environment.js'];
 const report={version:'3.24',status:'passed',createdAt:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(files.map(file=>[file,sha(readFileSync(new URL('../'+file,import.meta.url)))])),limits:[SHOWCASE_LIGHTING.scope,'The light is authored, not measured photometry. The existing building envelopes remain closed; this does not implement enterable shops.','Numerical/material and geometry checks do not establish GPU compile, visual legibility or native frame-rate acceptance.']};
-writeFileSync(new URL('../qa/showcase-lighting-3.24.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+writeFileSync(new URL(`../qa/showcase-lighting-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');

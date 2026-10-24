@@ -32,3 +32,21 @@ export function matchesRestoredSnapshot(sim,snapshot){
   else delete current.geometryIdentity;
   return canonicalJSON(current)===canonicalJSON(snapshot);
 }
+
+/** Compare continuation contents, never just the 32-bit provenance label.
+ * Portable geometry permits exactly one normalization, and only after both
+ * snapshots pass the same world/solver validation used by actual restoration.
+ * Presentation, original records and labels are left untouched. */
+export function compareInitialSnapshots(a,b){
+  if(!a?.physical||!b?.physical)return {equal:false,basis:'missing-physical-state'};
+  const left=a.physical,right=b.physical;
+  if(canonicalJSON(left)===canonicalJSON(right))return {equal:true,basis:'identical-physical-content'};
+  if(!left.geometryIdentity||!right.geometryIdentity)return {equal:false,basis:'legacy-content-differs'};
+  const normalized={...right,geometrySignature:left.geometrySignature};
+  if(canonicalJSON(left)!==canonicalJSON(normalized))return {equal:false,basis:'continuation-state-differs'};
+  try{
+    const checked=preflightExperimentRestore({snapshot:left,context:a.context});
+    preflightExperimentRestore({snapshot:right,context:b.context},checked.sim);
+    return {equal:true,basis:'validated-portable-geometry',ignoredField:'geometrySignature'};
+  }catch{return {equal:false,basis:'portable-world-validation-failed'};}
+}

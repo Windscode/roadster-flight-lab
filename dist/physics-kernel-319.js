@@ -530,7 +530,7 @@ export class RoadsterSim {
       const arrestSpeed=Math.max(0,-estimatedVy),arrestTime=arrestSpeed/netAccel+4*p.valveRiseTime+.15;
       const envelope=createManeuverEnvelope(this,{name:'roll',originGrounded:grounded,profile,launchVelocity,launchAccelerationMps2:netAccel,minimumRotationClearanceM},DEFAULT_PARAMS);
       const overhead=sampleManeuverHeadroom(this,{rangeM:peakRise+1.5,requiredM:peakRise+1.2,horizonS:launchTime+duration+arrestTime+1.5,envelope});
-      if(overhead.blocked){this.status='滚转预检：'+(overhead.envelope.active?'分阶段净空估计':'保守净空估计')+'认为快翻旋转 / 制动包络或预计滑行路径上方净空不足';return false;}
+      if(overhead.blocked){this.status=overhead.envelope?.operatingGuard==='open-overhead-corridor'?'滚转预检：当前工况超出已验证的顶棚预测范围，请在露天开阔区域自动快翻；手动研究仍可用。':'滚转预检：分阶段净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足';return false;}
       const arrestImpulse=b.mass*(arrestSpeed+p.gravity*arrestTime),reserveImpulse=b.mass*p.gravity*1.5;
       const requiredImpulse=1.16*(launchImpulse+rotationImpulse+arrestImpulse+reserveImpulse),availableImpulse=this._hoverBudget().impulseNs;
       if(p.supplyMode==='finite'&&availableImpulse<requiredImpulse){this.status=`滚转预检：剩余冲量不足：可用 ${(availableImpulse/1000).toFixed(1)} kN·s，快翻 / 回稳预算 ${(requiredImpulse/1000).toFixed(1)} kN·s`;return false;}

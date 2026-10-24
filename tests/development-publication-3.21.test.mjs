@@ -18,6 +18,7 @@ try{
   put('dist/validation.json',{scope:'historical fixture',report:'qa/unrecovered.json'});
   put('docs/release-3.21.md','Current release checks');
   put('qa/result-3.21.json',{status:'passed'});
+  put('tests/node_modules/test-only/fixture-3.21.json',{private:'must not ship'});
   const hashes=Object.fromEntries(['index.html','vehicle-models.js'].map(p=>[p,identity('dist/'+p).sha256]));
   put('dist/model-build.js',`export const MODEL_SOURCE_HASHES=${JSON.stringify(hashes)};export const MODEL_BUILD_ID='${hash(JSON.stringify(hashes))}';`);
   const original={schema:'roadster.recovered-publication',version:1,source:{modelVersion:'3.19.0',modelBuildId:'historical-build',commit:'historical-commit'},runtime:[],onlineEvidence:[],historicalReferences:[{path:'qa/unrecovered.json',status:'unrecovered'}]};
@@ -31,6 +32,7 @@ try{
   assert.equal(plan.source.modelVersion,'3.21.0');
   assert.equal(plan.originalDevelopment.modelVersion,'3.19.0');
   assert(plan.onlineEvidence.some(e=>e.path==='qa/result-3.21.json'));
+  assert(!plan.onlineEvidence.some(e=>e.path.includes('node_modules')));
   assert(plan.onlineEvidence.some(e=>e.path==='publication/recovery-plan.json'));
   assert.deepEqual(readFileSync(join(root,'publication/recovery-plan.json')),originalBytes);
   const rejects=fn=>{const changed=structuredClone(plan);fn(changed);assert.throws(()=>verifyPlan(changed));};

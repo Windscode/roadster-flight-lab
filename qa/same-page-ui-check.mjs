@@ -70,7 +70,7 @@ class MockRenderer{
   getSize(value){return value.set(this.width,this.height);}getDrawingBufferSize(value){return value.set(this.domElement.width,this.domElement.height);}
   getContext(){return{getExtension:()=>null,getParameter:()=>16,getError:()=>0,NO_ERROR:0,isContextLost:()=>false};}
   render(scene){this.info.render.calls++;graphics.rendered.push(scene.uuid);}
-  async compileAsync(){}compile(){}
+  async compileAsync(){if(graphics.compileGate)await graphics.compileGate;}compile(){}
 }
 class MockOrbitControls{constructor(){this.target=new NativeThree.Vector3();this.enabled=true;}update(){}dispose(){}}
 class MockPass{constructor(){this.enabled=true;this.material={uniforms:{resolution:{value:new NativeThree.Vector2()}}};}render(){}setSize(){}dispose(){}}
@@ -147,6 +147,7 @@ if(!noGraphics)assert.equal(window.roadsterReady,true,'Actual main.js boot must 
 const state=()=>window.roadsterLab?.getState()||window.roadsterApp.getState();
 const exportTurn=()=>{nowMs+=1;for(const[id,timer]of [...timers])if(timer.due<=nowMs){timers.delete(id);timer.callback();}};
 const tick=(frames=1,frameMs=1000/60)=>{for(let i=0;i<frames;i++){nowMs+=frameMs;const callbacks=raf;raf=[];for(const callback of callbacks)callback(nowMs);for(const[id,timer]of [...timers])if(timer.due<=nowMs){timers.delete(id);timer.callback();}assertHealthy();}};
+const renderingReady=async()=>{for(let i=0;i<20;i++){tick(1,40);await new Promise(resolve=>setImmediate(resolve));if($('render-prepare-progress').classList.contains('hidden'))return;}assert.fail('Render preparation did not settle');};
 const click=selector=>{const element=selector.startsWith('#')?$(selector.slice(1)):q(selector);assert.ok(element,'Missing DOM control '+selector);element.click();assertHealthy();return element;};
 const key=(code,{type='keydown',target=$('viewport'),repeat=false,...init}={})=>{const event=new window.KeyboardEvent(type,{code,bubbles:true,cancelable:true,repeat,...init});target.dispatchEvent(event);assertHealthy();return event;};
 const tap=code=>{key(code);key(code,{type:'keyup'});};
@@ -218,23 +219,38 @@ pass('Static trim inspect/export preserves physics, reports residuals and limite
 
 key('KeyW');tick(30);key('KeyW',{type:'keyup'});tick(1);
 const cityBefore=numerical(state()),cityScene=graphics.environments[0].scene.uuid,urlBefore=window.location.href;
-click('#context-switch');assert.equal(state().context,'lab');assert.equal(state().worldType,'windlab');assert.equal(state().research.open,true);assert.equal(state().paused,false);tick(60);
+click('#context-switch');await renderingReady();assert.equal(state().context,'lab');assert.equal(state().worldType,'windlab');assert.equal(state().research.open,true);assert.equal(state().paused,false);tick(60);
 assert.equal(window.location.href,urlBefore);assert.equal(document.querySelectorAll('#viewport canvas').length,1);
 assert.equal(graphics.environments.length,2);const labEnvironment=graphics.environments[1];assert.ok(labEnvironment.updates>0);assert.equal(graphics.rendered.at(-1),labEnvironment.scene.uuid);
 assert.equal(window.roadsterLab.getGeometry().some(item=>item.kind==='arch'),false);
-click('#context-switch');assert.equal(state().context,'city');assert.equal(numerical(state()),cityBefore,'Entering and simulating the lab must not advance or teleport the saved city vehicle');tick(1);assert.equal(graphics.rendered.at(-1),cityScene);
+click('#context-switch');await renderingReady();assert.equal(state().context,'city');assert.equal(numerical(state()),cityBefore,'Entering and simulating the lab must not advance or teleport the saved city vehicle');tick(1);assert.equal(graphics.rendered.at(-1),cityScene);
 values.contexts={cityGeometry:window.roadsterLab.getGeometry().length,labGeometry:24,viewports:document.querySelectorAll('#viewport canvas').length,cityStatePreserved:true,navigationChanged:false};
 pass('City/lab switching keeps one document and renderer, uses isolated real physics worlds, preserves the city vehicle state and routes drawing to the active scene');
 
 for(const quality of ['high','ultra','balanced']){
-  $('quality').value=quality;$('quality').dispatchEvent(new window.Event('change',{bubbles:true}));tick(1);
+  $('quality').value=quality;$('quality').dispatchEvent(new window.Event('change',{bubbles:true}));await renderingReady();tick(1);
   assert.equal(state().quality,quality);assert.equal(graphics.environments[0].quality,quality);
   const composer=graphics.composers[0];assert.equal(composer.passes.some(pass=>pass instanceof MockContactAO),quality!=='balanced');
-  click('#context-switch');tick(1);assert.equal(state().context,'lab');assert.equal(labEnvironment.quality,quality);assert.equal(composer.passes.some(pass=>pass instanceof MockContactAO),false,'City contact AO must not run in the lab');
-  assert.equal(graphics.cars[1].quality,quality);click('#context-switch');tick(1);assert.equal(state().context,'city');assert.equal(graphics.cars[0].quality,quality);
+  click('#context-switch');await renderingReady();tick(1);assert.equal(state().context,'lab');assert.equal(labEnvironment.quality,quality);assert.equal(composer.passes.some(pass=>pass instanceof MockContactAO),false,'City contact AO must not run in the lab');
+  assert.equal(graphics.cars[1].quality,quality);click('#context-switch');await renderingReady();tick(1);assert.equal(state().context,'city');assert.equal(graphics.cars[0].quality,quality);
   if(quality!=='balanced')assert.equal(composer.passes.find(pass=>pass instanceof MockContactAO).scene.uuid,cityScene);
 }
 pass('All three quality changes and context round trips update the active car/environment and restore city AO to the right scene while keeping it disabled in the lab');
+
+// Reproduce a still-pending shader compilation: changing weather used to
+// dispose the program polled by Three.js and leave preparation stuck forever.
+let releaseCompile;graphics.compileGate=new Promise(resolve=>releaseCompile=resolve);
+$('quality').value='high';$('quality').dispatchEvent(new window.Event('change',{bubbles:true}));
+const beforePreparation=numerical(state()),weatherBeforePreparation=graphics.environments[0].weatherPreset;
+tick(1);await new Promise(resolve=>setImmediate(resolve));
+assert.equal($('engineering-drawer').inert,true);assert.equal($('render-prepare-progress').classList.contains('hidden'),false);
+$('weather-preset').value='wet-night';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));
+click('#context-switch');tap('KeyR');tap('KeyH');tick(4);
+assert.equal(state().context,'city');assert.equal(graphics.environments[0].weatherPreset,weatherBeforePreparation);assert.equal(numerical(state()),beforePreparation);
+graphics.compileGate=null;releaseCompile();await renderingReady();assert.notEqual($('engineering-drawer').inert,true);
+$('weather-preset').value=weatherBeforePreparation;
+values.preparationInteraction={pendingCompiler:true,weatherMutationBlocked:true,contextMutationBlocked:true,physicalSnapshotPreserved:true,controlsRestored:true};
+pass('Pending shader preparation blocks weather, context and keyboard mutations, preserves the complete physical state and restores usable controls');
 
 click('[data-research-console]');click('[data-rc-tab="programs"]');const input=q('[data-rc="program-name"]');assert.ok(input);input.focus();assert.equal(document.activeElement,input,'Typing test must focus the visible program editor');
 const modeBefore=state().stabilizationMode;key('Digit1',{target:input});key('KeyG',{target:input});key('Digit3',{target:input});key('KeyW',{target:input});tick(1);
@@ -252,7 +268,7 @@ for(const field of ['id','stage','stageCount','stageType','elapsedS','stageElaps
 for(const field of ['recording','stepCount','durationS'])assert.equal(state().research.experiment[field],researchBeforeHudPause.experiment[field]);assert.ok(state().research.experiment.eventCount>researchBeforeHudPause.experiment.eventCount,'The live record must retain the pause and input-release events without advancing its physical samples');
 click('#operation-pause');assert.equal(state().paused,false);assert.equal(state().research.running,true);assert.equal(state().stabilizationMode,'hold');assert.equal(numerical(state()),programPausedPhysical);values.operationPlayback.researchOwnerPreserved=true;
 key('Digit1');tick(1);assert.equal(state().research.running,false,'Pilot pitch must cancel the custom program');assert.equal(state().driverInput.pitch,1);key('Digit1',{type:'keyup'});tick(1);
-click('#context-switch');tick(1);$('viewport').focus();tap('Numpad8');tick(30);assert.equal(state().research.running,true);assert.equal(state().context,'lab');
+click('#context-switch');await renderingReady();tick(1);$('viewport').focus();tap('Numpad8');tick(30);assert.equal(state().research.running,true);assert.equal(state().context,'lab');
 click('[data-rc-action="stop"]');tick(1);assert.equal(state().research.running,false);
 values.programs={savedShortcut:'Digit8',sameProgramRunsInCityAndLab:true,physicalTargetTrackingInvoked:true,pilotTakeoverCancels:true};
 pass('The actual editor persists a custom shortcut, runs its real force-controlled program in both scenes and yields immediately to pilot pitch or the stop control');
@@ -286,7 +302,7 @@ click('[data-study-panel]');await settle(()=>!study().hidden,'Study must open wh
 click('[data-study-id="study-close"]');assert.equal(state().paused,true);assert.equal(numerical(state()),alreadyPaused);
 click('#pause-btn');assert.equal(state().paused,false);
 click('[data-study-panel]');await settle(()=>!study().hidden,'Reused study panel must reopen');
-click('#context-switch');assert.equal(state().context,'city');assert.equal(study().hidden,true);assert.equal(document.body.classList.contains('study-open'),false);assert.equal(state().paused,false);
+click('#context-switch');await renderingReady();assert.equal(state().context,'city');assert.equal(study().hidden,true);assert.equal(document.body.classList.contains('study-open'),false);assert.equal(state().paused,false);
 tick(1);assert.equal(graphics.rendered.at(-1),cityScene);assert.equal(document.querySelectorAll('#viewport canvas').length,1);assert.equal(window.location.href,urlBefore);
 values.advancedStudy={actualModule:true,lazyCloseRaceHandled:true,activeVehiclePaused:true,parametersReadOnlyToLiveVehicle:true,priorPausePreserved:true,sceneSwitchClosesPanel:true,panelInstances:document.querySelectorAll('.research-study-panel').length,workerExecutionTested:false};
 pass('Closing the study preserves an existing pause, and switching back to the city closes the reused panel and restores the correct single-viewport scene');
@@ -296,7 +312,7 @@ pass('Closing the study preserves an existing pause, and switching back to the c
 $('road-surface').value='wet';$('road-surface').dispatchEvent(new window.Event('change',{bubbles:true}));
 $('abs-enabled').checked=false;$('abs-enabled').dispatchEvent(new window.Event('change',{bubbles:true}));
 $('wing-mode').value='fixed';$('wing-mode').dispatchEvent(new window.Event('change',{bubbles:true}));$('wing-command').value='75';$('wing-command').dispatchEvent(new window.Event('change',{bubbles:true}));
-$('weather-preset').value='wet-night';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));tick(20);
+$('weather-preset').value='wet-night';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));await renderingReady();tick(20);
 assert.equal(window.roadsterLab.getParameters().roadSurface,'wet');assert.equal(window.roadsterLab.getParameters().absEnabled,false);assert.equal(state().wing.command,.75);assert.ok(state().wing.deployment>0);
 assert.equal(graphics.environments[0].weatherPreset,'wet-night');assert.equal(graphics.environments[0].vehicleRoot,graphics.cars[0].group);assert.ok(graphics.cars[0].viewBudget.height>0);
 click('#benchmark-route-start');assert.ok(Math.abs(state().position.x+200)<1e-12);assert.ok(Math.abs(state().position.z+390)<1e-12);assert.equal(state().paused,true);
@@ -308,9 +324,9 @@ pass('Road adhesion, actual ABS and wing controls route to physics; weather, scr
 // Validate collection semantics with a renderer facade, never pixel quality.
 click('#exposure-baseline-39');tick(2);assert.equal($('exposure-lock').checked,true);assert.equal($('auto-exposure').disabled,true);
 click('#visual-capture-metadata');await awaitExport(document,{advance:exportTurn});const locked=JSON.parse(await lastBlob.text());assert.equal(locked.exposureLock,1.02);assert.equal(locked.exposure,1.02);
-$('weather-preset').value='clear-day';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));tick(2);
+$('weather-preset').value='clear-day';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));await renderingReady();tick(2);
 click('#visual-capture-metadata');await awaitExport(document,{advance:exportTurn});const dayLocked=JSON.parse(await lastBlob.text());assert.equal(dayLocked.exposureLock,1.02);assert.equal(dayLocked.exposure,1.02);
-$('weather-preset').value='wet-night';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));
+$('weather-preset').value='wet-night';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));await renderingReady();
 click('#visual-capture-bundle');
 // Paused rendering is capped at 30 Hz. Two binary floating-point 60 Hz ticks
 // can land just below the next permitted frame; keep RAF moving until that
@@ -367,6 +383,7 @@ async function checkProgramMatrix(label){
   assert.equal(window.localStorage.getItem('roadster-quality'),qualityPreference,'Temporary quality changes must not overwrite the saved preference');
   for(const [id,disabled] of criticalControls)assert.equal($(id).disabled,disabled,id+' was not restored');
   const after=await readVisualConditions();for(const key of ['quality','weatherPreset','exposureLock','exposure','autoExposure','route','camera','simState'])assert.deepEqual(after[key],before[key],label+' failed to restore '+key);
+  await renderingReady();
   return{label,scope:'Actual main DOM handlers with real physics and a non-drawing renderer facade; no GPU/pixel validation',virtualElapsedMs:nowMs-startedAt,wallElapsedMs:performance.now()-wallStart,virtualFrames:frames,interceptedMutationAttempts:attempts,cases:matrix.cases.length,reportedStatus:matrix.status,physicsUnchanged:matrix.physicsUnchanged,failures:[...new Set(matrix.cases.flatMap(c=>c.paused.failures))],restoredCameraMode:after.camera.mode,restoredViewOffset:after.camera.viewOffset,restoredPaused:after.paused};
 }
 $('exposure-lock-value').value='1.17';$('exposure-lock-value').dispatchEvent(new window.Event('change',{bubbles:true}));
@@ -444,10 +461,10 @@ pass('Slow PNG callbacks stay single-flight; ESC retains a cancelled one-frame p
 click('[data-rc-action="close"]');if(!state().paused)click('#pause-btn');
 $('benchmark-camera').value='weave-entry';$('benchmark-camera').dispatchEvent(new window.Event('change',{bubbles:true}));click('#exposure-baseline-39');tick(2);
 
-click('#record-btn');tick(60);assert.equal(state().research.experiment.recording,true);click('#record-btn');
-$('weather-preset').value='clear-day';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));
+await renderingReady();click('#record-btn');tick(60);assert.equal(state().research.experiment.recording,true);click('#record-btn');
+$('weather-preset').value='clear-day';$('weather-preset').dispatchEvent(new window.Event('change',{bubbles:true}));await renderingReady();
 $('benchmark-camera').value='canal';$('benchmark-camera').dispatchEvent(new window.Event('change',{bubbles:true}));
-click('#csv-btn');click('[data-ex-action="replay"]');
+click('#csv-btn');click('[data-ex-action="replay"]');await renderingReady();
 // Wait for the recorded fixed-step protocol, not exactly 60 floating-point RAF
 // deltas. The deliberately advanced matrix clock can shift a 120 Hz boundary
 // by one callback without changing the saved inputs or replay result.
@@ -458,6 +475,7 @@ click('[data-ex-action="record"]');tick(6);click('[data-ex-action="return-before
 values.liveReplay={terminalPositionErrorM:0,initialWeatherRestored:true,initialFixedCameraRestored:true,returnStateConfigurationRestored:true,recordingEndedBeforeReturn:true};
 pass('Actual main adapter replays the recorded fixed-step state with zero terminal position error, restores weather/camera, and ends a new recording before returning to the previous scene state');
 
+await renderingReady();
 $('road-surface').value='dry';$('road-surface').dispatchEvent(new window.Event('change',{bubbles:true}));
 $('abs-enabled').checked=true;$('abs-enabled').dispatchEvent(new window.Event('change',{bubbles:true}));
 $('control-capture-kind').value='steer-54';$('control-capture-kind').dispatchEvent(new window.Event('change',{bubbles:true}));

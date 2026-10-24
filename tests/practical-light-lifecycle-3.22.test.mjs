@@ -81,6 +81,18 @@ for(const quality of ['balanced','high','ultra']){
   f.lights.dispose();results.push({name:'headlamp off/move/on and vehicle detach',quality,refresh,errors});
 }
 
+for(const quality of ['balanced','high','ultra']){
+  const f=fixture(),vehicle=new THREE.Group();vehicle.userData.lampMode='low-beam';f.lights.setVehicleRoot(vehicle);f.lights.configure(quality);
+  const slots=CITY_PRACTICAL_LIGHT_BUDGET[quality].street+CITY_PRACTICAL_LIGHT_BUDGET[quality].heads,counts=[];
+  for(const z of [0,120,2000,0])for(const mode of ['low-beam','off']){
+    vehicle.userData.lampMode=mode;f.camera.position.set(0,2,z);for(let i=0;i<120;i++)f.step();
+    const visible=f.scene.children.filter(o=>o.isSpotLight&&o.visible);counts.push(visible.length);assert.equal(visible.length,slots);
+    const emitting=new Set(f.lights.getLights());for(const light of visible)if(!emitting.has(light))assert.equal(light.intensity,0,'An unused shader slot must contribute no light');
+    if(z===2000&&mode==='off')assert.equal(emitting.size,0,'An unlit district with lights off must remain dark');
+  }
+  f.lights.setEnabled(false);assert.equal(f.scene.children.filter(o=>o.isSpotLight&&o.visible).length,0);f.lights.dispose();
+  results.push({name:'fixed shader light/shadow count across empty districts and lamp switches; zero idle emission',quality,slots,counts});
+}
 const report={schema:'roadster-practical-light-lifecycle-3.22',status:'passed',scope:'Actual Three.js light selection, light transforms and shadow camera matrices; no GPU pixels, FPS or universal shadow-flicker acceptance.',results};
 mkdirSync(`qa/rendering-${REPORT_VERSION}`,{recursive:true});writeFileSync(`qa/rendering-${REPORT_VERSION}/practical-light-lifecycle.json`,JSON.stringify(report,null,2)+'\n');
 console.log('PASS practical-light lifecycle: unique fixtures, same-frame relighting depth, bounded idle updates and vehicle detach');

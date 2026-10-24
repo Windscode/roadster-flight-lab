@@ -1,7 +1,7 @@
 /** Challenge learning uses the existing fixed-input replay executor. Display
  * samples are evidence only; they never become a continuation state. */
 import {ExperimentPlayback,replayEligibility,contentLabel,canonicalJSON} from './experiment-records.js';
-import {matchesRestoredSnapshot,preflightExperimentRestore} from './experiment-restore.js';
+import {matchesRestoredSnapshot,preflightExperimentRestore,compareInitialSnapshots} from './experiment-restore.js';
 
 const copy=v=>JSON.parse(JSON.stringify(v));
 const finite=v=>Number.isFinite(v)?v:null;
@@ -92,8 +92,8 @@ export function compareCityAttempts(a,b){
  if(!a||!b)return null;
  const find=(r,type)=>r.events.find(e=>e.type===type)??null,rows=eventOrder.map(type=>{const ea=find(a,type),eb=find(b,type);return{type,a:ea?{timeS:ea.timeS,step:ea.step,detail:copy(ea.detail)}:null,b:eb?{timeS:eb.timeS,step:eb.step,detail:copy(eb.detail)}:null,deltaTimeS:ea&&eb?eb.timeS-ea.timeS:null};});
  const metrics=[['touchdown-descent','触地前下降速度','Pre-contact descent','m/s',a.summary.firstContact?-a.summary.firstContact.preContactVerticalMps:null,b.summary.firstContact?-b.summary.firstContact.preContactVerticalMps:null],['touchdown-tilt','触地最大倾角','Maximum contact tilt','°',a.summary.firstContact?Math.max(Math.abs(a.summary.firstContact.rollDeg),Math.abs(a.summary.firstContact.pitchDeg)):null,b.summary.firstContact?Math.max(Math.abs(b.summary.firstContact.rollDeg),Math.abs(b.summary.firstContact.pitchDeg)):null],['gas','喷口通过气量','Nozzle gas throughput','kg',a.summary.gasThroughputKg,b.summary.gasThroughputKg],['height','全程最高高度','Peak world height','m',a.summary.maximumWorldCgHeightM,b.summary.maximumWorldCgHeightM]].map(([key,label,labelEn,unit,av,bv])=>({key,label,labelEn,unit,a:finite(av),b:finite(bv),delta:Number.isFinite(av)&&Number.isFinite(bv)?bv-av:null}));
- const sameInitialState=a.liveExperiment.initialSnapshot.stateLabel===b.liveExperiment.initialSnapshot.stateLabel,sameConditions=a.conditionsLabel===b.conditionsLabel&&a.taskId===b.taskId,sameModel=a.identity.modelBuildId===b.identity.modelBuildId&&a.identity.modelVersion===b.identity.modelVersion;
- return{schema:'roadster.city-attempt-comparison',version:1,a:a.id,b:b.id,sameInitialState,sameConditions,sameModel,events:rows,metrics,semantics:'event-aligned-human-attempts',strictControllerAB:false,inputSequencesEqual:canonicalJSON(a.liveExperiment.inputRuns)===canonicalJSON(b.liveExperiment.inputRuns),commandSequencesEqual:canonicalJSON(a.liveExperiment.events.filter(e=>e.kind==='command'))===canonicalJSON(b.liveExperiment.events.filter(e=>e.kind==='command')),note:'Human attempts are aligned by physical events; differing inputs are not a controlled controller A/B experiment. Missing events remain missing.'};
+ const initialStateComparison=compareInitialSnapshots(a.liveExperiment.initialSnapshot,b.liveExperiment.initialSnapshot),sameInitialState=initialStateComparison.equal,sameConditions=a.conditionsLabel===b.conditionsLabel&&a.taskId===b.taskId,sameModel=a.identity.modelBuildId===b.identity.modelBuildId&&a.identity.modelVersion===b.identity.modelVersion;
+ return{schema:'roadster.city-attempt-comparison',version:1,a:a.id,b:b.id,sameInitialState,initialStateComparison,sameConditions,sameModel,events:rows,metrics,semantics:'event-aligned-human-attempts',strictControllerAB:false,inputSequencesEqual:canonicalJSON(a.liveExperiment.inputRuns)===canonicalJSON(b.liveExperiment.inputRuns),commandSequencesEqual:canonicalJSON(a.liveExperiment.events.filter(e=>e.kind==='command'))===canonicalJSON(b.liveExperiment.events.filter(e=>e.kind==='command')),note:'Human attempts are aligned by physical events; differing inputs are not a controlled controller A/B experiment. Missing events remain missing.'};
 }
 
 export function alignedEventSeries(record,type='takeoff'){

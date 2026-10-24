@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
@@ -48,7 +49,7 @@ const factory=new Function('D',`
  const {THREE,RoadsterSim,InputSession,DriverHeadFeedback,CITY_WEATHER_PRESETS,RENDER_PROFILES,document,fixtures}=D;
  const window=document.defaultView,{HTMLInputElement,HTMLSelectElement,HTMLTextAreaElement}=window,$=id=>document.getElementById(id),$$=selector=>[...document.querySelectorAll(selector)],vec=v=>new THREE.Vector3(v.x,v.y,v.z),getLanguage=()=> 'zh',localStorage=window.localStorage;
  let sim=D.initialSim,t=sim.telemetry(),activeContext='city',scenario=sim.scenario,scale=1,learningSessionMode='live',learningSaved=null,learningPrepared=false,learningSeekSerial=0;
- let programMatrixBusy=false,graphicsStopped=false,paused=true,lastTime=0,menuOpen=false,started=true,reverseHold=0,sound=null,lastActionResetSequence=0,pendingManeuver=null;
+ let programMatrixBusy=false,renderPreparing=false,graphicsStopped=false,paused=true,lastTime=0,menuOpen=false,started=true,reverseHold=0,sound=null,lastActionResetSequence=0,pendingManeuver=null;
  let quality='balanced',weatherPreset='clear-day',exposureLock=null,lampSelection='auto',activeBenchmarkRoute=sim.getRouteSurface()?.descriptor.id??null,cameraMode='orbit',fixedCameraId=null;
  let wantedCamera=null,cameraObstruction=null,cameraSolveMode=null,clearanceSampleAt=0,samples=[],trailCount=0,trailClock=0,panelFocus=null,pausedByPanel=false,activeDrawer=null;
  const headFeedback=new DriverHeadFeedback({enabled:false}),camera=D.camera,orbitCamera=camera.clone(),lastPosition=new THREE.Vector3(),controls={target:new THREE.Vector3(11,1,12),enabled:true,update(){orbitCamera.lookAt(this.target);}};
@@ -137,5 +138,5 @@ const newer=createPracticeAttempt(record,{createSim});host.callbacks.onPractice(
 assert.equal(canonicalJSON(host.getSim().exportState()),canonicalJSON(liveBefore));
 
 const report={schema:'roadster-learning-main-integration-3.19',identity:currentExperimentIdentity(),mainSha256:crypto.createHash('sha256').update(source).digest('hex'),extractedSourceSha256:Object.fromEntries(Object.entries(extracted).map(([key,value])=>[key,crypto.createHash('sha256').update(value).digest('hex')])),scope:'Production main.js isolation functions, callbacks, keyboard/focus guards and InputSession executed verbatim with actual RoadsterSim, task UI/recorder/review, application shell, research UI and Three cameras; JSDOM and graphics/menu/controller fixtures. City context only; no WebGL, browser-native keys or lab graphics switch claim.',activeResearchAndRecordingEntryRefused:true,preparedCompleteSnapshotUnchangedUntilStart:true,shellStudyAndResearchEntryBlockedDuringPreparation:true,researchShortcutRecordingReplayAndIdleStopCannotMutateIsolatedSim:true,buttonSpaceDoesNotBecomeDriverInput:true,seekProtectedBeforeAwait:true,lateSeekCannotOverridePractice:true,returnCompleteStateExactlyRestored:true,cameraSurfaceAndNavigationRestored:true,sourceRecordId:record.id,liveStateLabel:liveLabel};
-fs.mkdirSync('qa/learning-loop-3.19',{recursive:true});fs.writeFileSync('qa/learning-loop-3.19/main-integration-report.json',JSON.stringify(report,null,2));host.ui.dispose();productionShell.research.dispose();globalThis.document=oldDocument;globalThis.window=oldWindow;dom.window.close();
+fs.mkdirSync(`qa/learning-loop-${REPORT_VERSION}`,{recursive:true});fs.writeFileSync(`qa/learning-loop-${REPORT_VERSION}/main-integration-report.json`,JSON.stringify(report,null,2));host.ui.dispose();productionShell.research.dispose();globalThis.document=oldDocument;globalThis.window=oldWindow;dom.window.close();
 console.log('Production main isolation: preparation, input guards, seek freeze, stale seek, exact live/camera/surface return and research exclusions passed.');

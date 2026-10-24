@@ -1,3 +1,4 @@
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createRequire} from 'node:module';
@@ -9,7 +10,7 @@ import {setLanguage} from '../dist/i18n.js';
 const require=createRequire(import.meta.url),{JSDOM}=require(process.argv[2]||process.env.JSDOM_MODULE_PATH||'jsdom');
 const dom=new JSDOM('<main id="app"><div id="tasks"></div></main>',{url:'https://fixture.invalid/'}),doc=dom.window.document,originalDocument=globalThis.document;globalThis.document=doc;
 const draw={fillRect(){},fillText(){},beginPath(){},moveTo(){},lineTo(){},stroke(){}};dom.window.HTMLCanvasElement.prototype.getContext=()=>draw;
-const archive=JSON.parse(fs.readFileSync('qa/learning-loop-3.19/three-attempts.json','utf8')),data=new Map([[CITY_FLIGHT_LIBRARY_KEY,JSON.stringify(archive)]]),storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
+const archive=JSON.parse(fs.readFileSync(`qa/learning-loop-${REPORT_VERSION}/three-attempts.json`,'utf8')),data=new Map([[CITY_FLIGHT_LIBRARY_KEY,JSON.stringify(archive)]]),storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
 let live=new RoadsterSim({supplyMode:'finite'},{world:'city'});live.reset('city');live.advanceFixed({brake:1});const originalLive=live,originalLabel=contentLabel(live.exportState());let mode='live',preparedSourceId=null;
 const ui=createCityFlightUI({mount:doc.getElementById('tasks'),getSim:()=>live,getContext:()=> 'city',getSessionMode:()=>mode,storage,
  onReview:async ({review,step})=>{const state=await review.seekStep(step);if(state.cancelled)return state;live=review.sim;mode='review';return state;},onPractice:({sim,record})=>{live=sim;mode='practice';preparedSourceId=record?.id??null;},onReturn:()=>{live=originalLive;mode='live';}});
@@ -44,5 +45,5 @@ click('return-live');await until(()=>mode==='live');assert.equal(contentLabel(li
 const historical=structuredClone(hard);for(const identity of [historical.identity,historical.liveExperiment.identity,historical.liveExperiment.initialSnapshot.identity,historical.liveExperiment.finalSnapshot.identity])if(identity)identity.modelBuildId='unavailable-original-build';validateCityFlightResult(historical);
 await ui.reviewAt(100,historical);assert.equal(mode,'live');assert.equal(ui.getState().review.mode,'historical-read-only');assert.match(ui.deck.textContent,/Historical samples/);ui.deck.querySelector('[data-cf-action="return-live"]').click();await until(()=>ui.deck.hidden);assert.match($('state').textContent,/Read-only sample card closed/);assert.doesNotMatch($('state').textContent,/paused/);assert.equal(contentLabel(live.exportState()),originalLabel);
 const report={schema:'roadster-learning-ui-3.19',identity:currentExperimentIdentity(),environment:'JSDOM with actual RoadsterSim and replay plus an explicit mock host reference swap; no main.js integration, native graphics or actual keyboard claim',firstPracticeWithoutDrivingLiveCar:true,hardLandingOneActionReview:true,measuredThresholdVisible:true,eventBeforeAndAtSeek:true,panelSelectionAndReviewSourceIndependent:true,sourceInitialStatePreservedForPractice:true,newRunIdWithParent:true,practiceExcludedFromRanking:true,eventComparisonVisible:true,languagePreservesSelection:true,returnPreservesLiveState:true,historicalReadOnlyCloseDoesNotClaimPause:true,records:ui.getRecords().map(r=>({id:r.id,attemptClass:r.attemptClass,parentRunId:r.parentRunId,status:r.status,reason:r.reason}))};
-fs.writeFileSync('qa/learning-loop-3.19/ui-report.json',JSON.stringify(report,null,2));ui.dispose();setLanguage('zh',{persist:false});globalThis.document=originalDocument;dom.window.close();
+fs.writeFileSync(`qa/learning-loop-${REPORT_VERSION}/ui-report.json`,JSON.stringify(report,null,2));ui.dispose();setLanguage('zh',{persist:false});globalThis.document=originalDocument;dom.window.close();
 console.log('Learning UI: first practice, measured failure, exact event review, parent practice, comparison and original-scene return passed.');
