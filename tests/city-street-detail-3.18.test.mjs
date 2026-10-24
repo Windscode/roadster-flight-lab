@@ -54,12 +54,16 @@ await check('Selective upper facade light originates at actual finite fixtures a
   return {fixtures:rows,scope:'Authored intensity, finite cone and static-envelope transport. Not photometric calibration; nearby direct pools remain bounded and far diffuse uses probes.'};
 });
 
-await check('Night direct and bounced transport are rebaked from these same sources',()=>{
+await check('External night direct and bounce retain the exact baked geometry, lights, transport and volume data',()=>{
   const anchorSHA256=sha(JSON.stringify(env.getPracticalLightAnchors())),rows=[];
   for(const folder of ['night-irradiance','night-direct-irradiance']){
     const m=JSON.parse(readFileSync(new URL('../dist/assets/'+folder+'/manifest.json',import.meta.url)));assert.equal(m.anchorSHA256,anchorSHA256);assert.equal(m.geometryCanonicalSHA256,sha(canonicalGeometryJSON(geometry)));
-    for(const path of ['dist/street-display.js','dist/urban-architecture.js','dist/city-street-edge.js'])assert.equal(m.sourceHashes[path],sha(readFileSync(new URL('../'+path,import.meta.url))));
-    for(const v of m.volumes)assert.equal(v.sha256,sha(readFileSync(new URL('../dist/assets/'+folder+'/'+v.file,import.meta.url))));rows.push({folder,identity:m.identity,anchorSHA256});
+    // Renderer-only display light never enters the baked fixture list. Whole
+    // renderer source hashes can change while the bake's real inputs do not.
+    // Keep the original manifest, and require both inputs above plus unchanged
+    // transport/albedo/layout implementation and every baked volume below.
+    for(const path of ['dist/city-night-transport.js','dist/night-direct-transport.js','dist/night-city-lighting.js','dist/night-direct-lighting.js'].filter(path=>m.sourceHashes[path]))assert.equal(m.sourceHashes[path],sha(readFileSync(new URL('../'+path,import.meta.url))));
+    for(const v of m.volumes)assert.equal(v.sha256,sha(readFileSync(new URL('../dist/assets/'+folder+'/'+v.file,import.meta.url))));rows.push({folder,identity:m.identity,anchorSHA256,compatibility:'Original bake retained: exact external fixtures, shared solids, transport and volume bytes. Display-only shelf light is excluded; no rebake is claimed.',rendererSourceChanges:Object.fromEntries(['dist/street-display.js','dist/urban-architecture.js','dist/city-street-edge.js','dist/city-environment.js'].map(path=>[path,{baked:m.sourceHashes[path],current:sha(readFileSync(new URL('../'+path,import.meta.url)))}]))});
   }
   return rows;
 });

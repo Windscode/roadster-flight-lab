@@ -1,3 +1,4 @@
+import {attachShowcaseLighting,installShowcaseLighting} from './showcase-lighting.js';
 import {createShadowMotionTracker,SHADOW_MOTION_POLICY} from './shadow-motion.js';
 import {backgroundLightLayout} from './city-continuity.js';
 import {buildCityHorizon} from './city-horizon.js';
@@ -63,10 +64,12 @@ export function createEnvironment(scene,renderer,geometry,camera){
   mats['display-goods']=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.62});
   mats['display-glazing']=new THREE.MeshStandardMaterial({color:0xb6c9c5,roughness:.14,transparent:true,opacity:.19,depthWrite:false,envMapIntensity:.85});
   mats['display-glazing'].name='City / clear shallow display glass';
+  mats['display-lamp']=new THREE.MeshStandardMaterial({name:'City / confined display shelf lamp',color:0xffffff,emissive:0xffe1b7,emissiveIntensity:2.1,roughness:.35});
+  for(const name of ['display-warm-backing','display-cool-backing','display-timber','display-goods','weathered-steel'])attachShowcaseLighting(mats[name]);
   const pavementSurfaces=Object.entries(CITY_PAVEMENT_SPECIFICATIONS).map(([name,options])=>attachPavementSurface(mats[name],options));
   const plannedGeometry=new Map([...CITY_PLAN_SOLIDS,...CITY_CONTINUITY.solids].map(g=>[g.id,g]));
   const roadSurface=attachRoadSurface(mats.road,{albedo,normal,roughness:rough});
-  const add=(size,pos,mat=mats.steel,rot=[0,0,0],shadow=true,level=null,tint=null)=>{const a=buckets.get(mat)||[];a.push({size,pos,rot,shadow,level,tint});buckets.set(mat,a);};
+  const add=(size,pos,mat=mats.steel,rot=[0,0,0],shadow=true,level=null,tint=null,showcaseLight=null)=>{const a=buckets.get(mat)||[];a.push({size,pos,rot,shadow,level,tint,showcaseLight});buckets.set(mat,a);};
   const geometryById=new Map(geometry.map(g=>[g.id,g]));
   for(const g of geometry){
     if(['building','podium','street-prop','landmark'].includes(g.kind))continue;
@@ -81,7 +84,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
     else{const items=buckets.get(mat)||[];items.push({size:g.size,pos:g.position,quaternion:g.quaternion,shadow:true,level:plannedGeometry.get(g.id)?.data.renderDetail});buckets.set(mat,items);}
   }
   const horizon=buildCityHorizon(THREE,root);
-  for(const item of CITY_CONTINUITY.finishes)add(item.size,item.position,mats[item.material]||mats.paint,item.rotation,false,item.renderDetail||null,item.tint??null);
+  for(const item of CITY_CONTINUITY.finishes)add(item.size,item.position,mats[item.material]||mats.paint,item.rotation,false,item.renderDetail||null,item.tint??null,item.showcaseLight||null);
   const routeDetails=createRouteBridgeDetails();
   for(const item of routeDetails.items)add(item.size,item.position,mats[item.material]||mats.steel,item.rotation,item.shadow,item.renderDetail);
   const architecture=buildUrbanArchitecture(THREE,root,CITY_BUILDINGS);
@@ -283,7 +286,9 @@ export function createEnvironment(scene,renderer,geometry,camera){
       if(!cells.has(key))cells.set(key,{level,items:[]});cells.get(key).items.push(item);
     }
     for(const [cell,batch]of cells){
-      const mesh=new THREE.InstancedMesh(unit,mat,batch.items.length);mesh.name='Street structures / '+cell;mesh.castShadow=batch.items[0].shadow;mesh.receiveShadow=true;
+      const geometry=mat.userData.showcaseLighting&&batch.items.some(item=>item.showcaseLight)?unit.clone():unit;
+      if(mat.userData.showcaseLighting)installShowcaseLighting(THREE,geometry,batch.items);
+      const mesh=new THREE.InstancedMesh(geometry,mat,batch.items.length);mesh.name='Street structures / '+cell;mesh.castShadow=batch.items[0].shadow;mesh.receiveShadow=true;
       batch.items.forEach((v,i)=>{temp.position.set(...v.pos);if(v.quaternion)temp.quaternion.set(...v.quaternion);else temp.rotation.set(...(v.rot||[0,0,0]));temp.scale.set(...v.size);temp.updateMatrix();mesh.setMatrixAt(i,temp.matrix);if(v.tint!==null&&v.tint!==undefined)mesh.setColorAt(i,new THREE.Color(v.tint));});mesh.computeBoundingSphere();root.add(mesh);visibility.add(mesh,{level:batch.level});
     }
   }

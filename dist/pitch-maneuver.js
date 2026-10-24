@@ -1,5 +1,6 @@
 import {sampleRollManeuver} from './vehicle-models.js';
 import {sampleManeuverHeadroom} from './maneuver-clearance.js';
+import {createManeuverEnvelope} from './maneuver-envelope.js';
 
 // A commanded angular trajectory, not an animation or a body-state override.
 // Its longer pitch lever arm is accompanied by the actual, much larger Ixx.
@@ -26,7 +27,7 @@ export function manualPitchEnvelope(sim){
 export const PITCH_OPERATIONAL_ENVELOPE=Object.freeze({policy:'bounded-pitch-envelope-318',maxHorizontalSpeedMps:18,maxLateralSpeedMps:1,maxSteerInput:.08,maxYawRateRadS:.25,maxSlopeDeg:5,maxWindPeakMps:12,
   scope:'Bounded model operating guard. Combined limits require sampled clearance and real supply/torque margins; not an arbitrary-condition safety certificate.'});
 
-export function startPitchManeuver(sim){
+export function startPitchManeuver(sim,defaultParameters){
   const p=sim.params,b=sim.body,profile=pitchManeuverProfile(),origin={x:b.position.x,y:b.position.y,z:b.position.z};
   const reject=reason=>{sim.status='受控后翻预检：'+reason;return false;};
   if(sim._maneuver)return reject('已有自动动作，请完成或取消后再开始');
@@ -65,8 +66,9 @@ export function startPitchManeuver(sim){
   const peakRise=launchRise+rotationPeak+2.4;
   // Sample the current footprint and its nominal horizontal coast path. These
   // rays reject obvious roofs; they are explicitly not a swept-volume proof.
-  const headroom=sampleManeuverHeadroom(sim,{rangeM:peakRise+2.5,horizonS:5});
-  if(headroom.distanceM!==null&&headroom.distanceM<peakRise+2.4)return reject('保守净空估计认为车长旋转包络 / 预计滑行路径上方净空不足');
+  const clearanceEnvelope=createManeuverEnvelope(sim,{name:'pitch',originGrounded:grounded,profile,launchVelocity,launchAccelerationMps2:netAccel,minimumRotationClearanceM},defaultParameters);
+  const headroom=sampleManeuverHeadroom(sim,{rangeM:peakRise+2.5,requiredM:peakRise+2.4,horizonS:5,envelope:clearanceEnvelope});
+  if(headroom.blocked)return reject((headroom.envelope.active?'分阶段净空估计':'保守净空估计')+'认为车长旋转包络 / 预计滑行路径上方净空不足');
   const launchImpulse=b.mass*(Math.max(0,launchVelocity-b.velocity.y)+p.gravity*launchTime);
   const rotationImpulse=2*b.inertia.x*profile.rateRadS/lever;
   const arrestSpeed=Math.max(0,-estimatedVy),arrestTime=arrestSpeed/netAccel+4*p.valveRiseTime+.15;

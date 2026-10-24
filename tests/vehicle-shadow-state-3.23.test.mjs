@@ -7,6 +7,8 @@ import {createShadowMotionTracker} from '../dist/shadow-motion.js';
 import {createWindLaboratory} from '../dist/wind-laboratory.js';
 import {createEnvironment} from '../dist/city-environment.js';
 import {RoadsterSim} from '../dist/physics.js';
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
+const REPORT_VERSION=MODEL_VERSION.split('.').slice(0,2).join('.');
 
 const scene=new THREE.Scene(),car=createRoadster({quality:'high'}),camera=new THREE.PerspectiveCamera(48,16/9,.1,200);
 scene.add(car.group,camera);camera.position.set(0,3,-8);camera.lookAt(0,0,0);camera.updateMatrixWorld(true);
@@ -108,6 +110,6 @@ const traverse=car.group.traverse;car.group.traverse=()=>{throw Error('Unexpecte
 try{for(let i=0;i<300;i++)step();}finally{car.group.traverse=traverse;}
 rows.push({name:'300 parked updates without full vehicle traversal',updates:300});
 lab.dispose();light.dispose();car.dispose();
-mkdirSync('qa/rendering-3.23',{recursive:true});
-writeFileSync('qa/rendering-3.23/vehicle-shadow-state.json',JSON.stringify({status:'passed',scope:'Actual Three.js opaque caster transforms and depth invalidation. No GPU pixel or universal flicker claim.',rows},null,2)+'\n');
+mkdirSync(`qa/rendering-${REPORT_VERSION}`,{recursive:true});
+writeFileSync(`qa/rendering-${REPORT_VERSION}/vehicle-shadow-state.json`,JSON.stringify({status:'passed',scope:'Actual Three.js opaque caster transforms and depth invalidation. No GPU pixel or universal flicker claim.',rows},null,2)+'\n');
 console.log('PASS vehicle shadow state: wing, geometry profile, flexible seal, laboratory and bounded idle work');

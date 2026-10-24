@@ -1,0 +1,1293 @@
+{
+  "schema": "roadster-vehicle-display-3.14",
+  "status": "passed",
+  "modelVersion": "3.24.0",
+  "modelBuildId": "5411c22c49598432ee465070946dac75d72135b186f78f3b2811f837fee909f8",
+  "asOf": "2026-10-24T17:16:42.208Z",
+  "checks": [
+    {
+      "name": "Frozen 3.13 exterior restores the published bytes and independent layout",
+      "status": "passed",
+      "detail": {
+        "baselineCommit": "1dde9a3df081297978d7cc98409be86bcc6daa23",
+        "restoredSourceSHA256": "70515d7eec676d7a36f121701d0a7be17be6b19c0b4a826bfc794c279ccbb5b2",
+        "scope": "Frozen geometry/material code; the comparison uses the current renderer, not a frozen 3.13 rendering pipeline."
+      }
+    },
+    {
+      "name": "Two-seat display is inspection-only and swaps complete visible cabin identities",
+      "status": "passed",
+      "detail": {
+        "experimentalSeats": 1,
+        "officialStudyFrontSeats": 2,
+        "hiddenOEMStructureClaim": false,
+        "physicsWrites": false,
+        "inspectionOnly": true
+      }
+    },
+    {
+      "name": "Lamp off, DRL and low-beam affect bounded emissive roles while retaining wells and optical covers",
+      "status": "passed",
+      "detail": {
+        "states": {
+          "off": {
+            "whiteLight": 0,
+            "lampGuide": 0,
+            "lampEmitter": 0,
+            "tailLight": 0
+          },
+          "drl": {
+            "whiteLight": 1,
+            "lampGuide": 1.15,
+            "lampEmitter": 0,
+            "tailLight": 1.25
+          },
+          "low-beam": {
+            "whiteLight": 2.4,
+            "lampGuide": 1.9,
+            "lampEmitter": 0.44,
+            "tailLight": 1.25
+          }
+        },
+        "guideWinding": [
+          {
+            "quality": "balanced",
+            "triangles": 312,
+            "downwardWinding": 0
+          },
+          {
+            "quality": "high",
+            "triangles": 672,
+            "downwardWinding": 0
+          },
+          {
+            "quality": "ultra",
+            "triangles": 1184,
+            "downwardWinding": 0
+          }
+        ],
+        "addedTextureSamplers": 0,
+        "internalOptics": "inferred, not manufacturer optical data"
+      }
+    },
+    {
+      "name": "Rubber, coated dark alloy, machined silver, rotor and cabin finishes remain distinct without added texture samplers",
+      "status": "passed",
+      "detail": {
+        "rubber": {
+          "color": "171a1c",
+          "metalness": 0,
+          "roughness": 0.85
+        },
+        "wheelDark": {
+          "color": "353f47",
+          "metalness": 0.21,
+          "roughness": 0.36
+        },
+        "wheelSilver": {
+          "color": "b5bdc2",
+          "metalness": 0.86,
+          "roughness": 0.34
+        },
+        "rotor": {
+          "color": "68737a",
+          "metalness": 0.78,
+          "roughness": 0.58
+        },
+        "seatFabric": {
+          "color": "bec4c4",
+          "metalness": 0,
+          "roughness": 0.94
+        },
+        "seatBolster": {
+          "color": "cdd1cf",
+          "metalness": 0,
+          "roughness": 0.69
+        }
+      }
+    },
+    {
+      "name": "Tail installation surrounds unchanged nozzle positions and nozzle geometry",
+      "status": "passed",
+      "detail": {
+        "ports": [
+          {
+            "name": "rear propulsion nozzle 1",
+            "centre": [
+              -0.48,
+              -0.035,
+              -2.322
+            ],
+            "bounds": {
+              "min": [
+                -0.5524000036716461,
+                -0.10740000367164611,
+                -2.322399999989895
+              ],
+              "max": [
+                -0.40759999632835386,
+                0.03740000367164613,
+                -2.21650000025332
+              ]
+            }
+          },
+          {
+            "name": "rear propulsion nozzle 2",
+            "centre": [
+              -0.16,
+              -0.035,
+              -2.322
+            ],
+            "bounds": {
+              "min": [
+                -0.23240000367164612,
+                -0.10740000367164611,
+                -2.322399999989895
+              ],
+              "max": [
+                -0.08759999632835389,
+                0.03740000367164613,
+                -2.21650000025332
+              ]
+            }
+          },
+          {
+            "name": "rear propulsion nozzle 3",
+            "centre": [
+              0.16,
+              -0.035,
+              -2.322
+            ],
+            "bounds": {
+              "min": [
+                0.08759999632835389,
+                -0.10740000367164611,
+                -2.322399999989895
+              ],
+              "max": [
+                0.23240000367164612,
+                0.03740000367164613,
+                -2.21650000025332
+              ]
+            }
+          },
+          {
+            "name": "rear propulsion nozzle 4",
+            "centre": [
+              0.48,
+              -0.035,
+              -2.322
+            ],
+            "bounds": {
+              "min": [
+                0.40759999632835386,
+                -0.10740000367164611,
+                -2.322399999989895
+              ],
+              "max": [
+                0.5524000036716461,
+                0.03740000367164613,
+                -2.21650000025332
+              ]
+            }
+          }
+        ],
+        "apertureRays": [
+          {
+            "quality": "balanced",
+            "port": 1,
+            "oldPanelZ": -2.3005193698596247,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3166838288035163,
+            "retainedPanelZ": -2.257610234022511
+          },
+          {
+            "quality": "balanced",
+            "port": 2,
+            "oldPanelZ": -2.3018634962937283,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3166299708440916,
+            "retainedPanelZ": -2.2572261054865206
+          },
+          {
+            "quality": "balanced",
+            "port": 3,
+            "oldPanelZ": -2.3018269048644058,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.316639432914645,
+            "retainedPanelZ": -2.2574258637838422
+          },
+          {
+            "quality": "balanced",
+            "port": 4,
+            "oldPanelZ": -2.2997165523700303,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3168820017126834,
+            "retainedPanelZ": -2.2607372368245344
+          },
+          {
+            "quality": "high",
+            "port": 1,
+            "oldPanelZ": -2.3005617074930385,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3168412735922104,
+            "retainedPanelZ": -2.2575759613188966
+          },
+          {
+            "quality": "high",
+            "port": 2,
+            "oldPanelZ": -2.3018683279453693,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3167893143166456,
+            "retainedPanelZ": -2.257225558847315
+          },
+          {
+            "quality": "high",
+            "port": 3,
+            "oldPanelZ": -2.3018358544285147,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3167986639279787,
+            "retainedPanelZ": -2.2574138614707024
+          },
+          {
+            "quality": "high",
+            "port": 4,
+            "oldPanelZ": -2.2997301699724284,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.317036866510772,
+            "retainedPanelZ": -2.2606841564632356
+          },
+          {
+            "quality": "ultra",
+            "port": 1,
+            "oldPanelZ": -2.3005680535355784,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3171051302173575,
+            "retainedPanelZ": -2.257572850822664
+          },
+          {
+            "quality": "ultra",
+            "port": 2,
+            "oldPanelZ": -2.301869034344395,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3170546364616214,
+            "retainedPanelZ": -2.257225440175001
+          },
+          {
+            "quality": "ultra",
+            "port": 3,
+            "oldPanelZ": -2.3018364084904195,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.317063396699123,
+            "retainedPanelZ": -2.2574104042655097
+          },
+          {
+            "quality": "ultra",
+            "port": 4,
+            "oldPanelZ": -2.2997196783991716,
+            "currentPanelBlockingMouth": false,
+            "bevelZ": -2.3172892248955077,
+            "retainedPanelZ": -2.260678952653857
+          }
+        ],
+        "sharedPhotoVisiblePortReturns": true,
+        "forceModelChanges": 0,
+        "outletRadiusChanges": 0,
+        "scope": "Visible ports remain a common longitudinal actuator representation, not four new independent forces. Surrounds are authored installation geometry, not a disclosed OEM internal mechanism."
+      }
+    },
+    {
+      "name": "Identity, LOD, lamps and cutaway cycling preserve wheel, wing and glass geometry state",
+      "status": "passed",
+      "detail": {
+        "cycles": 18,
+        "independentGlassPanels": 5,
+        "independentLampCovers": 2,
+        "unchangedTyreRadiusM": 0.372,
+        "unchangedArchAndLiner": true,
+        "maximumSurfaceDeltaM": 0.06188144132479845,
+        "stationChanges": [
+          {
+            "x": 0,
+            "z": -2,
+            "before": {
+              "bodyY": 0.3061913668938777,
+              "outerX": 1.0022280485733697,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.0022280485733697,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2971913668938777,
+                "shoulder": 0.3113856171611718
+              }
+            },
+            "after": {
+              "bodyY": 0.3029971113737912,
+              "outerX": 1.0022280485733697,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.0022280485733697,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2939971113737912,
+                "shoulder": 0.3105149137150236
+              },
+              "topSkinEdgeX": 0.9587166159649383,
+              "topSkinEdgeY": 0.29502503860142787
+            }
+          },
+          {
+            "x": 0.4,
+            "z": -2,
+            "before": {
+              "bodyY": 0.3029002635836775,
+              "outerX": 1.0022280485733697,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.0022280485733697,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2971913668938777,
+                "shoulder": 0.3113856171611718
+              }
+            },
+            "after": {
+              "bodyY": 0.299706008063591,
+              "outerX": 1.0022280485733697,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.0022280485733697,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2939971113737912,
+                "shoulder": 0.3105149137150236
+              },
+              "topSkinEdgeX": 0.9587166159649383,
+              "topSkinEdgeY": 0.29502503860142787
+            }
+          },
+          {
+            "x": 0.7,
+            "z": -2,
+            "before": {
+              "bodyY": 0.30238833251169867,
+              "outerX": 1.0022280485733697,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.0022280485733697,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2971913668938777,
+                "shoulder": 0.3113856171611718
+              }
+            },
+            "after": {
+              "bodyY": 0.3000448031667944,
+              "outerX": 1.0022280485733697,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.0022280485733697,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2939971113737912,
+                "shoulder": 0.3105149137150236
+              },
+              "topSkinEdgeX": 0.9587166159649383,
+              "topSkinEdgeY": 0.29502503860142787
+            }
+          },
+          {
+            "x": 0.95,
+            "z": -2,
+            "before": {
+              "bodyY": 0.2965989230000191,
+              "outerX": 1.0022280485733697,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.0022280485733697,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2971913668938777,
+                "shoulder": 0.3113856171611718
+              }
+            },
+            "after": {
+              "bodyY": 0.2957282195538709,
+              "outerX": 1.0022280485733697,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.0022280485733697,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2939971113737912,
+                "shoulder": 0.3105149137150236
+              },
+              "topSkinEdgeX": 0.9587166159649383,
+              "topSkinEdgeY": 0.29502503860142787
+            }
+          },
+          {
+            "x": 0,
+            "z": -1.42,
+            "before": {
+              "bodyY": 0.31994674116336147,
+              "outerX": 1.047,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.047,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.31094674116336146,
+                "shoulder": 0.35
+              }
+            },
+            "after": {
+              "bodyY": 0.3818281824881599,
+              "outerX": 1.047,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.047,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.3728281824881599,
+                "shoulder": 0.405
+              },
+              "topSkinEdgeX": 1.0034885673915686,
+              "topSkinEdgeY": 0.3893600244652815
+            }
+          },
+          {
+            "x": 0.4,
+            "z": -1.42,
+            "before": {
+              "bodyY": 0.31693108892554284,
+              "outerX": 1.047,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.047,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.31094674116336146,
+                "shoulder": 0.35
+              }
+            },
+            "after": {
+              "bodyY": 0.3788125302503413,
+              "outerX": 1.047,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.047,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.3728281824881599,
+                "shoulder": 0.405
+              },
+              "topSkinEdgeX": 1.0034885673915686,
+              "topSkinEdgeY": 0.3893600244652815
+            }
+          },
+          {
+            "x": 0.7,
+            "z": -1.42,
+            "before": {
+              "bodyY": 0.3141367922331119,
+              "outerX": 1.047,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.047,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.31094674116336146,
+                "shoulder": 0.35
+              }
+            },
+            "after": {
+              "bodyY": 0.37449126913692937,
+              "outerX": 1.047,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.047,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.3728281824881599,
+                "shoulder": 0.405
+              },
+              "topSkinEdgeX": 1.0034885673915686,
+              "topSkinEdgeY": 0.3893600244652815
+            }
+          },
+          {
+            "x": 0.95,
+            "z": -1.42,
+            "before": {
+              "bodyY": 0.3384904997053384,
+              "outerX": 1.047,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.047,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.31094674116336146,
+                "shoulder": 0.35
+              }
+            },
+            "after": {
+              "bodyY": 0.39349049970533845,
+              "outerX": 1.047,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 1.047,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.3728281824881599,
+                "shoulder": 0.405
+              },
+              "topSkinEdgeX": 1.0034885673915686,
+              "topSkinEdgeY": 0.3893600244652815
+            }
+          },
+          {
+            "x": 0,
+            "z": -0.3,
+            "before": {
+              "bodyY": 0.3022754361298778,
+              "outerX": 0.9734486950921043,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9734486950921043,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2932754361298778,
+                "shoulder": 0.3159926416719479
+              }
+            },
+            "after": {
+              "bodyY": 0.33257981191578445,
+              "outerX": 0.9734486950921043,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9734486950921043,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.32357981191578444,
+                "shoulder": 0.36065837262836165
+              },
+              "topSkinEdgeX": 0.929937262483673,
+              "topSkinEdgeY": 0.34527227198729693
+            }
+          },
+          {
+            "x": 0.4,
+            "z": -0.3,
+            "before": {
+              "bodyY": 0.29878685773812313,
+              "outerX": 0.9734486950921043,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9734486950921043,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2932754361298778,
+                "shoulder": 0.3159926416719479
+              }
+            },
+            "after": {
+              "bodyY": 0.3290912335240298,
+              "outerX": 0.9734486950921043,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9734486950921043,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.32357981191578444,
+                "shoulder": 0.36065837262836165
+              },
+              "topSkinEdgeX": 0.929937262483673,
+              "topSkinEdgeY": 0.34527227198729693
+            }
+          },
+          {
+            "x": 0.7,
+            "z": -0.3,
+            "before": {
+              "bodyY": 0.30606043138323547,
+              "outerX": 0.9734486950921043,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9734486950921043,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2932754361298778,
+                "shoulder": 0.3159926416719479
+              }
+            },
+            "after": {
+              "bodyY": 0.34444722106228975,
+              "outerX": 0.9734486950921043,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9734486950921043,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.32357981191578444,
+                "shoulder": 0.36065837262836165
+              },
+              "topSkinEdgeX": 0.929937262483673,
+              "topSkinEdgeY": 0.34527227198729693
+            }
+          },
+          {
+            "x": 0.95,
+            "z": -0.3,
+            "before": {
+              "bodyY": 0.2989402039350393,
+              "outerX": 0.9734486950921043,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9734486950921043,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.2932754361298778,
+                "shoulder": 0.3159926416719479
+              }
+            },
+            "after": {
+              "bodyY": 0.343605934891453,
+              "outerX": 0.9734486950921043,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9734486950921043,
+                "crease": 0.66,
+                "ridge": 0.765,
+                "center": 0.32357981191578444,
+                "shoulder": 0.36065837262836165
+              },
+              "topSkinEdgeX": 0.929937262483673,
+              "topSkinEdgeY": 0.34527227198729693
+            }
+          },
+          {
+            "x": 0,
+            "z": 0.8,
+            "before": {
+              "bodyY": 0.26092038422396696,
+              "outerX": 0.9903519719607663,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9903519719607663,
+                "crease": 0.7239777303354261,
+                "ridge": 0.8289777303354261,
+                "center": 0.25192038422396695,
+                "shoulder": 0.2845086312669946
+              }
+            },
+            "after": {
+              "bodyY": 0.2592140320361421,
+              "outerX": 0.9903519719607663,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9903519719607663,
+                "crease": 0.7239777303354261,
+                "ridge": 0.8289777303354261,
+                "center": 0.25021403203614206,
+                "shoulder": 0.2833045766167922
+              },
+              "topSkinEdgeX": 0.9468405393523349,
+              "topSkinEdgeY": 0.26918564337095363
+            }
+          },
+          {
+            "x": 0.4,
+            "z": 0.8,
+            "before": {
+              "bodyY": 0.25811925634567895,
+              "outerX": 0.9903519719607663,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9903519719607663,
+                "crease": 0.7239777303354261,
+                "ridge": 0.8289777303354261,
+                "center": 0.25192038422396695,
+                "shoulder": 0.2845086312669946
+              }
+            },
+            "after": {
+              "bodyY": 0.25641290415785406,
+              "outerX": 0.9903519719607663,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9903519719607663,
+                "crease": 0.7239777303354261,
+                "ridge": 0.8289777303354261,
+                "center": 0.25021403203614206,
+                "shoulder": 0.2833045766167922
+              },
+              "topSkinEdgeX": 0.9468405393523349,
+              "topSkinEdgeY": 0.26918564337095363
+            }
+          },
+          {
+            "x": 0.7,
+            "z": 0.8,
+            "before": {
+              "bodyY": 0.25234193009670997,
+              "outerX": 0.9903519719607663,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9903519719607663,
+                "crease": 0.7239777303354261,
+                "ridge": 0.8289777303354261,
+                "center": 0.25192038422396695,
+                "shoulder": 0.2845086312669946
+              }
+            },
+            "after": {
+              "bodyY": 0.2503138939004016,
+              "outerX": 0.9903519719607663,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9903519719607663,
+                "crease": 0.7239777303354261,
+                "ridge": 0.8289777303354261,
+                "center": 0.25021403203614206,
+                "shoulder": 0.2833045766167922
+              },
+              "topSkinEdgeX": 0.9468405393523349,
+              "topSkinEdgeY": 0.26918564337095363
+            }
+          },
+          {
+            "x": 0.95,
+            "z": 0.8,
+            "before": {
+              "bodyY": 0.27003527304813385,
+              "outerX": 0.9903519719607663,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9903519719607663,
+                "crease": 0.7239777303354261,
+                "ridge": 0.8289777303354261,
+                "center": 0.25192038422396695,
+                "shoulder": 0.2845086312669946
+              }
+            },
+            "after": {
+              "bodyY": 0.26883121839793145,
+              "outerX": 0.9903519719607663,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.718,
+              "section": {
+                "width": 0.9903519719607663,
+                "crease": 0.7239777303354261,
+                "ridge": 0.8289777303354261,
+                "center": 0.25021403203614206,
+                "shoulder": 0.2833045766167922
+              },
+              "topSkinEdgeX": 0.9468405393523349,
+              "topSkinEdgeY": 0.26918564337095363
+            }
+          },
+          {
+            "x": 0,
+            "z": 1.42,
+            "before": {
+              "bodyY": 0.18558933083105567,
+              "outerX": 1.034,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6886533333333333,
+              "section": {
+                "width": 1.034,
+                "crease": 0.6660090264345583,
+                "ridge": 0.7710090264345583,
+                "center": 0.17658933083105566,
+                "shoulder": 0.272
+              }
+            },
+            "after": {
+              "bodyY": 0.18558933083105567,
+              "outerX": 1.034,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6774933333333333,
+              "section": {
+                "width": 1.034,
+                "crease": 0.6552159896840747,
+                "ridge": 0.7602159896840747,
+                "center": 0.17658933083105566,
+                "shoulder": 0.265
+              },
+              "topSkinEdgeX": 0.9904885673915687,
+              "topSkinEdgeY": 0.24933438869964186
+            }
+          },
+          {
+            "x": 0.4,
+            "z": 1.42,
+            "before": {
+              "bodyY": 0.1825529154397721,
+              "outerX": 1.034,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6886533333333333,
+              "section": {
+                "width": 1.034,
+                "crease": 0.6660090264345583,
+                "ridge": 0.7710090264345583,
+                "center": 0.17658933083105566,
+                "shoulder": 0.272
+              }
+            },
+            "after": {
+              "bodyY": 0.1824520569052612,
+              "outerX": 1.034,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6774933333333333,
+              "section": {
+                "width": 1.034,
+                "crease": 0.6552159896840747,
+                "ridge": 0.7602159896840747,
+                "center": 0.17658933083105566,
+                "shoulder": 0.265
+              },
+              "topSkinEdgeX": 0.9904885673915687,
+              "topSkinEdgeY": 0.24933438869964186
+            }
+          },
+          {
+            "x": 0.7,
+            "z": 1.42,
+            "before": {
+              "bodyY": 0.18656071389731355,
+              "outerX": 1.034,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6886533333333333,
+              "section": {
+                "width": 1.034,
+                "crease": 0.6660090264345583,
+                "ridge": 0.7710090264345583,
+                "center": 0.17658933083105566,
+                "shoulder": 0.272
+              }
+            },
+            "after": {
+              "bodyY": 0.1937709847993264,
+              "outerX": 1.034,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6774933333333333,
+              "section": {
+                "width": 1.034,
+                "crease": 0.6552159896840747,
+                "ridge": 0.7602159896840747,
+                "center": 0.17658933083105566,
+                "shoulder": 0.265
+              },
+              "topSkinEdgeX": 0.9904885673915687,
+              "topSkinEdgeY": 0.24933438869964186
+            }
+          },
+          {
+            "x": 0.95,
+            "z": 1.42,
+            "before": {
+              "bodyY": 0.2597405290498782,
+              "outerX": 1.034,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6886533333333333,
+              "section": {
+                "width": 1.034,
+                "crease": 0.6660090264345583,
+                "ridge": 0.7710090264345583,
+                "center": 0.17658933083105566,
+                "shoulder": 0.272
+              }
+            },
+            "after": {
+              "bodyY": 0.2524371277611218,
+              "outerX": 1.034,
+              "archY": 0.215,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6774933333333333,
+              "section": {
+                "width": 1.034,
+                "crease": 0.6552159896840747,
+                "ridge": 0.7602159896840747,
+                "center": 0.17658933083105566,
+                "shoulder": 0.265
+              },
+              "topSkinEdgeX": 0.9904885673915687,
+              "topSkinEdgeY": 0.24933438869964186
+            }
+          },
+          {
+            "x": 0,
+            "z": 2.1,
+            "before": {
+              "bodyY": 0.04337046980303683,
+              "outerX": 0.9122501519659318,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6564666666666668,
+              "section": {
+                "width": 0.9122501519659318,
+                "crease": 0.7196125593971757,
+                "ridge": 0.8246125593971757,
+                "center": 0.03437046980303683,
+                "shoulder": 0.04001777925629785
+              }
+            },
+            "after": {
+              "bodyY": 0.04337046980303683,
+              "outerX": 0.9615635151380258,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6330666666666667,
+              "section": {
+                "width": 0.9615635151380258,
+                "crease": 0.65837217895668,
+                "ridge": 0.76337217895668,
+                "center": 0.03437046980303683,
+                "shoulder": 0.07314813860701079
+              },
+              "topSkinEdgeX": 0.9180520825295946,
+              "topSkinEdgeY": 0.05778153852919392
+            }
+          },
+          {
+            "x": 0.4,
+            "z": 2.1,
+            "before": {
+              "bodyY": 0.040029003126674415,
+              "outerX": 0.9122501519659318,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6564666666666668,
+              "section": {
+                "width": 0.9122501519659318,
+                "crease": 0.7196125593971757,
+                "ridge": 0.8246125593971757,
+                "center": 0.03437046980303683,
+                "shoulder": 0.04001777925629785
+              }
+            },
+            "after": {
+              "bodyY": 0.039777417010533944,
+              "outerX": 0.9615635151380258,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6330666666666667,
+              "section": {
+                "width": 0.9615635151380258,
+                "crease": 0.65837217895668,
+                "ridge": 0.76337217895668,
+                "center": 0.03437046980303683,
+                "shoulder": 0.07314813860701079
+              },
+              "topSkinEdgeX": 0.9180520825295946,
+              "topSkinEdgeY": 0.05778153852919392
+            }
+          },
+          {
+            "x": 0.7,
+            "z": 2.1,
+            "before": {
+              "bodyY": 0.03693708206639765,
+              "outerX": 0.9122501519659318,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6564666666666668,
+              "section": {
+                "width": 0.9122501519659318,
+                "crease": 0.7196125593971757,
+                "ridge": 0.8246125593971757,
+                "center": 0.03437046980303683,
+                "shoulder": 0.04001777925629785
+              }
+            },
+            "after": {
+              "bodyY": 0.060077794048387395,
+              "outerX": 0.9615635151380258,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6330666666666667,
+              "section": {
+                "width": 0.9615635151380258,
+                "crease": 0.65837217895668,
+                "ridge": 0.76337217895668,
+                "center": 0.03437046980303683,
+                "shoulder": 0.07314813860701079
+              },
+              "topSkinEdgeX": 0.9180520825295946,
+              "topSkinEdgeY": 0.05778153852919392
+            }
+          },
+          {
+            "x": 0.95,
+            "z": 2.1,
+            "before": {
+              "bodyY": 0.016534906893932746,
+              "outerX": 0.9122501519659318,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6564666666666668,
+              "section": {
+                "width": 0.9122501519659318,
+                "crease": 0.7196125593971757,
+                "ridge": 0.8246125593971757,
+                "center": 0.03437046980303683,
+                "shoulder": 0.04001777925629785
+              }
+            },
+            "after": {
+              "bodyY": 0.05511374402342554,
+              "outerX": 0.9615635151380258,
+              "archY": -1,
+              "linerInnerX": 0.54,
+              "bonnetHalfWidth": 0.6330666666666667,
+              "section": {
+                "width": 0.9615635151380258,
+                "crease": 0.65837217895668,
+                "ridge": 0.76337217895668,
+                "center": 0.03437046980303683,
+                "shoulder": 0.07314813860701079
+              },
+              "topSkinEdgeX": 0.9180520825295946,
+              "topSkinEdgeY": 0.05778153852919392
+            }
+          }
+        ],
+        "changedMainBody": "3.18 changes visual section stations; the earlier <10 mm local-fillet envelope is obsolete. The physical hard points and full existing tyre clearance gate remain unchanged."
+      }
+    },
+    {
+      "name": "Photographic cameras reproduce the declared normalized landmark residuals and keep a separate technical rig",
+      "status": "passed",
+      "detail": {
+        "views": [
+          {
+            "id": "photo-side",
+            "sourceSHA256": "133de595f3cb7742f5bb2c24d8e9c41aef06dcd1a63507e2daaddc1c4a71c16a",
+            "rmsImageDiagonalPercent": 2.524958266082094,
+            "landmarks": 10
+          },
+          {
+            "id": "photo-front",
+            "sourceSHA256": "ba430d2177eba7f84f8d70d16af95ae758e2323d8c4d22df08ce58c0844aa647",
+            "rmsImageDiagonalPercent": 0.9871268815526928,
+            "landmarks": 8
+          },
+          {
+            "id": "photo-front-quarter",
+            "sourceSHA256": "342e862f7239479b0d1994d1f842e50d05e926b8fd4c9158c02cc9f011bcc71b",
+            "rmsImageDiagonalPercent": 2.3906281440671773,
+            "landmarks": 11
+          }
+        ],
+        "metricCADClaim": false,
+        "geometryImprovementClaim": false
+      }
+    },
+    {
+      "name": "All new geometry has finite unit normals and bounded incremental LOD costs against the 3.15 task baseline",
+      "status": "passed",
+      "detail": {
+        "costs": {
+          "balanced": {
+            "baselineVersion": "3.15.0",
+            "historical313": {
+              "quality": "balanced",
+              "geometryQuality": "balanced",
+              "projectedPixels": null,
+              "drawables": 82,
+              "meshes": 82,
+              "vertices": 45934,
+              "triangles": 55383,
+              "shadowMeshes": 5
+            },
+            "before": {
+              "quality": "balanced",
+              "geometryQuality": "balanced",
+              "projectedPixels": null,
+              "drawables": 86,
+              "meshes": 86,
+              "vertices": 47973,
+              "triangles": 57364,
+              "shadowMeshes": 5
+            },
+            "after": {
+              "quality": "balanced",
+              "geometryQuality": "balanced",
+              "projectedPixels": null,
+              "drawables": 86,
+              "meshes": 86,
+              "vertices": 45146,
+              "triangles": 59650,
+              "shadowMeshes": 5
+            },
+            "triangleDelta": 2286,
+            "drawablesDelta": 0,
+            "articulatedBatchAllowance": 3
+          },
+          "high": {
+            "baselineVersion": "3.15.0",
+            "historical313": {
+              "quality": "high",
+              "geometryQuality": "high",
+              "projectedPixels": null,
+              "drawables": 152,
+              "meshes": 148,
+              "vertices": 150740,
+              "triangles": 228677,
+              "shadowMeshes": 124
+            },
+            "before": {
+              "quality": "high",
+              "geometryQuality": "high",
+              "projectedPixels": null,
+              "drawables": 156,
+              "meshes": 152,
+              "vertices": 154406,
+              "triangles": 232992,
+              "shadowMeshes": 127
+            },
+            "after": {
+              "quality": "high",
+              "geometryQuality": "high",
+              "projectedPixels": null,
+              "drawables": 160,
+              "meshes": 156,
+              "vertices": 153694,
+              "triangles": 238540,
+              "shadowMeshes": 126
+            },
+            "triangleDelta": 5548,
+            "drawablesDelta": 4,
+            "articulatedBatchAllowance": 3
+          },
+          "ultra": {
+            "baselineVersion": "3.15.0",
+            "historical313": {
+              "quality": "ultra",
+              "geometryQuality": "ultra",
+              "projectedPixels": null,
+              "drawables": 152,
+              "meshes": 148,
+              "vertices": 229863,
+              "triangles": 372521,
+              "shadowMeshes": 124
+            },
+            "before": {
+              "quality": "ultra",
+              "geometryQuality": "ultra",
+              "projectedPixels": null,
+              "drawables": 156,
+              "meshes": 152,
+              "vertices": 235656,
+              "triangles": 380456,
+              "shadowMeshes": 127
+            },
+            "after": {
+              "quality": "ultra",
+              "geometryQuality": "ultra",
+              "projectedPixels": null,
+              "drawables": 160,
+              "meshes": 156,
+              "vertices": 240283,
+              "triangles": 395160,
+              "shadowMeshes": 126
+            },
+            "triangleDelta": 14704,
+            "drawablesDelta": 4,
+            "articulatedBatchAllowance": 3
+          }
+        },
+        "meaning": "Resource costs only, not visual quality or GPU performance."
+      }
+    }
+  ],
+  "sourceHashes": {
+    "dist/vehicle.js": "cbc1c87d09fd8541693ade060bcf34d62bbf3ae61fa0cea69d0be0497b0c5ae4",
+    "dist/vehicle-inspection.js": "31dc17eb64babe2fd26c30f98a2ff3e762ce070ff1a50f4689050d270fd1efe7",
+    "dist/vehicle-display-study.js": "5a0efda354afb89f5735826d1f0ed4e249b74778a6bbeda03fd1db837120be86",
+    "dist/vehicle-study-capture.js": "31f1f93dd062ab0452988bbbe81ed730252a13e21499440df148ec83606dee2c",
+    "dist/vehicle-reference-3.13.js": "31257f22ae30c1df7392c8a7dcafea1a91017e0b000299b10716ef01ebbb99a3",
+    "dist/vehicle-reference-layout-3.13.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "dist/vehicle-reference-3.15.js": "2747bba7a03d626ceb0661ec5771d8fc6e4c82c0e147402b1ca3fb47386f2009",
+    "dist/vehicle-reference-layout-3.15.js": "d2918ca2d9c3a7ff14a5b6647665ffd19f933bea9d1047ae6410b6f43d6414ec",
+    "dist/i18n-vehicle-314-en.js": "58af4e0083cb98e37e7cae89089c1bf4fcf91401e53894eaaf85a56e04c21868",
+    "tests/vehicle-display-3.14.test.mjs": "a8bcd97e95c9e018e5dc5f24d3bd3046e377ec4286fa7735265859b7015f7709"
+  },
+  "limitations": [
+    "Geometry/material parameters, camera projection and identity isolation are tested. No real GPU pixel or perceived-detail acceptance is implied.",
+    "This structural test does not acquire images; current matched WebGL captures and visual review are separate evidence.",
+    "Same-camera studio/daylight plus actual city wet-night frames, full optical orbit and steering/suspension/wing motion remain target-device checks."
+  ]
+}

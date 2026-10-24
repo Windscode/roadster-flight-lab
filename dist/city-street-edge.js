@@ -27,12 +27,12 @@ export function createCrosstownStreetEdge(){
     for(let i=0;i<count;i++){
       const u=from+(i+.5)*bay,windowY=(h-.80)/2+.43,windowH=h-1.28;
       const recipe=id.includes('reading')?'books':id.includes('daily')?'daily':id.includes('workshop')?'workshop':'gallery';
-      const materials={displayBack:row.warm?'display-warm-backing':'display-cool-backing',displayWood:'display-timber',displayGoods:'display-goods',displayFrame:row.trim,shopGlass:'display-glazing'};
+      const materials={displayBack:row.warm?'display-warm-backing':'display-cool-backing',displayWood:'display-timber',displayGoods:'display-goods',displayFrame:row.trim,shopGlass:'display-glazing',lamp:'display-lamp'};
       let piece=0;
-      buildStreetDisplay((kind,size,along,y,out,tint)=>{
+      buildStreetDisplay((kind,size,along,y,out,tint,_variance,_geometry,_tile,_rotation,light)=>{
         // Front's outward local direction differs on the two street sides.
         finishes.push({id:'street-edge-'+id+'-showcase-'+i+'-'+piece++,size,
-          position:[along,y,front+side*out],material:materials[kind],tint,rotation:[0,side>0?0:Math.PI,0],renderDetail:'facade',showcase:true});
+          position:[along,y,front+side*out],material:materials[kind],tint,rotation:[0,side>0?0:Math.PI,0],renderDetail:'facade',showcase:true,showcaseLight:light?{position:[light.position[0],light.position[1],front+side*light.position[2]],span:[light.span[0],0,0],cool:light.cool}:null});
       },{x:u,width:bay-.55,height:windowH,sill:windowY-windowH/2,recipe,variant:i,door:i%3===1,trim:0x43595b});
       face(id+'-transom-'+i,[bay-.55,.075,.10],[u,h-1.0,front-side*.12],row.trim);
       const canopyDepth=side<0?.85:1.45,canopyZ=front+side*canopyDepth*.38;

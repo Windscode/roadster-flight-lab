@@ -1,4 +1,4 @@
-# Roadster Flight Lab · 3.23
+# Roadster Flight Lab · 3.24
 
 Drive through the city, experiment with cold-gas flight, and replay what happened.
 
@@ -6,7 +6,9 @@ Drive through the city, experiment with cold-gas flight, and replay what happene
 
 An independent, medium-scale vehicle and automatic-control research project. Public Roadster references inform the model; unavailable specifications remain engineering assumptions. The long-term tracks are consistent vehicle physics, detailed vehicle presentation, a continuous atmospheric city, and useful experiments/challenges.
 
-3.23 continues local 3.22 with shared X/U path headroom estimates, honest collision-abort results, shadows that follow actual articulated casting geometry, and protected resource-route summaries. Storage failures preserve all unsaved session runs and appear in the driving completion notice. Exact Git bytes are preserved across Windows checkouts. X retains its 1.5-second turn reference and physical actuator limits. The headroom estimate is conservative and can reject feasible near-bridge maneuvers.
+3.24 wraps the rear quarters into a recessed installation surround while preserving experimental outlets, extraction ducts and wheel hard points. The existing city gains confined lighting in 210 shallow displays. A phase-dependent headroom estimate reduces late-roof refusals for validated default conditions; customized physics, observations and unsupported initial conditions retain the conservative estimate. Neither is a collision certificate. Portable scene identity handles Node/browser floating-point differences at a declared geometry quantization; real geometry/body-layout mismatches remain rejected before restoring the live scene.
+
+3.23 introduced shared X/U path headroom estimates, honest collision-abort results, shadows that follow actual articulated casting geometry, and protected resource-route summaries. Storage failures preserve all unsaved session runs and appear in the driving completion notice. Exact Git bytes are preserved across Windows checkouts. X retains its 1.5-second turn reference and physical actuator limits.
 
 3.22 fixes held gamepad axes resuming after menus, browser shortcut leakage, duplicate night-light assignments and stale relit headlight shadows. Cockpit steering follows measured front-wheel state; brake lamps survive headlamp changes. Experiment summaries separate net battery use, delivery and regeneration, and opposing drive torque has an explicit unrecovered heat channel.
 
@@ -22,6 +24,6 @@ npm run test:release
 
 Node.js 22+; production dependencies are vendored. `ROADSTER_PORT` selects a local port. DOM tests require an existing JSDOM path via `JSDOM_MODULE_PATH`. The historical full validation command has separate archive requirements.
 
-[Release scope](docs/release-3.23.md) · [Current validation](qa/release-3.23/validation.json) · [Development priorities](docs/development-plan.md)
+[Release scope](docs/release-3.24.md) · [Current validation](qa/release-3.24/validation.json) · [Development priorities](docs/development-plan.md)
 
-Evidence covers numerical dynamics, exact state/input replay, DOM lifecycle, HTTP serving and publication identity. Actual local WebGL browser checks include driving, X landing, combined inputs, day/wet-night and quality changes; these do not certify physical keyboards/gamepads, audio or universal shadow-flicker elimination. No city districts or art assets are added. Historical 3.21 records remain viewable/exportable but cannot automatically execute under the new resource schema. This is a local development candidate; the live version is identified by the website's `deployment.json`.
+The historical 3.23 evidence covers numerical dynamics, exact state/input replay, DOM lifecycle, HTTP serving and publication identity. That release's local WebGL browser checks included driving, X landing, combined inputs, day/wet-night and quality changes; they did not certify physical keyboards/gamepads, audio or universal shadow-flicker elimination. Version 3.23 added no city districts or art assets. Current 3.24 acceptance and limitations are recorded in the [release scope](docs/release-3.24.md). Historical 3.21 records remain viewable/exportable but cannot automatically execute under the new resource schema. This is a local development candidate; the live version is identified by the website's `deployment.json`.

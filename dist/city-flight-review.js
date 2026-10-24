@@ -1,6 +1,7 @@
 /** Challenge learning uses the existing fixed-input replay executor. Display
  * samples are evidence only; they never become a continuation state. */
 import {ExperimentPlayback,replayEligibility,contentLabel,canonicalJSON} from './experiment-records.js';
+import {matchesRestoredSnapshot,preflightExperimentRestore} from './experiment-restore.js';
 
 const copy=v=>JSON.parse(JSON.stringify(v));
 const finite=v=>Number.isFinite(v)?v:null;
@@ -81,9 +82,9 @@ export class CityFlightReview{
 
 export function createPracticeAttempt(record,{createSim}={}){
  const eligible=replayEligibility(record.liveExperiment);if(!eligible.exact)throw Error(eligible.reason);
- const physical=copy(record.liveExperiment.initialSnapshot.physical),sim=createSim(physical);sim.importState(physical,{allowVersionMismatch:false});
- const unchanged=canonicalJSON(sim.exportState())===canonicalJSON(physical);if(!unchanged)throw Error('Practice initial-state import differs from its source');
- return{sim,runId:createCityRunId(),parentRunId:record.runId??record.id,record,attemptClass:'practice',initialStateLabel:record.liveExperiment.initialSnapshot.stateLabel,sceneConfiguration:copy(record.liveExperiment.initialSnapshot.sceneConfiguration??null),paused:true};
+ const physical=copy(record.liveExperiment.initialSnapshot.physical),sim=createSim(physical);preflightExperimentRestore({snapshot:physical},sim);sim.importState(physical,{allowVersionMismatch:false});
+ if(!matchesRestoredSnapshot(sim,physical))throw Error('Practice initial-state import differs from its source');
+ return{sim,runId:createCityRunId(),parentRunId:record.runId??record.id,record,attemptClass:'practice',initialStateLabel:record.liveExperiment.initialSnapshot.stateLabel,initialSnapshot:sim.exportState(),sceneConfiguration:copy(record.liveExperiment.initialSnapshot.sceneConfiguration??null),paused:true};
 }
 
 const eventOrder=['drive_checkpoint','takeoff','gate_passed','touchdown','stable_landing'];

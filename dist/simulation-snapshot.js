@@ -2,6 +2,7 @@ import * as CANNON from './vendor/cannon-es.js';
 import {MODEL_VERSION} from './vehicle-models.js';
 import {observationConfiguration} from './control-observation.js';
 import {validateRouteSurface} from './route-surface.js';
+import {canonicalGeometryJSON} from './irradiance-math.js';
 
 export const SIM_STATE_SCHEMA='roadster-sim-state',SIM_STATE_SCHEMA_VERSION=1;
 const omitted=new Set(['params','worldType','world','body','geometry','_roadMaterial','_wheelStopMaterial','_wheelStopIndices','_ray','_wheelRays','_pads','_observationBody','_integration']);
@@ -44,8 +45,39 @@ function geometrySignature(sim){
   // Identity is supplementary to the cryptographic build identity kept by the
   // experiment record. Body ordering / shape counts are part of continuation.
   const text=JSON.stringify([sim.geometry,sim.world.bodies.map(b=>[b.type,b.shapes.length,b===sim.body?'vehicle':b.userData?.id])]);
+  return hashGeometry(text);
+}
+function hashGeometry(text){
   let h=2166136261;for(let i=0;i<text.length;i++)h=Math.imul(h^text.charCodeAt(i),16777619);
   return(h>>>0).toString(16).padStart(8,'0');
+}
+function shapeGeometry(shape){
+  const types=CANNON.Shape.types;
+  if(shape.type===types.BOX)return[shape.type,shape.halfExtents.toArray()];
+  if(shape.type===types.PLANE)return[shape.type];
+  if(shape.type===types.SPHERE)return[shape.type,shape.radius];
+  if(shape.type===types.CYLINDER||shape.type===types.CONVEXPOLYHEDRON)return[shape.type,shape.vertices.map(v=>v.toArray()),shape.faces];
+  fail('碰撞形状尚未加入几何身份契约');
+}
+export function simulationGeometryIdentity(sim){
+  // Sub-nanometre rounding removes platform math last-bit differences, not
+  // real scene changes. Keep body/shape order: contact histories use indices.
+  // Vehicle transforms and wheel steering are continuation state; fixed scene
+  // transforms, local shape transforms and primitive dimensions are geometry.
+  const bodies=sim.world.bodies.map(b=>[b.type,b===sim.body?'vehicle':b.userData?.id,
+    b.shapes.map(shapeGeometry),...(b===sim.body?[]:[b.position.toArray(),b.quaternion.toArray(),b.shapeOffsets.map(v=>v.toArray()),b.shapeOrientations.map(q=>q.toArray()),b.collisionFilterGroup,b.collisionFilterMask,b.collisionResponse,b.isTrigger])]);
+  return{schema:'roadster-collision-identity',version:1,precision:1e-9,signature:hashGeometry(canonicalGeometryJSON([sim.geometry,bodies]))};
+}
+export function assertSnapshotWorldCompatible(sim,snapshot){
+  if(snapshot?.worldType!==sim.worldType||typeof snapshot.geometrySignature!=='string'||!/^[\da-f]{8}$/.test(snapshot.geometrySignature))fail('场景几何或世界类型不匹配');
+  if(Object.hasOwn(snapshot,'geometryIdentity')){
+    const identity=snapshot.geometryIdentity;
+    if(!identity||identity.schema!=='roadster-collision-identity'||identity.version!==1||identity.precision!==1e-9||typeof identity.signature!=='string'||identity.signature!==simulationGeometryIdentity(sim).signature)fail('场景几何或世界类型不匹配');
+  }else if(snapshot.geometrySignature!==geometrySignature(sim)){
+    // An old raw signature cannot prove cross-engine equivalence. Never infer
+    // a portable identity for historical data or rewrite imported evidence.
+    fail('场景几何或世界类型不匹配');
+  }
 }
 const pick=(object,fields)=>Object.fromEntries(fields.filter(k=>k in object).map(k=>[k,encode(object[k])]));
 function sameType(value,template){
@@ -70,7 +102,7 @@ export function exportSimulationState(sim){
   }
   const bodies=sim.world.bodies,shapes=bodies.flatMap(b=>b.shapes);
   const contacts=sim.world.contacts.map(c=>({bi:bodies.indexOf(c.bi),bj:bodies.indexOf(c.bj),si:c.bi.shapes.indexOf(c.si),sj:c.bj.shapes.indexOf(c.sj),values:pick(c,['minForce','maxForce','a','b','eps','enabled','multiplier','restitution','ri','rj','ni'])}));
-  return{schema:SIM_STATE_SCHEMA,schemaVersion:SIM_STATE_SCHEMA_VERSION,modelVersion:MODEL_VERSION,worldType:sim.worldType,geometrySignature:geometrySignature(sim),params:encode(sim.params),state,
+  return{schema:SIM_STATE_SCHEMA,schemaVersion:SIM_STATE_SCHEMA_VERSION,modelVersion:MODEL_VERSION,worldType:sim.worldType,geometrySignature:geometrySignature(sim),geometryIdentity:simulationGeometryIdentity(sim),params:encode(sim.params),state,
     body:pick(sim.body,bodyFields),world:{...pick(sim.world,worldFields),solver:{iterations:sim.world.solver.iterations,tolerance:sim.world.solver.tolerance},contacts,
       collisionPairs:pairIndices(sim.world.collisionMatrix,bodies),previousCollisionPairs:pairIndices(sim.world.collisionMatrixPrevious,bodies),bodyOverlaps:overlaps(sim.world.bodyOverlapKeeper,bodies),shapeOverlaps:overlaps(sim.world.shapeOverlapKeeper,shapes)}};
 }
@@ -78,7 +110,7 @@ export function importSimulationState(sim,snapshot,{allowVersionMismatch=false}=
   if(allowVersionMismatch)fail('不支持跨模型执行；请使用明确标记的新模型重算');
   if(snapshot?.schema!==SIM_STATE_SCHEMA||snapshot.schemaVersion!==SIM_STATE_SCHEMA_VERSION)fail('不支持的状态格式');
   if(snapshot.modelVersion!==MODEL_VERSION)fail(`模型 ${snapshot.modelVersion} 与当前 ${MODEL_VERSION} 不同`);
-  if(snapshot.worldType!==sim.worldType||snapshot.geometrySignature!==geometrySignature(sim))fail('场景几何或世界类型不匹配');
+  assertSnapshotWorldCompatible(sim,snapshot);
   const state=decode(snapshot.state),body=decode(snapshot.body),world=decode(snapshot.world),params=decode(snapshot.params);
   if(!state||!body||!world||!params)fail('状态不完整');
   // Absence has an explicit legacy meaning, never the destination live state.

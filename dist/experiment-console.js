@@ -58,9 +58,17 @@ export function createExperimentConsole({mount,getSim,getContext=()=> 'city',get
   function captureReturnState(){const sim=getSim();return{snapshot:sim.exportState(),context:getContext(),sceneConfiguration:clone(getSceneConfiguration()??null)};}
   function startReplay(record=selected(),{recompute=false}={}){
     requireLive();if(!record)throw Error('先选择一条完整现场记录');if(recompute)throw Error('三维按钮只执行原条件；新构建重算请使用明确的数值重算按钮');const eligible=replayEligibility(record);if(!eligible.exact)throw Error(eligible.reason);
-    if(typeof onRestoreExperiment!=='function')throw Error('现场没有安装状态恢复适配器');onBeforeRestore('开始原条件重放');stopRecording('开始重放前结束本次记录','cancelled');if(playback)stopReplay('启动另一条重放');
-    replaySavedContext=captureReturnState();const sim=onRestoreExperiment({snapshot:clone(record.initialSnapshot.physical),context:record.context,sceneConfiguration:clone(record.initialSnapshot.sceneConfiguration??null),allowVersionMismatch:false});
-    playback=new ExperimentPlayback(record,{sim:sim||getSim(),recompute:false});replaySource=record;lastReplay=null;onStart({id:'experiment-replay',name:'按原条件重放'});paintStatus();notify('已恢复完整原始状态，正在按固定步输入重放。驾驶输入会立即接管；可返回重放前状态。');return playback.getState();
+    if(typeof onRestoreExperiment!=='function')throw Error('现场没有安装状态恢复适配器');
+    const request={snapshot:clone(record.initialSnapshot.physical),context:record.context,sceneConfiguration:clone(record.initialSnapshot.sceneConfiguration??null),allowVersionMismatch:false};
+    // The adapter must return an isolated solver for validateOnly. Exercise the
+    // complete playback constructor (record + physical validation) before any
+    // cancellation, scene switch or replacement of the saved return state.
+    const checked=onRestoreExperiment({...request,validateOnly:true});
+    if(!checked||checked===getSim())throw Error('现场恢复适配器缺少隔离预检');
+    new ExperimentPlayback(record,{sim:checked,recompute:false});
+    const previous=captureReturnState();onBeforeRestore('开始原条件重放');stopRecording('开始重放前结束本次记录','cancelled');if(playback)stopReplay('启动另一条重放');
+    const sim=onRestoreExperiment(request);
+    playback=new ExperimentPlayback(record,{sim:sim||getSim(),recompute:false});replaySavedContext=previous;replaySource=record;lastReplay=null;onStart({id:'experiment-replay',name:'按原条件重放'});paintStatus();notify('已恢复完整原始状态，正在按固定步输入重放。驾驶输入会立即接管；可返回重放前状态。');return playback.getState();
   }
   function replayResult(status,reason){
     const source=replaySource;let reproduction;
@@ -142,7 +150,7 @@ export function createExperimentConsole({mount,getSim,getContext=()=> 'city',get
     const ids=(t.nozzles||[]).filter(n=>n.kind==='lift').map(n=>n.id);if(ids.length&&$('fault-id').options[0]?.value!==ids[0])$('fault-id').innerHTML=ids.map(id=>`<option value="${esc(id)}">${esc(id)}</option>`).join('');}
   async function perform(action){try{
     if(action==='record')startRecording();else if(action==='stop-record')stopRecording();else if(action==='replay')startReplay();else if(action==='stop-replay')stopReplay();else if(action==='stop-job')stopJob();
-    else if(action==='return-before-replay'){requireLive();if(!replaySavedContext)throw Error('没有重放前状态');onBeforeRestore('返回重放前状态');stopRecording('返回重放前结束本次记录','cancelled');stopReplay('返回重放前状态');const previous=replaySavedContext;onRestoreExperiment({snapshot:clone(previous.snapshot),context:previous.context,sceneConfiguration:clone(previous.sceneConfiguration??null),allowVersionMismatch:false});replaySavedContext=null;notify('已恢复重放前的完整现场状态与视景配置；原有流程和记录已结束留证。');}
+    else if(action==='return-before-replay'){requireLive();if(!replaySavedContext)throw Error('没有重放前状态');const previous=replaySavedContext,request={snapshot:clone(previous.snapshot),context:previous.context,sceneConfiguration:clone(previous.sceneConfiguration??null),allowVersionMismatch:false};onRestoreExperiment({...request,validateOnly:true});onBeforeRestore('返回重放前状态');stopRecording('返回重放前结束本次记录','cancelled');stopReplay('返回重放前状态');onRestoreExperiment(request);replaySavedContext=null;notify('已恢复重放前的完整现场状态与视景配置；原有流程和记录已结束留证。');}
     else if(['numeric-replay','recompute','compare'].includes(action))runNumeric(action);
     else if(action==='copy-source-controller'){if(!selected())throw Error('先选择记录');setControllerFields(selected().initialSnapshot.physical.params);notify('B 已读取原记录参数；修改后再运行公平 A/B。');}
     else if(action==='copy-draft-controller'){setControllerFields(getControllerDraft());notify('B 已读取控制面板输入值；现场车辆参数未改变。');}

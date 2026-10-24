@@ -6,6 +6,7 @@ import {PersistenceState} from './research-storage.js';
 import {captureTaskSettings,restoreTaskSettings} from './task-setting-scope.js';
 import {contentLabel,replayEligibility} from './experiment-records.js';
 import {RoadsterSim} from './physics.js';
+import {matchesRestoredSnapshot} from './experiment-restore.js';
 import {CityFlightReview,createPracticeAttempt,createCityRunId,firstViolationReview,compareCityAttempts,alignedEventSeries,reviewTelemetry} from './city-flight-review.js';
 import {CityBehaviorMonitor} from './city-behavior-monitor.js';
 const L=(zh,en)=>getLanguage()==='en'?en:zh,copy=v=>JSON.parse(JSON.stringify(v)),fmt=(v,n=2)=>Number.isFinite(v)?v.toFixed(n):'—';
@@ -76,7 +77,7 @@ export function createCityFlightUI({mount,hudMount,scene,getSim,getContext=()=> 
    const original=getSim(),sim=new RoadsterSim({...original.params,supplyMode:'bench'},{world:'city'});
    sim.reset('harbor');for(let i=0;i<240;i++)sim.advanceFixed({brake:1},1/120);
    const wind=original.getWind?.();if(wind)sim.setWind(copy(wind));if(original._nozzleFault)sim.setNozzleFault(copy(original._nozzleFault));if(original._observationConfig)sim.setObservation(copy(original._observationConfig));
-   prepared={sim,runId:createCityRunId(),parentRunId:null,record:null,task:makeCityFlightTask({supplyMode:'bench'}),attemptClass:'practice',paused:true,initialPreparation:true,initialStateLabel:contentLabel(sim.exportState()),sceneConfiguration:null};
+   const initialSnapshot=sim.exportState();prepared={sim,runId:createCityRunId(),parentRunId:null,record:null,task:makeCityFlightTask({supplyMode:'bench'}),attemptClass:'practice',paused:true,initialPreparation:true,initialStateLabel:contentLabel(initialSnapshot),initialSnapshot,sceneConfiguration:null};
   }
   await onPractice(prepared);preparedPractice=prepared;postWatch=null;reviewState=null;reviewRecord=null;deck.hidden=true;
   message=source?L('已按这次记录的完整初态准备练习：风、气量、参数和规则保持。新尝试单独计数。','Practice prepared from the complete recorded initial state: wind, gas, parameters and rules retained. A separate attempt will be recorded.'):L('独立练习起点已准备：现有上城任务、恒压外供气；不计正式成绩。','Independent practice start prepared: existing Upper City task, external supply, excluded from formal scores.');
@@ -85,7 +86,7 @@ export function createCityFlightUI({mount,hudMount,scene,getSim,getContext=()=> 
  function startPreparedPractice(){
   if(runner&&!runner.finished)throw Error(L('请先结束当前挑战。','Finish the current attempt first.'));
   const prepared=preparedPractice,sim=getSim();if(sim!==prepared.sim)throw Error('Practice host did not activate its isolated simulator');
-  if(contentLabel(sim.exportState())!==prepared.initialStateLabel)throw Error(L('准备后的初态已改变，请重新创建同初态练习。','Prepared initial state changed; prepare the same-start practice again.'));
+  if(!matchesRestoredSnapshot(sim,prepared.initialSnapshot))throw Error(L('准备后的初态已改变，请重新创建同初态练习。','Prepared initial state changed; prepare the same-start practice again.'));
   const task=prepared.task??prepared.record.task;taskReturnSettings=captureTaskSettings(sim);scopedSim=sim;exitContract=null;
   runner=new CityFlightChallenge(sim,{task,onFinish:accept,getSceneConfiguration,attemptClass:'practice',runId:prepared.runId,parentRunId:prepared.parentRunId});
   try{runner.start();preparedPractice=null;showResult=true;message='';onStart({attemptClass:'practice',runId:runner.runId});render();return runner;}catch(error){restoreSettings('start_failed');throw error;}

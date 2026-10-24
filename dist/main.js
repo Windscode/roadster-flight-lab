@@ -13,6 +13,7 @@ import { RENDER_PROFILES, ResolutionGovernor, sizeRenderPipeline } from './rende
 import { PerformanceMeter } from './performance-meter.js';
 import { ColdGasExhaust } from './exhaust.js';
 import { RoadsterSim, DEFAULT_PARAMS } from './physics.js';
+import {preflightExperimentRestore} from './experiment-restore.js';
 import { MODEL_VERSION } from './vehicle-models.js';
 import { createRoadster,VEHICLE_DRIVER_VIEW } from './vehicle.js';
 import { createEnvironment } from './city-environment.js';
@@ -940,10 +941,12 @@ export async function boot(shell){
     onStart:()=>{keys.clear();closePanels();if(menuOpen)closeGameMenu();else ensureRunning();},
     onCancel:reason=>logEvent('program_cancel',{reason}),
     suspendGraphics:()=>{cityFlight?.cancel('graphics_context_lost');if(programMatrixBusy)releaseDiagnosticInput('graphics-stopped');else inputSession.release('graphics-stopped',{pause:true});matrixAbort?.abort();pendingProgramCapture?.reject?.(Error('WebGL context stopped'));pendingProgramCapture=null;controlCapture?.cancel('图形运行中断；已保留采集区间。','Graphics stopped; captured interval retained.');graphicsStopped=true;captureImageRequested=false;captureBundleRequested=false;setPaused(true);keys.clear();sound?.silence();meter.endGpu();},
-    restoreExperiment:({snapshot,context,sceneConfiguration:recordedScene,allowVersionMismatch=false})=>{
+    restoreExperiment:({snapshot,context,sceneConfiguration:recordedScene,allowVersionMismatch=false,validateOnly=false})=>{
       if(learningSessionMode!=='live')throw Error('请先返回原现场，再重放现场实验记录。');
+      const name=snapshot?.worldType==='windlab'?'lab':'city';
+      const checked=preflightExperimentRestore({snapshot,context,allowVersionMismatch},contexts[name]?.sim);
+      if(validateOnly)return checked.sim;
       controlCapture?.cancel('进入记录重放，操纵采集结束。','Record replay started; pilot capture ended.');
-      const name=context==='lab'||snapshot.worldType==='windlab'?'lab':'city';
       switchContext(name,{run:false,openConsole:false});
       sim.importState(snapshot,{allowVersionMismatch});environment.setRouteSurfaceDescription?.(sim.getRouteSurface?.()?.descriptor??null);cityMap.setSurfaceRoute?.(sim.getRouteSurface?.()?.descriptor??null);headFeedback.reset();t=sim.telemetry();scenario=sim.scenario;contexts[name].scenario=scenario;
       resetTrace();pendingManeuver=null;keys.clear();reverseHold=0;

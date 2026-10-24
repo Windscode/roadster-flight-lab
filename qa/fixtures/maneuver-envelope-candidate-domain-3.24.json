@@ -1,0 +1,4770 @@
+{
+  "schema": "roadster-maneuver-envelope-324",
+  "createdAt": "2026-10-23T14:49:29.589Z",
+  "status": "passed",
+  "modelBuildId": "3b80df9d3aa722fc5e382c660cbde7723f23bb66819c37f62bab95b23158020f",
+  "checks": [
+    {
+      "name": "Near roofs remain refused while 30–45 m X corridors now complete with five seconds of driving",
+      "status": "passed"
+    },
+    {
+      "name": "Reverse travel, rotated headings and a stationary car sample their complete timed envelope",
+      "status": "passed"
+    },
+    {
+      "name": "X and U physical collider heights remain inside the declared prediction reserves across a parameter matrix",
+      "status": "passed"
+    },
+    {
+      "name": "Unmodelled supply, wind, surface and entry conditions retain the conservative fallback",
+      "status": "passed"
+    },
+    {
+      "name": "Pitch uses its own longer physical envelope instead of reusing the quicker roll clearance",
+      "status": "passed"
+    },
+    {
+      "name": "Unexpected collisions still abort launch, rotation, landing, recovery and explicit L without resetting recovery clocks",
+      "status": "passed"
+    },
+    {
+      "name": "Maneuver continuation serializes compact evidence and preserves exact solver execution",
+      "status": "passed"
+    }
+  ],
+  "cases": [
+    {
+      "id": "near-refused",
+      "forwardM": 10,
+      "reason": "滚转预检：分阶段净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足"
+    },
+    {
+      "id": "near-refused",
+      "forwardM": 15,
+      "reason": "滚转预检：分阶段净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足"
+    },
+    {
+      "id": "near-refused",
+      "forwardM": 20,
+      "reason": "滚转预检：分阶段净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足"
+    },
+    {
+      "id": "near-refused",
+      "forwardM": 25,
+      "reason": "滚转预检：分阶段净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足"
+    },
+    {
+      "id": "late-roof-opened",
+      "forwardM": 30,
+      "oldPeak": {
+        "distanceM": 2.7529906091259595,
+        "objectId": "envelope-test-roof",
+        "nearestTimeS": 2.3904,
+        "blocked": true,
+        "violation": {
+          "distanceM": 2.7529906091259595,
+          "requiredM": 6.18,
+          "marginM": -3.42700939087404,
+          "objectId": "envelope-test-roof",
+          "timeS": 2.3904
+        },
+        "horizonS": 3.984,
+        "rangeM": 6.49,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9960000000000001,
+        "surfaceVerticalMps": 0,
+        "envelope": null,
+        "supportSampleCount": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; conservative single peak-height envelope; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "newHeadroom": {
+        "distanceM": null,
+        "objectId": null,
+        "nearestTimeS": null,
+        "blocked": false,
+        "violation": null,
+        "horizonS": 3.9839721035889246,
+        "rangeM": 6.482970505608256,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9959930258972312,
+        "surfaceVerticalMps": 0,
+        "envelope": {
+          "model": "phase-envelope-1",
+          "kind": "roll",
+          "active": true,
+          "fallbackReasons": [],
+          "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+          "horizonS": 5,
+          "stepS": 0.004166666666666667,
+          "timeReserveS": 0.28,
+          "heightReserveM": 0.75,
+          "attitudeReserveDeg": 10,
+          "transitions": {
+            "launchS": 0,
+            "rotateS": 0.4041666666666667,
+            "landS": 1.9083333333333332,
+            "supportS": 3.3833333333333333
+          },
+          "nominalPeakCgHeightM": 3.683445139793663,
+          "nominalPeakUpperHeightM": 4.938186640747336,
+          "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+        },
+        "supportSampleCount": 41,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; phase-dependent force/valve/geometry height prediction with explicit reserves; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.818111388338584,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "late-roof-opened",
+      "forwardM": 35,
+      "oldPeak": {
+        "distanceM": 2.7529906091259595,
+        "objectId": "envelope-test-roof",
+        "nearestTimeS": 2.8884,
+        "blocked": true,
+        "violation": {
+          "distanceM": 2.7529906091259595,
+          "requiredM": 6.18,
+          "marginM": -3.42700939087404,
+          "objectId": "envelope-test-roof",
+          "timeS": 2.8884
+        },
+        "horizonS": 3.984,
+        "rangeM": 6.49,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9960000000000001,
+        "surfaceVerticalMps": 0,
+        "envelope": null,
+        "supportSampleCount": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; conservative single peak-height envelope; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "newHeadroom": {
+        "distanceM": null,
+        "objectId": null,
+        "nearestTimeS": null,
+        "blocked": false,
+        "violation": null,
+        "horizonS": 3.9839721035889246,
+        "rangeM": 6.482970505608256,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9959930258972312,
+        "surfaceVerticalMps": 0,
+        "envelope": {
+          "model": "phase-envelope-1",
+          "kind": "roll",
+          "active": true,
+          "fallbackReasons": [],
+          "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+          "horizonS": 5,
+          "stepS": 0.004166666666666667,
+          "timeReserveS": 0.28,
+          "heightReserveM": 0.75,
+          "attitudeReserveDeg": 10,
+          "transitions": {
+            "launchS": 0,
+            "rotateS": 0.4041666666666667,
+            "landS": 1.9083333333333332,
+            "supportS": 3.3833333333333333
+          },
+          "nominalPeakCgHeightM": 3.683445139793663,
+          "nominalPeakUpperHeightM": 4.938186640747336,
+          "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+        },
+        "supportSampleCount": 41,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; phase-dependent force/valve/geometry height prediction with explicit reserves; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.818111388338584,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "late-roof-opened",
+      "forwardM": 40,
+      "oldPeak": {
+        "distanceM": 2.7529906091259595,
+        "objectId": "envelope-test-roof",
+        "nearestTimeS": 3.3863999999999996,
+        "blocked": true,
+        "violation": {
+          "distanceM": 2.7529906091259595,
+          "requiredM": 6.18,
+          "marginM": -3.42700939087404,
+          "objectId": "envelope-test-roof",
+          "timeS": 3.3863999999999996
+        },
+        "horizonS": 3.984,
+        "rangeM": 6.49,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9960000000000001,
+        "surfaceVerticalMps": 0,
+        "envelope": null,
+        "supportSampleCount": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; conservative single peak-height envelope; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "newHeadroom": {
+        "distanceM": null,
+        "objectId": null,
+        "nearestTimeS": null,
+        "blocked": false,
+        "violation": null,
+        "horizonS": 3.9839721035889246,
+        "rangeM": 6.482970505608256,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9959930258972312,
+        "surfaceVerticalMps": 0,
+        "envelope": {
+          "model": "phase-envelope-1",
+          "kind": "roll",
+          "active": true,
+          "fallbackReasons": [],
+          "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+          "horizonS": 5,
+          "stepS": 0.004166666666666667,
+          "timeReserveS": 0.28,
+          "heightReserveM": 0.75,
+          "attitudeReserveDeg": 10,
+          "transitions": {
+            "launchS": 0,
+            "rotateS": 0.4041666666666667,
+            "landS": 1.9083333333333332,
+            "supportS": 3.3833333333333333
+          },
+          "nominalPeakCgHeightM": 3.683445139793663,
+          "nominalPeakUpperHeightM": 4.938186640747336,
+          "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+        },
+        "supportSampleCount": 41,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; phase-dependent force/valve/geometry height prediction with explicit reserves; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.818111388338584,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "late-roof-opened",
+      "forwardM": 45,
+      "oldPeak": {
+        "distanceM": 2.7529906091259595,
+        "objectId": "envelope-test-roof",
+        "nearestTimeS": 3.8844000000000003,
+        "blocked": true,
+        "violation": {
+          "distanceM": 2.7529906091259595,
+          "requiredM": 6.18,
+          "marginM": -3.42700939087404,
+          "objectId": "envelope-test-roof",
+          "timeS": 3.8844000000000003
+        },
+        "horizonS": 3.984,
+        "rangeM": 6.49,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9960000000000001,
+        "surfaceVerticalMps": 0,
+        "envelope": null,
+        "supportSampleCount": 0,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; conservative single peak-height envelope; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "newHeadroom": {
+        "distanceM": null,
+        "objectId": null,
+        "nearestTimeS": null,
+        "blocked": false,
+        "violation": null,
+        "horizonS": 3.9839721035889246,
+        "rangeM": 6.482970505608256,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9959930258972312,
+        "surfaceVerticalMps": 0,
+        "envelope": {
+          "model": "phase-envelope-1",
+          "kind": "roll",
+          "active": true,
+          "fallbackReasons": [],
+          "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+          "horizonS": 5,
+          "stepS": 0.004166666666666667,
+          "timeReserveS": 0.28,
+          "heightReserveM": 0.75,
+          "attitudeReserveDeg": 10,
+          "transitions": {
+            "launchS": 0,
+            "rotateS": 0.4041666666666667,
+            "landS": 1.9083333333333332,
+            "supportS": 3.3833333333333333
+          },
+          "nominalPeakCgHeightM": 3.683445139793663,
+          "nominalPeakUpperHeightM": 4.938186640747336,
+          "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+        },
+        "supportSampleCount": 41,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; phase-dependent force/valve/geometry height prediction with explicit reserves; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.818111388338584,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "heading-or-reverse",
+      "speed": 10,
+      "yaw": 1.5707963267948966,
+      "forward": 30,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.818111388338584,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.263049683905865,
+          "actualRollTravelDeg": 360.2028539107705,
+          "externalGasKg": 148.06609132770177,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552094,
+          "finalVerticalSpeedMps": -0.019892081256211586,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "heading-or-reverse",
+      "speed": 10,
+      "yaw": 0.7853981633974483,
+      "forward": 30,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.818111388338584,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.8860681294721626,
+          "actualPitchTravelDeg": 0.26424847014620967,
+          "actualRollTravelDeg": 360.1999597847716,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552096,
+          "finalVerticalSpeedMps": -0.01989208125620639,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "heading-or-reverse",
+      "speed": -10,
+      "yaw": 0,
+      "forward": -30,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8181113883385839,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886070237371857,
+          "actualPitchTravelDeg": -0.2509898315225422,
+          "actualRollTravelDeg": 360.2596215505906,
+          "externalGasKg": 148.06907683280963,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5962355576861692,
+          "finalVerticalSpeedMps": -0.018708736118410018,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "vertical-entry-boundary",
+      "name": "roll",
+      "verticalMps": -0.29,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8321442501159739,
+      "maxEnvelopeExcessM": -0.6973070830041124,
+      "completion": {
+        "timeS": 3.975,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.9750000000000796,
+          "peakCgHeightM": 3.896289268524906,
+          "actualPitchTravelDeg": 0.09984192570646556,
+          "actualRollTravelDeg": 360.19398678357504,
+          "externalGasKg": 149.13448105416919,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.975000000000075,
+          "decisionAtSimTimeS": 5.966666666666741,
+          "finalCgHeightM": 0.5960976995853642,
+          "finalVerticalSpeedMps": -0.018869827448385494,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "vertical-entry-boundary",
+      "name": "roll",
+      "verticalMps": 0.29,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7981376420695272,
+      "maxEnvelopeExcessM": -0.7169532855094376,
+      "completion": {
+        "timeS": 3.9416666666666664,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.9416666666667446,
+          "peakCgHeightM": 3.879398075957363,
+          "actualPitchTravelDeg": 0.5524259861302604,
+          "actualRollTravelDeg": 360.1968582640903,
+          "externalGasKg": 146.87393825245078,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.94166666666674,
+          "decisionAtSimTimeS": 5.933333333333406,
+          "finalCgHeightM": 0.5959717858558367,
+          "finalVerticalSpeedMps": -0.02010214187031383,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "vertical-entry-boundary",
+      "name": "pitch",
+      "verticalMps": -0.29,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8819630829424338,
+      "maxEnvelopeExcessM": -0.6689673435830503,
+      "completion": {
+        "timeS": 4.925,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.925000000000131,
+          "peakCgHeightM": 6.139771217893388,
+          "actualPitchTravelDeg": 361.20778974131485,
+          "actualRollTravelDeg": 0.0004951702312832073,
+          "externalGasKg": 192.59549181737162,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.925000000000127,
+          "decisionAtSimTimeS": 6.916666666666793,
+          "finalCgHeightM": 0.5866394320579782,
+          "finalVerticalSpeedMps": -0.1667503676943862,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "vertical-entry-boundary",
+      "name": "pitch",
+      "verticalMps": 0.29,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.859381674148359,
+      "maxEnvelopeExcessM": -0.6300003256648212,
+      "completion": {
+        "timeS": 4.925,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.925000000000131,
+          "peakCgHeightM": 6.1587319330662655,
+          "actualPitchTravelDeg": 361.2245887485137,
+          "actualRollTravelDeg": 0.0005034391887294222,
+          "externalGasKg": 191.71418613565592,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.925000000000127,
+          "decisionAtSimTimeS": 6.916666666666793,
+          "finalCgHeightM": 0.5868057064809495,
+          "finalVerticalSpeedMps": -0.16027197794620027,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "fallback-finite",
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": false,
+        "fallbackReasons": [
+          "constant-supply-required"
+        ],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate."
+      }
+    },
+    {
+      "id": "fallback-wind",
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": false,
+        "fallbackReasons": [
+          "still-air-required"
+        ],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate."
+      }
+    },
+    {
+      "id": "fallback-nozzle",
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": false,
+        "fallbackReasons": [
+          "healthy-nozzles-required"
+        ],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate."
+      }
+    },
+    {
+      "id": "fallback-tilt",
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": false,
+        "fallbackReasons": [
+          "settled-upright-start-required"
+        ],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate."
+      }
+    },
+    {
+      "id": "fallback-lateral",
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": false,
+        "fallbackReasons": [
+          "straight-driving-envelope-required"
+        ],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate."
+      }
+    },
+    {
+      "id": "fallback-slow-valve",
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": false,
+        "fallbackReasons": [
+          "valve-response-outside-validated-range"
+        ],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate."
+      }
+    },
+    {
+      "id": "fallback-slope",
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": false,
+        "fallbackReasons": [
+          "approximately-level-support-required",
+          "settled-upright-start-required"
+        ],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate."
+      }
+    },
+    {
+      "id": "fallback-changing-support",
+      "headroom": {
+        "distanceM": null,
+        "objectId": null,
+        "nearestTimeS": null,
+        "blocked": false,
+        "violation": null,
+        "horizonS": 3.9839721035889246,
+        "rangeM": 6.482970505608256,
+        "sampleCount": 205,
+        "stationCount": 41,
+        "stationSpacingM": 0.9959930258972312,
+        "surfaceVerticalMps": 0,
+        "envelope": {
+          "model": "phase-envelope-1",
+          "kind": "roll",
+          "active": false,
+          "fallbackReasons": [
+            "support-plane-changes-along-path"
+          ],
+          "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+          "horizonS": 5,
+          "stepS": 0.004166666666666667,
+          "timeReserveS": 0.28,
+          "heightReserveM": 0.75,
+          "attitudeReserveDeg": 10,
+          "transitions": {
+            "launchS": 0,
+            "rotateS": 0.4041666666666667,
+            "landS": 1.9083333333333332,
+            "supportS": 3.3833333333333333
+          },
+          "nominalPeakCgHeightM": 3.683445139793663,
+          "nominalPeakUpperHeightM": 4.938186640747336,
+          "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+        },
+        "supportSampleCount": 17,
+        "estimated": true,
+        "method": "Five heading-aligned upward rays along a constant-horizontal-velocity path and the initial support plane; conservative single peak-height envelope; bounded to five seconds, 1285 upward rays and 257 support probes.",
+        "notCovered": "Continuous swept volume, thin obstacles between samples, horizontal thrust drift, future steering/throttle changes, wind drift or moving obstacles."
+      }
+    },
+    {
+      "id": "pitch-late-roof",
+      "forwardM": 40,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8722799413252867,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 4.916666666666667,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.9166666666667975,
+          "peakCgHeightM": 6.127635890900608,
+          "actualPitchTravelDeg": 361.20981741949754,
+          "actualRollTravelDeg": 0.0004801423888531015,
+          "externalGasKg": 191.8855875947588,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.916666666666793,
+          "decisionAtSimTimeS": 6.908333333333459,
+          "finalCgHeightM": 0.5868068311517584,
+          "finalVerticalSpeedMps": -0.16354772726848413,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "pitch-late-roof",
+      "forwardM": 45,
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8722799413252867,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 4.916666666666667,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.9166666666667975,
+          "peakCgHeightM": 6.127635890900608,
+          "actualPitchTravelDeg": 361.20981741949754,
+          "actualRollTravelDeg": 0.0004801423888531015,
+          "externalGasKg": 191.8855875947588,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.916666666666793,
+          "decisionAtSimTimeS": 6.908333333333459,
+          "finalCgHeightM": 0.5868068311517584,
+          "finalVerticalSpeedMps": -0.16354772726848413,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "collision-fallback",
+      "name": "roll",
+      "height": 0.62,
+      "target": "immediate",
+      "transition": {
+        "before": {
+          "phase": "rotate",
+          "time": 0.24895833333333303
+        },
+        "phase": "land",
+        "time": 0.0010416666666666667,
+        "dt": 0.0010416666666666667
+      },
+      "hullContacts": 22,
+      "phaseAtFirstHull": "rotate",
+      "firstAbort": "起跳 / 旋转中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+      "peakForceFraction": 0.818111388338584,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 3,
+        "feedback": {
+          "name": "roll",
+          "state": "aborted-landed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.000000000000017,
+          "peakCgHeightM": 2.5334290673786217,
+          "actualPitchTravelDeg": 0.7901916761768426,
+          "actualRollTravelDeg": 0.8737974512623345,
+          "externalGasKg": 121.80205267651877,
+          "onboardGasKg": 0,
+          "reason": "起跳 / 旋转中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 5.000000000000012,
+          "decisionAtSimTimeS": 4.998958333333346,
+          "finalCgHeightM": 0.5952989659086032,
+          "finalVerticalSpeedMps": -0.22169703093562546,
+          "aborted": true
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "collision-fallback",
+      "name": "roll",
+      "height": 0.62,
+      "target": "land",
+      "transition": {
+        "before": {
+          "phase": "land",
+          "time": 0.0010416666666666667
+        },
+        "phase": "land",
+        "time": 0.0020833333333333333,
+        "dt": 0.0010416666666666667
+      },
+      "hullContacts": 30,
+      "phaseAtFirstHull": "land",
+      "firstAbort": "着陆中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+      "peakForceFraction": 0.8047915866364971,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 4.233333333333333,
+        "feedback": {
+          "name": "roll",
+          "state": "aborted-landed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.233333333333414,
+          "peakCgHeightM": 3.898742120514353,
+          "actualPitchTravelDeg": 0.10758869578269932,
+          "actualRollTravelDeg": 358.7200495056913,
+          "externalGasKg": 133.60999630441228,
+          "onboardGasKg": 0,
+          "reason": "着陆中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 6.23333333333341,
+          "decisionAtSimTimeS": 6.225000000000076,
+          "finalCgHeightM": 0.6035308335932188,
+          "finalVerticalSpeedMps": -0.07451510795248005,
+          "aborted": true
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "collision-fallback",
+      "name": "roll",
+      "height": 4,
+      "target": "recover",
+      "transition": {
+        "before": {
+          "phase": "recover",
+          "time": 0.0010416666666666667
+        },
+        "phase": "recover",
+        "time": 0.0020833333333333333,
+        "dt": 0.0010416666666666667
+      },
+      "hullContacts": 30,
+      "phaseAtFirstHull": "recover",
+      "firstAbort": "回稳中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+      "peakForceFraction": 0.943562543561028,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 4.016666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "aborted-recovered",
+          "phase": "recover",
+          "startedAtSimTimeS": 0,
+          "elapsedS": 4.016666666666644,
+          "peakCgHeightM": 7.012785289236195,
+          "actualPitchTravelDeg": -1.163113947506199,
+          "actualRollTravelDeg": 361.1913592903525,
+          "externalGasKg": 147.74272139483685,
+          "onboardGasKg": 0,
+          "reason": "回稳中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 4.016666666666644,
+          "decisionAtSimTimeS": 4.008333333333311,
+          "finalCgHeightM": 3.9989826777590523,
+          "finalVerticalSpeedMps": 0.062231152342245716,
+          "aborted": true
+        }
+      },
+      "postMinContacts": 0,
+      "postCommandN": 20983.757890306744
+    },
+    {
+      "id": "collision-fallback",
+      "name": "pitch",
+      "height": 0.62,
+      "target": "land",
+      "transition": {
+        "before": {
+          "phase": "land",
+          "time": 0.0010416666666666667
+        },
+        "phase": "land",
+        "time": 0.0020833333333333333,
+        "dt": 0.0010416666666666667
+      },
+      "hullContacts": 30,
+      "phaseAtFirstHull": "land",
+      "firstAbort": "着陆中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+      "peakForceFraction": 0.8519556278090329,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 5.283333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "aborted-landed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.283333333333456,
+          "peakCgHeightM": 6.130207139491776,
+          "actualPitchTravelDeg": 359.9021176382171,
+          "actualRollTravelDeg": 0.000051462057485617845,
+          "externalGasKg": 179.70548149034389,
+          "onboardGasKg": 0,
+          "reason": "着陆中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 7.283333333333451,
+          "decisionAtSimTimeS": 7.275000000000118,
+          "finalCgHeightM": 0.586124223801743,
+          "finalVerticalSpeedMps": -0.2122580282704056,
+          "aborted": true
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "id": "collision-fallback",
+      "name": "pitch",
+      "height": 4,
+      "target": "recover",
+      "transition": {
+        "before": {
+          "phase": "recover",
+          "time": 0.0010416666666666667
+        },
+        "phase": "recover",
+        "time": 0.0020833333333333333,
+        "dt": 0.0010416666666666667
+      },
+      "hullContacts": 30,
+      "phaseAtFirstHull": "recover",
+      "firstAbort": "回稳中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+      "peakForceFraction": 0.9582361454884151,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 4.191666666666666,
+        "feedback": {
+          "name": "pitch",
+          "state": "aborted-recovered",
+          "phase": "recover",
+          "startedAtSimTimeS": 0,
+          "elapsedS": 4.1916666666666496,
+          "peakCgHeightM": 8.299461359677181,
+          "actualPitchTravelDeg": 360.0234092499282,
+          "actualRollTravelDeg": 0.00012626111836558013,
+          "externalGasKg": 155.88695248340142,
+          "onboardGasKg": 0,
+          "reason": "回稳中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 4.1916666666666496,
+          "decisionAtSimTimeS": 4.183333333333316,
+          "finalCgHeightM": 3.968734116833719,
+          "finalVerticalSpeedMps": 0.1880792963759182,
+          "aborted": true
+        }
+      },
+      "postMinContacts": 0,
+      "postCommandN": 20174.805729330004
+    },
+    {
+      "id": "collision-fallback",
+      "name": "land",
+      "height": 4,
+      "target": "descent",
+      "transition": {
+        "before": {
+          "phase": "descent",
+          "time": 0.008333333333333333
+        },
+        "phase": "descent",
+        "time": 0.009375,
+        "dt": 0.0010416666666666667
+      },
+      "hullContacts": 34,
+      "phaseAtFirstHull": "descent",
+      "firstAbort": "着陆中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+      "peakForceFraction": 0.8693293107717626,
+      "maxEnvelopeExcessM": null,
+      "completion": {
+        "timeS": 2.2666666666666666,
+        "feedback": {
+          "name": "land",
+          "state": "aborted-landed",
+          "phase": "descent",
+          "startedAtSimTimeS": 0,
+          "elapsedS": 2.26666666666666,
+          "peakCgHeightM": 4,
+          "actualPitchTravelDeg": 0.204823578152567,
+          "actualRollTravelDeg": 0.01550554805087958,
+          "externalGasKg": 69.12792396656205,
+          "onboardGasKg": 0,
+          "reason": "着陆中车身碰撞（envelope-test-roof）；完整动作已中止，按实际执行器尝试回稳",
+          "endedAtSimTimeS": 2.26666666666666,
+          "decisionAtSimTimeS": 2.2583333333333266,
+          "finalCgHeightM": 0.5861570583102365,
+          "finalVerticalSpeedMps": -0.211442246723664,
+          "aborted": true
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    }
+  ],
+  "matrix": [
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {},
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4041666666666667,
+          "landS": 1.9083333333333332,
+          "supportS": 3.3833333333333333
+        },
+        "nominalPeakCgHeightM": 3.683445139793663,
+        "nominalPeakUpperHeightM": 4.938186640747336,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8185295967668987,
+      "maxEnvelopeExcessM": -0.7077980443071574,
+      "completion": {
+        "timeS": 3.966666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.966666666666746,
+          "peakCgHeightM": 3.886511678185613,
+          "actualPitchTravelDeg": 0.32985896559109545,
+          "actualRollTravelDeg": 359.9683367075195,
+          "externalGasKg": 148.14490466747836,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.966666666666741,
+          "decisionAtSimTimeS": 5.958333333333408,
+          "finalCgHeightM": 0.596014585161622,
+          "finalVerticalSpeedMps": -0.022922349115294758,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "dryMass": 1700
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.39166666666666666,
+          "landS": 1.8958333333333333,
+          "supportS": 3.345833333333333
+        },
+        "nominalPeakCgHeightM": 3.686379020927952,
+        "nominalPeakUpperHeightM": 4.941180939465715,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7468834282018426,
+      "maxEnvelopeExcessM": -0.708646790698432,
+      "completion": {
+        "timeS": 3.925,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.925000000000078,
+          "peakCgHeightM": 3.8915359785710844,
+          "actualPitchTravelDeg": 0.4510497385669551,
+          "actualRollTravelDeg": 360.06256800683127,
+          "externalGasKg": 130.772839730877,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.9250000000000735,
+          "decisionAtSimTimeS": 5.91666666666674,
+          "finalCgHeightM": 0.6056640390182919,
+          "finalVerticalSpeedMps": -0.002182958086713536,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "dryMass": 2300
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.425,
+          "landS": 1.9291666666666667,
+          "supportS": 3.4291666666666667
+        },
+        "nominalPeakCgHeightM": 3.676104753324608,
+        "nominalPeakUpperHeightM": 4.930424003431279,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8887024339383158,
+      "maxEnvelopeExcessM": -0.6945545479136932,
+      "completion": {
+        "timeS": 4.008333333333333,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.008333333333413,
+          "peakCgHeightM": 3.889058309867946,
+          "actualPitchTravelDeg": 0.0273741970614522,
+          "actualRollTravelDeg": 359.87748223303703,
+          "externalGasKg": 173.02132743834656,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.008333333333408,
+          "decisionAtSimTimeS": 6.000000000000075,
+          "finalCgHeightM": 0.5846773672393336,
+          "finalVerticalSpeedMps": -0.0296994631577817,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "initialPressureBar": 40
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4166666666666667,
+          "landS": 1.9208333333333334,
+          "supportS": 3.345833333333333
+        },
+        "nominalPeakCgHeightM": 3.6767687299368514,
+        "nominalPeakUpperHeightM": 4.930631016859968,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.879007874405249,
+      "maxEnvelopeExcessM": -0.717421770996042,
+      "completion": {
+        "timeS": 3.933333333333333,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.933333333333411,
+          "peakCgHeightM": 3.8728603854663164,
+          "actualPitchTravelDeg": 0.46303565506921357,
+          "actualRollTravelDeg": 360.0022967774759,
+          "externalGasKg": 134.72175033579995,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.933333333333406,
+          "decisionAtSimTimeS": 5.925000000000073,
+          "finalCgHeightM": 0.6045451204158272,
+          "finalVerticalSpeedMps": -0.0035076094614778,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "valveRiseTime": 0.025,
+        "valveFallTime": 0.015
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.2,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.3875,
+          "landS": 1.8916666666666666,
+          "supportS": 3.3333333333333335
+        },
+        "nominalPeakCgHeightM": 3.6443532773591745,
+        "nominalPeakUpperHeightM": 4.894122388508114,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.872726319327691,
+      "maxEnvelopeExcessM": -0.7977301496522573,
+      "completion": {
+        "timeS": 3.7333333333333334,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.733333333333401,
+          "peakCgHeightM": 3.7838342191315344,
+          "actualPitchTravelDeg": 0.6602546527481442,
+          "actualRollTravelDeg": 359.7578770911327,
+          "externalGasKg": 138.01099201060478,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.7333333333333965,
+          "decisionAtSimTimeS": 5.725000000000063,
+          "finalCgHeightM": 0.5967191320117827,
+          "finalVerticalSpeedMps": 0.05306102542820745,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "valveRiseTime": 0.08,
+        "valveFallTime": 0.05
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.42000000000000004,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.42916666666666664,
+          "landS": 1.9333333333333333,
+          "supportS": 3.6166666666666667
+        },
+        "nominalPeakCgHeightM": 3.810757613407222,
+        "nominalPeakUpperHeightM": 5.077377137033522,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7559501277682458,
+      "maxEnvelopeExcessM": -0.44027651966303427,
+      "completion": {
+        "timeS": 4.45,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.450000000000103,
+          "peakCgHeightM": 4.24484676487236,
+          "actualPitchTravelDeg": 0.3040823243051036,
+          "actualRollTravelDeg": 360.2032737311556,
+          "externalGasKg": 166.45333720834142,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.450000000000099,
+          "decisionAtSimTimeS": 6.441666666666765,
+          "finalCgHeightM": 0.6000144472715692,
+          "finalVerticalSpeedMps": -0.05480530392593175,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "gravity": 7
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.43333333333333335,
+          "landS": 1.9375,
+          "supportS": 4.85
+        },
+        "nominalPeakCgHeightM": 4.07066105276677,
+        "nominalPeakUpperHeightM": 5.419438325239641,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.674817423517745,
+      "maxEnvelopeExcessM": -0.3678982476626995,
+      "completion": {
+        "timeS": 5.091666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.091666666666806,
+          "peakCgHeightM": 4.373149534989271,
+          "actualPitchTravelDeg": 0.7113984566101814,
+          "actualRollTravelDeg": 361.5622473314992,
+          "externalGasKg": 142.66063845449762,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 7.091666666666802,
+          "decisionAtSimTimeS": 7.083333333333468,
+          "finalCgHeightM": 0.6149555284484634,
+          "finalVerticalSpeedMps": -0.21483779489556312,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "gravity": 12
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4,
+          "landS": 1.9041666666666666,
+          "supportS": 1.9041666666666666
+        },
+        "nominalPeakCgHeightM": 3.5219966207938396,
+        "nominalPeakUpperHeightM": 4.84488358919217,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8910874317954145,
+      "maxEnvelopeExcessM": -0.7971680508693764,
+      "completion": {
+        "timeS": 2.15,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 2.149999999999981,
+          "peakCgHeightM": 3.6930412292127404,
+          "actualPitchTravelDeg": -0.040795323866252356,
+          "actualRollTravelDeg": 358.54100630012374,
+          "externalGasKg": 75.5520191560462,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 4.149999999999976,
+          "decisionAtSimTimeS": 4.1416666666666435,
+          "finalCgHeightM": 0.60245271645328,
+          "finalVerticalSpeedMps": -0.03259780191647457,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "liftNozzleMax": 24000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.39166666666666666,
+          "landS": 1.8958333333333333,
+          "supportS": 3.4
+        },
+        "nominalPeakCgHeightM": 3.6951827882918007,
+        "nominalPeakUpperHeightM": 4.950504349215999,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7028687410484067,
+      "maxEnvelopeExcessM": -0.7097941096796099,
+      "completion": {
+        "timeS": 3.966666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.966666666666746,
+          "peakCgHeightM": 3.8964584117931462,
+          "actualPitchTravelDeg": 0.34975332099697776,
+          "actualRollTravelDeg": 359.96701559837805,
+          "externalGasKg": 148.28471566684854,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.966666666666741,
+          "decisionAtSimTimeS": 5.958333333333408,
+          "finalCgHeightM": 0.5960364874218335,
+          "finalVerticalSpeedMps": -0.022452872738863087,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": -10,
+      "params": {
+        "liftNozzleMax": 16000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4375,
+          "landS": 1.9416666666666667,
+          "supportS": 3.408333333333333
+        },
+        "nominalPeakCgHeightM": 3.686338205456243,
+        "nominalPeakUpperHeightM": 4.940075703523961,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.9119249681515809,
+      "maxEnvelopeExcessM": -0.7107480355094671,
+      "completion": {
+        "timeS": 3.9833333333333334,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.9833333333334124,
+          "peakCgHeightM": 3.8864576439565948,
+          "actualPitchTravelDeg": 0.3508457753220731,
+          "actualRollTravelDeg": 360.03060182597557,
+          "externalGasKg": 148.86885514643714,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.983333333333408,
+          "decisionAtSimTimeS": 5.975000000000074,
+          "finalCgHeightM": 0.5962973408187247,
+          "finalVerticalSpeedMps": -0.027208042459930394,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {},
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4041666666666667,
+          "landS": 1.9083333333333332,
+          "supportS": 3.3833333333333333
+        },
+        "nominalPeakCgHeightM": 3.683445139793663,
+        "nominalPeakUpperHeightM": 4.938186640747336,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8255443316460939,
+      "maxEnvelopeExcessM": -0.6946962496720648,
+      "completion": {
+        "timeS": 3.9416666666666664,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.941666666666749,
+          "peakCgHeightM": 3.8984303284597464,
+          "actualPitchTravelDeg": -0.28319986981071565,
+          "actualRollTravelDeg": 360.57412846709815,
+          "externalGasKg": 148.39903059595676,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.941666666666745,
+          "decisionAtSimTimeS": 5.933333333333411,
+          "finalCgHeightM": 0.5887891208135818,
+          "finalVerticalSpeedMps": 0.06730489872586522,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "dryMass": 1700
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.39166666666666666,
+          "landS": 1.8958333333333333,
+          "supportS": 3.345833333333333
+        },
+        "nominalPeakCgHeightM": 3.686379020927952,
+        "nominalPeakUpperHeightM": 4.941180939465715,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7515815973915755,
+      "maxEnvelopeExcessM": -0.695823189993864,
+      "completion": {
+        "timeS": 3.908333333333333,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.908333333333416,
+          "peakCgHeightM": 3.903039447332003,
+          "actualPitchTravelDeg": 0.015642174734810298,
+          "actualRollTravelDeg": 360.8674597588055,
+          "externalGasKg": 131.0588185269882,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.908333333333411,
+          "decisionAtSimTimeS": 5.900000000000078,
+          "finalCgHeightM": 0.5952567801683172,
+          "finalVerticalSpeedMps": 0.03931635913578432,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "dryMass": 2300
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.425,
+          "landS": 1.9291666666666667,
+          "supportS": 3.4291666666666667
+        },
+        "nominalPeakCgHeightM": 3.676104753324608,
+        "nominalPeakUpperHeightM": 4.930424003431279,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8888997910975386,
+      "maxEnvelopeExcessM": -0.6836197861371804,
+      "completion": {
+        "timeS": 4,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.000000000000087,
+          "peakCgHeightM": 3.8990261944593776,
+          "actualPitchTravelDeg": -0.4482003195725394,
+          "actualRollTravelDeg": 360.16659005379705,
+          "externalGasKg": 173.34075742898636,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.000000000000083,
+          "decisionAtSimTimeS": 5.991666666666749,
+          "finalCgHeightM": 0.5799418753706507,
+          "finalVerticalSpeedMps": -0.0076071352282944425,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "initialPressureBar": 40
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4166666666666667,
+          "landS": 1.9208333333333334,
+          "supportS": 3.345833333333333
+        },
+        "nominalPeakCgHeightM": 3.6767687299368514,
+        "nominalPeakUpperHeightM": 4.930631016859968,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.88182587480242,
+      "maxEnvelopeExcessM": -0.7041275152685147,
+      "completion": {
+        "timeS": 3.908333333333333,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.908333333333416,
+          "peakCgHeightM": 3.8848269841613026,
+          "actualPitchTravelDeg": 0.00027044229664868746,
+          "actualRollTravelDeg": 360.8293851745029,
+          "externalGasKg": 134.95967356101684,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.908333333333411,
+          "decisionAtSimTimeS": 5.900000000000078,
+          "finalCgHeightM": 0.5947199236671622,
+          "finalVerticalSpeedMps": 0.05369127387801102,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "valveRiseTime": 0.025,
+        "valveFallTime": 0.015
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.2,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.3875,
+          "landS": 1.8916666666666666,
+          "supportS": 3.3333333333333335
+        },
+        "nominalPeakCgHeightM": 3.6443532773591745,
+        "nominalPeakUpperHeightM": 4.894122388508114,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8797431843652874,
+      "maxEnvelopeExcessM": -0.8264895482630292,
+      "completion": {
+        "timeS": 3.6,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.6000000000000663,
+          "peakCgHeightM": 3.754949829141581,
+          "actualPitchTravelDeg": -0.1760222692801271,
+          "actualRollTravelDeg": 360.5543549177447,
+          "externalGasKg": 136.34138053619654,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.600000000000062,
+          "decisionAtSimTimeS": 5.591666666666728,
+          "finalCgHeightM": 0.5880462409513142,
+          "finalVerticalSpeedMps": 0.0707378006507858,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "valveRiseTime": 0.08,
+        "valveFallTime": 0.05
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.42000000000000004,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.42916666666666664,
+          "landS": 1.9333333333333333,
+          "supportS": 3.6166666666666667
+        },
+        "nominalPeakCgHeightM": 3.810757613407222,
+        "nominalPeakUpperHeightM": 5.077377137033522,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7594254015004357,
+      "maxEnvelopeExcessM": -0.4264092757439366,
+      "completion": {
+        "timeS": 4.433333333333334,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.433333333333441,
+          "peakCgHeightM": 4.2580180036433,
+          "actualPitchTravelDeg": -0.3591682821647394,
+          "actualRollTravelDeg": 360.8121509343048,
+          "externalGasKg": 166.39773898403908,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.433333333333437,
+          "decisionAtSimTimeS": 6.425000000000103,
+          "finalCgHeightM": 0.5923404266674198,
+          "finalVerticalSpeedMps": 0.020550424406306462,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "gravity": 7
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.43333333333333335,
+          "landS": 1.9375,
+          "supportS": 4.85
+        },
+        "nominalPeakCgHeightM": 4.07066105276677,
+        "nominalPeakUpperHeightM": 5.419438325239641,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.6765711871121265,
+      "maxEnvelopeExcessM": -0.3450576612676697,
+      "completion": {
+        "timeS": 5.1,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.100000000000143,
+          "peakCgHeightM": 4.386745651449094,
+          "actualPitchTravelDeg": -0.3043167106492281,
+          "actualRollTravelDeg": 361.5134066366161,
+          "externalGasKg": 142.89981359575657,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 7.100000000000138,
+          "decisionAtSimTimeS": 7.0916666666668045,
+          "finalCgHeightM": 0.6149244386079893,
+          "finalVerticalSpeedMps": -0.21719245566338446,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "gravity": 12
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4,
+          "landS": 1.9041666666666666,
+          "supportS": 1.9041666666666666
+        },
+        "nominalPeakCgHeightM": 3.5219966207938396,
+        "nominalPeakUpperHeightM": 4.84488358919217,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8905737684564105,
+      "maxEnvelopeExcessM": -0.788187483739998,
+      "completion": {
+        "timeS": 2.1083333333333334,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 2.10833333333332,
+          "peakCgHeightM": 3.702992810086864,
+          "actualPitchTravelDeg": -0.23892934604275698,
+          "actualRollTravelDeg": 359.3876899432346,
+          "externalGasKg": 75.72803871972818,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 4.108333333333316,
+          "decisionAtSimTimeS": 4.099999999999982,
+          "finalCgHeightM": 0.602723959289876,
+          "finalVerticalSpeedMps": -0.08989677008814309,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "liftNozzleMax": 24000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.39166666666666666,
+          "landS": 1.8958333333333333,
+          "supportS": 3.4
+        },
+        "nominalPeakCgHeightM": 3.6951827882918007,
+        "nominalPeakUpperHeightM": 4.950504349215999,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7087897415034689,
+      "maxEnvelopeExcessM": -0.6965428977575705,
+      "completion": {
+        "timeS": 3.9416666666666664,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.941666666666749,
+          "peakCgHeightM": 3.908511849666944,
+          "actualPitchTravelDeg": -0.2815890523503024,
+          "actualRollTravelDeg": 360.59276403621413,
+          "externalGasKg": 148.53989328682204,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.941666666666745,
+          "decisionAtSimTimeS": 5.933333333333411,
+          "finalCgHeightM": 0.5884517827515482,
+          "finalVerticalSpeedMps": 0.06593969126141448,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 0,
+      "params": {
+        "liftNozzleMax": 16000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4375,
+          "landS": 1.9416666666666667,
+          "supportS": 3.408333333333333
+        },
+        "nominalPeakCgHeightM": 3.686338205456243,
+        "nominalPeakUpperHeightM": 4.940075703523961,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.9120838751538297,
+      "maxEnvelopeExcessM": -0.6989768634647486,
+      "completion": {
+        "timeS": 3.966666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.9666666666667485,
+          "peakCgHeightM": 3.8971103313453748,
+          "actualPitchTravelDeg": -0.18876489590077497,
+          "actualRollTravelDeg": 360.5441576613183,
+          "externalGasKg": 149.1313770903417,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.966666666666744,
+          "decisionAtSimTimeS": 5.95833333333341,
+          "finalCgHeightM": 0.5891630671742792,
+          "finalVerticalSpeedMps": 0.06988562785668337,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {},
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4041666666666667,
+          "landS": 1.9083333333333332,
+          "supportS": 3.3833333333333333
+        },
+        "nominalPeakCgHeightM": 3.683445139793663,
+        "nominalPeakUpperHeightM": 4.938186640747336,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.818111388338584,
+      "maxEnvelopeExcessM": -0.7083724751028502,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.886068129472161,
+          "actualPitchTravelDeg": 0.26463126324744496,
+          "actualRollTravelDeg": 360.19706565877175,
+          "externalGasKg": 148.06609132770174,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960420793552098,
+          "finalVerticalSpeedMps": -0.019892081256205608,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "dryMass": 1700
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.39166666666666666,
+          "landS": 1.8958333333333333,
+          "supportS": 3.345833333333333
+        },
+        "nominalPeakCgHeightM": 3.686379020927952,
+        "nominalPeakUpperHeightM": 4.941180939465715,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7465378804754497,
+      "maxEnvelopeExcessM": -0.7092022330361294,
+      "completion": {
+        "timeS": 3.925,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.925000000000077,
+          "peakCgHeightM": 3.8911076041698167,
+          "actualPitchTravelDeg": 0.4278237495488213,
+          "actualRollTravelDeg": 360.26912207597945,
+          "externalGasKg": 130.76505135023245,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.925000000000073,
+          "decisionAtSimTimeS": 5.916666666666739,
+          "finalCgHeightM": 0.6057024505343022,
+          "finalVerticalSpeedMps": 0.0032584516982083443,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "dryMass": 2300
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.425,
+          "landS": 1.9291666666666667,
+          "supportS": 3.4291666666666667
+        },
+        "nominalPeakCgHeightM": 3.676104753324608,
+        "nominalPeakUpperHeightM": 4.930424003431279,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8881690394814019,
+      "maxEnvelopeExcessM": -0.6951665303288737,
+      "completion": {
+        "timeS": 4.05,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.0500000000000815,
+          "peakCgHeightM": 3.8885812532456607,
+          "actualPitchTravelDeg": 0.1297283039357853,
+          "actualRollTravelDeg": 359.8071347413929,
+          "externalGasKg": 172.94720336572593,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.050000000000077,
+          "decisionAtSimTimeS": 6.041666666666743,
+          "finalCgHeightM": 0.5851926645096955,
+          "finalVerticalSpeedMps": 0.04560463176238122,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "initialPressureBar": 40
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4166666666666667,
+          "landS": 1.9208333333333334,
+          "supportS": 3.345833333333333
+        },
+        "nominalPeakCgHeightM": 3.6767687299368514,
+        "nominalPeakUpperHeightM": 4.930631016859968,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8785355150698381,
+      "maxEnvelopeExcessM": -0.7181169057312005,
+      "completion": {
+        "timeS": 3.925,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.925000000000077,
+          "peakCgHeightM": 3.8723162805320954,
+          "actualPitchTravelDeg": 0.406042579342828,
+          "actualRollTravelDeg": 360.2702999715467,
+          "externalGasKg": 134.65802536226022,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.925000000000073,
+          "decisionAtSimTimeS": 5.916666666666739,
+          "finalCgHeightM": 0.604518025323343,
+          "finalVerticalSpeedMps": 0.00035299448479528576,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "valveRiseTime": 0.025,
+        "valveFallTime": 0.015
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.2,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.3875,
+          "landS": 1.8916666666666666,
+          "supportS": 3.3333333333333335
+        },
+        "nominalPeakCgHeightM": 3.6443532773591745,
+        "nominalPeakUpperHeightM": 4.894122388508114,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8723038137559049,
+      "maxEnvelopeExcessM": -0.7981130886037047,
+      "completion": {
+        "timeS": 3.6416666666666666,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.6416666666667297,
+          "peakCgHeightM": 3.783559287770718,
+          "actualPitchTravelDeg": 0.32639229787759627,
+          "actualRollTravelDeg": 360.25010154757405,
+          "externalGasKg": 137.62100816380595,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.641666666666725,
+          "decisionAtSimTimeS": 5.6333333333333915,
+          "finalCgHeightM": 0.5956868382925122,
+          "finalVerticalSpeedMps": -0.01867442622420702,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "valveRiseTime": 0.08,
+        "valveFallTime": 0.05
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.42000000000000004,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.42916666666666664,
+          "landS": 1.9333333333333333,
+          "supportS": 3.6166666666666667
+        },
+        "nominalPeakCgHeightM": 3.810757613407222,
+        "nominalPeakUpperHeightM": 5.077377137033522,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7555954382534134,
+      "maxEnvelopeExcessM": -0.4411513579786819,
+      "completion": {
+        "timeS": 4.441666666666666,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.4416666666667695,
+          "peakCgHeightM": 4.244081216220109,
+          "actualPitchTravelDeg": 0.27005757729396884,
+          "actualRollTravelDeg": 360.4777519347439,
+          "externalGasKg": 166.0522484646681,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.441666666666765,
+          "decisionAtSimTimeS": 6.433333333333431,
+          "finalCgHeightM": 0.5995625524679674,
+          "finalVerticalSpeedMps": -0.041406934386273464,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "gravity": 7
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.43333333333333335,
+          "landS": 1.9375,
+          "supportS": 4.85
+        },
+        "nominalPeakCgHeightM": 4.07066105276677,
+        "nominalPeakUpperHeightM": 5.419438325239641,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.674532731938445,
+      "maxEnvelopeExcessM": -0.36860537517810954,
+      "completion": {
+        "timeS": 5.091666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.091666666666806,
+          "peakCgHeightM": 4.372798294122699,
+          "actualPitchTravelDeg": 0.7229557930719932,
+          "actualRollTravelDeg": 361.51111503095126,
+          "externalGasKg": 142.65745383558377,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 7.091666666666802,
+          "decisionAtSimTimeS": 7.083333333333468,
+          "finalCgHeightM": 0.6149537521706033,
+          "finalVerticalSpeedMps": -0.21661801882425474,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "gravity": 12
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4,
+          "landS": 1.9041666666666666,
+          "supportS": 1.9041666666666666
+        },
+        "nominalPeakCgHeightM": 3.5219966207938396,
+        "nominalPeakUpperHeightM": 4.84488358919217,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.890572361419991,
+      "maxEnvelopeExcessM": -0.7977345191062346,
+      "completion": {
+        "timeS": 2.1083333333333334,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 2.1083333333333174,
+          "peakCgHeightM": 3.692525128667122,
+          "actualPitchTravelDeg": 0.04184020257662801,
+          "actualRollTravelDeg": 358.7209205042767,
+          "externalGasKg": 75.47323617890113,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 4.108333333333313,
+          "decisionAtSimTimeS": 4.099999999999979,
+          "finalCgHeightM": 0.6030365495261638,
+          "finalVerticalSpeedMps": -0.08140038134503359,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "liftNozzleMax": 24000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.39166666666666666,
+          "landS": 1.8958333333333333,
+          "supportS": 3.4
+        },
+        "nominalPeakCgHeightM": 3.6951827882918007,
+        "nominalPeakUpperHeightM": 4.950504349215999,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7025365192042863,
+      "maxEnvelopeExcessM": -0.7102543858132968,
+      "completion": {
+        "timeS": 3.9583333333333335,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.958333333333412,
+          "peakCgHeightM": 3.896113790238421,
+          "actualPitchTravelDeg": 0.28498480749695226,
+          "actualRollTravelDeg": 360.1950270541789,
+          "externalGasKg": 148.2063629470219,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.958333333333408,
+          "decisionAtSimTimeS": 5.950000000000074,
+          "finalCgHeightM": 0.5960310452845424,
+          "finalVerticalSpeedMps": -0.019836493978020713,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 10,
+      "params": {
+        "liftNozzleMax": 16000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4375,
+          "landS": 1.9416666666666667,
+          "supportS": 3.408333333333333
+        },
+        "nominalPeakCgHeightM": 3.686338205456243,
+        "nominalPeakUpperHeightM": 4.940075703523961,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.9114312404332001,
+      "maxEnvelopeExcessM": -0.7114670022268204,
+      "completion": {
+        "timeS": 3.975,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.9750000000000787,
+          "peakCgHeightM": 3.8858823552166184,
+          "actualPitchTravelDeg": 0.30520676012757714,
+          "actualRollTravelDeg": 360.1965384410757,
+          "externalGasKg": 148.48245213205766,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.975000000000074,
+          "decisionAtSimTimeS": 5.9666666666667405,
+          "finalCgHeightM": 0.5960599566095812,
+          "finalVerticalSpeedMps": -0.0185371497939894,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {},
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4041666666666667,
+          "landS": 1.9083333333333332,
+          "supportS": 3.3833333333333333
+        },
+        "nominalPeakCgHeightM": 3.683445139793663,
+        "nominalPeakUpperHeightM": 4.938186640747336,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8168714844384249,
+      "maxEnvelopeExcessM": -0.7380578173360002,
+      "completion": {
+        "timeS": 3.8,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.8000000000000727,
+          "peakCgHeightM": 3.86181523816324,
+          "actualPitchTravelDeg": 0.437532777323719,
+          "actualRollTravelDeg": 360.8266916613415,
+          "externalGasKg": 146.45380260148295,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.800000000000068,
+          "decisionAtSimTimeS": 5.791666666666735,
+          "finalCgHeightM": 0.5957829773093359,
+          "finalVerticalSpeedMps": -0.12491194773384103,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "dryMass": 1700
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.39166666666666666,
+          "landS": 1.8958333333333333,
+          "supportS": 3.345833333333333
+        },
+        "nominalPeakCgHeightM": 3.686379020927952,
+        "nominalPeakUpperHeightM": 4.941180939465715,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7456358720581637,
+      "maxEnvelopeExcessM": -0.742459082974487,
+      "completion": {
+        "timeS": 3.7666666666666666,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.7666666666667385,
+          "peakCgHeightM": 3.864031552451493,
+          "actualPitchTravelDeg": 0.6754558523920136,
+          "actualRollTravelDeg": 361.0976178110957,
+          "externalGasKg": 129.12734883635162,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.766666666666734,
+          "decisionAtSimTimeS": 5.758333333333401,
+          "finalCgHeightM": 0.601794690670698,
+          "finalVerticalSpeedMps": -0.15126093008475194,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "dryMass": 2300
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.425,
+          "landS": 1.9291666666666667,
+          "supportS": 3.4291666666666667
+        },
+        "nominalPeakCgHeightM": 3.676104753324608,
+        "nominalPeakUpperHeightM": 4.930424003431279,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8865149297310976,
+      "maxEnvelopeExcessM": -0.7210728021849047,
+      "completion": {
+        "timeS": 3.975,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.975000000000078,
+          "peakCgHeightM": 3.867287575410508,
+          "actualPitchTravelDeg": 0.014038764435925721,
+          "actualRollTravelDeg": 360.00685309519,
+          "externalGasKg": 171.18217018568268,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.975000000000073,
+          "decisionAtSimTimeS": 5.96666666666674,
+          "finalCgHeightM": 0.5811704508595554,
+          "finalVerticalSpeedMps": 0.024093619382162444,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "initialPressureBar": 40
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4166666666666667,
+          "landS": 1.9208333333333334,
+          "supportS": 3.345833333333333
+        },
+        "nominalPeakCgHeightM": 3.6767687299368514,
+        "nominalPeakUpperHeightM": 4.930631016859968,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8775694320864024,
+      "maxEnvelopeExcessM": -0.7509994080483002,
+      "completion": {
+        "timeS": 3.7666666666666666,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.7666666666667385,
+          "peakCgHeightM": 3.8455014145830377,
+          "actualPitchTravelDeg": 0.6369055702859461,
+          "actualRollTravelDeg": 361.0762721912865,
+          "externalGasKg": 132.9692451672656,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.766666666666734,
+          "decisionAtSimTimeS": 5.759375000000068,
+          "finalCgHeightM": 0.6009822714999157,
+          "finalVerticalSpeedMps": -0.13716282283205103,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "valveRiseTime": 0.025,
+        "valveFallTime": 0.015
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.2,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.3875,
+          "landS": 1.8916666666666666,
+          "supportS": 3.3333333333333335
+        },
+        "nominalPeakCgHeightM": 3.6443532773591745,
+        "nominalPeakUpperHeightM": 4.894122388508114,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8708110914943463,
+      "maxEnvelopeExcessM": -0.827210795490255,
+      "completion": {
+        "timeS": 3.591666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.591666666666727,
+          "peakCgHeightM": 3.76039515257044,
+          "actualPitchTravelDeg": 0.3401135529755642,
+          "actualRollTravelDeg": 360.04252064430426,
+          "externalGasKg": 135.75235139432024,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.591666666666723,
+          "decisionAtSimTimeS": 5.583333333333389,
+          "finalCgHeightM": 0.5932113650746347,
+          "finalVerticalSpeedMps": 0.020604940674015745,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "valveRiseTime": 0.08,
+        "valveFallTime": 0.05
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.42000000000000004,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.42916666666666664,
+          "landS": 1.9333333333333333,
+          "supportS": 3.6166666666666667
+        },
+        "nominalPeakCgHeightM": 3.810757613407222,
+        "nominalPeakUpperHeightM": 5.077377137033522,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7546665002457408,
+      "maxEnvelopeExcessM": -0.4736008140298651,
+      "completion": {
+        "timeS": 4.266666666666667,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.266666666666763,
+          "peakCgHeightM": 4.215979275206264,
+          "actualPitchTravelDeg": 0.5219183932117778,
+          "actualRollTravelDeg": 361.35383673742484,
+          "externalGasKg": 164.5909533726489,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.266666666666759,
+          "decisionAtSimTimeS": 6.260416666666759,
+          "finalCgHeightM": 0.6027679525487505,
+          "finalVerticalSpeedMps": -0.18368938700827098,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "gravity": 7
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.43333333333333335,
+          "landS": 1.9375,
+          "supportS": 4.85
+        },
+        "nominalPeakCgHeightM": 4.07066105276677,
+        "nominalPeakUpperHeightM": 5.419438325239641,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.6739155491160832,
+      "maxEnvelopeExcessM": -0.4298654405596771,
+      "completion": {
+        "timeS": 5.058333333333334,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.058333333333471,
+          "peakCgHeightM": 4.340961327292081,
+          "actualPitchTravelDeg": 0.8409334068408271,
+          "actualRollTravelDeg": 360.8342176257452,
+          "externalGasKg": 141.97427493297357,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 7.058333333333467,
+          "decisionAtSimTimeS": 7.050000000000133,
+          "finalCgHeightM": 0.6148660268804075,
+          "finalVerticalSpeedMps": -0.22231204912474367,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "gravity": 12
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4,
+          "landS": 1.9041666666666666,
+          "supportS": 1.9041666666666666
+        },
+        "nominalPeakCgHeightM": 3.5219966207938396,
+        "nominalPeakUpperHeightM": 4.84488358919217,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8891319206226217,
+      "maxEnvelopeExcessM": -0.8154225158252171,
+      "completion": {
+        "timeS": 2.1416666666666666,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 2.1416666666666524,
+          "peakCgHeightM": 3.6710885528520594,
+          "actualPitchTravelDeg": 0.4789944601217362,
+          "actualRollTravelDeg": 359.7855695838043,
+          "externalGasKg": 75.13449585104384,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 4.141666666666648,
+          "decisionAtSimTimeS": 4.133333333333314,
+          "finalCgHeightM": 0.5977779987066932,
+          "finalVerticalSpeedMps": -0.16617618099333625,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "liftNozzleMax": 24000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.39166666666666666,
+          "landS": 1.8958333333333333,
+          "supportS": 3.4
+        },
+        "nominalPeakCgHeightM": 3.6951827882918007,
+        "nominalPeakUpperHeightM": 4.950504349215999,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7014396708781806,
+      "maxEnvelopeExcessM": -0.7397857437588966,
+      "completion": {
+        "timeS": 3.8,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.8000000000000727,
+          "peakCgHeightM": 3.8719693506936603,
+          "actualPitchTravelDeg": 0.4567386911839935,
+          "actualRollTravelDeg": 360.82649200932264,
+          "externalGasKg": 146.5914096081888,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.800000000000068,
+          "decisionAtSimTimeS": 5.791666666666735,
+          "finalCgHeightM": 0.5957741299862215,
+          "finalVerticalSpeedMps": -0.1255988385738907,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "roll",
+      "speed": 30,
+      "params": {
+        "liftNozzleMax": 16000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "roll",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.4375,
+          "landS": 1.9416666666666667,
+          "supportS": 3.408333333333333
+        },
+        "nominalPeakCgHeightM": 3.686338205456243,
+        "nominalPeakUpperHeightM": 4.940075703523961,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.910515203087389,
+      "maxEnvelopeExcessM": -0.7414152456509377,
+      "completion": {
+        "timeS": 3.8166666666666664,
+        "feedback": {
+          "name": "roll",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 3.8166666666667393,
+          "peakCgHeightM": 3.8614025858323964,
+          "actualPitchTravelDeg": 0.4666447256447104,
+          "actualRollTravelDeg": 360.8334927189356,
+          "externalGasKg": 146.87773422455965,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 5.816666666666735,
+          "decisionAtSimTimeS": 5.808333333333402,
+          "finalCgHeightM": 0.5957070301348536,
+          "finalVerticalSpeedMps": -0.12879190972348567,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {},
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6166666666666667,
+          "landS": 2.4208333333333334
+        },
+        "nominalPeakCgHeightM": 5.951531998379757,
+        "nominalPeakUpperHeightM": 7.924647447645915,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8727106240201865,
+      "maxEnvelopeExcessM": -0.6854151790799294,
+      "completion": {
+        "timeS": 4.908333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.908333333333464,
+          "peakCgHeightM": 6.120258092601581,
+          "actualPitchTravelDeg": 361.33313300144744,
+          "actualRollTravelDeg": 0.00045562152892366693,
+          "externalGasKg": 191.57117369908235,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.908333333333459,
+          "decisionAtSimTimeS": 6.900000000000126,
+          "finalCgHeightM": 0.5874348172279946,
+          "finalVerticalSpeedMps": -0.125563972828985,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "dryMass": 1700
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6,
+          "landS": 2.404166666666667,
+          "supportS": 4.991666666666666
+        },
+        "nominalPeakCgHeightM": 5.948704288372178,
+        "nominalPeakUpperHeightM": 7.921854598120028,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8177407185424546,
+      "maxEnvelopeExcessM": -0.6601789271384515,
+      "completion": {
+        "timeS": 4.85,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.850000000000128,
+          "peakCgHeightM": 6.138689599806979,
+          "actualPitchTravelDeg": 361.31817989085573,
+          "actualRollTravelDeg": 0.0008444279114969658,
+          "externalGasKg": 169.2050262947967,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.850000000000124,
+          "decisionAtSimTimeS": 6.84166666666679,
+          "finalCgHeightM": 0.599666268332669,
+          "finalVerticalSpeedMps": -0.2128791928657788,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "dryMass": 2300
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "initialPressureBar": 40
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "valveRiseTime": 0.025,
+        "valveFallTime": 0.015
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.2,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5958333333333333,
+          "landS": 2.4
+        },
+        "nominalPeakCgHeightM": 5.927105937436811,
+        "nominalPeakUpperHeightM": 7.900869154372117,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.9123433538143628,
+      "maxEnvelopeExcessM": -0.7026896454797971,
+      "completion": {
+        "timeS": 4.808333333333334,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.808333333333456,
+          "peakCgHeightM": 6.031649729093071,
+          "actualPitchTravelDeg": 360.9191193863519,
+          "actualRollTravelDeg": -0.00009824435793490658,
+          "externalGasKg": 186.03908198454218,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.808333333333452,
+          "decisionAtSimTimeS": 6.800000000000118,
+          "finalCgHeightM": 0.5936679909768885,
+          "finalVerticalSpeedMps": 0.14059983098560475,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "valveRiseTime": 0.08,
+        "valveFallTime": 0.05
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.42000000000000004,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6375,
+          "landS": 2.4416666666666664
+        },
+        "nominalPeakCgHeightM": 6.02336046971809,
+        "nominalPeakUpperHeightM": 8.00022764231177,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8148899452390879,
+      "maxEnvelopeExcessM": -0.2568330116705404,
+      "completion": {
+        "timeS": 5.35,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.350000000000152,
+          "peakCgHeightM": 6.502144991860228,
+          "actualPitchTravelDeg": 361.3157554563335,
+          "actualRollTravelDeg": 0.0037544986650903307,
+          "externalGasKg": 206.3521639775966,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 7.350000000000148,
+          "decisionAtSimTimeS": 7.341666666666814,
+          "finalCgHeightM": 0.5910805748242127,
+          "finalVerticalSpeedMps": -0.18595279832047315,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "gravity": 7
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6791666666666667,
+          "landS": 2.4833333333333334
+        },
+        "nominalPeakCgHeightM": 6.50657049679675,
+        "nominalPeakUpperHeightM": 8.6740390783695,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7539819014849153,
+      "maxEnvelopeExcessM": -0.50193807671039,
+      "completion": {
+        "timeS": 6.233333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 6.233333333333504,
+          "peakCgHeightM": 6.760928996267796,
+          "actualPitchTravelDeg": 361.25394078891065,
+          "actualRollTravelDeg": 0.00006568431411463941,
+          "externalGasKg": 177.68610950926947,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 8.2333333333335,
+          "decisionAtSimTimeS": 8.225000000000167,
+          "finalCgHeightM": 0.6150002107103638,
+          "finalVerticalSpeedMps": -0.2178025558219985,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "gravity": 12
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5916666666666667,
+          "landS": 2.3958333333333335,
+          "supportS": 2.470833333333333
+        },
+        "nominalPeakCgHeightM": 5.708033825223306,
+        "nominalPeakUpperHeightM": 7.737505508662071,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.9164025107115187,
+      "maxEnvelopeExcessM": -0.6550181583994688,
+      "completion": {
+        "timeS": 2.808333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 2.808333333333347,
+          "peakCgHeightM": 5.884292759675253,
+          "actualPitchTravelDeg": 361.3365021310147,
+          "actualRollTravelDeg": -0.00007188292146026629,
+          "externalGasKg": 103.62182814338779,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 4.8083333333333425,
+          "decisionAtSimTimeS": 4.800000000000009,
+          "finalCgHeightM": 0.5914520242121817,
+          "finalVerticalSpeedMps": -0.06195176913803728,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "liftNozzleMax": 24000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5958333333333333,
+          "landS": 2.4
+        },
+        "nominalPeakCgHeightM": 5.946965915677483,
+        "nominalPeakUpperHeightM": 7.920186996945224,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7814417327093895,
+      "maxEnvelopeExcessM": -0.6463231435023911,
+      "completion": {
+        "timeS": 4.916666666666667,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.9166666666667975,
+          "peakCgHeightM": 6.154990040820083,
+          "actualPitchTravelDeg": 361.3417268654905,
+          "actualRollTravelDeg": 0.0004553644025613715,
+          "externalGasKg": 192.03662412998676,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.916666666666793,
+          "decisionAtSimTimeS": 6.908333333333459,
+          "finalCgHeightM": 0.5875828336309553,
+          "finalVerticalSpeedMps": -0.12092301377022797,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": -10,
+      "params": {
+        "liftNozzleMax": 16000
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {},
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6166666666666667,
+          "landS": 2.4208333333333334
+        },
+        "nominalPeakCgHeightM": 5.951531998379757,
+        "nominalPeakUpperHeightM": 7.924647447645915,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8724202103047181,
+      "maxEnvelopeExcessM": -0.6694467765963985,
+      "completion": {
+        "timeS": 4.908333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.9083333333334656,
+          "peakCgHeightM": 6.138326300449333,
+          "actualPitchTravelDeg": 361.4470308510076,
+          "actualRollTravelDeg": 0.000402370135186889,
+          "externalGasKg": 191.89604147093618,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.908333333333461,
+          "decisionAtSimTimeS": 6.900000000000127,
+          "finalCgHeightM": 0.5889913867048862,
+          "finalVerticalSpeedMps": -0.16014335128284274,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "dryMass": 1700
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6,
+          "landS": 2.404166666666667,
+          "supportS": 4.991666666666666
+        },
+        "nominalPeakCgHeightM": 5.948704288372178,
+        "nominalPeakUpperHeightM": 7.921854598120028,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8213134732227827,
+      "maxEnvelopeExcessM": -0.6455401717973812,
+      "completion": {
+        "timeS": 4.866666666666666,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.866666666666797,
+          "peakCgHeightM": 6.1587677894531465,
+          "actualPitchTravelDeg": 361.43527956122387,
+          "actualRollTravelDeg": 0.00047420694009993124,
+          "externalGasKg": 169.77489992508734,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.866666666666792,
+          "decisionAtSimTimeS": 6.858333333333459,
+          "finalCgHeightM": 0.599738401065097,
+          "finalVerticalSpeedMps": -0.20941081761235705,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "dryMass": 2300
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "initialPressureBar": 40
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "valveRiseTime": 0.025,
+        "valveFallTime": 0.015
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.2,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5958333333333333,
+          "landS": 2.4
+        },
+        "nominalPeakCgHeightM": 5.927105937436811,
+        "nominalPeakUpperHeightM": 7.900869154372117,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.9122752911411628,
+      "maxEnvelopeExcessM": -0.6894179272835634,
+      "completion": {
+        "timeS": 4.816666666666666,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.816666666666794,
+          "peakCgHeightM": 6.049476829112769,
+          "actualPitchTravelDeg": 360.9698665769179,
+          "actualRollTravelDeg": -0.00010177680505085575,
+          "externalGasKg": 186.35364097725562,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.81666666666679,
+          "decisionAtSimTimeS": 6.808333333333456,
+          "finalCgHeightM": 0.596334977574705,
+          "finalVerticalSpeedMps": 0.13511042544832624,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "valveRiseTime": 0.08,
+        "valveFallTime": 0.05
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.42000000000000004,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6375,
+          "landS": 2.4416666666666664
+        },
+        "nominalPeakCgHeightM": 6.02336046971809,
+        "nominalPeakUpperHeightM": 8.00022764231177,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8140360409208768,
+      "maxEnvelopeExcessM": -0.22960125357971606,
+      "completion": {
+        "timeS": 5.358333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.358333333333488,
+          "peakCgHeightM": 6.525283474310065,
+          "actualPitchTravelDeg": 361.48876829245296,
+          "actualRollTravelDeg": 0.0020154556731127693,
+          "externalGasKg": 206.68879086675153,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 7.3583333333334835,
+          "decisionAtSimTimeS": 7.35000000000015,
+          "finalCgHeightM": 0.5916632932608478,
+          "finalVerticalSpeedMps": -0.14292329154945582,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "gravity": 7
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6791666666666667,
+          "landS": 2.4833333333333334
+        },
+        "nominalPeakCgHeightM": 6.50657049679675,
+        "nominalPeakUpperHeightM": 8.6740390783695,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7592747390460071,
+      "maxEnvelopeExcessM": -0.4777276729523283,
+      "completion": {
+        "timeS": 6.241666666666666,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 6.241666666666839,
+          "peakCgHeightM": 6.78448257159021,
+          "actualPitchTravelDeg": 361.16689324356037,
+          "actualRollTravelDeg": -0.000068678773165543,
+          "externalGasKg": 177.93456932351623,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 8.241666666666834,
+          "decisionAtSimTimeS": 8.233333333333501,
+          "finalCgHeightM": 0.6149686502078426,
+          "finalVerticalSpeedMps": -0.21849231294382054,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "gravity": 12
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5916666666666667,
+          "landS": 2.3958333333333335,
+          "supportS": 2.470833333333333
+        },
+        "nominalPeakCgHeightM": 5.708033825223306,
+        "nominalPeakUpperHeightM": 7.737505508662071,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.9162265555276726,
+      "maxEnvelopeExcessM": -0.6415079204702483,
+      "completion": {
+        "timeS": 2.75,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 2.7500000000000133,
+          "peakCgHeightM": 5.901098740916212,
+          "actualPitchTravelDeg": 361.5193373534719,
+          "actualRollTravelDeg": -0.00007429336565461202,
+          "externalGasKg": 103.43650499933982,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 4.750000000000009,
+          "decisionAtSimTimeS": 4.741666666666675,
+          "finalCgHeightM": 0.5982139584574434,
+          "finalVerticalSpeedMps": -0.06970787153427858,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "liftNozzleMax": 24000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5958333333333333,
+          "landS": 2.4
+        },
+        "nominalPeakCgHeightM": 5.946965915677483,
+        "nominalPeakUpperHeightM": 7.920186996945224,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7860437996224703,
+      "maxEnvelopeExcessM": -0.6695478526611716,
+      "completion": {
+        "timeS": 4.891666666666667,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.891666666666798,
+          "peakCgHeightM": 6.133653915167548,
+          "actualPitchTravelDeg": 361.4489702766289,
+          "actualRollTravelDeg": 0.00039863953738579125,
+          "externalGasKg": 191.4109694819376,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.891666666666794,
+          "decisionAtSimTimeS": 6.88333333333346,
+          "finalCgHeightM": 0.5890425469669512,
+          "finalVerticalSpeedMps": -0.15844557685810123,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 0,
+      "params": {
+        "liftNozzleMax": 16000
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {},
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6166666666666667,
+          "landS": 2.4208333333333334
+        },
+        "nominalPeakCgHeightM": 5.951531998379757,
+        "nominalPeakUpperHeightM": 7.924647447645915,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8722799413252867,
+      "maxEnvelopeExcessM": -0.6809867745219158,
+      "completion": {
+        "timeS": 4.916666666666667,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.9166666666667975,
+          "peakCgHeightM": 6.127635890900608,
+          "actualPitchTravelDeg": 361.20981741949754,
+          "actualRollTravelDeg": 0.0004801423888531015,
+          "externalGasKg": 191.8855875947588,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.916666666666793,
+          "decisionAtSimTimeS": 6.908333333333459,
+          "finalCgHeightM": 0.5868068311517584,
+          "finalVerticalSpeedMps": -0.16354772726848413,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "dryMass": 1700
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6,
+          "landS": 2.404166666666667,
+          "supportS": 4.991666666666666
+        },
+        "nominalPeakCgHeightM": 5.948704288372178,
+        "nominalPeakUpperHeightM": 7.921854598120028,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8173840791354795,
+      "maxEnvelopeExcessM": -0.6550820885284967,
+      "completion": {
+        "timeS": 4.858333333333333,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.858333333333462,
+          "peakCgHeightM": 6.147168130559597,
+          "actualPitchTravelDeg": 361.1691044531338,
+          "actualRollTravelDeg": 0.0006034508072504479,
+          "externalGasKg": 169.48516158506496,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.858333333333458,
+          "decisionAtSimTimeS": 6.850000000000124,
+          "finalCgHeightM": 0.5997147257467724,
+          "finalVerticalSpeedMps": -0.2113658034615168,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "dryMass": 2300
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "initialPressureBar": 40
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "valveRiseTime": 0.025,
+        "valveFallTime": 0.015
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.2,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5958333333333333,
+          "landS": 2.4
+        },
+        "nominalPeakCgHeightM": 5.927105937436811,
+        "nominalPeakUpperHeightM": 7.900869154372117,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.9119396966599156,
+      "maxEnvelopeExcessM": -0.6979364962216108,
+      "completion": {
+        "timeS": 4.816666666666666,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.8166666666667926,
+          "peakCgHeightM": 6.0393074290599085,
+          "actualPitchTravelDeg": 360.8581242116513,
+          "actualRollTravelDeg": -0.00007045145263092965,
+          "externalGasKg": 186.07334783789167,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.816666666666788,
+          "decisionAtSimTimeS": 6.808333333333454,
+          "finalCgHeightM": 0.5916828973677207,
+          "finalVerticalSpeedMps": 0.12402390652956977,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "valveRiseTime": 0.08,
+        "valveFallTime": 0.05
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.42000000000000004,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6375,
+          "landS": 2.4416666666666664
+        },
+        "nominalPeakCgHeightM": 6.02336046971809,
+        "nominalPeakUpperHeightM": 8.00022764231177,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.8145426126919304,
+      "maxEnvelopeExcessM": -0.24750073129062145,
+      "completion": {
+        "timeS": 5.35,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 5.350000000000152,
+          "peakCgHeightM": 6.5091456798601595,
+          "actualPitchTravelDeg": 361.13057968729754,
+          "actualRollTravelDeg": 0.004365507487812022,
+          "externalGasKg": 206.3533284291537,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 7.350000000000148,
+          "decisionAtSimTimeS": 7.341666666666814,
+          "finalCgHeightM": 0.5906670057105513,
+          "finalVerticalSpeedMps": -0.21331224892252165,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "gravity": 7
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.6791666666666667,
+          "landS": 2.4833333333333334
+        },
+        "nominalPeakCgHeightM": 6.50657049679675,
+        "nominalPeakUpperHeightM": 8.6740390783695,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.7536951116028799,
+      "maxEnvelopeExcessM": -0.4901566323876416,
+      "completion": {
+        "timeS": 6.241666666666666,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 6.241666666666837,
+          "peakCgHeightM": 6.7722021390843965,
+          "actualPitchTravelDeg": 361.1142315055778,
+          "actualRollTravelDeg": -0.00019330990734024115,
+          "externalGasKg": 177.8970119171607,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 8.241666666666832,
+          "decisionAtSimTimeS": 8.2333333333335,
+          "finalCgHeightM": 0.6150389162071598,
+          "finalVerticalSpeedMps": -0.215236004870339,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "gravity": 12
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5916666666666667,
+          "landS": 2.3958333333333335,
+          "supportS": 2.470833333333333
+        },
+        "nominalPeakCgHeightM": 5.708033825223306,
+        "nominalPeakUpperHeightM": 7.737505508662071,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.915948828746276,
+      "maxEnvelopeExcessM": -0.6509527636190313,
+      "completion": {
+        "timeS": 2.8583333333333334,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 2.8583333333333494,
+          "peakCgHeightM": 5.8905391847584125,
+          "actualPitchTravelDeg": 361.15702308922533,
+          "actualRollTravelDeg": -0.00006930906162189792,
+          "externalGasKg": 104.22247175549381,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 4.858333333333345,
+          "decisionAtSimTimeS": 4.850000000000011,
+          "finalCgHeightM": 0.587675894238053,
+          "finalVerticalSpeedMps": -0.025248639901364927,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "liftNozzleMax": 24000
+      },
+      "accepted": true,
+      "envelope": {
+        "model": "phase-envelope-1",
+        "kind": "pitch",
+        "active": true,
+        "fallbackReasons": [],
+        "scope": "Nominal 1D force/valve prediction plus measured engineering reserves; not a mathematical upper bound or collision certificate.",
+        "horizonS": 5,
+        "stepS": 0.004166666666666667,
+        "timeReserveS": 0.28,
+        "heightReserveM": 0.75,
+        "attitudeReserveDeg": 10,
+        "transitions": {
+          "launchS": 0,
+          "rotateS": 0.5958333333333333,
+          "landS": 2.4
+        },
+        "nominalPeakCgHeightM": 5.946965915677483,
+        "nominalPeakUpperHeightM": 7.920186996945224,
+        "omitted": "Full thrust allocation/tracking, horizontal force drift, wind, variable gas mass/pressure, changing support planes and future pilot changes."
+      },
+      "hullContacts": 0,
+      "phaseAtFirstHull": null,
+      "firstAbort": null,
+      "peakForceFraction": 0.781107954372703,
+      "maxEnvelopeExcessM": -0.6417739516737253,
+      "completion": {
+        "timeS": 4.916666666666667,
+        "feedback": {
+          "name": "pitch",
+          "state": "completed",
+          "phase": "land",
+          "startedAtSimTimeS": 1.9999999999999953,
+          "elapsedS": 4.9166666666667975,
+          "peakCgHeightM": 6.162530201465484,
+          "actualPitchTravelDeg": 361.20541648559134,
+          "actualRollTravelDeg": 0.000490333765495687,
+          "externalGasKg": 192.03346516710155,
+          "onboardGasKg": 0,
+          "reason": "wheel-supported-landing",
+          "endedAtSimTimeS": 6.916666666666793,
+          "decisionAtSimTimeS": 6.908333333333459,
+          "finalCgHeightM": 0.5866167442757657,
+          "finalVerticalSpeedMps": -0.16768227779426326,
+          "aborted": false
+        }
+      },
+      "postMinContacts": 4,
+      "postCommandN": 0
+    },
+    {
+      "name": "pitch",
+      "speed": 10,
+      "params": {
+        "liftNozzleMax": 16000
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：双向俯仰力矩 / 阀门跟踪余量不足"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {},
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "dryMass": 1700
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "dryMass": 2300
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "initialPressureBar": 40
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "valveRiseTime": 0.025,
+        "valveFallTime": 0.015
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "valveRiseTime": 0.08,
+        "valveFallTime": 0.05
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "gravity": 7
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "gravity": 12
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "liftNozzleMax": 24000
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    },
+    {
+      "name": "pitch",
+      "speed": 30,
+      "params": {
+        "liftNozzleMax": 16000
+      },
+      "accepted": false,
+      "reason": "受控后翻预检：当前水平速度超过已验证的 18 m/s 起始范围"
+    }
+  ],
+  "sourceHashes": {
+    "dist/maneuver-envelope.js": "e8012ac329319e7d7f8b25b7c0baa88c84b918c91c293b6d8068b540808ee3a9",
+    "dist/maneuver-clearance.js": "1a4418be0b22ca7901eae65bd4524fa5573758aea110158ac77b9266db9613cb",
+    "dist/physics-kernel-319.js": "da8ec10551fbcde94bbeaaf6ba8b8b946e409d4de0d3f1fc010c8f5f5f1108b4",
+    "dist/pitch-maneuver.js": "c45096baa6f40188e0509576579aaaeaa8fcc861c101efd75dafafd8458ec565"
+  },
+  "worstEnvelopeCase": {
+    "name": "pitch",
+    "speed": 0,
+    "params": {
+      "valveRiseTime": 0.08,
+      "valveFallTime": 0.05
+    },
+    "maxEnvelopeExcessM": -0.22960125357971606
+  },
+  "archived323ReportSha256": "1619c604310abb1de5efb77253ff7faaa3383702c959bdbf8456af71c00d0592",
+  "scope": "Actual force/contact integration and physical collider AABBs are observed at every contact microstep. Height reserves are empirically checked on 61 accepted cases, not proven for every point in a continuous parameter space. The independent vertical prediction is a nominal estimate. Constant-velocity rays still omit horizontal thrust drift and future commands. Finite supply, significant wind, slope, faults and unsettled entries retain the older conservative peak-height fallback. No GPU/native-keyboard claim."
+}

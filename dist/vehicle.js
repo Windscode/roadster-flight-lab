@@ -84,7 +84,7 @@ export const VEHICLE_GEOMETRY = Object.freeze({
   suspensionMinimum:.24,suspensionMaximum:.41,maxSteer:.49,
   archCentreY:-.22,archLongRadius:.452,archVerticalRadius:.435,
   linerInnerX:.54,linerOuterX:1.040,
-  model:'v13 / 3.18: rising waist, long canopy-to-quarter transition, broad angular nose cheeks and deep rising rockers; open rear installation retained; independent reconstruction, not OEM CAD',
+  model:'v14 / 3.24: continuous wrapped rear quarters and recessed installation surround; retained rising waist, long canopy, wheel and propulsion hard points; independent reconstruction, not OEM CAD',
   surfaceConstruction:'Shape-preserving longitudinal stations; broad radiused transverse blends with retained shut lines; no per-vertex wheel-arch uplift; analytic derivative normals',
   referenceRig:VEHICLE_INSPECTION_RIG.id
 });
@@ -155,6 +155,16 @@ const sidePanelY=(u,top,base)=>{
 export const sampleVehicleSurface=(x,z)=>({bodyY:bodySurfaceY(x,z),outerX:widthAt(z),archY:archCrown(z),linerInnerX:VEHICLE_GEOMETRY.linerInnerX,bonnetHalfWidth:bonnetHalfWidthAt(z),section:bodySection(z),topSkinEdgeX:bodyOuterXAt(z),topSkinEdgeY:fenderEdgeY(z)});
 
 export const sampleVehicleSide=(z,y)=>({x:sideSurfaceX(z,y),shoulderReturn:SHOULDER_RETURN,edgeX:bodyOuterXAt(z),edgeY:fenderEdgeY(z)});
+
+// A swept quarter-panel surface joins the existing side skin at z=-2.30.
+// Its recessed installation opening retains the experimental hardware; these
+// section widths and return depths are authored, not Tesla measurements.
+export function sampleVehicleRearCorner(side,u,v){
+  const sweep=Math.sin(u*PI/2),inner=.752-.035*smoothstep(.40,1,v),
+    y=lerp(fenderEdgeY(-2.30),lerp(-.365,-.315,sweep),v),
+    x=side*lerp(inner,sideSurfaceX(-2.30,y),sweep),depth=.055+.020*Math.sin(v*PI);
+  return[x,y,-2.30-depth*Math.cos(u*PI/2)];
+}
 
 const canopyKeys=[[-1.78,.346],[-1.57,.443],[-1.40,.524],[-1.15,.601],[-.85,.642],[-.58,.658],[-.22,.660],[.04,.624],[.29,.524],[.80,.280]];
 const canopyW=[[-1.78,.789],[-1.57,.775],[-1.12,.677],[-.65,.650],[-.02,.650],[.27,.678],[.55,.782],[.80,.885]];
@@ -1160,22 +1170,34 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
   const rearMountApertures=Array.from({length:4},(_,j)=>Array.from({length:24},(_,k)=>{const a=k*TAU/24;return[(j-1.5)*.32+.113*Math.cos(a),-.035+.113*Math.sin(a)];}));
   const fanMountApertures=Array.from({length:4},(_,j)=>Array.from({length:20},(_,k)=>{const a=k*TAU/20;return[(j-1.5)*.32+.103*Math.cos(a),-.256+.103*Math.sin(a)];}));
   cutSurfaceOpenings(rearValance,[...rearMountApertures,...fanMountApertures],{axes:[0,1],role:'rear-port-and-extraction-duct'});
-  // A folded carbon surround gives the open installation a continuous mouth
-  // and an actual recessed wall. The official outlets remain exposed at their
-  // existing centres; neither an opaque cover nor emissive paint fakes depth.
-  const rearMouth=[[-.766,-.402],[-.824,-.336],[-.824,-.012],[-.726,.126],[.726,.126],[.824,-.012],[.824,-.336],[.766,-.402],[-.766,-.402]];
-  for(let edge=0;edge<rearMouth.length-1;edge++)grid(underbody,mats.carbon,(u,v)=>{
-    const a=rearMouth[edge],b=rearMouth[edge+1],x=lerp(a[0],b[0],v),y=lerp(a[1],b[1],v),inset=.018*Math.sin(u*PI/2);
-    const centreY=-.138,dy=y-centreY,length=Math.hypot(x,dy);
+  // Replace the sharp hanging perimeter with a rounded recessed mouth. The
+  // existing four outlets and extraction ducts remain open experimental
+  // equipment, not a claim about a measured production installation.
+  const rearMouth=new THREE.Shape();rearMouth.moveTo(-.650,.130);rearMouth.lineTo(.650,.130);
+  rearMouth.quadraticCurveTo(.734,.130,.734,.046);rearMouth.lineTo(.734,-.290);
+  rearMouth.quadraticCurveTo(.734,-.386,.638,-.386);rearMouth.lineTo(-.638,-.386);
+  rearMouth.quadraticCurveTo(-.734,-.386,-.734,-.290);rearMouth.lineTo(-.734,.046);
+  rearMouth.quadraticCurveTo(-.734,.130,-.650,.130);
+  grid(underbody,mats.carbon,(u,v)=>{
+    const {x,y}=rearMouth.getPointAt(v),inset=.020*Math.sin(u*PI/2),dy=y+.138,length=Math.hypot(x,dy);
     return[x-x/length*inset,y-dy/length*inset,lerp(-2.345,rearValanceZ(x,y)+.005,u)];
-  },2,3,false,'folded rear installation perimeter return',true);
-  // Official rear imagery has a dark lower valance underneath the red
-  // optical strip. Painted corner returns, rather than a white full-width
-  // apron, preserve the floating deck and the width of the exposed diffuser.
-  for(const side of [-1,1])grid(shell,mats.paint,(u,v)=>{
-    const x=side*lerp(.790+.018*v,.940,u),edge=Math.abs(x)/.940,y=lerp(.261,-.056-.045*u,v),z=-2.322+.037*edge**4+.006*Math.sin(v*PI);
-    return[x,y,z];
-  },12,14,side<0,'sculpted rear painted corner return');
+  },2,44,false,'folded rear installation perimeter return',true);
+  // The rear quarter now wraps from the existing side panel into the back
+  // face, with a top closure and rolled inner edge instead of a thin short
+  // painted tab above a rectangular equipment rack. All ports stay clear.
+  for(const side of [-1,1]){
+    grid(shell,mats.paint,(u,v)=>sampleVehicleRearCorner(side,u,v),8,12,side<0,'sculpted rear painted corner return',true);
+    grid(shell,mats.paint,(u,v)=>{
+      const p=sampleVehicleRearCorner(side,v,0);return[p[0],lerp(p[1],bodySurfaceY(p[0],-2.30),u),lerp(p[2],-2.30,u)];
+    },2,8,side>0,'rear quarter upper skin closure',true);
+    grid(shell,mats.paint,(u,v)=>{
+      const p=sampleVehicleRearCorner(side,0,v);return[p[0]-side*.026*Math.sin(u*PI/2),p[1],p[2]+.045*(1-Math.cos(u*PI/2))];
+    },2,12,side>0,'rolled rear quarter cavity edge',true);
+    grid(underbody,mats.carbon,(u,v)=>{
+      const p=sampleVehicleRearCorner(side,v,1),x=side*lerp(.700,.848,Math.sin(v*PI/2));
+      return[lerp(p[0],x,u),lerp(p[1],-.420,u),lerp(p[2],-2.340,u)];
+    },2,8,side<0,'rear quarter lower diffuser closure',true);
+  }
   grid(shell,mats.black,(u,v)=>{const x=lerp(-.911,.911,u),edge=(Math.abs(x)/.911)**4;return[x,.264+lerp(-.016,.017,v),-2.321+.018*edge];},48,3,false,'recessed rear optical channel');
   grid(shell,mats.tailLight,(u,v)=>{const x=lerp(-.897,.897,u),edge=(Math.abs(x)/.897)**4;return[x,.264+lerp(-.008,.008,v),-2.324+.018*edge];},48,3,false,'full width rear light');
   curve(shell,[[-.884,.281,-2.306],[0,.284,-2.318],[.884,.281,-2.306]],.004,mats.paint,'rear trailing lip');

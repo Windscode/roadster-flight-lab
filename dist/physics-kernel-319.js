@@ -4,6 +4,7 @@ import {exportSimulationState,importSimulationState} from './simulation-snapshot
 import {solveStaticWrench,staticWrenchFeasible} from './trim-feasibility.js';
 import {sampleVehicleClearance} from './vehicle-clearance.js';
 import {sampleManeuverHeadroom} from './maneuver-clearance.js';
+import {createManeuverEnvelope,maneuverLaunchForce,landingDescentSpeed} from './maneuver-envelope.js';
 import {resetSafetyJournal,noteSafetyInput,rememberValidStep,preserveFailure,getFailureReport,contactDiagnostics,motionDiagnostics,maneuverDiagnostics,noteManeuverAction,noteManeuverEnd} from './simulation-safety.js';
 import {DEFAULT_OBSERVATION,observationConfiguration,measureControlState,controllerBody} from './control-observation.js';
 import {integrateWheel,regularizedSlip,lateralTireForce} from './tire-dynamics.js';
@@ -475,7 +476,7 @@ export class RoadsterSim {
   }
 
   _startManeuver(name) {
-    if(name==='pitch')return startPitchManeuver(this);
+    if(name==='pitch')return startPitchManeuver(this,DEFAULT_PARAMS);
     if(name==='cancel') {
       const wasSurface=this._maneuver?.name==='ramp'||this._contactCount>1;
       this._maneuver=null;this.setMode(wasSurface?'drive':'hover');
@@ -527,8 +528,9 @@ export class RoadsterSim {
       const launchImpulse=b.mass*(Math.max(0,launchVelocity-b.velocity.y)+p.gravity*launchTime);
       const rotationImpulse=2*b.inertia.z*profile.rateRadS/.59;
       const arrestSpeed=Math.max(0,-estimatedVy),arrestTime=arrestSpeed/netAccel+4*p.valveRiseTime+.15;
-      const overhead=sampleManeuverHeadroom(this,{rangeM:peakRise+1.5,horizonS:launchTime+duration+arrestTime+1.5});
-      if(overhead.distanceM!==null&&overhead.distanceM<peakRise+1.2){this.status='滚转预检：保守净空估计认为快翻旋转 / 制动包络或预计滑行路径上方净空不足';return false;}
+      const envelope=createManeuverEnvelope(this,{name:'roll',originGrounded:grounded,profile,launchVelocity,launchAccelerationMps2:netAccel,minimumRotationClearanceM},DEFAULT_PARAMS);
+      const overhead=sampleManeuverHeadroom(this,{rangeM:peakRise+1.5,requiredM:peakRise+1.2,horizonS:launchTime+duration+arrestTime+1.5,envelope});
+      if(overhead.blocked){this.status='滚转预检：'+(overhead.envelope.active?'分阶段净空估计':'保守净空估计')+'认为快翻旋转 / 制动包络或预计滑行路径上方净空不足';return false;}
       const arrestImpulse=b.mass*(arrestSpeed+p.gravity*arrestTime),reserveImpulse=b.mass*p.gravity*1.5;
       const requiredImpulse=1.16*(launchImpulse+rotationImpulse+arrestImpulse+reserveImpulse),availableImpulse=this._hoverBudget().impulseNs;
       if(p.supplyMode==='finite'&&availableImpulse<requiredImpulse){this.status=`滚转预检：剩余冲量不足：可用 ${(availableImpulse/1000).toFixed(1)} kN·s，快翻 / 回稳预算 ${(requiredImpulse/1000).toFixed(1)} kN·s`;return false;}
@@ -1094,7 +1096,7 @@ export class RoadsterSim {
       if(a.name==='land'||a.phase==='land') {
         const surface=this.traceSurface(b.position,{x:0,y:-1,z:0},220),surfaceY=surface?b.position.y-surface.distance:0;
         const supportNormal=surface?.normal&&surface.normal.y>.7?V(surface.normal.x,surface.normal.y,surface.normal.z):Y.clone();
-        const supportHeight=.60/supportNormal.y,clearance=Math.max(0,b.position.y-surfaceY-supportHeight),descent=-Math.max(.30,Math.min(7,Math.sqrt(2*1.5*Math.max(0,clearance-.40))));
+        const supportHeight=.60/supportNormal.y,clearance=Math.max(0,b.position.y-surfaceY-supportHeight),descent=landingDescentSpeed(clearance);
         // Follow the sampled support plane under horizontal travel. A fixed
         // world-Y descent can chase a downhill surface forever without landing.
         const surfaceVerticalMps=-(supportNormal.x*b.velocity.x+supportNormal.z*b.velocity.z)/supportNormal.y;
@@ -1132,7 +1134,7 @@ export class RoadsterSim {
           // A migrated historical mid-maneuver retains its stored comfort cap;
           // it is explicit current-model recomputation, never old-solver replay.
           const launchLimit=a.launchAccelerationMps2??Infinity;
-          const thrust=Math.min(4*p.liftNozzleMax,m*(p.gravity+clamp((a.launchVelocity-b.velocity.y)*8,0,launchLimit)));
+          const thrust=maneuverLaunchForce(m,p.gravity,b.velocity.y,a.launchVelocity,launchLimit,4*p.liftNozzleMax);
           return[0,thrust,0,...this._attitudeTorque(launchTarget,p.attitudeResponse)];
         } else if(a.phase==='rotate') {
           rollRunning=true;

@@ -12,7 +12,13 @@ export function displayRecipe(order){
 export function buildStreetDisplay(put,{x=0,width=4.6,height=2.7,sill=.38,recipe='books',variant=0,door=false,trim=0x405457}){
   const doorW=door?Math.min(1.10,width*.29):0,doorSide=variant%2?-1:1,
     displayW=width-(door?doorW+.12:0),centre=x-(door?doorSide*(doorW+.12)*.5:0),top=sill+height;
-  const place=(kind,size,dx,y,out,tint=0xffffff)=>put(kind,size,centre+dx,y,out,tint);
+  const light={position:[centre,top-.075,-.17],span:[displayW*.29,0,0],cool:recipe==='workshop'};
+  const emit=(kind,size,along,y,out,tint)=>put(kind,size,along,y,out,tint,1,'box',-1,[0,0,0],kind==='shopGlass'?null:light);
+  const place=(kind,size,dx,y,out,tint=0xffffff)=>emit(kind,size,centre+dx,y,out,tint);
+  // A small downward shelf bar is attached to the existing top panel. Its
+  // three-sample local diffuse term reaches only this closed display's pieces.
+  // The clear pane has no added emission and the street receives no new light.
+  put('lamp',[displayW*.78,.025,.065],centre,top-.058,-.17,recipe==='workshop'?0xd4e6ef:0xffe0b7);
   place('displayBack',[displayW,height,.035],0,sill+height*.5,-.59,recipe==='workshop'?0x344646:0x777b6d);
   for(const side of [-1,1])place('displayBack',[.055,height,.53],side*(displayW/2-.027),sill+height*.5,-.31,0x344846);
   place('displayWood',[displayW,.075,.52],0,sill+.035,-.31,0x7f694b);
@@ -57,12 +63,12 @@ export function buildStreetDisplay(put,{x=0,width=4.6,height=2.7,sill=.38,recipe
   if(displayW>3.5)place('displayFrame',[.045,height,.075],displayW*.12,sill+height*.5,-.03,trim);
   if(door){
     const dx=x+doorSide*(width-doorW)/2,dh=Math.min(2.28,top-.10);
-    put('displayBack',[doorW,dh,.04],dx,dh/2+.14,-.47,0x2d4648);
-    for(const end of [-1,1])put('displayFrame',[.065,dh,.43],dx+end*(doorW/2+.02),dh/2+.14,-.235,trim);
-    put('displayFrame',[doorW+.14,.085,.44],dx,dh+.18,-.23,trim);
-    put('displayFrame',[doorW-.09,.055,.07],dx,1.22,-.395,trim);
-    put('displayGoods',[.035,.28,.06],dx-doorSide*(doorW*.32),1.06,-.365,0xc1bba6);
-    put('displayWood',[doorW+.05,.045,.46],dx,.145,-.24,0x8c9283);
+    emit('displayBack',[doorW,dh,.04],dx,dh/2+.14,-.47,0x2d4648);
+    for(const end of [-1,1])emit('displayFrame',[.065,dh,.43],dx+end*(doorW/2+.02),dh/2+.14,-.235,trim);
+    emit('displayFrame',[doorW+.14,.085,.44],dx,dh+.18,-.23,trim);
+    emit('displayFrame',[doorW-.09,.055,.07],dx,1.22,-.395,trim);
+    emit('displayGoods',[.035,.28,.06],dx-doorSide*(doorW*.32),1.06,-.365,0xc1bba6);
+    emit('displayWood',[doorW+.05,.045,.46],dx,.145,-.24,0x8c9283);
   }
-  return {recipe,door,widthM:width,depthM:.62,glassDepthM:.055,handleHeightM:door?1.06:null};
+  return {recipe,door,widthM:width,depthM:.62,glassDepthM:.055,handleHeightM:door?1.06:null,light};
 }

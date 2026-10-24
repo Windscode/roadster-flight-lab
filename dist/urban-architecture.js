@@ -8,6 +8,7 @@
  * buildUrbanArchitecture(THREE, root, buildings) -> {group,stats,lightAnchors,dispose}
  * Building: {id,x,z,w,d,height,style,accent,seed,tier,hero,baseY?}.
  */
+import {attachShowcaseLighting,installShowcaseLighting} from './showcase-lighting.js';
 import {buildingMassing,buildingStoreys} from './city-data.js';
 import {buildingExtras,CITY_STREETS} from './city-plan.js';
 import {architectureDetailLevel,createCityVisibility} from './city-render-budget.js';
@@ -49,7 +50,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   const group=new THREE.Group();group.name='Urban architecture / street-facing civic, residential and working facades';root.add(group);
   const lightAnchors=[],batches=new Map(),geometries=[],materials=[],textures=[],visibility=createCityVisibility(THREE),surfaces=createCityExteriorMaterials(THREE);
   const stats={buildings:0,heroBuildings:0,shopfronts:0,recessedWindows:0,balconies:0,mechanicalUnits:0,
-    instances:0,drawBatches:0,triangles:0,textureCount:0,sectorSizeM:160,sectorCount:0,lightAnchors:0,massingTiers:0,setbackTerraces:0,structuralBraces:0,rotatedTowers:0,industrialHalls:0,sawtoothRoofs:0,civicBuildings:0,entrancePortals:0,continuousPlinths:0,shutterPanels:0,curatedWeaveFrontages:0,routeFacingFrontages:0,facadePortals:0,backlitWindowPanels:0,serviceBays:0,interiorAtlases:0,surfaces:surfaces.stats,renderBudget:visibility.stats};
+    instances:0,drawBatches:0,triangles:0,textureCount:0,showcaseReceivers:0,showcaseAttributeBytes:0,sectorSizeM:160,sectorCount:0,lightAnchors:0,massingTiers:0,setbackTerraces:0,structuralBraces:0,rotatedTowers:0,industrialHalls:0,sawtoothRoofs:0,civicBuildings:0,entrancePortals:0,continuousPlinths:0,shutterPanels:0,curatedWeaveFrontages:0,routeFacingFrontages:0,facadePortals:0,backlitWindowPanels:0,serviceBays:0,interiorAtlases:0,surfaces:surfaces.stats,renderBudget:visibility.stats};
   const transform=new THREE.Object3D(),colourCache=new Map(),white=new THREE.Color(0xffffff);
   const unitBox=new THREE.BoxGeometry(1,1,1),unitPlane=new THREE.PlaneGeometry(1,1),
     unitCylinder=new THREE.CylinderGeometry(.5,.5,1,12),unitCircle=new THREE.CircleGeometry(.5,16);
@@ -156,6 +157,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   };
   mat.accent.customProgramCacheKey=()=> 'urban-practical-instance-colour-v1';
   for(const [key,kind]of Object.entries({concrete:'concrete',darkConcrete:'concrete',ceramic:'enamel',metal:'metal',edges:'frame',glass:'glass',shutter:'shutter'}))surfaces.attach(mat[key],kind);
+  for(const key of ['concrete','darkConcrete','ceramic','edges'])attachShowcaseLighting(mat[key]);
   // One atlas material per sector, with per-instance UV rects, rather than one
   // draw call for every sign or one material for every illuminated window.
   for(const m of [mat.signs])if(m.map){
@@ -175,7 +177,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
   const palette=URBAN_MATERIAL_PALETTE;
   const accentColours=[0x78c4bd,0xd3a074,0xb7b597,0xb08e9d];
   let sector='',mergeDowntownConcrete=false;
-  function add(kind,geometry,size,position,rotation=[0,0,0],tint=white,variation=1,tile=-1,levelOverride=null){
+  function add(kind,geometry,size,position,rotation=[0,0,0],tint=white,variation=1,tile=-1,levelOverride=null,showcaseLight=null){
     if(size.some(n=>!Number.isFinite(n)||n<=0))return;
     // Group practical housings and brackets with the 160 m facade sectors.
     // Thin frames retain 80 m cells. Small circular vent plates share 320 m
@@ -194,7 +196,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     const key=cell+'|'+kind+'|'+geometry+'|'+level;
     let batch=batches.get(key);if(!batch){batch={sector:cell,kind,geometry,level,instances:[]};batches.set(key,batch);}
     transform.position.set(...position);transform.rotation.set(...rotation,'YXZ');transform.scale.set(...size);transform.updateMatrix();
-    const c=colour(tint);batch.instances.push({matrix:transform.matrix.toArray(),colour:[c.r*variation,c.g*variation,c.b*variation],tile,glazing});stats.instances++;
+    const c=colour(tint);batch.instances.push({matrix:transform.matrix.toArray(),colour:[c.r*variation,c.g*variation,c.b*variation],tile,glazing,showcaseLight});stats.instances++;if(showcaseLight)stats.showcaseReceivers++;
   }
   const box=(kind,size,p,r,c,v,t)=>add(kind,'box',size,p,r,c,v,t);
   function atlasRect(tile){const i=((tile%16)+16)%16,margin=3/1024;return[(i%4)/4+margin,1-(Math.floor(i/4)+1)/4+margin,.25-2*margin,.25-2*margin];}
@@ -216,14 +218,15 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     function face(localYaw,w,d){
       const yaw=localYaw+frame.yaw,c=Math.cos(yaw),s=Math.sin(yaw),span=Math.abs(Math.cos(localYaw))>.5?w:d,depth=(Math.abs(Math.cos(localYaw))>.5?d:w)/2-.50;
       const point=(along,y,out)=>[b.x+frame.x+c*along+s*(depth+out),b.baseY+y,b.z+frame.z-s*along+c*(depth+out)];
-      const put=(kind,size,along,y,out,tint=p.wall,variance=1,geometry='box',tile=-1,rotation=[0,0,0])=>{
+      const put=(kind,size,along,y,out,tint=p.wall,variance=1,geometry='box',tile=-1,rotation=[0,0,0],showcaseLight=null)=>{
+        const displayLight=showcaseLight?{position:point(...showcaseLight.position),span:[c*showcaseLight.span[0],0,-s*showcaseLight.span[0]],cool:showcaseLight.cool}:null;
         // Sealed opaque glazing sits in a solid wall recess. Only the outward
         // surface can be seen; its five hidden box faces used to consume
         // geometry in every view. Keep the exact front plane, outward normal,
         // metre UVs and surrounding three-dimensional reveals.
         if(geometry==='box'&&['glass','litGlass','displayGlass','shopGlass'].includes(kind))
           return add(kind,'plane',[size[0],size[1],1],point(along,y,out+size[2]/2),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile,kind==='glass'?architectureDetailLevel(kind,'box',size):'facade');
-        return add(kind,geometry,size,point(along,y,out),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile);
+        return add(kind,geometry,size,point(along,y,out),[rotation[0],yaw+rotation[1],rotation[2]],tint,variance,tile,null,displayLight);
       };
       const putDetail=(kind,size,along,y,out,tint=p.wall,variance=1)=>add(kind,'box',size,point(along,y,out),[0,yaw,0],tint,variance,-1,'detail');
       return {span,point,put,putDetail};
@@ -500,6 +503,7 @@ export function buildUrbanArchitecture(THREE,root,buildings) {
     }
     if(batch.kind==='glass')g.setAttribute('urbanGlazing',new THREE.InstancedBufferAttribute(new Float32Array(batch.instances.flatMap(instance=>instance.glazing)),4));
     if(mat[batch.kind].userData.exteriorSurface)surfaces.installGeometry(g,batch.instances,batch.geometry);
+    if(mat[batch.kind].userData.showcaseLighting)stats.showcaseAttributeBytes+=installShowcaseLighting(THREE,g,batch.instances);
     const mesh=new THREE.InstancedMesh(g,mat[batch.kind],count);mesh.name=`Urban ${batch.sector} / ${batch.level} / ${batch.kind} / ${batch.geometry}`;
     const c=new THREE.Color();
     for(let i=0;i<count;i++){
