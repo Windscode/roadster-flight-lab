@@ -1,5 +1,6 @@
 import * as CANNON from './vendor/cannon-es.js';
 import {roadWheelAngle,nozzleExhaustVelocity,hoverBudget,rearWingPose,quickRollManeuverProfile,sampleRollManeuver} from './vehicle-models.js';
+import {nozzlePressureFactor} from './nozzle-supply.js';
 import {exportSimulationState,importSimulationState} from './simulation-snapshot.js';
 import {solveStaticWrench,staticWrenchFeasible} from './trim-feasibility.js';
 import {sampleVehicleClearance} from './vehicle-clearance.js';
@@ -335,7 +336,7 @@ export class RoadsterSim {
   }
   _levelQuaternion(){const q=new CANNON.Quaternion();q.setFromEuler(0,this._stableHeading,0,'YXZ');return q;}
   getControlAuthority(){
-    const p=this.params,b=this.body,derate=clamp((this.pressureBar()-p.ambientPressureBar)/(p.regulatorBar-p.ambientPressureBar),0,1)*Number(this._hasPower);
+    const p=this.params,b=this.body,derate=nozzlePressureFactor(this.pressureBar(),p.regulatorBar,p.ambientPressureBar)*Number(this._hasPower);
     const maxes=this._nozzles.map(n=>(n.kind==='lift'?p.liftNozzleMax:n.kind==='roll'?p.sideNozzleMax:p.axialNozzleMax)*derate*(this._nozzleFault?.id===n.id?this._nozzleFault.scale:1));
     const positive=[0,0,0],negative=[0,0,0];let verticalUpper=0;
     this._nozzles.forEach((n,i)=>{verticalUpper+=Math.max(0,b.quaternion.vmult(n.direction).y)*maxes[i];for(let k=0;k<3;k++){positive[k]+=Math.max(0,n.column[k+3])*maxes[i];negative[k]+=Math.min(0,n.column[k+3])*maxes[i];}});
@@ -351,7 +352,7 @@ export class RoadsterSim {
   setNozzleFault({id,scale}={}){if(!this._nozzles.some(n=>n.id===id)||!Number.isFinite(scale)||scale<0||scale>1)return false;this._nozzleFault={id,scale};return true;}
   clearNozzleFault(){this._nozzleFault=null;}
   _liftHealthFactor(){return this._nozzleFault?.id.startsWith('lift-')?(3+this._nozzleFault.scale)/4:1;}
-  _availableLiftForce(){return 4*this.params.liftNozzleMax*this._liftHealthFactor()*clamp((this.pressureBar()-1)/(this.params.regulatorBar-1),0,1)*Number(this._hasPower);}
+  _availableLiftForce(){const p=this.params;return 4*p.liftNozzleMax*this._liftHealthFactor()*nozzlePressureFactor(this.pressureBar(),p.regulatorBar,p.ambientPressureBar)*Number(this._hasPower);}
   _hoverBudget(){const p=this._liftHealthFactor()<1?{...this.params,liftNozzleMax:this.params.liftNozzleMax*this._liftHealthFactor()}:this.params;return hoverBudget(p,this.gasMass,this.gasTemperature);}
 
   setMode(mode) {
@@ -1192,7 +1193,7 @@ export class RoadsterSim {
   _thrusters(dt,desired,input={}) {
     const p=this.params,b=this.body;
     const pressure=this.pressureBar();
-    const derate=clamp((pressure-1)/(p.regulatorBar-1),0,1);
+    const derate=nozzlePressureFactor(pressure,p.regulatorBar,p.ambientPressureBar);
     const maxes=this._nozzles.map(n=>(n.kind==='lift'?p.liftNozzleMax:n.kind==='roll'?p.sideNozzleMax:p.axialNozzleMax)*derate*Number(this._hasPower)*(this._nozzleFault?.id===n.id?this._nozzleFault.scale:1));
     // Weighted projected coordinate descent for a bounded, non-negative thrust
     // allocation. Every resulting body moment equals r × F at a real nozzle.
@@ -1293,7 +1294,7 @@ export class RoadsterSim {
   }
 
   getHoldTrimAssessment({target='current',includeReserve=true}={}) {
-    const p=this.params,derate=clamp((this.pressureBar()-p.ambientPressureBar)/(p.regulatorBar-p.ambientPressureBar),0,1)*Number(this._hasPower);
+    const p=this.params,derate=nozzlePressureFactor(this.pressureBar(),p.regulatorBar,p.ambientPressureBar)*Number(this._hasPower);
     const maxes=this._nozzles.map(n=>(n.kind==='lift'?p.liftNozzleMax:n.kind==='roll'?p.sideNozzleMax:p.axialNozzleMax)*derate*(this._nozzleFault?.id===n.id?this._nozzleFault.scale:1));
     const q=target==='current'?this.body.quaternion:target==='level'?this._levelQuaternion():target==='hold'?this._holdQuaternionTarget:target;
     return this._assessHoldTrim(maxes,q,{includeReserve});
@@ -1315,7 +1316,10 @@ export class RoadsterSim {
     // assumptions; Tesla has not published a usable actuator/aero calibration.
     const wing=this._wing,braking=this._lastInput.brake>.05;
     wing.command=p.wingMode==='fixed'?p.wingDeployment:clamp((Math.abs(localV.z)-16)/34*.45+(braking?this._lastInput.brake*.8:0),0,1);
-    wing.deployment+=clamp(wing.command-wing.deployment,-p.wingActuatorRate*dt,p.wingActuatorRate*dt);
+    // The powered actuator is part of the auxiliary electrical load. Losing
+    // that supply leaves the mechanism at its achieved position; aerodynamic
+    // forces still use that physical deployment, rather than the request.
+    if(this._hasPower)wing.deployment+=clamp(wing.command-wing.deployment,-p.wingActuatorRate*dt,p.wingActuatorRate*dt);
     Object.assign(wing,rearWingPose(wing.deployment));
     wing.dynamicPressurePa=.5*p.airDensity*localV.z*localV.z;
     wing.dragN=wing.dynamicPressurePa*p.wingAreaM2*p.wingDragCoefficient*wing.deployment;
@@ -1389,7 +1393,7 @@ export class RoadsterSim {
     this._sanity(true,integration.completedSubsteps===integration.substeps?'after-fixed-step':'after-contact-substep');
     if(this._fault) this.status=this._fault;
     else if(!this._hasPower)this.status='电池耗尽：电驱、风扇与喷口已失去供电';
-    else if(this.params.supplyMode==='finite'&&this.pressureBar()<1.2&&(this.mode!=='drive'||this.airStabilization)) this.status='气源压差耗尽：推进器失去支撑';
+    else if(this.params.supplyMode==='finite'&&this.pressureBar()<this.params.ambientPressureBar+.2&&(this.mode!=='drive'||this.airStabilization)) this.status='气源压差耗尽：推进器失去支撑';
     else if(this._pressureLimited&&this.mode==='hover') this.status='供压降低：可用推力受限';
     else if(!this._maneuver) {
       if(this.suctionEnabled&&this._sealQuality>.5) this.status=this.body.quaternion.vmult(Y).y<-.6?'倒挂：压差吸附保持':'近表面：压差吸附有效';

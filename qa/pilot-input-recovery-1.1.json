@@ -1,0 +1,6118 @@
+{
+  "schema": "roadster-pilot-input-recovery",
+  "version": 1,
+  "createdAt": "2026-10-25T04:24:44.768Z",
+  "modelVersion": "1.1.0",
+  "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+  "status": "passed",
+  "physicsHz": 120,
+  "baseline": {
+    "sourceCommit": "f4b96c5caa9652d812e0f2df1e3e3dfe1074abb3",
+    "sourcePath": "dist/physics.js",
+    "sourceSHA256": "f65430d3e12bc936e3c81d3fc02263b0bdeb88df69ed5245f08aa58df1e13247",
+    "fixtureSHA256": "75339b3eef717450c2e8601ee8675bf5a3f8ec6fcfb6e0e48d8c86d337e6a747",
+    "transform": "Static relative import prefix ./ replaced with ../../../dist/; implementation bytes otherwise preserved. Baseline and candidate share current dependencies and fixture geometry, isolating physics implementation differences."
+  },
+  "scope": "Actual fixed-step solver and production key-state mapping; no native keyboard, graphics, handling quality or real-vehicle claim. Baseline and candidate use the same current helper dependencies and isolated ground geometry.",
+  "sourceHashes": {
+    "dist/physics.js": "b609595c0ffabc5f91746645607ead33aa3f0faba328dd5ec02b6b159e478cc6",
+    "dist/controls.js": "6c631f1ad1c0e0ba9a0b8f28cefbbe2b72c6fdb3a9c770c0845cd6fedadf2004",
+    "dist/pilot-input-intent.js": "97470ee5a7be87a2e8034ff1d39fdeceb7931f47becef79af8162ff31447a378"
+  },
+  "checks": [
+    {
+      "name": "Production W+E+1 mapping preserves all three normalized requests",
+      "passed": true
+    },
+    {
+      "name": "Historical G pitch loss is reproduced through the actual solver",
+      "passed": true
+    },
+    {
+      "name": "Held G+W+E+1 now changes physical pitch without dropping translation/ascent",
+      "passed": true
+    },
+    {
+      "name": "G+W+E+2 independently requests the opposite physical pitch",
+      "passed": true
+    },
+    {
+      "name": "G remains armed during pitch override and returns to level after release",
+      "passed": true
+    },
+    {
+      "name": "G-off pitch still holds the achieved attitude after release",
+      "passed": true
+    },
+    {
+      "name": "Z/B keep their established G lateral-translation meaning, including simultaneous pitch",
+      "passed": true
+    },
+    {
+      "name": "air-g-on-z physical trajectory remains exactly the historical no-pitch path",
+      "passed": true
+    },
+    {
+      "name": "air-g-on-we physical trajectory remains exactly the historical no-pitch path",
+      "passed": true
+    },
+    {
+      "name": "Grounded pitch without takeoff is explicitly reported instead of silently discarded",
+      "passed": true
+    },
+    {
+      "name": "Simultaneous grounded W+E+1 reaches the hover pitch control path",
+      "passed": true
+    },
+    {
+      "name": "Raw wrench mode accepts 1/2 pitch separately from W/S axial thrust",
+      "passed": true
+    },
+    {
+      "name": "Every solver case remains finite within the actual nozzle capacities",
+      "passed": true
+    },
+    {
+      "name": "pilot input release changes no body state/current nozzle force and retains automatic references",
+      "passed": true
+    },
+    {
+      "name": "raw-valves input release changes no body state/current nozzle force and retains automatic references",
+      "passed": true
+    },
+    {
+      "name": "pose-hold input release changes no body state/current nozzle force and retains automatic references",
+      "passed": true
+    },
+    {
+      "name": "maneuver input release changes no body state/current nozzle force and retains automatic references",
+      "passed": true
+    },
+    {
+      "name": "Releasing G pitch clears the active override immediately without snapping the body",
+      "passed": true
+    },
+    {
+      "name": "Toggling G during a held pitch request keeps that request live, then levels on release",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "id": "air-g-on-we1",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          20.6995656781385,
+          -349.14146194098834
+        ],
+        "velocity": [
+          0,
+          2.6390277840925127,
+          2.765138780283422
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          9.124855850098036e-17,
+          0,
+          7.035574403695313e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          8143.536662422025,
+          8143.536662422022,
+          8143.536662422022,
+          8143.536662422025,
+          0,
+          0,
+          0,
+          0,
+          9999.650918584202,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20.67757377993773,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          32575.45694621929,
+          10000,
+          -1.9809504855150757e-12,
+          1.6398551681862624e-29,
+          -5.163313709066582e-13
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          21.64202427734311,
+          -347.03398605182895
+        ],
+        "velocity": [
+          0,
+          -0.003840779824096639,
+          0.04507809262053037
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          -8.392409520193575e-19,
+          0,
+          2.0435902799548654e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5397.155395752074,
+          5397.155395752073,
+          5397.155395752072,
+          5397.155395752074,
+          0,
+          0,
+          0,
+          0,
+          7.667380410377538e-49,
+          139.22243948575266
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0.9090596590909091,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-we1",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -0.00014446998942891796,
+          20.541401834707326,
+          -349.4543748966087
+        ],
+        "velocity": [
+          -0.000571841477754405,
+          1.6803651746961175,
+          1.0503570687220611
+        ],
+        "quaternion": [
+          -0.29733221246692143,
+          0.0000049232827836627404,
+          0.0001558056521466804,
+          0.9547740733439956
+        ],
+        "omega": [
+          -1.0440056537498317,
+          -0.0005547153183626463,
+          -0.0011217842132526512
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5091.184730468874,
+          5088.840436679999,
+          5011.147663281087,
+          5016.3268653779405,
+          3.892955264349191,
+          1.6118974405991625e-7,
+          1.7273869029808309,
+          0,
+          10999.994135241022,
+          0
+        ],
+        "pitchDeg": 34.5948793169862,
+        "rollDeg": 0.020504212778659884,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 1,
+            "pitch": 1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-pitch-override",
+          "stabilizationMode": "level",
+          "gPitchOverride": true,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": 60,
+            "referenceRateDegS": 59.99999999999999,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": -0.0001397046437809646,
+            "y": 20,
+            "z": -349.4631278721814
+          },
+          "quaternion": {
+            "x": -0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 20.527398791584858,
+          "heading": -0.00010229406657389082,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          5.442278716860896,
+          19577.313732276933,
+          29190.052900457176,
+          -270.13262284087267,
+          2.1138417775701157,
+          3.076964351592166
+        ]
+      },
+      "final": {
+        "position": [
+          -0.002232957987816,
+          21.187805510193623,
+          -351.845225305911
+        ],
+        "velocity": [
+          -0.0003583407370164753,
+          -0.007583807853324509,
+          -0.14363288362782
+        ],
+        "quaternion": [
+          -0.0001683468809997206,
+          -0.000050097266156919995,
+          0.0000011987092216140262,
+          0.9999999845740772
+        ],
+        "omega": [
+          0.0009940625598528691,
+          -0.0000024431742177055002,
+          -0.0000062920629333655485
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5400.184270158648,
+          5399.714452033779,
+          5396.328365152977,
+          5396.557911850443,
+          0.37136700308236364,
+          2.1357075123060786e-47,
+          0.35384211391310955,
+          5.9422435693260536e-43,
+          444.0587269658406,
+          2.1795307226585503e-45
+        ],
+        "pitchDeg": 0.019291124736390136,
+        "rollDeg": 0.00013832839719740104,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 39.154492959000684,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.03615425846902282,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-off-we1",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -0.00014446998942891796,
+          20.541401834707326,
+          -349.4543748966087
+        ],
+        "velocity": [
+          -0.000571841477754405,
+          1.6803651746961175,
+          1.0503570687220611
+        ],
+        "quaternion": [
+          -0.29733221246692143,
+          0.0000049232827836627404,
+          0.0001558056521466804,
+          0.9547740733439956
+        ],
+        "omega": [
+          -1.0440056537498317,
+          -0.0005547153183626463,
+          -0.0011217842132526512
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5091.184730468874,
+          5088.840436679999,
+          5011.147663281087,
+          5016.3268653779405,
+          3.892955264349191,
+          1.6118974405991625e-7,
+          1.7273869029808309,
+          0,
+          10999.994135241022,
+          0
+        ],
+        "pitchDeg": 34.5948793169862,
+        "rollDeg": 0.020504212778659884,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "off",
+          "position": {
+            "x": -0.0001397046437809646,
+            "y": 20,
+            "z": -349.4631278721814
+          },
+          "quaternion": {
+            "x": -0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 20.527398791584858,
+          "heading": -0.00010229406657389082,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          5.442278716860896,
+          19577.313732276933,
+          29190.052900457176,
+          -270.13262284087267,
+          2.1138417775701157,
+          3.076964351592166
+        ]
+      },
+      "final": {
+        "position": [
+          -0.00010602263196770153,
+          20.444207221318614,
+          -350.7744411921655
+        ],
+        "velocity": [
+          0.00014539119869192248,
+          -0.4152224240204623,
+          -1.3398613388773386
+        ],
+        "quaternion": [
+          -0.297334214976048,
+          0.0000051242485531936455,
+          0.0001557454295387607,
+          0.9547734497364706
+        ],
+        "omega": [
+          0.000015723395837867074,
+          -8.381626785801675e-7,
+          5.54147434908534e-7
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4803.428613423214,
+          4801.025527765467,
+          4802.193641188993,
+          4802.115772095737,
+          3.330384530462443,
+          1.2359462305447724e-59,
+          3.323492096110112,
+          0,
+          10999.999999999996,
+          0
+        ],
+        "pitchDeg": 34.595119661988534,
+        "rollDeg": 0.020487934989375636,
+        "mode": "hover",
+        "stabilizationMode": "off",
+        "intent": null
+      },
+      "maxPitchDeg": 40.42631667630265,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.03615425846902282,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-off-we1",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -0.00014446998942891796,
+          20.541401834707326,
+          -349.4543748966087
+        ],
+        "velocity": [
+          -0.000571841477754405,
+          1.6803651746961175,
+          1.0503570687220611
+        ],
+        "quaternion": [
+          -0.29733221246692143,
+          0.0000049232827836627404,
+          0.0001558056521466804,
+          0.9547740733439956
+        ],
+        "omega": [
+          -1.0440056537498317,
+          -0.0005547153183626463,
+          -0.0011217842132526512
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5091.184730468874,
+          5088.840436679999,
+          5011.147663281087,
+          5016.3268653779405,
+          3.892955264349191,
+          1.6118974405991625e-7,
+          1.7273869029808309,
+          0,
+          10999.994135241022,
+          0
+        ],
+        "pitchDeg": 34.5948793169862,
+        "rollDeg": 0.020504212778659884,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 1,
+            "pitch": 1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "pilot-attitude-rate",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": 60,
+            "referenceRateDegS": 59.99999999999999,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-rate"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "off",
+          "position": {
+            "x": -0.0001397046437809646,
+            "y": 20,
+            "z": -349.4631278721814
+          },
+          "quaternion": {
+            "x": -0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 20.527398791584858,
+          "heading": -0.00010229406657389082,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          5.442278716860896,
+          19577.313732276933,
+          29190.052900457176,
+          -270.13262284087267,
+          2.1138417775701157,
+          3.076964351592166
+        ]
+      },
+      "final": {
+        "position": [
+          -0.000316939611424862,
+          20.4696076087629,
+          -350.4805624304532
+        ],
+        "velocity": [
+          0.00012076684591297708,
+          -0.41342997718590596,
+          -1.2258972053600412
+        ],
+        "quaternion": [
+          -0.29733401985681607,
+          0.000005110381056695561,
+          0.00015574916407268857,
+          0.9547735104996726
+        ],
+        "omega": [
+          0.000014976216109860972,
+          -8.213268256860002e-7,
+          5.474918112311975e-7
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4722.780855835619,
+          4720.378647271931,
+          4721.539113270364,
+          4721.461753971849,
+          3.3287138189025383,
+          1.2359462305447724e-59,
+          3.321395194169691,
+          0,
+          10999.999999999996,
+          0
+        ],
+        "pitchDeg": 34.59509624353136,
+        "rollDeg": 0.020489001006182745,
+        "mode": "hover",
+        "stabilizationMode": "off",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "pilot-attitude-rate",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": true,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": 0,
+            "referenceRateDegS": 0,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-rate"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 40.439991592909266,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.03615425846902282,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-we2",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": -1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          20.6995656781385,
+          -349.14146194098834
+        ],
+        "velocity": [
+          0,
+          2.6390277840925127,
+          2.765138780283422
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          9.124855850098036e-17,
+          0,
+          7.035574403695313e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          8143.536662422025,
+          8143.536662422022,
+          8143.536662422022,
+          8143.536662422025,
+          0,
+          0,
+          0,
+          0,
+          9999.650918584202,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20.67757377993773,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          32575.45694621929,
+          10000,
+          -1.9809504855150757e-12,
+          1.6398551681862624e-29,
+          -5.163313709066582e-13
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          21.64202427734311,
+          -347.03398605182895
+        ],
+        "velocity": [
+          0,
+          -0.003840779824096639,
+          0.04507809262053037
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          -8.392409520193575e-19,
+          0,
+          2.0435902799548654e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5397.155395752074,
+          5397.155395752073,
+          5397.155395752072,
+          5397.155395752074,
+          0,
+          0,
+          0,
+          0,
+          7.667380410377538e-49,
+          139.22243948575266
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0.9090596590909091,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-we2",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": -1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0.000002375581417926408,
+          20.634111432042435,
+          -348.8813106907342
+        ],
+        "velocity": [
+          0.0005254214414577956,
+          2.43039105740278,
+          3.742820383171903
+        ],
+        "quaternion": [
+          0.2975882299143424,
+          -0.000009557847567160694,
+          0.00020605605655328027,
+          0.9546942981216542
+        ],
+        "omega": [
+          1.0403865904613356,
+          0.0006601631414755763,
+          -0.0012438093475642717
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          8575.172690034324,
+          8575.7630439116,
+          8681.924083750051,
+          8675.070292920956,
+          9.110343864150096,
+          0,
+          12.231676479329446,
+          1.2397712526456913e-7,
+          0.272887715409722,
+          5888.121029798091
+        ],
+        "pitchDeg": -34.62560747066108,
+        "rollDeg": 0.02699848571401714,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 1,
+            "pitch": -1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-pitch-override",
+          "stabilizationMode": "level",
+          "gPitchOverride": true,
+          "contactCount": 0,
+          "pitch": {
+            "requested": -1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": -60,
+            "referenceRateDegS": -59.99999999999999,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": -0.0000020029305942218893,
+            "y": 20,
+            "z": -348.912500860594
+          },
+          "quaternion": {
+            "x": 0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 20.613858173230746,
+          "heading": 0.00012768552500786633,
+          "manualRate": {
+            "x": 1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          20.190498054449254,
+          34369.67914284863,
+          -7352.223961583387,
+          342.5442314337029,
+          -3.456215430512317,
+          1.4761603257899234
+        ]
+      },
+      "final": {
+        "position": [
+          -0.0008016589711790597,
+          22.219777503087045,
+          -342.3622270193936
+        ],
+        "velocity": [
+          -0.00017665082687658333,
+          -0.008465775828843239,
+          0.23590642950626206
+        ],
+        "quaternion": [
+          0.00017972130526229456,
+          0.00006316360471259187,
+          -5.045087415967859e-8,
+          0.9999999818553044
+        ],
+        "omega": [
+          -0.0010503043868727575,
+          0.0000014289603737111375,
+          4.1252539146286204e-8
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5395.138904994557,
+          5395.312471185737,
+          5399.086486661918,
+          5398.834902228877,
+          0.10105769038595563,
+          4.866503357424021e-43,
+          0.11170089960979536,
+          5.96483757456792e-47,
+          2.092406965403769e-53,
+          729.7561921928884
+        ],
+        "pitchDeg": -0.020594544995171823,
+        "rollDeg": -0.0000044804188368864814,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": -38.959190250436805,
+      "maxRollDeg": 0.041532390759665236,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-pitch",
+      "variant": "before",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          19.906698263844845,
+          -350
+        ],
+        "velocity": [
+          0,
+          0.016029934605470402,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          -1.5945502751282173e-17,
+          0,
+          -1.480107336535108e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5545.5834298713335,
+          5545.5834298713335,
+          5545.5834298713335,
+          5545.5834298713335,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0.09060394564221497,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          22135.589565504444,
+          0,
+          3.461671278521625e-13,
+          6.028528916735849e-31,
+          1.0862309263061429e-13
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          19.99865702814217,
+          -350
+        ],
+        "velocity": [
+          0,
+          0.0023549565345191816,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          -1.6415466238893594e-17,
+          0,
+          -2.0151592550758514e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5391.976139005567,
+          5391.976139005567,
+          5391.976139005567,
+          5391.976139005567,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0.3010219046431198,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-pitch",
+      "variant": "after",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -0.00005867142991285188,
+          19.90415064319282,
+          -350.037668292782
+        ],
+        "velocity": [
+          -0.00007856478381099762,
+          0.029154584189294296,
+          -0.13875402098340636
+        ],
+        "quaternion": [
+          -0.2976077768341601,
+          0.000005003606399603577,
+          0.00016087072979731367,
+          0.9546882136401397
+        ],
+        "omega": [
+          -1.042628640913245,
+          -0.0005761890098343906,
+          -0.0011494649316752643
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4671.335270069148,
+          4668.206099928765,
+          4592.815495116928,
+          4597.841238927797,
+          5.281639440847612,
+          2.485892715912742e-7,
+          2.960457091626064,
+          0,
+          10946.622419816911,
+          0
+        ],
+        "pitchDeg": 34.62795388580148,
+        "rollDeg": 0.021180404887768327,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-pitch-override",
+          "stabilizationMode": "level",
+          "gPitchOverride": true,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": 60,
+            "referenceRateDegS": 59.99999999999999,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": -0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 20,
+          "heading": -0.00010588124639757675,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0.17296616101576276,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          7.904893630230169,
+          18174.130615915292,
+          13652.945589099425,
+          -268.87038141542405,
+          2.320998156326117,
+          3.125399321838921
+        ]
+      },
+      "final": {
+        "position": [
+          -0.00494745214760479,
+          20.01952058006226,
+          -353.72317427588206
+        ],
+        "velocity": [
+          -0.0004510289121817769,
+          -0.03174675907032163,
+          -0.1722914204818002
+        ],
+        "quaternion": [
+          -0.00015889218365204924,
+          -0.00005154369109560245,
+          5.81564326271299e-7,
+          0.9999999860480918
+        ],
+        "omega": [
+          0.0010010261138925958,
+          -0.00000449748966318255,
+          -0.000003376837518977551
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5420.1575508192955,
+          5419.552476438059,
+          5416.045813814461,
+          5416.279575956628,
+          0.5287645286674045,
+          1.4721886729995933e-48,
+          0.49513152328704907,
+          2.479752050513423e-47,
+          532.8407732627126,
+          0
+        ],
+        "pitchDeg": 0.01820769965919085,
+        "rollDeg": 0.00006758085752519118,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 38.801053718813336,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.04336633536636632,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-off-pitch",
+      "variant": "before",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -0.00005867142991285188,
+          19.90415064319282,
+          -350.037668292782
+        ],
+        "velocity": [
+          -0.00007856478381099762,
+          0.029154584189294296,
+          -0.13875402098340636
+        ],
+        "quaternion": [
+          -0.2976077768341601,
+          0.000005003606399603577,
+          0.00016087072979731367,
+          0.9546882136401397
+        ],
+        "omega": [
+          -1.042628640913245,
+          -0.0005761890098343906,
+          -0.0011494649316752643
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4671.335270069148,
+          4668.206099928765,
+          4592.815495116928,
+          4597.841238927797,
+          5.281639440847612,
+          2.485892715912742e-7,
+          2.960457091626064,
+          0,
+          10946.622419816911,
+          0
+        ],
+        "pitchDeg": 34.62795388580148,
+        "rollDeg": 0.021180404887768327,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "off",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": -0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 20,
+          "heading": -0.00010588124639757675,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0.17296616101576276,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          7.904893630230169,
+          18174.130615915292,
+          13652.945589099425,
+          -268.87038141542405,
+          2.320998156326117,
+          3.125399321838921
+        ]
+      },
+      "final": {
+        "position": [
+          0.00014835143467066764,
+          19.093045897849066,
+          -354.17460734549945
+        ],
+        "velocity": [
+          0.00007733299070990712,
+          -0.041961196285269675,
+          -2.6276938667624874
+        ],
+        "quaternion": [
+          -0.2976094237131755,
+          0.000005198416203983843,
+          0.00016081348332375165,
+          0.9546877002607249
+        ],
+        "omega": [
+          0.000012932844589642475,
+          -8.609235750378837e-7,
+          5.584685271723446e-7
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4827.320817018966,
+          4824.871620941157,
+          4826.076855267871,
+          4825.996512220972,
+          3.395992143968152,
+          1.6581156964312282e-48,
+          3.3883424949892404,
+          0,
+          10999.999999999996,
+          0
+        ],
+        "pitchDeg": 34.628151565989015,
+        "rollDeg": 0.0211647578228532,
+        "mode": "hover",
+        "stabilizationMode": "off",
+        "intent": null
+      },
+      "maxPitchDeg": 40.20941641447165,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.03678802338403464,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-off-pitch",
+      "variant": "after",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -0.00005867142991285188,
+          19.90415064319282,
+          -350.037668292782
+        ],
+        "velocity": [
+          -0.00007856478381099762,
+          0.029154584189294296,
+          -0.13875402098340636
+        ],
+        "quaternion": [
+          -0.2976077768341601,
+          0.000005003606399603577,
+          0.00016087072979731367,
+          0.9546882136401397
+        ],
+        "omega": [
+          -1.042628640913245,
+          -0.0005761890098343906,
+          -0.0011494649316752643
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4671.335270069148,
+          4668.206099928765,
+          4592.815495116928,
+          4597.841238927797,
+          5.281639440847612,
+          2.485892715912742e-7,
+          2.960457091626064,
+          0,
+          10946.622419816911,
+          0
+        ],
+        "pitchDeg": 34.62795388580148,
+        "rollDeg": 0.021180404887768327,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "pilot-attitude-rate",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": 60,
+            "referenceRateDegS": 59.99999999999999,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-rate"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "off",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": -0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 20,
+          "heading": -0.00010588124639757675,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0.17296616101576276,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          7.904893630230169,
+          18174.130615915292,
+          13652.945589099425,
+          -268.87038141542405,
+          2.320998156326117,
+          3.125399321838921
+        ]
+      },
+      "final": {
+        "position": [
+          0.00014835143467066764,
+          19.093045897849066,
+          -354.17460734549945
+        ],
+        "velocity": [
+          0.00007733299070990712,
+          -0.041961196285269675,
+          -2.6276938667624874
+        ],
+        "quaternion": [
+          -0.2976094237131755,
+          0.000005198416203983843,
+          0.00016081348332375165,
+          0.9546877002607249
+        ],
+        "omega": [
+          0.000012932844589642475,
+          -8.609235750378837e-7,
+          5.584685271723446e-7
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4827.320817018966,
+          4824.871620941157,
+          4826.076855267871,
+          4825.996512220972,
+          3.395992143968152,
+          1.6581156964312282e-48,
+          3.3883424949892404,
+          0,
+          10999.999999999996,
+          0
+        ],
+        "pitchDeg": 34.628151565989015,
+        "rollDeg": 0.0211647578228532,
+        "mode": "hover",
+        "stabilizationMode": "off",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "pilot-attitude-rate",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": true,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": 0,
+            "referenceRateDegS": 0,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-rate"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 40.20941641447165,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.03678802338403464,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-we",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          20.6995656781385,
+          -349.14146194098834
+        ],
+        "velocity": [
+          0,
+          2.6390277840925127,
+          2.765138780283422
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          9.124855850098036e-17,
+          0,
+          7.035574403695313e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          8143.536662422025,
+          8143.536662422022,
+          8143.536662422022,
+          8143.536662422025,
+          0,
+          0,
+          0,
+          0,
+          9999.650918584202,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20.67757377993773,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          32575.45694621929,
+          10000,
+          -1.9809504855150757e-12,
+          1.6398551681862624e-29,
+          -5.163313709066582e-13
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          21.64202427734311,
+          -347.03398605182895
+        ],
+        "velocity": [
+          0,
+          -0.003840779824096639,
+          0.04507809262053037
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          -8.392409520193575e-19,
+          0,
+          2.0435902799548654e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5397.155395752074,
+          5397.155395752073,
+          5397.155395752072,
+          5397.155395752074,
+          0,
+          0,
+          0,
+          0,
+          7.667380410377538e-49,
+          139.22243948575266
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0.9090596590909091,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-we",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          20.6995656781385,
+          -349.14146194098834
+        ],
+        "velocity": [
+          0,
+          2.6390277840925127,
+          2.765138780283422
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          9.124855850098036e-17,
+          0,
+          7.035574403695313e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          8143.536662422025,
+          8143.536662422022,
+          8143.536662422022,
+          8143.536662422025,
+          0,
+          0,
+          0,
+          0,
+          9999.650918584202,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 1,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 20.67757377993773,
+            "z": -349.16450476415736
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20.67757377993773,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          32575.45694621929,
+          10000,
+          -1.9809504855150757e-12,
+          1.6398551681862624e-29,
+          -5.163313709066582e-13
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          21.64202427734311,
+          -347.03398605182895
+        ],
+        "velocity": [
+          0,
+          -0.003840779824096639,
+          0.04507809262053037
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          -8.392409520193575e-19,
+          0,
+          2.0435902799548654e-17
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5397.155395752074,
+          5397.155395752073,
+          5397.155395752072,
+          5397.155395752074,
+          0,
+          0,
+          0,
+          0,
+          7.667380410377538e-49,
+          139.22243948575266
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0.9090596590909091,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-z",
+      "variant": "before",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 1,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0.7297333046531164,
+          19.90669763541078,
+          -349.99999905544996
+        ],
+        "velocity": [
+          2.3502580853694854,
+          0.01601866814945863,
+          0.000005484139011241466
+        ],
+        "quaternion": [
+          7.863467859337798e-7,
+          1.5896104496941374e-12,
+          -0.000011166309560382254,
+          0.9999999999373477
+        ],
+        "omega": [
+          -0.0000017364832278395382,
+          -3.631593347496611e-11,
+          0.000038362596943343975
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          7077.345625763965,
+          4013.8659887208983,
+          5598.409622939597,
+          5492.780346454605,
+          4249.7931887585555,
+          0,
+          4249.793188691249,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": -0.0000901087041317912,
+        "rollDeg": -0.001279564821120604,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0.09060446399075428,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          8500,
+          22135.670352343044,
+          -0.015824409725689405,
+          -0.024328385860290888,
+          5.649859766117105e-8,
+          0.09165116023855893
+        ]
+      },
+      "final": {
+        "position": [
+          2.5182183996941894,
+          19.99796686867512,
+          -349.9817835955235
+        ],
+        "velocity": [
+          0.03736300271138761,
+          0.0032841720410658713,
+          0.002022389227676789
+        ],
+        "quaternion": [
+          0.000026925702426671042,
+          -7.90151380106282e-9,
+          0.000027963780322859107,
+          0.9999999992465168
+        ],
+        "omega": [
+          -0.00008057361653253767,
+          3.889755044125328e-8,
+          -0.00007602391611212685
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5370.435335308759,
+          5412.120821876868,
+          5390.694720345572,
+          5392.1578757348725,
+          3.2585918557501805e-49,
+          57.65983228487333,
+          3.2585918556985615e-49,
+          57.65957881677499,
+          0,
+          5.851286814850706
+        ],
+        "pitchDeg": -0.0030854582434329853,
+        "rollDeg": 0.0032044131629842144,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": -0.1534239000224346,
+      "maxRollDeg": 0.02281813572831967,
+      "maxActuatorRatio": 0.7726900829228955,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-z",
+      "variant": "after",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 1,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0.7297333046531164,
+          19.90669763541078,
+          -349.99999905544996
+        ],
+        "velocity": [
+          2.3502580853694854,
+          0.01601866814945863,
+          0.000005484139011241466
+        ],
+        "quaternion": [
+          7.863467859337798e-7,
+          1.5896104496941374e-12,
+          -0.000011166309560382254,
+          0.9999999999373477
+        ],
+        "omega": [
+          -0.0000017364832278395382,
+          -3.631593347496611e-11,
+          0.000038362596943343975
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          7077.345625763965,
+          4013.8659887208983,
+          5598.409622939597,
+          5492.780346454605,
+          4249.7931887585555,
+          0,
+          4249.793188691249,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": -0.0000901087041317912,
+        "rollDeg": -0.001279564821120604,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 1,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 1,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0.7101478206083707,
+            "y": 19.906564146509535,
+            "z": -349.9999991011511
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0.09060446399075428,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          8500,
+          22135.670352343044,
+          -0.015824409725689405,
+          -0.024328385860290888,
+          5.649859766117105e-8,
+          0.09165116023855893
+        ]
+      },
+      "final": {
+        "position": [
+          2.5182183996941894,
+          19.99796686867512,
+          -349.9817835955235
+        ],
+        "velocity": [
+          0.03736300271138761,
+          0.0032841720410658713,
+          0.002022389227676789
+        ],
+        "quaternion": [
+          0.000026925702426671042,
+          -7.90151380106282e-9,
+          0.000027963780322859107,
+          0.9999999992465168
+        ],
+        "omega": [
+          -0.00008057361653253767,
+          3.889755044125328e-8,
+          -0.00007602391611212685
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5370.435335308759,
+          5412.120821876868,
+          5390.694720345572,
+          5392.1578757348725,
+          3.2585918557501805e-49,
+          57.65983228487333,
+          3.2585918556985615e-49,
+          57.65957881677499,
+          0,
+          5.851286814850706
+        ],
+        "pitchDeg": -0.0030854582434329853,
+        "rollDeg": 0.0032044131629842144,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": -0.1534239000224346,
+      "maxRollDeg": 0.02281813572831967,
+      "maxActuatorRatio": 0.7726900829228955,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-we1z",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 1,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0.7296675936010836,
+          20.699531961715532,
+          -349.14147168394663
+        ],
+        "velocity": [
+          2.3498159974700865,
+          2.638797724187785,
+          2.7650778973981396
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          7.944332455615438e-17,
+          -9.033068781442369e-17,
+          2.4452490550068374e-16
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          9675.38650401611,
+          6611.686820827936,
+          8196.35546747112,
+          8090.717857372927,
+          4249.793188724902,
+          0,
+          4249.7931887249015,
+          0,
+          9999.650918584202,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20.677541980680633,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          8500,
+          32575.45694621929,
+          10000,
+          -1.6305716281052032e-12,
+          1.8639182146646216e-12,
+          -1.7504287236973478e-12
+        ]
+      },
+      "final": {
+        "position": [
+          2.502151292787803,
+          21.639652494438288,
+          -347.0332918318068
+        ],
+        "velocity": [
+          0.036183412045642294,
+          -0.003761917844711002,
+          0.045490874453004586
+        ],
+        "quaternion": [
+          0.000022350808234669616,
+          3.4891421533600334e-9,
+          0.000026165292547100214,
+          0.9999999994079094
+        ],
+        "omega": [
+          -0.000046122466362905606,
+          -1.2282022784894009e-8,
+          -0.00009421773902849164
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5376.999050995365,
+          5417.513550699408,
+          5396.565326817984,
+          5397.9617833154625,
+          3.2585918557243754e-49,
+          55.831436048688715,
+          3.2585918557243754e-49,
+          55.83150952770878,
+          7.667380410377538e-49,
+          140.45870695318987
+        ],
+        "pitchDeg": -0.0025612139499805735,
+        "rollDeg": 0.002998321676873216,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": -0.005768504743132174,
+      "maxRollDeg": 0.16904478822961358,
+      "maxActuatorRatio": 0.9090596590909091,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-g-on-we1z",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 1,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0.9438814352541216,
+          20.541360874336515,
+          -349.4543629848462
+        ],
+        "velocity": [
+          3.0391655183663016,
+          1.6800654124885575,
+          1.0504751207388152
+        ],
+        "quaternion": [
+          -0.29733177024004975,
+          0.000008705048467986093,
+          0.00013366062059485615,
+          0.9547742143904908
+        ],
+        "omega": [
+          -1.0440077625601363,
+          -0.0006766050287367825,
+          -0.0008639213162750522
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          7071.7667189654885,
+          3106.3318764388564,
+          5078.504389190386,
+          4947.034917037177,
+          5499.997067620511,
+          0,
+          5499.997067620511,
+          0,
+          10999.994135241022,
+          0
+        ],
+        "pitchDeg": 34.59482643413347,
+        "rollDeg": 0.017404401220545897,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 1,
+            "pitch": 1,
+            "roll": 1,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-pitch-override",
+          "stabilizationMode": "level",
+          "gPitchOverride": true,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": 60,
+            "referenceRateDegS": 59.99999999999999,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 1,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0.9185550559344025,
+            "y": 20,
+            "z": -349.46311694418574
+          },
+          "quaternion": {
+            "x": -0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 20.527360329232444,
+          "heading": -0.00007522121030196587,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          13204.445894448534,
+          19573.7821449033,
+          29189.21219086173,
+          -270.1380032753857,
+          6.006780629006989,
+          3.0194268273793234
+        ]
+      },
+      "final": {
+        "position": [
+          3.2792062752921507,
+          21.187123577497488,
+          -351.8446661794881
+        ],
+        "velocity": [
+          0.049319550372665985,
+          -0.007468707873885001,
+          -0.14310518279528475
+        ],
+        "quaternion": [
+          -0.00013775694643591914,
+          -0.00003831998024128454,
+          0.00003106130417172466,
+          0.9999999892948992
+        ],
+        "omega": [
+          0.0009293203316460327,
+          0.000001331687519440186,
+          -0.00008638085527050306
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5372.72205041678,
+          5427.4520465721425,
+          5395.499891970264,
+          5397.689437126442,
+          4.217204192101751e-49,
+          76.16335115597789,
+          4.217204192101751e-49,
+          76.14874205645697,
+          442.49311876301823,
+          2.1768015630859375e-45
+        ],
+        "pitchDeg": 0.015785646894763014,
+        "rollDeg": 0.003559968280626159,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 39.15496825829677,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.1431867230565674,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "ground-g-on-we1",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          0.5970097961232198,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00006990539717352988,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -0.0010413921267826503,
+          2.000616416073629,
+          -348.61407468034747
+        ],
+        "velocity": [
+          -0.00643937286303133,
+          4.031727117480222,
+          2.693700411708001
+        ],
+        "quaternion": [
+          -0.1231397326128088,
+          0.00022565876430751767,
+          0.000865923462571008,
+          0.9923889386257413
+        ],
+        "omega": [
+          0.375911737648154,
+          0.00032149389139475684,
+          -0.0003398328991840889
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          7252.962979689055,
+          7258.254385626485,
+          8090.5825879347285,
+          8036.408035947972,
+          0,
+          0.922749696098913,
+          4.218350947814918,
+          0,
+          9999.656548543784,
+          0
+        ],
+        "pitchDeg": 14.146697917053073,
+        "rollDeg": 0.09826828845824245,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": -0.000040020888515351314,
+            "y": 0.5970097961232198,
+            "z": -349.618544489672
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 1.9670186900946272,
+          "heading": 0,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          4.153171837120694,
+          29822.55812380406,
+          10000,
+          1478.7620934606132,
+          -7.3489714618096995,
+          -28.63646137989601
+        ]
+      },
+      "final": {
+        "position": [
+          -0.010916816264751588,
+          3.7664972109804893,
+          -347.2283465987882
+        ],
+        "velocity": [
+          -0.00041227502720895116,
+          -0.004943749370591936,
+          0.014375397329646754
+        ],
+        "quaternion": [
+          -0.000029578565884741522,
+          2.2240152028636817e-7,
+          -2.0573055104320783e-7,
+          0.9999999995625085
+        ],
+        "omega": [
+          0.00017749437518278208,
+          -0.0000012699626500112627,
+          0.0000013305860948069649
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5398.03868802844,
+          5397.686656379629,
+          5397.238756300444,
+          5397.2688321254955,
+          0.43029147769393067,
+          8.012959857528442e-53,
+          0.42018034476363114,
+          0,
+          7.667384727232413e-49,
+          44.21267849139252
+        ],
+        "pitchDeg": 0.003389453973741625,
+        "rollDeg": -0.000023575738434010113,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 16.606817440004008,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.09833251093077892,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "ground-g-on-we1",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          0.5970097961232198,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00006990539717352988,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0.00006327770494697103,
+          1.8714035178539885,
+          -348.5944595878529
+        ],
+        "velocity": [
+          0.0008414514742528933,
+          3.0677429277229513,
+          2.650794979302387
+        ],
+        "quaternion": [
+          -0.289317347516236,
+          0.00011777391593910859,
+          0.00008837265033471059,
+          0.9572332269336189
+        ],
+        "omega": [
+          -1.0814053698096548,
+          -0.0005140687070626379,
+          -0.0008004677766181258
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5251.178564714204,
+          5242.025481188041,
+          5106.298024219734,
+          5115.345983906145,
+          3.7303448632829785,
+          0.000002787408692108103,
+          5.238160465157275,
+          0,
+          10999.994135241022,
+          0
+        ],
+        "pitchDeg": 33.634183048553766,
+        "rollDeg": 0.006953083068652938,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 1,
+            "pitch": 1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-pitch-override",
+          "stabilizationMode": "level",
+          "gPitchOverride": true,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": 60,
+            "referenceRateDegS": 59.99999999999999,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0.00005626560932819692,
+            "y": 0.5970097961232198,
+            "z": -348.61654954601374
+          },
+          "quaternion": {
+            "x": -0.2941836805850951,
+            "y": 0,
+            "z": 0,
+            "w": 0.9557489011646348
+          },
+          "height": 1.8458389934562973,
+          "heading": 0.00020798944815359388,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          8.492960083984519,
+          20072.924664573482,
+          28851.483815338062,
+          -342.88841643581424,
+          -2.130757345074887,
+          2.18838051283708
+        ]
+      },
+      "final": {
+        "position": [
+          -0.0007954892901692439,
+          2.9934039853034076,
+          -349.4379584652187
+        ],
+        "velocity": [
+          -0.0003266773278602101,
+          -0.0068808102691471544,
+          -0.10484819176993532
+        ],
+        "quaternion": [
+          -0.00016165910923220106,
+          0.00010507521545393454,
+          0.0000017601645532806633,
+          0.9999999814112166
+        ],
+        "omega": [
+          0.0009704193602240235,
+          -0.000001926663514292076,
+          -0.000009668395110839465
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5400.216638712941,
+          5399.830998049885,
+          5396.437254253556,
+          5396.66996323181,
+          0.2633661436906008,
+          3.08314406641264e-37,
+          0.24997024012330504,
+          3.765964950623047e-41,
+          323.97699338900145,
+          1.5896110475022966e-41
+        ],
+        "pitchDeg": 0.018524790529764912,
+        "rollDeg": 0.00019975351286318378,
+        "mode": "hover",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "g-level",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "lateral-translation"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 38.48670054529117,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.022566097514357227,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "ground-g-off-we1",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          0.5970097961232198,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00006990539717352988,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0.000043147387687824523,
+          1.8645975187243282,
+          -348.597807595886
+        ],
+        "velocity": [
+          0.0008280601369550696,
+          3.0284548085604,
+          2.6319874629854634
+        ],
+        "quaternion": [
+          -0.2918453616076629,
+          0.00011981195335475852,
+          0.00009230340982643725,
+          0.956465504884138
+        ],
+        "omega": [
+          -1.0786189730507802,
+          -0.0005394440078456383,
+          -0.0008358421831038369
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5149.165708148455,
+          5148.232398814956,
+          5133.626502160288,
+          5134.60024052983,
+          3.9319513538212028,
+          0.000002606884391782906,
+          5.404776318862957,
+          0,
+          10999.994135241022,
+          0
+        ],
+        "pitchDeg": 33.936935995274766,
+        "rollDeg": 0.007364342980432779,
+        "intent": null,
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "off",
+          "position": {
+            "x": 0.00003624688654653228,
+            "y": 0.5970097961232198,
+            "z": -348.6197408247442
+          },
+          "quaternion": {
+            "x": -0.29445734060540196,
+            "y": 0,
+            "z": 0,
+            "w": 0.9556646245224285
+          },
+          "height": 1.8393603953196582,
+          "heading": 0.0002098496635174898,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          8.823220258492949,
+          19919.619122330143,
+          28957.541248109344,
+          -66.0824318027397,
+          -2.1146563710757844,
+          2.352538694260653
+        ]
+      },
+      "final": {
+        "position": [
+          -0.0002256952855094827,
+          2.539028411336166,
+          -349.5525784382439
+        ],
+        "velocity": [
+          -0.00027333212442907457,
+          -0.4077614078455536,
+          -1.2090894513054664
+        ],
+        "quaternion": [
+          -0.29184736052740406,
+          0.00011994617110784958,
+          0.0000922631497269877,
+          0.9564648949405382
+        ],
+        "omega": [
+          0.000015667427445164493,
+          -6.151339801319002e-7,
+          3.6830465378324557e-7
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4572.6772420140505,
+          4571.807822119106,
+          4572.182928366446,
+          4572.157922932139,
+          1.2021882980614245,
+          1.1365726915224372e-46,
+          1.1971261702012013,
+          5.040598659689046e-47,
+          10999.999999999996,
+          5.118203143584535e-44
+        ],
+        "pitchDeg": 33.937175481066724,
+        "rollDeg": 0.007353593863078173,
+        "mode": "hover",
+        "stabilizationMode": "off",
+        "intent": null
+      },
+      "maxPitchDeg": 39.751603186242214,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.02364070251346429,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "ground-g-off-we1",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 1,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          0.5970097961232198,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00006990539717352988,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0.00006327770494697103,
+          1.8714035178539885,
+          -348.5944595878529
+        ],
+        "velocity": [
+          0.0008414514742528933,
+          3.0677429277229513,
+          2.650794979302387
+        ],
+        "quaternion": [
+          -0.289317347516236,
+          0.00011777391593910859,
+          0.00008837265033471059,
+          0.9572332269336189
+        ],
+        "omega": [
+          -1.0814053698096548,
+          -0.0005140687070626379,
+          -0.0008004677766181258
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          5251.178564714204,
+          5242.025481188041,
+          5106.298024219734,
+          5115.345983906145,
+          3.7303448632829785,
+          0.000002787408692108103,
+          5.238160465157275,
+          0,
+          10999.994135241022,
+          0
+        ],
+        "pitchDeg": 33.634183048553766,
+        "rollDeg": 0.006953083068652938,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 1,
+            "pitch": 1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "pilot-attitude-rate",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": 60,
+            "referenceRateDegS": 59.99999999999999,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-rate"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "hover",
+          "stabilizationMode": "off",
+          "position": {
+            "x": 0.00005626560932819692,
+            "y": 0.5970097961232198,
+            "z": -348.61654954601374
+          },
+          "quaternion": {
+            "x": -0.2941836805850951,
+            "y": 0,
+            "z": 0,
+            "w": 0.9557489011646348
+          },
+          "height": 1.8458389934562973,
+          "heading": 0.00020798944815359388,
+          "manualRate": {
+            "x": -1.0471975511965976,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 5,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          8.492960083984519,
+          20072.924664573482,
+          28851.483815338062,
+          -342.88841643581424,
+          -2.130757345074887,
+          2.18838051283708
+        ]
+      },
+      "final": {
+        "position": [
+          0.00013234670324429525,
+          2.7490736913884852,
+          -348.35046361400805
+        ],
+        "velocity": [
+          -0.00016467535812709206,
+          -0.26955482614699133,
+          -0.7252729327094039
+        ],
+        "quaternion": [
+          -0.28931946326374713,
+          0.00011790783013857472,
+          0.00008833207278251846,
+          0.9572325874477771
+        ],
+        "omega": [
+          0.000017068796970068014,
+          -5.915166530367364e-7,
+          3.896822246954646e-7
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          4579.12893999596,
+          4578.311144158094,
+          4578.657362602426,
+          4578.6342857527015,
+          1.1301040021419104,
+          9.395752518318364e-47,
+          1.1251529892699415,
+          3.5206511921172307e-47,
+          10999.999999999996,
+          1.8849393089939148e-45
+        ],
+        "pitchDeg": 33.634436327816964,
+        "rollDeg": 0.0069423830384665215,
+        "mode": "hover",
+        "stabilizationMode": "off",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "pilot-attitude-rate",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": true,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": 0,
+            "referenceRateDegS": 0,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-rate"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 39.48538650748445,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0.022566097514357227,
+      "maxActuatorRatio": 1,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "ground-g-on-pitch",
+      "variant": "before",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          0.5970097961232198,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00006990539717352988,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          0.5970090004636588,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00000193306531645345,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": null,
+        "reference": {
+          "mode": "drive",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 0.62,
+            "z": -28
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 0.5970097961232198,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          0.597008977135411,
+          -350
+        ],
+        "velocity": [
+          0,
+          6.428417434115385e-14,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "drive",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "ground-g-on-pitch",
+      "variant": "after",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          0.5970097961232198,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00006990539717352988,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          0.5970090004636588,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00000193306531645345,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "ground-drive",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 4,
+          "pitch": {
+            "requested": 1,
+            "accepted": false,
+            "reason": "takeoff-required",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "inactive"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [
+            "takeoff-required"
+          ],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "drive",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 0.5970090165725365,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 0.5970090165725365,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          0.597008977135411,
+          -350
+        ],
+        "velocity": [
+          0,
+          6.428417434115385e-14,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "drive",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "ground-drive",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 4,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "inactive"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "ground-g-on-w",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          0.5970097961232198,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00006990539717352988,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          0.5994835825469198,
+          -347.75859346640584
+        ],
+        "velocity": [
+          0,
+          0.006384048676987938,
+          6.811085421593777
+        ],
+        "quaternion": [
+          -0.01263577675138722,
+          0,
+          0,
+          0.9999201653861619
+        ],
+        "omega": [
+          0.004826266910748828,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 1.447991890944269,
+        "rollDeg": 0,
+        "intent": null,
+        "reference": {
+          "mode": "drive",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 0.62,
+            "z": -28
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 0.5970097961232198,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          0.5970064946253208,
+          -332.61514522593586
+        ],
+        "velocity": [
+          0,
+          1.087927165419908e-7,
+          3.2895379825333566
+        ],
+        "quaternion": [
+          0.0015040804125057503,
+          0,
+          0,
+          0.9999988688704167
+        ],
+        "omega": [
+          1.3706020683914084e-7,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": -0.17235498435502952,
+        "rollDeg": 0,
+        "mode": "drive",
+        "stabilizationMode": "level",
+        "intent": null
+      },
+      "maxPitchDeg": 1.541636744424867,
+      "minPitchDeg": -0.383356454885189,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "ground-g-on-w",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          0.5970097961232198,
+          -350
+        ],
+        "velocity": [
+          0,
+          -0.00006990539717352988,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          0.5993305566160592,
+          -347.75765252769753
+        ],
+        "velocity": [
+          0,
+          0.005006870531696786,
+          6.813753450106569
+        ],
+        "quaternion": [
+          -0.012528690647352871,
+          0,
+          0,
+          0.9999215128752172
+        ],
+        "omega": [
+          0.0035755425581672443,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 1.435719755871783,
+        "rollDeg": 0,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "ground-drive",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 4,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "inactive"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "drive",
+          "stabilizationMode": "level",
+          "position": {
+            "x": 0,
+            "y": 0.5992888326949617,
+            "z": -347.8144338064484
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 0.5992888326949617,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          0.5970081907644104,
+          -332.6062828008389
+        ],
+        "velocity": [
+          0,
+          1.0730198755152063e-7,
+          3.2921568825200804
+        ],
+        "quaternion": [
+          0.0014809638221712287,
+          0,
+          0,
+          0.9999989033724775
+        ],
+        "omega": [
+          1.348573596650569e-7,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": -0.16970601527871573,
+        "rollDeg": 0,
+        "mode": "drive",
+        "stabilizationMode": "level",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "ground-drive",
+          "stabilizationMode": "level",
+          "gPitchOverride": false,
+          "contactCount": 4,
+          "pitch": {
+            "requested": 0,
+            "accepted": false,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": null
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "inactive"
+          },
+          "afterPitchRelease": "return-to-level",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 1.5326149767213182,
+      "minPitchDeg": -0.3836005009914255,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 3
+    },
+    {
+      "id": "air-raw-pitch",
+      "variant": "before",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          17.903860602168777,
+          -350
+        ],
+        "velocity": [
+          0,
+          -6.3623139053311215,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": null,
+        "reference": {
+          "mode": "manual",
+          "stabilizationMode": "off",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          16.42831693615936,
+          -350
+        ],
+        "velocity": [
+          0,
+          -8.311008456102725,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "manual",
+        "stabilizationMode": "off",
+        "intent": null
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 0.2
+    },
+    {
+      "id": "air-raw-pitch",
+      "variant": "after",
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 1,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -5.409306719683859e-18,
+          18.42564840932564,
+          -350.0400367142007
+        ],
+        "velocity": [
+          -3.352887477884503e-17,
+          -4.705426348323431,
+          -0.2522753306472702
+        ],
+        "quaternion": [
+          -0.2252571408774972,
+          2.3340332150647448e-18,
+          2.817716268748085e-17,
+          0.9742993484980351
+        ],
+        "omega": [
+          -1.4648080892010564,
+          1.7579742615547684e-17,
+          1.4867526916625796e-16
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          3062.3378683680157,
+          3062.337868368016,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 26.03599885394442,
+        "rollDeg": 3.434135058136551e-15,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 1,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "raw-wrench",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 1,
+            "accepted": true,
+            "reason": "accepted",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": -12000
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-moment"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "manual",
+          "stabilizationMode": "off",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          0,
+          0,
+          -12000,
+          0,
+          0
+        ]
+      },
+      "final": {
+        "position": [
+          -1.2732419151213226e-17,
+          17.290244686170713,
+          -350.0954493118683
+        ],
+        "velocity": [
+          -3.703125760359795e-17,
+          -6.607917667186975,
+          -0.28087043211336576
+        ],
+        "quaternion": [
+          -0.3674093650884675,
+          6.155417181694275e-18,
+          4.229480039056481e-17,
+          0.9300593306049293
+        ],
+        "omega": [
+          -1.477177119761811,
+          4.3879143536536523e-17,
+          1.3827028693883938e-16
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          1.0272999088481112,
+          1.0272999088481112,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "pitchDeg": 43.11186914793283,
+        "rollDeg": 5.819691448031414e-15,
+        "mode": "manual",
+        "stabilizationMode": "off",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "raw-wrench",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": true,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": 0
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-moment"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 43.11186914793283,
+      "minPitchDeg": 0,
+      "maxRollDeg": 5.819691448031414e-15,
+      "maxActuatorRatio": 0.15311697505423302,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 0.2
+    },
+    {
+      "id": "air-raw-w",
+      "variant": "before",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          -5.9531638383597064e-18,
+          18.497527146949928,
+          -349.1022232289557
+        ],
+        "velocity": [
+          -3.856379519714958e-17,
+          -4.252808141040557,
+          2.7279243741744237
+        ],
+        "quaternion": [
+          -0.2252571408774972,
+          2.3340332150647448e-18,
+          2.817716268748085e-17,
+          0.9742993484980351
+        ],
+        "omega": [
+          -1.4648080892010564,
+          1.7579742615547684e-17,
+          1.4867526916625796e-16
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          3062.3378683680157,
+          3062.337868368016,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10999.650385424296,
+          0
+        ],
+        "pitchDeg": 26.03599885394442,
+        "rollDeg": 3.434135058136551e-15,
+        "intent": null,
+        "reference": {
+          "mode": "manual",
+          "stabilizationMode": "off",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          0,
+          11000,
+          -12000,
+          0,
+          0
+        ]
+      },
+      "final": {
+        "position": [
+          -1.445733404674444e-17,
+          17.461383101338015,
+          -348.5452459724453
+        ],
+        "velocity": [
+          -4.3078895053177906e-17,
+          -6.105881685940932,
+          2.7888406164013992
+        ],
+        "quaternion": [
+          -0.3674093650884675,
+          6.155038491602184e-18,
+          4.2294292206377974e-17,
+          0.9300593306049293
+        ],
+        "omega": [
+          -1.477177119761811,
+          4.386188475501643e-17,
+          1.3825906127220843e-16
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          1.0272999088481112,
+          1.0272999088481112,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3.6899716243033156,
+          0
+        ],
+        "pitchDeg": 43.11186914793283,
+        "rollDeg": 5.819639097318158e-15,
+        "mode": "manual",
+        "stabilizationMode": "off",
+        "intent": null
+      },
+      "maxPitchDeg": 43.11186914793283,
+      "minPitchDeg": 0,
+      "maxRollDeg": 5.819639097318158e-15,
+      "maxActuatorRatio": 0.99996875,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 0.2
+    },
+    {
+      "id": "air-raw-w",
+      "variant": "after",
+      "input": {
+        "throttle": 1,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      },
+      "initial": {
+        "position": [
+          0,
+          20,
+          -350
+        ],
+        "velocity": [
+          0,
+          0,
+          0
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "hold": {
+        "position": [
+          0,
+          17.903955815073704,
+          -349.0556635815369
+        ],
+        "velocity": [
+          0,
+          -6.36170473916582,
+          3.0413156085872073
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          10999.650385424296,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 1,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "raw-wrench",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": true,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": 0
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-moment"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        },
+        "reference": {
+          "mode": "manual",
+          "stabilizationMode": "off",
+          "position": {
+            "x": 0,
+            "y": 20,
+            "z": -350
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "height": 20,
+          "heading": 0,
+          "manualRate": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "verticalVelocityMps": 0,
+          "maneuver": null
+        },
+        "desiredWrench": [
+          0,
+          0,
+          11000,
+          0,
+          0,
+          0
+        ]
+      },
+      "final": {
+        "position": [
+          0,
+          16.428601072407055,
+          -348.42889145258357
+        ],
+        "velocity": [
+          0,
+          -8.30974913347876,
+          3.143308226850587
+        ],
+        "quaternion": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "omega": [
+          0,
+          0,
+          0
+        ],
+        "gasMass": 249.55820028489444,
+        "gasTemperature": 293.15,
+        "nozzleForces": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3.6899716243033156,
+          0
+        ],
+        "pitchDeg": 0,
+        "rollDeg": 0,
+        "mode": "manual",
+        "stabilizationMode": "off",
+        "intent": {
+          "schema": "roadster.pilot-input-intent",
+          "version": 1,
+          "requested": {
+            "throttle": 0,
+            "steer": 0,
+            "lift": 0,
+            "pitch": 0,
+            "roll": 0,
+            "brake": 0,
+            "boost": false,
+            "frontJets": 0,
+            "rearJets": 0
+          },
+          "controller": "raw-wrench",
+          "stabilizationMode": "off",
+          "gPitchOverride": false,
+          "contactCount": 0,
+          "pitch": {
+            "requested": 0,
+            "accepted": true,
+            "reason": "no-pitch-request",
+            "requestedRateDegS": null,
+            "referenceRateDegS": null,
+            "requestedTorqueNm": 0
+          },
+          "roll": {
+            "requested": 0,
+            "meaning": "roll-moment"
+          },
+          "afterPitchRelease": "hold-achieved-attitude",
+          "limitations": [],
+          "scope": "Accepted controller request only. Saturation, valve lag, finite supply and contact can prevent the requested motion."
+        }
+      },
+      "maxPitchDeg": 0,
+      "minPitchDeg": 0,
+      "maxRollDeg": 0,
+      "maxActuatorRatio": 0.99996875,
+      "fault": null,
+      "heldSeconds": 0.65,
+      "releaseSeconds": 0.2
+    }
+  ],
+  "releaseChecks": [
+    {
+      "kind": "pilot",
+      "receipt": {
+        "schema": "roadster.pilot-input-release",
+        "version": 1,
+        "reason": "fixture-blur",
+        "step": 24,
+        "simTime": 0.19999999999999998,
+        "previousInput": {
+          "throttle": 0,
+          "steer": 0,
+          "brake": 0,
+          "lift": 0.4,
+          "roll": 0,
+          "pitch": 0.5,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "rawValveCommandsCleared": false,
+        "pilotReferenceCaptured": true,
+        "scope": "Pilot requests released; body pose/velocity and current nozzle force unchanged. Automatic task/hold references retained."
+      },
+      "idempotent": true,
+      "shapePreserved": true,
+      "axesCleared": true,
+      "bodyAndActualForceUnchanged": true,
+      "holdUnchanged": true,
+      "maneuverUnchanged": true,
+      "commands": [
+        7852.453444808496,
+        7815.64531000436,
+        8427.381626260321,
+        8386.60189561998,
+        2.7802308470828097,
+        0,
+        5.542994571787391,
+        0,
+        2451.597942205415,
+        0
+      ],
+      "manualRate": [
+        0,
+        0,
+        0
+      ],
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      }
+    },
+    {
+      "kind": "raw-valves",
+      "receipt": {
+        "schema": "roadster.pilot-input-release",
+        "version": 1,
+        "reason": "fixture-blur",
+        "step": 24,
+        "simTime": 0.19999999999999998,
+        "previousInput": {
+          "throttle": 0,
+          "steer": 0,
+          "brake": 0,
+          "lift": 0,
+          "roll": 0,
+          "pitch": 0,
+          "boost": false,
+          "frontJets": 0.5,
+          "rearJets": 0
+        },
+        "rawValveCommandsCleared": true,
+        "pilotReferenceCaptured": true,
+        "scope": "Pilot requests released; body pose/velocity and current nozzle force unchanged. Automatic task/hold references retained."
+      },
+      "idempotent": true,
+      "shapePreserved": true,
+      "axesCleared": true,
+      "bodyAndActualForceUnchanged": true,
+      "holdUnchanged": true,
+      "maneuverUnchanged": true,
+      "commands": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "manualRate": [
+        0,
+        0,
+        0
+      ],
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      }
+    },
+    {
+      "kind": "pose-hold",
+      "receipt": {
+        "schema": "roadster.pilot-input-release",
+        "version": 1,
+        "reason": "fixture-blur",
+        "step": 24,
+        "simTime": 0.19999999999999998,
+        "previousInput": {
+          "throttle": 0,
+          "steer": 0,
+          "brake": 0,
+          "lift": 0,
+          "roll": 0,
+          "pitch": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "rawValveCommandsCleared": false,
+        "pilotReferenceCaptured": false,
+        "scope": "Pilot requests released; body pose/velocity and current nozzle force unchanged. Automatic task/hold references retained."
+      },
+      "idempotent": true,
+      "shapePreserved": true,
+      "axesCleared": true,
+      "bodyAndActualForceUnchanged": true,
+      "holdUnchanged": true,
+      "maneuverUnchanged": true,
+      "commands": [
+        5986.137952989916,
+        5986.13795298992,
+        5986.13795298992,
+        5986.137952989916,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "manualRate": [
+        0,
+        0,
+        0
+      ],
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      }
+    },
+    {
+      "kind": "maneuver",
+      "receipt": {
+        "schema": "roadster.pilot-input-release",
+        "version": 1,
+        "reason": "fixture-blur",
+        "step": 24,
+        "simTime": 0.19999999999999998,
+        "previousInput": {
+          "throttle": 0,
+          "steer": 0,
+          "brake": 0,
+          "lift": 0,
+          "roll": 0,
+          "pitch": 0,
+          "boost": false,
+          "frontJets": 0,
+          "rearJets": 0
+        },
+        "rawValveCommandsCleared": false,
+        "pilotReferenceCaptured": false,
+        "scope": "Pilot requests released; body pose/velocity and current nozzle force unchanged. Automatic task/hold references retained."
+      },
+      "idempotent": true,
+      "shapePreserved": true,
+      "axesCleared": true,
+      "bodyAndActualForceUnchanged": true,
+      "holdUnchanged": true,
+      "maneuverUnchanged": true,
+      "commands": [
+        10853.067583960634,
+        10853.067583960623,
+        10853.067583960623,
+        10853.067583960632,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "manualRate": [
+        0,
+        0,
+        0
+      ],
+      "input": {
+        "throttle": 0,
+        "steer": 0,
+        "brake": 0,
+        "lift": 0,
+        "roll": 0,
+        "pitch": 0,
+        "boost": false,
+        "frontJets": 0,
+        "rearJets": 0
+      }
+    }
+  ],
+  "trace": {
+    "file": "pilot-input-recovery-1.1.ndjson.gz",
+    "frequencyHz": 120,
+    "samples": 10920,
+    "sha256": "d4e48ecc7759995e8dedfd3acdc33ebd473bf05db9c099b81516fc47aa86dc98",
+    "compressedBytes": 1967466
+  },
+  "limits": [
+    "G retains Z/B lateral translation. Only 1/2 temporarily takes pitch control while G remains armed.",
+    "A controller acceptance indicator is not an achieved motion/available-thrust guarantee.",
+    "Ground pitch-only input does not invent wheel or jet authority; it reports the required takeoff/flight mode."
+  ]
+}

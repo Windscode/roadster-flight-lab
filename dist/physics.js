@@ -3,7 +3,7 @@
 // fixes documented in the current release.
 import {RoadsterSim as Kernel,DEFAULT_PARAMS as KERNEL_PARAMS} from './physics-kernel-319.js';
 import {applyResourceWheels} from './resource-wheels.js';
-import {RESOURCE_DEFAULTS,validateResourceParams,createEnergyLedger,validateEnergyLedger,energySummary} from './energy-model.js';
+import {AUXILIARY_POWER_W,RESOURCE_DEFAULTS,validateResourceParams,createEnergyLedger,validateEnergyLedger,energySummary} from './energy-model.js';
 import {resetSafetyJournal} from './simulation-safety.js';
 export {PHYSICS_HZ,TELEMETRY_HZ,SCENARIOS} from './physics-kernel-319.js';
 export const DEFAULT_PARAMS=Object.freeze({...KERNEL_PARAMS,...RESOURCE_DEFAULTS});
@@ -38,13 +38,20 @@ export class RoadsterSim extends Kernel{
     // Reserve the wheel work already solved plus the 800 W auxiliary load.
     // When the battery runs out the fan force cannot spend unprovided energy.
     const rated=this.params.fanPower,before=this._energyUsed;
-    const available=Math.max(0,(this.params.batteryKWh-before)*3.6e6-this._motorWork-800*dt);
+    const remaining=Math.max(0,(this.params.batteryKWh-before)*3.6e6-this._motorWork);
+    // One declared auxiliary supply powers valve/control electronics and the
+    // wing actuator. Do not grant a full slice of powered actuation for an
+    // arbitrarily small positive battery remainder. The sub-slice cutoff is
+    // conservative by at most this integration slice; no hidden energy source
+    // or pose correction is used. _aero still books the delivered remainder.
+    this._hasPower=remaining>=AUXILIARY_POWER_W*dt;
+    const available=Math.max(0,remaining-AUXILIARY_POWER_W*dt);
     this.params.fanPower=Math.min(rated,available/dt);
     try{super._suction(dt);}finally{this.params.fanPower=rated;}
     if(this._resourceSlice)this._resourceSlice.fanJ=Math.max(0,(this._energyUsed-before)*3.6e6);
   }
   _aero(dt){
-    const before=this._energyUsed,requested=800*dt;
+    const before=this._energyUsed,requested=AUXILIARY_POWER_W*dt;
     super._aero(dt);
     const available=Math.max(0,(this.params.batteryKWh-before)*3.6e6-this._motorWork);
     const delivered=Math.min(requested,available);
@@ -96,6 +103,8 @@ export class RoadsterSim extends Kernel{
     const result=super.telemetry();
     const remaining=Math.max(0,this.params.batteryKWh-this._energyUsed)*3.6e6;
     result.energyAccounting=energySummary(this._resourceLedger??createEnergyLedger(remaining),remaining,this.params.batteryKWh*3.6e6,this._driveAccounting);
+    result.electricalSupply={controlPowered:this._hasPower,auxiliaryDemandW:AUXILIARY_POWER_W,fanSpinFraction:this._fanLevel,
+      policy:'reserve-full-auxiliary-slice-before-powered-actuation',scope:'Lumped auxiliary supply; cutoff is conservative within one integration slice.'};
     return result;
   }
 }

@@ -1,0 +1,92 @@
+{
+  "modelVersion": "1.1.0",
+  "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+  "status": "passed",
+  "evidence": [
+    {
+      "name": "Complete city record restores its route surface without a presentation configuration",
+      "status": "passed",
+      "raw": "716ddeea",
+      "portable": {
+        "schema": "roadster-collision-identity",
+        "version": 1,
+        "precision": 1e-9,
+        "signature": "aa20fe4e"
+      },
+      "route": "weave-learning-route",
+      "steps": 24,
+      "reproduction": "matched"
+    },
+    {
+      "name": "Representable geometry perturbation changes raw provenance but preserves canonical compatibility",
+      "status": "passed",
+      "perturbationM": 2.220446049250313e-16,
+      "rawBefore": "716ddeea",
+      "rawAfter": "78e83ffa",
+      "portable": "aa20fe4e",
+      "scope": "Numerical last-bit fixture; actual Chrome/Node identity comparison remains browser acceptance evidence."
+    },
+    {
+      "name": "Real geometry, shape, type and body ordering differences reject without mutating the live state",
+      "status": "passed",
+      "rejected": [
+        "metadata-position",
+        "static-body-position",
+        "static-body-orientation",
+        "box-half-extent",
+        "local-shape-position",
+        "local-shape-orientation",
+        "body-type",
+        "shape-type",
+        "body-order",
+        "context-world-conflict"
+      ],
+      "minimumRealDifferenceM": 0.001
+    },
+    {
+      "name": "Optional portable identity cannot be bypassed; legacy raw signatures retain strict behavior",
+      "status": "passed",
+      "legacySameRaw": "accepted",
+      "legacyDifferentRaw": "rejected",
+      "absentLegacyRoute": "explicit null",
+      "portableMismatchWithMatchingRaw": "rejected"
+    },
+    {
+      "name": "Full physical and resource validation occurs on an isolated solver before any live mutation",
+      "status": "passed",
+      "rejected": [
+        "resource-ledger",
+        "state",
+        "parameter",
+        "model"
+      ]
+    },
+    {
+      "name": "Console rejected replay keeps active recording, physical state, camera and cancellation ownership",
+      "status": "passed",
+      "geometryRejection": "no cancellation or mutation",
+      "recordValidationRejection": "no cancellation or mutation"
+    },
+    {
+      "name": "Failed replacement and return preserve existing replay and its original return point",
+      "status": "passed",
+      "rejectedReplacement": "running replay and return point retained",
+      "rejectedReturn": "running replay and return point retained",
+      "successfulReturn": "original physical and presentation state restored"
+    },
+    {
+      "name": "Same-start practice accepts only verified geometry portability and keeps all other state exact",
+      "status": "passed",
+      "sourceRaw": "78e83ffa",
+      "destinationRaw": "716ddeea",
+      "portable": "aa20fe4e",
+      "originalSourceLabel": "fnv1a32-7ee960a8",
+      "nonGeometryStateTolerance": 0,
+      "legacyDifferentRaw": "rejected",
+      "legacyMatchingRaw": "accepted",
+      "uiPractice": "started after portable restoration; actual state changes still rejected",
+      "sourceEvidence": "unchanged"
+    }
+  ],
+  "scope": "Full solver snapshot and DOM checks. Synthetic ULP portability is not actual cross-engine trajectory proof; browser acceptance is recorded separately. No historical record is modified or assigned a new identity."
+}

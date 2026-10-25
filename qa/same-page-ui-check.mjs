@@ -70,7 +70,7 @@ class MockRenderer{
   getSize(value){return value.set(this.width,this.height);}getDrawingBufferSize(value){return value.set(this.domElement.width,this.domElement.height);}
   getContext(){return{getExtension:()=>null,getParameter:()=>16,getError:()=>0,NO_ERROR:0,isContextLost:()=>false};}
   render(scene){this.info.render.calls++;graphics.rendered.push(scene.uuid);}
-  async compileAsync(){if(graphics.compileGate)await graphics.compileGate;}compile(){}
+  async compileAsync(){if(graphics.compileGate)await graphics.compileGate;}compile(){this.info.programs=[{isReady:()=>!graphics.compileGate}];}
 }
 class MockOrbitControls{constructor(){this.target=new NativeThree.Vector3();this.enabled=true;}update(){}dispose(){}}
 class MockPass{constructor(){this.enabled=true;this.material={uniforms:{resolution:{value:new NativeThree.Vector2()}}};}render(){}setSize(){}dispose(){}}
@@ -408,11 +408,12 @@ pass('Actual GPU-matrix UI freezes real physics against P/H/X/R, driving and syn
 // A resource request can remain pending. Its wait must time out before the
 // first diagnostic draw and release the real UI/physics capture transaction.
 const cityEnvironment=graphics.environments.find(e=>e.scene.userData.qaContext==='city'),savedReady=cityEnvironment.ready;
+let finishPendingResources;
 if(!state().paused)click('#pause-btn');
 const timeoutBefore=await readVisualConditions(),timeoutFingerprint=mutationFingerprint(),timeoutBlob=lastBlob;
 const timeoutControlStates=['pause-btn','operation-pause','reset-btn','context-switch','render-program-matrix','render-program-capture','render-program-driving'].map(id=>[id,$(id).disabled]);
 try{
-  cityEnvironment.ready=new Promise(()=>{});click('#render-program-matrix');
+  cityEnvironment.ready=new Promise(resolve=>{finishPendingResources=resolve;});click('#render-program-matrix');
   assert.equal($('render-program-matrix').disabled,true);assert.equal(state().paused,true);
   await new Promise(resolve=>setImmediate(resolve));tick(1,20001);
   await settle(()=>!$('render-program-matrix').disabled&&lastBlob!==timeoutBlob&&lastBlob?.type==='application/zip','The bounded resource timeout must restore the UI and finish an explicitly failed evidence ZIP');
@@ -431,7 +432,13 @@ try{
   // the paused physical pose; the persistent failure message is independent.
   tick(5,250);await new Promise(resolve=>setImmediate(resolve));assert.equal($('render-program-status').textContent,timeoutMessage,'Generic later completion/ready messages must not replace the original timeout');assert.equal(mutationFingerprint(),timeoutFingerprint);
   values.programMatrix.readinessTimeout={boundedMs:20000,physicalStateUnchanged:true,presentationRestored:true,archive:{status:manifest.status,executionStatus:manifest.executionStatus,drawStatus:manifest.drawStatus,expectedFrames:manifest.expectedFrames,completedFrames:manifest.completedFrames,pngCount:0,entries:Object.keys(entries),failure:manifest.failure},persistentMessage:timeoutMessage,contractRevision:{retainedOriginalFailure:retiredGateFailure,reason:'3.14 retains an explicitly failed 0/14 evidence archive instead of suppressing all output; no passing capture, invented frame or pixel evidence is allowed',replacementChecks:['failed execution','incomplete draw','0 of 14 frames','zero PNG entries','unchanged physics','original 20-second cause persists']}};
-}finally{cityEnvironment.ready=savedReady;}
+}finally{
+  // Ordinary preparation may already be awaiting this same loader after the
+  // matrix restores its scene. Model its eventual completion, not replacement
+  // of the promise: a consumer must never compile while that loader is pending.
+  finishPendingResources?.();cityEnvironment.ready=savedReady;
+  await renderingReady();
+}
 pass('A genuinely pending resource wait exports an explicitly failed 0/14 ZIP with zero PNGs, restores the UI/physics and keeps its original 20-second cause visible');
 
 // Hold a real main.js PNG callback across many rendered facade frames, then

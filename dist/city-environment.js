@@ -374,12 +374,12 @@ export function createEnvironment(scene,renderer,geometry,camera){
     practicals.configure(q);wetReflection.configure(q);wetReflection.setEnabled(presentation.night);stats.wetReflections=presentation.night&&q!=='balanced';
     createShadows();configureProbe();
   }
-  const skyReady=typeof document==='undefined'?Promise.resolve(false):new Promise(resolve=>new HDRLoader().load('./assets/daylight.hdr',async t=>{
+  const skyReady=typeof document==='undefined'?Promise.resolve(false):new Promise((resolve,reject)=>new HDRLoader().load('./assets/daylight.hdr',t=>{void(async()=>{
     hdr=t;t.mapping=THREE.EquirectangularReflectionMapping;
     await indirect.ready;sunlessSky=makeSunlessEnvironment(t,indirect.metadata);
     const pmrem=new THREE.PMREMGenerator(renderer);skyEnvironment=pmrem.fromEquirectangular(sunlessSky).texture;pmrem.dispose();
-    setWeatherPreset(weatherPreset);resolve(true);
-  },undefined,()=>resolve(false)));
+    setWeatherPreset(weatherPreset);return true;
+  })().then(resolve,reject);},undefined,()=>resolve(false)));
   const ready=Promise.all([skyReady,architecture.ready,landmarks.ready,streetLife.ready,indirect.ready,nightIndirect.ready,nightDirect.ready]);
   // Register asynchronously arriving materials when the assets arrive. There
   // is no permanent two-second traversal of every city object.
@@ -422,7 +422,7 @@ export function createEnvironment(scene,renderer,geometry,camera){
   }
   const setDay=value=>setWeatherPreset(value===false?'wet-night':'clear-day');
   setQuality('balanced');setWeatherPreset('clear-day');
-  ready.then(()=>{collectEmissives();setWeatherPreset(weatherPreset);});
+  ready.then(()=>{collectEmissives();setWeatherPreset(weatherPreset);}).catch(error=>{stats.assetPreparationError=error.message;});
   let lastSceneStats=-Infinity;
   return {root,ready,setDay,setWeatherPreset,get weatherPreset(){return weatherPreset;},getPresentation:()=>({...presentation}),setRouteSurfaceDescription:value=>roadSurface.setRouteSurfaceDescription(value),getRouteSurfaceDescription:()=>roadSurface.getRouteSurfaceDescription(),getBenchmarkRoute:()=>CITY_BENCHMARK_ROUTE,getPracticalLightAnchors:()=>lightAnchors.filter(a=>a.practical).map(a=>structuredClone(a)),setVehicleRoot:r=>{shadowVehicleRoot=r;shadowMotion.reset();practicals.setVehicleRoot(r);},setQuality,stats,exposureAt:(p,sunVisible)=>presentation.night?presentation.exposure:Math.min(2.0,indirect.exposureAt(p,sunVisible))*presentation.exposure/.90,setContactAO:t=>indirect.setContactAO(t),
     particleLighting(){return {ambient:particleAmbient,lights:[]};},

@@ -60,6 +60,18 @@ function assertSafePass(r,texture,oldEnabled){
   r.assertCallerState();assert.equal(r.u.roadReflection.value,texture);
 }
 
+test('A successful reflected view consumes the global shadow request; a failed draw retains it',()=>{
+  const r=rig();let shadowPasses=0;
+  r.renderer.render=function(){if(this.shadowMap.needsUpdate){shadowPasses++;this.shadowMap.needsUpdate=false;}};
+  assert.equal(r.render(0),true);assert.equal(shadowPasses,1);assert.equal(r.renderer.shadowMap.needsUpdate,false);
+  // The following main view need not enter global shadow preparation again.
+  // Real lights also have per-light flags; this does not count GPU depth draws.
+  r.renderer.render();assert.equal(shadowPasses,1);
+  r.renderer.shadowMap.needsUpdate=true;r.camera.position.z+=1;
+  r.renderer.render=function(){this.shadowMap.needsUpdate=false;throw Error('draw after shadow update failed');};
+  assert.throws(()=>r.render(1),/draw after shadow/);assert.equal(r.renderer.shadowMap.needsUpdate,true);r.dispose();
+});
+
 test('The frozen 3.15 source is byte-exact after its single relative import adaptation',()=>{
   const bytes=readFileSync(new URL('../'+manifest.fixturePath,import.meta.url)),text=bytes.toString(),a=manifest.adaptation;
   assert.equal(hash(bytes),manifest.fixtureSha256);assert.equal(text.split(a.to).length-1,a.occurrences);

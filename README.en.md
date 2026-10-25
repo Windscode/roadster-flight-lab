@@ -1,31 +1,88 @@
-# Roadster Flight Lab · 1.0
+# Roadster Flight Lab
 
-Drive through the city, experiment with cold-gas flight, and replay what happened.
+**Drive through a city, practice flight control, and turn each attempt into an experiment you can explain and replay.**
 
-[Drive](https://windscode.github.io/roadster-flight-lab/) · [Wind laboratory](https://windscode.github.io/roadster-flight-lab/?view=lab) · [Vehicle inspection](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) · [中文](README.md)
+[Drive](https://windscode.github.io/roadster-flight-lab/) · [Wind laboratory](https://windscode.github.io/roadster-flight-lab/?view=lab) · [Vehicle workshop](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) · [中文](README.md)
 
-An independent, medium-scale vehicle and automatic-control research project. Public Roadster references inform the model; unavailable specifications remain engineering assumptions. The long-term tracks are consistent vehicle physics, detailed vehicle presentation, a continuous atmospheric city, and useful experiments/challenges.
+An independent vehicle-driving, cold-gas-flight and automatic-control research project. Explore the connected streets of Vesper, practice takeoff and landing, or change controllers, disturbances and resource conditions. Driving, challenges and research share the same physics, inputs and resource accounting.
 
-1.0 is the first product release; 3.x denotes earlier development iterations. It adds explicit screening outside validated maneuver conditions, complete portable initial-state comparison and opt-in 3.24 recomputation. Front body curvature, stable night-light shader counts, serialized reflection preparation, a direct challenges entry and remapping-aware guidance improve the existing experience. The complete city and shared research/physics platform remain.
+![Actual driving view in Vesper](qa/browser-1.1/day-route.png)
 
-3.24 wraps the rear quarters into a recessed installation surround while preserving experimental outlets, extraction ducts and wheel hard points. The existing city gains confined lighting in 210 shallow displays. A phase-dependent headroom estimate reduces late-roof refusals for validated default conditions; customized physics, observations and unsupported initial conditions retain the conservative estimate. Neither is a collision certificate. Portable scene identity handles Node/browser floating-point differences at a declared geometry quantization; real geometry/body-layout mismatches remain rejected before restoring the live scene.
+## Explore, drive, experiment
 
-3.23 introduced shared X/U path headroom estimates, honest collision-abort results, shadows that follow actual articulated casting geometry, and protected resource-route summaries. Storage failures preserve all unsaved session runs and appear in the driving completion notice. Exact Git bytes are preserved across Windows checkouts. X retains its 1.5-second turn reference and physical actuator limits.
+| Area | Available today |
+| --- | --- |
+| Vehicle simulation | 120 Hz rigid-body dynamics, tire/suspension/contact models, varying grip, manual jets, attitude assistance, automatic maneuvers and landing |
+| Vehicle workshop | Independently reconstructed Roadster concept body, cabin, underside and nozzles; steering, suspension, wing and lighting follow actual state; cutaway and model export |
+| Complete city | Connected roads, elevated streets and ramps, commercial blocks, civic spaces and industrial waterfront; daylight/wet night, three quality levels and multiple cameras |
+| Research and play | Finite-resource driving, flight/landing tasks, wind disturbances, controller A/B, parameter studies, initial-state/input recording, replay and export |
 
-3.22 fixes held gamepad axes resuming after menus, browser shortcut leakage, duplicate night-light assignments and stale relit headlight shadows. Cockpit steering follows measured front-wheel state; brake lamps survive headlamp changes. Experiment summaries separate net battery use, delivery and regeneration, and opposing drive torque has an explicit unrecovered heat channel.
+Resources participate in the dynamics: motors and fans draw battery energy, finite tanks lose gas through the jets, and regenerative braking follows actual wheel work within power, efficiency and state-of-charge limits. Free driving uses a declared external gas supply; resource challenges specify their own initial conditions.
 
-3.21 adds actual-work regenerative braking and a bounded battery ledger; shared keyboard/touch/gamepad actions with remapping and calibration; a 302.5 m finite-resource route; and comparable run summaries with full input replay. A 120 Wh initial budget represents a near-empty 200 kWh pack, not a real vehicle range claim. Only successful runs with matching build, conditions and full initial state are compared.
+## First drive
 
-Open Input & gamepad settings from the menu/help. For the route, pause, open the map, choose the run mode, prepare, then Drive and record. Export recent resource summaries or open Inputs / replay for the complete experiment.
+Choose **Enter city**, learn steering and braking on the road, then try flight assistance in open space. **Routes & challenges** leads to navigation, resource driving and flight/landing practice. Review a failed attempt and restart from its result card.
 
-```bash
+| Default keys | Action |
+| --- | --- |
+| W / S, A / D | Forward / slow and reverse, steering; arrow keys also work |
+| Space | Blended friction and regenerative braking |
+| H, E / Q | Flight-assist toggle, climb / descend |
+| 1 / 2, Z / B | Manual pitch and roll; Z / B translate when G is enabled |
+| P, Esc, R | Pause / resume, menu, end attempt and reset |
+| C, M | Camera, map / routes |
+
+Full controls, rebinding and gamepad calibration are in the application. Help follows your bindings. Start with a desktop browser and keyboard, and select a graphics preset suitable for your device.
+
+## Repeatable research
+
+The city and wind laboratory share one page. Configure controllers, conditions and experimental procedures; record full initial states and effective inputs; review responses, resource budgets and failures. A record can retain multiple recomputations or controller A/B analyses, each selectable and exportable.
+
+Original-condition replay under the same build checks state errors. Compatible historical records require an explicit current-model recomputation and retain their source identity; this never claims to execute an old solver. Fair comparisons require matching conditions and complete initial states. Storage limits and concurrent-page conflicts are reported. Export important experiments for safekeeping.
+
+## Version 1.1
+
+- Consistent ambient-pressure nozzle limits and actuator power behavior near battery depletion.
+- Continuous front hood/return/corner boundaries with preserved mechanical hard points and draw budgets.
+- Preparation of all submitted material variants, without reissuing shadow-update requests already consumed by wet-road reflections.
+- Concurrent archive protection, selectable analysis history and explicit compatible-record recomputation.
+
+[Audit and release scope](docs/release-1.1.md) · [Current checks](qa/release-1.1/validation.json) · [Real browser acceptance](qa/browser-1.1/observations.json) · [Development direction](docs/development-plan.md)
+
+## Scope and limitations
+
+Public Roadster references inform the independently authored model; unpublished specifications remain declared engineering assumptions. This is **not an official Tesla product, OEM CAD, real-vehicle performance prediction or industrially certified simulator**. The explorable city currently emphasizes exterior streetscapes.
+
+Initial resource/shader preparation may take time and pauses the vehicle. Preparation costs and active-driving long frames are reported separately. Acceptance states its actual device and scope; numerical/DOM checks do not certify physical keyboards/gamepads, listening quality or performance on every GPU.
+
+## Run locally
+
+**Node.js 22+**; production dependencies and reviewed assets are vendored.
+
+~~~sh
+git clone https://github.com/Windscode/roadster-flight-lab.git
+cd roadster-flight-lab
 npm start
+~~~
+
+Open http://127.0.0.1:8080/ . Edit the runtime source in `dist/`; it is not disposable build output. Serve over HTTP rather than opening files directly.
+
+For the full current release gate:
+
+~~~sh
+npm ci --prefix tests/dom --ignore-scripts
+export JSDOM_MODULE_PATH="$PWD/tests/dom/node_modules/jsdom/lib/api.js"
 npm run model:build
 npm run test:release
-```
+node scripts/check-static.mjs
+~~~
 
-Node.js 22+; production dependencies are vendored. `ROADSTER_PORT` selects a local port. For the complete release gate, install pinned DOM dependencies with `npm ci --prefix tests/dom --ignore-scripts`, then set `JSDOM_MODULE_PATH` to the absolute `tests/dom/node_modules/jsdom/lib/api.js` path. The historical full validation command has separate archive requirements.
+PowerShell: `$env:JSDOM_MODULE_PATH = (Resolve-Path tests/dom/node_modules/jsdom/lib/api.js).Path`. Historical `npm test` / `npm run validate` require separate archived inputs; they are not the current release entry point. See [development documentation](docs/DEVELOPMENT.md).
 
-[Release scope and audit](docs/release-1.0.md) · [Current validation](qa/release-1.0/validation.json) · [Browser acceptance](qa/browser-1.0/observations.json) · [Development priorities](docs/development-plan.md)
+## History, feedback and license
 
-The historical 3.23 evidence covers numerical dynamics, exact state/input replay, DOM lifecycle, HTTP serving and publication identity. That release's local WebGL browser checks included driving, X landing, combined inputs, day/wet-night and quality changes; they did not certify physical keyboards/gamepads, audio or universal shadow-flicker elimination. Version 3.23 added no city districts or art assets. Current 1.0 acceptance and limitations are recorded in the [release scope](docs/release-1.0.md). Historical 3.21 records remain viewable/exportable but cannot automatically execute under the new resource schema. The website's `deployment.json` identifies the actual published build.
+1.0 was the first product release; 3.19–3.24 were development iteration numbers. Earlier notes and evidence remain intact: [1.0](docs/release-1.0.md), [3.24](docs/release-3.24.md), [3.23](docs/release-3.23.md), [3.22](docs/release-3.22.md), [3.21](docs/release-3.21.md). The live [deployment identity](https://windscode.github.io/roadster-flight-lab/deployment.json) identifies the published build.
+
+Use [Issues](https://github.com/Windscode/roadster-flight-lab/issues) for reproducible bugs, research proposals and usability feedback. Include your browser, quality setting, steps and an exported record or capture conditions where possible.
+
+Original code and procedural assets use the [MIT License](LICENSE). Third-party assets and libraries retain their own licenses; see [asset credits](dist/CREDITS.md).

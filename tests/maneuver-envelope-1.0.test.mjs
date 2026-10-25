@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import {mkdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import * as CANNON from '../dist/vendor/cannon-es.js';
@@ -216,7 +217,7 @@ const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const sourceHashes=Object.fromEntries(sources.map(p=>[p,sha(readFileSync(p))]));
 const accepted=matrix.filter(r=>r.accepted),active=accepted.filter(r=>r.envelope.active),worst=active.reduce((a,b)=>b.maxEnvelopeExcessM>a.maxEnvelopeExcessM?b:a);
 mkdirSync('qa',{recursive:true});
-writeFileSync('qa/maneuver-envelope-1.0.json',JSON.stringify({schema:'roadster-maneuver-envelope-100',createdAt:new Date().toISOString(),status:'passed',modelBuildId:MODEL_BUILD_ID,
+writeFileSync(`qa/maneuver-envelope-${REPORT_VERSION}.json`,JSON.stringify({schema:'roadster-maneuver-envelope-100',createdAt:new Date().toISOString(),status:'passed',modelBuildId:MODEL_BUILD_ID,
   checks,cases,matrix,sourceHashes,worstEnvelopeCase:{name:worst.name,speed:worst.speed,params:worst.params,maxEnvelopeExcessM:worst.maxEnvelopeExcessM},
   archived323ReportSha256:sha(readFileSync('qa/maneuver-clearance-3.23.json')),
   scope:'Production physics/contact integration. Default phase envelopes remain unchanged; unsupported parameters/supply/observation/support now require an open-overhead sampled corridor instead of relying on the old peak estimate. The known low-gravity roof is refused without changing body or gas. Bounded rays still omit thin obstacles, steering and wind drift; no collision certificate or native-input claim.'},null,2)+'\n');

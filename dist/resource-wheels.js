@@ -4,7 +4,7 @@ import * as CANNON from './vendor/cannon-es.js';
 import {roadWheelAngle} from './vehicle-models.js';
 import {circularWheelSupport} from './wheel-contact-envelope.js';
 import {integrateWheel,lateralTireForce} from './tire-dynamics.js';
-import {regenerationAcceptance,brakeBlend} from './energy-model.js';
+import {AUXILIARY_POWER_W,regenerationAcceptance,brakeBlend} from './energy-model.js';
 const V=(x=0,y=0,z=0)=>new CANNON.Vec3(x,y,z),Y=V(0,1,0),Z=V(0,0,1);
 const WHEEL_LOCATIONS=[[-.89,.06,1.42],[.89,.06,1.42],[-.89,.06,-1.42],[.89,.06,-1.42]];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),plain=v=>({x:v.x,y:v.y,z:v.z});
@@ -92,7 +92,7 @@ export function applyResourceWheels(dt,input) {
     for(let i=0;i<4;i++)serviceDemands[i]+=parkTopUps[i]*parkScale;
     const poweredWheels=p.tractionAssist?this.wheelStates.filter(w=>w.contact):this.wheelStates;
     const motorSpeed=Math.max(speed,...poweredWheels.map(w=>Math.abs(w.angularVelocityRadS*p.wheelRadius)));
-    const auxiliaryReserve=800+Math.max(this._fanLevel,Number(this.suctionEnabled))*p.fanPower;
+    const auxiliaryReserve=AUXILIARY_POWER_W+Math.max(this._fanLevel,Number(this.suctionEnabled))*p.fanPower;
     const batteryPower=Math.max(0,(p.batteryKWh-this._energyUsed)*3.6e6/dt-auxiliaryReserve);
     const motorPower=Math.min(p.motorPower,batteryPower*.9);
     driveForce=clamp(driveForce,-motorPower/Math.max(8,motorSpeed),motorPower/Math.max(8,motorSpeed));

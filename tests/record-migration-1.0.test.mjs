@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
+import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {RoadsterSim} from '../dist/physics.js';
@@ -18,5 +20,5 @@ assert.equal(result.status,'completed');assert.equal(result.completedSteps,recor
 assert.equal(result.execution,'current-model-recompute');assert.equal(JSON.stringify(record),original);
 const other=structuredClone(record);other.initialSnapshot.physical.geometryIdentity.signature='00000000';
 assert.throws(()=>prepareRecordedStateForCurrentModel(other,sim,{recompute:true}),/几何/);
-mkdirSync('qa/release-1.0',{recursive:true});writeFileSync('qa/release-1.0/record-migration.json',JSON.stringify({status:'passed',source:'qa/browser-3.24/final/browser-replay.json',sourceSha256:createHash('sha256').update(bytes).digest('hex'),steps:result.completedSteps,compatibility:result.compatibility,reproduction:result.reproduction,sourceUnchanged:true},null,2)+'\n');
-console.log('PASS explicit 3.24 → 1.0 recomputation of actual browser record; full initial state and source preserved');
+mkdirSync(`qa/release-${REPORT_VERSION}`,{recursive:true});writeFileSync(`qa/release-${REPORT_VERSION}/record-migration.json`,JSON.stringify({status:'passed',source:'qa/browser-3.24/final/browser-replay.json',sourceSha256:createHash('sha256').update(bytes).digest('hex'),steps:result.completedSteps,compatibility:result.compatibility,reproduction:result.reproduction,sourceUnchanged:true},null,2)+'\n');
+console.log(`PASS explicit 3.24 → ${MODEL_VERSION} recomputation of actual browser record; full initial state and source preserved`);

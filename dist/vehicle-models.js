@@ -1,4 +1,5 @@
-export const MODEL_VERSION='1.0.0';
+export const MODEL_VERSION='1.1.0';
+import {nozzlePressureFactor} from './nozzle-supply.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 // Reduced engineering models. Parameters are explicit hypotheses, not OEM data.
 export function rearWingPose(deployment){
@@ -56,7 +57,7 @@ export function hoverBudget(p,gasMass,temperatureK){
  let m=gasMass,T=temperatureK,seconds=0,impulseNs=0;const dm=gasMass/96;
  for(let i=0;i<96&&m>0;i++){
   const pressure=m*287.05*T/(p.tankLitres/1000)/1e5,weight=(p.dryMass+m)*p.gravity;
-  const max=4*p.liftNozzleMax*clamp((pressure-p.ambientPressureBar)/(p.regulatorBar-p.ambientPressureBar),0,1);
+  const max=4*p.liftNozzleMax*nozzlePressureFactor(pressure,p.regulatorBar,p.ambientPressureBar);
   if(max<weight)break;
   const ve=nozzleExhaustVelocity(p,pressure,T),take=Math.min(m,dm);seconds+=take*ve/weight;impulseNs+=take*ve;
   const previous=m;m-=take;if(p.gasModel==='adiabatic')T*=Math.pow(Math.max(1e-9,m/previous),p.gasGamma-1);

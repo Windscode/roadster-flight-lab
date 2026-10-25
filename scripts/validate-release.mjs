@@ -8,6 +8,9 @@ import {MODEL_BUILD_ID,MODEL_SOURCE_HASHES} from '../dist/model-build.js';
 const version=MODEL_VERSION.split('.').slice(0,2).join('.'),dir=`qa/release-${version}`;
 mkdirSync(dir,{recursive:true});mkdirSync('.runtime/release-tests',{recursive:true});
 const jobs=[
+ ['tests/render-preparation-1.1.test.mjs'],
+ ['tests/vehicle-front-continuity-1.1.test.mjs'],['tests/record-migration-1.1.test.mjs'],
+ ['tests/actuator-supply-1.1.test.mjs'],['tests/landing-energy-1.1.test.mjs'],
  ['tests/record-migration-1.0.test.mjs'],['tests/wind-laboratory.test.mjs'],['tests/flight-programs.test.mjs'],
  ['tests/research-platform-3.14.test.mjs'],['tests/research-value-3.15.test.mjs'],['tests/physics-research-3.8.test.mjs'],
  ['tests/wind-response-3.17.test.mjs'],['tests/city-learning-3.19.test.mjs'],['tests/camera-clearance-3.14.test.mjs'],
@@ -27,6 +30,7 @@ const jobs=[
  ['tests/development-publication-3.21.test.mjs'],['tests/local-launch-3.21.test.mjs']
 ];
 const domAvailable=!!process.env.JSDOM_MODULE_PATH;
+if(domAvailable)jobs.push(['tests/experiment-history-1.1.test.mjs']);
 if(domAvailable)jobs.push(['tests/input-hints-1.0.test.mjs'],['tests/city-learning-ui-3.19.test.mjs'],['tests/city-learning-main-3.19.test.mjs'],['tests/research-boundaries-3.14.test.mjs'],['tests/export-deadline-3.18.test.mjs'],['tests/experiment-restore-3.24.test.mjs'],['tests/resource-history-3.23.test.mjs'],['tests/operation-feedback-3.23.test.mjs'],['tests/browser-input-3.22.test.mjs'],['tests/resource-route-ui-3.21.test.mjs'],['qa/same-page-ui-check.mjs'],['qa/same-page-ui-check.mjs','--graphics-unavailable']);
 const report={schema:'roadster-release-validation-1',modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,createdAt:new Date().toISOString(),status:'running',scope:'Focused current-source numerical, input, replay, local launch and publication tests. DOM is explicitly recorded. No native input, audio, WebGL pixels or hardware performance acceptance.',sourceHashes:MODEL_SOURCE_HASHES,domAvailable,jobs:[]};
 for(const [i,args] of jobs.entries()){

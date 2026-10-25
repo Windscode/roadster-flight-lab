@@ -1,5 +1,9 @@
 import {registerTranslations} from './i18n.js';
 registerTranslations({
+ '正在载入街景资源…':'Loading city assets…',
+ '正在准备车漆、玻璃与街景材质…':'Preparing paint, glass and city materials…',
+ '正在准备车身与湿路反射…':'Preparing vehicle and wet-road reflections…',
+ '正在完成光照准备…':'Finishing lighting preparation…',
  '正在准备街景与车辆光照…':'Preparing the city and vehicle lighting…',
  '驾驶暂时等待，完成后从原位置继续。':'Driving waits briefly, then continues from the same position.',
  '路线与挑战':'Routes & challenges',

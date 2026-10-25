@@ -88,7 +88,7 @@ export function replayEligibility(record){
   return{exact,recompute:true,reason:exact?'可按原始条件执行当前相同模型 / 构建':'原始模型 / 构建未安装；不能精确重放。可明确选择按当前模型重新计算，并保留来源身份'};
 }
 function canMigrateRecordedState(from,to){
-  if(from==='3.24.0'&&to==='1.0.0')return true;
+  if(from==='3.24.0'&&['1.0.0','1.1.0'].includes(to)||from==='1.0.0'&&to==='1.1.0')return true;
   const targets={'3.8.0':['3.9.0','3.10.0','3.11.0','3.12.0','3.13.0'],'3.9.0':['3.10.0','3.11.0','3.12.0','3.13.0'],'3.10.0':['3.11.0','3.12.0','3.13.0'],'3.11.0':['3.12.0','3.13.0'],'3.12.0':['3.13.0'],'3.16.0':['3.17.0']};
   return targets[from]?.includes(to)??false;
 }
@@ -97,7 +97,7 @@ export function prepareRecordedStateForCurrentModel(record,sim,{recompute=false}
   const compatibility={model:source.modelVersion===current.modelVersion&&source.modelBuildId===current.modelBuildId?'exact':'current-model-recompute',sourceIdentity:clone(source),executionIdentity:current,conditions:'original-complete-snapshot',migration:null};
   if(physical.modelVersion!==current.modelVersion){
     if(!recompute||!canMigrateRecordedState(source.modelVersion,current.modelVersion)||physical.schemaVersion!==1)throw Error('没有此历史模型的显式状态迁移器');
-    const template=sim.exportState(),releaseMigration=source.modelVersion==='3.24.0'&&current.modelVersion==='1.0.0',added=releaseMigration?[]:[...(source.modelVersion==='3.8.0'?['_driveAccounting','_verticalControl','_levelRecovery']:[]),...['_routeSurface','_contactFeedback'].filter(key=>key in template.state)];
+    const template=sim.exportState(),releaseMigration=['3.24.0','1.0.0'].includes(source.modelVersion)&&['1.0.0','1.1.0'].includes(current.modelVersion),added=releaseMigration?[]:[...(source.modelVersion==='3.8.0'?['_driveAccounting','_verticalControl','_levelRecovery']:[]),...['_routeSurface','_contactFeedback'].filter(key=>key in template.state)];
     if(releaseMigration)assertSnapshotWorldCompatible(sim,physical);
     else if(physical.worldType!==template.worldType||physical.geometrySignature!==template.geometrySignature)throw Error('历史场景几何与当前模型不同；不能把不同碰撞世界标作同一原始条件');
     const parameterMapping={};
@@ -119,6 +119,15 @@ export function validateExperimentRecord(value){
   if(!value.identity||typeof value.identity.modelVersion!=='string'||typeof value.identity.modelBuildId!=='string'||value.identity.fixedHz!==FIXED_HZ)throw Error('实验身份 / 固定物理频率无效');
   if(!value.initialSnapshot?.physical||(!value.finalSnapshot?.physical&&!(value.status==='failed'&&value.failureEvidence&&value.finalSnapshot?.terminalReplayable===false))||!Array.isArray(value.inputRuns)||!Array.isArray(value.events)||!Array.isArray(value.samples)||!value.summary||!value.sampling)throw Error('缺少快照、输入、事件、采样说明或统计');
   if(!Number.isInteger(value.stepCount)||value.stepCount<0||value.stepCount>EXPERIMENT_LIMITS.steps||value.inputRuns.length>value.stepCount||value.events.length>EXPERIMENT_LIMITS.events||value.samples.length>6002)throw Error('实验规模超出支持范围');
+  if(value.analyses!==undefined&&(!Array.isArray(value.analyses)||value.analyses.some(a=>!a||typeof a!=='object'||Array.isArray(a))))throw Error('实验分析列表无效');
+  for(const analysis of value.analyses??[]){
+    if(analysis.changed!==undefined&&(!Array.isArray(analysis.changed)||analysis.changed.some(key=>typeof key!=='string')))throw Error('实验分析的参数差异列表无效');
+    for(const result of [analysis,analysis.baseline,analysis.candidate].filter(v=>v!=null)){
+      if(typeof result!=='object'||Array.isArray(result)||result.samples!==undefined&&(!Array.isArray(result.samples)||result.samples.some(row=>!row||typeof row!=='object'||Array.isArray(row))))throw Error('实验分析的曲线结构无效');
+    }
+    const controller=analysis.reproduction?.controller;
+    if(controller&&(!Array.isArray(controller.missingFields)||controller.missingFields.some(key=>typeof key!=='string')))throw Error('实验分析的控制状态比较无效');
+  }
   let count=0;for(const run of value.inputRuns){if(!Number.isInteger(run.steps)||run.steps<1||!run.input||typeof run.input!=='object'||Array.isArray(run.input))throw Error('固定步输入损坏');for(const [k,v]of Object.entries(run.input))if(!INPUT_KEYS.includes(k)||k==='boost'&&typeof v!=='boolean'||k!=='boost'&&(!finite(v)||Math.abs(v)>1))throw Error('记录含不受支持的输入');count+=run.steps;}
   if(count!==value.stepCount)throw Error('输入数量和物理步数不一致');
   if(value.appliedInputRuns&&(!Array.isArray(value.appliedInputRuns)||value.appliedInputRuns.reduce((n,r)=>n+(Number.isInteger(r.steps)&&r.steps>0?r.steps:NaN),0)!==value.stepCount))throw Error('实际应用输入证据的步数不一致');
@@ -263,10 +272,48 @@ export function exportExperimentArchive(records){return{schema:'roadster.live-ex
 export function loadExperimentArchive(storage){
   let raw;try{raw=storage?.getItem(EXPERIMENT_LIBRARY_KEY)||'';if(!raw)return{records:[],warning:null,protectedRaw:null,raw:raw||null};if(byteLength(raw)>EXPERIMENT_LIMITS.storageBytes)throw Error('存档超过 4 MiB，暂不覆盖');return{records:parseExperimentArchive(raw,{maxRecords:EXPERIMENT_LIMITS.records}),warning:null,protectedRaw:null,raw};}catch(error){return{records:[],warning:'旧现场存档已保护：'+error.message,protectedRaw:raw||null,raw:raw||null};}
 }
-export function saveExperimentArchive(storage,records,{protectedRaw=null,replace=false,expectedRaw}={}){
+// Source captures are immutable. Only independently appended analyses can be
+// merged between pages. Compare contents, never a short non-cryptographic label.
+function experimentCore(record){const {analyses,...core}=record;return canonicalJSON(compactExperiment(core));}
+function assertSharedSamplesAgree(a,b){
+  const byStep=new Map(a.samples.map(sample=>[sample.step,sample]));
+  for(const sample of b.samples){const previous=byStep.get(sample.step);if(previous&&canonicalJSON(previous)!==canonicalJSON(sample))throw Error('同 ID 实验的相同步采样内容不同，未合并：'+b.id+' / 第 '+sample.step+' 步');}
+}
+export function mergeExperimentRecord(current,local,base){
+  validateExperimentRecord(current);validateExperimentRecord(local);if(base)validateExperimentRecord(base);
+  // Compaction may omit display samples, but it cannot excuse a disagreement
+  // at a time both archives actually retained. Never interpolate absent data.
+  assertSharedSamplesAgree(current,local);if(base){assertSharedSamplesAgree(base,current);assertSharedSamplesAgree(base,local);}
+  if(experimentCore(current)!==experimentCore(local)||base&&experimentCore(base)!==experimentCore(local))throw Error('同 ID 的原始实验内容不同，未覆盖：'+local.id);
+  const before=base?.analyses??[],remote=current.analyses??[],incoming=local.analyses??[];
+  if(base&&[remote,incoming].some(list=>before.some((value,i)=>canonicalJSON(value)!==canonicalJSON(list[i]??null))))throw Error('另一页面的分析历史与本页冲突，未覆盖：'+local.id);
+  const merged=[...remote],seen=new Map();
+  const keyFor=analysis=>{const text=canonicalJSON(analysis);return{key:typeof analysis.id==='string'?'id:'+analysis.id:'content:'+text,text};};
+  for(const analysis of remote){const {key,text}=keyFor(analysis),prior=seen.get(key);if(prior&&prior.text!==text)throw Error('同 ID 的分析内容不同，未覆盖：'+analysis.id);seen.set(key,{text,count:(prior?.count??0)+1});}
+  // Keep repeated legacy attempts already present in either archive. New
+  // executions carry unique IDs; identical legacy entries have no attempt ID.
+  for(const analysis of incoming){const {key,text}=keyFor(analysis),prior=seen.get(key);if(prior&&prior.text!==text)throw Error('同 ID 的分析内容不同，未覆盖：'+analysis.id);if(prior?.count>0){prior.count--;continue;}seen.set(key,{text,count:0});merged.push(analysis);}
+  return{...local,...(merged.length||local.analyses||current.analyses?{analyses:merged}:{})};
+}
+export function saveExperimentArchive(storage,records,{protectedRaw=null,replace=false,expectedRaw,baseRaw,activeRecordIds=[]}={}){
   if(!storage)throw Error('浏览器存储不可用，请导出整库 JSON');if(protectedRaw)throw Error('旧存档受保护，新记录只留在当前会话；请先导出原存档');
-  const existing=loadExperimentArchive(storage);if(existing.protectedRaw)throw Error(existing.warning);const all=new Map((replace?[]:existing.records).map(r=>[r.id,r]));for(const r of records)all.set(r.id,r);if(all.size>EXPERIMENT_LIMITS.records)throw Error('达到 32 条记录上限；旧记录未删除，新结果只保留在本次会话，请导出整库');
-  const compact=[...all.values()].map(r=>compactExperiment(validateExperimentRecord(r))),text=JSON.stringify(exportExperimentArchive(compact));if(byteLength(text)>EXPERIMENT_LIMITS.storageBytes)throw Error('达到 4 MiB 存储上限；旧记录未覆盖，新结果只保留在本次会话，请导出整库');writeArchiveCandidate(storage,EXPERIMENT_LIBRARY_KEY,exportExperimentArchive(compact),{parse:parseExperimentArchive,maxBytes:EXPERIMENT_LIMITS.storageBytes,protectedRaw,expectedRaw});return compact;
+  const existing=loadExperimentArchive(storage);if(existing.warning)throw Error(existing.warning);
+  const baseline=new Map((baseRaw?parseExperimentArchive(baseRaw):[]).map(r=>[r.id,r])),all=new Map((replace?[]:existing.records).map(r=>[r.id,r]));
+  for(const record of records){validateExperimentRecord(record);const current=all.get(record.id),base=baseline.get(record.id);
+    if(!replace&&!current&&(base||activeRecordIds.includes(record.id))){
+      // An in-flight worker/replay owns this source. Keep its original object
+      // and baseline in the session until the result has been retained; an
+      // unrelated save must not retire it under the execution callback.
+      if(!activeRecordIds.includes(record.id)&&canonicalJSON(compactExperiment(record))===canonicalJSON(compactExperiment(base)))continue;
+      throw Error('另一页面已删除此实验，本页执行与新增分析仅保留在会话，未恢复已删除记录：'+record.id);
+    }
+    all.set(record.id,!replace&&current?mergeExperimentRecord(current,record,base):record);
+  }
+  if(all.size>EXPERIMENT_LIMITS.records)throw Error('达到 32 条记录上限；旧记录未删除，新结果只保留在本次会话，请导出整库');
+  const compact=[...all.values()].map(r=>compactExperiment(validateExperimentRecord(r))),text=JSON.stringify(exportExperimentArchive(compact));if(byteLength(text)>EXPERIMENT_LIMITS.storageBytes)throw Error('达到 4 MiB 存储上限；旧记录未覆盖，新结果只保留在本次会话，请导出整库');
+  const saved=writeArchiveCandidate(storage,EXPERIMENT_LIBRARY_KEY,exportExperimentArchive(compact),{parse:parseExperimentArchive,maxBytes:EXPERIMENT_LIMITS.storageBytes,protectedRaw,expectedRaw:expectedRaw===undefined?existing.raw:expectedRaw});
+  if(storage.getItem(EXPERIMENT_LIBRARY_KEY)!==saved.raw)throw Error('保存后存档发生变化或未写入；本页成果仍可导出，请重新尝试保存');
+  return compact;
 }
 export function experimentCSV(record){
   const identity=record.identity||{},fields=['timeS','simTime','step','heightM','targetHeightM','positionErrorM','attitudeErrorDeg','speedMps','rollDeg','pitchDeg','pressureBar','gasMassKg','tankTemperatureK','massFlowKgS','supplyMode','allocationError','feasible','contactCount','wingDeployment'];

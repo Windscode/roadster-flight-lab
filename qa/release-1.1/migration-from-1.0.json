@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "modelVersion": "1.1.0",
+  "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+  "source": "qa/browser-1.0/day-replay.json.gz",
+  "sourceSha256": "27df39ed9e8b5cb8cfb5f9749f10b172ae509b95d3d1eaa2e165b0f638eb6ea1",
+  "steps": 21600,
+  "statusLabel": "not_applicable",
+  "compatibility": {
+    "model": "current-model-recompute",
+    "sourceIdentity": {
+      "modelVersion": "1.0.0",
+      "modelBuildId": "e0aebd1ac7fa158e1abed3f0c8a7d24abc5243f43125d37e0ebeeeb82328326c",
+      "sourceCommit": null,
+      "sourceTree": null,
+      "sourceIdentityStatus": "not-available",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "executionIdentity": {
+      "modelVersion": "1.1.0",
+      "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+      "sourceCommit": null,
+      "sourceTree": null,
+      "sourceIdentityStatus": "not-available",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "conditions": "explicitly-migrated-historical-initial-state",
+    "migration": {
+      "from": "1.0.0",
+      "to": "1.1.0",
+      "addedDefaultState": [],
+      "parameterMapping": {},
+      "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+      "changed": [
+        "modelVersion"
+      ],
+      "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+      "limitation": "The 1.0.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+    }
+  },
+  "summary": {
+    "source": "all fixed 120 Hz post-integration states; independent of stored display curve",
+    "version": 2,
+    "energyAccountingScope": "Signed net battery use = delivered battery energy minus regeneration across acknowledged solver steps; explicit resets and resource preparation are excluded. Incomplete accounting is labelled.",
+    "energyAccountingComplete": true,
+    "energyDischargedKWh": 0.44862652998110586,
+    "energyRecoveredKWh": 0.034064710081631866,
+    "count": 21600,
+    "positionCount": 0,
+    "sumPositionSquared": 0,
+    "peakPositionErrorM": null,
+    "peakAttitudeErrorDeg": 179.99999995458342,
+    "allocationCount": 21600,
+    "saturatedCount": 0,
+    "gasThroughputKg": 0,
+    "onboardDischargedKg": 0,
+    "externalSupplyKg": 0,
+    "energyUsedKWh": 0.41456181989948054,
+    "peakSpeedMps": 10.012138329884728,
+    "minimumHeightM": 0.5962355486339945,
+    "maximumHeightM": 0.6023343392289239,
+    "rmsPositionErrorM": null,
+    "saturationFraction": 0,
+    "gasRemainingKg": 249.55820028489444,
+    "finalPosition": {
+      "x": 3.578239465251802,
+      "y": 0.5970090402379071,
+      "z": -132.50000005674556
+    },
+    "finalVelocity": {
+      "x": 10.012133919986047,
+      "y": -6.562954073623066e-13,
+      "z": 0.000007081458764680779
+    },
+    "finalQuaternion": {
+      "x": 0.000050444884049722886,
+      "y": -0.7071066177927914,
+      "z": -0.00005024303456461765,
+      "w": -0.7071069409959079
+    },
+    "finalAngularVelocity": {
+      "x": 1.7423147738917668e-7,
+      "y": -0.0000033990827701289673,
+      "z": 1.2357408410782423e-9
+    },
+    "finalFault": null
+  },
+  "sourceUnchanged": true,
+  "rejected": [
+    "world",
+    "missing-state",
+    "missing-parameter",
+    "extra-parameter"
+  ],
+  "scope": "Complete 180 s browser-recorded 1.0 city loop recomputed by the current model. Source state/parameters/input/provenance remain unchanged; no exact old-model replay or GPU claim."
+}

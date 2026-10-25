@@ -1,5 +1,5 @@
 import {exportJson,exportFile,getExportState} from './export-download.js';
-import {createRenderPreparation} from './render-preparation.js';
+import {createRenderPreparation,compileScenePrograms,awaitSceneReady} from './render-preparation.js';
 import * as THREE from './vendor/three.module.js';
 import { OrbitControls } from './vendor/addons/controls/OrbitControls.js';
 import { EffectComposer } from './vendor/addons/postprocessing/EffectComposer.js';
@@ -979,14 +979,23 @@ export async function boot(shell){
     },
   });
   renderPreparation=createRenderPreparation(async()=>{
-    const preparingEnvironment=environment,preparingScene=scene,revision=environment.preparationRevision;
-    if(renderer.compileAsync)await renderer.compileAsync(preparingScene,camera);else renderer.compile(preparingScene,camera);
+    const preparingEnvironment=environment,preparingScene=scene;
+    const stage=message=>{$('render-prepare-stage').textContent=tr(message);};
+    stage('正在载入街景资源…');
+    // Asset completion may rebind lighting materials. Finish it before the
+    // compiler starts polling their programs, including on slow connections.
+    await awaitSceneReady(preparingEnvironment.ready);
     if(preparingEnvironment!==environment)return;
+    const revision=environment.preparationRevision;
     t=sim.telemetry();updateEnvironment(performance.now(),t,0);
+    stage('正在准备车漆、玻璃与街景材质…');
+    await compileScenePrograms(renderer,preparingScene,camera);
     environment.wantsShadowUpdate?.(performance.now()/1000,t.position);renderer.shadowMap.needsUpdate=true;
+    stage('正在准备车身与湿路反射…');
     await environment.prepareReflections?.(performance.now()/1000,t.position,[car.group,exhaust.mesh,forcesRoot,trail,targetGroup]);
     if(preparingEnvironment!==environment)return;
-    if(renderer.compileAsync)await renderer.compileAsync(scene,camera);else renderer.compile(scene,camera);
+    stage('正在完成光照准备…');
+    const compiled=await compileScenePrograms(renderer,scene,camera);renderPreparation.stats.preparedPrograms=compiled.programs;
     composer.render();
     preparedEnvironment=preparingEnvironment;preparedRevision=revision;
   },{onBusy:busy=>{
@@ -1009,7 +1018,6 @@ export async function boot(shell){
   }).catch(()=>{$('research-content').textContent='参考资料暂未载入。可直接查看 Tesla 官方 Roadster 产品页与本项目物理说明。';});
   setCityWeather(weatherPreset,{record:false});
   activateScenario('city');
-  await Promise.race([environment.ready,new Promise(resolve=>setTimeout(resolve,10000))]);
   $('loading-message').textContent='准备车辆材质、灯光与实时渲染…';
   exhaust.mesh.geometry.instanceCount=1;
   await renderPreparation.run();exhaust.mesh.geometry.instanceCount=0;shell.graphicsReady();window.roadsterReady=true;

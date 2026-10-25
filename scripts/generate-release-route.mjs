@@ -7,6 +7,7 @@ import {gzipSync} from 'node:zlib';
 import {RoadsterSim} from '../dist/physics.js';
 import {roadWheelAngle,MODEL_VERSION} from '../dist/vehicle-models.js';
 import {MODEL_BUILD_ID} from '../dist/model-build.js';
+import {REPORT_VERSION} from './qa-report-version.mjs';
 import {ExperimentRecorder,validateExperimentRecord} from '../dist/experiment-records.js';
 const sim=new RoadsterSim({supplyMode:'bench'},{world:'city'}),dt=1/120;
 sim.reset('city');sim.body.position.set(-200,.74,-390);sim.body.quaternion.set(0,0,0,1);
@@ -21,7 +22,7 @@ line(100,-142.5,100,-390);arc(a=>({x:90+10*Math.cos(a),z:-390-10*Math.sin(a)}));
 line(90,-400,-190,-400);arc(a=>({x:-190-10*Math.sin(a),z:-390-10*Math.cos(a)}));
 let index=0,loops=0,distance=0,maxLateral=0,hullContacts=0,minContacts=4,heldInput={};
 const recorder=new ExperimentRecorder({getSim:()=>sim,getSceneConfiguration:()=>({version:3,context:'city',quality:'high',weatherPreset:'clear-day',camera:{mode:'chase'},autoExposure:true})});
-recorder.start({name:'1.0 QA · continuous Weave–Quay loop · 180 s',kind:'release-route',lineage:{generator:'scripts/generate-release-route.mjs',method:'Pure pursuit fixed-step analog commands; no pose assignments after declared preparation. Dry physical road in both presentation comparisons.'}});
+recorder.start({name:`${REPORT_VERSION} QA · continuous Weave–Quay loop · 180 s`,kind:'release-route',lineage:{generator:'scripts/generate-release-route.mjs',method:'Pure pursuit fixed-step analog commands; no pose assignments after declared preparation. Dry physical road in both presentation comparisons.'}});
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 for(let step=0;step<180/dt;step++){
   const p=sim.body.position;
@@ -42,7 +43,7 @@ for(let step=0;step<180/dt;step++){
 }
 const record=recorder.finish('completed','180 seconds of continuous production-physics loop inputs');validateExperimentRecord(record);
 assert.ok(loops>=1,'Must complete the entire street loop');assert.equal(hullContacts,0);assert.ok(maxLateral<3);
-mkdirSync('.runtime/release-route',{recursive:true});mkdirSync('qa/browser-1.0',{recursive:true});
-const bytes=Buffer.from(JSON.stringify(record));writeFileSync('.runtime/release-route/route.json',bytes);writeFileSync('qa/browser-1.0/route-record.json.gz',gzipSync(bytes,{level:9}));
+mkdirSync('.runtime/release-route',{recursive:true});mkdirSync(`qa/browser-${REPORT_VERSION}`,{recursive:true});
+const bytes=Buffer.from(JSON.stringify(record));writeFileSync('.runtime/release-route/route.json',bytes);writeFileSync(`qa/browser-${REPORT_VERSION}/route-record.json.gz`,gzipSync(bytes,{level:9}));
 const summary={modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,durationS:record.durationS,steps:record.stepCount,loops,distanceM:distance,maxCentrelineErrorM:maxLateral,minContacts,hullContacts,storedSamples:record.samples.length,inputRuns:record.inputRuns.length,bytes:bytes.length,scope:'Numerical command generator on the complete retained Weave/Crosstown/Foundry/Canal loop. Browser replay/rendering acceptance is separate. No native driver or broader cross-district route claim.'};
-writeFileSync('qa/browser-1.0/route-generation.json',JSON.stringify(summary,null,2)+'\n');console.log(JSON.stringify(summary));
+writeFileSync(`qa/browser-${REPORT_VERSION}/route-generation.json`,JSON.stringify(summary,null,2)+'\n');console.log(JSON.stringify(summary));

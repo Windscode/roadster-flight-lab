@@ -1,0 +1,930 @@
+{
+  "status": "passed",
+  "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+  "baselineCommit": "88ddb11799403b5fffa78a86e7cece72085d207e",
+  "baselineSourceSHA256": "391347f411d35af207058b1360a971a2ae3acc90a475d53422248ed1cda651df",
+  "sourceSHA256": "e2f9734c2f0b580221c034bb348d1f639befec171a64734b5892e9a8a24bc65b",
+  "cases": [
+    {
+      "id": "only-one-joule-finite",
+      "initialEnergyJ": 1.000000031581294,
+      "supplyMode": "finite",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 1.000000031581294,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 0.5333333333333339,
+          "contactVerticalMps": -5.232000000000006,
+          "gasRequiredKg": 0,
+          "gasRemainingKg": 249.55820028489444,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 30375.898745934395,
+          "arrest": null,
+          "electricalUsedJ": 1.000000031581294,
+          "electricalRemainingJ": 0,
+          "controlPowerLost": true,
+          "reserveElectricalPowerW": 800
+        },
+        "limitations": [
+          "electrical-supply-exhausted"
+        ],
+        "status": "insufficient",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 1.000000031581294,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "1.0-counterexample-finite",
+      "status": "estimated-reserve",
+      "oldPredictedContactVerticalMps": -0.5023388057007081,
+      "actualFirstStepThrustN": 0
+    },
+    {
+      "id": "only-one-joule-bench",
+      "initialEnergyJ": 1.000000031581294,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 1.000000031581294,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 0.5333333333333339,
+          "contactVerticalMps": -5.232000000000006,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 30375.898745934395,
+          "arrest": null,
+          "electricalUsedJ": 1.000000031581294,
+          "electricalRemainingJ": 0,
+          "controlPowerLost": true,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 0
+        },
+        "limitations": [
+          "electrical-supply-exhausted"
+        ],
+        "status": "insufficient",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 1.000000031581294,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "1.0-counterexample-bench",
+      "status": "estimated-reserve",
+      "oldPredictedContactVerticalMps": -0.5016914637767254,
+      "actualFirstStepThrustN": 0
+    },
+    {
+      "id": "adequate-control-energy",
+      "initialEnergyJ": 9999.999999956799,
+      "supplyMode": "finite",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 9999.999999956799,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.5023388057007081,
+          "gasRequiredKg": 58.06932657021861,
+          "gasRemainingKg": 191.4888737146759,
+          "pressureAtContactBar": 242.4161859195635,
+          "peakDemandRatio": 0.3603879475320699,
+          "arrest": null,
+          "electricalUsedJ": 1246.6666666665533,
+          "electricalRemainingJ": 8753.333333290246,
+          "controlPowerLost": false,
+          "reserveElectricalPowerW": 800
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 9999.999999956799,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "same-energy-active-fan",
+      "initialEnergyJ": 9999.999999956799,
+      "supplyMode": "finite",
+      "fan": true,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "finite",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 9999.999999956799,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 0.7583333333333331,
+          "contactVerticalMps": -4.8555262981295,
+          "gasRequiredKg": 10.046706505951546,
+          "gasRemainingKg": 239.51149377894288,
+          "pressureAtContactBar": 330.4666540263917,
+          "peakDemandRatio": 30237.153729087204,
+          "arrest": null,
+          "electricalUsedJ": 9999.999999956799,
+          "electricalRemainingJ": 0,
+          "controlPowerLost": true,
+          "reserveElectricalPowerW": 26800
+        },
+        "limitations": [
+          "electrical-supply-exhausted"
+        ],
+        "status": "insufficient",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 9999.999999956799,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 26000,
+          "reservePowerW": 26800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "switched-off-fan-still-spinning",
+      "initialEnergyJ": 98736.13984145777,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0.12499999999999999,
+        "step": 15,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0.0038370027221974468,
+          "timeS": 0.03333333333333333,
+          "gasRequiredKg": 2.671378529056177,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 893.3333333333139,
+          "electricalRemainingJ": 97842.80650812446,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 3.249999999999991,
+          "contactVerticalMps": -0.5097095350473541,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 0.3704684240274744,
+          "arrest": null,
+          "electricalUsedJ": 87099.99999999956,
+          "electricalRemainingJ": 11636.139841458207,
+          "controlPowerLost": false,
+          "reserveElectricalPowerW": 26800,
+          "enduranceS": null,
+          "throughputKg": 122.97460323170233
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 3.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 98736.13984145777,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 26000,
+          "reservePowerW": 26800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "active-drive-input",
+      "initialEnergyJ": 9993.33333325012,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0.008333333333333333,
+        "step": 1,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": false,
+          "possible": null
+        },
+        "landing": {
+          "available": false,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null
+        },
+        "limitations": [
+          "wheel-drive-outside-estimate"
+        ],
+        "status": "unavailable",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground"
+      }
+    },
+    {
+      "id": "energy-sweep-1",
+      "initialEnergyJ": 1.000000031581294,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 1.000000031581294,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 0.5333333333333339,
+          "contactVerticalMps": -5.232000000000006,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 30375.898745934395,
+          "arrest": null,
+          "electricalUsedJ": 1.000000031581294,
+          "electricalRemainingJ": 0,
+          "controlPowerLost": true,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 0
+        },
+        "limitations": [
+          "electrical-supply-exhausted"
+        ],
+        "status": "insufficient",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 1.000000031581294,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "energy-sweep-100",
+      "initialEnergyJ": 99.99999998626663,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 99.99999998626663,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 0.5833333333333337,
+          "contactVerticalMps": -5.176884803183162,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 30375.898745934395,
+          "arrest": null,
+          "electricalUsedJ": 99.99999998626663,
+          "electricalRemainingJ": 0,
+          "controlPowerLost": true,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 2.1179073810212454
+        },
+        "limitations": [
+          "electrical-supply-exhausted"
+        ],
+        "status": "insufficient",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 99.99999998626663,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "energy-sweep-400",
+      "initialEnergyJ": 400.0000000473847,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 400.0000000473847,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 0.8583333333333327,
+          "contactVerticalMps": -4.613676029701104,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 30375.898745934395,
+          "arrest": null,
+          "electricalUsedJ": 400.0000000473847,
+          "electricalRemainingJ": 0,
+          "controlPowerLost": true,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 14.775928447619277
+        },
+        "limitations": [
+          "electrical-supply-exhausted"
+        ],
+        "status": "insufficient",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 400.0000000473847,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "energy-sweep-800",
+      "initialEnergyJ": 799.9999999924512,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 799.9999999924512,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "hard-contact-estimate",
+          "timeS": 1.2083333333333315,
+          "contactVerticalMps": -3.1699552006470664,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 30375.898745934395,
+          "arrest": null,
+          "electricalUsedJ": 799.9999999924512,
+          "electricalRemainingJ": 0,
+          "controlPowerLost": true,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 33.70777281886684
+        },
+        "limitations": [
+          "electrical-supply-exhausted"
+        ],
+        "status": "insufficient",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 799.9999999924512,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "energy-sweep-1600",
+      "initialEnergyJ": 1599.9999999849024,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 1599.9999999849024,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.5016914637767254,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 0.37302857831621195,
+          "arrest": null,
+          "electricalUsedJ": 1246.6666666666706,
+          "electricalRemainingJ": 353.33333331823167,
+          "controlPowerLost": false,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 57.39290939673156
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 1599.9999999849024,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "energy-sweep-3200",
+      "initialEnergyJ": 3199.999999969805,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 3199.999999969805,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.5016914637767254,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 0.37302857831621195,
+          "arrest": null,
+          "electricalUsedJ": 1246.6666666666417,
+          "electricalRemainingJ": 1953.333333303163,
+          "controlPowerLost": false,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 57.39290939673156
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 3199.999999969805,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "energy-sweep-6400",
+      "initialEnergyJ": 6400.000000041928,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 6400.000000041928,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.5016914637767254,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 0.37302857831621195,
+          "arrest": null,
+          "electricalUsedJ": 1246.6666666667234,
+          "electricalRemainingJ": 5153.333333375204,
+          "controlPowerLost": false,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 57.39290939673156
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 6400.000000041928,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    },
+    {
+      "id": "energy-sweep-10000",
+      "initialEnergyJ": 9999.999999956799,
+      "supplyMode": "bench",
+      "fan": false,
+      "result": {
+        "protocol": "vertical-landing-reserve-2",
+        "simTime": 0,
+        "step": 0,
+        "estimated": true,
+        "supplyMode": "bench",
+        "scope": "near-level, low-horizontal-speed descent over sampled collision surface; fixed current attitude, no lateral path/obstacle prediction",
+        "validity": {
+          "maximumTiltDeg": 10,
+          "maximumAngularSpeedRadS": 0.35,
+          "maximumHorizontalSpeedMps": 3,
+          "forecastHz": 120,
+          "horizonS": 35,
+          "trimRayFraction": 0.85
+        },
+        "hover": {
+          "feasible": true,
+          "marginN": 58422.33405520518,
+          "meaning": "static trim now; not a landing prediction"
+        },
+        "arrest": {
+          "available": true,
+          "possible": true,
+          "heightRequiredM": 0,
+          "timeS": 0,
+          "gasRequiredKg": 0,
+          "status": "arrest-estimate",
+          "electricalUsedJ": 0,
+          "electricalRemainingJ": 9999.999999956799,
+          "controlPowerLost": false
+        },
+        "landing": {
+          "available": true,
+          "status": "soft-contact-estimate",
+          "timeS": 1.5583333333333302,
+          "contactVerticalMps": -0.5016914637767254,
+          "gasRequiredKg": null,
+          "gasRemainingKg": null,
+          "pressureAtContactBar": 350,
+          "peakDemandRatio": 0.37302857831621195,
+          "arrest": null,
+          "electricalUsedJ": 1246.6666666665533,
+          "electricalRemainingJ": 8753.333333290246,
+          "controlPowerLost": false,
+          "reserveElectricalPowerW": 800,
+          "enduranceS": null,
+          "throughputKg": 57.39290939673156
+        },
+        "limitations": [],
+        "status": "estimated-reserve",
+        "sampledClearanceM": 1.4,
+        "surfaceId": "ground",
+        "electrical": {
+          "initialEnergyJ": 9999.999999956799,
+          "auxiliaryPowerW": 800,
+          "fanReservePowerW": 0,
+          "reservePowerW": 800,
+          "scope": "Constant auxiliary load; active/spinning fan reserves its full rating until contact. Active wheel drive is outside this vertical forecast; future pilot commands are not predicted."
+        }
+      }
+    }
+  ],
+  "scope": "Read-only 1D landing advisory on actual solver states. Initial conditions are declared. Constant 800 W auxiliaries and full active/spinning fan rating reserve; active wheel drive is outside scope. Not a full 6DOF landing certificate, measured battery curve or native input test."
+}

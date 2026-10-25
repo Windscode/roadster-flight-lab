@@ -1,0 +1,1756 @@
+{
+  "schema": "roadster-learning-loop-3.19",
+  "identity": {
+    "modelVersion": "1.1.0",
+    "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+    "sourceCommit": null,
+    "sourceTree": null,
+    "sourceIdentityStatus": "not-available",
+    "protocolVersion": "live-fixed-inputs-1",
+    "fixedHz": 120
+  },
+  "execution": "Actual RoadsterSim at 120 Hz, using the existing public drive input and pose/landing commands. No body-state overwrite, refill or parameter change inside attempts. Numerical execution, not native keyboard or GPU evidence.",
+  "cases": [
+    {
+      "id": "city-mvnbo3ba-1",
+      "status": "failed",
+      "reason": "hard_or_tilted_landing",
+      "durationS": 18.78333333333333,
+      "firstContact": {
+        "step": 2254,
+        "timeS": 18.78333333333333,
+        "position": {
+          "x": 400.0000774949453,
+          "y": 8.669730735861148,
+          "z": 304.99514053502054
+        },
+        "preContactVerticalMps": -7.943737291201576,
+        "verticalMps": -7.524900330854051,
+        "rollDeg": -4.43254643343539e-11,
+        "pitchDeg": 0.0011096880493658822,
+        "wheelObjects": [
+          "upper-city-terrace",
+          "upper-city-terrace",
+          "upper-city-terrace",
+          "upper-city-terrace"
+        ]
+      },
+      "gate": {
+        "direction": "forward",
+        "fraction": 0.7675029434870876,
+        "position": {
+          "x": 400.0000713702759,
+          "y": 11.896501637976622,
+          "z": 280
+        },
+        "forwardSpeedMps": 15.119049385034971,
+        "envelopeHalfWidthM": 1.0225715934036543,
+        "envelopeHalfHeightM": 0.8234998404563605,
+        "inside": true,
+        "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+        "step": 1306,
+        "timeS": 10.881395857862392
+      }
+    },
+    {
+      "id": "city-mvnbo4qh-2",
+      "status": "failed",
+      "reason": "gate_envelope_outside",
+      "durationS": 10.883333333333333,
+      "firstContact": null,
+      "gate": null
+    },
+    {
+      "id": "city-mvnbo5ik-3",
+      "status": "completed",
+      "reason": "stable_platform_landing",
+      "durationS": 21.366666666666667,
+      "firstContact": {
+        "step": 2480,
+        "timeS": 20.666666666666668,
+        "position": {
+          "x": 400.0000774970112,
+          "y": 8.701990002903647,
+          "z": 304.3632647326474
+        },
+        "preContactVerticalMps": -0.2999174110705697,
+        "verticalMps": -0.32102218483175593,
+        "rollDeg": -7.359771395671728e-11,
+        "pitchDeg": 0.000250107263801896,
+        "wheelObjects": [
+          "upper-city-terrace",
+          "upper-city-terrace",
+          "upper-city-terrace",
+          "upper-city-terrace"
+        ]
+      },
+      "gate": {
+        "direction": "forward",
+        "fraction": 0.7675029434870876,
+        "position": {
+          "x": 400.0000713702759,
+          "y": 11.896501637976622,
+          "z": 280
+        },
+        "forwardSpeedMps": 15.119049385034971,
+        "envelopeHalfWidthM": 1.0225715934036543,
+        "envelopeHalfHeightM": 0.8234998404563605,
+        "inside": true,
+        "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+        "step": 1306,
+        "timeS": 10.881395857862392
+      }
+    }
+  ],
+  "reviews": [
+    {
+      "sourceId": "city-mvnbo3ba-1",
+      "reason": "hard_or_tilted_landing",
+      "beforeStep": 1894,
+      "eventStep": 2254,
+      "reproduction": {
+        "schema": "roadster.reproduction-verdict",
+        "version": 1,
+        "status": "matched",
+        "executionStatus": "completed",
+        "semantics": "fixed-input-replay",
+        "expectedAgreement": true,
+        "sourceStatus": "failed",
+        "sourceIdentity": {
+          "modelVersion": "1.1.0",
+          "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+          "sourceCommit": null,
+          "sourceTree": null,
+          "sourceIdentityStatus": "not-available",
+          "protocolVersion": "live-fixed-inputs-1",
+          "fixedHz": 120
+        },
+        "compatibility": {
+          "model": "exact",
+          "sourceIdentity": {
+            "modelVersion": "1.1.0",
+            "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+            "sourceCommit": null,
+            "sourceTree": null,
+            "sourceIdentityStatus": "not-available",
+            "protocolVersion": "live-fixed-inputs-1",
+            "fixedHz": 120
+          },
+          "executionIdentity": {
+            "modelVersion": "1.1.0",
+            "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+            "sourceCommit": null,
+            "sourceTree": null,
+            "sourceIdentityStatus": "not-available",
+            "protocolVersion": "live-fixed-inputs-1",
+            "fixedHz": 120
+          },
+          "conditions": "original-complete-snapshot",
+          "migration": null
+        },
+        "controllerOverride": null,
+        "tolerances": {
+          "positionM": 0.000001,
+          "velocityMps": 0.000001,
+          "attitudeDeg": 0.00001,
+          "angularVelocityRadS": 0.000001,
+          "gasMassKg": 1e-8,
+          "tankTemperatureK": 0.000001,
+          "wheelOmegaRadS": 0.00001,
+          "controllerAbsolute": 1e-7,
+          "controllerRelative": 1e-9
+        },
+        "completedSteps": 2254,
+        "requestedSteps": 2254,
+        "terminalComparedAtSameStep": true,
+        "terminal": {
+          "position": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "m",
+            "available": true,
+            "withinTolerance": true
+          },
+          "velocity": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "m/s",
+            "available": true,
+            "withinTolerance": true
+          },
+          "attitude": {
+            "error": 0,
+            "tolerance": 0.00001,
+            "unit": "deg",
+            "available": true,
+            "withinTolerance": true
+          },
+          "angularVelocity": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "rad/s",
+            "available": true,
+            "withinTolerance": true
+          },
+          "gasMass": {
+            "error": 0,
+            "tolerance": 1e-8,
+            "unit": "kg",
+            "available": true,
+            "withinTolerance": true
+          },
+          "tankTemperature": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "K",
+            "available": true,
+            "withinTolerance": true
+          },
+          "wheelOmega": {
+            "error": 0,
+            "tolerance": 0.00001,
+            "unit": "rad/s",
+            "available": true,
+            "withinTolerance": true,
+            "wheels": [
+              {
+                "id": "FR",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "FL",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "RR",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "RL",
+                "error": 0,
+                "unit": "rad/s"
+              }
+            ]
+          }
+        },
+        "controller": {
+          "comparedAtSourceTerminal": true,
+          "comparedScalars": 418,
+          "comparedDiscrete": 157,
+          "missingFields": [],
+          "absentOptionalFields": [],
+          "mismatchCount": 0,
+          "maxAbsoluteError": 0,
+          "maxNormalizedError": 0,
+          "firstMismatch": null,
+          "contactSupport": {
+            "source": [],
+            "actual": [],
+            "scope": "Canonical local body/shape support set; not transient Cannon equation multipliers or global object IDs."
+          }
+        },
+        "curves": {
+          "position": {
+            "unit": "m",
+            "tolerance": 0.000001,
+            "comparedSamples": 377,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "velocity": {
+            "unit": "m/s",
+            "tolerance": 0.000001,
+            "comparedSamples": 377,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "attitude": {
+            "unit": "deg",
+            "tolerance": 0.00001,
+            "comparedSamples": 377,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "angularVelocity": {
+            "unit": "rad/s",
+            "tolerance": 0.000001,
+            "comparedSamples": 377,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "gasMass": {
+            "unit": "kg",
+            "tolerance": 1e-8,
+            "comparedSamples": 377,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "tankTemperature": {
+            "unit": "K",
+            "tolerance": 0.000001,
+            "comparedSamples": 377,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "wheelOmega": {
+            "unit": "rad/s",
+            "tolerance": 0.00001,
+            "comparedSamples": 377,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          }
+        },
+        "firstDivergence": null,
+        "mismatchCount": 0,
+        "sampling": {
+          "referenceStoredSamples": 377,
+          "comparedSamples": 377,
+          "referenceDecimated": false,
+          "referenceRawHz": 20,
+          "coverage": "Only retained reference samples at matching fixed-step indices were compared; no interpolation and no reconstructed peaks or integrals. Controller and complete rigid-body/gas/wheel comparisons are terminal."
+        },
+        "reason": "Completed the recorded segment; terminal state, required control state and available retained curves agree within the declared numerical tolerances.",
+        "executionReason": ""
+      },
+      "practiceId": "city-mvnbo9rz-4",
+      "comparison": {
+        "schema": "roadster.city-attempt-comparison",
+        "version": 1,
+        "a": "city-mvnbo3ba-1",
+        "b": "city-mvnbo9rz-4",
+        "sameInitialState": true,
+        "initialStateComparison": {
+          "equal": true,
+          "basis": "identical-physical-content"
+        },
+        "sameConditions": true,
+        "sameModel": true,
+        "events": [
+          {
+            "type": "drive_checkpoint",
+            "a": {
+              "timeS": 4.108333333333333,
+              "step": 493,
+              "detail": {
+                "groundDistanceM": 22.025989756222998,
+                "position": {
+                  "x": 400,
+                  "y": 8.597008988554608,
+                  "z": 252.025989756223
+                }
+              }
+            },
+            "b": {
+              "timeS": 4.108333333333333,
+              "step": 493,
+              "detail": {
+                "groundDistanceM": 22.025989756222998,
+                "position": {
+                  "x": 400,
+                  "y": 8.597008988554608,
+                  "z": 252.025989756223
+                }
+              }
+            },
+            "deltaTimeS": 0
+          },
+          {
+            "type": "takeoff",
+            "a": {
+              "timeS": 8.258333333333333,
+              "step": 991,
+              "detail": {
+                "position": {
+                  "x": 400.000010784549,
+                  "y": 9.295606526102928,
+                  "z": 257.2814058366039
+                },
+                "airborneDwellS": 0.12499999999999999
+              }
+            },
+            "b": {
+              "timeS": 8.258333333333333,
+              "step": 991,
+              "detail": {
+                "position": {
+                  "x": 400.000010784549,
+                  "y": 9.295606526102928,
+                  "z": 257.2814058366039
+                },
+                "airborneDwellS": 0.12499999999999999
+              }
+            },
+            "deltaTimeS": 0
+          },
+          {
+            "type": "gate_passed",
+            "a": {
+              "timeS": 10.883333333333333,
+              "step": 1306,
+              "detail": {
+                "direction": "forward",
+                "fraction": 0.7675029434870876,
+                "position": {
+                  "x": 400.0000713702759,
+                  "y": 11.896501637976622,
+                  "z": 280
+                },
+                "forwardSpeedMps": 15.119049385034971,
+                "envelopeHalfWidthM": 1.0225715934036543,
+                "envelopeHalfHeightM": 0.8234998404563605,
+                "inside": true,
+                "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+                "step": 1306,
+                "timeS": 10.881395857862392
+              }
+            },
+            "b": {
+              "timeS": 10.883333333333333,
+              "step": 1306,
+              "detail": {
+                "direction": "forward",
+                "fraction": 0.7675029434870876,
+                "position": {
+                  "x": 400.0000713702759,
+                  "y": 11.896501637976622,
+                  "z": 280
+                },
+                "forwardSpeedMps": 15.119049385034971,
+                "envelopeHalfWidthM": 1.0225715934036543,
+                "envelopeHalfHeightM": 0.8234998404563605,
+                "inside": true,
+                "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+                "step": 1306,
+                "timeS": 10.881395857862392
+              }
+            },
+            "deltaTimeS": 0
+          },
+          {
+            "type": "touchdown",
+            "a": {
+              "timeS": 18.78333333333333,
+              "step": 2254,
+              "detail": {
+                "step": 2254,
+                "timeS": 18.78333333333333,
+                "position": {
+                  "x": 400.0000774949453,
+                  "y": 8.669730735861148,
+                  "z": 304.99514053502054
+                },
+                "preContactVerticalMps": -7.943737291201576,
+                "verticalMps": -7.524900330854051,
+                "rollDeg": -4.43254643343539e-11,
+                "pitchDeg": 0.0011096880493658822,
+                "wheelObjects": [
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace"
+                ]
+              }
+            },
+            "b": {
+              "timeS": 20.666666666666668,
+              "step": 2480,
+              "detail": {
+                "step": 2480,
+                "timeS": 20.666666666666668,
+                "position": {
+                  "x": 400.0000774970112,
+                  "y": 8.701990002903647,
+                  "z": 304.3632647326474
+                },
+                "preContactVerticalMps": -0.2999174110705697,
+                "verticalMps": -0.32102218483175593,
+                "rollDeg": -7.359771395671728e-11,
+                "pitchDeg": 0.000250107263801896,
+                "wheelObjects": [
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace"
+                ]
+              }
+            },
+            "deltaTimeS": 1.8833333333333364
+          },
+          {
+            "type": "stable_landing",
+            "a": null,
+            "b": {
+              "timeS": 21.366666666666667,
+              "step": 2564,
+              "detail": {
+                "stableSeconds": 0.5000000000000007,
+                "errorM": 0.6660625842515129
+              }
+            },
+            "deltaTimeS": null
+          }
+        ],
+        "metrics": [
+          {
+            "key": "touchdown-descent",
+            "label": "触地前下降速度",
+            "labelEn": "Pre-contact descent",
+            "unit": "m/s",
+            "a": 7.943737291201576,
+            "b": 0.2999174110705697,
+            "delta": -7.643819880131007
+          },
+          {
+            "key": "touchdown-tilt",
+            "label": "触地最大倾角",
+            "labelEn": "Maximum contact tilt",
+            "unit": "°",
+            "a": 0.0011096880493658822,
+            "b": 0.000250107263801896,
+            "delta": -0.0008595807855639862
+          },
+          {
+            "key": "gas",
+            "label": "喷口通过气量",
+            "labelEn": "Nozzle gas throughput",
+            "unit": "kg",
+            "a": 628.8627247201339,
+            "b": 731.0791977210968,
+            "delta": 102.21647300096288
+          },
+          {
+            "key": "height",
+            "label": "全程最高高度",
+            "labelEn": "Peak world height",
+            "unit": "m",
+            "a": 11.999809752389492,
+            "b": 11.999809752389492,
+            "delta": 0
+          }
+        ],
+        "semantics": "event-aligned-human-attempts",
+        "strictControllerAB": false,
+        "inputSequencesEqual": false,
+        "commandSequencesEqual": false,
+        "note": "Human attempts are aligned by physical events; differing inputs are not a controlled controller A/B experiment. Missing events remain missing."
+      },
+      "firstViolation": {
+        "status": "failed",
+        "reason": "hard_or_tilted_landing",
+        "first": {
+          "step": 2254,
+          "timeS": 18.78333333333333,
+          "reason": "hard_or_tilted_landing",
+          "detail": {
+            "descentMps": 7.943737291201576,
+            "tiltDeg": 0.0011096880493658822,
+            "observed": {
+              "position": {
+                "x": 400.0000774949453,
+                "y": 8.669730735861148,
+                "z": 304.99514053502054
+              },
+              "velocity": {
+                "x": 9.59735236755182e-10,
+                "y": -7.524900330854051,
+                "z": -0.32172652583884526
+              },
+              "rollDeg": -4.43254643343539e-11,
+              "pitchDeg": 0.0011096880493658822,
+              "contactCount": 4
+            },
+            "measurements": [
+              {
+                "key": "descent",
+                "label": "触地前下降速度",
+                "labelEn": "Pre-contact descent",
+                "actual": 7.943737291201576,
+                "operator": "≤",
+                "threshold": 1.4,
+                "unit": "m/s",
+                "violated": true
+              },
+              {
+                "key": "tilt",
+                "label": "触地倾角",
+                "labelEn": "Contact tilt",
+                "actual": 0.0011096880493658822,
+                "operator": "≤",
+                "threshold": 8,
+                "unit": "°",
+                "violated": false
+              }
+            ]
+          }
+        },
+        "measurements": [
+          {
+            "key": "descent",
+            "label": "触地前下降速度",
+            "labelEn": "Pre-contact descent",
+            "actual": 7.943737291201576,
+            "operator": "≤",
+            "threshold": 1.4,
+            "unit": "m/s",
+            "violated": true
+          },
+          {
+            "key": "tilt",
+            "label": "触地倾角",
+            "labelEn": "Contact tilt",
+            "actual": 0.0011096880493658822,
+            "operator": "≤",
+            "threshold": 8,
+            "unit": "°",
+            "violated": false
+          }
+        ],
+        "precedingEvents": [
+          {
+            "step": 493,
+            "timeS": 4.108333333333333,
+            "type": "drive_checkpoint",
+            "detail": {
+              "groundDistanceM": 22.025989756222998,
+              "position": {
+                "x": 400,
+                "y": 8.597008988554608,
+                "z": 252.025989756223
+              }
+            }
+          },
+          {
+            "step": 991,
+            "timeS": 8.258333333333333,
+            "type": "takeoff",
+            "detail": {
+              "position": {
+                "x": 400.000010784549,
+                "y": 9.295606526102928,
+                "z": 257.2814058366039
+              },
+              "airborneDwellS": 0.12499999999999999
+            }
+          },
+          {
+            "step": 1306,
+            "timeS": 10.883333333333333,
+            "type": "gate_crossing",
+            "detail": {
+              "direction": "forward",
+              "fraction": 0.7675029434870876,
+              "position": {
+                "x": 400.0000713702759,
+                "y": 11.896501637976622,
+                "z": 280
+              },
+              "forwardSpeedMps": 15.119049385034971,
+              "envelopeHalfWidthM": 1.0225715934036543,
+              "envelopeHalfHeightM": 0.8234998404563605,
+              "inside": true,
+              "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate"
+            }
+          },
+          {
+            "step": 1306,
+            "timeS": 10.883333333333333,
+            "type": "gate_passed",
+            "detail": {
+              "direction": "forward",
+              "fraction": 0.7675029434870876,
+              "position": {
+                "x": 400.0000713702759,
+                "y": 11.896501637976622,
+                "z": 280
+              },
+              "forwardSpeedMps": 15.119049385034971,
+              "envelopeHalfWidthM": 1.0225715934036543,
+              "envelopeHalfHeightM": 0.8234998404563605,
+              "inside": true,
+              "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+              "step": 1306,
+              "timeS": 10.881395857862392
+            }
+          },
+          {
+            "step": 2254,
+            "timeS": 18.78333333333333,
+            "type": "touchdown",
+            "detail": {
+              "step": 2254,
+              "timeS": 18.78333333333333,
+              "position": {
+                "x": 400.0000774949453,
+                "y": 8.669730735861148,
+                "z": 304.99514053502054
+              },
+              "preContactVerticalMps": -7.943737291201576,
+              "verticalMps": -7.524900330854051,
+              "rollDeg": -4.43254643343539e-11,
+              "pitchDeg": 0.0011096880493658822,
+              "wheelObjects": [
+                "upper-city-terrace",
+                "upper-city-terrace",
+                "upper-city-terrace",
+                "upper-city-terrace"
+              ]
+            }
+          }
+        ],
+        "note": "The earliest recorded rule breach is shown. Temporal order is evidence of sequence, not proof of cause."
+      }
+    },
+    {
+      "sourceId": "city-mvnbo4qh-2",
+      "reason": "gate_envelope_outside",
+      "beforeStep": 946,
+      "eventStep": 1306,
+      "reproduction": {
+        "schema": "roadster.reproduction-verdict",
+        "version": 1,
+        "status": "matched",
+        "executionStatus": "completed",
+        "semantics": "fixed-input-replay",
+        "expectedAgreement": true,
+        "sourceStatus": "failed",
+        "sourceIdentity": {
+          "modelVersion": "1.1.0",
+          "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+          "sourceCommit": null,
+          "sourceTree": null,
+          "sourceIdentityStatus": "not-available",
+          "protocolVersion": "live-fixed-inputs-1",
+          "fixedHz": 120
+        },
+        "compatibility": {
+          "model": "exact",
+          "sourceIdentity": {
+            "modelVersion": "1.1.0",
+            "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+            "sourceCommit": null,
+            "sourceTree": null,
+            "sourceIdentityStatus": "not-available",
+            "protocolVersion": "live-fixed-inputs-1",
+            "fixedHz": 120
+          },
+          "executionIdentity": {
+            "modelVersion": "1.1.0",
+            "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+            "sourceCommit": null,
+            "sourceTree": null,
+            "sourceIdentityStatus": "not-available",
+            "protocolVersion": "live-fixed-inputs-1",
+            "fixedHz": 120
+          },
+          "conditions": "original-complete-snapshot",
+          "migration": null
+        },
+        "controllerOverride": null,
+        "tolerances": {
+          "positionM": 0.000001,
+          "velocityMps": 0.000001,
+          "attitudeDeg": 0.00001,
+          "angularVelocityRadS": 0.000001,
+          "gasMassKg": 1e-8,
+          "tankTemperatureK": 0.000001,
+          "wheelOmegaRadS": 0.00001,
+          "controllerAbsolute": 1e-7,
+          "controllerRelative": 1e-9
+        },
+        "completedSteps": 1306,
+        "requestedSteps": 1306,
+        "terminalComparedAtSameStep": true,
+        "terminal": {
+          "position": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "m",
+            "available": true,
+            "withinTolerance": true
+          },
+          "velocity": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "m/s",
+            "available": true,
+            "withinTolerance": true
+          },
+          "attitude": {
+            "error": 0,
+            "tolerance": 0.00001,
+            "unit": "deg",
+            "available": true,
+            "withinTolerance": true
+          },
+          "angularVelocity": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "rad/s",
+            "available": true,
+            "withinTolerance": true
+          },
+          "gasMass": {
+            "error": 0,
+            "tolerance": 1e-8,
+            "unit": "kg",
+            "available": true,
+            "withinTolerance": true
+          },
+          "tankTemperature": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "K",
+            "available": true,
+            "withinTolerance": true
+          },
+          "wheelOmega": {
+            "error": 0,
+            "tolerance": 0.00001,
+            "unit": "rad/s",
+            "available": true,
+            "withinTolerance": true,
+            "wheels": [
+              {
+                "id": "FR",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "FL",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "RR",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "RL",
+                "error": 0,
+                "unit": "rad/s"
+              }
+            ]
+          }
+        },
+        "controller": {
+          "comparedAtSourceTerminal": true,
+          "comparedScalars": 418,
+          "comparedDiscrete": 160,
+          "missingFields": [],
+          "absentOptionalFields": [],
+          "mismatchCount": 0,
+          "maxAbsoluteError": 0,
+          "maxNormalizedError": 0,
+          "firstMismatch": null,
+          "contactSupport": {
+            "source": [],
+            "actual": [],
+            "scope": "Canonical local body/shape support set; not transient Cannon equation multipliers or global object IDs."
+          }
+        },
+        "curves": {
+          "position": {
+            "unit": "m",
+            "tolerance": 0.000001,
+            "comparedSamples": 219,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "velocity": {
+            "unit": "m/s",
+            "tolerance": 0.000001,
+            "comparedSamples": 219,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "attitude": {
+            "unit": "deg",
+            "tolerance": 0.00001,
+            "comparedSamples": 219,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "angularVelocity": {
+            "unit": "rad/s",
+            "tolerance": 0.000001,
+            "comparedSamples": 219,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "gasMass": {
+            "unit": "kg",
+            "tolerance": 1e-8,
+            "comparedSamples": 219,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "tankTemperature": {
+            "unit": "K",
+            "tolerance": 0.000001,
+            "comparedSamples": 219,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "wheelOmega": {
+            "unit": "rad/s",
+            "tolerance": 0.00001,
+            "comparedSamples": 219,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          }
+        },
+        "firstDivergence": null,
+        "mismatchCount": 0,
+        "sampling": {
+          "referenceStoredSamples": 219,
+          "comparedSamples": 219,
+          "referenceDecimated": false,
+          "referenceRawHz": 20,
+          "coverage": "Only retained reference samples at matching fixed-step indices were compared; no interpolation and no reconstructed peaks or integrals. Controller and complete rigid-body/gas/wheel comparisons are terminal."
+        },
+        "reason": "Completed the recorded segment; terminal state, required control state and available retained curves agree within the declared numerical tolerances.",
+        "executionReason": ""
+      },
+      "practiceId": "city-mvnbocrn-5",
+      "comparison": {
+        "schema": "roadster.city-attempt-comparison",
+        "version": 1,
+        "a": "city-mvnbo4qh-2",
+        "b": "city-mvnbocrn-5",
+        "sameInitialState": true,
+        "initialStateComparison": {
+          "equal": true,
+          "basis": "identical-physical-content"
+        },
+        "sameConditions": true,
+        "sameModel": true,
+        "events": [
+          {
+            "type": "drive_checkpoint",
+            "a": {
+              "timeS": 4.108333333333333,
+              "step": 493,
+              "detail": {
+                "groundDistanceM": 22.025989756222998,
+                "position": {
+                  "x": 400,
+                  "y": 8.597008988554608,
+                  "z": 252.025989756223
+                }
+              }
+            },
+            "b": {
+              "timeS": 4.108333333333333,
+              "step": 493,
+              "detail": {
+                "groundDistanceM": 22.025989756222998,
+                "position": {
+                  "x": 400,
+                  "y": 8.597008988554608,
+                  "z": 252.025989756223
+                }
+              }
+            },
+            "deltaTimeS": 0
+          },
+          {
+            "type": "takeoff",
+            "a": {
+              "timeS": 8.191666666666666,
+              "step": 983,
+              "detail": {
+                "position": {
+                  "x": 400.0000092504979,
+                  "y": 9.544340646842675,
+                  "z": 257.15202053644276
+                },
+                "airborneDwellS": 0.12499999999999999
+              }
+            },
+            "b": {
+              "timeS": 8.258333333333333,
+              "step": 991,
+              "detail": {
+                "position": {
+                  "x": 400.000010784549,
+                  "y": 9.295606526102928,
+                  "z": 257.2814058366039
+                },
+                "airborneDwellS": 0.12499999999999999
+              }
+            },
+            "deltaTimeS": 0.06666666666666643
+          },
+          {
+            "type": "gate_passed",
+            "a": null,
+            "b": {
+              "timeS": 10.883333333333333,
+              "step": 1306,
+              "detail": {
+                "direction": "forward",
+                "fraction": 0.7675029434870876,
+                "position": {
+                  "x": 400.0000713702759,
+                  "y": 11.896501637976622,
+                  "z": 280
+                },
+                "forwardSpeedMps": 15.119049385034971,
+                "envelopeHalfWidthM": 1.0225715934036543,
+                "envelopeHalfHeightM": 0.8234998404563605,
+                "inside": true,
+                "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+                "step": 1306,
+                "timeS": 10.881395857862392
+              }
+            },
+            "deltaTimeS": null
+          },
+          {
+            "type": "touchdown",
+            "a": null,
+            "b": {
+              "timeS": 20.666666666666668,
+              "step": 2480,
+              "detail": {
+                "step": 2480,
+                "timeS": 20.666666666666668,
+                "position": {
+                  "x": 400.0000774970112,
+                  "y": 8.701990002903647,
+                  "z": 304.3632647326474
+                },
+                "preContactVerticalMps": -0.2999174110705697,
+                "verticalMps": -0.32102218483175593,
+                "rollDeg": -7.359771395671728e-11,
+                "pitchDeg": 0.000250107263801896,
+                "wheelObjects": [
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace"
+                ]
+              }
+            },
+            "deltaTimeS": null
+          },
+          {
+            "type": "stable_landing",
+            "a": null,
+            "b": {
+              "timeS": 21.366666666666667,
+              "step": 2564,
+              "detail": {
+                "stableSeconds": 0.5000000000000007,
+                "errorM": 0.6660625842515129
+              }
+            },
+            "deltaTimeS": null
+          }
+        ],
+        "metrics": [
+          {
+            "key": "touchdown-descent",
+            "label": "触地前下降速度",
+            "labelEn": "Pre-contact descent",
+            "unit": "m/s",
+            "a": null,
+            "b": 0.2999174110705697,
+            "delta": null
+          },
+          {
+            "key": "touchdown-tilt",
+            "label": "触地最大倾角",
+            "labelEn": "Maximum contact tilt",
+            "unit": "°",
+            "a": null,
+            "b": 0.000250107263801896,
+            "delta": null
+          },
+          {
+            "key": "gas",
+            "label": "喷口通过气量",
+            "labelEn": "Nozzle gas throughput",
+            "unit": "kg",
+            "a": 266.70970207064255,
+            "b": 731.0791977210968,
+            "delta": 464.3694956504542
+          },
+          {
+            "key": "height",
+            "label": "全程最高高度",
+            "labelEn": "Peak world height",
+            "unit": "m",
+            "a": 17.665993184615285,
+            "b": 11.999809752389492,
+            "delta": -5.666183432225793
+          }
+        ],
+        "semantics": "event-aligned-human-attempts",
+        "strictControllerAB": false,
+        "inputSequencesEqual": false,
+        "commandSequencesEqual": false,
+        "note": "Human attempts are aligned by physical events; differing inputs are not a controlled controller A/B experiment. Missing events remain missing."
+      },
+      "firstViolation": {
+        "status": "failed",
+        "reason": "gate_envelope_outside",
+        "first": {
+          "step": 1306,
+          "timeS": 10.883333333333333,
+          "reason": "gate_envelope_outside",
+          "detail": {
+            "direction": "forward",
+            "fraction": 0.576846619831505,
+            "position": {
+              "x": 400.00007157805777,
+              "y": 17.664388597060693,
+              "z": 280
+            },
+            "forwardSpeedMps": 15.117326462175837,
+            "envelopeHalfWidthM": 1.0225716854382654,
+            "envelopeHalfHeightM": 6.294388991685036,
+            "inside": false,
+            "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+            "observed": {
+              "position": {
+                "x": 400.0000716022021,
+                "y": 17.665993184615285,
+                "z": 280.05336887399574
+              },
+              "velocity": {
+                "x": 0.000006846972792774121,
+                "y": 0.4550371462805118,
+                "z": 15.134618272311336
+              },
+              "rollDeg": 2.0469914234698833e-7,
+              "pitchDeg": -0.00001944469280245968,
+              "contactCount": 0
+            },
+            "measurements": [
+              {
+                "key": "gate-width",
+                "label": "含余量的横向半包络",
+                "labelEn": "Lateral half envelope + margin",
+                "actual": 1.0725716854382654,
+                "operator": "≤",
+                "threshold": 5.5,
+                "unit": "m",
+                "violated": false
+              },
+              {
+                "key": "gate-height",
+                "label": "含余量的竖向半包络",
+                "labelEn": "Vertical half envelope + margin",
+                "actual": 6.344388991685036,
+                "operator": "≤",
+                "threshold": 2.7,
+                "unit": "m",
+                "violated": true
+              }
+            ]
+          }
+        },
+        "measurements": [
+          {
+            "key": "gate-width",
+            "label": "含余量的横向半包络",
+            "labelEn": "Lateral half envelope + margin",
+            "actual": 1.0725716854382654,
+            "operator": "≤",
+            "threshold": 5.5,
+            "unit": "m",
+            "violated": false
+          },
+          {
+            "key": "gate-height",
+            "label": "含余量的竖向半包络",
+            "labelEn": "Vertical half envelope + margin",
+            "actual": 6.344388991685036,
+            "operator": "≤",
+            "threshold": 2.7,
+            "unit": "m",
+            "violated": true
+          }
+        ],
+        "precedingEvents": [
+          {
+            "step": 0,
+            "timeS": 0,
+            "type": "start",
+            "detail": {
+              "taskId": "fnv1a32-a06b9b00",
+              "conditionsLabel": "fnv1a32-bf0f7379",
+              "supplyMode": "bench",
+              "rules": [
+                "Start stopped on the existing 8 m terrace road, heading +Z; starting never teleports or refills.",
+                "Drive on wheels at least 18 m and cross z=252 before taking off inside the marked strip.",
+                "Cross the gate once in +Z while fully airborne; the physical hull/tyre envelope must fit the 11 by 5.4 m opening.",
+                "Touch down only inside the marked terrace area, with <=1.4 m/s descent and <=8 degree tilt; no hull collision.",
+                "At least 3 wheels on upper-city-terrace, slow translation and rotation for 0.5 s are required before completion.",
+                "Reset, refill, changed wind/fault/model parameters or a discontinuity end the attempt; cancel releases the observer without moving the vehicle."
+              ]
+            }
+          },
+          {
+            "step": 493,
+            "timeS": 4.108333333333333,
+            "type": "drive_checkpoint",
+            "detail": {
+              "groundDistanceM": 22.025989756222998,
+              "position": {
+                "x": 400,
+                "y": 8.597008988554608,
+                "z": 252.025989756223
+              }
+            }
+          },
+          {
+            "step": 983,
+            "timeS": 8.191666666666666,
+            "type": "takeoff",
+            "detail": {
+              "position": {
+                "x": 400.0000092504979,
+                "y": 9.544340646842675,
+                "z": 257.15202053644276
+              },
+              "airborneDwellS": 0.12499999999999999
+            }
+          },
+          {
+            "step": 1306,
+            "timeS": 10.883333333333333,
+            "type": "gate_crossing",
+            "detail": {
+              "direction": "forward",
+              "fraction": 0.576846619831505,
+              "position": {
+                "x": 400.00007157805777,
+                "y": 17.664388597060693,
+                "z": 280
+              },
+              "forwardSpeedMps": 15.117326462175837,
+              "envelopeHalfWidthM": 1.0225716854382654,
+              "envelopeHalfHeightM": 6.294388991685036,
+              "inside": false,
+              "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate"
+            }
+          }
+        ],
+        "note": "The earliest recorded rule breach is shown. Temporal order is evidence of sequence, not proof of cause."
+      }
+    },
+    {
+      "sourceId": "city-mvnbo5ik-3",
+      "reason": "stable_platform_landing",
+      "beforeStep": 2204,
+      "eventStep": 2564,
+      "reproduction": {
+        "schema": "roadster.reproduction-verdict",
+        "version": 1,
+        "status": "matched",
+        "executionStatus": "completed",
+        "semantics": "fixed-input-replay",
+        "expectedAgreement": true,
+        "sourceStatus": "completed",
+        "sourceIdentity": {
+          "modelVersion": "1.1.0",
+          "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+          "sourceCommit": null,
+          "sourceTree": null,
+          "sourceIdentityStatus": "not-available",
+          "protocolVersion": "live-fixed-inputs-1",
+          "fixedHz": 120
+        },
+        "compatibility": {
+          "model": "exact",
+          "sourceIdentity": {
+            "modelVersion": "1.1.0",
+            "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+            "sourceCommit": null,
+            "sourceTree": null,
+            "sourceIdentityStatus": "not-available",
+            "protocolVersion": "live-fixed-inputs-1",
+            "fixedHz": 120
+          },
+          "executionIdentity": {
+            "modelVersion": "1.1.0",
+            "modelBuildId": "58c5a44ebcacede67e31d2ff32ce5272f8f228ed84637b689f756d95a3d88a33",
+            "sourceCommit": null,
+            "sourceTree": null,
+            "sourceIdentityStatus": "not-available",
+            "protocolVersion": "live-fixed-inputs-1",
+            "fixedHz": 120
+          },
+          "conditions": "original-complete-snapshot",
+          "migration": null
+        },
+        "controllerOverride": null,
+        "tolerances": {
+          "positionM": 0.000001,
+          "velocityMps": 0.000001,
+          "attitudeDeg": 0.00001,
+          "angularVelocityRadS": 0.000001,
+          "gasMassKg": 1e-8,
+          "tankTemperatureK": 0.000001,
+          "wheelOmegaRadS": 0.00001,
+          "controllerAbsolute": 1e-7,
+          "controllerRelative": 1e-9
+        },
+        "completedSteps": 2564,
+        "requestedSteps": 2564,
+        "terminalComparedAtSameStep": true,
+        "terminal": {
+          "position": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "m",
+            "available": true,
+            "withinTolerance": true
+          },
+          "velocity": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "m/s",
+            "available": true,
+            "withinTolerance": true
+          },
+          "attitude": {
+            "error": 0,
+            "tolerance": 0.00001,
+            "unit": "deg",
+            "available": true,
+            "withinTolerance": true
+          },
+          "angularVelocity": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "rad/s",
+            "available": true,
+            "withinTolerance": true
+          },
+          "gasMass": {
+            "error": 0,
+            "tolerance": 1e-8,
+            "unit": "kg",
+            "available": true,
+            "withinTolerance": true
+          },
+          "tankTemperature": {
+            "error": 0,
+            "tolerance": 0.000001,
+            "unit": "K",
+            "available": true,
+            "withinTolerance": true
+          },
+          "wheelOmega": {
+            "error": 0,
+            "tolerance": 0.00001,
+            "unit": "rad/s",
+            "available": true,
+            "withinTolerance": true,
+            "wheels": [
+              {
+                "id": "FR",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "FL",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "RR",
+                "error": 0,
+                "unit": "rad/s"
+              },
+              {
+                "id": "RL",
+                "error": 0,
+                "unit": "rad/s"
+              }
+            ]
+          }
+        },
+        "controller": {
+          "comparedAtSourceTerminal": true,
+          "comparedScalars": 418,
+          "comparedDiscrete": 157,
+          "missingFields": [],
+          "absentOptionalFields": [],
+          "mismatchCount": 0,
+          "maxAbsoluteError": 0,
+          "maxNormalizedError": 0,
+          "firstMismatch": null,
+          "contactSupport": {
+            "source": [],
+            "actual": [],
+            "scope": "Canonical local body/shape support set; not transient Cannon equation multipliers or global object IDs."
+          }
+        },
+        "curves": {
+          "position": {
+            "unit": "m",
+            "tolerance": 0.000001,
+            "comparedSamples": 429,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "velocity": {
+            "unit": "m/s",
+            "tolerance": 0.000001,
+            "comparedSamples": 429,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "attitude": {
+            "unit": "deg",
+            "tolerance": 0.00001,
+            "comparedSamples": 429,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "angularVelocity": {
+            "unit": "rad/s",
+            "tolerance": 0.000001,
+            "comparedSamples": 429,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "gasMass": {
+            "unit": "kg",
+            "tolerance": 1e-8,
+            "comparedSamples": 429,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "tankTemperature": {
+            "unit": "K",
+            "tolerance": 0.000001,
+            "comparedSamples": 429,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          },
+          "wheelOmega": {
+            "unit": "rad/s",
+            "tolerance": 0.00001,
+            "comparedSamples": 429,
+            "missingSamples": 0,
+            "maxError": 0,
+            "maxErrorStep": 0
+          }
+        },
+        "firstDivergence": null,
+        "mismatchCount": 0,
+        "sampling": {
+          "referenceStoredSamples": 429,
+          "comparedSamples": 429,
+          "referenceDecimated": false,
+          "referenceRawHz": 20,
+          "coverage": "Only retained reference samples at matching fixed-step indices were compared; no interpolation and no reconstructed peaks or integrals. Controller and complete rigid-body/gas/wheel comparisons are terminal."
+        },
+        "reason": "Completed the recorded segment; terminal state, required control state and available retained curves agree within the declared numerical tolerances.",
+        "executionReason": ""
+      },
+      "practiceId": "city-mvnbohbw-6",
+      "comparison": {
+        "schema": "roadster.city-attempt-comparison",
+        "version": 1,
+        "a": "city-mvnbo5ik-3",
+        "b": "city-mvnbohbw-6",
+        "sameInitialState": true,
+        "initialStateComparison": {
+          "equal": true,
+          "basis": "identical-physical-content"
+        },
+        "sameConditions": true,
+        "sameModel": true,
+        "events": [
+          {
+            "type": "drive_checkpoint",
+            "a": {
+              "timeS": 4.108333333333333,
+              "step": 493,
+              "detail": {
+                "groundDistanceM": 22.025989756222998,
+                "position": {
+                  "x": 400,
+                  "y": 8.597008988554608,
+                  "z": 252.025989756223
+                }
+              }
+            },
+            "b": {
+              "timeS": 4.108333333333333,
+              "step": 493,
+              "detail": {
+                "groundDistanceM": 22.025989756222998,
+                "position": {
+                  "x": 400,
+                  "y": 8.597008988554608,
+                  "z": 252.025989756223
+                }
+              }
+            },
+            "deltaTimeS": 0
+          },
+          {
+            "type": "takeoff",
+            "a": {
+              "timeS": 8.258333333333333,
+              "step": 991,
+              "detail": {
+                "position": {
+                  "x": 400.000010784549,
+                  "y": 9.295606526102928,
+                  "z": 257.2814058366039
+                },
+                "airborneDwellS": 0.12499999999999999
+              }
+            },
+            "b": {
+              "timeS": 8.258333333333333,
+              "step": 991,
+              "detail": {
+                "position": {
+                  "x": 400.000010784549,
+                  "y": 9.295606526102928,
+                  "z": 257.2814058366039
+                },
+                "airborneDwellS": 0.12499999999999999
+              }
+            },
+            "deltaTimeS": 0
+          },
+          {
+            "type": "gate_passed",
+            "a": {
+              "timeS": 10.883333333333333,
+              "step": 1306,
+              "detail": {
+                "direction": "forward",
+                "fraction": 0.7675029434870876,
+                "position": {
+                  "x": 400.0000713702759,
+                  "y": 11.896501637976622,
+                  "z": 280
+                },
+                "forwardSpeedMps": 15.119049385034971,
+                "envelopeHalfWidthM": 1.0225715934036543,
+                "envelopeHalfHeightM": 0.8234998404563605,
+                "inside": true,
+                "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+                "step": 1306,
+                "timeS": 10.881395857862392
+              }
+            },
+            "b": {
+              "timeS": 10.883333333333333,
+              "step": 1306,
+              "detail": {
+                "direction": "forward",
+                "fraction": 0.7675029434870876,
+                "position": {
+                  "x": 400.0000713702759,
+                  "y": 11.896501637976622,
+                  "z": 280
+                },
+                "forwardSpeedMps": 15.119049385034971,
+                "envelopeHalfWidthM": 1.0225715934036543,
+                "envelopeHalfHeightM": 0.8234998404563605,
+                "inside": true,
+                "method": "linear 120 Hz endpoint envelope projection at CG plane crossing; not a continuous curved swept-volume certificate",
+                "step": 1306,
+                "timeS": 10.881395857862392
+              }
+            },
+            "deltaTimeS": 0
+          },
+          {
+            "type": "touchdown",
+            "a": {
+              "timeS": 20.666666666666668,
+              "step": 2480,
+              "detail": {
+                "step": 2480,
+                "timeS": 20.666666666666668,
+                "position": {
+                  "x": 400.0000774970112,
+                  "y": 8.701990002903647,
+                  "z": 304.3632647326474
+                },
+                "preContactVerticalMps": -0.2999174110705697,
+                "verticalMps": -0.32102218483175593,
+                "rollDeg": -7.359771395671728e-11,
+                "pitchDeg": 0.000250107263801896,
+                "wheelObjects": [
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace"
+                ]
+              }
+            },
+            "b": {
+              "timeS": 20.666666666666668,
+              "step": 2480,
+              "detail": {
+                "step": 2480,
+                "timeS": 20.666666666666668,
+                "position": {
+                  "x": 400.0000774970112,
+                  "y": 8.701990002903647,
+                  "z": 304.3632647326474
+                },
+                "preContactVerticalMps": -0.2999174110705697,
+                "verticalMps": -0.32102218483175593,
+                "rollDeg": -7.359771395671728e-11,
+                "pitchDeg": 0.000250107263801896,
+                "wheelObjects": [
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace",
+                  "upper-city-terrace"
+                ]
+              }
+            },
+            "deltaTimeS": 0
+          },
+          {
+            "type": "stable_landing",
+            "a": {
+              "timeS": 21.366666666666667,
+              "step": 2564,
+              "detail": {
+                "stableSeconds": 0.5000000000000007,
+                "errorM": 0.6660625842515129
+              }
+            },
+            "b": {
+              "timeS": 21.366666666666667,
+              "step": 2564,
+              "detail": {
+                "stableSeconds": 0.5000000000000007,
+                "errorM": 0.6660625842515129
+              }
+            },
+            "deltaTimeS": 0
+          }
+        ],
+        "metrics": [
+          {
+            "key": "touchdown-descent",
+            "label": "触地前下降速度",
+            "labelEn": "Pre-contact descent",
+            "unit": "m/s",
+            "a": 0.2999174110705697,
+            "b": 0.2999174110705697,
+            "delta": 0
+          },
+          {
+            "key": "touchdown-tilt",
+            "label": "触地最大倾角",
+            "labelEn": "Maximum contact tilt",
+            "unit": "°",
+            "a": 0.000250107263801896,
+            "b": 0.000250107263801896,
+            "delta": 0
+          },
+          {
+            "key": "gas",
+            "label": "喷口通过气量",
+            "labelEn": "Nozzle gas throughput",
+            "unit": "kg",
+            "a": 731.0791977210968,
+            "b": 731.0791977210968,
+            "delta": 0
+          },
+          {
+            "key": "height",
+            "label": "全程最高高度",
+            "labelEn": "Peak world height",
+            "unit": "m",
+            "a": 11.999809752389492,
+            "b": 11.999809752389492,
+            "delta": 0
+          }
+        ],
+        "semantics": "event-aligned-human-attempts",
+        "strictControllerAB": false,
+        "inputSequencesEqual": true,
+        "commandSequencesEqual": true,
+        "note": "Human attempts are aligned by physical events; differing inputs are not a controlled controller A/B experiment. Missing events remain missing."
+      },
+      "firstViolation": {
+        "status": "completed",
+        "reason": "stable_platform_landing",
+        "first": null,
+        "measurements": [],
+        "precedingEvents": [],
+        "note": "No rule violation is recorded. Completion and cancellation remain distinct."
+      }
+    }
+  ],
+  "originalLiveUnchanged": true,
+  "oldBuildReadOnly": true,
+  "practiceExcludedFromFormalRanking": true,
+  "advisoryUnitProbes": {
+    "events": [
+      {
+        "type": "unowned-new-nozzle-request",
+        "simTime": 1.75,
+        "advisory": true,
+        "causalClaim": false,
+        "detail": {
+          "durationS": 0.25,
+          "owner": "driver",
+          "commandForceN": 900,
+          "actualForceN": 950,
+          "valveResidualOnly": false,
+          "meaning": "New commands without a declared flight/manual/maneuver source; closing-valve residual thrust is excluded."
+        }
+      },
+      {
+        "type": "reported-landed-support-lost",
+        "simTime": 4,
+        "advisory": true,
+        "causalClaim": false,
+        "detail": {
+          "durationS": 1,
+          "reportedBy": "challenge-stable-landing",
+          "sinceReportS": 1,
+          "contactCount": 2,
+          "requiredContacts": 3,
+          "meaning": "Reported settled state lost support for at least 1 s, with no new explicit flight request."
+        }
+      }
+    ],
+    "scope": "Synthetic ownership/support inputs to a read-only monitor; not claimed as observed physical defects."
+  }
+}

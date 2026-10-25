@@ -1,12 +1,12 @@
 # Development and evidence
 
-## Current 3.24 workflow
+## Current 1.1 workflow
 
 The current source is the Git working tree. `dist/` contains editable source, including the retained 3.19 physics kernel and the new 3.21 resource/input adapters. Start with `npm start`; `ROADSTER_PORT` selects a different port. Production dependencies and current assets are present in the checkout. Edited development assets are preserved and reported, never restored over.
 
-Use `npm run model:build` and `npm run test:release` for the current bounded gate. With JSDOM available, set `JSDOM_MODULE_PATH` to its `lib/api.js` to include application DOM flows; its explicit graphics facade does not establish WebGL pixels. The release report is `qa/release-3.24/validation.json`, also copied to `dist/release-validation.json`. Earlier reports retain their historical identities. Keep `.gitattributes`: exact committed bytes, including existing LF/CRLF conventions, are required by historical hashes and publication identity.
+Use `npm run model:build` and `npm run test:release` for the current bounded gate. Install the pinned test dependency with `npm ci --prefix tests/dom --ignore-scripts`, then set `JSDOM_MODULE_PATH` to the absolute `tests/dom/node_modules/jsdom/lib/api.js` path to include application DOM flows; its explicit graphics facade does not establish WebGL pixels. The release report is `qa/release-1.1/validation.json`, also copied to `dist/release-validation.json`. Earlier reports retain their historical identities. Keep `.gitattributes`: exact committed bytes, including existing LF/CRLF conventions, are required by historical hashes and publication identity.
 
-Publication still uses the existing Pages workflow: static/source checks, committed-file checks, then deployment. A successor development plan captures the current complete runtime tree and current evidence without rewriting `publication/recovery-plan.json`. Git history must advance normally. See [current release scope](release-3.24.md) and [development order](development-plan.md).
+Publication uses the existing Pages workflow: the current release gate including DOM, static/source checks, committed-file checks, then deployment. A successor development plan captures the current complete runtime tree and current evidence without rewriting `publication/recovery-plan.json`. Git history must advance normally. See [current release scope](release-1.1.md) and [development order](development-plan.md).
 
 The sections below document inherited architecture and historical release procedures. The original comprehensive `validate.mjs` includes older archive fixtures; it is separate from the current release gate and unavailable historical evidence must not be counted as passed.
 

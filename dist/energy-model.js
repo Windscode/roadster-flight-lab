@@ -1,5 +1,6 @@
 // Engineering assumptions, not an identified production-vehicle battery map.
 // W, J and dimensionless SOC are used internally; kWh appears only at the UI.
+export const AUXILIARY_POWER_W=800;
 export const RESOURCE_DEFAULTS=Object.freeze({regenEnabled:true,regenEfficiency:.78,
   chargePowerLimitW:60000,regenTaperSoc:.95});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));

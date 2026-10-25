@@ -144,7 +144,13 @@ export function createWetRoadReflection(scene,renderer,camera,surface){
       captured=true;
     }finally{
       stats.lastCpuMs=performance.now()-begin;
-      renderer.xr.enabled=old.xr;renderer.shadowMap.autoUpdate=old.shadowAuto;renderer.shadowMap.needsUpdate=old.shadowNeeded;
+      renderer.xr.enabled=old.xr;renderer.shadowMap.autoUpdate=old.shadowAuto;
+      // A successful reflection already services the pending night spotlight
+      // requests. Preserve consumption of the global request instead of
+      // entering shadow preparation again in the main view. Individual lights
+      // also have their own dirty flags; this is not a per-map draw reduction.
+      // Failed draws still owe the caller its original request.
+      if(!captured)renderer.shadowMap.needsUpdate=old.shadowNeeded;
       renderer.setViewport(old.viewport);renderer.setScissor(old.scissor);renderer.setScissorTest(old.scissorTest);renderer.setRenderTarget(old.target,old.face,old.mip);
       // Leave the writing target before exposing its texture to later passes.
       uniforms.roadReflection.value=old.texture;uniforms.roadReflectionEnabled.value=old.enabled;
