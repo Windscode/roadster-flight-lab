@@ -7,7 +7,9 @@ export const ROUTE_SURFACE_PRESETS=Object.freeze(['dry-day','after-rain']);
 const clone=value=>JSON.parse(JSON.stringify(value));
 const finite=Number.isFinite;
 const canonical=value=>value===null||typeof value!=='object'?JSON.stringify(value):Array.isArray(value)?'['+value.map(canonical).join(',')+']':'{'+Object.keys(value).sort().map(key=>JSON.stringify(key)+':'+canonical(value[key])).join(',')+'}';
+const preparedHashes=new WeakMap();
 export function routeSurfaceHash(descriptor){
+  if(preparedHashes.has(descriptor))return preparedHashes.get(descriptor);
   // Deterministic content identity; explicitly not a cryptographic signature.
   let value=2166136261;for(const c of canonical(descriptor)){value^=c.charCodeAt(0);value=Math.imul(value,16777619);}
   return 'fnv1a32-'+(value>>>0).toString(16).padStart(8,'0');
@@ -57,6 +59,16 @@ export function validateRouteSurface(descriptor){
   const text=JSON.stringify(descriptor);if(text.length>20000||text.includes('"__proto__"')||text.includes('"constructor"')||text.includes('"prototype"'))throw Error('Invalid surface payload');
   return clone(descriptor);
 }
+// Only solver-owned immutable copies get an identity cache. Public editable
+// descriptors are hashed from their contents on every explicit request.
+export function prepareRouteSurface(value){
+  const descriptor=validateRouteSurface(value);
+  function freeze(node){
+    if(node&&typeof node==='object'){Object.values(node).forEach(freeze);Object.freeze(node);}
+  }
+  freeze(descriptor);preparedHashes.set(descriptor,routeSurfaceHash(descriptor));
+  return descriptor;
+}
 export function queryRouteSurface(descriptor,x,z,{y=0,normalY=1,baseMu=1.25}={}){
   if(!descriptor||!finite(x)||!finite(z)||!finite(y)||Math.abs(y-descriptor.groundY)>descriptor.contactToleranceM||normalY<.85)return null;
   let selected=null;
@@ -69,7 +81,9 @@ export function routeSurfaceProgress(descriptor,point){
   if(!descriptor?.route||!point)return null;
   let best=null,offset=0;const points=descriptor.route.waypoints;
   for(let i=1;i<points.length;i++){
-    const a=points[i-1],b=points[i],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz),u=Math.max(0,Math.min(1,((point.x-a.x)*dx+(point.z-a.z)*dz)/(length*length)));
+    const a=points[i-1],b=points[i],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz);
+    if(length===0)continue;
+    const u=Math.max(0,Math.min(1,((point.x-a.x)*dx+(point.z-a.z)*dz)/(length*length)));
     const distance=Math.hypot(point.x-a.x-u*dx,point.z-a.z-u*dz),candidate={distanceM:offset+u*length,lateralDistanceM:distance,segment:i-1,remainingM:descriptor.route.lengthM-offset-u*length};
     if(!best||distance<best.lateralDistanceM)best=candidate;offset+=length;
   }

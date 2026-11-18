@@ -16,12 +16,13 @@ for(let step=0;step<120*70;step++){
  rigidSteps+=Number(t.rigidContactCount>0);minContacts=Math.min(minContacts,t.contactCount);maxClosure=Math.max(maxClosure,Math.abs(t.energyAccounting.balanceErrorJ));
  const z=t.position.z+380,progress=z<247.5?z:247.5+t.position.x+200;checkpoints.add(progress<60?0:progress<180?1:progress<235?2:3);
  if(mission.check(sim,t))break;
- stable=routeTerminal(descriptor,t)&&checkpoints.size===4?stable+DT:0;if(stable>=.5){completed=true;break;}
+ stable=routeTerminal(descriptor,t)&&checkpoints.size===4?stable+DT:0;if(mission.timing.finished){assert(stable>=.5-1e-8);completed=true;break;}
 }
 const result=mission.result(sim,completed?'route-completed':'not-completed');recorder.event('resource_route_result',result);const record=recorder.finish(completed?'completed':'cancelled',result.reason);
 mkdirSync(reportDir,{recursive:true});writeFileSync(`${reportDir}/${style}-${preset}.json`,JSON.stringify({result,rigidSteps,minContacts,maxClosure,scope:'Numerical full-city driver, same production physics/record/replay. No native keys, GPU or audible device acceptance.'},null,2)+'\n');writeFileSync(`${reportDir}/${style}-${preset}-record.json`,JSON.stringify(record)+'\n');
 console.log(JSON.stringify({style,preset,completed:result.completed,reason:result.reason,elapsed:result.elapsedS,netWh:result.netEnergyJ/3600,recoveredWh:result.work.recoveredJ/3600,gas:result.gasUsedKg,remainingWh:result.remainingKWh*1000,rigidSteps,minContacts,maxClosure,position:sim.telemetry().position}));
-assert(result.completed,'Actual route must finish within finite resources');assert.equal(rigidSteps,0);assert.equal(minContacts,4);assert(maxClosure<.02);assert(result.work.recoveredJ>0);assert.equal(result.externalGasKg,0);
+assert(result.completed,'Actual route must finish within finite resources');assert.equal(result.sectors.length,4);
+for(const [field,total] of [['elapsedS',result.elapsedS],['netWh',result.netEnergyJ/3600],['gasUsedKg',result.gasUsedKg],['recoveredWh',result.work.recoveredJ/3600]])assert(Math.abs(result.sectors.reduce((sum,row)=>sum+row[field],0)-total)<1e-7);assert.equal(rigidSteps,0);assert.equal(minContacts,4);assert(maxClosure<.02);assert(result.work.recoveredJ>0);assert.equal(result.externalGasKg,0);
 if(process.env.REPLAY==='1'){
  const replay=new RoadsterSim(),playback=new ExperimentPlayback(record,{sim:replay});while(!playback.finished){const input=playback.nextInput();if(playback.finished)break;const t=replay.advanceFixed(input,DT);playback.afterStep(t);}
  assert.deepEqual(replay.exportState(),sim.exportState());const reproduction=playback.reproduction();writeFileSync(`${reportDir}/${style}-${preset}-replay.json`,JSON.stringify(reproduction,null,2)+'\n');console.log('Exact full-state replay passed');

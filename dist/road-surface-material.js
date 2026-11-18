@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.js';
+import {weaveTimingMarks,WEAVE_STOP_RADIUS_M} from './route-sectors.js';
 import {validateRouteSurface,routeSurfaceHash} from './route-surface.js';
 
 // Metre-scale scanned asphalt. Surface detail changes the distribution of
@@ -23,6 +24,7 @@ export const ROAD_SURFACE_MODEL=Object.freeze({
 export function attachRoadSurface(material,{albedo,normal,roughness}){
   const uniforms={roadAlbedo:{value:albedo},roadNormal:{value:normal},roadRoughness:{value:roughness},roadFineDetail:{value:0},roadWetness:{value:0},roadReflection:{value:null},roadReflectionMatrix:{value:new THREE.Matrix4()},roadReflectionTexel:{value:new THREE.Vector2(1/512,1/288)},roadReflectionEnabled:{value:0},roadReflectionStrength:{value:0}};
   Object.assign(uniforms,{roadRouteCount:{value:0},roadRouteGround:{value:new THREE.Vector2(0,.08)},
+    roadGates:{value:Array.from({length:3},()=>new THREE.Vector4())},roadStop:{value:new THREE.Vector4()},
     roadRouteBounds:{value:Array.from({length:ROAD_ROUTE_REGION_CAPACITY},()=>new THREE.Vector4())},
     roadRouteFinish:{value:Array.from({length:ROAD_ROUTE_REGION_CAPACITY},()=>new THREE.Vector4())}});
   let routeDescription=null;
@@ -48,6 +50,7 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       uniform sampler2D roadAlbedo,roadNormal,roadRoughness;
       uniform float roadFineDetail,roadWetness,roadReflectionEnabled,roadReflectionStrength;
       uniform float roadRouteCount;uniform vec2 roadRouteGround;
+      uniform vec4 roadGates[3],roadStop;
       uniform vec4 roadRouteBounds[${ROAD_ROUTE_REGION_CAPACITY}],roadRouteFinish[${ROAD_ROUTE_REGION_CAPACITY}];
       uniform sampler2D roadReflection;uniform mat4 roadReflectionMatrix;uniform vec2 roadReflectionTexel;
       varying vec3 roadSurfaceWorld;
@@ -126,7 +129,24 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       float serviceJoint=max(roadJoint(roadMetres.x+204.5,1.5,.009),roadJoint(roadMetres.y+321.15,1.15,.009));
       float serviceTread=roadJoint(roadMetres.x+roadMetres.y,.24,.014)*roadJoint(roadMetres.x-roadMetres.y,.48,.095);
       roadOpticalFinish=mix(roadOpticalFinish,vec3(.26,.29,.30)*(1.-.30*serviceJoint+.11*serviceTread),roadRouteMetal);
-      diffuseColor.rgb*=roadOpticalFinish*mix(1.,.79,roadRainFilm)*mix(1.,.72,roadWater);`);
+      diffuseColor.rgb*=roadOpticalFinish*mix(1.,.79,roadRainFilm)*mix(1.,.72,roadWater);
+      // Paint shares the metre-scale road plane and scoring geometry. Use the
+      // precomputed world-space pixel footprint across the sloping perspective.
+      vec2 roadPixel=fwidth(roadSurfaceWorld.xz);
+      if(roadStop.w>0.&&roadRoutePlane>.5){
+        float width=max(.012,length(roadPixel)*.55),paint=0.;
+        for(int gate=0;gate<3;gate++){
+          vec2 delta=roadSurfaceWorld.xz-roadGates[gate].xy,dir=roadGates[gate].zw;
+          float along=abs(dot(delta,dir)),across=abs(dot(delta,vec2(-dir.y,dir.x)));
+          float edge=max(along-.14,max(across-roadStop.w,roadStop.w*.32-across));
+          paint=max(paint,1.-smoothstep(-width,width,edge));
+        }
+        float ring=abs(length(roadSurfaceWorld.xz-roadStop.xy)-roadStop.z)-.13;
+        float finish=1.-smoothstep(-width,width,ring);
+        float visibility=(1.-smoothstep(.20,.90,width))*(1.-roadRainFilm*.22);
+        diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.68,.47,.18),paint*visibility*.86);
+        diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.36,.73,.64),finish*visibility*.88);
+      }`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
       float roadScannedRoughness=textureGrad(roadRoughness,roadUv,roadDx,roadDy).g;
       float roadDryRoughness=clamp(.885+.20*(roadScannedRoughness-.9314)+.055*roadWear-.055*roadRepairJoint-.045*wheelTrack,.72,.96);
@@ -180,7 +200,7 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|road-surface-authored-contact-regions-3.19';
+  material.customProgramCacheKey=()=>key+'|road-surface-marked-regions-1.2';
   material.needsUpdate=true;
   function setRouteSurfaceDescription(value){
     const description=value===null?null:validateRouteSurface(value);
@@ -193,6 +213,11 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       uniforms.roadRouteBounds.value[i].set(b?.minX??0,b?.minZ??0,b?.maxX??0,b?.maxZ??0);
       uniforms.roadRouteFinish.value[i].set(m?.opticalWetness??0,m?.roughness??.84,m?.kind==='metal'?2:m?.kind==='patch'?1:0,0);
     }
+    if(description){
+      const marks=weaveTimingMarks(description),end=description.route.waypoints.at(-1);
+      marks.forEach((m,i)=>uniforms.roadGates.value[i].set(m.x,m.z,m.dx,m.dz));
+      uniforms.roadStop.value.set(end.x,end.z,WEAVE_STOP_RADIUS_M,description.route.widthM/2);
+    }else uniforms.roadStop.value.set(0,0,0,0);
     uniforms.roadRouteGround.value.set(description?.groundY??0,description?.contactToleranceM??.08);
     uniforms.roadRouteCount.value=regions.length;routeDescription=description;
     Object.assign(routeState,{active:!!description,hash:description?routeSurfaceHash(description):null,presetId:description?.presetId??null,regionCount:regions.length});

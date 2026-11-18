@@ -1,3 +1,4 @@
+import {validSectorRows} from './route-sectors.js';
 import {readProtectedArchive,storageBytes,writeArchiveCandidate} from './research-storage.js';
 
 export const RESOURCE_HISTORY_KEY='roadster-resource-runs-3.21';
@@ -15,6 +16,7 @@ export function parseResourceHistory(raw){
     if(!run||run.schema!=='roadster-resource-route-1'||typeof run.comparisonKey!=='string'||run.comparisonKey.length>100000||
       typeof run.reason!=='string'||typeof run.finite!=='boolean'||typeof run.completed!=='boolean'||!run.work||Array.isArray(run.work)||
       !['elapsedS','remainingKWh','gasUsedKg','netEnergyJ'].every(key=>Number.isFinite(run[key]))||!Number.isFinite(run.work.recoveredJ)||
+      (run.sectors!==undefined&&(!validSectorRows(run.sectors)||run.completed&&run.sectors.length!==4))||
       (run.recordId!=null&&typeof run.recordId!=='string')||(run.summaryId!=null&&typeof run.summaryId!=='string'))throw Error('resource-history-invalid');
   }
   return runs;

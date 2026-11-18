@@ -696,33 +696,46 @@ function buildSuspension(parent,wheel,materials){
   const group=new THREE.Group();group.name=wheel.assembly.name+' pushrod suspension reconstruction';parent.add(group);
   const links=[];
   function rod(name,a,b,r,mat){
-    const mesh=cylinder(group,r,r,1,mat,[0,0,0],'y',12,name);links.push({mesh,a,b});
+    const mesh=cylinder(group,r,r,1,mat,[0,0,0],'y',12,name);const link={mesh,a,b};links.push(link);return link;
   }
   const s=wheel.side,z=wheel.z;
   for(const upper of [false,true])for(const fore of [-1,1]){
     const y=upper?-.075:-.255;
     rod(upper?'upper wishbone':'lower wishbone',[s*.53,y,z+fore*.20],{x:s*.85,dy:upper?.105:-.095,dz:fore*.025},upper?.014:.018,materials.carbon);
   }
-  rod('titanium pushrod',[s*.61,.105,z-.09],{x:s*.84,dy:-.08,dz:.018},.012,materials.chrome);
+  const pushrod=rod('titanium pushrod',[0,.09,z-.08],{x:s*.84,dy:-.08,dz:.018},.012,materials.chrome);
   rod('steering tie rod',[s*.54,-.12,z+.15],{x:s*.855,dy:.008,dz:.12},.010,materials.nozzle);
-  // Public suspension photograph shows an inboard horizontal coil-over. The
-  // exact rocker ratio / pivot coordinates here are an engineering layout.
-  const springRoot=new THREE.Group();springRoot.position.set(s*.39,.09,z-.08);springRoot.rotation.z=PI/2;group.add(springRoot);
-  cylinder(springRoot,.044,.044,.40,materials.black,[0,0,0],'y',28,'inboard damper body');
-  cylinder(springRoot,.019,.019,.46,materials.chrome,[0,0,0],'y',20,'damper shaft');
+  // Illustrative inboard slider. Its upright joint follows steer and travel.
+  // The moving eye is the inner intersection of its rail with a constant-length rod.
+  const anchorX=.15,housingLength=.19;
+  const pushrodLength=Math.hypot(.84-.45,.09-(.06-.287-.08),.018+.08);
+  const springRoot=new THREE.Group();springRoot.position.set(s*anchorX,.09,z-.08);springRoot.rotation.z=-s*PI/2;group.add(springRoot);
+  const housing=new THREE.Group();springRoot.add(housing);
+  cylinder(housing,.044,.044,housingLength,materials.black,[0,housingLength/2,0],'y',28,'inboard damper body');
+  cylinder(housing,.071,.071,.018,materials.black,[0,0,0],'y',28,'fixed spring perch');
+  mergeStaticMeshes(housing);
+  const shaft=cylinder(springRoot,.019,.019,1,materials.chrome,[0,0,0],'y',20,'damper shaft');
   const points=[];for(let i=0;i<=224;i++){const t=i/224,a=t*TAU*8;points.push([.061*Math.cos(a),lerp(-.17,.17,t),.061*Math.sin(a)]);}
-  curve(springRoot,points,.0084,materials.damper,'gold inboard coil spring',false);
-  for(const y of [-.185,.185])cylinder(springRoot,.071,.071,.018,materials.nozzle,[0,y,0],'y',28,'spring perch');
-  mergeStaticMeshes(springRoot);
+  const spring=curve(springRoot,points,.0084,materials.damper,'gold inboard coil spring',false);
+  const seat=cylinder(springRoot,.071,.071,.018,materials.nozzle,[0,0,0],'y',28,'moving spring perch');
   const from=new THREE.Vector3(),to=new THREE.Vector3(),delta=new THREE.Vector3(),up=new THREE.Vector3(0,1,0);
   function update(){
     for(const link of links){
       from.set(...link.a);const p=link.b;
       const angle=wheel.assembly.rotation.y,c=Math.cos(angle),s=Math.sin(angle),dx=p.x-wheel.assembly.position.x;
       to.set(wheel.assembly.position.x+dx*c+p.dz*s,wheel.assembly.position.y+p.dy,z-dx*s+p.dz*c);
+      if(link===pushrod){
+        const dy=to.y-from.y,dz=to.z-from.z;
+        from.x=to.x-wheel.side*Math.sqrt(Math.max(0,pushrodLength**2-dy**2-dz**2));
+        const length=wheel.side*from.x-anchorX;
+        seat.position.y=length;
+        shaft.scale.y=Math.max(0,length-housingLength);
+        shaft.position.y=housingLength+shaft.scale.y/2;
+        spring.position.y=length/2;
+        spring.scale.y=(length-.018)/.34;
+      }
       delta.copy(to).sub(from);link.mesh.position.copy(from).add(to).multiplyScalar(.5);link.mesh.scale.y=delta.length();link.mesh.quaternion.setFromUnitVectors(up,delta.normalize());
     }
-    springRoot.scale.y=clamp(1+((.06-wheel.assembly.position.y)-.287)*1.4,.91,1.17);
   }
   update();return {group,update};
 }
@@ -1263,7 +1276,7 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     const ductBuild=q=>new THREE.CylinderGeometry(.123,.108,.090,segmentsFor(28,q,12),1,true);
     const well=detailGeometry(addMesh(underbody,ductBuild('high'),mats.black,'rear turbine duct'),ductBuild);well.position.set(x,-.256,-2.285);well.rotation.x=PI/2;
     ring(underbody,.118,.008,mats.carbon,[x,-.256,-2.338],'z',28,'fan duct edge');
-    const fan=new THREE.Group();fan.position.set(x,-.256,-2.329);underbody.add(fan);
+    const fan=new THREE.Group();fan.name='extraction fan rotor';fan.position.set(x,-.256,-2.329);underbody.add(fan);
     for(let k=0;k<7;k++) {
       const a=k*TAU/7,pts=[[0,0,0],[Math.sin(a)*.106,Math.cos(a)*.106,0],[Math.sin(a+.35)*.103,Math.cos(a+.35)*.103,.010],[Math.sin(a+.55)*.025,Math.cos(a+.55)*.025,.014]];
       polygon(fan,pts,mats.wheelDark,'extraction fan blade',true);
@@ -1314,14 +1327,26 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     return[x,Math.sin(a)*.014,Math.cos(a)*.133+sweep];
   },32,16,false,'carbon airfoil');
   for(const side of [-1,1])polygon(wing,[[side*.918,-.012,-.10],[side*.918,.039,-.098],[side*.918,.047,.11],[side*.918,-.010,.19]],mats.carbon,'wing endplate',true);
-  const wingStruts=[];
+  const wingStruts=[],strutUpper=new THREE.Vector3(),strutLower=new THREE.Vector3(),strutAxis=new THREE.Vector3(),strutUp=new THREE.Vector3(0,1,0);
   for(const side of [-1,1]) {
     const strut=box(group,.035,.12,.05,mats.black,[side*.527,.30,-2.009],.005,'wing actuator');
+    strut.userData.mountX=side*.527;
     wingStruts.push(strut);
     cylinder(wing,.017,.017,.057,mats.nozzle,[side*.527,-.007,.057],'x',24,'upper active wing pivot');
     cylinder(underbody,.019,.019,.057,mats.nozzle,[side*.527,.264,-2.009],'x',24,'lower active wing pivot');
     for(const dx of [-.026,.026])box(wing,.009,.039,.059,mats.carbon,[side*.527+dx,.007,.053],.004,'paired wing support clevis');
   }
+  function updateWingStruts(){
+    for(const strut of wingStruts){
+      strutLower.set(strut.userData.mountX,.264,-2.009);
+      strutUpper.set(strut.userData.mountX,-.007,.057).applyQuaternion(wing.quaternion).add(wing.position);
+      strutAxis.subVectors(strutUpper,strutLower);
+      strut.position.addVectors(strutLower,strutUpper).multiplyScalar(.5);
+      strut.scale.y=strutAxis.length()/.12;
+      strut.quaternion.setFromUnitVectors(strutUp,strutAxis.normalize());
+    }
+  }
+  updateWingStruts();
   mergeStaticMeshes(wing);
 
   // The airtight roof and skirt form a real visual enclosure; the old large
@@ -1528,9 +1553,9 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     for(let i=nozzles.length;i<jets.length;i++)jets[i].root.visible=false;
     rearFans.forEach((jet,i)=>{
       updateJet(jet,rearThrust,rearMax,dt,.07+i*.15);
-      jet.fan.rotation.z+=dt*(telemetry.suctionEnabled?22+14*(telemetry.sealQuality||0):5*clamp((telemetry.speedKmh||0)/130,0,1));
+      // Illustrative full-speed rate; the physical spool fraction owns start, coast-down and power loss.
+      jet.fan.rotation.z+=dt*36*clamp(telemetry.electricalSupply?.fanSpinFraction??telemetry.inspectionFanFraction??0,0,1);
     });
-    const brake=clamp(telemetry.brake??telemetry.brakeInput??0,0,1);
     // The physical actuator owns deployment and rate limiting. Rendering has
     // no speed/brake-driven copy and never changes the aerodynamic state.
     const wingState=telemetry.wing||{};
@@ -1541,7 +1566,7 @@ export function createRoadster({quality:initialQuality='high',inspection=false,d
     if(hasPhysicalPose){wing.position.set(physicalPosition.x,physicalPosition.y,physicalPosition.z);wing.rotation.x=wingState.incidenceRad;}
     else{wing.position.set(0,.325+wingExtension*.30,-2.065);wing.rotation.x=-wingExtension*.25;}
     wing.userData.deployment=wingExtension;wing.userData.source=hasPhysicalPose?'telemetry.wing.position/incidenceRad':'telemetry.wing.deployment';
-    for(const strut of wingStruts){strut.scale.y=1+wingExtension*2.5;strut.position.y=.30+wingExtension*.15;}
+    updateWingStruts();
     updateShadowShape();
     brakeSignal=vehicleBrakeSignal(telemetry,brakeSignal);
     mats.tailLight.emissiveIntensity=brakeSignal?2.4:lampMode==='off'?0:1.25;

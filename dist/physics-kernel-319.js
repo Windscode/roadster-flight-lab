@@ -1,6 +1,6 @@
 import * as CANNON from './vendor/cannon-es.js';
 import {roadWheelAngle,nozzleExhaustVelocity,hoverBudget,rearWingPose,quickRollManeuverProfile,sampleRollManeuver} from './vehicle-models.js';
-import {nozzlePressureFactor} from './nozzle-supply.js';
+import {nozzlePressureFactor,deliverableGasMass} from './nozzle-supply.js';
 import {exportSimulationState,importSimulationState} from './simulation-snapshot.js';
 import {solveStaticWrench,staticWrenchFeasible} from './trim-feasibility.js';
 import {sampleVehicleClearance} from './vehicle-clearance.js';
@@ -9,7 +9,7 @@ import {createManeuverEnvelope,maneuverLaunchForce,landingDescentSpeed} from './
 import {resetSafetyJournal,noteSafetyInput,rememberValidStep,preserveFailure,getFailureReport,contactDiagnostics,motionDiagnostics,maneuverDiagnostics,noteManeuverAction,noteManeuverEnd} from './simulation-safety.js';
 import {DEFAULT_OBSERVATION,observationConfiguration,measureControlState,controllerBody} from './control-observation.js';
 import {integrateWheel,regularizedSlip,lateralTireForce} from './tire-dynamics.js';
-import {validateRouteSurface,queryRouteSurface,routeSurfaceHash} from './route-surface.js';
+import {prepareRouteSurface,queryRouteSurface,routeSurfaceHash} from './route-surface.js';
 import {describePilotInputIntent} from './pilot-input-intent.js';
 import {circularWheelSupport} from './wheel-contact-envelope.js';
 import {contactStepSchedule} from './contact-step-schedule.js';
@@ -295,7 +295,7 @@ export class RoadsterSim {
   // action, never a by-product of an optical weather or lighting adjustment.
   setRouteSurface(descriptor,{phase}={}){
     if(phase!=='preparation'||this.worldType!=='city')return false;
-    try{this._routeSurface=descriptor===null?null:validateRouteSurface(descriptor);return true;}catch{return false;}
+    try{this._routeSurface=descriptor===null?null:prepareRouteSurface(descriptor);return true;}catch{return false;}
   }
   getRouteSurface(){return this._routeSurface?{descriptor:structuredClone(this._routeSurface),descriptorHash:routeSurfaceHash(this._routeSurface)}:null;}
   getRoadSurface(){const legacy={preset:this.params.roadSurface,dryMu:this.params.tireMu,wetMu:this.params.tireMu*this.params.wetGripMultiplier,splitPositionX:this.params.splitMuPositionX,splitLowMuSide:'negative-world-x'};
@@ -330,7 +330,9 @@ export class RoadsterSim {
   getReference(){
     const levelReference=this.stabilizationMode==='level'&&this._levelRecovery.status!=='pilot-pitch';
     const q=levelReference?this._levelQuaternion():this.stabilizationMode==='hold'?this._holdQuaternionTarget:this._manualQuaternionTarget;
-    return{mode:this.mode,stabilizationMode:this.stabilizationMode,position:this.stabilizationMode==='hold'&&this._holdPositionTarget?plain(this._holdPositionTarget):plain(this._positionTarget),quaternion:q?{...plain(q),w:q.w}:null,
+    const position=plain(this.stabilizationMode==='hold'&&this._holdPositionTarget?this._holdPositionTarget:this._positionTarget);
+    if(this.mode==='hover'&&this.stabilizationMode!=='hold')position.y=levelReference?this._stableHeight:this._heightTarget;
+    return{mode:this.mode,stabilizationMode:this.stabilizationMode,position,quaternion:q?{...plain(q),w:q.w}:null,
       height:levelReference?this._stableHeight:this._heightTarget,heading:levelReference?this._stableHeading:this._headingTarget,
       manualRate:plain(this._manualReferenceRate),verticalVelocityMps:this._verticalControl.targetMps,maneuver:this._maneuver?structuredClone(this._maneuver):null};
   }
@@ -353,7 +355,7 @@ export class RoadsterSim {
   clearNozzleFault(){this._nozzleFault=null;}
   _liftHealthFactor(){return this._nozzleFault?.id.startsWith('lift-')?(3+this._nozzleFault.scale)/4:1;}
   _availableLiftForce(){const p=this.params;return 4*p.liftNozzleMax*this._liftHealthFactor()*nozzlePressureFactor(this.pressureBar(),p.regulatorBar,p.ambientPressureBar)*Number(this._hasPower);}
-  _hoverBudget(){const p=this._liftHealthFactor()<1?{...this.params,liftNozzleMax:this.params.liftNozzleMax*this._liftHealthFactor()}:this.params;return hoverBudget(p,this.gasMass,this.gasTemperature);}
+  _hoverBudget(){if(!this._hasPower)return{seconds:0,impulseNs:0};const p=this._liftHealthFactor()<1?{...this.params,liftNozzleMax:this.params.liftNozzleMax*this._liftHealthFactor()}:this.params;return hoverBudget(p,this.gasMass,this.gasTemperature);}
 
   setMode(mode) {
     if(!['drive','hover','manual'].includes(mode)) return;
@@ -1241,7 +1243,8 @@ export class RoadsterSim {
     const sum=this._nozzles.reduce((a,n)=>a+n.force,0);
     const ve=nozzleExhaustVelocity(p,pressure,this.gasTemperature);this._effectiveExhaustVelocity=ve;
     const requiredMass=sum/ve*dt;
-    const availableScale=p.supplyMode==='bench'?1:Math.min(1,this.gasMass/Math.max(1e-10,requiredMass));
+    const deliveredMass=p.supplyMode==='bench'?requiredMass:deliverableGasMass(p,this.gasMass,pressure,requiredMass);
+    const availableScale=requiredMass>0?deliveredMass/requiredMass:1;
     this._thrustN=0;
     this._desiredWrench=[...desired];this._achievedWrench=Array(6).fill(0);
     this._nozzles.forEach((n,i)=>{
@@ -1253,7 +1256,7 @@ export class RoadsterSim {
     this._massFlowKgS=this._thrustN/ve;this._impulseNs+=this._thrustN*dt;
     if(p.supplyMode==='bench')this._externalGasKg+=this._massFlowKgS*dt;else this._gasConsumedKg+=this._massFlowKgS*dt;
     if(p.supplyMode!=='bench'){
-      const previous=this.gasMass;this.gasMass=Math.max(0,previous-requiredMass*availableScale);
+      const previous=this.gasMass;this.gasMass=Math.max(0,previous-deliveredMass);
       if(p.gasModel==='adiabatic'&&previous>1e-10)this.gasTemperature*=Math.pow(this.gasMass/previous,p.gasGamma-1);
       else this.gasTemperature=p.gasTemperatureK;
       this.gasTemperature+=(p.gasTemperatureK-this.gasTemperature)*(1-Math.exp(-dt/p.tankThermalTime));
@@ -1482,7 +1485,7 @@ export class RoadsterSim {
     const requested=this._desiredWrench.some(v=>Math.abs(v)>.01),commands=this._nozzles.reduce((sum,n)=>sum+n.command,0);
     const positionPolicy=this._holdActive?'explicit-world-target':this._maneuver?.phase==='land'||this._maneuver?.name==='land'?'coast-and-surface-land':this._stabilizationActive?'velocity-damping-no-xz-hold':this.mode==='hover'?this._manualTranslationActive?'pilot-or-release-braking':'captured-after-braking':'none';
     return {owner,requestedWrench:[...this._desiredWrench],automaticForceRequested:requested&&['flight-assist','g-level-height','explicit-pose-hold'].includes(owner),
-      explicitManeuver:this._maneuver?.name??null,positionPolicy,positionTarget:positionPolicy==='explicit-world-target'?plain(this._holdPositionTarget):positionPolicy==='captured-after-braking'?plain(this._positionTarget):null,
+      explicitManeuver:this._maneuver?.name??null,positionPolicy,positionTarget:positionPolicy==='explicit-world-target'?plain(this._holdPositionTarget):positionPolicy==='captured-after-braking'?{x:this._positionTarget.x,y:this._heightTarget,z:this._positionTarget.z}:null,
       heightTarget:this._stabilizationActive?this._stableHeight:this.mode==='hover'?this._heightTarget:null,
       valveResidualOnly:commands<.01&&this._thrustN>.01,commandForceN:commands,actualForceN:this._thrustN,
       gSemantics:'Level attitude, heading and captured height; horizontal velocity damping. No world-XZ position lock.',

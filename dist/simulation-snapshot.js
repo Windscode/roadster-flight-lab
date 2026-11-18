@@ -1,7 +1,7 @@
 import * as CANNON from './vendor/cannon-es.js';
 import {MODEL_VERSION} from './vehicle-models.js';
 import {observationConfiguration} from './control-observation.js';
-import {validateRouteSurface} from './route-surface.js';
+import {prepareRouteSurface} from './route-surface.js';
 import {canonicalGeometryJSON} from './irradiance-math.js';
 
 export const SIM_STATE_SCHEMA='roadster-sim-state',SIM_STATE_SCHEMA_VERSION=1;
@@ -117,7 +117,7 @@ export function importSimulationState(sim,snapshot,{allowVersionMismatch=false}=
   // Model-version checks above still prohibit silently running historical physics.
   if(!('_routeSurface' in state))state._routeSurface=null;
   if(!('_contactFeedback' in state))state._contactFeedback={sequence:0,lastEvent:null,rigidPairs:{},scope:'Legacy snapshot: no contact-onset feedback recorded.'};
-  if(state._routeSurface!==null){try{validateRouteSurface(state._routeSurface);}catch{fail('路线表面描述无效');}}
+  if(state._routeSurface!==null){try{state._routeSurface=prepareRouteSurface(state._routeSurface);}catch{fail('路线表面描述无效');}}
   const feedback=state._contactFeedback,event=feedback?.lastEvent;
   if(!feedback||!Number.isInteger(feedback.sequence)||feedback.sequence<0||!feedback.rigidPairs||typeof feedback.rigidPairs!=='object'||Object.keys(feedback.rigidPairs).length>128||Object.values(feedback.rigidPairs).some(t=>!Number.isFinite(t)||t<0))fail('接触反馈状态无效');
   if(event!==null&&(!event||!Number.isInteger(event.id)||event.id<1||event.id>feedback.sequence||!['touchdown','hull-impact'].includes(event.kind)||!['timeS','normalEnergyJ','normalImpulseNs','normalSpeedMps'].every(k=>Number.isFinite(event[k])&&event[k]>=0)||!Array.isArray(event.wheelIds)||event.wheelIds.length>4))fail('接触开始事件无效');

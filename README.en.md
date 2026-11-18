@@ -1,63 +1,54 @@
 # Roadster Flight Lab
 
-**Drive through a city, practice flight control, and turn each attempt into an experiment you can explain and replay.**
+Drive a cold-gas flight concept through the streets and elevated roads of Vesper. Practice a roll or a landing, then return to the same gust, patch of wet asphalt or tank of gas to compare two control strategies.
 
-[Drive](https://windscode.github.io/roadster-flight-lab/) · [Wind laboratory](https://windscode.github.io/roadster-flight-lab/?view=lab) · [Vehicle workshop](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) · [中文](README.md)
+**[Enter the city](https://windscode.github.io/roadster-flight-lab/)** · [Wind laboratory](https://windscode.github.io/roadster-flight-lab/?view=lab) · [Vehicle workshop](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) · [中文](README.md)
 
-An independent vehicle-driving, cold-gas-flight and automatic-control research project. Explore the connected streets of Vesper, practice takeoff and landing, or change controllers, disturbances and resource conditions. Driving, challenges and research share the same physics, inputs and resource accounting.
+![Driving on Weave Street with the amber timing line ahead and four-wheel surface readings on the right](qa/browser-1.2/timing-line.jpg)
 
-![Actual driving view in Vesper](qa/browser-1.1/day-route.png)
+## First visit
 
-## Explore, drive, experiment
-
-| Area | Available today |
+| To try | Where to start |
 | --- | --- |
-| Vehicle simulation | 120 Hz rigid-body dynamics, tire/suspension/contact models, varying grip, manual jets, attitude assistance, automatic maneuvers and landing |
-| Vehicle workshop | Independently reconstructed Roadster concept body, cabin, underside and nozzles; steering, suspension, wing and lighting follow actual state; cutaway and model export |
-| Complete city | Connected roads, elevated streets and ramps, commercial blocks, civic spaces and industrial waterfront; daylight/wet night, three quality levels and multiple cameras |
-| Research and play | Finite-resource driving, flight/landing tasks, wind disturbances, controller A/B, parameter studies, initial-state/input recording, replay and export |
+| Drive and fly | Choose **Enter city**. W / S accelerate, slow and reverse. A / D steer. Space brakes. In open space, H enables flight assistance and E / Q command climb and descent. |
+| Learn a braking line | Choose **Routes & challenges → Prepare route → Drive and record**. Cross the three amber lines, turn left and stop inside the teal ring for half a second. Free practice lets you stop and study the turn. |
+| Compare controllers | Open the **Wind laboratory**, select a disturbance, initial state and controller, and record a run. Review inputs and attitude, or compare controllers from the same initial state. |
+| Inspect the car | The **Vehicle workshop** has exterior, chassis and cutaway views. Adjust steering and suspension travel to see the pushrods, dampers and active wing. |
 
-Resources participate in the dynamics: motors and fans draw battery energy, finite tanks lose gas through the jets, and regenerative braking follows actual wheel work within power, efficiency and state-of-charge limits. Free driving uses a declared external gas supply; resource challenges specify their own initial conditions.
+C cycles cameras, M opens the map and P or Esc pauses. The application provides automatic maneuvers, key remapping and gamepad calibration. On-screen hints follow the active bindings. City driving, challenges and laboratory runs use the same 120 Hz dynamics and resource accounting. Start in a desktop browser.
 
-## First drive
+## One street, three driving strategies
 
-Choose **Enter city**, learn steering and braking on the road, then try flight assistance in open space. **Routes & challenges** leads to navigation, resource driving and flight/landing practice. Review a failed attempt and restart from its result card.
+The finite-resource route starts with **120 Wh available and a 600 L tank at 100 bar**. Cover 302.5 m within 65 seconds and retain at least 5 Wh and 5 kg of gas. Regeneration follows measured wheel work. The motor, fan, auxiliaries and valves draw from their respective supplies.
 
-| Default keys | Action |
-| --- | --- |
-| W / S, A / D | Forward / slow and reverse, steering; arrow keys also work |
-| Space | Blended friction and regenerative braking |
-| H, E / Q | Flight-assist toggle, climb / descend |
-| 1 / 2, Z / B | Manual pitch and roll; Z / B translate when G is enabled |
-| P, Esc, R | Pause / resume, menu, end attempt and reset |
-| C, M | Camera, map / routes |
+| Dry daylight, identical full starting state | Time | Net battery use | Recovered | Onboard gas used |
+| --- | ---: | ---: | ---: | ---: |
+| Economy | 52.81 s | 55.83 Wh | 14.40 Wh | 0 kg |
+| Balanced | 43.72 s | 69.25 Wh | 16.79 Wh | 0 kg |
+| Boost-assisted launch | 40.92 s | 60.74 Wh | 16.76 Wh | 15.67 kg |
 
-Full controls, rebinding and gamepad calibration are in the application. Help follows your bindings. Start with a desktop browser and keyboard, and select a graphics preset suitable for your device.
+These are three complete 1.2 simulation runs using ordinary throttle, brake, steering and jet inputs. Net battery use already accounts for regeneration. Open the four sectors after a run to see where time, electricity and gas went. Matched finishes include per-sector differences. An interrupted attempt retains the timing lines already crossed. [Full results and replayable input records](qa/resource-1.2)
 
-## Repeatable research
+## Vehicle, city and laboratory
 
-The city and wind laboratory share one page. Configure controllers, conditions and experimental procedures; record full initial states and effective inputs; review responses, resource budgets and failures. A record can retain multiple recomputations or controller A/B analyses, each selectable and exportable.
+- **Driving and flight.** Each wheel has its own contact, suspension and grip state. Manual valves, flight assistance, leveling and automatic maneuvers declare who controls thrust. Landing estimates account for pressure, energy, valve response and force direction.
+- **Vehicle workshop.** Parametric surfaces and mechanical assemblies form the body, cabin, arches and underside. Paint, glass, rubber and metal use distinct materials. Public exterior views inform the independent reconstruction. Hidden linkages and the cold-gas installation are illustrative engineering assumptions. [Model references](dist/assets/references/README.md)
+- **Explorable city.** Streets, ramps and elevated roads connect. Weave has double-level walkways, South Bank has tidal survey displays, and the foundry district has machine-tool shopfronts. Daylight, wet night and three quality levels are available. Buildings emphasize exterior streetscapes.
+- **Repeatable research.** Records retain the complete physical initial state, effective inputs and build identity. Same-build replay checks state agreement. Compatible earlier records can be explicitly recomputed with the current model. Experiments, controller comparisons and results can be exported. This is an independent project for driving and control research.
 
-Original-condition replay under the same build checks state errors. Compatible historical records require an explicit current-model recomputation and retain their source identity; this never claims to execute an old solver. Fair comparisons require matching conditions and complete initial states. Storage limits and concurrent-page conflicts are reported. Export important experiments for safekeeping.
+<details>
+<summary>See the vehicle and chassis in the workshop</summary>
 
-## Version 1.1
+![Body, glazing and wheels in the workshop daylight view](qa/browser-1.2/vehicle-exterior.png)
+![Chassis cutaway with suspension extended and front wheels turned](qa/browser-1.2/vehicle-linkage.png)
 
-- Consistent ambient-pressure nozzle limits and actuator power behavior near battery depletion.
-- Continuous front hood/return/corner boundaries with preserved mechanical hard points and draw budgets.
-- Preparation of all submitted material variants, without reissuing shadow-update requests already consumed by wet-road reflections.
-- Concurrent archive protection, selectable analysis history and explicit compatible-record recomputation.
+</details>
 
-[Audit and release scope](docs/release-1.1.md) · [Current checks](qa/release-1.1/validation.json) · [Real browser acceptance](qa/browser-1.1/observations.json) · [Development direction](docs/development-plan.md)
-
-## Scope and limitations
-
-Public Roadster references inform the independently authored model; unpublished specifications remain declared engineering assumptions. This is **not an official Tesla product, OEM CAD, real-vehicle performance prediction or industrially certified simulator**. The explorable city currently emphasizes exterior streetscapes.
-
-Initial resource/shader preparation may take time and pauses the vehicle. Preparation costs and active-driving long frames are reported separately. Acceptance states its actual device and scope; numerical/DOM checks do not certify physical keyboards/gamepads, listening quality or performance on every GPU.
+[1.2 audit and scope](docs/release-1.2.md) · [Release checks](qa/release-1.2/validation.json) · [Browser acceptance](qa/browser-1.2/observations.json) · [Official Roadster exterior reference](https://www.tesla.com/roadster)
 
 ## Run locally
 
-**Node.js 22+**; production dependencies and reviewed assets are vendored.
+Use Node.js 22 or newer. Production dependencies and assets are vendored.
 
 ~~~sh
 git clone https://github.com/Windscode/roadster-flight-lab.git
@@ -65,9 +56,7 @@ cd roadster-flight-lab
 npm start
 ~~~
 
-Open http://127.0.0.1:8080/ . Edit the runtime source in `dist/`; it is not disposable build output. Serve over HTTP rather than opening files directly.
-
-For the full current release gate:
+Open `http://127.0.0.1:8080/`. The editable runtime source lives in `dist/`. For the full release checks use the pinned DOM test dependency.
 
 ~~~sh
 npm ci --prefix tests/dom --ignore-scripts
@@ -77,12 +66,12 @@ npm run test:release
 node scripts/check-static.mjs
 ~~~
 
-PowerShell: `$env:JSDOM_MODULE_PATH = (Resolve-Path tests/dom/node_modules/jsdom/lib/api.js).Path`. Historical `npm test` / `npm run validate` require separate archived inputs; they are not the current release entry point. See [development documentation](docs/DEVELOPMENT.md).
+On PowerShell use `$env:JSDOM_MODULE_PATH = (Resolve-Path tests/dom/node_modules/jsdom/lib/api.js).Path`. The development guide describes historical check inputs and the current publication workflow. [Development guide](docs/DEVELOPMENT.md)
 
-## History, feedback and license
+## Releases and feedback
 
-1.0 was the first product release; 3.19–3.24 were development iteration numbers. Earlier notes and evidence remain intact: [1.0](docs/release-1.0.md), [3.24](docs/release-3.24.md), [3.23](docs/release-3.23.md), [3.22](docs/release-3.22.md), [3.21](docs/release-3.21.md). The live [deployment identity](https://windscode.github.io/roadster-flight-lab/deployment.json) identifies the published build.
+1.0 was the first product release. Earlier 3.x numbers refer to development iterations. Versioned notes retain original measurements and scope. [1.1](docs/release-1.1.md) · [1.0](docs/release-1.0.md) · [3.24](docs/release-3.24.md) · [Development direction](docs/development-plan.md) · [Live build identity](https://windscode.github.io/roadster-flight-lab/deployment.json)
 
-Use [Issues](https://github.com/Windscode/roadster-flight-lab/issues) for reproducible bugs, research proposals and usability feedback. Include your browser, quality setting, steps and an exported record or capture conditions where possible.
+Bug reports are welcome. Include the browser, quality preset, input sequence and an exported record when available. [Report an issue](https://github.com/Windscode/roadster-flight-lab/issues)
 
-Original code and procedural assets use the [MIT License](LICENSE). Third-party assets and libraries retain their own licenses; see [asset credits](dist/CREDITS.md).
+Original code and procedural assets use the MIT license. Third-party libraries and assets retain their respective licenses. [LICENSE](LICENSE) · [Asset credits](dist/CREDITS.md)

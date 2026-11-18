@@ -1,5 +1,5 @@
 import {nozzleExhaustVelocity} from './vehicle-models.js';
-import {nozzlePressureFactor} from './nozzle-supply.js';
+import {nozzlePressureFactor,deliverableGasMass} from './nozzle-supply.js';
 import {AUXILIARY_POWER_W} from './energy-model.js';
 
 // Advisory only. The real vehicle always remains on the 120 Hz 6-DOF solver.
@@ -12,10 +12,14 @@ const finite=v=>typeof v==='number'&&Number.isFinite(v);
 function forecast(t,p,height,trim,electrical,{arrest=false}={}){
   const dt=1/120,maxSteps=120*35,bench=p.supplyMode==='bench';
   let mass=t.gasMass,temperature=t.gasTemperatureK,y=height,v=t.verticalSpeed,spent=0,minY=y,elapsed=0;
-  const weight=t.mass*p.gravity,shares=trim.nozzles.map(n=>n.forceN/weight),totalShare=shares.reduce((s,v)=>s+v,0);
+  const weight=t.mass*p.gravity,shares=trim.nozzles.map(n=>n.forceN/weight);
   // A uniform scale of a feasible gravity wrench retains zero body torque.
   const capacities=t.nozzles.map(n=>n.ratedForce*n.healthScale);
-  let thrust=Math.max(0,t.nozzles.reduce((s,n,i)=>s+n.force,0)/Math.max(1,totalShare));
+  const forces=t.nozzles.map(n=>n.force),q=t.quaternion;
+  // World-up projections of the fixed body axes, the second row of R(q).
+  const upX=2*(q.x*q.y+q.w*q.z),upY=1-2*(q.x*q.x+q.z*q.z),upZ=2*(q.y*q.z-q.w*q.x);
+  const up=t.nozzles.map(({direction:d})=>d.x*upX+d.y*upY+d.z*upZ);
+  const rise=-Math.expm1(-dt/p.valveRiseTime),fall=-Math.expm1(-dt/p.valveFallTime);
   let peakDemandRatio=0,pressure=t.pressureBar,stop=null;
   let energyRemainingJ=electrical.initialEnergyJ,controlPowerLost=false;
   const supply=()=>({electricalUsedJ:electrical.initialEnergyJ-energyRemainingJ,electricalRemainingJ:energyRemainingJ,controlPowerLost,reserveElectricalPowerW:electrical.reservePowerW});
@@ -39,14 +43,21 @@ function forecast(t,p,height,trim,electrical,{arrest=false}={}){
     const acceleration=arrest?Infinity:clamp((descentTarget-v)*3.6,-3,4);
     const request=arrest?maxVertical:Math.max(0,m*(p.gravity+acceleration));
     peakDemandRatio=Math.max(peakDemandRatio,request/Math.max(1,maxVertical));
-    const command=Math.min(request,maxVertical),tau=command>thrust?p.valveRiseTime:p.valveFallTime;
-    thrust=clamp(thrust+(command-thrust)*(1-Math.exp(-dt/tau)),0,maxVertical);
-    const scalar=thrust*totalShare,ve=nozzleExhaustVelocity(p,pressure,temperature),need=scalar/ve*dt,take=bench?need:Math.min(mass,need),scale=need>0?take/need:1;
+    const command=Math.min(request,maxVertical);
+    let thrust=0,scalar=0;
+    for(let i=0;i<forces.length;i++){
+      const target=command*shares[i],current=forces[i];
+      forces[i]=clamp(current+(target-current)*(target>current?rise:fall),0,capacities[i]*derate);
+      thrust+=forces[i]*up[i];
+      scalar+=forces[i];
+    }
+    const ve=nozzleExhaustVelocity(p,pressure,temperature),need=scalar/ve*dt,take=bench?need:deliverableGasMass(p,mass,pressure,need),scale=need>0?take/need:1;
+    if(scale<1)for(let i=0;i<forces.length;i++)forces[i]*=scale;
     const previousV=v;v+=(thrust*scale/m-p.gravity)*dt;y+=v*dt;minY=Math.min(minY,y);elapsed+=dt;spent+=take;
     energyRemainingJ=Math.max(0,energyRemainingJ-electrical.reservePowerW*dt);
     if(!bench){const previous=mass;mass-=take;if(p.gasModel==='adiabatic'&&previous>1e-10)temperature*=Math.pow(mass/previous,p.gasGamma-1);else temperature=p.gasTemperatureK;temperature+=(p.gasTemperatureK-temperature)*(1-Math.exp(-dt/p.tankThermalTime));}
     if(arrest&&v>=0&&previousV<0){stop={timeS:elapsed,heightUsedM:Math.max(0,height-minY),gasKg:spent};break;}
-    if(y<=0){return{status:Math.abs(v)<=.65?'soft-contact-estimate':'hard-contact-estimate',timeS:elapsed,contactVerticalMps:v,gasRequiredKg:spent,gasRemainingKg:bench?null:mass,pressureAtContactBar:pressure,peakDemandRatio,arrest:stop,...supply()};}
+    if(y<=0){return{status:Math.abs(v)<=.65?'soft-contact-estimate':'hard-contact-estimate',timeS:elapsed,contactVerticalMps:v,gasRequiredKg:spent,gasRemainingKg:bench?null:mass,pressureAtContactBar:bench?pressure:mass*287.05*temperature/(p.tankLitres/1000)/1e5,peakDemandRatio,arrest:stop,...supply()};}
   }
   return arrest?{status:stop?'arrest-estimate':'not-arrested-in-window',arrest:stop,gasRequiredKg:spent,gasRemainingKg:bench?null:mass,peakDemandRatio,...supply()}:{status:'forecast-horizon-exceeded',timeS:elapsed,gasRequiredKg:spent,gasRemainingKg:bench?null:mass,peakDemandRatio,...supply()};
 }

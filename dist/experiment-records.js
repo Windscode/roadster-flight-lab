@@ -87,8 +87,15 @@ export function replayEligibility(record){
   const current=currentExperimentIdentity();if(record.identity.modelVersion!==current.modelVersion){const migration=canMigrateRecordedState(record.identity.modelVersion,current.modelVersion)&&record.initialSnapshot.physical.schemaVersion===1;return{exact:false,recompute:migration,migrationRequired:migration,reason:migration?(record.identity.modelVersion==='3.8.0'?'原 3.8 模型未安装，不能精确重放。可显式按当前模型重算历史初态：保留原参数、刚体、气源和控制状态，并补充当前模型新增的驱动诊断、升降制动与回正状态；迁移与差异单独留证。':`原 ${record.identity.modelVersion} 模型未安装，不能精确重放。可显式按当前模型重算；执行前核对完整状态字段与碰撞几何签名，保留原参数并声明新增参数映射。轮速、气源、控制器和扰动相位保持。`):'原模型 '+record.identity.modelVersion+' 未安装，且没有此完整状态的迁移器；不能执行旧模型。可查看 / 导出历史，或在流程编辑器明确按当前模型重新建立试验。'};}const exact=record.identity.modelVersion===current.modelVersion&&record.identity.modelBuildId===current.modelBuildId;
   return{exact,recompute:true,reason:exact?'可按原始条件执行当前相同模型 / 构建':'原始模型 / 构建未安装；不能精确重放。可明确选择按当前模型重新计算，并保留来源身份'};
 }
+// These published snapshots share the complete state contract. Only forward,
+ // explicitly listed versions qualify for current-model recomputation.
+const releaseStates=['3.24.0','1.0.0','1.1.0','1.2.0'];
+function compatibleReleaseStates(from,to){
+  const i=releaseStates.indexOf(from);
+  return i>=0&&releaseStates.indexOf(to)>i;
+}
 function canMigrateRecordedState(from,to){
-  if(from==='3.24.0'&&['1.0.0','1.1.0'].includes(to)||from==='1.0.0'&&to==='1.1.0')return true;
+  if(compatibleReleaseStates(from,to))return true;
   const targets={'3.8.0':['3.9.0','3.10.0','3.11.0','3.12.0','3.13.0'],'3.9.0':['3.10.0','3.11.0','3.12.0','3.13.0'],'3.10.0':['3.11.0','3.12.0','3.13.0'],'3.11.0':['3.12.0','3.13.0'],'3.12.0':['3.13.0'],'3.16.0':['3.17.0']};
   return targets[from]?.includes(to)??false;
 }
@@ -97,7 +104,7 @@ export function prepareRecordedStateForCurrentModel(record,sim,{recompute=false}
   const compatibility={model:source.modelVersion===current.modelVersion&&source.modelBuildId===current.modelBuildId?'exact':'current-model-recompute',sourceIdentity:clone(source),executionIdentity:current,conditions:'original-complete-snapshot',migration:null};
   if(physical.modelVersion!==current.modelVersion){
     if(!recompute||!canMigrateRecordedState(source.modelVersion,current.modelVersion)||physical.schemaVersion!==1)throw Error('没有此历史模型的显式状态迁移器');
-    const template=sim.exportState(),releaseMigration=['3.24.0','1.0.0'].includes(source.modelVersion)&&['1.0.0','1.1.0'].includes(current.modelVersion),added=releaseMigration?[]:[...(source.modelVersion==='3.8.0'?['_driveAccounting','_verticalControl','_levelRecovery']:[]),...['_routeSurface','_contactFeedback'].filter(key=>key in template.state)];
+    const template=sim.exportState(),releaseMigration=compatibleReleaseStates(source.modelVersion,current.modelVersion),added=releaseMigration?[]:[...(source.modelVersion==='3.8.0'?['_driveAccounting','_verticalControl','_levelRecovery']:[]),...['_routeSurface','_contactFeedback'].filter(key=>key in template.state)];
     if(releaseMigration)assertSnapshotWorldCompatible(sim,physical);
     else if(physical.worldType!==template.worldType||physical.geometrySignature!==template.geometrySignature)throw Error('历史场景几何与当前模型不同；不能把不同碰撞世界标作同一原始条件');
     const parameterMapping={};
@@ -139,8 +146,12 @@ export function validateExperimentRecord(value){
   return value;
 }
 function measuredSample(t,step,initialTime,includeReview=true){
-  const target=t.mode==='hover'?(t.reference?.position??t.holdPositionTarget??null):null,q=t.reference?.quaternion??t.holdQuaternionTarget??t.manualQuaternionTarget;
-  return{step,timeS:step/FIXED_HZ,simTime:t.simTime??initialTime+step/FIXED_HZ,position:{...t.position},velocity:{...t.velocity},quaternion:{...t.quaternion},angularVelocity:{...t.angularVelocity},heightM:numeric(t.position?.y),targetHeightM:numeric(target?.y??t.targetAltitude),positionErrorM:poseError(t.position,target),attitudeErrorDeg:attitudeError(t.quaternion,q),speedMps:norm(t.velocity),rollDeg:numeric(t.rollDeg),pitchDeg:numeric(t.pitchDeg),pressureBar:numeric(t.pressureBar),gasMassKg:numeric(t.gasMass),tankTemperatureK:numeric(t.gasTemperatureK),massFlowKgS:Math.max(0,t.massFlowKgS||0),supplyMode:t.supplyMode,allocationError:numeric(t.allocationError),feasible:t.holdFeasible??t.manualPoseFeasible??null,contactCount:t.contactCount??0,wheelOmegaRadS:(t.wheelStates||[]).map(w=>numeric(w.angularVelocityRadS)),wheelSlip:(t.wheelStates||[]).map(w=>numeric(w.slipRatio)),wingDeployment:numeric(t.wing?.deployment??t.wingDeployment),...(includeReview?{
+  const owner=t.controlOwnership,velocityControl=t.verticalControl?.pilotActive||t.verticalControl?.braking;
+  const positionControl=owner?.owner==='explicit-pose-hold'||owner?.owner==='flight-assist'&&!velocityControl;
+  const target=owner?(positionControl?owner.positionTarget:null):t.mode==='hover'?(t.reference?.position??t.holdPositionTarget??null):null;
+  const targetHeight=owner?(target?.y??(velocityControl||owner.owner==='raw-valves'?null:owner.heightTarget)):(target?.y??t.targetAltitude);
+  const q=t.reference?.quaternion??t.holdQuaternionTarget??t.manualQuaternionTarget;
+  return{step,timeS:step/FIXED_HZ,simTime:t.simTime??initialTime+step/FIXED_HZ,position:{...t.position},velocity:{...t.velocity},quaternion:{...t.quaternion},angularVelocity:{...t.angularVelocity},heightM:numeric(t.position?.y),targetHeightM:numeric(targetHeight),positionErrorM:poseError(t.position,target),attitudeErrorDeg:attitudeError(t.quaternion,q),speedMps:norm(t.velocity),rollDeg:numeric(t.rollDeg),pitchDeg:numeric(t.pitchDeg),pressureBar:numeric(t.pressureBar),gasMassKg:numeric(t.gasMass),tankTemperatureK:numeric(t.gasTemperatureK),massFlowKgS:Math.max(0,t.massFlowKgS||0),supplyMode:t.supplyMode,allocationError:numeric(t.allocationError),feasible:t.holdFeasible??t.manualPoseFeasible??null,contactCount:t.contactCount??0,wheelOmegaRadS:(t.wheelStates||[]).map(w=>numeric(w.angularVelocityRadS)),wheelSlip:(t.wheelStates||[]).map(w=>numeric(w.slipRatio)),wingDeployment:numeric(t.wing?.deployment??t.wingDeployment),...(includeReview?{
     headingDeg:numeric(t.headingDeg),mode:t.mode??null,wheels:(t.wheelStates??[]).map(w=>({id:w.id??null,contact:!!w.contact,normalLoadN:numeric(w.normalLoadN),surfaceId:w.surfaceId??w.contactObjectId??null,surfaceMaterial:w.surfaceMaterial??null,mu:numeric(w.surfaceMu),slipPowerW:numeric(w.slipPowerW)})),
     owner:t.controlOwnership?.owner??null,positionPolicy:t.controlOwnership?.positionPolicy??null,positionTarget:clone(t.controlOwnership?.positionTarget??null),heightTarget:numeric(t.controlOwnership?.heightTarget),commandForceN:numeric(t.controlOwnership?.commandForceN),actualForceN:numeric(t.controlOwnership?.actualForceN??t.thrustN),valveResidualOnly:!!t.controlOwnership?.valveResidualOnly,nozzles:(t.nozzles??[]).map(n=>({id:n.id,commandN:numeric(n.command),actualN:numeric(n.force)})),contactEvent:clone(t.contactFeedback?.lastEvent??null)
   }:{})};

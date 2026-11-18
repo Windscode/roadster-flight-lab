@@ -1,10 +1,11 @@
 // Original shallow exterior showcases, built in metres. They occupy the
 // existing sealed facade recess (<= 0.62 m); none is an enterable room.
 export const STREET_DISPLAY_VERSION='sealed-shopfront-3.18';
-export const DISPLAY_RECIPES=Object.freeze(['books','daily','workshop','gallery']);
+export const DISPLAY_RECIPES=Object.freeze(['books','daily','workshop','gallery','tide-survey','machine-shop']);
 export function displayRecipe(order){
-  return ['gallery','exchange','southbank'].includes(order)?'books':
-    ['workshop','service'].includes(order)?'workshop':order==='residential'?'gallery':'daily';
+  if(order==='southbank')return 'tide-survey';
+  if(order==='service')return 'machine-shop';
+  return ['gallery','exchange'].includes(order)?'books':order==='workshop'?'workshop':order==='residential'?'gallery':'daily';
 }
 
 // The adapter puts boxes in a facade's local outward frame. Shallow opaque
@@ -12,14 +13,15 @@ export function displayRecipe(order){
 export function buildStreetDisplay(put,{x=0,width=4.6,height=2.7,sill=.38,recipe='books',variant=0,door=false,trim=0x405457}){
   const doorW=door?Math.min(1.10,width*.29):0,doorSide=variant%2?-1:1,
     displayW=width-(door?doorW+.12:0),centre=x-(door?doorSide*(doorW+.12)*.5:0),top=sill+height;
-  const light={position:[centre,top-.075,-.17],span:[displayW*.29,0,0],cool:recipe==='workshop'};
+  const cool=recipe==='workshop'||recipe==='machine-shop';
+  const light={position:[centre,top-.075,-.17],span:[displayW*.29,0,0],cool};
   const emit=(kind,size,along,y,out,tint)=>put(kind,size,along,y,out,tint,1,'box',-1,[0,0,0],kind==='shopGlass'?null:light);
   const place=(kind,size,dx,y,out,tint=0xffffff)=>emit(kind,size,centre+dx,y,out,tint);
   // A small downward shelf bar is attached to the existing top panel. Its
   // three-sample local diffuse term reaches only this closed display's pieces.
   // The clear pane has no added emission and the street receives no new light.
-  put('lamp',[displayW*.78,.025,.065],centre,top-.058,-.17,recipe==='workshop'?0xd4e6ef:0xffe0b7);
-  place('displayBack',[displayW,height,.035],0,sill+height*.5,-.59,recipe==='workshop'?0x344646:0x777b6d);
+  put('lamp',[displayW*.78,.025,.065],centre,top-.058,-.17,cool?0xd4e6ef:0xffe0b7);
+  place('displayBack',[displayW,height,.035],0,sill+height*.5,-.59,cool?0x344646:0x777b6d);
   for(const side of [-1,1])place('displayBack',[.055,height,.53],side*(displayW/2-.027),sill+height*.5,-.31,0x344846);
   place('displayWood',[displayW,.075,.52],0,sill+.035,-.31,0x7f694b);
   place('displayBack',[displayW,.06,.52],0,top-.03,-.31,0x53605a);
@@ -33,6 +35,32 @@ export function buildStreetDisplay(put,{x=0,width=4.6,height=2.7,sill=.38,recipe
         place('displayGoods',[.11+((k+level)%2)*.045,bh,.19],bx,y+.03+bh*.5,-.35,[0xa48152,0x425d64,0xa8ab90,0x794e43][(k+level+variant)%4]);
       }
     }
+  }else if(recipe==='tide-survey'){
+    // A stepped bathymetry model with a staff gauge and a brass level marker.
+    const bench=sill+.35;
+    place('displayWood',[displayW*.84,.29,.39],0,sill+.145,-.32,0x786752);
+    place('displayFrame',[displayW*.87,.06,.43],0,bench-.03,-.32,0xb0a68c);
+    for(let layer=0;layer<4;layer++){
+      const width=displayW*(.69-layer*.11);
+      place('displayGoods',[width,.085,.28-layer*.035],-displayW*.05+layer*displayW*.018,bench+.0425+layer*.085,-.32,[0x32636a,0x668982,0x93a392,0xb9a981][layer]);
+    }
+    const gaugeX=displayW*.28;
+    place('displayGoods',[.24,1.50,.045],gaugeX,sill+1.20,-.53,0x223e49);
+    for(let tick=0;tick<9;tick++)place('displayGoods',[tick%2?.09:.16,.025,.025],gaugeX-.02,sill+.55+tick*.16,-.493,0xe5d6ae);
+    place('displayFrame',[.29,.06,.045],gaugeX,sill+.74+(variant%3)*.16,-.47,0xc28a48);
+  }else if(recipe==='machine-shop'){
+    // Gantry press: a steel worktable, two columns, a ram and a workpiece.
+    const width=Math.min(2.5,displayW*.76),table=sill+.64;
+    for(const side of [-1,1]){
+      place('displayFrame',[.12,.62,.30],side*width*.40,sill+.31,-.31,0x465955);
+      place('displayFrame',[.095,.89,.14],side*width*.40,table+.49,-.36,0x83938b);
+    }
+    place('displayWood',[width,.10,.44],0,table,-.30,0x768078);
+    place('displayGoods',[width,.16,.22],0,table+.93,-.36,0xbbae78);
+    place('displayGoods',[.27,.27,.20],0,table+.72,-.36,0x546963);
+    const stroke=.15+(variant%3)*.065;
+    place('displayFrame',[.095,stroke,.09],0,table+.585-stroke/2,-.35,0xbdc8c0);
+    place('displayGoods',[.30,.11,.22],0,table+.105,-.33,0xa07750);
   }else if(recipe==='daily'){
     place('displayWood',[displayW-.18,.56,.42],0,sill+.29,-.31,0x8e7855);
     place('displayGoods',[displayW-.12,.055,.48],0,sill+.59,-.28,0x969b8c);

@@ -10,7 +10,8 @@ export function soundState(t){
   const texture=wheels.length?wheels.reduce((sum,w)=>sum+(w.rollingTexture??1)*w.normalLoadN,0)/normalLoadN:1;
   const slipPowerW=wheels.reduce((sum,w)=>sum+Math.max(0,w.slipPowerW||0),0),moving=clamp((travel-.06)/1.2);
   const road=contact?clamp(travel/45):0,flow=clamp((t.thrustN||0)/80000);
-  const fan=t.suctionEnabled?clamp((t.suctionN||0)/39000):0;
+  const spin=clamp(t.electricalSupply?.fanSpinFraction??0);
+  const fan=spin*(.55+.45*clamp((t.suctionN||0)/39000));
   const slide=contact?clamp(Math.sqrt(Math.max(0,slipPowerW-12)/70000))*Math.sqrt(support)*moving:0;
   const absLoad=normalLoadN?wheels.filter(w=>w.absActive).reduce((sum,w)=>sum+w.normalLoadN,0)/normalLoadN:0;
   const absPulse=contact&&travel>1.2?absLoad*(.55+.45*Math.sin((t.simTime||0)*2*Math.PI*14)):0;

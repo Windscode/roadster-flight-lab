@@ -1,3 +1,4 @@
+import {WeaveRouteTiming} from './route-sectors.js';
 import {MODEL_VERSION} from './vehicle-models.js';
 import {MODEL_BUILD_ID} from './model-build.js';
 import {energySummary,validateEnergyLedger} from './energy-model.js';
@@ -38,6 +39,9 @@ export class ResourceMission{
     const t=sim.telemetry();if(!t.energyAccounting)throw Error('Energy accounting unavailable');
     if(finite&&(sim.params.supplyMode!=='finite'||Math.abs(t.energyKWh-RESOURCE_ROUTE.initialKWh)>.000001||Math.abs(sim.params.initialPressureBar-RESOURCE_ROUTE.initialPressureBar)>.001||Math.abs(sim.params.tankLitres-RESOURCE_ROUTE.tankLitres)>.001))throw Error('Prepare the finite-resource initial state again');
     this.finite=finite;this.descriptorHash=descriptorHash;this.recordId=recordId;this.startedAt=t.simTime;this.lastTime=t.simTime;this.initial=copy(t);this.params=JSON.stringify(sim.params);this.wind=JSON.stringify(sim.getWind());this.revision=t.energyAccounting.revision;this.failure=null;this.samples=[];this.lastSample=-1;
+    const surface=sim.getRouteSurface();
+    if(!surface||surface.descriptorHash!==descriptorHash)throw Error('Prepare the selected route before starting');
+    this.timing=new WeaveRouteTiming(surface.descriptor,t);
     this.lastValidResources=resourceSample(t);this.terminalResources=null;this.resourceEvidence=null;
     this.identity={modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,descriptorHash,profile:finite?RESOURCE_ROUTE.id:'free-practice',parameters:copy(sim.params),wind:sim.getWind(),initialKWh:t.energyKWh,initialGasKg:t.gasMass,initialGasTemperatureK:t.gasTemperatureK,initialState:resourceInitialState(sim),inputProfile};
     this.comparisonKey=JSON.stringify({...this.identity,inputProfile:undefined});
@@ -49,7 +53,7 @@ export class ResourceMission{
     if(t.fault)reason='simulation-fault';
     else if(t.rigidContactCount>0)reason='collision';
     else if(t.simTime+1e-7<this.lastTime||t.energyAccounting.revision!==this.revision)reason='reset-or-resource-reprepared';
-    else if(JSON.stringify(sim.params)!==this.params||JSON.stringify(sim.getWind())!==this.wind||sim.getRouteSurface()?.descriptorHash!==this.descriptorHash)reason='conditions-changed';
+    else if(JSON.stringify(sim.params)!==this.params||JSON.stringify(sim.getWind())!==this.wind||t.roadSurface?.descriptorHash!==this.descriptorHash)reason='conditions-changed';
     else if(this.finite&&t.externalGasSuppliedKg-this.initial.externalGasSuppliedKg>1e-6)reason='external-gas-supply';
     else if(this.finite&&Math.abs(t.gasMass-this.initial.gasMass+t.onboardGasConsumedKg-this.initial.onboardGasConsumedKg)>.0001)reason='gas-refilled-or-state-changed';
     else if(Math.abs(t.energyAccounting.balanceErrorJ)>.02)reason='energy-accounting-failed';
@@ -67,6 +71,7 @@ export class ResourceMission{
       this.failure={reason,elapsedS:Math.max(0,sample.simTime-this.startedAt),energyKWh:sample.energyKWh,gasKg:sample.gasMass,resourceScope:scope};
       return this.failure;
     }
+    this.timing.observe(t);
     this.lastValidResources=resourceSample(t);
     if(elapsed-this.lastSample>=.5){this.lastSample=elapsed;this.samples.push({elapsedS:elapsed,position:{...t.position},speedKmh:t.speedKmh,energyKWh:t.energyKWh,gasKg:t.gasMass,chargePowerW:t.energyAccounting.chargePowerW,chargeLimitReason:t.energyAccounting.chargeLimitReason});if(this.samples.length>260)this.samples.shift();}
     return this.failure;
@@ -74,22 +79,25 @@ export class ResourceMission{
   result(sim,reason){
     const current=sim.telemetry();this.check(sim,current);const t=this.terminalResources??current,end=snapshotBudget(t),start=snapshotBudget(this.initial),work=Object.fromEntries(Object.keys(end).map(k=>[k,end[k]-start[k]]));
     const reserveOK=!this.finite||(t.energyKWh>=RESOURCE_ROUTE.minimumFinishKWh&&t.gasMass>=RESOURCE_ROUTE.minimumGasKg);
+    if(reason==='route-completed'&&!this.timing.finished)reason='route-incomplete';
     const completed=reason==='route-completed'&&!this.failure&&reserveOK;
-    return{schema:'roadster-resource-route-1',recordId:this.recordId,identity:copy(this.identity),comparisonKey:this.comparisonKey,completed,finite:this.finite,reason:this.failure?.reason??(!reserveOK&&reason==='route-completed'?'finish-reserve-insufficient':reason),elapsedS:Math.max(0,t.simTime-this.startedAt),remainingKWh:t.energyKWh,gasRemainingKg:t.gasMass,gasUsedKg:t.onboardGasConsumedKg-this.initial.onboardGasConsumedKg,externalGasKg:t.externalGasSuppliedKg-this.initial.externalGasSuppliedKg,netEnergyJ:(this.initial.energyKWh-t.energyKWh)*3.6e6,work,balanceErrorJ:t.energyAccounting.balanceErrorJ,resourceEvidence:copy(this.resourceEvidence??{scope:'live-terminal-state',simTime:t.simTime,terminal:true}),firstFailure:copy(this.failure),samples:copy(this.samples),comparisonScope:'Matched build, route, full initial simulation snapshot and parameters; successful driver strategies, not a strict controller A/B test.'};
+    return{schema:'roadster-resource-route-1',recordId:this.recordId,identity:copy(this.identity),comparisonKey:this.comparisonKey,completed,finite:this.finite,sectors:copy(this.timing.rows),reason:this.failure?.reason??(!reserveOK&&reason==='route-completed'?'finish-reserve-insufficient':reason),elapsedS:Math.max(0,t.simTime-this.startedAt),remainingKWh:t.energyKWh,gasRemainingKg:t.gasMass,gasUsedKg:t.onboardGasConsumedKg-this.initial.onboardGasConsumedKg,externalGasKg:t.externalGasSuppliedKg-this.initial.externalGasSuppliedKg,netEnergyJ:(this.initial.energyKWh-t.energyKWh)*3.6e6,work,balanceErrorJ:t.energyAccounting.balanceErrorJ,resourceEvidence:copy(this.resourceEvidence??{scope:'live-terminal-state',simTime:t.simTime,terminal:true}),firstFailure:copy(this.failure),samples:copy(this.samples),comparisonScope:'Matched build, route, full initial simulation snapshot and parameters; successful driver strategies, not a strict controller A/B test.'};
   }
 }
+export const routeGasUseKg=run=>run.finite?run.gasUsedKg:run.externalGasKg;
 export function comparableResourceRuns(a,b){
-  return a?.schema==='roadster-resource-route-1'&&b?.schema===a.schema&&a.completed===true&&b.completed===true&&
+  return a?.schema==='roadster-resource-route-1'&&b?.schema===a.schema&&a.completed===true&&b.completed===true&&a.finite===b.finite&&
     a.reason==='route-completed'&&b.reason==='route-completed'&&!a.firstFailure&&!b.firstFailure&&
     typeof a.identity?.initialState==='string'&&a.identity.initialState===b.identity?.initialState&&a.comparisonKey===b.comparisonKey&&
-    [a,b].every(r=>['elapsedS','netEnergyJ','gasUsedKg','balanceErrorJ'].every(k=>Number.isFinite(r[k]))&&Math.abs(r.balanceErrorJ)<.02);
+    [a,b].every(r=>['elapsedS','netEnergyJ','gasUsedKg','balanceErrorJ'].every(k=>Number.isFinite(r[k]))&&Number.isFinite(routeGasUseKg(r))&&Number.isFinite(r.work?.recoveredJ)&&Math.abs(r.balanceErrorJ)<.02);
 }
 export function resourceRunDifference(current,previous){
   if(!comparableResourceRuns(current,previous))return null;
   return{elapsedS:current.elapsedS-previous.elapsedS,netWh:(current.netEnergyJ-previous.netEnergyJ)/3600,
-    gasKg:current.gasUsedKg-previous.gasUsedKg,recoveredWh:(current.work.recoveredJ-previous.work.recoveredJ)/3600};
+    gasKg:routeGasUseKg(current)-routeGasUseKg(previous),recoveredWh:(current.work.recoveredJ-previous.work.recoveredJ)/3600};
 }
 export function resourceVerdict(reason,english=false){const labels={
+ 'route-incomplete':['计时线或终点停车尚未完成','Timing lines or final stop incomplete'],
  'route-completed':['完成路线并停稳','Route completed and stopped'],
  'finish-reserve-insufficient':['到达终点，但剩余储备不足','Arrived, but finish reserve was insufficient'],
  'time-budget-exceeded':['超过 65 秒驾驶时间预算','65-second driving-time budget exceeded'],

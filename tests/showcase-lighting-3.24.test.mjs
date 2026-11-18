@@ -2,6 +2,7 @@ import {REPORT_VERSION} from '../scripts/qa-report-version.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {readGitObject} from './git-object-read.mjs';
 import * as THREE from '../dist/vendor/three.module.js';
 import {SHOWCASE_LIGHTING,showcaseIrradiance,installShowcaseLighting} from '../dist/showcase-lighting.js';
 import {buildStreetDisplay,DISPLAY_RECIPES} from '../dist/street-display.js';
@@ -28,14 +29,14 @@ await check('Each sealed shallow display has a mounted source and only its opaqu
     assert.equal(lamps.length,1);assert.equal(lamps[0].light,undefined);assert.equal(glass.light,null);
     const source=summary.light,lens=lamps[0];assert.ok(Math.abs(source.position[0]-lens.x)<1e-9);assert.equal(source.position[2],lens.out);
     assert.ok(lens.y-lens.size[1]/2-source.position[1]>0&&lens.y-source.position[1]<.02,'Emitter just below its visible lens');
-    assert.ok(source.span[0]<lens.size[0]/2);assert.equal(source.cool,recipe==='workshop');
+    assert.ok(source.span[0]<lens.size[0]/2);assert.equal(source.cool,['workshop','machine-shop'].includes(recipe));
     for(const p of pieces){assert.ok(p.out-p.size[2]/2>=-.62&&p.out+p.size[2]/2<=.01);if(p.light){assert.ok(['displayBack','displayWood','displayGoods','displayFrame'].includes(p.kind));assert.equal(p.light,source);receiverParts++;}}
   }
   const edge=createCrosstownStreetEdge(),sources=edge.finishes.filter(p=>p.material==='display-lamp');
   assert.equal(sources.length,edge.finishes.filter(p=>p.material==='display-glazing').length);
   assert.ok(edge.finishes.every(p=>p.material));assert.ok(edge.finishes.filter(p=>p.material==='display-glazing').every(p=>!p.showcaseLight));
   assert.ok(edge.finishes.some(p=>p.showcaseLight?.cool));assert.ok(edge.finishes.some(p=>p.showcaseLight&&!p.showcaseLight.cool));
-  return {recipeVariants:16,receiverParts,crosstownSources:sources.length,recessDepthM:.62};
+  return {recipeVariants:DISPLAY_RECIPES.length*4,receiverParts,crosstownSources:sources.length,recessDepthM:.62};
 });
 
 await check('Local diffuse obeys receiver orientation, downward emission and bounded distance',()=>{
@@ -109,10 +110,53 @@ await check('Original external night bake inputs and complete city remain byte-i
 });
 
 const routeRoot=new THREE.Group(),architecture=buildUrbanArchitecture(THREE,routeRoot,CITY_BUILDINGS),street=buildStreetLife(THREE,routeRoot);await Promise.all([architecture.ready,street.ready]);
-await check('Original architecture is unchanged apart from 185 shelf lenses; fifteen view budgets hold',()=>{
-  const h=createHash('sha256');
-  for(const mesh of architecture.group.children.filter(m=>!m.name.includes(' / lamp / ')).sort((a,b)=>a.name.localeCompare(b.name))){h.update(mesh.name);for(const array of [mesh.instanceMatrix.array,mesh.instanceColor?.array,mesh.geometry.attributes.position.array,mesh.geometry.index?.array])if(array)h.update(new Uint8Array(array.buffer,array.byteOffset,array.byteLength));}
-  assert.equal(h.digest('hex'),baseline.nonLampArchitectureSHA256);assert.equal(architecture.stats.drawBatches,baseline.architecture.drawBatches);assert.equal(architecture.stats.instances-baseline.architecture.instances,185);assert.equal(architecture.stats.triangles-baseline.architecture.triangles,185*12);
+await check('Only the two district fit-outs change; lamps, external geometry and fifteen view budgets hold',async()=>{
+  const priorCommit='9eda86e9d8687feec9245609282b8b568370927b',links=new Map();
+  for(const file of ['street-display.js','city-frontage-design.js','urban-architecture.js']){
+    const url=new URL('../dist/'+file,import.meta.url);
+    const source=readGitObject(priorCommit+':dist/'+file).toString().replaceAll('import.meta.url',JSON.stringify(url.href))
+      .replace(/from '\.\/([^']+)'/g,(_,name)=>"from '"+(links.get(name)??new URL(name,url).href)+"'");
+    links.set(file,'data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+  }
+  const oldStreet=await import(links.get('street-display.js'));
+  for(const recipe of oldStreet.DISPLAY_RECIPES)for(const door of [false,true])for(const variant of [0,1]){
+    const opts={width:4.6,height:2.7,sill:.38,recipe,variant,door},a=[],b=[];
+    oldStreet.buildStreetDisplay((...args)=>a.push(args),opts);buildStreetDisplay((...args)=>b.push(args),opts);assert.deepEqual(b,a);
+  }
+  const old=(await import(links.get('urban-architecture.js'))).buildUrbanArchitecture(THREE,new THREE.Group(),CITY_BUILDINGS);await old.ready;
+  function digest(kit,include){
+    const h=createHash('sha256');
+    for(const mesh of kit.group.children.filter(include).sort((a,b)=>a.name.localeCompare(b.name))){
+      h.update(mesh.name);
+      for(const a of [mesh.instanceMatrix.array,mesh.instanceColor?.array,mesh.geometry.attributes.position.array,mesh.geometry.index?.array])
+        if(a)h.update(new Uint8Array(a.buffer,a.byteOffset,a.byteLength));
+    }
+    return h.digest('hex');
+  }
+  assert.equal(digest(old,m=>!m.name.includes(' / lamp / ')),baseline.nonLampArchitectureSHA256);
+  // The renderer batches ceramic, concrete and metal from both inside and
+  // outside the shop. Isolate individual opaque interior receivers by their
+  // actual authored emitter instead of excluding entire material batches.
+  function exteriorDigest(kit){
+    const hash=createHash('sha256');
+    for(const mesh of [...kit.group.children].sort((a,b)=>a.name.localeCompare(b.name))){
+      const emitter=mesh.geometry.getAttribute('showcaseEmitter'),indices=[];
+      for(let i=0;i<mesh.count;i++)if(!emitter||emitter.getW(i)===0)indices.push(i);
+      if(!indices.length)continue;
+      hash.update(mesh.name);
+      for(const a of [mesh.geometry.attributes.position.array,mesh.geometry.index?.array])if(a)hash.update(Buffer.from(a.buffer,a.byteOffset,a.byteLength));
+      for(const attr of [mesh.instanceMatrix,mesh.instanceColor])if(attr){
+        const a=attr.array,bytes=attr.itemSize*a.BYTES_PER_ELEMENT;
+        for(const i of indices)hash.update(Buffer.from(a.buffer,a.byteOffset+i*bytes,bytes));
+      }
+    }
+    return hash.digest('hex');
+  }
+  assert.equal(exteriorDigest(architecture),exteriorDigest(old));
+  assert.equal(architecture.stats.drawBatches,baseline.architecture.drawBatches);
+  assert.equal(old.stats.instances-baseline.architecture.instances,185);
+  const recipes=architecture.stats.showcaseRecipes,added=architecture.stats.triangles-old.stats.triangles;
+  assert.ok(recipes['tide-survey']>0&&recipes['machine-shop']>0);assert.ok(added<=0);old.dispose();
   const camera=new THREE.PerspectiveCamera(52,16/9,.1,1800),views={};let time=1;
   for(const quality of ['balanced','high','ultra','balanced']){
     architecture.setQuality(quality);street.setQuality(quality);views[quality]=protocol.views.map(view=>{camera.position.set(...view.position);camera.lookAt(...view.lookAt);camera.updateMatrixWorld(true);time+=1;architecture.update(time,camera.position);street.update(time,camera.position);return{view:view.id,...countVisibleGeometry(THREE,routeRoot,camera)};});
@@ -122,10 +166,10 @@ await check('Original architecture is unchanged apart from 185 shelf lenses; fif
     assert.equal(row.drawCalls,old.drawCalls);assert.equal(row.shadowDrawCalls,old.shadowDrawCalls);assert.equal(row.shadowTriangles,old.shadowTriangles);
     assert.ok(row.triangles<=old.triangles*1.01);assert.ok(row.drawCalls<=limit.drawCalls&&row.triangles<=limit.triangles*1.10);if(quality==='balanced')assert.ok(row.drawCalls<300&&row.triangles<650000);
   }
-  return {baselineCommit:baseline.sourceCommit,allocatedDrawBatches:architecture.stats.drawBatches,addedLenses:185,addedTriangles:2220,showcaseAttributeBytes:architecture.stats.showcaseAttributeBytes,geometryMiBBefore:baseline.architecture.geometryMiB,geometryMiBAfter:architecture.stats.geometryMiB,views,scope:'Architecture and existing street furnishings. Full rendered scene and target frame rate require native browser measurement.'};
+  return {baselineCommit:baseline.sourceCommit,priorCommit,recipes,fitoutTriangleDelta:added,allocatedDrawBatches:architecture.stats.drawBatches,shelfLenses:185,showcaseAttributeBytes:architecture.stats.showcaseAttributeBytes,geometryMiBBefore:baseline.architecture.geometryMiB,geometryMiBAfter:architecture.stats.geometryMiB,views,scope:'Architecture and existing street furnishings. Full rendered scene and target frame rate require native browser measurement.'};
 });
 
 globalThis.fetch=savedFetch;architecture.dispose();street.dispose();const resources=new Set();scene.traverse(o=>{if(o.geometry)resources.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])resources.add(m);});for(const resource of resources)resource.dispose?.();
 const files=['dist/showcase-lighting.js','dist/street-display.js','dist/urban-architecture.js','dist/city-street-edge.js','dist/city-environment.js'];
-const report={version:'3.24',status:'passed',createdAt:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(files.map(file=>[file,sha(readFileSync(new URL('../'+file,import.meta.url)))])),limits:[SHOWCASE_LIGHTING.scope,'The light is authored, not measured photometry. The existing building envelopes remain closed; this does not implement enterable shops.','Numerical/material and geometry checks do not establish GPU compile, visual legibility or native frame-rate acceptance.']};
+const report={version:REPORT_VERSION,status:'passed',createdAt:new Date().toISOString(),checks,sourceHashes:Object.fromEntries(files.map(file=>[file,sha(readFileSync(new URL('../'+file,import.meta.url)))])),limits:[SHOWCASE_LIGHTING.scope,'The light is authored, not measured photometry. The existing building envelopes remain closed; this does not implement enterable shops.','Numerical/material and geometry checks do not establish GPU compile, visual legibility or native frame-rate acceptance.']};
 writeFileSync(new URL(`../qa/showcase-lighting-${REPORT_VERSION}.json`,import.meta.url),JSON.stringify(report,null,2)+'\n');

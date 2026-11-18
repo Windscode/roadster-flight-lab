@@ -220,7 +220,7 @@ try{
     try{
       await loadBaseline();surfaceDiagnostics.restore();
       const state=sim.telemetry(),length=Number($('suspension').value),steer=Number($('steer').value);
-      for(const model of [car,baseline]){model.setCutaway(cut);model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,wing:state.wing},0);model.setViewBudget(camera,renderer.getDrawingBufferSize(new THREE.Vector2()).y,{inspection:true});}
+      for(const model of [car,baseline]){model.setCutaway(cut);model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,inspectionFanFraction:Number(sealed),wing:state.wing},0);model.setViewBudget(camera,renderer.getDrawingBufferSize(new THREE.Vector2()).y,{inspection:true});}
       camera.updateMatrixWorld();surfaceDiagnostics.apply(allModels());
       const result=await captureInspectionPair({renderer,archive,baselineVersion,currentVersion:CURRENT_RELEASE,canvasFactory:()=>document.createElement('canvas'),
         render:role=>{if(renderer.getContext().isContextLost())throw new Error(t('采集时 WebGL 上下文不可用。'));car.group.visible=role==='current';baselineCache.forEach(({model})=>model.group.visible=role==='reference'&&model===baseline);auditInspectionFrame('comparison-'+role);},
@@ -249,7 +249,7 @@ try{
   };
   function frozenArticulation(){
     const state=sim.telemetry(),length=Number($('suspension').value),steer=Number($('steer').value);
-    for(const model of allModels()){model.setCutaway(cut);model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,wing:state.wing},0);}
+    for(const model of allModels()){model.setCutaway(cut);model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,inspectionFanFraction:Number(sealed),wing:state.wing},0);}
   }
   async function runStudyCapture(kind){
     if(captureBusy||stage.dataset.graphics!=='ready')return;
@@ -294,7 +294,7 @@ try{
     if(sweep){$('suspension').value=.325+.085*Math.sin(now*.0007);$('steer').value=.49*Math.sin(now*.0011);}
     const length=Number($('suspension').value),steer=Number($('steer').value);$('length').textContent=length.toFixed(3)+' m';$('angle').textContent=(steer*180/Math.PI).toFixed(1)+'°';
     sim.step(dt,{});const state=sim.telemetry();$('wing-value').textContent=Math.round((state.wing?.deployment||0)*100)+'% 实际';
-    for(const model of [car,...[...baselineCache.values()].map(e=>e.model)]){model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,wing:state.wing},dt);}
+    for(const model of [car,...[...baselineCache.values()].map(e=>e.model)]){model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,inspectionFanFraction:Number(sealed),wing:state.wing},dt);}
     controls.update();camera.updateMatrixWorld();for(const model of [car,...[...baselineCache.values()].map(e=>e.model)])model.setViewBudget(camera,renderer.getDrawingBufferSize(drawingSize).y,{inspection:true});surfaceDiagnostics.apply(allModels());renderInspection();
     if(now-statusTime>250){refreshStatus();statusTime=now;}frameId=requestAnimationFrame(frame);
   }

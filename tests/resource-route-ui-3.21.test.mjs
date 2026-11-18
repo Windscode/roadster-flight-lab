@@ -31,7 +31,7 @@ const ui=createRouteExperience({mount:doc.getElementById('route'),hudMount:doc.g
   },
   onStart:()=>{recorder.start({name:'Finite route DOM lifecycle'});paused=false;return recorder.getState();},
   onFinish:reason=>{stops.push(reason);return recorder.finish(reason==='route-completed'?'completed':'cancelled',reason);},
-  onInspect:id=>inspections.push(id),onOpen(){},onSound(){},onHead(){},recordEvent:(type,detail)=>{events.push({type,detail});recorder.event(type,detail);},notify(){}
+  onInspect:id=>inspections.push(id),onOpen(){paused=true;},onSound(){},onHead(){},recordEvent:(type,detail)=>{events.push({type,detail});recorder.event(type,detail);},notify(){}
 });
 const route=key=>doc.querySelector(`[data-route="${key}"]`),resource=key=>doc.querySelector(`[data-resource="${key}"]`),action=key=>doc.querySelector(`[data-route-action="${key}"]`);
 async function click(key){action(key).click();await Promise.resolve();await Promise.resolve();ui.update();}
@@ -52,12 +52,17 @@ try{
   const replay=new RoadsterSim(),playback=new ExperimentPlayback(record,{sim:replay});
   while(!playback.finished){const input=playback.nextInput();if(playback.finished)break;const t=replay.advanceFixed(input,DT);playback.afterStep(t);}
   assert.deepEqual(replay.exportState(),sim.exportState());
+  const fixedBalance=resource('accounting').textContent;assert.match(fixedBalance,/本次记录电池收支|Recorded battery balance/);
+  for(let i=0;i<120;i++)sim.advanceFixed({},DT);ui.update();assert.equal(resource('accounting').textContent,fixedBalance);
   checks.push({name:'Real finite DOM prepare/start/complete/record/replay',steps,elapsedS:completed.elapsedS,netWh:completed.netEnergyJ/3600,recoveredWh:completed.work.recoveredJ/3600});
 
-  await prepareRun();await click('start');const faster=driver('balanced');let secondSteps=0;
+  assert.equal(action('retry').hidden,false);await click('retry');assert.equal(recorder.getState().recording,true);
+  assert.equal(ui.getState().resourceHistory.at(-1).recordId,completed.recordId);const faster=driver('balanced');let secondSteps=0;
   while(!ui.getState().run.finished&&secondSteps<8400){step(faster(sim));secondSteps++;}
   const second=ui.getState().resourceHistory.at(-1);assert.equal(second.completed,true);assert.equal(second.comparisonKey,completed.comparisonKey);assert.match(resource('comparison').textContent,/有效同条件成绩|valid matching run/);
-  checks.push({name:'Two complete real trajectories produce a matched time/energy/gas difference',secondSteps,elapsedS:second.elapsedS,deltaWh:(second.netEnergyJ-completed.netEnergyJ)/3600});
+  const splits=resource('history').querySelector('.route-sector-table');assert.equal(splits.tBodies[0].rows.length,4);
+  assert.equal(splits.querySelectorAll('td small').length,16);
+  checks.push({name:'One-action retry preserves prior evidence and four paired sector deltas; two complete real trajectories produce a matched time/energy/gas difference',secondSteps,elapsedS:second.elapsedS,deltaWh:(second.netEnergyJ-completed.netEnergyJ)/3600});
 
   paused=true;chooseMode('practice');assert.equal(action('start').disabled,true);await prepareRun();assert.equal(sim.params.supplyMode,'bench');assert(sim.telemetry().energyKWh>199);
   await click('start');step({brake:1});await click('end');const practice=ui.getState().resourceHistory.at(-1);assert.equal(practice.finite,false);assert.equal(practice.completed,false);assert.equal(practice.reason,'pilot-ended');

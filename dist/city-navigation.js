@@ -120,13 +120,21 @@ function nextTurn(route,destination){
  }
  return{kind:'straight',inM:route.lengthM,roadId:destination.streetId,roadLabel:destination.label};
 }
+const roadNamesEn={
+ 'weave-main':'Weave Street','canal-link':'South Quay Avenue','crosstown-link':'Crosstown Street',
+ 'foundry-main':'Foundry Avenue','foundry-yard':'Foundry Service Lane','terrace-link':'Terrace Approach',
+ 'forum-west-link':'West Forum Approach','forum-main':'Forum Avenue','forum-court':'Forum Court',
+ 'forum-cross-240':'Upper City Cross Street','forum-cross-322':'Upper City Cross Street','forum-cross-410':'Upper City Cross Street',
+ 'cross-city':'Cross-City Viaduct','east-ridge':'East Ridge Loop','terrace-south':'South Terrace Ramp',
+ 'terrace-west':'West Terrace Ramp','skyway':'Skyway','test-center-access':'Test Centre Lane','south-arrival':'South Quay Approach'
+};
 function textState(state){
  const label=state.destination?.label??'',en=state.destination?.labelEn??label;
  const turnZh={'left':'左转','right':'右转','turn-around':'在安全位置掉头','ramp-up':'沿坡道上行','ramp-down':'沿坡道下行','arrive':'抵达车行入口','straight':'沿道路继续'},turnEn={'left':'Turn left','right':'Turn right','turn-around':'Turn around where safe','ramp-up':'Take the ramp up','ramp-down':'Take the ramp down','arrive':'Arrive at vehicle entrance','straight':'Continue along the road'};
- const base={idle:['请选择车行目的地。','Choose a vehicle destination.'],unknown:['未收录该目的地的可靠车行入口。','No verified road entrance is listed for this destination.'],airborne:['空中：公路导航保留路线，落地后恢复层级定位。','Airborne: road route retained; road level guidance resumes after contact.'],unavailable:['当前不在精选道路上；未生成穿越楼体的直线。请回到地图所示车道。','Outside the selected road network; no straight shortcut is supplied. Rejoin a mapped carriageway.'],disconnected:['此层道路与目标无已确认车行连接。请按实际出入口返回相连路网。','This road level has no verified vehicle connection to the destination. Return through its actual entrance.'],arrived:[`已到 ${label} · 车行入口`,`${en} vehicle entrance reached`],'return-to-road':[`偏离车道约 ${Math.round(state.lateralM??0)} m；在可见、安全位置回到 ${state.currentRoad?.label??'地图车道'}。`,`About ${Math.round(state.lateralM??0)} m from road centre; safely rejoin ${state.currentRoad?.label??'the mapped road'} using the visible access.`]};
+ const base={idle:['请选择车行目的地。','Choose a vehicle destination.'],unknown:['未收录该目的地的可靠车行入口。','No verified road entrance is listed for this destination.'],airborne:['空中：公路导航保留路线，落地后恢复层级定位。','Airborne: road route retained; road level guidance resumes after contact.'],unavailable:['当前不在精选道路上；未生成穿越楼体的直线。请回到地图所示车道。','Outside the selected road network; no straight shortcut is supplied. Rejoin a mapped carriageway.'],disconnected:['此层道路与目标无已确认车行连接。请按实际出入口返回相连路网。','This road level has no verified vehicle connection to the destination. Return through its actual entrance.'],arrived:[`已到 ${label} · 车行入口`,`${en} vehicle entrance reached`],'return-to-road':[`偏离车道约 ${Math.round(state.lateralM??0)} m；在可见、安全位置回到 ${state.currentRoad?.label??'地图车道'}。`,`About ${Math.round(state.lateralM??0)} m from road centre; safely rejoin ${roadNamesEn[state.currentRoad?.id]??'the mapped road'} using the visible access.`]};
  if(base[state.status])return{messageZh:base[state.status][0],messageEn:base[state.status][1]};
  const turn=state.nextTurn??{kind:'straight',inM:0},distance=Math.round(turn.inM);
- return{messageZh:`${state.rejoining?'已按当前道路重算 · ':''}${distance} m 后${turnZh[turn.kind]} · ${turn.roadLabel??label} · 余 ${Math.round(state.remainingM??0)} m`,messageEn:`${state.rejoining?'Route recalculated · ':''}${turnEn[turn.kind]} in ${distance} m · ${turn.roadLabel??en} · ${Math.round(state.remainingM??0)} m remaining`};
+ return{messageZh:`${state.rejoining?'已按当前道路重算 · ':''}${distance} m 后${turnZh[turn.kind]} · ${turn.roadLabel??label} · 余 ${Math.round(state.remainingM??0)} m`,messageEn:`${state.rejoining?'Route recalculated · ':''}${turnEn[turn.kind]} in ${distance} m · ${roadNamesEn[turn.roadId]??en} · ${Math.round(state.remainingM??0)} m remaining`};
 }
 export class CityNavigator{
  constructor({graph=CITY_NAV_GRAPH}={}){this.graph=graph;this.target=null;this.last=null;this.lastRoad=null;this.lastPathRoads=[];this.rejoinUntil=-Infinity;this.state=this.empty('idle');}

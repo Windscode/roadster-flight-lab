@@ -47,7 +47,11 @@ export function createOperationHud({mount,getSim,getContext,getOwner=()=>'',getL
         'coast-and-surface-land':L('回平落地 · 轮胎逐步接管','Level landing · progressive wheel handover'),
         'explicit-world-target':L('研究指定世界坐标','Explicit world coordinates'),
         'captured-after-braking':L('松键制动后采样的当前位置','Current position captured after release braking'),none:''};
-      $('control-target').textContent=target?L('目标 X/Y/Z：','Target X/Y/Z: ')+[target.x,target.y,target.z].map(v=>f(v,1)).join(' / ')+' m · '+(policies[ownership.positionPolicy]||''):
+      if(ownership.positionPolicy==='captured-after-braking'&&target){
+        const vertical=t.verticalControl;
+        const height=vertical?.pilotActive||vertical?.braking?L('竖直速度指令 ','Vertical speed command ')+f(vertical.targetMps,1)+' m/s':L('保持高度 ','Hold height ')+f(ownership.heightTarget,2)+' m';
+        $('control-target').textContent=L('保持 X/Z ','Hold X/Z ')+f(target.x,1)+' / '+f(target.z,1)+' m · '+height;
+      }else $('control-target').textContent=target?L('目标 X/Y/Z：','Target X/Y/Z: ')+[target.x,target.y,target.z].map(v=>f(v,1)).join(' / ')+' m · '+(policies[ownership.positionPolicy]||''):
         (policies[ownership.positionPolicy]||'')+(Number.isFinite(ownership.heightTarget)?' · '+L('世界高度 ','World height ')+f(ownership.heightTarget,2)+' m':'');
       $('control-target').hidden=!$('control-target').textContent;
       $('control-source').title=L('命令 / 实际推力 ','Command / actual thrust ')+f(ownership.commandForceN,0)+' / '+f(ownership.actualForceN,0)+' N';

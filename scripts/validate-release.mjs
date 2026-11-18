@@ -8,7 +8,8 @@ import {MODEL_BUILD_ID,MODEL_SOURCE_HASHES} from '../dist/model-build.js';
 const version=MODEL_VERSION.split('.').slice(0,2).join('.'),dir=`qa/release-${version}`;
 mkdirSync(dir,{recursive:true});mkdirSync('.runtime/release-tests',{recursive:true});
 const jobs=[
- ['tests/render-preparation-1.1.test.mjs'],
+ ['tests/discharge-reserve-1.2.test.mjs'],['tests/vehicle-linkage-1.2.test.mjs'],['tests/route-sectors-1.2.test.mjs'],
+ ['tests/record-migration-1.1.test.mjs','1.1'],['tests/render-preparation-1.1.test.mjs'],
  ['tests/vehicle-front-continuity-1.1.test.mjs'],['tests/record-migration-1.1.test.mjs'],
  ['tests/actuator-supply-1.1.test.mjs'],['tests/landing-energy-1.1.test.mjs'],
  ['tests/record-migration-1.0.test.mjs'],['tests/wind-laboratory.test.mjs'],['tests/flight-programs.test.mjs'],
@@ -26,7 +27,7 @@ const jobs=[
  ['tests/input-session-3.15.test.mjs'],['tests/control-continuity-3.18.test.mjs'],['tests/control-transition-guards-3.18.test.mjs'],
  ['tests/pilot-input-recovery-3.15.test.mjs'],['scripts/check-control-feedback.mjs'],['tests/experiment-records.test.mjs'],['tests/resource-comparison-3.21.test.mjs'],['tests/resource-failure-3.21.test.mjs'],
  ['tests/resource-route-3.21.test.mjs','economy','dry-day'],['tests/resource-route-3.21.test.mjs','balanced','dry-day'],
- ['tests/resource-route-3.21.test.mjs','boost','after-rain'],
+ ['tests/resource-route-3.21.test.mjs','boost','dry-day'],['tests/resource-route-3.21.test.mjs','boost','after-rain'],
  ['tests/development-publication-3.21.test.mjs'],['tests/local-launch-3.21.test.mjs']
 ];
 const domAvailable=!!process.env.JSDOM_MODULE_PATH;

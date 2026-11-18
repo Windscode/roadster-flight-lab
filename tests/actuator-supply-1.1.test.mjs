@@ -97,8 +97,12 @@ for(const [scenario,params]of [['free',{}],['hover',{supplyMode:'finite'}],['fre
   for(let i=0;i<240;i++){
     const input=scenario==='hover'?{lift:i<60?.4:0,pitch:i>=120&&i<180?.15:0}:{throttle:i<100?.35:0,steer:i>=60&&i<120?.2:0,brake:i>=130?.35:0};
     const now=current.advanceFixed(input,DT),prior=old.advanceFixed(input,DT);
-    for(const key of ['position','quaternion','velocity','angularVelocity','wing','energyAccounting','gasMass','thrustN','wheelStates','reference'])
+    for(const key of ['position','quaternion','velocity','angularVelocity','wing','energyAccounting','gasMass','thrustN','wheelStates'])
       assert.deepEqual(now[key],prior[key],`Default ambient ${key} diverged at ${scenario}/${i}`);
+    const reference=structuredClone(prior.reference);
+    // 1.2 exposes the actual height reference used by hover in its displayed position.
+    if(reference.mode==='hover'&&reference.stabilizationMode!=='hold')reference.position.y=reference.height;
+    assert.deepEqual(now.reference,reference);
   }
   assert.deepEqual(current.exportState(),old.exportState(),'Default operating terminal state must remain unchanged');
   checks.push({name:'unchanged-default-operating-state',scenario,params,physicalSteps:240,exactFullState:true});

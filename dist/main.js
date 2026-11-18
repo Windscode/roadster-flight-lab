@@ -18,7 +18,7 @@ import {preflightExperimentRestore} from './experiment-restore.js';
 import { MODEL_VERSION } from './vehicle-models.js';
 import { createRoadster,VEHICLE_DRIVER_VIEW } from './vehicle.js';
 import { createEnvironment } from './city-environment.js';
-import {CITY,CITY_BUILDINGS,CITY_ROUTES,CITY_LOCATIONS,districtAt} from './city-data.js';
+import {CITY,CITY_BUILDINGS,CITY_LOCATIONS,districtAt} from './city-data.js';
 import {driverAxes} from './controls.js';
 import {ACTIONS,sharedInputs,actionKeyLabel} from './semantic-input.js';
 import {resolveVehicleLampMode} from './vehicle-light-state.js';
@@ -35,7 +35,7 @@ import {createCityFlightUI} from './city-flight-ui.js';
 import {createRouteExperience} from './route-experience.js';
 import {createRouteSurfacePreset} from './route-surface.js';
 import {DriverHeadFeedback} from './driver-feedback.js';
-import {CITY_STREETS} from './city-plan.js';
+import {CITY_NAV_ROADS} from './city-navigation.js';
 import {CITY_REVIEW_CAMERAS,CITY_REVIEW_ROUTE} from './city-review.js';
 const CITY_CAPTURE_CAMERAS=[...CITY_BENCHMARK_ROUTE.cameras,...CITY_REVIEW_CAMERAS];
 import {createWindLaboratory} from './wind-laboratory.js';
@@ -421,8 +421,11 @@ export async function boot(shell){
     const c=$('mini-map').getContext('2d'),w=288,range=130,scale=w/(range*2);c.clearRect(0,0,w,w);c.fillStyle='#0b1723';c.fillRect(0,0,w,w);c.save();c.translate(w/2,w/2);
     const px=x=>-(x-data.position.x)*scale,pz=z=>-(z-data.position.z)*scale;c.strokeStyle='#7397b344';c.lineWidth=28*scale;
     for(let q=-600;q<=600;q+=100){c.beginPath();c.moveTo(px(q),-w);c.lineTo(px(q),w);c.stroke();c.beginPath();c.moveTo(-w,pz(q));c.lineTo(w,pz(q));c.stroke();}
-    c.strokeStyle='#b0c6b8aa';for(const street of CITY_STREETS){c.lineWidth=street.width*scale;c.beginPath();street.points.forEach((p,i)=>i?c.lineTo(px(p[0]),pz(p[2])):c.moveTo(px(p[0]),pz(p[2])));c.stroke();}
-    c.strokeStyle='#b9c3a977';for(const route of CITY_ROUTES){c.lineWidth=route.width*scale;c.beginPath();route.points.forEach((p,i)=>i?c.lineTo(px(p[0]),pz(p[2])):c.moveTo(px(p[0]),pz(p[2])));c.stroke();}
+    for(const road of CITY_NAV_ROADS){
+      const ramp=road.source==='CITY_ROUTES'||road.id==='skyway';
+      c.strokeStyle=ramp?'#d9b37caa':'#b0c6b8aa';c.lineWidth=road.width*scale;c.beginPath();
+      road.points.forEach((p,i)=>i?c.lineTo(px(p[0]),pz(p[2])):c.moveTo(px(p[0]),pz(p[2])));c.stroke();
+    }
     c.fillStyle='#57708766';for(const b of CITY_BUILDINGS)if(Math.abs(b.x-data.position.x)<range+40&&Math.abs(b.z-data.position.z)<range+40)c.fillRect(px(b.x+b.w/2),pz(b.z+b.d/2),b.w*scale,b.d*scale);
     for(const s of CITY_LOCATIONS){const x=px(s.position[0]),z=pz(s.position[2]);if(Math.abs(x)>w/2||Math.abs(z)>w/2)continue;c.fillStyle=['garden','waterfront','sculpture'].includes(s.id)?'#99c59b':'#c0ad86';c.beginPath();c.arc(x,z,4,0,7);c.fill();}
     const mappedRoute=sim.getRouteSurface?.()?.descriptor;if(mappedRoute&&activeBenchmarkRoute===mappedRoute.id){c.strokeStyle='#f0cf8d';c.lineWidth=3;c.beginPath();mappedRoute.route.waypoints.forEach((p,i)=>i?c.lineTo(px(p.x),pz(p.z)):c.moveTo(px(p.x),pz(p.z)));c.stroke();}
@@ -867,7 +870,7 @@ export async function boot(shell){
     }
     $('target-height-label').textContent=format(data.targetAltitude,1)+' m';if(document.activeElement!==$('target-height'))$('target-height').value=data.targetAltitude;
     if(activeDrawer==='engineering'){
-      for(const [label,key,unit,digits,factor=1]of detailFields){const value=key.split('.').reduce((object,part)=>object?.[part],data);$('detail-'+key).textContent=key==='hoverSecondsEstimate'&&data.supplyMode==='bench'?'∞':format(key==='sealQuality'?value*100:value*factor,digits);}
+      for(const [label,key,unit,digits,factor=1]of detailFields){const value=key.split('.').reduce((object,part)=>object?.[part],data);$('detail-'+key).textContent=key==='hoverSecondsEstimate'&&value===Infinity?'∞':format(key==='sealQuality'?value*100:value*factor,digits);}
       data.nozzles.forEach((n,i)=>{$('nozzle-bar-'+i).style.width=clamp(n.force/Math.max(1,n.maxForce)*100,0,100)+'%';$('nozzle-label-'+i).textContent=format(n.force/1000,1)+' kN';});drawChart();drawSignals('force-chart',[['delivered','#c1e6b0'],['demand','#c4a675']]);drawSignals('gas-chart',[['pressure','#c1e6b0'],['temperature','#c4a675']],[sim.params.initialPressureBar,sim.params.gasTemperatureK]);
     }
     $('app').dataset.simState=JSON.stringify({time:+data.simTime.toFixed(3),context:activeContext,programRunning:researchConsole?.getState().running===true,scenario:data.scenario,mode:data.mode,paused,pressure:+data.pressureBar.toFixed(2),height:+data.heightWorld.toFixed(3),gas:+data.gasMass.toFixed(3),phase:data.maneuver?.phase||null,contacts:data.contactCount,recorded:researchConsole.getExperimentState?.().stepCount||0,plumes:exhaust.particles.length,x:+data.position.x.toFixed(2),z:+data.position.z.toFixed(2),menu:menuOpen,heading:+data.headingDeg.toFixed(3),pitch:+data.pitchDeg.toFixed(3),roll:+data.rollDeg.toFixed(3),angularSpeed:+Math.hypot(data.angularVelocity.x,data.angularVelocity.y,data.angularVelocity.z).toFixed(4),input:data.driverInput,stabilization:{mode:data.stabilizationMode,armed:data.airStabilization,active:data.stabilizationActive,holdActive:data.holdActive,holdFeasible:data.holdFeasible,positionError:data.holdPositionError,attitudeErrorDeg:data.holdAttitudeErrorDeg},dynamics:{beta:+data.bodySlipDeg.toFixed(3),steer:+data.steeringCentreDeg.toFixed(3),flow:+data.massFlowKgS.toFixed(3),exhaust:+data.effectiveExhaustVelocity.toFixed(1),hoverSeconds:+data.hoverSecondsEstimate.toFixed(2),nozzleModel:data.nozzleModel},jets:data.nozzles.slice(0,4).map(n=>Math.round(n.command)),audio:sound?{enabled:sound.enabled,volume:sound.volume,state:sound.context.state}:null});
