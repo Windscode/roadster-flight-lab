@@ -7,6 +7,7 @@ export const PROTOCOL_VERSION='flat-lab-4';
 export const EXPERIMENTS={
  steer:{title:'转向阶跃',domain:'车辆操稳',duration:4,description:'平路初速，0.5–2.5秒施加转向阶跃。速度由独立PI驾驶器维持，记录实际速度误差。'},
  launch:{title:'轮速与牵引起步',domain:'车辆操稳',duration:8,description:'相同静置初态，0.5–6.5秒全油门，随后松开。记录每轮角速度、滑移、TCS调制、距离和能量耗散；可选择干地、湿地或左右分离附着。'},
+ coast:{title:'松油滑行',domain:'车辆操稳',duration:8,description:'同一平路初速和电量，连续8秒松开油门与脚刹。比较行驶距离、末速、电池回充与摩擦制动热。'},
  brake:{title:'直线制动',domain:'车辆操稳',duration:10,description:'平路初速，0.5秒开始持续制动。距离从制动指令时刻积分，停止需持续0.5秒确认。'},
  attitude:{title:'空中稳姿恢复',domain:'飞行控制',duration:4,description:'12米空中初态，给定滚转扰动；比较G稳姿开启与关闭。没有额外位置锁定。'},
  rise:{title:'升降与释放',domain:'飞行控制',duration:4,description:'普通E升降输入持续2秒后释放，观察实际高度参考、上升速度与耗气。'},
@@ -56,7 +57,7 @@ export function normalizeResearchRequest(request={}){
  if(request.stabilization!==undefined&&typeof request.stabilization!=='boolean')throw Error('稳姿开关需要布尔值');
  const result={kind,params:validateResearchParams(request.params),speedKmh,angleDeg,steerInput,steeringProtocol,initialRollDeg,heightM,stabilization:request.stabilization??true};
  if(request.initialSoc!==undefined){
-  if(kind!=='brake'||!Number.isFinite(request.initialSoc)||request.initialSoc<0||request.initialSoc>1)throw Error('制动初始电量应为 0–100%');
+  if(!['brake','coast'].includes(kind)||!Number.isFinite(request.initialSoc)||request.initialSoc<0||request.initialSoc>1)throw Error('起始电池电量应为 0–100%');
   result.initialSoc=request.initialSoc;
  }
  if(kind==='roll'){

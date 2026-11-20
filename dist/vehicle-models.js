@@ -1,4 +1,4 @@
-export const MODEL_VERSION='1.3.0';
+export const MODEL_VERSION='1.4.0';
 import {nozzlePressureFactor,deliverableGasMass} from './nozzle-supply.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 // Reduced engineering models. Parameters are explicit hypotheses, not OEM data.

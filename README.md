@@ -1,22 +1,33 @@
 # Roadster Flight Lab
 
-在浏览器里开一辆能用冷气喷口飞行的概念跑车。沿 Vesper 的高架进城，在织桥街看准弯心、收油、停车。想知道湿地要早多少米制动，或者同一阵横风下哪种控制器更稳，可以把一次驾驶变成可重放的实验。
+驾驶一辆装有冷气喷口的概念跑车，在 Vesper 的街道与高架之间自由穿行，从路口起飞，再把车落回四个轮胎上。想练好织桥街的左弯，可以先试一次松油滑行，再到实验室从相同初速重跑，看看多走了多少米、少收回了多少电。
 
-**[进入城市](https://windscode.github.io/roadster-flight-lab/)** · [制动对照实验](https://windscode.github.io/roadster-flight-lab/?view=study) · [风场实验室](https://windscode.github.io/roadster-flight-lab/?view=lab) · [车辆工坊](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) · [English](README.en.md)
+**[进入城市](https://windscode.github.io/roadster-flight-lab/)** · [车辆对照实验](https://windscode.github.io/roadster-flight-lab/?view=study) · [风场实验室](https://windscode.github.io/roadster-flight-lab/?view=lab) · [车辆工坊](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) · [English](README.en.md)
 
-![键盘驾驶经过织桥街弯道，路面箭头提示前进方向](qa/browser-1.3/weave-turn.jpg)
+![织桥街左转后的停车练习。青色标线提示剩余距离，仪表显示距圈心 35 米](qa/browser-1.4/weave-stop-markings.jpg)
 
 ## 第一次打开
 
 | 想尝试什么 | 从这里开始 |
 | --- | --- |
 | 自由驾驶与飞行 | 选 **进入城市**。W / S 加速、减速与倒车，A / D 转向，空格制动。到开阔处按 H 进入辅助飞行，E / Q 上升和下降。 |
-| 用一段街道练制动 | 选 **路线与挑战 → 准备路线 → 开始驾驶并记录**。通过三道金色计时线，在路口左转，进入青色圈并停稳半秒。自由练习可以停车熟悉弯道。 |
-| 比较干湿地制动 | 打开 **制动对照实验**，选择直线制动、初始电量和路面，配对比较回收关 / 开。结果同时给出停车距离、回充与摩擦制动热量。 |
+| 用一段街道练制动 | 选 **路线与挑战 → 准备路线 → 开始驾驶并记录**。通过三道金色计时线，在路口左转，沿青色距离标线进入停车圈并停稳半秒。自由练习可以停车熟悉弯道。 |
+| 比较干湿地制动 | 打开 **车辆对照实验**，选择直线制动、初始电量和路面，配对比较回收关 / 开。结果同时给出停车距离、回充与摩擦制动热量。 |
 | 调飞行控制器 | 进入 **风场实验室**，选扰动、初态和控制器。保存一次实验后，在记录中回看输入和姿态，或从同一初态比较控制器。 |
 | 看车身与机构 | 进入 **车辆工坊**，切换外观、底盘和剖视，调节悬架行程与转向，观察推杆、减振器和尾翼。 |
 
-C 切换视角，M 打开地图，P 或 Esc 暂停。自动动作、改键和手柄校准在游戏内提供，操作提示跟随当前绑定。城市路线、任务和实验共用 120 Hz 车辆求解器、输入与资源记录。推荐先在桌面浏览器体验。
+C 切换视角，M 打开地图，P 或 Esc 暂停。自动动作、改键和手柄校准在游戏内提供，操作提示跟随当前绑定。城市路线、任务和实验共用 120 Hz 车辆求解器、输入与资源记录。推荐先在桌面浏览器体验。一趟干地自由练习的键盘实驾用了 56.43 秒，四段计时完整，6,772 步重放与原记录吻合。[完赛车辆与停车圈](qa/browser-1.4/weave-finish.jpg) · [实驾与复算](qa/browser-1.4/observations.json)
+
+## 从 80 km/h 松开油门，八秒能走多远？
+
+在 **车辆对照实验 → 松开油门能走多远？ → 运行实验** 中，两辆车从相同干地、80% 电量和四轮滚动初态出发，全程松开双踏板。可在图上切换速度、距离、回充和摩擦热，也可导出逐时样本。
+
+| 松油策略 | 行驶距离 | 8 秒末速 | 电池回充 | 摩擦制动热量 |
+| --- | ---: | ---: | ---: | ---: |
+| 自由滑行 | 169.29 m | 72.47 km/h | 0.00 Wh | 0.00 Wh |
+| 松油减速 | 133.36 m | 40.51 km/h | 69.20 Wh | 6.93 Wh |
+
+在城市的 **模型与参数 → 道路轮速与气动尾翼** 里关闭「松油减速」即可自由滑行。脚刹仍可回充。充满电重跑松油减速，模型中的回充降至 0.012 Wh，摩擦制动热量升至 95.63 Wh。表中是这辆概念车的仿真结果。[三档初速与满电对照数据](qa/release-1.4/coast-study.json)
 
 ## 湿地要早多少米刹车？
 
@@ -53,11 +64,13 @@ C 切换视角，M 打开地图，P 或 Esc 暂停。自动动作、改键和手
 <summary>查看工坊与底盘实景</summary>
 
 ![工坊自然光下的车身、玻璃与车轮](qa/browser-1.2/vehicle-exterior.png)
+![自然光下的后轮和轮拱，可透过轮辐查看制动盘和固定卡钳](qa/browser-1.4/wheel-workshop.jpg)
+
 ![工坊转弯姿态，左右前轮随内外轮轨迹分别转向](qa/browser-1.3/ackermann-workshop.jpg)
 
 </details>
 
-[1.3 审查、实测与限制](docs/release-1.3.md) · [当前发布检查](qa/release-1.3/validation.json) · [浏览器验收](qa/browser-1.3/observations.json) · [官方 Roadster 外观参考](https://www.tesla.com/roadster)
+[1.4 审查、实测与限制](docs/release-1.4.md) · [当前发布检查](qa/release-1.4/validation.json) · [浏览器验收](qa/browser-1.4/observations.json) · [官方 Roadster 外观参考](https://www.tesla.com/roadster)
 
 ## 本地运行
 
@@ -83,7 +96,7 @@ macOS / Linux 使用 `export JSDOM_MODULE_PATH="$PWD/tests/dom/node_modules/jsdo
 
 ## 版本与反馈
 
-1.0 是首个正式版，此前的 3.x 为开发迭代。历史审查与原始验收材料随版本保留。[1.2](docs/release-1.2.md) · [1.1](docs/release-1.1.md) · [1.0](docs/release-1.0.md) · [3.24](docs/release-3.24.md) · [开发方向](docs/development-plan.md) · [线上构建身份](https://windscode.github.io/roadster-flight-lab/deployment.json)
+1.0 是首个正式版，此前的 3.x 为开发迭代。历史审查与原始验收材料随版本保留。[1.3](docs/release-1.3.md) · [1.2](docs/release-1.2.md) · [1.1](docs/release-1.1.md) · [1.0](docs/release-1.0.md) · [3.24](docs/release-3.24.md) · [开发方向](docs/development-plan.md) · [线上构建身份](https://windscode.github.io/roadster-flight-lab/deployment.json)
 
 欢迎报告可复现的问题。浏览器、画质、操作顺序和游戏内导出的记录可以帮助定位。[提交反馈](https://github.com/Windscode/roadster-flight-lab/issues)
 

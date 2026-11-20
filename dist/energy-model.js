@@ -1,10 +1,11 @@
 // Engineering assumptions, not an identified production-vehicle battery map.
 // W, J and dimensionless SOC are used internally; kWh appears only at the UI.
 export const AUXILIARY_POWER_W=800;
-export const RESOURCE_DEFAULTS=Object.freeze({regenEnabled:true,regenEfficiency:.78,
+export const RESOURCE_DEFAULTS=Object.freeze({liftOffBraking:true,regenEnabled:true,regenEfficiency:.78,
   chargePowerLimitW:60000,regenTaperSoc:.95});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export function validateResourceParams(p){
+  if(typeof p.liftOffBraking!=='boolean')throw RangeError('liftOffBraking must be boolean');
   if(typeof p.regenEnabled!=='boolean')throw RangeError('regenEnabled must be boolean');
   for(const [key,lo,hi]of [['regenEfficiency',.01,1],['chargePowerLimitW',0,1e6],['regenTaperSoc',.5,.9999],['batteryKWh',.001,1000]])
     if(!Number.isFinite(p[key])||p[key]<lo||p[key]>hi)throw RangeError('Invalid resource parameter: '+key);

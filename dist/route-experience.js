@@ -3,7 +3,7 @@ import {ResourceMission,RESOURCE_ROUTE,prepareResourceRoute,completeResourcePrep
 import {exportJson} from './export-download.js';
 import {sharedInputs} from './semantic-input.js';
 import {routeSurfaceProgress} from './route-surface.js';
-import {WEAVE_SECTORS} from './route-sectors.js';
+import {WEAVE_SECTORS,weaveApproach} from './route-sectors.js';
 import {ResourceHistory} from './resource-history.js';
 const L=(zh,en)=>getLanguage()==='en'?en:zh;
 const gasLabel=run=>run.finite?L('车载用气','Tank gas'):L('外部供气','External gas');
@@ -162,13 +162,23 @@ export function createRouteExperience({mount,hudMount,getSim,getPaused,getContex
     if(ended){
       live('title').textContent=resourceVerdict(lastResult.reason,getLanguage()==='en');
       live('instruction').textContent=f(lastResult.elapsedS,1)+' s · '+L('已记录 ','Recorded ')+(mission?.timing.rows.length??0)+'/4 '+L('段','sectors');
-      live('detail').textContent=lastResult.reason==='battery-exhausted'?L('用短点按起步，提前松开加速键，让车轮回充。','Use short throttle pulses and release early to regenerate.'):'';
+      live('detail').textContent=lastResult.reason==='battery-exhausted'?L('用短点按起步，提前收油，轻刹回充。','Use short throttle pulses, lift early and brake gently to regenerate.'):'';
       return;
     }
-    const desc=surface.descriptor,progress=routeSurfaceProgress(desc,t.position),remaining=progress.remainingM,turn=247.5-progress.distanceM;
-    live('title').textContent=L(desc.label,desc.labelEn)+' · '+f(progress.distanceM,0)+' / 303 m';
+    const desc=surface.descriptor,progress=routeSurfaceProgress(desc,t.position),cue=weaveApproach(desc,progress,t);
+    live('title').textContent=L(desc.label,desc.labelEn)+' · '+f(progress.distanceM,0)+' / '+Math.round(desc.route.lengthM)+' m';
     const missed=run&&!run.finished&&mission?.timing.missedGate;
-    live('instruction').textContent=missed?L('漏过计时线，请沿原车道返回并向前通过 ','Missed timing line. Rejoin the lane and cross forward at ')+WEAVE_SECTORS[mission.timing.rows.length].endM+' m':progress.lateralDistanceM>desc.route.widthM/2?L('已偏离示范路线 · 沿原车道返回','Outside the route · return via the road'):turn>25?L('沿街直行 · 路口前减速','Continue along the street · brake before the junction'):turn>0?L('前方左转 · 先制动，再使用左转动作','Turn left ahead · brake, then use your left action'):remaining>5?L('沿横街前进 · 终点前停车','Continue on cross street · stop at the end'):L('终点 · 制动至四轮停稳','Finish · brake to a stable stop');
+    let instruction;
+    if(missed)instruction=L('漏过计时线，请沿原车道返回并向前通过 ','Missed timing line. Rejoin the lane and cross forward at ')+WEAVE_SECTORS[mission.timing.rows.length].endM+' m';
+    else if(cue?.kind==='inside')instruction=L('停车圈内 · 制动至四轮停稳半秒','Inside the circle · brake and settle on all wheels for ½ s');
+    else if(cue?.kind==='return')instruction=L('已驶过终点 · 返回停车圈，距圈心 ','Past the finish · return to the circle, centre ')+f(cue.distance,0)+' m';
+    else if(!cue||cue.kind==='off-route')instruction=L('已偏离示范路线 · 沿原车道返回','Outside the route · return via the road');
+    else{
+      instruction=cue.kind==='turn'?L('前方左转 ','Left turn in ')+f(cue.distance,0)+L(' m · 建议 30 km/h',' m · aim for 30 km/h'):L('沿横街至停车圈心 ','Stop at the circle centre in ')+f(cue.distance,0)+' m';
+      if(cue.distance<=80&&cue.exceedsGrip)instruction+=L(' · 立即减速，所需制动力超出当前轮胎余量',' · slow now, required braking exceeds current tyre grip');
+      else if(cue.distance<=80&&cue.required>=.25)instruction+=L(' · 所需减速度 ',' · required deceleration ')+f(cue.required,1)+' m/s²';
+    }
+    live('instruction').textContent=instruction;
     for(const [i,badge] of wheelBadges.entries()){const w=t.wheelStates?.[i];badge.hidden=!w;if(!w)continue;badge.textContent=(w.id??['FR','FL','RR','RL'][i])+' '+(w.contact?L(w.surfaceLabel??'旧路面',w.surfaceLabelEn??'Legacy road')+' μ '+f(w.surfaceMu,2)+(w.absActive?' · ABS':''):L('离地','air'));}
     const slip=(t.wheelStates??[]).reduce((n,w)=>n+(w.contact?w.slipPowerW??0:0),0);
     live('detail').textContent=(mission?.finite?L('剩余 ','Remaining ')+f(Math.max(0,RESOURCE_ROUTE.deadlineS-(t.simTime-mission.startedAt)))+' s · '+f(t.energyKWh*1000,1)+' Wh · '+f(t.gasMass,1)+' kg · ':preparation?.finite?L('准备：120 Wh / 有限气源 · ','Prepared: 120 Wh / finite gas · '):'')+L('回充 ','Charge ')+f((t.energyAccounting?.chargePowerW??0)/1000,1)+' kW · '+L('滑移耗散 ','Slip dissipation ')+f(slip/1000,1)+' kW · '+(run&&!run.finished?L('记录中','recording'):getPaused()?L('暂停准备','paused'):L('自由驾驶','free driving'));

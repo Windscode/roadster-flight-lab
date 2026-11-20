@@ -152,6 +152,15 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
         }
         float ring=abs(length(roadSurfaceWorld.xz-roadStop.xy)-roadStop.z)-.13;
         float finish=1.-smoothstep(-width,width,ring);
+        // Paired countdown bars 30, 20 and 10 metres before the stop centre.
+        // Use the same exit tangent and lane width as the prepared route.
+        if(dot(turnDir,turnDir)>.5){
+          vec2 toStop=roadStop.xy-roadSurfaceWorld.xz;
+          float ahead=dot(toStop,turnDir),offset=abs(dot(toStop,vec2(-turnDir.y,turnDir.x)));
+          float station=clamp(floor(ahead/10.+.5),1.,3.);
+          float edge=max(abs(ahead-10.*station)-.12,abs(offset-roadStop.w*.64)-station*.20);
+          finish=max(finish,1.-smoothstep(-width,width,edge));
+        }
         float visibility=(1.-smoothstep(.20,.90,width))*(1.-roadRainFilm*.22);
         diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.68,.47,.18),paint*visibility*.86);
         diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.36,.73,.64),finish*visibility*.88);

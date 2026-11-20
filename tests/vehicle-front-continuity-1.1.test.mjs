@@ -52,7 +52,7 @@ for(const quality of ['balanced','high','ultra']){
     coverage.push({quality,side,oldHit:false,newHitZ:hits[0].point.z});
   }
   after.group.traverse(o=>{if(!o.isMesh)return;const p=o.geometry.attributes.position,n=o.geometry.attributes.normal;assert.ok(p.array.every(Number.isFinite));if(n)for(let i=0;i<n.count;i++)assert.ok(Math.abs(Math.hypot(n.getX(i),n.getY(i),n.getZ(i))-1)<.0005);});
-  const a=before.getRenderCost(),b=after.getRenderCost();assert.equal(b.drawables,a.drawables);assert.equal(b.triangles,a.triangles);cost.push({quality,before:a,after:b});
+  const a=before.getRenderCost(),b=after.getRenderCost();assert.equal(b.drawables,a.drawables);assert.ok(b.triangles<=a.triangles,'Keep the original full-vehicle geometry ceiling');cost.push({quality,before:a,after:b});
 }
 for(const name of ['paint','glass','carbon','frontPanel','rubber','wheelDark','wheelSilver']){
   for(const property of ['roughness','metalness','opacity'])assert.equal(after.materials[name][property],before.materials[name][property]);

@@ -26,8 +26,8 @@ export function runExperiment(raw={}){
  sim._positionTarget.copy(sim.body.position);sim._heightTarget=initialHeight;sim._headingTarget=0;
  if(!['hover','attitude'].includes(kind)){for(let k=0;k<240;k++)sim.step(dt);}
  sim.simTime=0;sim._stepCount=0;sim._accumulator=0;
- if(kind==='brake'&&request.initialSoc!==undefined)sim.prepareEnergy(applied.batteryKWh*request.initialSoc);
- if(['steer','brake'].includes(kind)){sim.body.velocity.z=speedKmh/3.6;for(const wheel of sim.wheelStates){wheel.angularVelocityRadS=(speedKmh/3.6)/sim.params.wheelRadius;wheel.rotation=0;wheel.absPressure=1;wheel.tcsFactor=1;}overrides.push('标准道路初态同时设置车速和每轮 v/r 轮速；从该初态起由独立轮惯量、驱动 / 制动和接地反力矩积分');}
+ if(['brake','coast'].includes(kind)&&request.initialSoc!==undefined)sim.prepareEnergy(applied.batteryKWh*request.initialSoc);
+ if(['steer','brake','coast'].includes(kind)){sim.body.velocity.z=speedKmh/3.6;for(const wheel of sim.wheelStates){wheel.angularVelocityRadS=(speedKmh/3.6)/sim.params.wheelRadius;wheel.rotation=0;wheel.absPressure=1;wheel.tcsFactor=1;}overrides.push('标准道路初态同时设置车速和每轮 v/r 轮速；从该初态起由独立轮惯量、驱动 / 制动和接地反力矩积分');}
  if(kind==='attitude'){
   sim.body.quaternion.setFromEuler(-10*rad,0,request.initialRollDeg*rad,'YXZ');sim.body.previousQuaternion.copy(sim.body.quaternion);
   sim.body.angularVelocity.set(.2,0,.3);sim.setAirStabilization(request.stabilization);
@@ -53,6 +53,7 @@ export function runExperiment(raw={}){
  let capabilityLoss=null,heightLoss=null,groundTouch=null,heightFailureTimer=0,gasEmpty=null,stop=null,stopCandidate=null,stopTimer=0;
  let totalFlow=0,impulse=0,saturationSeconds=0,residualSquared=0,activeControlSteps=0,heightSquared=0,heightSamples=0,maxPositionError=0;
  let speedSquared=0,speedSum=0,speedMin=Infinity,speedMax=-Infinity,speedCount=0,speedIntegral=0,brakeDistance=0,brakeStart=null;
+ let coastDistanceM=0;
  let minimumAbsPressure=1,minimumTcsFactor=1,maxSlip=0,lockedWheelSeconds=0,spinningWheelSeconds=0,absActiveSeconds=0,tcsActiveSeconds=0,peakWheelOmega=0,launchDistance=0,launchStart=null,peakWingDownforceN=0,peakWingDragN=0;
  let maxHeading=0,maxLateral=0,hullContacts=0,oldPhase,peakAfterRelease=0,releaseHeight=null,recoveryTimer=0,recoveredAt=null,driverSaturationSeconds=0;
  let attitudeSquared=0,positionSquared=0,recoveryStarted=null;
@@ -101,6 +102,7 @@ export function runExperiment(raw={}){
   if(kind==='steer'){
    const speed=t.forwardSpeedKmh;speedSquared+=(speed-speedKmh)**2;speedSum+=speed;speedMin=Math.min(speedMin,speed);speedMax=Math.max(speedMax,speed);speedCount++;
   }
+  if(kind==='coast')coastDistanceM+=(horizontal+Math.hypot(previous.velocity.x,previous.velocity.z))*.5*dt;
   if(kind==='brake'&&brakeStart){
    brakeDistance+=.5*(horizontal+Math.hypot(previous.velocity.x,previous.velocity.z))*dt;
    if(horizontal<.1&&t.contactCount>=3){
@@ -121,6 +123,11 @@ export function runExperiment(raw={}){
   if(kind==='rise'&&time>=2){releaseHeight??=previous.heightWorld;peakAfterRelease=Math.max(peakAfterRelease,t.heightWorld-releaseHeight);}
   const phase=t.maneuver?.phase||'done';if(phase!==oldPhase){oldPhase=phase;phases.push({time:t.simTime,phase});}
   if(k%sampleStride===sampleStride-1)rows.push(robust?{time:t.simTime,speed:t.forwardSpeedKmh,height:t.heightWorld,targetHeight:reference,heightError,vertical:t.verticalSpeed,yaw:t.angularVelocity.y/rad,roll:t.rollDeg,pitch:t.pitchDeg,gas:t.gasMass,temperature:t.gasTemperatureK,pressure:t.pressureBar,flow:t.massFlowKgS,thrust:t.thrustN,thrustMargin:t.thrustMargin,allocationError:t.allocationError,saturated:saturated?1:0,contacts:t.contactCount,x:t.position.x,z:t.position.z,positionError,attitudeErrorDeg,observationTime:t.observation.sample?.simTime??null,observedHeight:t.observation.sample?.position.y??null}:{time:t.simTime,speed:t.forwardSpeedKmh,height:t.heightWorld,targetHeight:reference,heightError,vertical:t.verticalSpeed,beta,betaValid:beta!==null?1:0,steer:t.steeringCentreDeg,steerInput:input.steer||0,throttle:input.throttle||0,brake:input.brake||0,yaw:t.angularVelocity.y/rad,roll:t.rollDeg,rollTravel:rollTravel/rad,pitch:t.pitchDeg,gas:t.gasMass,temperature:t.gasTemperatureK,pressure:t.pressureBar,flow:t.massFlowKgS,ve:t.effectiveExhaustVelocity,thrust:t.thrustN,thrustMargin:t.thrustMargin,allocationError:t.allocationError,saturated:saturated?1:0,grip:Math.max(...t.wheelStates.map(w=>w.gripUse)),contacts:t.contactCount,x:t.position.x,z:t.position.z,positionError,slipFL:byWheelId.FL.slipRatio,slipFR:byWheelId.FR.slipRatio,slipRL:byWheelId.RL.slipRatio,slipRR:byWheelId.RR.slipRatio,wheelFL:byWheelId.FL.angularVelocityRadS,wheelFR:byWheelId.FR.angularVelocityRadS,wheelRL:byWheelId.RL.angularVelocityRadS,wheelRR:byWheelId.RR.angularVelocityRadS,abs:Math.min(...wheels.map(w=>w.absPressure)),tcs:Math.min(...wheels.map(w=>w.tcsFactor)),wing:t.wing?.deployment||0,wingDrag:t.wing?.dragN||0,wingDownforce:t.wing?.downforceN||0});
+  if(kind==='coast'&&k%sampleStride===sampleStride-1){
+    const energy=t.energyAccounting,start=initial.energyAccounting;
+    Object.assign(rows.at(-1),{coastDistanceM,recoveredWh:(energy.recoveredJ-start.recoveredJ)/3600,
+      frictionHeatWh:(energy.frictionBrakeJ-start.frictionBrakeJ)/3600});
+  }
   if(grid&&k%sampleStride===sampleStride-1)Object.assign(rows.at(-1),{tiltErrorDeg:Math.acos(clamp(up,-1,1))/rad,angularRateRadS:sim.body.angularVelocity.length(),rigidContacts:rigidContacts,frontRightLiftForceN:t.nozzles.find(n=>n.id==='lift-FR')?.force??0,frontRightLiftAvailableN:t.nozzles.find(n=>n.id==='lift-FR')?.maxForce??0,frontRightLiftHealth:t.nozzleFault?.scale??1,controllerMode:sim.stabilizationMode});
   previous=t;
  }
@@ -141,6 +148,13 @@ export function runExperiment(raw={}){
   initialHoverEstimateSeconds:Number.isFinite(initial.hoverSecondsEstimate)?initial.hoverSecondsEstimate:null,lossOfSupportSeconds:capabilityLoss,heightHoldLostSeconds:heightLoss,groundTouchSeconds:groundTouch,touchdown,stableLanding,stop,
   speedRmseKmh:speedRmse,meanSpeedKmh:speedCount?speedSum/speedCount:null,minSpeedKmh:speedCount?speedMin:null,maxSpeedKmh:speedCount?speedMax:null,heightRmseM:heightSamples?Math.sqrt(heightSquared/heightSamples):null,maxPositionErrorM:maxPositionError,finalPositionErrorM:Math.hypot(final.position.x,final.position.z+350),releaseOvershootM:releaseHeight===null?null:peakAfterRelease,
   recoveredAtSeconds:recoveredAt,recoveryMaintainedToEnd:recoveryTimer>=.5,driverSaturationSeconds,nozzleSaturationSeconds:saturationSeconds,allocationRmse:activeControlSteps?Math.sqrt(residualSquared/activeControlSteps):0,maxHeadingDeviationDeg:maxHeading,maxLateralDeviationM:maxLateral,hullContactSamples:hullContacts};
+ if(kind==='coast'){
+   const start=initial.energyAccounting,end=final.energyAccounting;
+   metrics.coast={entrySpeedKmh:initial.forwardSpeedKmh,entrySoc:start.soc,distanceM:coastDistanceM,
+     exitSpeedKmh:final.forwardSpeedKmh,recoveredWh:(end.recoveredJ-start.recoveredJ)/3600,
+     frictionHeatWh:(end.frictionBrakeJ-start.frictionBrakeJ)/3600,rollingLossWh:(end.rollingLossJ-start.rollingLossJ)/3600,
+     netBatteryWh:(initial.energyKWh-final.energyKWh)*1000};
+ }
  if(robust||grid)Object.assign(metrics,{attitudeRmseDeg:Math.sqrt(attitudeSquared/steps),positionRmseM:Math.sqrt(positionSquared/steps),maximumHeightLossM:Math.max(0,initial.heightWorld-minHeight),energyUsedKWh:Math.max(0,final.energyUsedKWh-initial.energyUsedKWh),sustainedFinalRecoverySeconds:recoveryTimer>=.5?recoveryStarted+.5:null});
  return{schemaVersion:2,protocolVersion:researchProtocolVersion(request),modelVersion:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,modelSourceHashes:MODEL_SOURCE_HASHES,runId:protocolId(request),generatedAt:new Date().toISOString(),kind,outcome,warnings,request,fixture:'隔离水平地面；车辆/轮胎/控制/气源使用同一120Hz求解器；不改变城市中的车辆',
   input:{speedKmh,angleDeg,steerInput,steeringProtocol,duration,dt,settleSeconds:['hover','attitude'].includes(kind)?0:2,sampleHz,...(robust?{robustness:robust}:{}),...(grid?{recoveryGrid:grid}:{})},requestedParams:request.params,appliedParams:sim.params,overrides,initialState:{...snapshot(initial),...(grid?{nozzleFault:initial.nozzleFault,controllerMode:'level'}:{})},finalState:{...snapshot(final),...(grid?{nozzleFault:final.nozzleFault,controllerMode:sim.stabilizationMode}:{})},

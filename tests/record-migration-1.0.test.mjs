@@ -11,9 +11,10 @@ assert.equal(replayEligibility(record).exact,false);assert.equal(replayEligibili
 const createSim=s=>new RoadsterSim(s.params,{world:s.worldType}),sim=createSim(record.initialSnapshot.physical);
 assert.throws(()=>prepareRecordedStateForCurrentModel(record,sim),/迁移器/);
 const mapped=prepareRecordedStateForCurrentModel(record,sim,{recompute:true});
-assert.deepEqual(mapped.compatibility.migration.changed,['modelVersion']);
+assert.deepEqual(mapped.compatibility.migration.changed,['modelVersion','params.liftOffBraking']);
 assert.deepEqual(mapped.compatibility.migration.addedDefaultState,[]);
-assert.deepEqual({...mapped.physical,modelVersion:'3.24.0'},record.initialSnapshot.physical);
+const {liftOffBraking,...originalParams}=mapped.physical.params;assert.equal(liftOffBraking,true);
+assert.deepEqual({...mapped.physical,params:originalParams,modelVersion:'3.24.0'},record.initialSnapshot.physical);
 sim.importState(mapped.physical);
 const result=await executeExperiment(record,{createSim,recompute:true,yieldEvery:0});
 assert.equal(result.status,'completed');assert.equal(result.completedSteps,record.stepCount);

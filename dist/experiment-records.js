@@ -89,7 +89,7 @@ export function replayEligibility(record){
 }
 // These published snapshots share the complete state contract. Only forward,
  // explicitly listed versions qualify for current-model recomputation.
-const releaseStates=['3.24.0','1.0.0','1.1.0','1.2.0','1.3.0'];
+const releaseStates=['3.24.0','1.0.0','1.1.0','1.2.0','1.3.0','1.4.0'];
 function compatibleReleaseStates(from,to){
   const i=releaseStates.indexOf(from);
   return i>=0&&releaseStates.indexOf(to)>i;
@@ -108,6 +108,11 @@ export function prepareRecordedStateForCurrentModel(record,sim,{recompute=false}
     if(releaseMigration)assertSnapshotWorldCompatible(sim,physical);
     else if(physical.worldType!==template.worldType||physical.geometrySignature!==template.geometrySignature)throw Error('历史场景几何与当前模型不同；不能把不同碰撞世界标作同一原始条件');
     const parameterMapping={};
+    if(releaseMigration&&current.modelVersion==='1.4.0'){
+      if('liftOffBraking' in physical.params)throw Error('历史版本中出现未知的松油制动设置');
+      physical.params.liftOffBraking=true;
+      parameterMapping.liftOffBraking={value:true,meaning:'Earlier releases requested blended braking when the accelerator was released.'};
+    }
     // Older E/Q commands used an explicit 3 m/s² acceleration envelope. A new
     // session's stronger default must not silently accelerate an old input log.
     if(['3.11.0','3.12.0','3.13.0'].includes(current.modelVersion)&&['3.8.0','3.9.0','3.10.0'].includes(source.modelVersion)&&'verticalAccelerationMps2' in template.params&&!('verticalAccelerationMps2' in physical.params)){physical.params.verticalAccelerationMps2=3;parameterMapping.verticalAccelerationMps2={value:3,meaning:'Historical E/Q acceleration envelope; not the stronger new-session default.'};}

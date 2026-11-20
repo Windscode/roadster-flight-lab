@@ -9,6 +9,30 @@ export const WEAVE_SECTORS=Object.freeze([
   {endM:302.5,zh:'左转至停稳',en:'Left turn and stop'}
 ].map(Object.freeze));
 export const WEAVE_STOP_RADIUS_M=5;
+// Along-lane braking cue. Distance and velocity share the same signed road
+// axis; the final circle is still scored by actual contact and settled time.
+export function weaveApproach(descriptor,progress,t){
+  const points=descriptor.route.waypoints,leg=progress.segment,finish=leg===points.length-2;
+  const a=points[leg],target=points[leg+1],dx=target.x-a.x,dz=target.z-a.z,len=Math.hypot(dx,dz);
+  if(!len)return null;
+  const x=target.x-t.position.x,z=target.z-t.position.z;
+  const toCentre=(x*dx+z*dz)/len,distance=Math.hypot(x,z);
+  if(finish&&distance<WEAVE_STOP_RADIUS_M)return {kind:'inside',distance};
+  if(finish&&toCentre<0)return {kind:'return',distance};
+  if(progress.lateralDistanceM>descriptor.route.widthM/2)return {kind:'off-route',distance};
+  const along=(t.velocity.x*dx+t.velocity.z*dz)/len,targetSpeed=finish?0:30/3.6;
+  const required=toCentre>0&&along>targetSpeed?(along*along-targetSpeed*targetSpeed)/(2*toCentre):0;
+  // Instantaneous longitudinal tyre capacity on this lane, after lateral force.
+  // Upcoming surface changes, additional aero drag and brake response are unknown.
+  let capacityN=0;
+  for(const w of t.wheelStates||[]){
+    if(!w.contact)continue;
+    const limit=w.surfaceMu*w.normalLoadN;
+    capacityN+=Math.sqrt(Math.max(0,limit*limit-w.lateralForceN*w.lateralForceN));
+  }
+  const exceedsGrip=t.mass>0&&Array.isArray(t.wheelStates)&&required*t.mass>capacityN;
+  return {kind:finish?'stop':'turn',distance:Math.max(0,toCentre),required,exceedsGrip};
+}
 export function weaveTimingMarks(descriptor){
   const points=descriptor.route.waypoints;
   return WEAVE_SECTORS.slice(0,-1).map(({endM})=>{

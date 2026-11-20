@@ -75,7 +75,7 @@ export function applyResourceWheels(dt,input) {
     const axleLoads=[this.wheelStates[0].normalLoadN+this.wheelStates[1].normalLoadN,this.wheelStates[2].normalLoadN+this.wheelStates[3].normalLoadN];
     const serviceShares=this.wheelStates.map((w,i)=>axleLoads[i>>1]>1?(i<2?.6:.4)*w.normalLoadN/axleLoads[i>>1]:(i<2?.30:.20));
     const pedal=Math.abs(input.throttle),pedalU=clamp((pedal-.010)/.010,0,1),pedalBlend=pedalU*pedalU*(3-2*pedalU);
-    const liftOff=this._hasPower&&contacts.length?Math.min(p.brakeForce,p.regenForce,p.regenPower/Math.max(speed,1))*(1-pedalBlend):0;
+    const liftOff=p.liftOffBraking!==false&&this._hasPower&&contacts.length?Math.min(p.brakeForce,p.regenForce,p.regenPower/Math.max(speed,1))*(1-pedalBlend):0;
     const serviceRequest=input.brake*p.brakeForce,totalBrakeRequest=Math.max(liftOff,serviceRequest);
     const charge=regenerationAcceptance(p,this._energyUsed,dt);
     const blend=brakeBlend({totalBrakeRequest,liftOff,serviceShares,wheels:this.wheelStates,

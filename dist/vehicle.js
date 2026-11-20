@@ -605,22 +605,39 @@ function mergeStaticMeshes(parent,recursive=true,keep=new Set()) {
   }
 }
 
+// Revolve a closed section around the axle. The inner bore stays open at
+// every detail level, including the back of the rim visible from underneath.
+function wheelRing(parent,material,section,x,segments,name){
+  const points=section.map(([r,y])=>new THREE.Vector2(r,y));
+  const build=quality=>{const geometry=new THREE.LatheGeometry(points,segmentsFor(segments,quality,16));geometry.normalizeNormals();return geometry;};
+  const mesh=detailGeometry(addMesh(parent,build('high'),material,name),build);
+  mesh.position.x=x;mesh.rotation.z=-PI/2;return mesh;
+}
 function buildWheel(parent,side,z,materials) {
   const assembly=new THREE.Group();assembly.name=(z>0?'front':'rear')+(side<0?'-right':'-left');
   assembly.position.set(side*.89,-.22,z);parent.add(assembly);
   const spin=new THREE.Group();assembly.add(spin);
   const w=z>0?.265:.284,half=w/2;
   const profile=[ [.285,-half+.006],[.324,-half-.001],[.354,-half+.011],[.367,-half+.031] ];
+  function crownRadius(x){
+    let radius=.372-.004*(Math.abs(x)/(half-.040))**4;
+    for(const groove of [-.060,0,.060])radius-=.0036*Math.exp(-(((x-groove)/.0032)**4));
+    return radius;
+  }
   for(let i=0;i<=60;i++){
-    const a=lerp(-half+.040,half-.040,i/60),edge=Math.abs(a)/(half-.040);
-    let radius=.372-.004*edge**4;
-    for(const groove of [-.060,0,.060])radius-=.0036*Math.exp(-(((a-groove)/.0032)**4));
-    profile.push([radius,a]);
+    const x=lerp(-half+.040,half-.040,i/60);
+    profile.push([crownRadius(x),x]);
   }
   profile.push([.367,half-.031],[.354,half-.011],[.324,half+.001],[.285,half-.006],[.285,-half+.006]);
   const buildTyre=quality=>{
-    const crossSection=quality==='balanced'?profile.filter((p,i)=>i<4||i>=profile.length-5||(i-4)%5===0):profile;
-    const g=new THREE.LatheGeometry(crossSection.map(([r,a])=>new THREE.Vector2(r,a)),quality==='balanced'?48:quality==='ultra'?160:112);g.normalizeNormals();return g;
+    // Keep the full shoulder and groove walls. The shallow crown between
+    // grooves needs fewer axial samples, particularly in a moving wheel.
+    const grooveStations=[-half+.040,-.066,-.060,-.054,-.006,0,.006,.054,.060,.066,half-.040];
+    const crossSection=quality==='balanced'
+      ?[...profile.slice(0,4),...grooveStations.map(x=>[crownRadius(x),x]),...profile.slice(-5)]
+      :profile.filter(([,x],i)=>i<4||i>=profile.length-5||(i-4)%3===0||
+        Math.min(Math.abs(x),Math.abs(Math.abs(x)-.060))<.006);
+    const g=new THREE.LatheGeometry(crossSection.map(([r,a])=>new THREE.Vector2(r,a)),quality==='balanced'?40:quality==='ultra'?160:112);g.normalizeNormals();return g;
   };
   const tire=detailGeometry(addMesh(spin,buildTyre('high'),materials.rubber,'performance tire'),buildTyre);tire.rotation.z=PI/2;
   tire.userData={role:'tyre-contact-envelope',radiusMetres:.372,widthMetres:w};
@@ -642,8 +659,19 @@ function buildWheel(parent,side,z,materials) {
   }
   const tg=new THREE.BufferGeometry();tg.setAttribute('position',new THREE.Float32BufferAttribute(tread,3));
   const tl=new THREE.LineSegments(tg,new THREE.LineBasicMaterial({color:0x090b0d}));tl.name='submillimetre tread sipes';spin.add(tl);
-  cylinder(spin,.294,.294,.19,materials.wheelBarrel,[0,0,0],'x',56,'forged rim barrel');
-  cylinder(spin,.249,.249,.017,materials.rotor,[side*(half-.04),0,0],'x',48,'ventilated brake rotor');
+  wheelRing(spin,materials.wheelBarrel,[[.278,-.095],[.294,-.095],[.294,.095],[.278,.095],[.278,-.095]],0,56,'forged rim barrel');
+  const discX=side*(half-.04);
+  // Two swept faces and an open cooling gap, with a narrow mounting hat.
+  for(const faceOffset of [-.006,.006]){
+    wheelRing(spin,materials.rotor,[[.149,-.0025],[.249,-.0025],[.249,.0025],[.149,.0025],[.149,-.0025]],
+      discX+faceOffset,48,'ventilated brake rotor');
+  }
+  cylinder(spin,.155,.155,.027,materials.wheelDark,[discX,0,0],'x',36,'rotor mounting hat');
+  for(let i=0;i<16;i++){
+    const angle=i*TAU/16;
+    const vane=addMesh(spin,new THREE.BoxGeometry(.007,.078,.009),materials.rotor,'radial cooling vane');
+    vane.position.set(discX,.198*Math.cos(angle),.198*Math.sin(angle));vane.rotation.x=angle;
+  }
   for(let i=0;i<24;i++) {
     const angle=i*TAU/24;
     const hole=addMesh(spin,new THREE.CircleGeometry(.006,6),materials.seam,'rotor drill hole');
@@ -664,7 +692,7 @@ function buildWheel(parent,side,z,materials) {
         return[a-side*depth,r*Math.cos(angle)-across*Math.sin(angle),r*Math.sin(angle)+across*Math.cos(angle)];
       };
       grid(root,materials.wheelDark,spoke,2,8,side<0,branch?'forked spoke':'forged main spoke',true);
-      for(const edge of [0,1])grid(root,materials.wheelSilver,(u,v)=>{const p=spoke(edge,v);p[0]-=side*u*.007;return p;},2,8,side*(edge?1:-1)>0,'machined spoke bevel',true);
+      for(const edge of [0,1])grid(root,materials.wheelSilver,(u,v)=>{const p=spoke(edge,v);p[0]-=side*u*.007;return p;},1,8,side*(edge?1:-1)>0,'machined spoke bevel',true);
     }
     // A shallow continuous radial dish connects hub and rim. The original
     // constant-depth extruded silver triangles remained visually flat despite
@@ -676,8 +704,8 @@ function buildWheel(parent,side,z,materials) {
       return[a-side*depth,r*Math.cos(angle),r*Math.sin(angle)];
     };
     grid(root,materials.wheelSilver,sector,4,8,side<0,'continuous dished aero facet',true);
-    for(const end of [0,1])grid(root,materials.wheelDark,(u,v)=>{const p=sector(end,v);p[0]-=side*u*.008;return p;},2,8,side* (end?1:-1)>0,'aero sector folded return',true);
-    grid(root,materials.wheelDark,(u,v)=>{const p=sector(v,1);p[0]-=side*u*.008;return p;},2,4,side<0,'aero sector rim return',true);
+    for(const end of [0,1])grid(root,materials.wheelDark,(u,v)=>{const p=sector(end,v);p[0]-=side*u*.008;return p;},1,8,side* (end?1:-1)>0,'aero sector folded return',true);
+    grid(root,materials.wheelDark,(u,v)=>{const p=sector(v,1);p[0]-=side*u*.008;return p;},1,4,side<0,'aero sector rim return',true);
     curve(root,[[a+side*.002,.097,-.011],[a+side*.002,.268,-.025]],.0029,materials.wheelSilver,'machined spoke edge',false);
     cylinder(root,.011,.011,.014,materials.chrome,[a+side*.002,.047*Math.cos(.25),.047*Math.sin(.25)],'x',8,'wheel bolt');
   }
@@ -686,8 +714,13 @@ function buildWheel(parent,side,z,materials) {
   cylinder(spin,.055,.055,.017,materials.wheelDark,[face+side*.006,0,0],'x',28,'hub cap');
   ring(spin,.055,.0020,materials.wheelSilver,[face+side*.009,0,0]);
   // Calipers stay with the upright rather than rotating with the rim.
-  const caliper=box(assembly,.055,.145,.085,materials.caliper,[side*(half-.057),.061,-.187],.019,'brake caliper');
-  caliper.rotation.x=.25;
+  // The fixed caliper straddles the rotating disc. Its bridge clears the
+  // outer edge; the two cheeks clear both rubbing faces.
+  const caliper=new THREE.Group();caliper.name='brake caliper';assembly.add(caliper);
+  caliper.position.x=discX;caliper.rotation.x=-1.25;
+  for(const x of [-.019,.019])box(caliper,.016,.065,.104,materials.caliper,[x,.224,0],.004,'caliper cheek');
+  box(caliper,.054,.014,.092,materials.caliper,[0,.257,0],.004,'caliper bridge');
+  mergeStaticMeshes(caliper);
   mergeStaticMeshes(spin);
   return {assembly,spin,side,z,tire,tyreProfile:profile.map(p=>[...p])};
 }

@@ -10,6 +10,8 @@ The first product release continues 3.24 `6d55c5f`, 3.23 `bb2fd93`, 3.22 `5e3664
 
 1.3 continues 1.2 (`0d40843`). Coasting uses loaded-wheel rolling resistance, the workshop follows the driving steering geometry, and six stops measure recovered electrical energy alongside friction heat. A spatial query narrows camera collision candidates while retaining the original hit; the interchange and Weave bend have new street-level cues. [The 1.3 audit](release-1.3.md) records the tested cases and outstanding hardware coverage.
 
+1.4 separates coasting preference from pedal regeneration, quantifies eight-second lift-off runs, opens the wheel barrel around the brake rotor and adds tyre-grip-aware approach guidance on Weave Street. [The 1.4 audit](release-1.4.md) includes browser evidence and removal of redundant wheel geometry.
+
 | Next priority | Reason and acceptance |
 | --- | --- |
 | Extend validated automatic-maneuver domains | Finite gas, wind and nondefault models currently require an open overhead corridor for automatic maneuvers. Establish measured parameter families with close/late roofs, disturbances and resource exhaustion before relaxing guards; keep actuator and grip limits. |

@@ -32,6 +32,14 @@ export function installContactLedger(sim){
       const isA=c.bi===b,other=isA?c.bj:c.bi,index=b.shapes.indexOf(isA?c.si:c.sj),staticShape=other.shapes.indexOf(isA?c.sj:c.si);
       const offset=isA?c.ri:c.rj,point=b.position.vadd(offset),w=work(c),objectId=other.userData?.id??'unnamed-static';
       const key=`${objectId}:${staticShape}:${index}`,signedNormal=isA?c.ni.negate():c.ni;
+      // A loaded tyre's bump stop can touch the supporting road face during
+      // an ordinary turn. Its side hitting a wall is a separate contact.
+      const wheel=sim.wheelStates[sim._wheelStopIndices.indexOf(index)];
+      const supported=wheel?.contact&&wheel.contactObjectId===objectId&&wheel.contactNormalWorld&&
+        dot(signedNormal,wheel.contactNormalWorld)>.95;
+      if(c.enabled&&!supported&&!ledger.obstacleContact){
+        ledger.obstacleContact={objectId,vehiclePart:shapeName(sim,index),normalOnVehicle:vec(signedNormal),pointWorld:vec(point)};
+      }
       const pointKey=key+':'+[point.x,point.y,point.z,signedNormal.x,signedNormal.y,signedNormal.z].map(x=>Math.round(x*1e8)).join(',');
       const duplicate=points.has(pointKey);points.add(pointKey);ledger.duplicatePointEquations+=Number(duplicate);
       let pair=ledger.pairs.find(p=>p.id===key);if(!pair){pair={id:key,objectId,staticShape,vehicleShape:index,vehiclePart:shapeName(sim,index),equations:0,normalImpulseNs:0,normalWorkJ:0,peakNormalForceN:0};ledger.pairs.push(pair);}

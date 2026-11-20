@@ -1,10 +1,10 @@
 # Roadster Flight Lab
 
-Drive a cold-gas-powered flight concept through Vesper. Follow the elevated roads into the city, brake for the turn on Weave Street and stop inside the marked circle. Take the same car into the lab to measure the cost of a wet road or compare two flight controllers in the same gust.
+Drive a concept roadster with cold-gas thrusters through Vesper’s streets and elevated roads. Take off from an intersection, land on four wheels, or practise the left turn on Weave Street. Bring the same car into the lab to find out how much farther it travels when you lift off and how much energy the battery can take back.
 
-**[Enter the city](https://windscode.github.io/roadster-flight-lab/)** · [Braking experiments](https://windscode.github.io/roadster-flight-lab/?view=study) · [Wind laboratory](https://windscode.github.io/roadster-flight-lab/?view=lab) · [Vehicle workshop](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) · [中文](README.md)
+**[Enter the city](https://windscode.github.io/roadster-flight-lab/)** · [Vehicle experiments](https://windscode.github.io/roadster-flight-lab/?view=study) · [Wind laboratory](https://windscode.github.io/roadster-flight-lab/?view=lab) · [Vehicle workshop](https://windscode.github.io/roadster-flight-lab/vehicle-inspection.html) · [中文](README.md)
 
-![Keyboard driving through the marked bend on Weave Street](qa/browser-1.3/weave-turn.jpg)
+![The final approach on Weave Street, with painted markers and 35 m remaining to the parking circle](qa/browser-1.4/weave-stop-markings.jpg)
 
 ## First visit
 
@@ -12,11 +12,22 @@ Drive a cold-gas-powered flight concept through Vesper. Follow the elevated road
 | --- | --- |
 | Drive and fly | Choose **Enter city**. W / S accelerate, slow and reverse. A / D steer. Space brakes. In open space, H enables flight assistance and E / Q command climb and descent. |
 | Learn a braking line | Choose **Routes & challenges → Prepare route → Drive and record**. Cross the three amber lines, turn left and stop inside the teal ring for half a second. Free practice lets you stop and study the turn. |
-| Compare stopping distances | Open **Braking experiments**, select the surface and initial battery charge, then pair regeneration off and on. Read distance, battery recovery and friction heat together. |
+| Compare stopping distances | Open **Vehicle experiments**, select the surface and initial battery charge, then pair regeneration off and on. Read distance, battery recovery and friction heat together. |
 | Compare flight controllers | Open the **Wind laboratory**, select a disturbance, initial state and controller, and record a run. Review inputs and attitude, or compare controllers from the same initial state. |
 | Inspect the car | The **Vehicle workshop** has exterior, chassis and cutaway views. Adjust steering and suspension travel to see the pushrods, dampers and active wing. |
 
-C cycles cameras, M opens the map and P or Esc pauses. The application provides automatic maneuvers, key remapping and gamepad calibration. On-screen hints follow the active bindings. City driving, challenges and laboratory runs use the same 120 Hz dynamics and resource accounting. Start in a desktop browser.
+C cycles cameras, M opens the map and P or Esc pauses. The application provides automatic maneuvers, key remapping and gamepad calibration. On-screen hints follow the active bindings. City driving, challenges and laboratory runs use the same 120 Hz dynamics and resource accounting. Start in a desktop browser. A keyboard-driven dry practice run completed all four sectors in 56.43 s. All 6,772 fixed steps were recomputed and the retained samples and terminal state matched. [Finish photo](qa/browser-1.4/weave-finish.jpg) · [Driving record and replay](qa/browser-1.4/observations.json)
+
+## How far can you coast from 80 km/h?
+
+Open **Vehicle experiments → How far can you coast? → Run experiment**. Both runs start on the same dry surface with 80% charge and all four wheels rolling. Both pedals stay released for eight seconds. Select distance, speed, recovery or friction heat on the chart, or export the samples.
+
+| Lift-off strategy | Distance | Final speed | Recovered | Friction heat |
+| --- | ---: | ---: | ---: | ---: |
+| Free coasting | 169.29 m | 72.47 km/h | 0.00 Wh | 0.00 Wh |
+| Lift-off braking | 133.36 m | 40.51 km/h | 69.20 Wh | 6.93 Wh |
+
+Under **Model & parameters**, turn off lift-off braking to coast through the city. The brake pedal can still regenerate. Repeating the lift-off braking run with a full battery returned 0.012 Wh and produced 95.63 Wh of friction heat in the model. [Three entry speeds and the full-battery comparison](qa/release-1.4/coast-study.json)
 
 ## How much earlier should you brake in the wet?
 
@@ -53,11 +64,13 @@ These are three complete 1.3 simulation runs using ordinary throttle, brake, ste
 <summary>See the vehicle and chassis in the workshop</summary>
 
 ![Body, glazing and wheels in the workshop daylight view](qa/browser-1.2/vehicle-exterior.png)
+![The open rear wheel barrel, brake disc and fixed caliper in daylight](qa/browser-1.4/wheel-workshop.jpg)
+
 ![Workshop steering pose showing the different inside and outside front-wheel angles](qa/browser-1.3/ackermann-workshop.jpg)
 
 </details>
 
-[1.3 audit and scope](docs/release-1.3.md) · [Release checks](qa/release-1.3/validation.json) · [Browser acceptance](qa/browser-1.3/observations.json) · [Official Roadster exterior reference](https://www.tesla.com/roadster)
+[1.4 audit and scope](docs/release-1.4.md) · [Release checks](qa/release-1.4/validation.json) · [Browser acceptance](qa/browser-1.4/observations.json) · [Official Roadster exterior reference](https://www.tesla.com/roadster)
 
 ## Run locally
 
@@ -83,7 +96,7 @@ On PowerShell use `$env:JSDOM_MODULE_PATH = (Resolve-Path tests/dom/node_modules
 
 ## Releases and feedback
 
-1.0 was the first product release. Earlier 3.x numbers refer to development iterations. Versioned notes retain original measurements and scope. [1.2](docs/release-1.2.md) · [1.1](docs/release-1.1.md) · [1.0](docs/release-1.0.md) · [3.24](docs/release-3.24.md) · [Development direction](docs/development-plan.md) · [Live build identity](https://windscode.github.io/roadster-flight-lab/deployment.json)
+1.0 was the first product release. Earlier 3.x numbers refer to development iterations. Versioned notes retain original measurements and scope. [1.3](docs/release-1.3.md) · [1.2](docs/release-1.2.md) · [1.1](docs/release-1.1.md) · [1.0](docs/release-1.0.md) · [3.24](docs/release-3.24.md) · [Development direction](docs/development-plan.md) · [Live build identity](https://windscode.github.io/roadster-flight-lab/deployment.json)
 
 Bug reports are welcome. Include the browser, quality preset, input sequence and an exported record when available. [Report an issue](https://github.com/Windscode/roadster-flight-lab/issues)
 

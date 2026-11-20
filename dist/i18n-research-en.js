@@ -3,10 +3,18 @@ import {t as tr} from './i18n.js';
 
 // Presentation-only strings; stored requests, identities and user names remain unchanged.
 export const entries={
+  "松开油门能走多远？":"How far can you coast?","自由滑行与松油减速 · 8 秒对照":"Coast vs lift-off braking over 8 seconds",
+  "松油滑行":"Accelerator lift-off", "松油策略 · 自由滑行 / 松油减速":"Lift-off strategy · coast / decelerate",
+  "自由滑行":"Free coasting", "松油减速":"Lift-off braking", "起始电池电量":"Initial battery charge",
+  "松油减速（关闭后滑行，脚刹仍可回充）":"Lift-off braking (switch off to coast and retain pedal regeneration)",
+  "同一平路初速和电量，连续8秒松开油门与脚刹。比较行驶距离、末速、电池回充与摩擦制动热。":"Release both pedals for eight seconds from the same speed and battery charge on level ground. Compare travel distance, final speed, battery recovery and friction heat.",
+  "滑行距离 / m":"Coasting distance / m","累计回充 / Wh":"Cumulative recovery / Wh","累计摩擦热 / Wh":"Cumulative friction heat / Wh",
+  "滑行距离":"Coasting distance","松油末速":"Final speed","电池回充":"Battery recovery","净用电":"Net battery use",
   "制动能量回收 关 / 开":"Brake regeneration off / on",
   "回收关闭":"Recovery off","回收开启":"Recovery on",
   "制动初始电量":"Initial battery charge","制动段回充":"Energy recovered while braking",
   "摩擦制动热量":"Friction brake heat","制动起始车速":"Speed at brake application",
+  "起始电池电量应为 0–100%":"Initial battery charge must be between 0 and 100%.",
   "制动初始电量应为 0–100%":"Initial braking charge must be between 0 and 100%.",
   "风场研究控制台": "Wind Research Console",
   "风场实验室": "Wind Laboratory",
@@ -332,7 +340,7 @@ export const entries={
   "气动尾翼工况": "Aerodynamic wing condition",
   "主动翼 · 随制动 / 速度执行": "Active wing · Responds to braking / speed",
   "固定翼 · 保持已设展开量": "Fixed wing · Holds set deployment",
-  "起步从静止，制动从所设车速；每轮角速度作为独立初态。ABS/TCS 受阀值、执行速率与轮胎附着约束，不保证所有路面都缩短距离。ABS 不是 ESC：分离附着时降低抱死并不代表偏航更小。": "Launch starts at rest; braking starts at the set speed. Each wheel has an independent initial angular speed. ABS/TCS respect thresholds, actuator rates and tire grip; shorter distances are not guaranteed. ABS is not ESC: less locking on split grip does not imply less yaw.",
+  "起步试验从静止开始，制动和滑行从设定车速开始。各轮从相应滚动速度起算。ABS/TCS 受阀值、执行速率与轮胎附着约束，不保证所有路面都缩短距离。ABS 不是 ESC：分离附着时降低抱死并不代表偏航更小。": "Launch starts at rest. Braking and coasting start at the selected speed with each wheel already rolling. ABS/TCS respect thresholds, actuator rates and tire grip; shorter distances are not guaranteed. ABS is not ESC: less locking on split grip does not imply less yaw.",
   "转向输入协议": "Steering input protocol",
   "固定实际路轮角 · 研究轮胎": "Fixed road-wheel angle · Tire study",
   "固定驾驶输入 · 研究辅助": "Fixed driver input · Assistance study",

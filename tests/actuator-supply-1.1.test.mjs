@@ -108,7 +108,10 @@ for(const [scenario,params]of [['free',{}],['hover',{supplyMode:'finite'}],['fre
     if(reference.mode==='hover'&&reference.stabilizationMode!=='hold')reference.position.y=reference.height;
     assert.deepEqual(now.reference,reference);
   }
-  assert.deepEqual(current.exportState(),old.exportState(),'Default operating terminal state must remain unchanged');
+  const baselineState=old.exportState();
+  // The original wheel law always used lift-off braking when enabled by demand.
+  baselineState.params.liftOffBraking=true;
+  assert.deepEqual(current.exportState(),baselineState,'Default terminal state must match the mapped historical configuration');
   checks.push({name:'default-actuator-supply-with-common-baseline-wheel-law',scenario,params,physicalSteps:240,exactFullState:true});
 }
 const sources=['dist/nozzle-supply.js','dist/physics-kernel-319.js','dist/physics.js','dist/resource-wheels.js','dist/energy-model.js','dist/vehicle-models.js'];

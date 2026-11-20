@@ -49,9 +49,10 @@ export class ResourceMission{
   check(sim,t=sim.telemetry()){
     if(this.failure)return this.failure;
     const elapsed=t.simTime-this.startedAt;
+    const contacts=t.integration?.contactLedger;
     let reason=null;
     if(t.fault)reason='simulation-fault';
-    else if(t.rigidContactCount>0)reason='collision';
+    else if(contacts?contacts.obstacleContact:t.rigidContactCount>0)reason='collision';
     else if(t.simTime+1e-7<this.lastTime||t.energyAccounting.revision!==this.revision)reason='reset-or-resource-reprepared';
     else if(JSON.stringify(sim.params)!==this.params||JSON.stringify(sim.getWind())!==this.wind||t.roadSurface?.descriptorHash!==this.descriptorHash)reason='conditions-changed';
     else if(this.finite&&t.externalGasSuppliedKg-this.initial.externalGasSuppliedKg>1e-6)reason='external-gas-supply';
@@ -69,6 +70,7 @@ export class ResourceMission{
       if(!sample){sample=copy(this.lastValidResources);scope='last-measured-valid-state';}
       this.terminalResources=sample;this.resourceEvidence={scope,simTime:sample.simTime,terminal:scope!=='last-measured-valid-state'};
       this.failure={reason,elapsedS:Math.max(0,sample.simTime-this.startedAt),energyKWh:sample.energyKWh,gasKg:sample.gasMass,resourceScope:scope};
+      if(reason==='collision'&&contacts?.obstacleContact)this.failure.contact=copy(contacts.obstacleContact);
       return this.failure;
     }
     this.timing.observe(t);
@@ -108,6 +110,6 @@ export function resourceVerdict(reason,english=false){const labels={
  'external-gas-supply':['使用了外部供气','External gas was supplied'],
  'energy-accounting-failed':['电量收支校验失败','Battery accounting check failed'],
  'simulation-fault':['仿真触发保护；本次任务无效','Simulation safety triggered; run invalid'],
- 'collision':['发生车体碰撞；重新准备后再试','Body collision; prepare a new attempt'],
+ 'collision':['车辆碰到障碍或车身触地；重新准备后再试','Vehicle hit an obstacle or the body grounded; prepare a new attempt'],
  'recording-ended-externally':['记录已在其他面板结束','Recording ended in another panel'],
  'pilot-ended':['驾驶者提前结束','Ended by driver']};return labels[reason]?.[english?1:0]??reason;}
