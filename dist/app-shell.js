@@ -61,6 +61,7 @@ export function createApplicationShell({initialSim}) {
   }
   function attachLive(adapter){live=adapter;}
   function graphicsReady(){
+    $('game-menu').removeAttribute('inert');
     graphics.status='available';graphics.reason='';graphics.readyAfterMs=performance.now()-graphics.startedAt;
     document.body.classList.remove('graphics-unavailable');$('graphics-status').classList.add('hidden');
     $('error-screen').classList.add('hidden');research.setLiveAvailable?.(true,'');
@@ -84,7 +85,7 @@ export function createApplicationShell({initialSim}) {
     if($('perf-breakdown'))$('perf-breakdown').textContent='';
     if($('vertical-response-status'))$('vertical-response-status').textContent='三维操作暂停；可在数值研究中使用升降速度参数。';
     for(const element of document.querySelectorAll('[data-requires-graphics]'))element.disabled=true;
-    if(new URLSearchParams(location.search).get('view')==='lab'&&!studyOpen)void openStudy();
+    if(['lab','study'].includes(new URLSearchParams(location.search).get('view'))&&!studyOpen)void openStudy();
   }
   $('graphics-open-study').addEventListener('click',()=>void openStudy());
   $('graphics-open-records').addEventListener('click',()=>openResearch('experiments'));

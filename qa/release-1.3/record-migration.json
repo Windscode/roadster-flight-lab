@@ -1,0 +1,284 @@
+{
+  "status": "passed",
+  "source": "qa/browser-3.24/final/browser-replay.json",
+  "sourceSha256": "7991fe3c3b3410c1d16f9652b92da8bda8dde4b31a8c9c6a68d0956d0f9cd37f",
+  "steps": 5245,
+  "compatibility": {
+    "model": "current-model-recompute",
+    "sourceIdentity": {
+      "modelVersion": "3.24.0",
+      "modelBuildId": "5411c22c49598432ee465070946dac75d72135b186f78f3b2811f837fee909f8",
+      "sourceCommit": null,
+      "sourceTree": null,
+      "sourceIdentityStatus": "not-available",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "executionIdentity": {
+      "modelVersion": "1.3.0",
+      "modelBuildId": "606484987ed0ac898d149a2ac0d5854f27762e5b1b6f032bc61a30bbd820889c",
+      "sourceCommit": null,
+      "sourceTree": null,
+      "sourceIdentityStatus": "not-available",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "conditions": "explicitly-migrated-historical-initial-state",
+    "migration": {
+      "from": "3.24.0",
+      "to": "1.3.0",
+      "addedDefaultState": [],
+      "parameterMapping": {},
+      "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+      "changed": [
+        "modelVersion"
+      ],
+      "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+      "limitation": "The 3.24.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+    }
+  },
+  "reproduction": {
+    "schema": "roadster.reproduction-verdict",
+    "version": 1,
+    "status": "not_applicable",
+    "executionStatus": "completed",
+    "semantics": "fixed-input-current-model-recompute",
+    "expectedAgreement": false,
+    "sourceStatus": "completed",
+    "sourceIdentity": {
+      "modelVersion": "3.24.0",
+      "modelBuildId": "5411c22c49598432ee465070946dac75d72135b186f78f3b2811f837fee909f8",
+      "sourceCommit": null,
+      "sourceTree": null,
+      "sourceIdentityStatus": "not-available",
+      "protocolVersion": "live-fixed-inputs-1",
+      "fixedHz": 120
+    },
+    "compatibility": {
+      "model": "current-model-recompute",
+      "sourceIdentity": {
+        "modelVersion": "3.24.0",
+        "modelBuildId": "5411c22c49598432ee465070946dac75d72135b186f78f3b2811f837fee909f8",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "executionIdentity": {
+        "modelVersion": "1.3.0",
+        "modelBuildId": "606484987ed0ac898d149a2ac0d5854f27762e5b1b6f032bc61a30bbd820889c",
+        "sourceCommit": null,
+        "sourceTree": null,
+        "sourceIdentityStatus": "not-available",
+        "protocolVersion": "live-fixed-inputs-1",
+        "fixedHz": 120
+      },
+      "conditions": "explicitly-migrated-historical-initial-state",
+      "migration": {
+        "from": "3.24.0",
+        "to": "1.3.0",
+        "addedDefaultState": [],
+        "parameterMapping": {},
+        "defaultStateMeaning": "No default physical or controller state was added. Full historical state and collision signature must match the current contract.",
+        "changed": [
+          "modelVersion"
+        ],
+        "preserved": "All existing historical parameters (including climbRateMps and manual rate limits), rigid body, wheels, gas, valves, controller state, disturbance phase, observation buffers and seed.",
+        "limitation": "The 3.24.0 solver is not executed. The current model recalculates the explicitly mapped initial state; this is never an exact old-model replay."
+      }
+    },
+    "controllerOverride": null,
+    "tolerances": {
+      "positionM": 0.000001,
+      "velocityMps": 0.000001,
+      "attitudeDeg": 0.00001,
+      "angularVelocityRadS": 0.000001,
+      "gasMassKg": 1e-8,
+      "tankTemperatureK": 0.000001,
+      "wheelOmegaRadS": 0.00001,
+      "controllerAbsolute": 1e-7,
+      "controllerRelative": 1e-9
+    },
+    "completedSteps": 5245,
+    "requestedSteps": 5245,
+    "terminalComparedAtSameStep": true,
+    "terminal": {
+      "position": {
+        "error": 4.3758348156493305,
+        "tolerance": 0.000001,
+        "unit": "m",
+        "available": true,
+        "withinTolerance": false
+      },
+      "velocity": {
+        "error": 0.0021672445137189676,
+        "tolerance": 0.000001,
+        "unit": "m/s",
+        "available": true,
+        "withinTolerance": false
+      },
+      "attitude": {
+        "error": 6.065958531582773,
+        "tolerance": 0.00001,
+        "unit": "deg",
+        "available": true,
+        "withinTolerance": false
+      },
+      "angularVelocity": {
+        "error": 0.009899602743360467,
+        "tolerance": 0.000001,
+        "unit": "rad/s",
+        "available": true,
+        "withinTolerance": false
+      },
+      "gasMass": {
+        "error": 0,
+        "tolerance": 1e-8,
+        "unit": "kg",
+        "available": true,
+        "withinTolerance": true
+      },
+      "tankTemperature": {
+        "error": 0,
+        "tolerance": 0.000001,
+        "unit": "K",
+        "available": true,
+        "withinTolerance": true
+      },
+      "wheelOmega": {
+        "error": 0.04964227442855163,
+        "tolerance": 0.00001,
+        "unit": "rad/s",
+        "available": true,
+        "withinTolerance": false,
+        "wheels": [
+          {
+            "id": "FR",
+            "error": 0.02472947131662833,
+            "unit": "rad/s"
+          },
+          {
+            "id": "FL",
+            "error": 0.024729476026581723,
+            "unit": "rad/s"
+          },
+          {
+            "id": "RR",
+            "error": 0.024912460638164637,
+            "unit": "rad/s"
+          },
+          {
+            "id": "RL",
+            "error": 0.024912466342020517,
+            "unit": "rad/s"
+          }
+        ]
+      }
+    },
+    "controller": {
+      "comparedAtSourceTerminal": true,
+      "comparedScalars": 416,
+      "comparedDiscrete": 157,
+      "missingFields": [],
+      "absentOptionalFields": [
+        "_poseTakeoffOriginHeight",
+        "_poseTakeoffQuaternion"
+      ],
+      "mismatchCount": 39,
+      "maxAbsoluteError": 5408.393281751269,
+      "maxNormalizedError": 58641757.741961695,
+      "firstMismatch": {
+        "scope": "terminal-controller",
+        "channel": "state._levelRecovery.tiltErrorDeg",
+        "step": 5245,
+        "error": 0.002125874731045272,
+        "tolerance": 1.0000904259013243e-7,
+        "unit": "state units"
+      },
+      "contactSupport": {
+        "source": [],
+        "actual": [],
+        "scope": "Canonical local body/shape support set; not transient Cannon equation multipliers or global object IDs."
+      }
+    },
+    "curves": {
+      "position": {
+        "unit": "m",
+        "tolerance": 0.000001,
+        "comparedSamples": 876,
+        "missingSamples": 0,
+        "maxError": 4.3758348156493305,
+        "maxErrorStep": 5245
+      },
+      "velocity": {
+        "unit": "m/s",
+        "tolerance": 0.000001,
+        "comparedSamples": 876,
+        "missingSamples": 0,
+        "maxError": 0.7756447354146737,
+        "maxErrorStep": 4824
+      },
+      "attitude": {
+        "unit": "deg",
+        "tolerance": 0.00001,
+        "comparedSamples": 876,
+        "missingSamples": 0,
+        "maxError": 6.0732762037267625,
+        "maxErrorStep": 5220
+      },
+      "angularVelocity": {
+        "unit": "rad/s",
+        "tolerance": 0.000001,
+        "comparedSamples": 876,
+        "missingSamples": 0,
+        "maxError": 0.034894570832726124,
+        "maxErrorStep": 5226
+      },
+      "gasMass": {
+        "unit": "kg",
+        "tolerance": 1e-8,
+        "comparedSamples": 876,
+        "missingSamples": 0,
+        "maxError": 0,
+        "maxErrorStep": 0
+      },
+      "tankTemperature": {
+        "unit": "K",
+        "tolerance": 0.000001,
+        "comparedSamples": 876,
+        "missingSamples": 0,
+        "maxError": 0,
+        "maxErrorStep": 0
+      },
+      "wheelOmega": {
+        "unit": "rad/s",
+        "tolerance": 0.00001,
+        "comparedSamples": 876,
+        "missingSamples": 0,
+        "maxError": 3.1714761971895316,
+        "maxErrorStep": 5178
+      }
+    },
+    "firstDivergence": {
+      "scope": "stored-curve",
+      "channel": "velocity",
+      "step": 282,
+      "error": 0.000037576756311034885,
+      "tolerance": 0.000001,
+      "unit": "m/s",
+      "timeS": 2.35
+    },
+    "mismatchCount": 3695,
+    "sampling": {
+      "referenceStoredSamples": 876,
+      "comparedSamples": 876,
+      "referenceDecimated": false,
+      "referenceRawHz": 20,
+      "coverage": "Only retained reference samples at matching fixed-step indices were compared; no interpolation and no reconstructed peaks or integrals. Controller and complete rigid-body/gas/wheel comparisons are terminal."
+    },
+    "reason": "This is current-model/controller recomputation. Errors describe differences from the historical reference, not an exact reproduction requirement.",
+    "executionReason": "按记录输入执行完成"
+  },
+  "sourceUnchanged": true
+}

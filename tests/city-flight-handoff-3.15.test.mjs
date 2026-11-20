@@ -32,7 +32,9 @@ function harness(){
   city.cancel('research_control');session.release('research-control-start');
   timeline.push({event:'city-terminal-before-new-recorder',cityRunning:city.getState().running,recordCount:city.getState().recordCount,researchRecording:shell.research.getExperimentState().recording,supplyMode:sim.params.supplyMode,gasKg:sim.gasMass,physical:sim.exportState()});
  },onStart:()=>timeline.push({event:'research-started',cityRunning:city.getState().running,researchRecording:shell.research.getExperimentState().recording})});
+ assert.equal(doc.getElementById('game-menu').hasAttribute('inert'),true);
  shell.graphicsReady();
+ assert.equal(doc.getElementById('game-menu').hasAttribute('inert'),false);
  city=createCityFlightUI({mount:doc.querySelector('#map-drawer .drawer-content'),getSim:()=>sim,getContext:()=>context,storage:dom.window.localStorage,onBeforeStart:()=>{preStartCalls++;shell.research.cancel('开始城市挑战');shell.research.stopRecording('开始城市挑战','cancelled');session.release('city-challenge-start');},onFinish:r=>timeline.push({event:'city-finished',status:r.status,reason:r.reason,step:r.stepCount,researchRecording:shell.research.getExperimentState().recording})});
  city.panel.querySelector('[data-cf="supply"]').value='finite';
  const received=[];dom.window.addEventListener('keydown',event=>{let handled=false;if(!event.repeat)handled=shell.research.handleKey(event.code.replace(/^Numpad([3-9])$/,'Digit$1'));received.push({code:event.code,repeat:event.repeat,isTrusted:event.isTrusted,handled});});

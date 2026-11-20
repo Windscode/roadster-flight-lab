@@ -1,0 +1,198 @@
+{
+  "schema": "roadster-export-deadline-3.18",
+  "status": "passed",
+  "wallMs": 117.34640000000002,
+  "checks": [
+    {
+      "name": "An unresolved asynchronous snapshot expires and identifies its blocked stage",
+      "status": "passed",
+      "receipt": {
+        "status": "failed",
+        "filename": "unresolved-snapshot.json",
+        "elapsedMs": 42.94500000000005,
+        "snapshotMs": 0,
+        "serializeMs": 0,
+        "blobMs": 0,
+        "bytes": 0,
+        "visited": 0,
+        "characters": 0,
+        "error": "Export preparation exceeded 40 ms at snapshot; no completed disk download is claimed.",
+        "browserCompletion": "unobservable",
+        "serializer": null,
+        "workerSerializeMs": null,
+        "postMessageMs": 0,
+        "compatibilityScanMs": 0,
+        "queueWaitMs": 3.163400000000024,
+        "phase": "deadline",
+        "deadlineMs": 40,
+        "events": [
+          {
+            "phase": "queued",
+            "atMs": 0.15420000000005984
+          },
+          {
+            "phase": "snapshot",
+            "atMs": 3.172900000000027
+          },
+          {
+            "phase": "deadline",
+            "atMs": 42.95100000000002
+          }
+        ]
+      }
+    },
+    {
+      "name": "A silent module Worker expires, terminates and never hands off an empty file",
+      "status": "passed",
+      "receipt": {
+        "status": "failed",
+        "filename": "silent-worker.json",
+        "elapsedMs": 41.37059999999997,
+        "snapshotMs": 0.1493000000000393,
+        "serializeMs": 0,
+        "blobMs": 0,
+        "bytes": 0,
+        "visited": 0,
+        "characters": 0,
+        "error": "Export preparation exceeded 40 ms at worker-wait; no completed disk download is claimed.",
+        "browserCompletion": "unobservable",
+        "serializer": null,
+        "workerSerializeMs": null,
+        "postMessageMs": 0,
+        "compatibilityScanMs": 0,
+        "queueWaitMs": 2.7680999999998903,
+        "phase": "deadline",
+        "deadlineMs": 40,
+        "events": [
+          {
+            "phase": "queued",
+            "atMs": 0.017999999999915417
+          },
+          {
+            "phase": "snapshot",
+            "atMs": 2.7754999999999654
+          },
+          {
+            "phase": "compatibility-scan",
+            "atMs": 3.7888999999998987
+          },
+          {
+            "phase": "worker-start",
+            "atMs": 3.8701999999999543
+          },
+          {
+            "phase": "worker-wait",
+            "atMs": 4.117199999999912
+          },
+          {
+            "phase": "deadline",
+            "atMs": 41.377899999999954
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cancellation interrupts an unresolved snapshot without awaiting its promise",
+      "status": "passed",
+      "receipt": {
+        "status": "cancelled",
+        "filename": "cancel-await.json",
+        "elapsedMs": 6.29340000000002,
+        "snapshotMs": 0,
+        "serializeMs": 0,
+        "blobMs": 0,
+        "bytes": 0,
+        "visited": 0,
+        "characters": 0,
+        "error": null,
+        "browserCompletion": "unobservable",
+        "serializer": null,
+        "workerSerializeMs": null,
+        "postMessageMs": 0,
+        "compatibilityScanMs": 0,
+        "queueWaitMs": 1.737600000000043,
+        "phase": "cancelled",
+        "deadlineMs": 500,
+        "events": [
+          {
+            "phase": "queued",
+            "atMs": 0.014400000000023283
+          },
+          {
+            "phase": "snapshot",
+            "atMs": 1.7440000000000282
+          },
+          {
+            "phase": "cancelled",
+            "atMs": 6.295000000000073
+          }
+        ]
+      }
+    },
+    {
+      "name": "Successful application preparation retains the exact payload and separates browser handoff from disk completion",
+      "status": "passed",
+      "receipt": {
+        "status": "handed-off",
+        "filename": "inspection-state.json",
+        "elapsedMs": 12.154199999999946,
+        "snapshotMs": 0.036500000000046384,
+        "serializeMs": 10.265900000000101,
+        "blobMs": 0.08690000000001419,
+        "bytes": 69,
+        "visited": 16,
+        "characters": 69,
+        "error": null,
+        "browserCompletion": "unobservable",
+        "serializer": "cooperative-main-thread",
+        "workerSerializeMs": null,
+        "postMessageMs": 0,
+        "compatibilityScanMs": 0.0008000000000265572,
+        "queueWaitMs": 0.5921999999999343,
+        "phase": "browser-handoff",
+        "deadlineMs": 30000,
+        "events": [
+          {
+            "phase": "queued",
+            "atMs": 0.009199999999964348
+          },
+          {
+            "phase": "snapshot",
+            "atMs": 0.5927000000000362
+          },
+          {
+            "phase": "compatibility-scan",
+            "atMs": 0.9679999999999609
+          },
+          {
+            "phase": "cooperative-encode",
+            "atMs": 0.9687999999999874
+          },
+          {
+            "phase": "blob",
+            "atMs": 11.24619999999993
+          },
+          {
+            "phase": "browser-click",
+            "atMs": 12.060399999999959
+          },
+          {
+            "phase": "browser-handoff",
+            "atMs": 12.066500000000019
+          }
+        ]
+      }
+    },
+    {
+      "name": "Inspection current-state export uses the same bounded manager and caches invariant GPU identity outside its click path",
+      "status": "passed",
+      "scope": "Source event-chain check; native download is verified separately."
+    }
+  ],
+  "sourceHashes": {
+    "dist/export-download.js": "2e4a4f2650367063a2a80c7e7789150c99ccb73266be924bcbc61640f0c0ace1",
+    "dist/export-encoder.js": "8ec6913b785a619647c7fd2f1f7057b5b04d51924cbac924fc29a134d5f3cf25",
+    "dist/vehicle-inspection.js": "65d4f626ad7754d705674270023fef3fef6952bf90cf0c5bd99d4e9ac7a7805d"
+  },
+  "scope": "Actual download manager with intentionally unresolved snapshot and silent Worker fixtures, shortened deadlines for bounded failure tests. A JavaScript timer cannot preempt a synchronous browser/GPU stall or diagnose an external automation tool hang. No reproduction of the historical 1758/2561 s tool calls is claimed."
+}

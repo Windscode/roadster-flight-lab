@@ -3,6 +3,11 @@ import {t as tr} from './i18n.js';
 
 // Presentation-only strings; stored requests, identities and user names remain unchanged.
 export const entries={
+  "制动能量回收 关 / 开":"Brake regeneration off / on",
+  "回收关闭":"Recovery off","回收开启":"Recovery on",
+  "制动初始电量":"Initial battery charge","制动段回充":"Energy recovered while braking",
+  "摩擦制动热量":"Friction brake heat","制动起始车速":"Speed at brake application",
+  "制动初始电量应为 0–100%":"Initial braking charge must be between 0 and 100%.",
   "风场研究控制台": "Wind Research Console",
   "风场实验室": "Wind Laboratory",
   "收起研究控制台": "Close research console",
@@ -850,8 +855,9 @@ patterns.push(
   [/^(当前模型结果|历史结果) · (.+) · (.+) · 模型 (.+) · (.+)$/u,(_,kind,run,protocol,version,build)=>`${tr(kind)} · ${run} · ${protocol} · Model ${version} · ${build}`],
   [/^历史结果：基于模型 (.+) \/ (.+)。此处回看原响应，不代表当前模型；可按当前模型重算方案。$/u,(_,version,build)=>`Historical result from model ${version} / ${build}. This is the original response, not the current model. Recompute the request explicitly to obtain a current-model result.`],
   [/^方案已载入：(.+)，点击运行开始。$/u,(_,title)=>`Request loaded: ${tr(title)}. Select Run to start.`],
+  [/^当前查看的结果（请导出备份）：(.+)。左侧配置用于下一次运行；查看或切换结果不会替换它。$/u,(_,description)=>`Viewing a result: ${translatedParts(description)}. Export a copy before closing. The configuration on the left applies to the next run.`],
   [/^当前查看的是已保存结果：(.+)。左侧配置用于下一次运行；查看或切换结果不会替换它。$/u,(_,description)=>`Viewing a saved result: ${translatedParts(description)}. The left-hand configuration is used for the next execution; viewing or switching results does not replace it.`],
-  [/^待运行：(.+) · 当前模型 ([^。\s]+)(.*?)。(.+)右侧所选结果独立保留。$/u,(_,description,version,source,state)=>`Next run: ${translatedParts(description)} · Current model ${version}${source?tr(source):''}. ${tr(state)}The selected saved result remains separate.`],
+  [/^待运行：(.+) · 当前模型 ([^。\s]+)(.*?)。(.+)右侧所选结果独立保留。$/u,(_,description,version,source,state)=>`Next run: ${translatedParts(description)} · Current model ${version}${source?tr(source):''}. ${tr(state)}The selected result remains separate.`],
   [/^此配置已执行完成 (\d+) \/ (\d+)；记录库中保留 (\d+) 条结果。计算完成不等于物理判据通过。$/u,(_,completed,total,retained)=>`This configuration completed ${completed} / ${total} executions; ${retained} results remain in the library. Completion does not mean that a physical criterion passed. `],
   [/^此配置正在执行，已返回 (\d+) \/ (\d+) 条结果。$/u,(_,completed,total)=>`This configuration is running; ${completed} / ${total} results returned. `],
   [/^此配置上次执行(失败|取消|中断)，已返回 (\d+) \/ (\d+) 条结果；完整尝试条件与原因已留证。$/u,(_,state,completed,total)=>`The last execution of this configuration ${({失败:'failed',取消:'was cancelled',中断:'was interrupted'})[state]}; ${completed} / ${total} results returned. The frozen attempt and reason are retained. `],

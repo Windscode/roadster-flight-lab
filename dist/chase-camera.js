@@ -67,12 +67,12 @@ function boxEntry(from,to,box,radius){
  * camera position has been calculated. Retraction has no intentional lag;
  * release waits 0.18 s then eases out, so a thin post does not cause alternating
  * full-distance frames. It never hides geometry or changes physical state. */
-export function resolveCameraObstruction({target,desired,geometry,previous=null,dt=1/60,near=.08,fov=60,aspect=16/9,viewOffsetFraction=0,releaseRate=3.5,releaseHoldS=.18}={}){
+export function resolveCameraObstruction({target,desired,geometry,geometryNear,previous=null,dt=1/60,near=.08,fov=60,aspect=16/9,viewOffsetFraction=0,releaseRate=3.5,releaseHoldS=.18}={}){
   if(!target||!desired||![target.x,target.y,target.z,desired.x,desired.y,desired.z].every(Number.isFinite))throw new Error('Camera obstruction requires finite target and desired positions');
   const delta={x:desired.x-target.x,y:desired.y-target.y,z:desired.z-target.z},length=Math.hypot(delta.x,delta.y,delta.z),radius=cameraClearanceRadius({near,fov,aspect,viewOffsetFraction});
   if(length<1e-9)return{position:{...desired},distanceM:0,desiredDistanceM:0,nearPlaneRadiusM:radius,obstructed:false,hit:null,state:{distanceM:0,holdRemainingS:0}};
   let nearest=null;
-  for(const box of geometry??[]){if(box.type!=='box'||!Array.isArray(box.size)||!Array.isArray(box.position))continue;const hit=boxEntry(target,desired,box,radius);if(hit&&(!nearest||hit.fraction<nearest.fraction))nearest={...hit,objectId:box.id,kind:box.kind};}
+  for(const box of (geometryNear?geometryNear(target,desired,radius):geometry)??[]){if(box.type!=='box'||!Array.isArray(box.size)||!Array.isArray(box.position))continue;const hit=boxEntry(target,desired,box,radius);if(hit&&(!nearest||hit.fraction<nearest.fraction))nearest={...hit,objectId:box.id,kind:box.kind};}
   const available=nearest?Math.max(0,length*nearest.fraction-.025):length;
   const elapsed=clamp(Number.isFinite(dt)?dt:0,0,.1),old=previous?.distanceM,validOld=Number.isFinite(old);
   let distance=available,holdRemaining=previous?.holdRemainingS??0;

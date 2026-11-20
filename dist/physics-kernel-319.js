@@ -174,7 +174,7 @@ export class RoadsterSim {
     const b=new CANNON.Body({mass:0,position:V(...position),quaternion:q,collisionFilterGroup:1,collisionFilterMask:2});
     b.material=this._roadMaterial;
     b.addShape(new CANNON.Box(V(size[0]/2,size[1]/2,size[2]/2)));
-    b.userData={id,kind};this.world.addBody(b);
+    b.userData={id,kind,geometryIndex:this.geometry.length};this.world.addBody(b);
     this.geometry.push({id,type:'box',kind,size:[...size],position:[...position],quaternion:quatArray(q),color});
   }
 
@@ -202,6 +202,19 @@ export class RoadsterSim {
   }
 
   getWorldGeometry() { return this.geometry; }
+
+  cameraGeometryNear(from,to,radius){
+    // Narrow phase inflates each LOCAL box axis by radius. Its world AABB
+    // can therefore grow by up to sqrt(3)*radius on a rotated building.
+    const pad=Math.sqrt(3)*radius+1e-6;
+    const bounds=new CANNON.AABB({
+      lowerBound:V(Math.min(from.x,to.x)-pad,Math.min(from.y,to.y)-pad,Math.min(from.z,to.z)-pad),
+      upperBound:V(Math.max(from.x,to.x)+pad,Math.max(from.y,to.y)+pad,Math.max(from.z,to.z)+pad)
+    });
+    const indices=this.world.broadphase.aabbQuery(this.world,bounds,[])
+      .map(body=>body.userData?.geometryIndex).filter(Number.isInteger);
+    return indices.sort((a,b)=>a-b).map(i=>this.geometry[i]);
+  }
 
   _resetMass() {
     this.gasInitialMass = this.params.initialPressureBar*1e5*(this.params.tankLitres/1000)/(287.05*this.params.gasTemperatureK);

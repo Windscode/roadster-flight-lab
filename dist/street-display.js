@@ -1,11 +1,12 @@
 // Original shallow exterior showcases, built in metres. They occupy the
 // existing sealed facade recess (<= 0.62 m); none is an enterable room.
 export const STREET_DISPLAY_VERSION='sealed-shopfront-3.18';
-export const DISPLAY_RECIPES=Object.freeze(['books','daily','workshop','gallery','tide-survey','machine-shop']);
+export const DISPLAY_RECIPES=Object.freeze(['books','daily','workshop','gallery','tide-survey','machine-shop','viaduct-model']);
 export function displayRecipe(order){
   if(order==='southbank')return 'tide-survey';
   if(order==='service')return 'machine-shop';
-  return ['gallery','exchange'].includes(order)?'books':order==='workshop'?'workshop':order==='residential'?'gallery':'daily';
+  if(order==='exchange')return 'viaduct-model';
+  return order==='gallery'?'books':order==='workshop'?'workshop':order==='residential'?'gallery':'daily';
 }
 
 // The adapter puts boxes in a facade's local outward frame. Shallow opaque
@@ -35,6 +36,23 @@ export function buildStreetDisplay(put,{x=0,width=4.6,height=2.7,sill=.38,recipe
         place('displayGoods',[.11+((k+level)%2)*.045,bh,.19],bx,y+.03+bh*.5,-.35,[0xa48152,0x425d64,0xa8ab90,0x794e43][(k+level+variant)%4]);
       }
     }
+  }else if(recipe==='viaduct-model'){
+    // Exchange concourse: a section model of the overhead walk and its piers,
+    // with an interchange diagram on the wall behind the model.
+    const table=sill+.57,deck=table+.40;
+    place('displayWood',[displayW*.86,.53,.43],0,sill+.265,-.315,0x695e50);
+    place('displayFrame',[displayW*.89,.04,.46],0,table-.02,-.31,0xc6ac79);
+    for(const station of [-1,0,1]){
+      place('displayGoods',[displayW*.054,.35,.13],station*displayW*.29,table+.175,-.30,0xaba99b);
+      place('displayFrame',[displayW*.10,.06,.20],station*displayW*.29,deck-.02,-.30,0x687873);
+    }
+    place('displayGoods',[displayW*.78,.08,.19],0,deck+.04,-.30,0xb39966);
+    for(const out of [-.38,-.22])place('displayFrame',[displayW*.78,.065,.018],0,deck+.11,out,0x586e6c);
+    const mapY=sill+height*.69;
+    place('displayGoods',[displayW*.76,height*.29,.035],0,mapY,-.52,0x2b464c);
+    place('displayGoods',[displayW*.58,.038,.02],0,mapY,-.494,0xe7b569);
+    place('displayGoods',[.036,height*.18,.02],0,mapY,-.494,0x97c8bf);
+    for(const station of [-1,0,1])place('displayGoods',[.069,.069,.025],station*displayW*.23,mapY,-.47,0xe3e6ce);
   }else if(recipe==='tide-survey'){
     // A stepped bathymetry model with a staff gauge and a brass level marker.
     const bench=sill+.35;

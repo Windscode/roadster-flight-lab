@@ -1,7 +1,7 @@
 // 3.21 wheel integration: extracted from the verified 3.19 _wheels method.
 // Contact geometry, friction circle, steering, ABS/TCS and inertia are retained.
 import * as CANNON from './vendor/cannon-es.js';
-import {roadWheelAngle} from './vehicle-models.js';
+import {roadWheelAngle,frontWheelSteer} from './vehicle-models.js';
 import {circularWheelSupport} from './wheel-contact-envelope.js';
 import {integrateWheel,lateralTireForce} from './tire-dynamics.js';
 import {AUXILIARY_POWER_W,regenerationAcceptance,brakeBlend} from './energy-model.js';
@@ -23,8 +23,7 @@ export function applyResourceWheels(dt,input) {
       const mount=V(...WHEEL_LOCATIONS[i]),from=b.pointToWorldFrame(mount);
       const extension=p.suspensionRest+p.suspensionDroop;
       const ray=this._wheelRays[i],w=this.wheelStates[i],wasContact=w.contact,airTime=w.contactAirTimeS||0;
-      const turn=this._steerCentre,radius=2.84/Math.max(1e-6,Math.tan(Math.abs(turn)));
-      w.steer=i<2?Math.sign(turn)*Math.atan(2.84/(radius-Math.sign(turn)*mount.x)):0;
+      w.steer=i<2?frontWheelSteer(this._steerCentre,mount.x):0;
       // A wheel can strike a curb or land before its suspension ray reports
       // support. Its collider must follow the same steering command in air.
       const stopQ=new CANNON.Quaternion();stopQ.setFromEuler(0,w.steer,Math.PI/2,'YXZ');b.shapeOrientations[this._wheelStopIndices[i]].copy(stopQ);b.aabbNeedsUpdate=true;
@@ -171,7 +170,7 @@ export function applyResourceWheels(dt,input) {
       const brake=w.brakeDemandN;
       const result=integrateWheel(w,{dt,vlong:c.vlong,normalLoadN:w.normalLoadN,mu,lateralForceN:lateral,
         driveTorqueNm:driveTorque,maxDrivePowerW,brakeTorqueNm:brake*p.wheelRadius,regenTorqueNm:w.regenBrakeDemandN*p.wheelRadius,regenMechanicalPowerW,regenMechanicalEnergyJ,
-        rollingTorqueNm:w.normalLoadN*.011*p.wheelRadius*pedalBlend,
+        rollingTorqueNm:w.normalLoadN*.011*p.wheelRadius,
         radius:p.wheelRadius,inertia:p.wheelInertia,effectiveMass,gravityLong:g.dot(c.forward),absEnabled:p.absEnabled,tcsEnabled:p.tractionAssist});
       w.tcsActive||=w.corneringTractionActive;
       const flong=result.longitudinalForceN,flat=result.lateralForceN;

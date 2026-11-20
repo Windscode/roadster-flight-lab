@@ -55,6 +55,10 @@ export function normalizeResearchRequest(request={}){
  const steeringProtocol=request.steeringProtocol??'wheel';if(!['wheel','driver'].includes(steeringProtocol))throw Error('未知转向协议');
  if(request.stabilization!==undefined&&typeof request.stabilization!=='boolean')throw Error('稳姿开关需要布尔值');
  const result={kind,params:validateResearchParams(request.params),speedKmh,angleDeg,steerInput,steeringProtocol,initialRollDeg,heightM,stabilization:request.stabilization??true};
+ if(request.initialSoc!==undefined){
+  if(kind!=='brake'||!Number.isFinite(request.initialSoc)||request.initialSoc<0||request.initialSoc>1)throw Error('制动初始电量应为 0–100%');
+  result.initialSoc=request.initialSoc;
+ }
  if(kind==='roll'){
   const durationS=request.durationS??EXPERIMENTS.roll.duration;
   if(![8,20].includes(durationS))throw Error('滚转观察窗口只支持8秒历史窗口或20秒标准窗口');

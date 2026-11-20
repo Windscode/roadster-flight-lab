@@ -10,12 +10,13 @@ export const PAIRS={
  nozzleModel:{label:'温压排速 / 固定650 m/s',key:'nozzleModel',values:['isentropic','constant'],labels:['温压排速','固定650 m/s']},
  steeringAssist:{label:'道路限舵辅助 关 / 开',key:'steeringAssist',values:[false,true],labels:['限舵关闭','限舵开启']},
  tractionAssist:{label:'轮速反馈 TCS 关 / 开',key:'tractionAssist',values:[false,true],labels:['TCS关闭','TCS开启']},
+ regenEnabled:{label:'制动能量回收 关 / 开',key:'regenEnabled',values:[false,true],labels:['回收关闭','回收开启']},
  absEnabled:{label:'轮速反馈 ABS 关 / 开',key:'absEnabled',values:[false,true],labels:['ABS关闭','ABS开启']},
  wingMode:{label:'固定收起翼 / 主动翼',key:'wingMode',values:['fixed','active'],labels:['固定翼收起','主动气动翼']},
  stabilization:{label:'G空中稳姿 关 / 开',key:'stabilization',values:[false,true],labels:['G关闭','G开启'],input:true},
  tireMu:{label:'摩擦系数 0.65 / 1.25',key:'tireMu',values:[.65,1.25],labels:['μ = 0.65','μ = 1.25']},
 };
-export const PAIR_KEYS={steer:['steeringAssist','tractionAssist'],brake:['absEnabled','wingMode','tireMu'],launch:['tractionAssist','wingMode'],attitude:['stabilization','supplyMode'],rise:['supplyMode','gasModel','nozzleModel'],hover:['supplyMode','gasModel','nozzleModel'],roll:['supplyMode','gasModel','nozzleModel']};
+export const PAIR_KEYS={steer:['steeringAssist','tractionAssist'],brake:['absEnabled','regenEnabled','wingMode','tireMu'],launch:['tractionAssist','wingMode'],attitude:['stabilization','supplyMode'],rise:['supplyMode','gasModel','nozzleModel'],hover:['supplyMode','gasModel','nozzleModel'],roll:['supplyMode','gasModel','nozzleModel']};
 export function researchConditionLabel(request){
  const p=request.params||{};if(!['steer','brake','launch'].includes(request.kind))return'';
  return[({dry:'干地',wet:'湿地',split:'左右分离附着'})[p.roadSurface]||p.roadSurface,`ABS${p.absEnabled?'开启':'关闭'}`,`TCS${p.tractionAssist?'开启':'关闭'}`].join(' · ');

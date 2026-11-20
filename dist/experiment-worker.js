@@ -26,6 +26,7 @@ export function runExperiment(raw={}){
  sim._positionTarget.copy(sim.body.position);sim._heightTarget=initialHeight;sim._headingTarget=0;
  if(!['hover','attitude'].includes(kind)){for(let k=0;k<240;k++)sim.step(dt);}
  sim.simTime=0;sim._stepCount=0;sim._accumulator=0;
+ if(kind==='brake'&&request.initialSoc!==undefined)sim.prepareEnergy(applied.batteryKWh*request.initialSoc);
  if(['steer','brake'].includes(kind)){sim.body.velocity.z=speedKmh/3.6;for(const wheel of sim.wheelStates){wheel.angularVelocityRadS=(speedKmh/3.6)/sim.params.wheelRadius;wheel.rotation=0;wheel.absPressure=1;wheel.tcsFactor=1;}overrides.push('标准道路初态同时设置车速和每轮 v/r 轮速；从该初态起由独立轮惯量、驱动 / 制动和接地反力矩积分');}
  if(kind==='attitude'){
   sim.body.quaternion.setFromEuler(-10*rad,0,request.initialRollDeg*rad,'YXZ');sim.body.previousQuaternion.copy(sim.body.quaternion);
@@ -68,7 +69,7 @@ export function runExperiment(raw={}){
    if(demand>=0)input.throttle=clamp(demand/Math.max(1,applied.maxMotorForce),0,1);else input.brake=clamp(-demand/applied.brakeForce,0,1);
   }
   if(kind==='steer')input.steer=time>=.5&&time<2.5?(steeringProtocol==='wheel'?angleDeg*rad/.49:steerInput):0;
-  if(kind==='brake'&&time>=.5){input.brake=1;brakeStart??={time:previous.simTime,position:{...previous.position}};}
+  if(kind==='brake'&&time>=.5){input.brake=1;brakeStart??={time:previous.simTime,speedKmh:previous.forwardSpeedKmh,energy:previous.energyAccounting};}
   if(kind==='rise')input.lift=time<2?1:0;
   if(kind==='launch'&&time>=.5){input.throttle=time<6.5?1:0;launchStart??={time:previous.simTime,position:{...previous.position}};}
   const t=sim.step(dt,input);if(t.fault)throw Error('试验无效：'+t.fault);
@@ -102,8 +103,18 @@ export function runExperiment(raw={}){
   }
   if(kind==='brake'&&brakeStart){
    brakeDistance+=.5*(horizontal+Math.hypot(previous.velocity.x,previous.velocity.z))*dt;
-   if(horizontal<.1&&t.contactCount>=3){stopCandidate??={time:t.simTime,distance:brakeDistance};stopTimer+=dt;}else{stopTimer=0;stopCandidate=null;}
-   if(stopTimer>=.5&&!stop)stop={timeSeconds:stopCandidate.time-brakeStart.time,distanceM:stopCandidate.distance,confirmedAt:t.simTime,thresholdMps:.1,confirmationSeconds:.5};
+   if(horizontal<.1&&t.contactCount>=3){
+    stopCandidate??={time:t.simTime,distance:brakeDistance,energy:t.energyAccounting};
+    stopTimer=t.simTime-stopCandidate.time;
+   }else{stopTimer=0;stopCandidate=null;}
+   if(stopTimer>=.5-1e-9&&!stop){
+    const before=brakeStart.energy,after=stopCandidate.energy;
+    stop={timeSeconds:stopCandidate.time-brakeStart.time,distanceM:stopCandidate.distance,confirmedAt:t.simTime,
+      thresholdMps:.1,confirmationSeconds:.5,entrySpeedKmh:brakeStart.speedKmh,entrySoc:before.soc,
+      recoveredWh:(after.recoveredJ-before.recoveredJ)/3600,
+      frictionHeatWh:(after.frictionBrakeJ-before.frictionBrakeJ)/3600,
+      rollingLossWh:(after.rollingLossJ-before.rollingLossJ)/3600};
+   }
   }
   maxHeading=Math.max(maxHeading,Math.abs(wrap(t.headingDeg*rad))/rad);maxLateral=Math.max(maxLateral,Math.abs(t.position.x));maxPositionError=Math.max(maxPositionError,Math.hypot(t.position.x,t.position.z+350));
   const hull=rigidContacts;if(hull&&!hullContacts)events.push({time:t.simTime,type:'rigid_body_contact'});hullContacts+=hull;

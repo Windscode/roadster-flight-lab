@@ -44,6 +44,7 @@ try{
     child.stdout.on('data',()=>{const m=log.match(/http:\/\/127\.0\.0\.1:\d+\//);if(m){clearTimeout(timer);resolve(m[0]);}});
   });
   const health=await (await fetch(url+'health')).json();
+  assert.ok(health.instanceId);assert.equal(health.instanceId,JSON.parse(readFileSync(join(root,'.runtime/server.json'))).instanceId);
   assert.equal(health.version,'3.21.0');assert.equal(health.modelBuildId,'fixture-current');
   assert.match(await (await fetch(url)).text(),/Local development/);
   const range=await fetch(url+'assets/fixture.bin',{headers:{Range:'bytes=0-6'}});

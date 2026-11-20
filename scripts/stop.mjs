@@ -10,7 +10,12 @@ try{
   const health=await(await fetch(info.url+'health',{signal:AbortSignal.timeout(1500)})).json();
   if(health.application!=='roadster-flight-lab-reviewed'||health.pid!==info.pid)throw new Error('The port belongs to another application. Nothing was stopped.');
   if(process.platform!=='win32')throw new Error('Use Ctrl+C in the server terminal on this platform.');
-  const command=execFileSync('powershell.exe',['-NoProfile','-Command',`(Get-CimInstance Win32_Process -Filter 'ProcessId = ${info.pid}').CommandLine`],{encoding:'utf8',windowsHide:true});
-  if(!command.replaceAll('\\','/').toLowerCase().includes(expected.replaceAll('\\','/').toLowerCase()))throw new Error('Process identity changed. Nothing was stopped.');
+  if(info.instanceId){
+    if(health.instanceId!==info.instanceId)throw Error('The running server instance changed. Nothing was stopped.');
+  }else{
+    // Older launchers only supplied a PID. Retain their absolute-path check.
+    const command=execFileSync('powershell.exe',['-NoProfile','-Command',`(Get-CimInstance Win32_Process -Filter 'ProcessId = ${info.pid}').CommandLine`],{encoding:'utf8',windowsHide:true});
+    if(!command.replaceAll('\\','/').toLowerCase().includes(expected.replaceAll('\\','/').toLowerCase()))throw new Error('Process identity changed. Nothing was stopped.');
+  }
   process.kill(info.pid);console.log('Roadster Flight Lab stopped.');
 }catch(error){console.log(error.code==='ENOENT'?'No local server has been started.':error.message);}

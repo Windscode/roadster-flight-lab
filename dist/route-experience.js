@@ -16,10 +16,24 @@ export function createRouteExperience({mount,hudMount,getSim,getPaused,getContex
   const live=key=>hud.querySelector('[data-live="'+key+'"]');live('open').onclick=onOpen;
   const wheelBadges=Array.from({length:4},()=>live('wheels').appendChild(doc.createElement('span')));
   const style=doc.createElement('style');style.textContent='.route-experience{padding:18px 16px;margin:4px 0 22px;background:#172a2de8;border:1px solid #8bb3a866;border-radius:10px}.route-experience h3{font-size:21px;margin:5px 0 12px}.route-experience p{line-height:1.6}.route-experience label{display:block}.route-experience select{width:100%;margin-top:6px}.route-eyebrow{font-size:10px;letter-spacing:1.2px;color:#aed1bb}.route-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.route-sector-table{width:100%;border-collapse:collapse;margin:8px 0 12px;font-size:12px;font-variant-numeric:tabular-nums}.route-sector-table th,.route-sector-table td{text-align:right;padding:5px 3px;border-bottom:1px solid #91ac9a35}.route-sector-table th:first-child{text-align:left}.route-sector-table small{display:block;color:#b9cdae}.route-feedback{font-size:12px;margin:8px 0}.route-driving-card{position:relative;width:100%;box-sizing:border-box;flex:0 0 auto;padding:10px 14px;border:1px solid #8ab4a55c;background:#102427e8;border-radius:8px;color:#deeee3;font-size:12px;pointer-events:auto;z-index:18}.route-driving-card[hidden],.route-driving-card [hidden]{display:none!important}.route-driving-card [data-live=result]{display:flex;gap:8px;margin-top:8px}.route-driving-card [data-live=result] button{border:1px solid #69948b;border-radius:5px;padding:5px 9px}.route-driving-card [data-live=retry]{background:#38554b}.route-driving-card>div:first-child{display:flex;justify-content:space-between;align-items:center}.route-driving-card button{padding:2px 8px;background:transparent;border:0;color:inherit}.route-driving-card p{margin:7px 0}.route-driving-card [data-live=wheels]{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:10px}.route-driving-card [data-live=wheels]>span{padding:4px 6px;background:#c5dec40a;border-left:2px solid #99bea5}.route-driving-card small{display:block;margin-top:6px;color:#a9c1b8;line-height:1.5}@media(max-width:750px){.route-driving-card{padding:9px 11px}}';section.append(style);
-  const resourceControls=doc.createElement('div');resourceControls.innerHTML='<label><span data-resource="mode-label"></span><select data-resource="mode"><option value="finite"></option><option value="practice"></option></select></label><p data-resource="budget"></p><p data-resource="accounting"></p><details><summary data-resource="history-title"></summary><p data-resource="comparison"></p><div data-resource="history"></div><button data-resource="export"></button></details><p data-resource="storage" role="status"></p>';
+  const resourceControls=doc.createElement('div');resourceControls.innerHTML='<label><span data-resource="mode-label"></span><select data-resource="mode"><option value="finite"></option><option value="practice"></option></select></label><p data-resource="budget"></p><p data-resource="accounting"></p><details><summary data-resource="history-title"></summary><p data-resource="comparison"></p><div data-resource="history"></div></details><p data-resource="storage" role="status"></p><button data-resource="retry-save" hidden></button> <button data-resource="export"></button>';
   section.insertBefore(resourceControls,$('limits'));const resource=key=>resourceControls.querySelector('[data-resource="'+key+'"]');
   let mission=null,preparation=null,busy=false;const history=new ResourceHistory(),resourceHistory=history.runs;
-  function renderStorage(){const state=history.snapshot();resource('storage').hidden=state.status==='saved';resource('storage').dataset.persistence=JSON.stringify(state);resource('storage').textContent=state.status==='saved'?'':state.protectedArchive?L('原摘要存档无法完整读取，已保护且不会覆盖。新结果未保存；导出会包含原文与本会话全部摘要。','The original summary archive cannot be fully read and is protected from replacement. New results are not saved; export includes the original text and all session summaries.'):state.reason==='conflict'?L('其他页面已修改摘要或同一记录的内容不同，未确认保存。当前结果仍保留，请导出后刷新。','Another page changed the summaries or the same record has different content. Saving is unconfirmed; export the retained results before refreshing.'):L('当前浏览器未保存摘要。关闭页面前请导出；本会话的未保存结果全部保留。','Summaries are not saved in this browser. Export before closing; every unsaved session result is retained.');}
+  function renderStorage(){
+    const state=history.snapshot(),status=resource('storage'),retry=resource('retry-save');
+    status.hidden=state.status==='saved';
+    status.dataset.persistence=JSON.stringify(state);
+    retry.hidden=!state.unsavedCount||state.protectedArchive;
+    retry.textContent=L('重试保存摘要','Retry saving summaries');
+    if(status.hidden){status.textContent='';return;}
+    if(state.protectedArchive)status.textContent=L('原摘要存档无法完整读取，已保护。导出包含原文和本会话的全部摘要。','The original summary archive is protected. New results are not saved. Export includes the original text and all session summaries.');
+    else if(state.reason==='conflict')status.textContent=L('其他页面更改了记录。可以重试合并，或在关闭前导出本次结果。','Another page changed the records. Retry the merge or export this session before closing.');
+    else if(state.reason==='quota')status.textContent=L('浏览器存储空间已满，未保存摘要。可直接导出全部摘要，或腾出空间后重试保存。','Browser storage is full. Summaries are not saved. Export all summaries now or free space and retry saving.');
+    else status.textContent=L('当前浏览器未保存摘要。可重试保存，或在关闭前导出本会话的全部结果。','Summaries are not saved in this browser. Retry saving or export all session results before closing.');
+  }
+  function resultMessage(){
+    return message+(run?.finished&&history.snapshot().status==='unsaved'?L(' · 摘要未保存，请打开路线面板导出',' · Summary not saved; open the route panel to export.'):'');
+  }
   function sectorTable(item,previous){
     const panel=doc.createElement('details'),title=doc.createElement('summary');
     title.textContent=L('分段收支','Sector breakdown')+' · '+item.sectors.length+'/'+WEAVE_SECTORS.length;
@@ -47,8 +61,13 @@ export function createRouteExperience({mount,hudMount,getSim,getPaused,getContex
     const previous=resourceHistory.slice(0,-1).findLast(item=>comparableResourceRuns(latest,item));
     const delta=resourceRunDifference(latest,previous),signed=(v,n=2)=>(v>0?'+':'')+f(v,n);
     resource('comparison').textContent=delta?L('最近一次相对上一条有效同条件成绩：','Latest versus previous valid matching run: ')+signed(delta.elapsedS)+' s · '+signed(delta.netWh)+' Wh · '+signed(delta.gasKg)+' kg · '+L('回充 ','recovered ')+signed(delta.recoveredWh)+' Wh':L('完成两次完整初态相同的路线后，显示用时、用电与耗气差值。失败或条件不同的记录保留，但不参与成绩比较。','Complete two runs with identical full initial states to compare time, energy and gas. Failed or unmatched runs are retained but excluded from comparison.');
-    renderStorage();resource('export').textContent=L('导出收支摘要与保存状态','Export summaries and save status');resource('export').disabled=!resourceHistory.length&&history.protectedRaw===null;for(const item of resourceHistory.toReversed()){const row=doc.createElement('div');const comparable=comparableResourceRuns(item,latest);row.textContent=(item.finite?L('有限任务','Finite'):L('自由练习','Practice'))+' · '+resourceVerdict(item.reason,getLanguage()==='en')+' · '+f(item.elapsedS)+' s · '+f(item.netEnergyJ/3600,2)+' Wh · '+gasLabel(item)+' '+f(routeGasUseKg(item),2)+' kg · '+L('回充 ','recovered ')+f(item.work.recoveredJ/3600,2)+' Wh'+(item.resourceEvidence?.scope==='last-measured-valid-state'?L(' · 最后有效采样',' · last valid sample'):'')+(item!==latest?(comparable?L(' · 与最近一次同条件',' · matched to latest'):L(' · 未完成或条件不同，不比较',' · incomplete or unmatched')):'');
+    renderStorage();resource('export').textContent=L('导出收支摘要与保存状态','Export summaries and save status');resource('export').hidden=resource('export').disabled=!resourceHistory.length&&history.protectedRaw===null;for(const item of resourceHistory.toReversed()){const row=doc.createElement('div');const comparable=comparableResourceRuns(item,latest);row.textContent=(item.finite?L('有限任务','Finite'):L('自由练习','Practice'))+' · '+resourceVerdict(item.reason,getLanguage()==='en')+' · '+f(item.elapsedS)+' s · '+f(item.netEnergyJ/3600,2)+' Wh · '+gasLabel(item)+' '+f(routeGasUseKg(item),2)+' kg · '+L('回充 ','recovered ')+f(item.work.recoveredJ/3600,2)+' Wh'+(item.resourceEvidence?.scope==='last-measured-valid-state'?L(' · 最后有效采样',' · last valid sample'):'')+(item!==latest?(comparable?L(' · 与最近一次同条件',' · matched to latest'):L(' · 未完成或条件不同，不比较',' · incomplete or unmatched')):'');
     if(item.recordId){const inspect=doc.createElement('button');inspect.textContent=L('查看输入 / 重放','Inputs / replay');inspect.onclick=()=>onInspect(item.recordId);row.append(doc.createElement('br'),inspect);}if(item.sectors?.length){const prior=resourceHistory.slice(0,resourceHistory.indexOf(item)).findLast(other=>comparableResourceRuns(item,other));row.append(sectorTable(item,prior));}resource('history').append(row);}}
+  resource('retry-save').onclick=()=>{
+    const saved=history.save();
+    renderHistory();update();
+    notify(saved?L('本次摘要已保存。','Session summaries saved.'):resource('storage').textContent,6500);
+  };
   resource('export').onclick=()=>exportJson(()=>history.archive(),'roadster-resource-runs.json',{doc});
   resource('mode').onchange=()=>{showBudget();preparation=null;message=L('模式已改变；必须重新准备，不能沿用上次资源初态。','Mode changed. Prepare again; the previous initial state cannot be reused.');update();};
   let descriptor=null,run=null,recordId=null,lastResult=null,lastRegion='',message='';
@@ -75,6 +94,7 @@ export function createRouteExperience({mount,hudMount,getSim,getPaused,getContex
     update();
   }
   async function perform(name){if(busy)return;busy=true;try{
+    update();
     if(name==='retry'){
       if(!run?.finished||getSessionMode()!=='live'||getRecording()?.recording)return;
       if(!getPaused())onOpen();
@@ -103,7 +123,7 @@ export function createRouteExperience({mount,hudMount,getSim,getPaused,getContex
   };
   for(const name of ['prepare','start','end','inspect','retry'])action(name).onclick=()=>perform(name);
   $('sound').onchange=()=>onSound($('sound').checked);$('head').onchange=()=>onHead($('head').checked);
-  function finish(reason,{stopRecording=true}={}){if(!run||run.finished)return;run.finished=true;const budget=mission?.result(getSim(),reason);if(budget){recordEvent('resource_route_result',budget);history.append(budget);renderHistory();}const result=stopRecording?onFinish(budget&&!budget.completed&&reason==='route-completed'?budget.reason:reason):null;lastResult={work:budget?.work??null,recordId:result?.id??recordId,reason:budget?.reason??reason,elapsedS:budget?.elapsedS??getSim().simTime-run.startedAt,distanceM:run.maximumDistanceM,descriptorHash:run.descriptorHash};recordId=lastResult.recordId;message=reason==='route-completed'?L('已沿路线到达终点并停车；记录已结束，可查看本次路况与输入。','Route completed and stopped. The run is ready to inspect.'):L('本次路线记录已结束。','Route recording ended.');if(budget)message=resourceVerdict(budget.reason,getLanguage()==='en')+' · '+f(budget.elapsedS)+' s · '+L('净用电 ','net ')+f(budget.netEnergyJ/3600,2)+' Wh · '+gasLabel(budget)+' '+f(routeGasUseKg(budget),2)+' kg';if(budget?.resourceEvidence?.scope==='last-measured-valid-state')message+=L(' · 数值取最后有效采样，非精确失败瞬间',' · values from last valid sample, not the exact failure instant');if(budget&&history.snapshot().status==='unsaved')message+=L(' · 摘要未保存，请打开路线面板导出',' · Summary not saved; open the route panel to export.');notify(message,6500);}
+  function finish(reason,{stopRecording=true}={}){if(!run||run.finished)return;run.finished=true;const budget=mission?.result(getSim(),reason);if(budget){recordEvent('resource_route_result',budget);history.append(budget);renderHistory();}const result=stopRecording?onFinish(budget&&!budget.completed&&reason==='route-completed'?budget.reason:reason):null;lastResult={work:budget?.work??null,recordId:result?.id??recordId,reason:budget?.reason??reason,elapsedS:budget?.elapsedS??getSim().simTime-run.startedAt,distanceM:run.maximumDistanceM,descriptorHash:run.descriptorHash};recordId=lastResult.recordId;message=reason==='route-completed'?L('已沿路线到达终点并停车；记录已结束，可查看本次路况与输入。','Route completed and stopped. The run is ready to inspect.'):L('本次路线记录已结束。','Route recording ended.');if(budget)message=resourceVerdict(budget.reason,getLanguage()==='en')+' · '+f(budget.elapsedS)+' s · '+L('净用电 ','net ')+f(budget.netEnergyJ/3600,2)+' Wh · '+gasLabel(budget)+' '+f(routeGasUseKg(budget),2)+' kg';if(budget?.resourceEvidence?.scope==='last-measured-valid-state')message+=L(' · 数值取最后有效采样，非精确失败瞬间',' · values from last valid sample, not the exact failure instant');notify(resultMessage(),6500);}
   function syncRecording(t){
     const recording=getRecording();
     if(run&&!run.finished&&t.fault){finish('simulation-fault',{stopRecording:false});return;}
@@ -129,13 +149,13 @@ export function createRouteExperience({mount,hudMount,getSim,getPaused,getContex
     const sim=getSim(),surface=sim.getRouteSurface?.(),t=sim.telemetry();
     const active=surface&&surface.descriptor.id==='weave-learning-route'&&getContext()==='city';
     syncRecording(t);
-    action('prepare').disabled=getSessionMode()!=='live'||!getPaused()||!!run&&!run.finished;action('start').disabled=getSessionMode()!=='live'||!getPaused()||!active||!descriptor||!preparation||!!run;action('end').disabled=!run||run.finished;action('inspect').disabled=!recordId||!!run&&!run.finished;
-    action('retry').hidden=!run?.finished;action('retry').disabled=live('retry').disabled=getSessionMode()!=='live'||!!getRecording()?.recording;
-    resource('mode').disabled=!!run&&!run.finished;
+    action('prepare').disabled=busy||getSessionMode()!=='live'||!getPaused()||!!run&&!run.finished;action('start').disabled=busy||getSessionMode()!=='live'||!getPaused()||!active||!descriptor||!preparation||!!run;action('end').disabled=busy||!run||run.finished;action('inspect').disabled=busy||!recordId||!!run&&!run.finished;
+    action('retry').hidden=!run?.finished;action('retry').disabled=live('retry').disabled=busy||getSessionMode()!=='live'||!!getRecording()?.recording;
+    resource('mode').disabled=busy||!!run&&!run.finished;
     const recordedWork=run?.finished&&lastResult?.work,energy=recordedWork||t.energyAccounting;
     resource('accounting').textContent=energy?(recordedWork?L('本次记录电池收支　','Recorded battery balance · '):L('当前车辆电池收支　','Live battery balance · '))+f(energy.motorElectricalJ/3600,2)+' Wh '+L('电驱 + ','drive + ')+f((energy.fanJ+energy.auxiliaryJ)/3600,2)+' Wh '+L('风扇/附件 − ','fan/aux − ')+f(energy.recoveredJ/3600,2)+' Wh '+L('回充；反向驱动制动热 ','recovered; opposing-drive heat ')+f((energy.motorBrakingHeatJ??0)/3600,2)+' Wh'+L('（不计入回充），轮胎滑移热不回收。',' (not recovered); tyre slip heat is not recovered.'):'';
-    $('condition').disabled=!!run&&!run.finished;
-    $('status').textContent=message||(run&&!run.finished?L('记录中 · ','Recording · ')+f(t.simTime-run.startedAt)+' s':L('暂停后准备一组新条件。','Pause to prepare new conditions.'));
+    $('condition').disabled=busy||!!run&&!run.finished;
+    $('status').textContent=resultMessage()||(run&&!run.finished?L('记录中 · ','Recording · ')+f(t.simTime-run.startedAt)+' s':L('暂停后准备一组新条件。','Pause to prepare new conditions.'));
     hud.hidden=!active||!descriptor||getSessionMode()!=='live';if(hud.hidden)return;
     const ended=!!run?.finished&&!!lastResult;
     live('result').hidden=!ended;live('wheels').hidden=ended;

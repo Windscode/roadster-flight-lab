@@ -110,7 +110,7 @@ await check('Original external night bake inputs and complete city remain byte-i
 });
 
 const routeRoot=new THREE.Group(),architecture=buildUrbanArchitecture(THREE,routeRoot,CITY_BUILDINGS),street=buildStreetLife(THREE,routeRoot);await Promise.all([architecture.ready,street.ready]);
-await check('Only the two district fit-outs change; lamps, external geometry and fifteen view budgets hold',async()=>{
+await check('Only the district display interiors change; lamps, external geometry and fifteen view budgets hold',async()=>{
   const priorCommit='9eda86e9d8687feec9245609282b8b568370927b',links=new Map();
   for(const file of ['street-display.js','city-frontage-design.js','urban-architecture.js']){
     const url=new URL('../dist/'+file,import.meta.url);
@@ -156,7 +156,7 @@ await check('Only the two district fit-outs change; lamps, external geometry and
   assert.equal(architecture.stats.drawBatches,baseline.architecture.drawBatches);
   assert.equal(old.stats.instances-baseline.architecture.instances,185);
   const recipes=architecture.stats.showcaseRecipes,added=architecture.stats.triangles-old.stats.triangles;
-  assert.ok(recipes['tide-survey']>0&&recipes['machine-shop']>0);assert.ok(added<=0);old.dispose();
+  assert.ok(recipes['tide-survey']>0&&recipes['machine-shop']>0&&recipes['viaduct-model']>0);assert.ok(added<=0);old.dispose();
   const camera=new THREE.PerspectiveCamera(52,16/9,.1,1800),views={};let time=1;
   for(const quality of ['balanced','high','ultra','balanced']){
     architecture.setQuality(quality);street.setQuality(quality);views[quality]=protocol.views.map(view=>{camera.position.set(...view.position);camera.lookAt(...view.lookAt);camera.updateMatrixWorld(true);time+=1;architecture.update(time,camera.position);street.update(time,camera.position);return{view:view.id,...countVisibleGeometry(THREE,routeRoot,camera)};});

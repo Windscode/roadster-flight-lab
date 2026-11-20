@@ -8,6 +8,7 @@ import {MODEL_BUILD_ID,MODEL_SOURCE_HASHES} from '../dist/model-build.js';
 const version=MODEL_VERSION.split('.').slice(0,2).join('.'),dir=`qa/release-${version}`;
 mkdirSync(dir,{recursive:true});mkdirSync('.runtime/release-tests',{recursive:true});
 const jobs=[
+ ['tests/driving-study-1.3.test.mjs'],['tests/record-migration-1.1.test.mjs','1.2'],
  ['tests/discharge-reserve-1.2.test.mjs'],['tests/vehicle-linkage-1.2.test.mjs'],['tests/route-sectors-1.2.test.mjs'],
  ['tests/record-migration-1.1.test.mjs','1.1'],['tests/render-preparation-1.1.test.mjs'],
  ['tests/vehicle-front-continuity-1.1.test.mjs'],['tests/record-migration-1.1.test.mjs'],

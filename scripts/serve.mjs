@@ -3,6 +3,7 @@ import {MODEL_VERSION} from '../dist/vehicle-models.js';
 import {MODEL_BUILD_ID} from '../dist/model-build.js';
 prepareDependencies({purpose:'runtime'});
 import http from 'node:http';
+import {randomUUID} from 'node:crypto';
 import path from 'node:path';
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
@@ -13,14 +14,14 @@ const port=Number(process.env.ROADSTER_PORT??8080),host='127.0.0.1',application=
 if(!Number.isInteger(port)||port<0||port>65535)throw Error('ROADSTER_PORT must be an integer from 0 to 65535');
 let url=`http://${host}:${port}/`;
 const runtime=fileURLToPath(new URL('../.runtime/',import.meta.url));
-const script=fileURLToPath(import.meta.url);
+const script=fileURLToPath(import.meta.url),instanceId=randomUUID();
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.md':'text/plain; charset=utf-8','.hdr':'application/octet-stream','.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml','.glb':'model/gltf-binary','.zip':'application/zip','.mp3':'audio/mpeg','.m4a':'audio/mp4','.ogg':'audio/ogg','.wav':'audio/wav','.bin':'application/octet-stream'};
 function openBrowser(){if(process.platform==='win32')spawn('cmd.exe',['/c','start','',url],{windowsHide:true,stdio:'ignore'});}
 const server=http.createServer((req,res)=>{
   if(req.method!=='GET'&&req.method!=='HEAD'){res.writeHead(405,{'Allow':'GET, HEAD'});res.end();return;}
   if(req.url==='/health'){
     res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});
-    res.end(req.method==='HEAD'?undefined:JSON.stringify({application,version:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,pid:process.pid}));return;
+    res.end(req.method==='HEAD'?undefined:JSON.stringify({application,version:MODEL_VERSION,modelBuildId:MODEL_BUILD_ID,pid:process.pid,instanceId}));return;
   }
   let pathname;try{pathname=decodeURIComponent(new URL(req.url,url).pathname);}catch{res.writeHead(400);res.end('Bad path');return;}
   const target=path.resolve(root,'.'+(pathname==='/'?'/index.html':pathname)),relative=path.relative(root,target);
@@ -45,7 +46,7 @@ server.on('error',async err=>{
 });
 server.listen(port,host,()=>{
   url=`http://${host}:${server.address().port}/`;
-  fs.mkdirSync(runtime,{recursive:true});fs.writeFileSync(path.join(runtime,'server.json'),JSON.stringify({pid:process.pid,script,url,application}));
+  fs.mkdirSync(runtime,{recursive:true});fs.writeFileSync(path.join(runtime,'server.json'),JSON.stringify({pid:process.pid,script,url,application,instanceId}));
   console.log(`ROADSTER FLIGHT LAB ${MODEL_VERSION}\n${url}\nKeep this window open. Ctrl+C stops this local server.`);
   if(process.argv.includes('--open'))openBrowser();
 });

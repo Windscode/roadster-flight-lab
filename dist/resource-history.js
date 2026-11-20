@@ -61,8 +61,8 @@ export class ResourceHistory{
         this.runs.splice(0,this.runs.length,...clone(candidate),...this.pending);
       }
       this.warning=null;return true;
-    }catch{
-      this.warning='unavailable';
+    }catch(error){
+      this.warning=error?.name==='QuotaExceededError'||/quota|容量上限/i.test(error?.message??'')?'quota':'unavailable';
       try{if(expectedRaw!==undefined&&storage.getItem(RESOURCE_HISTORY_KEY)!==expectedRaw)this.warning='conflict';}catch{}
       return false;
     }

@@ -27,7 +27,7 @@ for(const speed of [100,200,300])for(const sign of [-1,1]){
     const fw=s.body.quaternion.vmult({x:0,y:0,z:1});maxYaw=Math.max(maxYaw,Math.abs(Math.atan2(fw.x,fw.z)));
     const wheels=t.wheelStates;
     assert.ok(Math.abs(wheels.reduce((a,w)=>a+w.brakeDemandN,0)-s.params.brakeForce)<1e-8,'All axle brake requests must sum to the service-brake demand');
-    for(const w of wheels){assert.ok(Number.isFinite(w.angularVelocityRadS));assert.ok(w.brakeTorqueNm<=w.brakeDemandN*s.params.wheelRadius+1e-6,'ABS may release requested torque, not exceed it');assert.ok(w.gripUse<=1+1e-10);}
+    for(const w of wheels){assert.ok(Number.isFinite(w.angularVelocityRadS));assert.ok(w.brakeTorqueNm-w.rollingBrakeTorqueNm<=w.brakeDemandN*s.params.wheelRadius+1e-6,'ABS may release requested torque, not exceed it');assert.ok(w.rollingBrakeTorqueNm<=w.normalLoadN*.011*s.params.wheelRadius+1e-6,'Rolling resistance exceeds its own loaded-wheel budget');assert.ok(w.gripUse<=1+1e-10);}
     if(t.speedKmh<.36){stopped=true;break;}
   }
   assert.ok(stopped&&maxYaw<.01*Math.PI/180,'A microscopic yaw disturbance must not become a brake spin');

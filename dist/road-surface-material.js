@@ -24,7 +24,7 @@ export const ROAD_SURFACE_MODEL=Object.freeze({
 export function attachRoadSurface(material,{albedo,normal,roughness}){
   const uniforms={roadAlbedo:{value:albedo},roadNormal:{value:normal},roadRoughness:{value:roughness},roadFineDetail:{value:0},roadWetness:{value:0},roadReflection:{value:null},roadReflectionMatrix:{value:new THREE.Matrix4()},roadReflectionTexel:{value:new THREE.Vector2(1/512,1/288)},roadReflectionEnabled:{value:0},roadReflectionStrength:{value:0}};
   Object.assign(uniforms,{roadRouteCount:{value:0},roadRouteGround:{value:new THREE.Vector2(0,.08)},
-    roadGates:{value:Array.from({length:3},()=>new THREE.Vector4())},roadStop:{value:new THREE.Vector4()},
+    roadGates:{value:Array.from({length:3},()=>new THREE.Vector4())},roadStop:{value:new THREE.Vector4()},roadTurn:{value:new THREE.Vector4()},
     roadRouteBounds:{value:Array.from({length:ROAD_ROUTE_REGION_CAPACITY},()=>new THREE.Vector4())},
     roadRouteFinish:{value:Array.from({length:ROAD_ROUTE_REGION_CAPACITY},()=>new THREE.Vector4())}});
   let routeDescription=null;
@@ -50,7 +50,7 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       uniform sampler2D roadAlbedo,roadNormal,roadRoughness;
       uniform float roadFineDetail,roadWetness,roadReflectionEnabled,roadReflectionStrength;
       uniform float roadRouteCount;uniform vec2 roadRouteGround;
-      uniform vec4 roadGates[3],roadStop;
+      uniform vec4 roadGates[3],roadStop,roadTurn;
       uniform vec4 roadRouteBounds[${ROAD_ROUTE_REGION_CAPACITY}],roadRouteFinish[${ROAD_ROUTE_REGION_CAPACITY}];
       uniform sampler2D roadReflection;uniform mat4 roadReflectionMatrix;uniform vec2 roadReflectionTexel;
       varying vec3 roadSurfaceWorld;
@@ -141,6 +141,15 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
           float edge=max(along-.14,max(across-roadStop.w,roadStop.w*.32-across));
           paint=max(paint,1.-smoothstep(-width,width,edge));
         }
+        // Two lane-centre chevrons point along the exit road at the turn.
+        vec2 turnDir=roadTurn.zw;
+        if(dot(turnDir,turnDir)>.5){
+          vec2 local=roadSurfaceWorld.xz-roadTurn.xy;
+          float along=dot(local,turnDir),across=abs(dot(local,vec2(-turnDir.y,turnDir.x)));
+          float chevrons=min(abs(along+across*.8-1.2),abs(along+across*.8-3.8));
+          float edge=max(chevrons-.17,across-1.35);
+          paint=max(paint,1.-smoothstep(-width,width,edge));
+        }
         float ring=abs(length(roadSurfaceWorld.xz-roadStop.xy)-roadStop.z)-.13;
         float finish=1.-smoothstep(-width,width,ring);
         float visibility=(1.-smoothstep(.20,.90,width))*(1.-roadRainFilm*.22);
@@ -200,7 +209,7 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       }
       #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'|road-surface-marked-regions-1.2';
+  material.customProgramCacheKey=()=>key+'|road-surface-marked-regions-1.3';
   material.needsUpdate=true;
   function setRouteSurfaceDescription(value){
     const description=value===null?null:validateRouteSurface(value);
@@ -213,7 +222,13 @@ export function attachRoadSurface(material,{albedo,normal,roughness}){
       uniforms.roadRouteBounds.value[i].set(b?.minX??0,b?.minZ??0,b?.maxX??0,b?.maxZ??0);
       uniforms.roadRouteFinish.value[i].set(m?.opticalWetness??0,m?.roughness??.84,m?.kind==='metal'?2:m?.kind==='patch'?1:0,0);
     }
+    uniforms.roadTurn.value.set(0,0,0,0);
     if(description){
+      const points=description.route.waypoints;
+      if(points.length===3){
+        const corner=points[1],exit=points[2],dx=exit.x-corner.x,dz=exit.z-corner.z,length=Math.hypot(dx,dz);
+        if(length>0)uniforms.roadTurn.value.set(corner.x,corner.z,dx/length,dz/length);
+      }
       const marks=weaveTimingMarks(description),end=description.route.waypoints.at(-1);
       marks.forEach((m,i)=>uniforms.roadGates.value[i].set(m.x,m.z,m.dx,m.dz));
       uniforms.roadStop.value.set(end.x,end.z,WEAVE_STOP_RADIUS_M,description.route.widthM/2);

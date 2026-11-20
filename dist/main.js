@@ -907,7 +907,7 @@ export async function boot(shell){
     }else{camera.up.set(0,0,1);camera.position.lerp(p.clone().add(new THREE.Vector3(0,37,0)),1-Math.exp(-dt*5));camera.lookAt(p);}
     if(['chase','orbit'].includes(cameraMode)){
       const target=cameraMode==='orbit'?controls.target:p.clone().add(new THREE.Vector3(Math.sin(heading)*1.2,.4,Math.cos(heading)*1.2));
-      cameraObstruction=resolveCameraObstruction({target,desired:wantedCamera,geometry:sim.getWorldGeometry(),previous:cameraObstruction?.state,dt,near:camera.near,fov:camera.fov,aspect:camera.aspect,viewOffsetFraction:camera.view?.enabled?camera.view.offsetX/camera.view.fullWidth:0});
+      cameraObstruction=resolveCameraObstruction({target,desired:wantedCamera,geometryNear:(from,to,radius)=>sim.cameraGeometryNear(from,to,radius),previous:cameraObstruction?.state,dt,near:camera.near,fov:camera.fov,aspect:camera.aspect,viewOffsetFraction:camera.view?.enabled?camera.view.offsetX/camera.view.fullWidth:0});
       camera.position.set(cameraObstruction.position.x,cameraObstruction.position.y,cameraObstruction.position.z);camera.lookAt(target);
     }else cameraObstruction=null;
     if(cameraMode==='orbit')camera.up.set(0,1,0);lastPosition.copy(p);
@@ -1024,7 +1024,7 @@ export async function boot(shell){
   $('loading-message').textContent='准备车辆材质、灯光与实时渲染…';
   exhaust.mesh.geometry.instanceCount=1;
   await renderPreparation.run();exhaust.mesh.geometry.instanceCount=0;shell.graphicsReady();window.roadsterReady=true;
-  $('loading-screen').style.opacity='0';setTimeout(()=>$('loading-screen').style.display='none',700);
+  $('loading-screen').style.pointerEvents='none';$('loading-screen').style.opacity='0';setTimeout(()=>$('loading-screen').style.display='none',700);
   $('sim-state').textContent='系统就绪';$('solver-label').textContent='6DOF · 120 Hz / 遥测 20 Hz';syncUi(t);
   // A small read-only diagnostics surface makes the numerical state inspectable.
   window.roadsterLab={getControlCapture:()=>controlCapture.getState(),getState:()=>({...sim.telemetry(),paused,quality,cameraMode,context:activeContext,graphics:shell.graphics,research:researchConsole.getState()}),getParameters:()=>({...sim.params}),getInputTimeline:()=>inputSession.export(getRuntimeIdentity()),getExportState:()=>getExportState(),getLandingReserve:()=>operationHud.snapshot(),getCityNavigation:()=>cityMap.navigation,getCityFlight:()=>cityFlight.getState(),getCityFlightRecords:()=>cityFlight.getRecords(),getRouteExperience:()=>routeExperience.getState(),getPreparedSurface:()=>sim.getRouteSurface?.(),getDriverFeedback:()=>headFeedback.getState(),getLearningSession:()=>({mode:learningSessionMode,prepared:learningPrepared,hasLiveReturn:!!learningSaved}),getResourceHistory:()=>structuredClone(resourceHistory),getGeometry:()=>sim.getWorldGeometry(),getPerformance:()=>meter.export({version:MODEL_VERSION,quality,profile:renderProfile,resolution:renderSize,scene:environment.stats}),version:MODEL_VERSION};
@@ -1107,7 +1107,9 @@ export async function boot(shell){
       if(uiTimer>.14){syncUi(t);$('performance-label').dataset.renderState=JSON.stringify({fps:displayFps,calls:sample.calls,triangles:sample.triangles,resolution:renderSize,programs:renderer.info.programs.length,exposure:+renderer.toneMappingExposure.toFixed(3),scene:environment.stats});uiTimer=0;}
     }catch(error){if(renderPrograms.active){const abortedReport=renderPrograms.endFrame({aborted:error.message});if(pendingProgramCapture)pendingProgramCapture.report=abortedReport;}if(pendingProgramCapture){clearTimeout(pendingProgramCapture.timer);pendingProgramCapture.reject(error);pendingProgramCapture=null;}meter.endGpu();shell.graphicsUnavailable('三维运行已暂停：'+error.message);console.error(error);}
   }
-  if(new URLSearchParams(location.search).get('view')==='lab')switchContext('lab');
+  const entryView=new URLSearchParams(location.search).get('view');
+  if(entryView==='lab')switchContext('lab');
+  if(entryView==='study')void shell.openStudy();
   lastTime=performance.now();requestAnimationFrame(frame);
   renderer.domElement.addEventListener('webglcontextlost',event=>{event.preventDefault();shell.graphicsUnavailable('浏览器已通知 WebGL 上下文丢失。当前三维试验已暂停并保留记录；数值研究与导出仍可使用。',{contextLost:true});});
 }

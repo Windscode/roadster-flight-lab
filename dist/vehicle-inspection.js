@@ -7,7 +7,7 @@ import {VEHICLE_DISPLAY_CONFIGURATIONS,VEHICLE_PHOTO_MATCHES,VEHICLE_CABIN_REFER
 import {captureVehicleStudy,captureVehicleOrbit} from './vehicle-study-capture.js';
 import {entries as vehicle314Entries,patterns as vehicle314Patterns} from './i18n-vehicle-314-en.js';
 import {RoadsterSim} from './physics.js';
-import {MODEL_VERSION} from './vehicle-models.js';
+import {MODEL_VERSION,frontWheelSteer} from './vehicle-models.js';
 import {MODEL_BUILD_ID} from './model-build.js';
 import {VEHICLE_INSPECTION_RIG as RIG} from './visual-presets.js';
 import {captureInspectionPair} from './inspection-capture.js';
@@ -22,7 +22,7 @@ import {entries as diagnosticEntries} from './i18n-visual-311-en.js';
 import {t,registerTranslations,observeTranslations,bindLanguageSelectors,onLanguageChange} from './i18n.js';
 import {entries,patterns} from './i18n-visual-en.js';
 import {entries as surfaceEntries,patterns as surfacePatterns} from './i18n-vehicle-310-en.js';
-registerTranslations(vehicle314Entries,vehicle314Patterns);registerTranslations(diagnosticEntries);registerTranslations(entries,patterns);registerTranslations(surfaceEntries,surfacePatterns);observeTranslations(document.body);bindLanguageSelectors(document);
+registerTranslations({'前轮转角（左 / 右）':'Front steer (left / right)'});registerTranslations(vehicle314Entries,vehicle314Patterns);registerTranslations(diagnosticEntries);registerTranslations(entries,patterns);registerTranslations(surfaceEntries,surfacePatterns);observeTranslations(document.body);bindLanguageSelectors(document);
 const translateTitle=()=>{document.title=t('Roadster · 50 mm 曲面检视');};translateTitle();onLanguageChange(translateTitle);
 
 const $=id=>document.getElementById(id),stage=$('inspection-stage');
@@ -43,6 +43,13 @@ $('model-current').textContent='当前 '+CURRENT_RELEASE+' 外观';$('model-base
 const translateReferencePlaceholder=()=>{if(!photoReference)$('photo-landmark-status').textContent=t('选择官方机位后显示地标对照。');};translateReferencePlaceholder();onLanguageChange(translateReferencePlaceholder);
 const reference=$('reference-links');RIG.sources.forEach(source=>{const a=document.createElement('a');a.href=source.url;a.target='_blank';a.rel='noopener';a.textContent=source.id+' ↗';reference.append(a);});
 const sim=new RoadsterSim();sim.setWing?.({mode:'fixed',deployment:0});
+function inspectionPose(model,length,steer,wing){
+  return {
+    steeringCentreDeg:steer*180/Math.PI,
+    wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?frontWheelSteer(steer,.89*w.side):0,rotation:0})),
+    contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,inspectionFanFraction:Number(sealed),wing
+  };
+}
 function fail(message){$('inspection-failure').hidden=false;$('inspection-failure').textContent=message;stage.dataset.graphics='unavailable';for(const b of document.querySelectorAll('button,input,select'))if(!b.matches('[data-language-select]'))b.disabled=true;$('capture-meta').disabled=false;$('ready').textContent='三维不可用；官方参考和状态 JSON 仍可查看。';}
 function selected(id,group){for(const name of group)$(name).classList.toggle('selected',name===id);}
 function download(blob,name){return exportFile(blob,name,blob?.type||'application/octet-stream');}
@@ -66,7 +73,7 @@ function metadata({referenceActive=baselineActive,association=null}={}){
     lighting:lightMode,lightingRevision:'3.9 light rig retained; studio .72 / daylight .68, exposure .92; 3.11 receiver-plane shadow comparison',toneMappingExposure:renderer?.toneMappingExposure??null,
     environmentIntensity:scene?.environmentIntensity??null,resolution:renderer?renderer.getDrawingBufferSize(new THREE.Vector2()).toArray():null,cssStageSize:[size.width,size.height],pixelRatio:renderer?.getPixelRatio()??null,graphicsDevice:graphicsDevice(),
     surfaceDiagnostics:{...surfaceDiagnostics?.snapshot(),receiverPlaneCorrection:receiverPlaneShadowEnabled.value>.5,shadowComparison:RECEIVER_PLANE_SHADOW_MODEL,shadowMapSize:inspectionKeyLight?.shadow.mapSize.toArray()??null,shadowNormalBiasM:inspectionKeyLight?.shadow.normalBias??null,shadowDepthBias:inspectionKeyLight?.shadow.bias??null},
-    quality:$('inspection-quality').value,simTime:sim.simTime,steer:Number($('steer').value),suspensionLength:Number($('suspension').value),wing:sim.telemetry().wing||null,cutaway:cut,seal:sealed,suspensionSweep:sweep,
+    quality:$('inspection-quality').value,simTime:sim.simTime,steer:Number($('steer').value),frontWheelSteerRad:{FL:frontWheelSteer(Number($('steer').value),.89),FR:frontWheelSteer(Number($('steer').value),-.89)},suspensionLength:Number($('suspension').value),wing:sim.telemetry().wing||null,cutaway:cut,seal:sealed,suspensionSweep:sweep,
     lastProgramAudit:renderPrograms?.snapshot()??null,materialState:{currentGlassOpacity:car?.materials.glass.opacity??null,referenceGlassOpacity:baseline?.materials.glass.opacity??null},geometry:referenceActive?baselineGeometry:VEHICLE_GEOMETRY,renderCost:(referenceActive?baseline:car)?.getRenderCost(),userAgent:navigator.userAgent,graphicsAvailable:stage.dataset.graphics==='ready',
     limits:(association?'These conditions were frozen beside the named rendered frame; keep the PNG and companion JSON together. ':'This is the state at this JSON export click. It is not associated with any previous PNG and does not attest that a framebuffer was captured. ')+
       'PNG exports require live WebGL. No automatic quality/FPS verdict. Dimensions, lens match and internal equipment are engineering assumptions. Frozen references retain original geometry/material code under the same current light rig; they are not old renderer pipelines.'};
@@ -220,7 +227,7 @@ try{
     try{
       await loadBaseline();surfaceDiagnostics.restore();
       const state=sim.telemetry(),length=Number($('suspension').value),steer=Number($('steer').value);
-      for(const model of [car,baseline]){model.setCutaway(cut);model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,inspectionFanFraction:Number(sealed),wing:state.wing},0);model.setViewBudget(camera,renderer.getDrawingBufferSize(new THREE.Vector2()).y,{inspection:true});}
+      for(const model of [car,baseline]){model.setCutaway(cut);model.group.position.y=length-.287;model.update(inspectionPose(model,length,steer,state.wing),0);model.setViewBudget(camera,renderer.getDrawingBufferSize(new THREE.Vector2()).y,{inspection:true});}
       camera.updateMatrixWorld();surfaceDiagnostics.apply(allModels());
       const result=await captureInspectionPair({renderer,archive,baselineVersion,currentVersion:CURRENT_RELEASE,canvasFactory:()=>document.createElement('canvas'),
         render:role=>{if(renderer.getContext().isContextLost())throw new Error(t('采集时 WebGL 上下文不可用。'));car.group.visible=role==='current';baselineCache.forEach(({model})=>model.group.visible=role==='reference'&&model===baseline);auditInspectionFrame('comparison-'+role);},
@@ -249,7 +256,7 @@ try{
   };
   function frozenArticulation(){
     const state=sim.telemetry(),length=Number($('suspension').value),steer=Number($('steer').value);
-    for(const model of allModels()){model.setCutaway(cut);model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,inspectionFanFraction:Number(sealed),wing:state.wing},0);}
+    for(const model of allModels()){model.setCutaway(cut);model.group.position.y=length-.287;model.update(inspectionPose(model,length,steer,state.wing),0);}
   }
   async function runStudyCapture(kind){
     if(captureBusy||stage.dataset.graphics!=='ready')return;
@@ -292,9 +299,9 @@ try{
   onLanguageChange(()=>{refreshStatus();refreshDisplayIdentity();});
   function frame(now){if(captureBusy){lastTime=now;frameId=requestAnimationFrame(frame);return;}const dt=Math.max(0,Math.min(.05,(now-lastTime)/1000));lastTime=now;surfaceDiagnostics.restore();
     if(sweep){$('suspension').value=.325+.085*Math.sin(now*.0007);$('steer').value=.49*Math.sin(now*.0011);}
-    const length=Number($('suspension').value),steer=Number($('steer').value);$('length').textContent=length.toFixed(3)+' m';$('angle').textContent=(steer*180/Math.PI).toFixed(1)+'°';
+    const length=Number($('suspension').value),steer=Number($('steer').value);$('length').textContent=length.toFixed(3)+' m';$('angle').textContent=[.89,-.89].map(x=>(frontWheelSteer(steer,x)*180/Math.PI).toFixed(1)+'°').join(' / ');
     sim.step(dt,{});const state=sim.telemetry();$('wing-value').textContent=Math.round((state.wing?.deployment||0)*100)+'% 实际';
-    for(const model of [car,...[...baselineCache.values()].map(e=>e.model)]){model.group.position.y=length-.287;model.update({wheelStates:model.wheels.map(w=>({suspensionLength:length,steer:w.z>0?steer:0,rotation:0})),contactCount:4,suctionEnabled:sealed,sealQuality:sealed?1:0,inspectionFanFraction:Number(sealed),wing:state.wing},dt);}
+    for(const model of [car,...[...baselineCache.values()].map(e=>e.model)]){model.group.position.y=length-.287;model.update(inspectionPose(model,length,steer,state.wing),dt);}
     controls.update();camera.updateMatrixWorld();for(const model of [car,...[...baselineCache.values()].map(e=>e.model)])model.setViewBudget(camera,renderer.getDrawingBufferSize(drawingSize).y,{inspection:true});surfaceDiagnostics.apply(allModels());renderInspection();
     if(now-statusTime>250){refreshStatus();statusTime=now;}frameId=requestAnimationFrame(frame);
   }

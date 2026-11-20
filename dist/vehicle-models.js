@@ -1,10 +1,17 @@
-export const MODEL_VERSION='1.2.0';
+export const MODEL_VERSION='1.3.0';
 import {nozzlePressureFactor,deliverableGasMass} from './nozzle-supply.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 // Reduced engineering models. Parameters are explicit hypotheses, not OEM data.
 export function rearWingPose(deployment){
  const u=clamp(deployment,0,1),incidenceRad=-.25*u,position={x:0,y:.325+.30*u,z:-2.065};
  return{position,incidenceRad,applicationPoint:{x:0,y:position.y-.05*Math.sin(incidenceRad),z:position.z+.05*Math.cos(incidenceRad)}};
+}
+// Ackermann front-wheel angles for the 2.84 m wheelbase; x is signed
+// lateral offset from the vehicle centre. Rear wheels remain unsteered.
+export function frontWheelSteer(centreRad, offsetX){
+  if(centreRad===0)return 0;
+  const radius=2.84/Math.tan(Math.abs(centreRad));
+  return Math.sign(centreRad)*Math.atan(2.84/(radius-Math.sign(centreRad)*offsetX));
 }
 export function roadWheelAngle(input,speed,p,surfaceMu=p.tireMu*(p.roadSurface==='wet'?p.wetGripMultiplier:1)){
  // A road wheel needs both geometric curvature and a small tyre-slip angle.

@@ -90,10 +90,14 @@ for(let i=0;i<60;i++)unpowered.advanceFixed({},DT);
 assert.ok(unpowered.telemetry().wing.deployment>.74);
 checks.push({name:'verified-1.0-unpowered-wing-counterexample',deployment:unpowered.telemetry().wing.deployment,auxiliaryJ:unpowered.telemetry().energyAccounting.auxiliaryJ});
 
-// Check unchanged operating conditions against the accepted baseline through
-// full solver state, including contact, wheels, resources and controller state.
+// Isolate actuator supply from the deliberately revised coasting resistance.
+// Both sides use the frozen wheel law, and every state field is compared.
+// The current production wheel law is exercised in the driving-study gate.
+class SupplyComparison extends RoadsterSim {
+  _wheels(dt,input){return Before.prototype._wheels.call(this,dt,input);}
+}
 for(const [scenario,params]of [['free',{}],['hover',{supplyMode:'finite'}],['free',{roadSurface:'wet'}]]){
-  const current=new RoadsterSim(params),old=new Before(params);current.reset(scenario);old.reset(scenario);
+  const current=new SupplyComparison(params),old=new Before(params);current.reset(scenario);old.reset(scenario);
   for(let i=0;i<240;i++){
     const input=scenario==='hover'?{lift:i<60?.4:0,pitch:i>=120&&i<180?.15:0}:{throttle:i<100?.35:0,steer:i>=60&&i<120?.2:0,brake:i>=130?.35:0};
     const now=current.advanceFixed(input,DT),prior=old.advanceFixed(input,DT);
@@ -105,7 +109,7 @@ for(const [scenario,params]of [['free',{}],['hover',{supplyMode:'finite'}],['fre
     assert.deepEqual(now.reference,reference);
   }
   assert.deepEqual(current.exportState(),old.exportState(),'Default operating terminal state must remain unchanged');
-  checks.push({name:'unchanged-default-operating-state',scenario,params,physicalSteps:240,exactFullState:true});
+  checks.push({name:'default-actuator-supply-with-common-baseline-wheel-law',scenario,params,physicalSteps:240,exactFullState:true});
 }
 const sources=['dist/nozzle-supply.js','dist/physics-kernel-319.js','dist/physics.js','dist/resource-wheels.js','dist/energy-model.js','dist/vehicle-models.js'];
 mkdirSync(`qa/physics-${REPORT_VERSION}`,{recursive:true});

@@ -42,6 +42,7 @@ checks.push('Corrupt, partially readable and unknown archives remain byte-identi
   const storage=storageWith(JSON.stringify([run('existing')])),history=new ResourceHistory(()=>storage),write=storage.setItem;
   storage.setItem=()=>{throw Error('Quota exceeded');};
   for(let i=0;i<8;i++)history.append(run(`quota-${i}`));
+  assert.equal(history.snapshot().reason,'quota');
   assert.equal(history.runs.length,9);assert.equal(history.snapshot().unsavedCount,8);
   assert.equal(JSON.parse(storage.raw)[0].recordId,'existing');
   storage.setItem=write;assert.equal(history.save(),true);
@@ -98,9 +99,10 @@ const original='{old-summary-file-truncated',storage=storageWith(original);
 globalThis.localStorage=storage;globalThis.document=dom.window.document;
 const doc=dom.window.document,live=new RoadsterSim(),notifications=[];let paused=true,recording={recording:false},downloadedUrl=null;
 dom.window.HTMLAnchorElement.prototype.click=function(){downloadedUrl=this.href;};
-const ui=createRouteExperience({mount:doc.getElementById('route'),hudMount:doc.getElementById('hud'),getSim:()=>live,getPaused:()=>paused,getContext:()=> 'city',getRecording:()=>recording,
+const options={mount:doc.getElementById('route'),hudMount:doc.getElementById('hud'),getSim:()=>live,getPaused:()=>paused,getContext:()=> 'city',getRecording:()=>recording,
   onPrepare:(_,{prepareSim})=>{prepareSim(live);return{descriptor:prepare(live)};},
-  onStart:()=>{paused=false;recording={recording:true,id:'ui-measured'};return recording;},onFinish:()=>{recording={recording:false};return{id:'ui-measured'};},onInspect(){},onOpen(){},onSound(){},onHead(){},notify:message=>notifications.push(message)});
+  onStart:()=>{paused=false;recording={recording:true,id:'ui-measured'};return recording;},onFinish:()=>{recording={recording:false};return{id:'ui-measured'};},onInspect(){},onOpen(){},onSound(){},onHead(){},notify:message=>notifications.push(message)};
+let ui=createRouteExperience(options);
 const resource=name=>doc.querySelector(`[data-resource="${name}"]`);
 async function click(action){doc.querySelector(`[data-route-action="${action}"]`).click();await Promise.resolve();await Promise.resolve();ui.update();}
 try{
@@ -120,6 +122,21 @@ try{
   assert.equal(exported.protectedRaw,original);assert.deepEqual(exported.runs,ui.getState().resourceHistory);
   assert.equal(exported.persistence.status,'unsaved');
   doc.querySelector('[data-export="close"]').click();
+  ui.dispose();
+  const retryStorage=storageWith(),write=retryStorage.setItem;
+  retryStorage.setItem=()=>{throw new DOMException('Full','QuotaExceededError');};
+  globalThis.localStorage=retryStorage;paused=true;
+  ui=createRouteExperience(options);
+  await click('prepare');await click('start');ui.afterStep(live.advanceFixed({throttle:.3},DT),DT);await click('end');
+  assert.match(resource('storage').textContent,/storage is full/);
+  assert.equal(resource('retry-save').hidden,false);
+  assert.equal(resource('export').closest('details'),null);
+  retryStorage.setItem=write;resource('retry-save').click();
+  assert.equal(ui.getState().resourcePersistence.status,'saved');
+  assert.equal(parseResourceHistory(retryStorage.raw).length,1);
+  assert.equal(resource('retry-save').hidden,true);
+  assert.doesNotMatch(doc.querySelector('[data-route="status"]').textContent,/not saved/);
+  checks.push('A quota-limited finish exposes export and retry, then confirms the verified write without restarting the route');
   checks.push('Route UI exposes damaged storage outside its collapsed history and exports original bytes plus the actual new measured result');
 }finally{ui.dispose();setLanguage('zh',{persist:false});dom.window.close();if(previousStorage===undefined)delete globalThis.localStorage;else globalThis.localStorage=previousStorage;if(previousDocument===undefined)delete globalThis.document;else globalThis.document=previousDocument;}
 

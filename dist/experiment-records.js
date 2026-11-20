@@ -89,7 +89,7 @@ export function replayEligibility(record){
 }
 // These published snapshots share the complete state contract. Only forward,
  // explicitly listed versions qualify for current-model recomputation.
-const releaseStates=['3.24.0','1.0.0','1.1.0','1.2.0'];
+const releaseStates=['3.24.0','1.0.0','1.1.0','1.2.0','1.3.0'];
 function compatibleReleaseStates(from,to){
   const i=releaseStates.indexOf(from);
   return i>=0&&releaseStates.indexOf(to)>i;
